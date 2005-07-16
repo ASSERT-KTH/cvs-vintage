@@ -1,4 +1,4 @@
-// $Id: DnDJGraph.java,v 1.6 2005/07/16 19:58:27 mvw Exp $
+// $Id: DnDJGraph.java,v 1.7 2005/07/16 21:27:38 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,21 +113,29 @@ class DnDJGraph
     }
 
     public void dragEnter(DropTargetDragEvent dtde) {
-    	if (dtde.isDataFlavorSupported(
-    			TransferableModelElements.UML_COLLECTION_FLAVOR)) {
-    		dtde.acceptDrag(dtde.getDropAction());
-    	} else {
-    		dtde.rejectDrag();
-    	}
+    	try {
+			if (dtde.isDataFlavorSupported(
+					TransferableModelElements.UML_COLLECTION_FLAVOR)) {
+				dtde.acceptDrag(dtde.getDropAction());
+				return;
+			}
+		} catch (NullPointerException e) {
+//			System.err.println("NullPointerException ignored.");
+		}
+    	dtde.rejectDrag();
     }
 
     public void dragOver(DropTargetDragEvent dtde) {
-    	if (dtde.isDataFlavorSupported(
-    			TransferableModelElements.UML_COLLECTION_FLAVOR)) {
-    		dtde.acceptDrag(dtde.getDropAction());
-    	} else {
-    		dtde.rejectDrag();
+    	try {
+    		if (dtde.isDataFlavorSupported(
+    				TransferableModelElements.UML_COLLECTION_FLAVOR)) {
+    			dtde.acceptDrag(dtde.getDropAction());
+    			return;
+    		}
+    	} catch (NullPointerException e) {
+//    		System.err.println("NullPointerException ignored.");
     	}
+    	dtde.rejectDrag();
     }
 
     public void dropActionChanged(DropTargetDragEvent dtde) {
