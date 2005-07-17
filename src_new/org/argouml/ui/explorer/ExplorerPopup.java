@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.24 2005/06/11 15:00:22 mvw Exp $
+// $Id: ExplorerPopup.java,v 1.25 2005/07/17 08:10:52 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.ActionAddAllClassesFromModel;
 import org.argouml.uml.diagram.ui.ActionAddExistingEdge;
 import org.argouml.uml.diagram.ui.ActionAddExistingNode;
+import org.argouml.uml.diagram.ui.ActionSaveDiagramToClipboard;
 import org.argouml.uml.ui.ActionAddPackage;
 import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.ActionSetSourcePath;
@@ -200,7 +201,8 @@ public class ExplorerPopup extends JPopupMenu {
         }
         
         if (selectedItem instanceof Diagram) {
-	    this.add(new ActionDeleteModelElements());
+            this.add(new ActionSaveDiagramToClipboard());
+            this.add(new ActionDeleteModelElements());
         }
     }
 
