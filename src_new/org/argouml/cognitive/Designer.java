@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.46 2005/07/10 09:13:25 linus Exp $
+// $Id: Designer.java,v 1.47 2005/07/17 15:29:05 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,8 @@ import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
+import org.argouml.application.api.ConfigurationKey;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.ui.ActionGoToCritique;
@@ -87,6 +89,9 @@ public final class Designer
         unspecGoalVector = new Vector();
         unspecGoalVector.addElement(Goal.getUnspecifiedGoal());
     }
+
+    public static final ConfigurationKey AUTO_CRITIQUE =
+        Configuration.makeKey("cognitive", "autocritique");
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -153,9 +158,7 @@ public final class Designer
 
     private int critiqueCPUPercent;
 
-    private boolean autoCritique;
-
-    /**
+   /**
      * dm's that should be critiqued ASAP.
      */
     private Vector hotQueue;
@@ -221,7 +224,6 @@ public final class Designer
 
         critiquingInterval = 8000;
         critiqueCPUPercent = 10;
-        autoCritique = true;
 
         hotQueue = new Vector();
         hotReasonQueue = new Vector();
@@ -279,7 +281,7 @@ public final class Designer
 
             // the critiquing thread should wait if disabled.
             synchronized (this) {
-                while (!autoCritique) {
+                while (!Configuration.getBoolean(Designer.AUTO_CRITIQUE, true)) {
                     try {
                         this.wait();
                     } catch (InterruptedException ignore) {
@@ -481,17 +483,18 @@ public final class Designer
      *
      * @return autoCritique
      */
-    public boolean getAutoCritique() { return autoCritique; }
+    public boolean getAutoCritique() { 
+        return Configuration.getBoolean(Designer.AUTO_CRITIQUE, true); 
+    }
 
     /**
      * @see #getAutoCritique()
      * @param b
      */
     public void setAutoCritique(boolean b) {
-	autoCritique = b;
-
+        Configuration.setBoolean(Designer.AUTO_CRITIQUE, b);
 	synchronized (this) {
-	    if (autoCritique) {
+	    if (b) {
 		this.notifyAll();
 	    }
 	}

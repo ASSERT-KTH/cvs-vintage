@@ -1,4 +1,4 @@
-// $Id: ActionAutoCritique.java,v 1.2 2005/01/09 14:58:13 linus Exp $
+// $Id: ActionAutoCritique.java,v 1.3 2005/07/17 15:29:05 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ class ActionAutoCritique extends UMLAction {
 
     public ActionAutoCritique() {
 	super("action.toggle-auto-critique", NO_ICON);
+	putValue("SELECTED", new Boolean(Designer.theDesigner().getAutoCritique()));
     }
 
     /**
