@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.29 2005/07/15 20:25:44 mvw Exp $
+// $Id: FigActor.java,v 1.30 2005/07/17 18:38:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -237,22 +237,14 @@ public class FigActor extends FigNodeModelElement {
 			      (int) (cy + Math.sin(angle) * radiusy));
             ret.add(point);
         }
-        ret.add(new Point(getFigAt(BODY_POSN).getX(),
-                          getFigAt(BODY_POSN).getY()));
-        ret.add(new Point(((FigLine) getFigAt(BODY_POSN)).getX1(),
-                          ((FigLine) getFigAt(BODY_POSN)).getY1()));
-        ret.add(new Point(getFigAt(LEFT_LEG_POSN).getX(),
-                          getFigAt(LEFT_LEG_POSN).getY()));
-        ret.add(new Point(((FigLine) getFigAt(LEFT_LEG_POSN)).getX1(),
-                          ((FigLine) getFigAt(LEFT_LEG_POSN)).getY1()));
-        ret.add(new Point(getFigAt(RIGHT_LEG_POSN).getX(),
-                          getFigAt(RIGHT_LEG_POSN).getY()));
-        ret.add(new Point(((FigLine) getFigAt(RIGHT_LEG_POSN)).getX1(),
-                          ((FigLine) getFigAt(RIGHT_LEG_POSN)).getY1()));
-        ret.add(new Point(getFigAt(ARMS_POSN).getX(),
-                          getFigAt(ARMS_POSN).getY()));
+        ret.add(new Point(((FigLine) getFigAt(LEFT_LEG_POSN)).getX2(),
+                          ((FigLine) getFigAt(LEFT_LEG_POSN)).getY2()));
+        ret.add(new Point(((FigLine) getFigAt(RIGHT_LEG_POSN)).getX2(),
+                          ((FigLine) getFigAt(RIGHT_LEG_POSN)).getY2()));
         ret.add(new Point(((FigLine) getFigAt(ARMS_POSN)).getX1(),
                           ((FigLine) getFigAt(ARMS_POSN)).getY1()));
+        ret.add(new Point(((FigLine) getFigAt(ARMS_POSN)).getX2(),
+                          ((FigLine) getFigAt(ARMS_POSN)).getY2()));
         return ret;
     }
 
