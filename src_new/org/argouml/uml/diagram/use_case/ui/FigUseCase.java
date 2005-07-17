@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.66 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigUseCase.java,v 1.67 2005/07/17 18:40:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -208,7 +208,7 @@ public class FigUseCase extends FigNodeModelElement
         getNameFig().setTextFilled(false);
         getNameFig().setFilled(false);
         getNameFig().setLineWidth(0);
-        getNameFig().setMultiLine(false);
+        getNameFig().setReturnAction(FigText.END_EDITING);
 
         // The separator, again with arbitrary bounds for now.
 
@@ -1331,7 +1331,7 @@ public class FigUseCase extends FigNodeModelElement
                     epFig.setFont(getLabelFont());
                     epFig.setTextColor(Color.black);
                     epFig.setJustification(FigText.JUSTIFY_LEFT);
-                    epFig.setMultiLine(false);
+                    epFig.setReturnAction(FigText.END_EDITING);
 
                     epVec.addFig(epFig);
                 } else {
@@ -1390,13 +1390,19 @@ public class FigUseCase extends FigNodeModelElement
 
     /**
      * Makes sure that the edges stick to the elipse fig of the usecase.
+     * TODO: This function is called way too many times - I count 6x when 
+     * simply clicking on this usecase, and 20x when clicking on the button
+     * on selection at the right hand side of a usecase.
+     * Once this problem is solved, try increasing the "maxPoint" 4-fold, 
+     * to make edge attachment when dragging much smoother.
+     * 
      * @see org.tigris.gef.presentation.Fig#getGravityPoints()
      */
     public List getGravityPoints() {
-        final int maxPoints = 20;
+        final int maxPoints = 30;
         List ret = new ArrayList(maxPoints);
-        int cx = bigPort.center().x;
-        int cy = bigPort.center().y;
+        int cx = bigPort.getCenter().x;
+        int cy = bigPort.getCenter().y;
         int radiusx = Math.round(bigPort.getWidth() / 2) + 1;
         int radiusy = Math.round(bigPort.getHeight() / 2) + 1;
         Point point = null;
