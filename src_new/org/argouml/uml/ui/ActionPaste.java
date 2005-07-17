@@ -1,4 +1,4 @@
-// $Id: ActionPaste.java,v 1.14 2005/05/11 18:55:55 linus Exp $
+// $Id: ActionPaste.java,v 1.15 2005/07/17 13:37:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,6 @@ import javax.swing.text.JTextComponent;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.tigris.gef.base.CmdPaste;
 import org.tigris.gef.base.Globals;
 
 /**
@@ -109,8 +108,9 @@ public class ActionPaste
      */
     public void actionPerformed(ActionEvent ae) {
         if (Globals.clipBoard != null && !Globals.clipBoard.isEmpty()) {
-            CmdPaste cmd = new CmdPaste();
-            cmd.doIt();
+        	 /* Disable pasting as long as issue 594 is not solved:*/
+//            CmdPaste cmd = new CmdPaste();
+//            cmd.doIt();
         } else {
             if (!isSystemClipBoardEmpty() && textSource != null) {
                 textSource.paste();
