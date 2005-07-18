@@ -1,4 +1,4 @@
-// $Id: CrInvalidJoinTriggerOrGuard.java,v 1.3 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrInvalidJoinTriggerOrGuard.java,v 1.4 2005/07/18 14:51:44 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,11 +56,14 @@ public class CrInvalidJoinTriggerOrGuard extends CrUML {
         Object g = Model.getFacade().getGuard(tr);
         Object dv = Model.getFacade().getTarget(tr);
         if (!(Model.getFacade().isAPseudostate(dv))) return NO_PROBLEM;
+		
+		// WFR Transitions, OMG UML 1.3
         Object k = Model.getFacade().getPseudostateKind(dv);
         if (!Model.getFacade().
                 equalsPseudostateKind(k,
                         Model.getPseudostateKind().getJoin()))
             return NO_PROBLEM;
+		
         boolean hasTrigger =
                 (t != null && Model.getFacade().getName(t) != null
                 && Model.getFacade().getName(t).length() > 0);
