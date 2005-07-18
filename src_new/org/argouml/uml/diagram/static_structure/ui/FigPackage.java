@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.74 2005/07/16 13:07:10 mvw Exp $
+// $Id: FigPackage.java,v 1.75 2005/07/18 19:20:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,7 +109,8 @@ public class FigPackage extends FigNodeModelElement
      * The main constructor
      */
     public FigPackage() {
-        setBigPort(new FigRect(x, y, width, height, null, null));
+        setBigPort(
+            new PackagePortFigRect(x, y, width, height, indentX, tabHeight));
 
         //
         // Create a Body that reacts to double-clicks and jumps to a diagram.
@@ -824,3 +825,45 @@ public class FigPackage extends FigNodeModelElement
     }
     
 } /* end class FigPackage */
+
+/**
+ * The bigport needs to overrule the getClosestPoint, 
+ * because it is the port of this FigNode.
+ * 
+ * @author mvw@tigris.org
+ */
+class PackagePortFigRect extends FigRect {
+    private int indentX;
+    private int tabHeight;
+    
+    /**
+     * The constructor.
+     * 
+     * @param x the x
+     * @param y the y
+     * @param w the width
+     * @param h the hight
+     */
+    public PackagePortFigRect(int x, int y, int w, int h, int ix, int th) {
+        super(x, y, w, h, null, null);
+        this.indentX = ix;
+        tabHeight = th;
+    }
+    
+    /**
+     * @see org.tigris.gef.presentation.Fig#getClosestPoint(java.awt.Point)
+     */
+    public Point getClosestPoint(Point anotherPt) {
+        Rectangle r = getBounds();
+        int xs[] = {r.x, r.x + r.width - indentX, r.x + r.width - indentX, 
+                    r.x + r.width,   r.x + r.width,  r.x,            r.x};
+        int ys[] = {r.y, r.y,                     r.y + tabHeight,
+                    r.y + tabHeight, r.y + r.height, r.y + r.height, r.y};
+        Point p = Geometry.ptClosestTo(
+                xs, 
+                ys,
+                7 , anotherPt);
+        return p;
+    }
+    
+}    
