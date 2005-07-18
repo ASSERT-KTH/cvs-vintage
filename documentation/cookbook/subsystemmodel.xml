@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: subsystemmodel.xml,v 1.1 2005/06/18 18:37:05 mvw Exp $ -->
+<!-- $Id: subsystemmodel.xml,v 1.2 2005/07/18 17:21:50 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -25,9 +25,13 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 -->
 
-    <sect1 id="model">
-      <title>Model</title>
-      <para id="comp-model-purpose">
+<sect1 id="model">
+  <title>Model</title>
+  <indexterm>
+    <primary>Model</primary>
+  </indexterm>
+
+  <para id="comp-model-purpose">
 Purpose - to provide the data structures that keep track of the
 element in the UML model.
 This comes with a complete set of methods to modify the model
