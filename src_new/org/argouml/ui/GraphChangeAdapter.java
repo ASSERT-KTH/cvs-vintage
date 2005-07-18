@@ -1,4 +1,4 @@
-// $Id: GraphChangeAdapter.java,v 1.3 2005/07/14 17:16:19 bobtarling Exp $
+// $Id: GraphChangeAdapter.java,v 1.4 2005/07/18 13:43:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,9 +59,9 @@ public class GraphChangeAdapter implements GraphListener {
     private GraphChangeAdapter() {
     }
     
-    public DiDiagram createDiagram(Class type) {
+    public DiDiagram createDiagram(Class type, Object owner) {
         if (Model.getDiagramInterchangeModel() != null) {
-            return Model.getDiagramInterchangeModel().createDiagram(type);
+            return Model.getDiagramInterchangeModel().createDiagram(type,owner);
         } else {
             return null;
         }

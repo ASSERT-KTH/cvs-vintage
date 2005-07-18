@@ -1,4 +1,4 @@
-// $Id: DiagramInterchangeModel.java,v 1.3 2005/07/14 15:27:55 bobtarling Exp $
+// $Id: DiagramInterchangeModel.java,v 1.4 2005/07/18 13:43:28 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ package org.argouml.model;
  */
 public interface DiagramInterchangeModel {
     
-    public DiDiagram createDiagram(Class type);
+    public DiDiagram createDiagram(Class type, Object owner);
     public void deleteDiagram(DiDiagram diagram);
     
     public DiElement createElement(DiDiagram diagram, Object modelElement);
