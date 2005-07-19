@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.34 2005/07/05 23:35:18 bobtarling Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.35 2005/07/19 08:19:01 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.model.DataTypesHelper;
 import org.argouml.model.Model;
-import org.argouml.uml.util.namespace.StringNamespace;
 import org.tigris.gef.util.ResourceLoader;
 
 /**
@@ -328,6 +327,7 @@ public final class ResourceLoaderWrapper {
         images.put("button.new-compositestate", "CompositeState");
         images.put("button.new-composition", "Composition");
         images.put("button.new-createaction", "CreateAction");
+        images.put("button.new-datatype", "Datatype");
         images.put("button.new-deephistory", "DeepHistory");
         images.put("button.new-dependency", "Dependency");
         images.put("button.new-destroyaction", "DestroyAction");
