@@ -287,17 +287,17 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 		Header header = HeaderParser.parse(source);
 
-		source.close();
-
 		if ((attributes != null) && (flags != null)) {
 			// save header and attributes
 			getHeaderListStorage()
 					.addMessage(newUid, header, attributes, flags);
 		} else {
 			ColumbaHeader h = new ColumbaHeader(header);
+			h.set("columba.size",new Integer(source.length() / 1024));
 			getHeaderListStorage().addMessage(newUid, header,
 					h.getAttributes(), h.getFlags());
 		}
+		source.close();
 
 		fireMessageAdded(newUid);
 		return newUid;
