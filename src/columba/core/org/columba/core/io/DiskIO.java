@@ -263,14 +263,19 @@ public final class DiskIO {
 			path = resourceFolder + path.substring(1);
 		}
 
+		System.out.println("path ="+path);
+		
 		//url = ClassLoader.getSystemResource(path);
 		url = DiskIO.class.getResource("/" + path);
 
+		
+		
 		if (url == null) {
-			LOG.severe("*** failed locating resource: " + path);
+			LOG.info("*** failed locating resource: " + path);
 
 			return null;
-		}
+		} else
+			System.out.println("url="+url.toString());
 
 		return url;
 	}

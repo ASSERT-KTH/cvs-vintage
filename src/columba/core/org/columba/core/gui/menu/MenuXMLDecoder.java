@@ -18,6 +18,8 @@
 package org.columba.core.gui.menu;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
@@ -27,7 +29,6 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.io.DiskIO;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
@@ -100,8 +101,8 @@ public class MenuXMLDecoder {
 		}
 	}
 
-	public ExtendablePopupMenu createPopupMenu(String xmlResource) {
-		Document doc = retrieveDocument(xmlResource);
+	public ExtendablePopupMenu createPopupMenu(InputStream is) {
+		Document doc = retrieveDocument(is);
 
 		Element menuElement = doc.getRootElement();
 		if (menuElement.getName().equals(MenuXMLDecoder.MENU) == false) {
@@ -116,9 +117,9 @@ public class MenuXMLDecoder {
 		return menu;
 	}
 
-	public ExtendableMenuBar createMenuBar(String xmlResource) {
+	public ExtendableMenuBar createMenuBar(InputStream is) {
 
-		Document doc = retrieveDocument(xmlResource);
+		Document doc = retrieveDocument(is);
 
 		Element menubarElement = doc.getRootElement();
 		if (menubarElement.getName().equals(MenuXMLDecoder.MENUBAR) == false) {
@@ -152,12 +153,12 @@ public class MenuXMLDecoder {
 	 * @param xmlResource
 	 * @return
 	 */
-	private Document retrieveDocument(String xmlResource) {
+	private Document retrieveDocument(InputStream is) {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setIgnoringElementContentWhitespace(true);
 		Document doc = null;
 		try {
-			doc = builder.build(DiskIO.getResourceStream(xmlResource));
+			doc = builder.build(is);
 		} catch (JDOMException e) {
 			LOG.severe(e.getMessage());
 			e.printStackTrace();
@@ -299,8 +300,8 @@ public class MenuXMLDecoder {
 	 * @param xmlResource
 	 *            xml resource to retrieve menu structure
 	 */
-	public void extendMenuBar(ExtendableMenuBar menubar, String xmlResource) {
-		Document doc = retrieveDocument(xmlResource);
+	public void extendMenuBar(ExtendableMenuBar menubar, InputStream is) {
+		Document doc = retrieveDocument(is);
 		Element menubarElement = doc.getRootElement();
 		if (menubarElement.getName().equals(MenuXMLDecoder.MENUBAR) == false) {
 			LOG.severe("root element <menubar> expected");

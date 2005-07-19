@@ -23,6 +23,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -35,6 +36,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.io.DiskIO;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -51,7 +53,7 @@ import org.frapuccino.swing.DynamicFileTransferHandler;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
@@ -117,14 +119,14 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 			contentType = type.getType();
 			contentSubtype = type.getSubtype();
 
-			//Get Text for Icon
+			// Get Text for Icon
 			if (header.getFileName() != null) {
 				text = header.getFileName();
 			} else {
 				text = contentType + "/" + contentSubtype;
 			}
 
-			//Get Tooltip for Icon
+			// Get Tooltip for Icon
 			StringBuffer tooltip = new StringBuffer();
 			tooltip.append("<html><body>");
 
@@ -186,9 +188,17 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 	}
 
 	public void createPopupMenu() {
-		//menu = new AttachmentMenu(getFrameController());
-		menu = new MenuXMLDecoder(mediator.getFrameController())
-				.createPopupMenu("org/columba/mail/action/attachment_contextmenu.xml");
+		// menu = new AttachmentMenu(getFrameController());
+
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/mail/action/attachment_contextmenu.xml");
+
+			menu = new MenuXMLDecoder(mediator.getFrameController())
+					.createPopupMenu(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 

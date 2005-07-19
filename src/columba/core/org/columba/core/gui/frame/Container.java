@@ -18,6 +18,7 @@
 package org.columba.core.gui.frame;
 
 import java.awt.event.MouseAdapter;
+import java.io.InputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -243,10 +244,10 @@ public interface Container {
 	 * 
 	 * @param mediator
 	 *            current framemediator
-	 * @param file
+	 * @param fileUrl
 	 *            path to xml file
 	 */
-	void extendMenuFromFile(FrameMediator mediator, String file);
+	void extendMenuFromURL(FrameMediator mediator, InputStream is);
 
 	/**
 	 * Extend current toolbar from xml element.

@@ -20,15 +20,12 @@ package org.columba.core.plugin;
 import groovy.lang.GroovyClassLoader;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
-import org.codehaus.groovy.control.CompilationFailedException;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.exception.PluginException;
 import org.columba.core.plugin.util.ClassLoaderHelper;
@@ -315,10 +312,4 @@ public class Extension implements IExtension {
 		return url;
 	}
 
-	/**
-	 * @param pluginMetadata The pluginMetadata to set.
-	 */
-	public void setPluginMetadata(PluginMetadata pluginMetadata) {
-		this.pluginMetadata = pluginMetadata;
-	}
 }

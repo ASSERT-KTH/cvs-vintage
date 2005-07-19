@@ -19,6 +19,8 @@ package org.columba.mail.gui.message;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Observer;
@@ -45,6 +47,7 @@ import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.ColumbaDesktop;
+import org.columba.core.io.DiskIO;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
@@ -316,9 +319,16 @@ public class MessageController extends JScrollPane implements
 	}
 
 	public void createPopupMenu() {
-		if (menu == null)
-			menu = new MenuXMLDecoder(getFrameController())
-					.createPopupMenu("org/columba/mail/action/message_contextmenu.xml");
+		if (menu == null) {
+			try {
+				InputStream is = DiskIO
+						.getResourceStream("org/columba/mail/action/message_contextmenu.xml");
+
+				menu = new MenuXMLDecoder(getFrameController()).createPopupMenu(is);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**

@@ -22,8 +22,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
-import java.awt.GridLayout;
 import java.awt.event.ContainerListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Iterator;
@@ -53,6 +54,7 @@ import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.action.SaveAsDraftAction;
@@ -123,7 +125,7 @@ public class ComposerController extends DefaultFrameController implements
 	private JPanel topPanel;
 
 	private HtmlToolbar htmlToolbar;
-	
+
 	private boolean promptOnDialogClosing = true;
 
 	private SignatureView signatureView;
@@ -162,7 +164,7 @@ public class ComposerController extends DefaultFrameController implements
 		composerSpellCheck = new ComposerSpellCheck(this);
 
 		signatureView = new SignatureView(this);
-		
+
 		// set default html or text based on stored option
 		// ... can be overridden by setting the composer model
 		XmlElement optionsElement = MailConfig.getInstance().get(
@@ -195,7 +197,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		initComponents();
 
-		//		 add JPanel with useful HTML related actions.
+		// add JPanel with useful HTML related actions.
 		htmlToolbar = new HtmlToolbar(this);
 
 		layoutComponents();
@@ -212,7 +214,7 @@ public class ComposerController extends DefaultFrameController implements
 				try {
 					setCharset(Charset.forName(charset));
 				} catch (UnsupportedCharsetException ex) {
-					//ignore this
+					// ignore this
 				}
 			}
 		}
@@ -232,14 +234,14 @@ public class ComposerController extends DefaultFrameController implements
 		editorComponent.setDragEnabled(true);
 		editorComponent.setTransferHandler(compositeHandler);
 
-		//getContainer().setContentPane(this);
+		// getContainer().setContentPane(this);
 
 		/*
 		 * if (isAccountInfoPanelVisible()) {
 		 * addToolBar(getIdentityInfoPanel()); }
 		 */
 
-		//		 *20030917, karlpeder* If ContainerListeners are waiting to be
+		// *20030917, karlpeder* If ContainerListeners are waiting to be
 		// added, add them now.
 		if (containerListenerBuffer != null) {
 			LOG.fine("Adding ContainerListeners from buffer");
@@ -307,7 +309,7 @@ public class ComposerController extends DefaultFrameController implements
 			centerPanel.add(editorPanel, BorderLayout.CENTER);
 		}
 
-		//re-paint composer-view
+		// re-paint composer-view
 		// FIXME showAttachmentPanel validate
 		if (getContainer() != null)
 			getContainer().getFrame().validate();
@@ -349,7 +351,7 @@ public class ComposerController extends DefaultFrameController implements
 				"center:max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
 
 				// 2 columns
-				//"fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu,
+				// "fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu,
 				// fill:default, 3dlu");
 				"fill:default:grow");
 
@@ -359,7 +361,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		layout.setColumnGroups(new int[][] { { 1 } });
 
-		//layout.setRowGroups(new int[][] { { 1, 5, 7 } });
+		// layout.setRowGroups(new int[][] { { 1, 5, 7 } });
 
 		builder.add(smtpLabel, cc.xy(1, 1));
 
@@ -398,12 +400,13 @@ public class ComposerController extends DefaultFrameController implements
 
 		htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
 
-		//editorPanel.add(htmlToolbar, BorderLayout.NORTH);
+		// editorPanel.add(htmlToolbar, BorderLayout.NORTH);
 
-		editorPanel.getContentPane().add(getEditorController().getViewUIComponent());
+		editorPanel.getContentPane().add(
+				getEditorController().getViewUIComponent());
 
 		editorPanel.getContentPane().add(signatureView);
-		
+
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		centerPanel.setLayout(new BorderLayout());
 
@@ -567,9 +570,9 @@ public class ComposerController extends DefaultFrameController implements
 	 * @return Composer model
 	 */
 	public ComposerModel getModel() {
-		//if (composerModel == null) // *20030907, karlpeder* initialized in
+		// if (composerModel == null) // *20030907, karlpeder* initialized in
 		// init
-		//  composerModel = new ComposerModel();
+		// composerModel = new ComposerModel();
 		return composerModel;
 	}
 
@@ -594,7 +597,7 @@ public class ComposerController extends DefaultFrameController implements
 					"composer_options").getElement("/options");
 			XmlElement htmlElement = optionsElement.getElement("html");
 
-			//create default element if not available
+			// create default element if not available
 			if (htmlElement == null) {
 				htmlElement = optionsElement.addSubElement("html");
 			}
@@ -756,7 +759,7 @@ public class ComposerController extends DefaultFrameController implements
 			} else {
 				editorPanel.remove(htmlToolbar);
 			}
-			
+
 			editorPanel.validate();
 		}
 	}
@@ -817,15 +820,16 @@ public class ComposerController extends DefaultFrameController implements
 	 * @see org.columba.core.gui.frame.FrameMediator#close()
 	 */
 	public void close() {
-		
+
 		// don't prompt user if composer should be closed
-		if ( isPromptOnDialogClosing() == false) return;
-		
-		//	only prompt user, if composer contains some text
+		if (isPromptOnDialogClosing() == false)
+			return;
+
+		// only prompt user, if composer contains some text
 		if (editorController.getViewText().length() == 0) {
 			getContainer().getFrame().setVisible(false);
 
-			//			 close Columba, if composer is only visible frame
+			// close Columba, if composer is only visible frame
 			FrameModel.getInstance().close(null);
 
 			return;
@@ -836,7 +840,7 @@ public class ComposerController extends DefaultFrameController implements
 				"Message wasn't sent. Would you like to save your changes?",
 				"Warning: Message was modified",
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, options, options[2]); //default button title
+				null, options, options[2]); // default button title
 
 		if (n == 2) {
 			// save changes
@@ -854,7 +858,7 @@ public class ComposerController extends DefaultFrameController implements
 			// close composer
 			getContainer().getFrame().setVisible(false);
 
-			//			 close Columba, if composer is only visible frame
+			// close Columba, if composer is only visible frame
 			FrameModel.getInstance().close(null);
 		}
 
@@ -932,8 +936,14 @@ public class ComposerController extends DefaultFrameController implements
 
 		panel.add(centerPanel, BorderLayout.CENTER);
 
-		getContainer().extendMenuFromFile(this,
-				"org/columba/mail/action/composer_menu.xml");
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/mail/action/composer_menu.xml");
+
+			getContainer().extendMenuFromURL(this, is);
+		} catch (IOException e) {
+			LOG.severe(e.getMessage());
+		}
 
 		getContainer().extendToolbar(
 				this,
@@ -943,7 +953,7 @@ public class ComposerController extends DefaultFrameController implements
 		// @author: fdietz
 		// disabled identity infopanel because it contains
 		// only duplicate information
-		//getContainer().setInfoPanel(getIdentityInfoPanel());
+		// getContainer().setInfoPanel(getIdentityInfoPanel());
 
 		getContainer().getFrame().setFocusTraversalPolicy(
 				new ComposerFocusTraversalPolicy());
@@ -1017,7 +1027,8 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @param promptOnDialogClosing The promptOnDialogClosing to set.
+	 * @param promptOnDialogClosing
+	 *            The promptOnDialogClosing to set.
 	 */
 	public void setPromptOnDialogClosing(boolean promptOnDialogClosing) {
 		this.promptOnDialogClosing = promptOnDialogClosing;

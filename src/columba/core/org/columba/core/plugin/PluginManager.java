@@ -181,8 +181,8 @@ public class PluginManager implements IPluginManager {
 				while (e2.hasMoreElements()) {
 					ExtensionMetadata extensionMetadata = (ExtensionMetadata) e2
 							.nextElement();
-					Extension pluginExtension = new Extension(extensionMetadata);
-					pluginExtension.setPluginMetadata(pluginMetadata);
+					Extension pluginExtension = new Extension(pluginMetadata, extensionMetadata);
+					
 					handler.addExtension(pluginExtension.getMetadata().getId(),
 							pluginExtension);
 				}

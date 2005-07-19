@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import javax.swing.JPopupMenu;
@@ -29,6 +31,7 @@ import javax.swing.tree.TreePath;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
+import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
@@ -123,19 +126,20 @@ public class TreeController implements TreeWillExpandListener,
 
 		this.selectedFolder = folder;
 
-		/*
-		CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
-				getFrameController(),
-				((MailFrameMediator) getFrameController()).getTreeSelection()));
-				*/
 	}
 
 	/**
 	 * Creates a Popup menu.
 	 */
 	public void createPopupMenu() {
-		menu = new MenuXMLDecoder(frameController).createPopupMenu(
-				"org/columba/mail/action/tree_contextmenu.xml");
+		try {
+			InputStream is = DiskIO.getResourceStream("org/columba/mail/action/tree_contextmenu.xml");
+			
+			menu = new MenuXMLDecoder(frameController).createPopupMenu(
+					is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

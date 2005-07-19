@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Observable;
 import java.util.logging.Logger;
 
@@ -33,6 +35,7 @@ import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
+import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
@@ -177,7 +180,7 @@ public class TableController implements ListSelectionListener,
 
 		// register interest on folder events
 		FolderEventDelegator.getInstance().addTableListener(this);
-		
+
 	}
 
 	/**
@@ -260,9 +263,14 @@ public class TableController implements ListSelectionListener,
 	 * create the PopupMenu
 	 */
 	public void createPopupMenu() {
-		menu = new MenuXMLDecoder(getFrameController())
-		.createPopupMenu(
-				"org/columba/mail/action/table_contextmenu.xml");
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/mail/action/table_contextmenu.xml");
+
+			menu = new MenuXMLDecoder(getFrameController()).createPopupMenu(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

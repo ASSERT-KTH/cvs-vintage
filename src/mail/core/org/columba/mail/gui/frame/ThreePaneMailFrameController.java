@@ -20,6 +20,8 @@ package org.columba.mail.gui.frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -33,6 +35,7 @@ import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.UIFSplitPane;
+import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
@@ -292,8 +295,14 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// throw new RuntimeException(ex);
 		// }
 
-		getContainer().extendMenuFromFile(this,
-				"org/columba/mail/action/menu.xml");
+		try {
+			InputStream is = DiskIO.getResourceStream("org/columba/mail/action/menu.xml");
+			
+			getContainer().extendMenuFromURL(this,
+					is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		getContainer().extendToolbar(
 				this,

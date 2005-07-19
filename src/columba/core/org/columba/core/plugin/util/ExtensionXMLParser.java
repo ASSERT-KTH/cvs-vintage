@@ -2,6 +2,7 @@ package org.columba.core.plugin.util;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -68,7 +69,11 @@ public class ExtensionXMLParser {
 	public static Enumeration loadExtensionsFromFile(String xmlResource) {
 		Vector vector = new Vector();
 
-		XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(xmlResource));
+		URL url = DiskIO.getResourceURL(xmlResource);
+		if ( url == null) 
+			url = ExtensionXMLParser.class.getResource(xmlResource);
+		
+		XmlIO xmlFile = new XmlIO(url);
 		xmlFile.load();
 		XmlElement parent = xmlFile.getRoot().getElement(
 				XML_ELEMENT_EXTENSIONLIST);
@@ -247,7 +252,7 @@ public class ExtensionXMLParser {
 
 				ExtensionMetadata extensionMetadata = ExtensionXMLParser
 						.parseExtensionMetadata(extensionXmlElement);
-
+		
 				vector.add(extensionMetadata);
 
 			}

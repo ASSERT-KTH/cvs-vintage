@@ -19,6 +19,8 @@
 package org.columba.mail.gui.messageframe;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -27,6 +29,7 @@ import javax.swing.JPanel;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -158,8 +161,14 @@ public class MessageFrameController extends AbstractMailFrameController
 
 		ViewItem viewItem = getViewItem();
 
-		getContainer().extendMenuFromFile(this,
-				"org/columba/mail/action/messageframe_menu.xml");
+		try {
+			InputStream is = DiskIO.getResourceStream("org/columba/mail/action/messageframe_menu.xml");
+			
+			getContainer().extendMenuFromURL(this,
+					is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		getContainer().extendToolbar(
 				this,

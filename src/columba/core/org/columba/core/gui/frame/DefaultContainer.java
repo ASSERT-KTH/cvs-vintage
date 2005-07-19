@@ -25,6 +25,9 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +47,7 @@ import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ColumbaToolBar;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.io.DiskIO;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.ExtensionMetadata;
 import org.columba.core.plugin.IExtension;
@@ -179,13 +183,18 @@ public class DefaultContainer extends JFrame implements Container,
 
 		panel.add(contentPane, BorderLayout.CENTER);
 
-		// create menu
-		// menu = new ColumbaMenu("org/columba/core/action/menu.xml", mediator);
-		menubar = new MenuXMLDecoder(mediator)
-				.createMenuBar("org/columba/core/action/menu.xml");
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/core/action/menu.xml");
 
-		if (menubar != null) {
-			setJMenuBar(menubar);
+			// create menu
+			menubar = new MenuXMLDecoder(mediator).createMenuBar(is);
+
+			if (menubar != null) {
+				setJMenuBar(menubar);
+			}
+		} catch (IOException e) {
+			LOG.severe(e.getMessage());
 		}
 
 		// create toolbar
@@ -235,8 +244,7 @@ public class DefaultContainer extends JFrame implements Container,
 		setContentPane(m.getContentPane());
 		/*
 		 * // awt-event-thread javax.swing.SwingUtilities.invokeLater(new
-		 * Runnable() { public void run() {
-		 *  } });
+		 * Runnable() { public void run() { } });
 		 */
 
 	}
@@ -256,11 +264,17 @@ public class DefaultContainer extends JFrame implements Container,
 
 		switchedFrameMediator = true;
 
-		// default core menu
-		menubar = new MenuXMLDecoder(mediator)
-				.createMenuBar("org/columba/core/action/menu.xml");
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/core/action/menu.xml");
 
-		setJMenuBar(menubar);
+			// default core menu
+			menubar = new MenuXMLDecoder(mediator).createMenuBar(is);
+
+			setJMenuBar(menubar);
+		} catch (IOException e) {
+			LOG.severe(e.getMessage());
+		}
 		// default toolbar
 		toolbar = new ColumbaToolBar(mediator);
 		setToolBar(toolbar);
@@ -458,9 +472,9 @@ public class DefaultContainer extends JFrame implements Container,
 	/**
 	 * @see org.columba.core.gui.frame.View#extendMenuFromFile(java.lang.String)
 	 */
-	public void extendMenuFromFile(FrameMediator mediator, String xmlResource) {
+	public void extendMenuFromURL(FrameMediator mediator, InputStream is) {
 
-		new MenuXMLDecoder(mediator).extendMenuBar(menubar, xmlResource);
+		new MenuXMLDecoder(mediator).extendMenuBar(menubar, is);
 
 		try {
 			ActionExtensionHandler handler = (ActionExtensionHandler) PluginManager

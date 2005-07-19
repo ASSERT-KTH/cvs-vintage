@@ -110,4 +110,13 @@ public class ExternalClassLoader extends URLClassLoader {
 		return constructor.newInstance(args);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.net.URLClassLoader#findResource(java.lang.String)
+	 */
+	public URL findResource(String name) {
+		
+		URL url = super.findResource(name);
+		return url;
+	}
+
 }

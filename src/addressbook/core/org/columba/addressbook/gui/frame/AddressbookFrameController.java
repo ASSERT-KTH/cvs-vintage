@@ -20,6 +20,8 @@ package org.columba.addressbook.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -40,6 +42,7 @@ import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.util.UIFSplitPane;
+import org.columba.core.io.DiskIO;
 
 /**
  * 
@@ -52,7 +55,7 @@ public class AddressbookFrameController extends DefaultFrameController
 	protected TreeController tree;
 
 	protected TableController table;
-	
+
 	protected FilterToolbar filterToolbar;
 
 	/**
@@ -71,7 +74,7 @@ public class AddressbookFrameController extends DefaultFrameController
 		// this is needed to update the titlebar
 		tree.getView().addTreeSelectionListener(this);
 
-		//getContainer().setContentPane(this);
+		// getContainer().setContentPane(this);
 	}
 
 	/**
@@ -108,33 +111,40 @@ public class AddressbookFrameController extends DefaultFrameController
 	 */
 	public JComponent getComponent() {
 		JScrollPane treeScrollPane = new JScrollPane(tree.getView());
-		//treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		// treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2,
+		// 2));
 
 		JPanel panel = new JPanel();
-		panel.setLayout( new BorderLayout());
+		panel.setLayout(new BorderLayout());
 		panel.add(filterToolbar, BorderLayout.NORTH);
 		JScrollPane tableScrollPane = new JScrollPane(table.getView());
 		tableScrollPane.getViewport().setBackground(Color.white);
 		panel.add(tableScrollPane, BorderLayout.CENTER);
-		
+
 		JSplitPane splitPane = new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				treeScrollPane, panel);
 		splitPane.setBorder(null);
 
-		
-		getContainer().extendMenuFromFile(this,
-				"org/columba/addressbook/action/menu.xml");
-		
-//		try {
-//			((MenuPluginHandler) PluginManager.getInstance()
-//					.getHandler("org.columba.addressbook.menu"))
-//					.insertPlugins(getContainer().getMenuBar());
-//		} catch (PluginHandlerNotFoundException ex) {
-//			throw new RuntimeException(ex);
-//		}
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/addressbook/action/menu.xml");
+			getContainer().extendMenuFromURL(this, is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		getContainer().extendToolbar(this, AddressbookConfig.getInstance().get(
-				"main_toolbar").getElement("toolbar"));
+		// try {
+		// ((MenuPluginHandler) PluginManager.getInstance()
+		// .getHandler("org.columba.addressbook.menu"))
+		// .insertPlugins(getContainer().getMenuBar());
+		// } catch (PluginHandlerNotFoundException ex) {
+		// throw new RuntimeException(ex);
+		// }
+
+		getContainer().extendToolbar(
+				this,
+				AddressbookConfig.getInstance().get("main_toolbar").getElement(
+						"toolbar"));
 
 		getContainer().setInfoPanel(new ContainerInfoPanel());
 
@@ -148,7 +158,7 @@ public class AddressbookFrameController extends DefaultFrameController
 	public String getString(String sPath, String sName, String sID) {
 		return AddressbookResourceLoader.getString(sPath, sName, sID);
 	}
-	
+
 	/**
 	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
 	 */
@@ -160,9 +170,10 @@ public class AddressbookFrameController extends DefaultFrameController
 	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
 	 */
 	public void valueChanged(TreeSelectionEvent arg0) {
-		AddressbookTreeNode selectedFolder = (AddressbookTreeNode) arg0.getPath().getLastPathComponent();
-		
-		if( selectedFolder != null ) {
+		AddressbookTreeNode selectedFolder = (AddressbookTreeNode) arg0
+				.getPath().getLastPathComponent();
+
+		if (selectedFolder != null) {
 			getContainer().getFrame().setTitle(selectedFolder.getName());
 		}
 	}
