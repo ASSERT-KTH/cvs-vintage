@@ -1,4 +1,4 @@
-// $Id: GoTransitionToSource.java,v 1.11 2005/07/19 14:31:26 mkl Exp $
+// $Id: GoTransitionToGuard.java,v 1.1 2005/07/19 14:31:26 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,15 +33,17 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 
 /**
- * Rule for Transition->Source State.
+ * Rule for Transistion to Guard.
+ * 
+ * @author MarkusK
  */
-public class GoTransitionToSource extends AbstractPerspectiveRule {
+public class GoTransitionToGuard extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize("misc.transition.source-state");
+        return Translator.localize("misc.transition.guard");
     }
 
     /**
@@ -50,7 +52,7 @@ public class GoTransitionToSource extends AbstractPerspectiveRule {
     public Collection getChildren(Object parent) {
         if (Model.getFacade().isATransition(parent)) {
             Collection col = new ArrayList();
-            col.add(Model.getFacade().getSource(parent));
+            col.add(Model.getFacade().getGuard(parent));
             return col;
         }
         return null;
