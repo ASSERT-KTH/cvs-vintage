@@ -103,45 +103,38 @@ public class Extension implements IExtension {
 
 		} else {
 
-			if (isInternal())
-				try {
-					plugin = new DefaultPluginLoader().loadPlugin(id,
-							className, arguments);
-				} catch (Exception e) {
-					handleException(e);
-
-				} catch (Error e) {
-					handleException(e);
-
-				}
-			else {
-
-				String runtimeType = pluginMetadata.getRuntimeType();
-				if (runtimeType.equals("java")) {
-					try {
-						plugin = instanciateExternalJavaClass(arguments,
-								pluginDirectory, className);
-					} catch (Exception e) {
-						handleException(e);
-
-					} catch (Error e) {
-						handleException(e);
-
-					}
-				} else if (runtimeType.equals("groovy")) {
-
-					try {
+			try {
+				if (isInternal())
+					if (className.endsWith(".groovy")) {
+						// use Groovy classloader
 						plugin = instanciateGroovyClass(arguments,
 								pluginDirectory, className);
-					} catch (Exception e) {
-						handleException(e);
-					} catch (Error e) {
-						handleException(e);
+					} else {
+						// use default Java classlodaer
+						plugin = new DefaultPluginLoader().loadPlugin(id,
+								className, arguments);
 					}
-				} else
-					throw new IllegalArgumentException("runtime type "
-							+ runtimeType + " not supported");
+				else {
+					// external plugin
+					// -> use external classloader
+					if (className.endsWith(".groovy")) {
+						// use Groovy classloader, wrapped in external URL
+						// classloader
+						// TODO: still needs to be wrapped in external URL classloader,
+						// nevertheless, it seems to work this way - but don't know why?!
+						plugin = instanciateGroovyClass(arguments,
+								pluginDirectory, className);
+					} else {
+						// use external Java URL classloader
+						plugin = instanciateExternalJavaClass(arguments,
+								pluginDirectory, className);
+					}
 
+				}
+			} catch (Exception e) {
+				handleException(e);
+			} catch (Error e) {
+				handleException(e);
 			}
 
 			// remember instance
@@ -168,13 +161,16 @@ public class Extension implements IExtension {
 	}
 
 	/**
-	 * Instanciate external Java class which is specified using
-	 * the <code>plugin.xml</code> descriptor file.
+	 * Instanciate external Java class which is specified using the
+	 * <code>plugin.xml</code> descriptor file.
 	 * 
-	 * @param arguments			class constructor arguments
-	 * @param pluginDirectory	plugin directory
-	 * @param className			extension classname
-	 * @return					extension instance
+	 * @param arguments
+	 *            class constructor arguments
+	 * @param pluginDirectory
+	 *            plugin directory
+	 * @param className
+	 *            extension classname
+	 * @return extension instance
 	 * @throws Exception
 	 */
 	private IExtensionInterface instanciateExternalJavaClass(
@@ -202,10 +198,13 @@ public class Extension implements IExtension {
 	/**
 	 * Instaciate groovy script class.
 	 * 
-	 * @param arguments		 	class arguments
-	 * @param pluginDirectory	plugin directory
-	 * @param className			groovy classname
-	 * @return					extension interface
+	 * @param arguments
+	 *            class arguments
+	 * @param pluginDirectory
+	 *            plugin directory
+	 * @param className
+	 *            groovy classname
+	 * @return extension interface
 	 * @throws Exception
 	 */
 	private IExtensionInterface instanciateGroovyClass(Object[] arguments,
@@ -252,14 +251,15 @@ public class Extension implements IExtension {
 	}
 
 	/**
-	 * Generate array of all URLs which are used to prefill
-	 * the URLClassloader. 
+	 * Generate array of all URLs which are used to prefill the URLClassloader.
 	 * <p>
 	 * All jar-files in /lib directory are automatically added.
 	 * 
-	 * @param file			plugin directory
-	 * @param jarFile		jar-file containing the extension code
-	 * @return				URL array
+	 * @param file
+	 *            plugin directory
+	 * @param jarFile
+	 *            jar-file containing the extension code
+	 * @return URL array
 	 * @throws MalformedURLException
 	 */
 	private URL[] getURLs(File file, String jarFile)
