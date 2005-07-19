@@ -80,6 +80,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 	private boolean htmlMessage;
 
+	private boolean firstText;
+
 	/**
 	 * 
 	 */
@@ -109,6 +111,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		viewers.clear();
 		counter = 0;
 		htmlMessage = false;
+		firstText = true;
 
 		MimeTree mimePartTree = folder.getMimePartTree(uid);
 		MimePart parent = mimePartTree.getRootMimeNode();
@@ -197,8 +200,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				MimePart alternativePart = mp.getChild(j);
 				if (alternativePart.getHeader().getMimeType().equals(
 						new MimeType("text", "html"))) {
-					htmlMessage = true;
-					
 					ref.setAddress(alternativePart.getAddress());
 
 					panel = createPanel(ref);
@@ -300,6 +301,9 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
 						address, mediator.getFrameController());
 				viewers.add(viewer);
+				
+				if( firstText ) htmlMessage = ((TextViewer)viewer).isHtmlMessage();
+				firstText = false;
 			} else if (type.equalsIgnoreCase("image")) {
 
 				viewer = new ImageViewer(mediator);
@@ -352,42 +356,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	}
 
 	/**
-	 * @param mimePartTree
-	 */
-	private Integer[] getBodyPartAddress(MimeTree mimePartTree) {
-		MimePart bodyPart = null;
-		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
-				.getRoot().getElement("/options/html");
-
-		// Which Bodypart shall be shown? (html/plain)
-		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
-				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
-			bodyPart = mimePartTree.getFirstTextPart("html");
-		} else {
-			bodyPart = mimePartTree.getFirstTextPart("plain");
-		}
-
-		return bodyPart.getAddress();
-	}
-
-	private boolean hasHtmlPart(MimePart mimeTypes) {
-
-		if (mimeTypes.getHeader().getMimeType().equals(
-				new MimeType("text", "html")))
-			return true; // exit immediately
-
-		java.util.List children = mimeTypes.getChilds();
-
-		for (int i = 0; i < children.size(); i++) {
-			if (hasHtmlPart(mimeTypes.getChild(i)))
-				return true;
-		}
-
-		return false;
-
-	}
-
-	/**
 	 * @param viewer
 	 * @param ref
 	 * @return
@@ -411,8 +379,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 	private MailFolderCommandReference createNewReference(MimeHeader h,
 			MimePart mp, IMailbox folder, Object uid) throws Exception {
-
-		String fileName = h.getFileName();
 
 		InputStream is = folder.getMimePartBodyStream(uid, mp.getAddress());
 

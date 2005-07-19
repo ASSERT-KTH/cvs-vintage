@@ -470,5 +470,12 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		fileStream.close();
 		bodyStream.close();
 	}
+
+	/**
+	 * @return Returns the htmlMessage.
+	 */
+	public boolean isHtmlMessage() {
+		return htmlMessage;
+	}
 	
 }
