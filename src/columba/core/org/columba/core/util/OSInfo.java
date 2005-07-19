@@ -125,4 +125,11 @@ public class OSInfo {
     public static boolean isSolaris() {
         return "Solaris".equalsIgnoreCase(System.getProperty(OS_NAME));
     }
+    
+    /**
+     * Returns whether the underlying operating system is some MacOS.
+     */
+    public static boolean isMac() {
+    	return System.getProperty(OS_NAME).toLowerCase().indexOf("mac") != -1;
+    }
 }
