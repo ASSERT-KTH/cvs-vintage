@@ -10,5 +10,4 @@
      <properties menuid="menu_utilities" placeholderid="bottom"/>
     </extension>
   </extensionlist>
-  <runtime jar="HelloWorldAction.jar" type="java" />
 </plugin>

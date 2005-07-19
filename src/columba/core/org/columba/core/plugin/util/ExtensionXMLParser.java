@@ -158,14 +158,9 @@ public class ExtensionXMLParser {
 		String description = pluginElement
 				.getAttribute(XML_ATTRIBUTE_DESCRIPTION);
 
-		XmlElement runtime = pluginElement.getElement(XML_ELEMENT_RUNTIME);
-		String jar = runtime.getAttribute(XML_ELEMENT_JAR);
-		String type = runtime.getAttribute(XML_ATTRIBUTE_TYPE);
-
 		PluginMetadata pluginMetadata = new PluginMetadata(id, name,
 				description, version, category, new Boolean(enabled)
-						.booleanValue(), type);
-		pluginMetadata.setRuntimeJar(jar);
+						.booleanValue());
 
 		return pluginMetadata;
 	}

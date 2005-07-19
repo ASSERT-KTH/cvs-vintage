@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="My Hello World Plugin" description="Simple Example" id="org.columba.example.groovy.HelloWorldAction" version="1.0" category="Examples" enabled="true">
+<plugin name="My Hello World Plugin" 
+        description="Simple Example" 
+        id="org.columba.example.groovy.HelloWorldAction" 
+        version="1.0" 
+        category="Examples" 
+        enabled="true">
   <extensionlist id="org.columba.core.action">
     <extension id="GroovyHelloWorld" class="HelloWorld.groovy">
      <properties menuid="menu_utilities" placeholderid="bottom" />
     </extension>
   </extensionlist>
-  <runtime type="groovy" />
 </plugin>

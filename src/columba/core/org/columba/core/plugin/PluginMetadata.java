@@ -23,10 +23,7 @@ import java.util.Vector;
 
 public class PluginMetadata {
 
-	public final static String RUNTIME_TYPE_JAVA = "java";
-
-	public final static String RUNTIME_TYPE_GROOVY = "groovy";
-
+	
 	private String id;
 
 	private String name;
@@ -41,10 +38,6 @@ public class PluginMetadata {
 
 	private Vector extensions = new Vector();
 
-	private String runtimeType;
-
-	private String runtimeJar;
-	
 	private File directory;
 	
 	private String jar;
@@ -56,14 +49,13 @@ public class PluginMetadata {
 	}
 
 	public PluginMetadata(String id, String name, String description,
-			String version, String category, boolean enabled, String runtimeType) {
+			String version, String category, boolean enabled) {
 		this(id, name, enabled);
 
 		this.description = description;
 		this.version = version;
 		this.category = category;
 
-		this.runtimeType = runtimeType;
 	}
 
 	public void addExtension(ExtensionMetadata metadata) {
@@ -124,13 +116,6 @@ public class PluginMetadata {
 	}
 
 	/**
-	 * @return Returns the runtimeType.
-	 */
-	public String getRuntimeType() {
-		return runtimeType;
-	}
-
-	/**
 	 * @return Returns the version.
 	 */
 	public String getVersion() {
@@ -142,20 +127,6 @@ public class PluginMetadata {
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	/**
-	 * @return Returns the runtimeJar.
-	 */
-	public String getRuntimeJar() {
-		return runtimeJar;
-	}
-
-	/**
-	 * @param runtimeJar The runtimeJar to set.
-	 */
-	public void setRuntimeJar(String runtimeJar) {
-		this.runtimeJar = runtimeJar;
 	}
 
 	/**

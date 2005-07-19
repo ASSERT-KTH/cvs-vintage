@@ -40,6 +40,8 @@ import org.columba.core.plugin.util.ExternalClassLoader;
  */
 public class Extension implements IExtension {
 
+	private static final String FILE_PLUGIN_JAR = "plugin.jar";
+
 	private static final java.util.logging.Logger LOG = java.util.logging.Logger
 			.getLogger("org.columba.core.plugin");
 
@@ -179,7 +181,8 @@ public class Extension implements IExtension {
 		IExtensionInterface plugin;
 		URL[] urls = null;
 
-		String jarFilename = pluginMetadata.getRuntimeJar();
+		// all Java plugins package their class-files in "plugin.jar"
+		String jarFilename = Extension.FILE_PLUGIN_JAR;
 
 		try {
 			urls = getURLs(pluginDirectory, jarFilename);
