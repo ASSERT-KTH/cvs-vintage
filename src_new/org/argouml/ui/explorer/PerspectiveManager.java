@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.25 2005/07/19 18:17:40 mvw Exp $
+// $Id: PerspectiveManager.java,v 1.26 2005/07/19 18:43:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -294,7 +294,6 @@ public class PerspectiveManager {
                 loadDefaultPerspectives();
             }
         } catch (Exception e1) {
-            int i = 0;
         }
     }
 
