@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: subsystemlogging.xml,v 1.2 2005/07/18 17:21:50 linus Exp $ -->
+<!-- $Id: subsystemlogging.xml,v 1.3 2005/07/19 06:57:20 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -326,11 +326,11 @@ file://home/username/<emphasis>filename.lcf</emphasis>              <co id="ex.u
 &lt;!-- Run ArgoUML from compiled sources                                   --&gt;
 &lt;!-- =================================================================== --&gt;
 &lt;target name="run" depends="compile"&gt;
-    &lt;echo message="--- Executing ${Name} ---"/&gt;
+    &lt;echo message="--- Executing &dollar;{Name} ---"/&gt;
     &lt;!-- Uncomment the sysproperty and change the value if you want --&gt;
     &lt;java classname="org.argouml.application.Main"
           fork="yes"
-          classpath="${build.dest};${classpath}"&gt;
+          classpath="&dollar;{build.dest};&dollar;{classpath}"&gt;
           <emphasis>&lt; sysproperty key="log4j.configuration"
                        value="org/argouml/resource/<emphasis>filename.lcf</emphasis>"&gt;&lt;/sysproperty&gt;</emphasis>
     &lt;/java&gt;

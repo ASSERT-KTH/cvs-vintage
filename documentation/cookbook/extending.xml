@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: extending.xml,v 1.1 2005/06/18 13:47:23 mvw Exp $ -->
+<!-- $Id: extending.xml,v 1.2 2005/07/19 06:57:20 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -141,7 +141,7 @@
                 <listitem><para> Go to the menu
                   <command>Edit->Settings</command> and look at the
                   <command>Environment</command> tab. Find the entry
-                  labeled <literal>${argo.ext.dir}</literal>. Create that
+                  labeled <literal>&dollar;{argo.ext.dir}</literal>. Create that
                   directory if it does not already exist. </para></listitem>
                 <listitem><para> Copy the plug-in jar and any other jars
                   required by it into that directory. </para></listitem>
