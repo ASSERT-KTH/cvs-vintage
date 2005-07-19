@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.58 2005/01/30 20:47:34 linus Exp $
+// $Id: PropPanelClassifier.java,v 1.59 2005/07/19 18:41:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import javax.swing.border.TitledBorder;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.behavior.common_behavior.ActionNewReception;
@@ -381,15 +380,6 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
             structuralFeatureScroll = new JScrollPane(list);
         }
         return structuralFeatureScroll;
-    }
-
-    /**
-     * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
-     */
-    public void targetSet(TargetEvent e) {
-        super.targetSet(e);
-        Object target = TargetManager.getInstance().getModelTarget();
-        getActionNewReception().putValue(ActionNewReception.CLASSIFIER, target);
     }
 
     /**

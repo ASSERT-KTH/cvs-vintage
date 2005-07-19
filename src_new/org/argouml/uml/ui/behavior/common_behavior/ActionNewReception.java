@@ -1,4 +1,4 @@
-// $Id: ActionNewReception.java,v 1.10 2005/06/03 10:10:47 bobtarling Exp $
+// $Id: ActionNewReception.java,v 1.11 2005/07/19 18:41:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,12 +42,6 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 public class ActionNewReception extends AbstractActionNewModelElement {
 
     /**
-     * CLASSIFIER is the name of the property that
-     * holds the Classifier of this reception.
-     */
-    public static final String CLASSIFIER = "classifier";
-
-    /**
      * The constructor.
      */
     public ActionNewReception() {
@@ -60,7 +54,8 @@ public class ActionNewReception extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        Object classifier = getValue(CLASSIFIER);
+        Object classifier =  
+            TargetManager.getInstance().getModelTarget();
         if (!Model.getFacade().isAClassifier(classifier)) {
             throw new IllegalArgumentException(
                     "Argument classifier is null or not a classifier. Got: "
