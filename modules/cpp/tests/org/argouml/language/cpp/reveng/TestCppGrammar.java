@@ -1,4 +1,4 @@
-// $Id: TestCppGrammar.java,v 1.3 2005/05/17 23:07:14 euluis Exp $
+// $Id: TestCppGrammar.java,v 1.4 2005/07/19 00:16:17 euluis Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,7 @@ public class TestCppGrammar extends TestCase {
         modelerCtrl = MockControl.createStrictControl(Modeler.class);
         modeler = (Modeler) modelerCtrl.getMock();
     }
+    
     /**
      * Test parsing of file which doesn't need preprocessing.
      * @throws Exception something went wrong
@@ -83,8 +84,11 @@ public class TestCppGrammar extends TestCase {
         
         modeler.enterNamespaceScope("pack");
         modeler.beginClassDefinition(CPPvariables.OT_CLASS, "SimpleClass");
+        modeler.beginMemberDeclaration();
         modeler.accessSpecifier("public");
+        modeler.endMemberDeclaration();
         // virtual int newOperation();
+        modeler.beginMemberDeclaration();
         modeler.beginFunctionDeclaration();
         List declSpecs = new ArrayList(); declSpecs.add("virtual");
         modeler.declarationSpecifiers(declSpecs);
@@ -92,10 +96,13 @@ public class TestCppGrammar extends TestCase {
         modeler.simpleTypeSpecifier(sts);
         modeler.directDeclarator("newOperation");
         modeler.endFunctionDeclaration();
+        modeler.endMemberDeclaration();
         // double newAttr;
         List sts2 = new ArrayList(); sts2.add("double");
+        modeler.beginMemberDeclaration();
         modeler.simpleTypeSpecifier(sts2);
         modeler.directDeclarator("newAttr");
+        modeler.endMemberDeclaration();
         modeler.endClassDefinition();
         modeler.exitNamespaceScope();
         
@@ -103,6 +110,8 @@ public class TestCppGrammar extends TestCase {
         modeler.beginFunctionDefinition();
         modeler.simpleTypeSpecifier(sts); // reuse from above
         modeler.functionDirectDeclarator("SimpleClass::newOperation");
+        modeler.beginCompoundStatement();
+        modeler.endCompoundStatement();
         modeler.endFunctionDefinition();
         modeler.exitNamespaceScope();
         
@@ -141,6 +150,15 @@ public class TestCppGrammar extends TestCase {
      */
     public void testCastExpressions() throws Exception {
         parseFile("CastExpressions.cpp");
+    }
+    
+    /**
+     * Test parsing the DerivedFromAbstract.cxx translation unit.
+     * 
+     * @throws Exception something went wrong
+     */
+    public void testParseDerivedFromAbstract() throws Exception {
+        parseFile("DerivedFromAbstract.cxx");
     }
 
     /**
