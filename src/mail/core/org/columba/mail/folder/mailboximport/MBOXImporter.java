@@ -16,13 +16,17 @@
 
 package org.columba.mail.folder.mailboximport;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.SteerableInputStream;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.mbox.MboxMessage;
+import org.columba.mail.folder.mbox.MboxParser;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.io.FileSource;
+import org.columba.ristretto.io.SourceInputStream;
 
 public class MBOXImporter extends AbstractMailboxImporter {
     public MBOXImporter() {
@@ -39,44 +43,21 @@ public class MBOXImporter extends AbstractMailboxImporter {
 
     public void importMailboxFile(File file, WorkerStatusController worker,
         AbstractMessageFolder destFolder) throws Exception {
-        boolean success = false;
-
-        StringBuffer strbuf = new StringBuffer();
-
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        String str;
-
-        // parse line by line
-        while ((str = in.readLine()) != null) {
-            // if user cancelled task exit immediately			
-            if (worker.cancelled()) {
-                return;
-            }
-
-            // if line doesn't start with "From" or line length is 0
-            //  -> save everything in StringBuffer
-            if (!str.startsWith("From ") || (str.length() == 0)) {
-                strbuf.append(str + "\n");
-            } else {
-                //  -> import message in Columba
-                if (strbuf.length() != 0) {
-                    // found new message
-                    saveMessage(strbuf.toString(), worker,
-                        getDestinationFolder());
-
-                    success = true;
-                }
-
-                strbuf = new StringBuffer();
-            }
-        }
-
-        // save last message, because while loop aborted before being able to save message
-        if (success && (strbuf.length() > 0)) {
-            saveMessage(strbuf.toString(), worker, getDestinationFolder());
-        }
-
-        in.close();
+    	FileSource mboxSource = new FileSource(file);
+    	MboxMessage[] messages = MboxParser.parseMbox(mboxSource);
+    	mboxSource.close();
+    	
+    	SteerableInputStream in = new SteerableInputStream(new FileInputStream(file));
+    	
+    	worker.setProgressBarMaximum(messages.length);
+    	for( int i=0; i<messages.length && !worker.cancelled(); i++) {
+    		worker.setProgressBarValue(i);
+    		in.setPosition(messages[i].getStart());
+    		in.setLengthLeft(messages[i].getLength());
+    		destFolder.addMessage(in);
+    	}
+    	
+    	in.finalClose();
     }
 
     public String getDescription() {

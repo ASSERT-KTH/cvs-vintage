@@ -42,7 +42,7 @@ public class MboxParser {
 		while (it.hasNext()) {
 			start = ((Integer) it.next()).intValue();
 			messages.add(new MboxMessage(new Integer(newUid++), lastEnd,
-					start - 1));
+					start - 1 - lastEnd));
 			lastEnd = findNext(mailboxSource, start + 5, '\n') + 1;
 		}
 
