@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewEvent.java,v 1.8 2005/01/09 14:59:07 linus Exp $
+// $Id: PopupMenuNewEvent.java,v 1.9 2005/07/19 12:16:57 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import javax.swing.JPopupMenu;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionRemoveModelElement;
 import org.argouml.uml.ui.UMLMutableLinkedList;
+import org.argouml.uml.ui.behavior.activity_graphs.ActionAddEventAsTrigger;
 
 /**
  * @since Dec 15, 2002
@@ -51,6 +52,11 @@ public class PopupMenuNewEvent extends JPopupMenu {
     public PopupMenuNewEvent(String role, UMLMutableLinkedList list) {
         super();
 
+        JMenu select = new JMenu();
+        select.setText(Translator.localize("action.select"));
+        ActionAddEventAsTrigger.SINGLETON.setTarget(list.getTarget());
+        select.add(ActionAddEventAsTrigger.SINGLETON);
+        add(select);
         JMenu newMenu = new JMenu();
         newMenu.setText(Translator.localize("action.new"));
         newMenu.add(ActionNewCallEvent.getSingleton());
