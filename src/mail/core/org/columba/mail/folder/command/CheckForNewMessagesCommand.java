@@ -16,10 +16,12 @@
 package org.columba.mail.folder.command;
 
 import java.awt.Toolkit;
+import java.io.IOException;
 
 import javax.swing.Action;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
@@ -27,6 +29,7 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.ristretto.imap.IMAPException;
 
 /**
  * Check for new messages in IMAPFolder.
@@ -68,7 +71,12 @@ public class CheckForNewMessagesCommand extends Command {
 		int unseen = inboxFolder.getMessageFolderInfo().getUnseen();
 
 		// check for new headers
-		inboxFolder.synchronizeHeaderlist();
+		try {
+			inboxFolder.synchronizeHeaderlist();
+		} catch (IOException e) {
+			worker.cancel();
+			throw new CommandCancelledException(e);
+		} 
 
 		// Get the new numbers
 		int newTotal = inboxFolder.getMessageFolderInfo().getExists();
