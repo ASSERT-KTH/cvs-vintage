@@ -90,6 +90,11 @@ public class ReplyCommand extends Command {
 
         // model->view update
         controller.updateComponents(true);
+        
+        // Set the focus to the editor pane and set cursor to the top
+        controller.getEditorController().getViewUIComponent().requestFocus();
+        controller.getEditorController().getViewUIComponent().moveCaretPosition(0);
+        controller.getEditorController().getViewUIComponent().select(0,0);
     }
 
     public void execute(WorkerStatusController worker) throws Exception {
