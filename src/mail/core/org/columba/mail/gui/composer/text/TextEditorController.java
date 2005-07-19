@@ -21,6 +21,7 @@ import java.util.Observer;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
@@ -300,7 +301,7 @@ public class TextEditorController extends AbstractEditorController
     /* (non-Javadoc)
      * @see org.columba.mail.gui.composer.AbstractEditorController#getViewUIComponent()
      */
-    public JComponent getViewUIComponent() {
+    public JTextPane getViewUIComponent() {
         // Returns the view encapsulated in a scroll pane. This means
         // that the caller shouldn't add the scroll pane him self
         //return new JScrollPane(view);

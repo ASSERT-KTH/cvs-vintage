@@ -19,6 +19,7 @@ import java.awt.Font;
 import java.util.Observable;
 
 import javax.swing.JComponent;
+import javax.swing.JTextPane;
 
 import org.columba.core.gui.focus.FocusOwner;
 
@@ -70,7 +71,7 @@ public abstract class AbstractEditorController extends Observable
  *
  * @return        GUI component to be added to parent frame
  */
-    public abstract JComponent getViewUIComponent();
+    public abstract JTextPane getViewUIComponent();
 
     /**
  * Enables or disables the editor view.
