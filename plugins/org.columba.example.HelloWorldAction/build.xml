@@ -43,24 +43,17 @@
 	<echo message="you are running java version ${ant.java.version}"/>
 	<mkdir dir="${build}"/>
  </target>
-	
- <!-- copy all resources to build/ directory -->
- <target name="copy-resources" depends="init" description="Copies all resources to the ${build} folder">
- 	<!-- enable if we need a res/ directory here -->
- 	
- 	<!-- how can we make this optional, depending on the variable
- 	     plugin_resources
- 	-->
- 	
-	<!--
+    
+ <!-- copy all resources to build/ directory if the variable plugin_resources is set in the build.properties file -->
+ <target name="copy-resources" if="plugin_resources" depends="init" description="Copies all resources to the ${build} folder">
+    <echo message="copy ressources now"/>
  	<copy todir="${build}">
 		<fileset dir="${plugin_src}/${plugin_resources}">
 		        <include name="**/*.xml"/>
 			<include name="**/*.png"/>
 		</fileset>
 	</copy>
-	-->
- </target>
+ </target>   
 	
  <!-- compile the classes -->
  <target name="compile" depends="copy-resources">
