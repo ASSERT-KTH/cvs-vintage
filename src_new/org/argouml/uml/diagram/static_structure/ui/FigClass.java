@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.154 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigClass.java,v 1.155 2005/07/20 18:02:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,8 +80,8 @@ public class FigClass extends FigNodeModelElement
     ////////////////////////////////////////////////////////////////
     // constants
 
-    //These are the positions of child figs inside this fig
-    //They mst be added in the constructor in this order.
+    //These are the positions of child figs inside this fig (counting from 0)
+    //They must be added in the constructor in this order.
     private static final int OPERATIONS_POSN = 3;
     private static final int ATTRIBUTES_POSN = 4;
 
