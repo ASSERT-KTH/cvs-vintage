@@ -203,6 +203,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
 			item.setBoolean(OutgoingItem.USE_DEFAULT_ACCOUNT,
 					defaultAccountCheckBox.isSelected());
+			
+			item.getRoot().notifyObservers();
 		}
 	}
 

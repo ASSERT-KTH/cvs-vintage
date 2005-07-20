@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
@@ -110,7 +112,7 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz
  */
-public class IMAPServer implements IMAPListener {
+public class IMAPServer implements IMAPListener, Observer {
 
 	private static final int STEP_SIZE = 50;
 
@@ -180,6 +182,8 @@ public class IMAPServer implements IMAPListener {
 		this.item = item;
 		this.imapRoot = root;
 
+		item.getRoot().addObserver(this);
+		
 		// create IMAP protocol
 		protocol = new IMAPProtocol(item.get("host"), item.getInteger("port"));
 		// register interest on status updates
@@ -1919,5 +1923,9 @@ public class IMAPServer implements IMAPListener {
 	 */
 	public ImapItem getItem() {
 		return item;
+	}
+
+	public void update(Observable o, Object arg) {
+		protocol = new IMAPProtocol(item.get("host"), item.getInteger("port"));		
 	}
 }

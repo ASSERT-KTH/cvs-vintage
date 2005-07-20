@@ -200,6 +200,8 @@ public class IncomingServerPanel extends DefaultPanel implements
             
             serverItem.setBoolean(IncomingItem.USE_DEFAULT_ACCOUNT, defaultAccountCheckBox
                     .isSelected());
+            
+            serverItem.getRoot().notifyObservers();
         }
     }
     

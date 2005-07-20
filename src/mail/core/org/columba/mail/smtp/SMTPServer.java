@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JOptionPane;
 
@@ -67,19 +69,21 @@ import org.columba.ristretto.smtp.SMTPProtocol;
  * @author fdietz, Timo Stich <tstich@users.sourceforge.net>
  *  
  */
-public class SMTPServer  {
+public class SMTPServer implements Observer  {
 
 	private String[] capas;
 
 	protected SMTPProtocol protocol;
 
-	protected AccountItem accountItem;
-
+	protected OutgoingItem smtpItem;
+	
 	protected Identity identity;
 
 	protected String fromAddress;
 
 	private boolean usingSSL;
+
+	private AccountItem accountItem;
 
 	/**
 	 * Constructor for SMTPServer.
@@ -88,14 +92,13 @@ public class SMTPServer  {
 		super();
 
 		this.accountItem = accountItem;
-
 		identity = accountItem.getIdentity();
 
 		// initialise protocol layer
-		OutgoingItem smtpItem = accountItem.getSmtpItem();
-		String host = smtpItem.get("host");
+		smtpItem = accountItem.getSmtpItem();
 
-		protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
+		smtpItem.getRoot().addObserver(this);		
+		protocol = new SMTPProtocol(smtpItem.get("host"), smtpItem.getInteger("port"));
 	}
 
 	private void ensureConnected() throws IOException, SMTPException, CommandCancelledException {
@@ -123,9 +126,6 @@ public class SMTPServer  {
 		// Init Values
 		// user's email address
 		fromAddress = identity.getAddress().getMailAddress();
-
-		// POP3 server host name
-		OutgoingItem smtpItem = accountItem.getSmtpItem();
 
 		// Sent Folder
 		SpecialFoldersItem specialFoldersItem = accountItem
@@ -155,8 +155,7 @@ public class SMTPServer  {
 		if (!authenticated) {
 			username = smtpItem.get("user");
 			password = Blowfish.decrypt(smtpItem.getRoot().getAttribute("password", ""));
-			savePassword = accountItem.getSmtpItem()
-					.getBoolean("save_password");
+			savePassword = smtpItem.getBoolean("save_password");
 
 			if (username.length() == 0) {
 				// there seems to be no username set in the smtp-options
@@ -177,7 +176,7 @@ public class SMTPServer  {
 				passDialog.showDialog(MessageFormat.format(MailResourceLoader
 						.getString("dialog", "password", "enter_password"),
 						new Object[] { username,
-								accountItem.getSmtpItem().get("host") }),
+								smtpItem.get("host") }),
 						new String(password), savePassword);
 
 				if (passDialog.success()) {
@@ -293,8 +292,6 @@ public class SMTPServer  {
 	 * @throws SMTPException
 	 */
 	private void doSSL() throws CommandCancelledException, IOException, SMTPException {
-		OutgoingItem smtpItem = accountItem.getSmtpItem();
-
 		if (smtpItem.getBoolean("enable_ssl")) {
 			if (isSupported("STARTTLS")) {
 				try {
@@ -530,5 +527,9 @@ public class SMTPServer  {
 	
 	public void dropConnection() throws IOException {
 		protocol.dropConnection();
+	}
+
+	public void update(Observable o, Object arg) {
+		protocol = new SMTPProtocol(smtpItem.get("host"), smtpItem.getInteger("port"));
 	}
 }

@@ -25,6 +25,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
@@ -59,7 +61,7 @@ import org.columba.ristretto.pop3.UidListEntry;
  *
  * @author freddy, tstich
  */
-public class POP3Store {
+public class POP3Store implements Observer {
     
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.pop3");
@@ -82,6 +84,8 @@ public class POP3Store {
     public POP3Store(PopItem popItem) {
         super();
         this.popItem = popItem;
+        
+        popItem.getRoot().addObserver(this);
         
         protocol = new POP3Protocol(popItem.get("host"), popItem.getInteger("port"));
         
@@ -544,4 +548,9 @@ public class POP3Store {
 	public void dropConnection() throws IOException {
 		protocol.dropConnection();
 	}
+	
+	public void update(Observable o, Object arg) {
+        protocol = new POP3Protocol(popItem.get("host"), popItem.getInteger("port"));				
+	}
+	
 }
