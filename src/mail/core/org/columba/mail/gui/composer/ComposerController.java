@@ -40,6 +40,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
@@ -310,9 +311,13 @@ public class ComposerController extends DefaultFrameController implements
 		}
 
 		// re-paint composer-view
-		// FIXME showAttachmentPanel validate
-		if (getContainer() != null)
-			getContainer().getFrame().validate();
+		SwingUtilities.invokeLater( new Runnable() {
+			public void run() {
+				if (getContainer() != null)
+					getContainer().getFrame().validate();				
+			}
+		}
+		);
 
 	}
 
