@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Greedy_Delete.bsh,v 1.4 2004/05/26 18:52:09 orutherfurd Exp $
+ * $Id: Greedy_Delete.bsh,v 1.5 2005/07/20 13:31:08 orutherfurd Exp $
  */
 
 /**
@@ -18,7 +18,7 @@
 void greedyDelete(View view, boolean onlyFullTabs)
 {
 	JEditTextArea textArea = view.getTextArea();
-	Buffer buffer = textArea.getBuffer();
+	JEditBuffer buffer = textArea.getBuffer();
 	int caret = textArea.getCaretPosition();
 	int caretLine = textArea.getCaretLine();
 	int lineStart = textArea.getLineStartOffset(caretLine);

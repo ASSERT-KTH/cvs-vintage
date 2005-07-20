@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2002-2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Greedy_Backspace.bsh,v 1.4 2004/06/03 22:09:22 orutherfurd Exp $
+ * $Id: Greedy_Backspace.bsh,v 1.5 2005/07/20 13:31:07 orutherfurd Exp $
  */
 
 /**
@@ -18,7 +18,8 @@
 void greedyBackspace(View view, boolean onlyFullTabs)
 {
 	JEditTextArea textArea = view.getTextArea();
-	Buffer buffer = textArea.getBuffer();
+	JEditBuffer buffer = textArea.getBuffer();
+
 	int caret = textArea.getCaretPosition();
 	int caretLine = textArea.getCaretLine();
 	int lineStart = textArea.getLineStartOffset(caretLine);

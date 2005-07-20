@@ -9,12 +9,12 @@
  * :mode=beanshell:tabSize=4:indentSize=4:maxLineLen=0:noTabs=false:
  * :indentOnTab=true:indentOnEnter=true:folding=explicit:collapseFolds=1:
  *
- * $Id: Reverse_Lines.bsh,v 1.1 2004/03/19 15:58:00 spestov Exp $
+ * $Id: Reverse_Lines.bsh,v 1.2 2005/07/20 13:31:08 orutherfurd Exp $
  */
 
 void reverseLines(textArea)
 {
-	Buffer buffer = textArea.getBuffer();
+	JEditBuffer buffer = textArea.getBuffer();
 	Selection[] selections = textArea.getSelection();
 
 	// doesn't work with rectangular selections, check for them up-front
