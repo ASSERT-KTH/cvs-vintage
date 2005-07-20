@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.24 2005/03/17 19:05:55 mvw Exp $
+// $Id: FigState.java,v 1.25 2005/07/20 18:08:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,13 @@ import org.tigris.gef.presentation.FigText;
  */
 public abstract class FigState extends FigStateVertex {
 
+    protected final static int SPACE_TOP = 1;
+    protected final static int SPACE_MIDDLE = 5;
+    protected final static int DIVIDER_Y = 4;
+    protected final static int SPACE_BOTTOM = 6;
+ 
+    protected static final int MARGIN = 2;
+    
     /**
      * the text inside the state
      */
@@ -64,7 +71,7 @@ public abstract class FigState extends FigStateVertex {
         internal.setLineWidth(0);
         internal.setFilled(false);
         internal.setExpandOnly(true);
-        internal.setMultiLine(true);
+        internal.setReturnAction(FigText.INSERT);
         internal.setJustification(FigText.JUSTIFY_LEFT);
     }
 
