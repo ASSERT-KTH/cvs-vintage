@@ -131,6 +131,8 @@ public class ComposerController extends DefaultFrameController implements
 
 	private SignatureView signatureView;
 
+	private boolean attachmentPanelShown;
+
 	public ComposerController() {
 		this(new ComposerModel(), FrameModel.getInstance()
 				.createCustomViewItem("Composer"));
@@ -271,6 +273,9 @@ public class ComposerController extends DefaultFrameController implements
 	 * attachment panel. Otherwise, hide the attachment panel.
 	 */
 	public void showAttachmentPanel() {
+		if( attachmentPanelShown == getAttachmentController().getView().count() > 0 )
+			return;
+		
 		// remove all components from container
 		centerPanel.removeAll();
 
@@ -304,10 +309,14 @@ public class ComposerController extends DefaultFrameController implements
 			int pos = viewItem.getIntegerWithDefault("splitpanes",
 					"attachment", 200);
 			attachmentSplitPane.setDividerLocation(pos);
+			
+			attachmentPanelShown = true;
 		} else {
 			// no attachments
 			// -> only show bodytext editor
 			centerPanel.add(editorPanel, BorderLayout.CENTER);
+
+			attachmentPanelShown = false;
 		}
 
 		// re-paint composer-view
@@ -417,6 +426,13 @@ public class ComposerController extends DefaultFrameController implements
 
 		centerPanel.add(topPanel, BorderLayout.NORTH);
 
+		// no attachments
+		// -> only show bodytext editor
+		centerPanel.add(editorPanel, BorderLayout.CENTER);
+
+		attachmentPanelShown = false;
+		
+		/*
 		JScrollPane attachmentScrollPane = new JScrollPane(
 				getAttachmentController().getView());
 		attachmentScrollPane
@@ -430,11 +446,11 @@ public class ComposerController extends DefaultFrameController implements
 		attachmentSplitPane.setBorder(null);
 
 		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
-
 		ViewItem viewItem = getViewItem();
 		int pos = viewItem.getIntegerWithDefault("splitpanes", "attachment",
 				200);
 		attachmentSplitPane.setDividerLocation(pos);
+		*/
 
 	}
 
