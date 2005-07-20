@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.3 2005/06/09 11:42:32 benoitf Exp $
+ * $Id: ConfigurationRepository.java,v 1.4 2005/07/20 12:28:31 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -252,6 +252,10 @@ public class ConfigurationRepository {
         if (initDone) {
             return;
         }
+
+        // Configure logger
+        TraceCarol.configure();
+
         Properties carolDefaultProperties = getDefaultProperties();
         Properties carolProperties = getPropertiesFromURL(carolPropertiesFileURL);
 
