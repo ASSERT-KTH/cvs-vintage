@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.37 2005/07/10 09:51:49 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.38 2005/07/20 11:51:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.model.UmlException;
 import org.argouml.model.XmiReader;
-import org.argouml.model.uml.NSUMLModelFacade;
 import org.xml.sax.InputSource;
 
 /**
