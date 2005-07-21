@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.91 2005/07/15 20:14:26 mvw Exp $
+// $Id: FigAssociation.java,v 1.92 2005/07/21 08:05:00 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Layer;
-import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.base.PathConvPercentPlusConst;
 import org.tigris.gef.presentation.ArrowHead;
 import org.tigris.gef.presentation.ArrowHeadComposite;
@@ -101,7 +100,7 @@ public class FigAssociation extends FigEdgeModelElement {
         // the association
         middleGroup.addFig(getNameFig());
         middleGroup.addFig(getStereotypeFig());
-        addPathItem(middleGroup, new PathConvPercent(this, 50, 25));
+        addPathItem(middleGroup, new PathConvPercent2(this, middleGroup, 50, 25));
 
         srcMult = new FigText(10, 10, 90, 20);
         srcMult.setFont(getLabelFont());
