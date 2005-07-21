@@ -24,7 +24,7 @@
 // File: PathConvPercent.java
 // Classes: PathConvPercent
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConvPercent2.java,v 1.1 2005/07/21 08:04:15 mkl Exp $
+// $Id: PathConvPercent2.java,v 1.2 2005/07/21 11:02:54 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -101,9 +101,20 @@ public class PathConvPercent2 extends PathConv {
         int width = itemFig.getHalfWidth();
         
         if (recipnumerator != 0) {
-            double factor = (Math.tanh(((double)recipdenominator / (double)recipnumerator)));
+            double slope = (double)recipdenominator / (double)recipnumerator;
+            
+            double factor = tanh(slope);
             res.x += (Math.abs(factor) * width);
         }
         else res.x += width;
+    }
+    
+    /** 
+     * calculate the tangens hyperbolicus
+     * @param x
+     * @return tangens hyberbolicus
+     */
+    private double tanh(double x) {
+        return ((Math.exp(x)-Math.exp(-x))/2)/((Math.exp(x)+Math.exp(-x))/2);
     }
 }
