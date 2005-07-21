@@ -9,30 +9,54 @@
 	</target>
 	
 	<target name="mail" description="Builds all mail plugins">
-		
-		<ant target="release" inheritall="false" dir="./org.columba.mail.EudoraMailImportFilter"/>
-		<!-- ant target="release" inheritall="false" dir="./org.columba.mail.SpamAssassin"/ !-->
-		<ant target="release" inheritall="false" dir="./org.columba.mail.ToOrCcFilter"/>
-		<ant target="release" inheritall="false" dir="./org.columba.mail.MozillaMailImportFilter"/>
-		<ant target="release" inheritall="false" dir="./org.columba.mail.PlaySoundFilterAction"/>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.mail.EudoraMailImportFilter"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.mail.ToOrCcFilter"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.mail.MozillaMailImportFilter"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.mail.PlaySoundFilterAction"/>
+		</ant>
 	</target>
 	
 	<target name="core" description="Builds all core plugins">
-		<ant target="release" inheritall="false" dir="./org.columba.core.KunststoffLookAndFeel"/>
-		<ant target="release" inheritall="false" dir="./org.columba.core.MetouiaLookAndFeel"/>
-		<ant target="release" inheritall="false" dir="./org.columba.core.ThinColumbaLookAndFeel"/>
-		<ant target="release" inheritall="false" dir="./org.columba.core.HippoLookAndFeel"/>
-		<ant target="release" inheritall="false" dir="./org.columba.core.LiquidLookAndFeel"/>
-		<ant target="release" inheritall="false" dir="./org.columba.core.LogDisplay"/>
-		<ant target="release" inheritall="false" dir="./org.columba.core.WinLAFLookAndFeel"/>
-		<!--ant target="release" inheritall="false" dir="./org.columba.core.GroovyInterpreter"/ !-->
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.core.KunststoffLookAndFeel"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.core.MetouiaLookAndFeel"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.core.ThinColumbaLookAndFeel"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.core.HippoLookAndFeel"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.core.LiquidLookAndFeel"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.core.WinLAFLookAndFeel"/>
+		</ant>
 	</target>
 	
 	<target name="examples" description="Builds all example plugins">
-		<ant target="release" inheritall="false" dir="./org.columba.example.ConfigExample"/>
-		<ant target="release" inheritall="false" dir="./org.columba.example.CSVAddressbookImportFilter"/>
-		<ant target="release" inheritall="false" dir="./org.columba.example.HelloWorldAction"/>
-		<ant target="release" inheritall="false" dir="./org.columba.example.MBOXMailImportFilter"/>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.example.HelloWorldAction"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.example.ConfigExample"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.example.CSVAddressbookImportFilter"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.example.MBOXMailImportFilter"/>
+		</ant>
 	</target>
 	
 	<target name="all" depends="core,mail,examples"/>
