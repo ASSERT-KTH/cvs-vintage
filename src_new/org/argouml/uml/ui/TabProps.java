@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.66 2005/07/06 20:38:41 mvw Exp $
+// $Id: TabProps.java,v 1.67 2005/07/21 06:50:54 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -379,6 +379,8 @@ public class TabProps
      * @return A new prop panel to display any model element of the given type
      */
     private TabModelTarget createPropPanel(Object modelElement) {
+        
+       
 
         // Create prop panels for diagrams
         if (modelElement instanceof UMLActivityDiagram) {
@@ -402,6 +404,14 @@ public class TabProps
         if (modelElement instanceof UMLUseCaseDiagram) {
             return new PropPanelUMLUseCaseDiagram();
         }
+        
+        // if (1 == 1) return null;
+        
+        if (Model.getFacade().isASubmachineState(modelElement)) { 
+            return new PropPanelSubmachineState();}
+
+        if (Model.getFacade().isASubactivityState(modelElement)) { 
+                return new PropPanelSubactivityState();}
         
         // Create prop panels for model elements
         if (Model.getFacade().isAAbstraction(modelElement)) { 
@@ -514,10 +524,6 @@ public class TabProps
                 return new PropPanelStimulus();}
         if (Model.getFacade().isAStubState(modelElement)) { 
                 return new PropPanelStubState();}
-        if (Model.getFacade().isASubactivityState(modelElement)) { 
-                return new PropPanelSubactivityState();}
-        if (Model.getFacade().isASubmachineState(modelElement)) { 
-                return new PropPanelSubmachineState();}
         if (Model.getFacade().isASubsystem(modelElement)) { 
                 return new PropPanelSubsystem();}
         if (Model.getFacade().isASynchState(modelElement)) { 
