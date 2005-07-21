@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.11 2005/03/18 13:33:04 mkl Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.12 2005/07/21 12:49:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,10 @@ import java.beans.PropertyChangeListener;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.AddAssociationEvent;
+import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
+import org.argouml.model.RemoveAssociationEvent;
 
 /**
  * All events going to the Explorer must pass through here first!<p>
@@ -170,24 +173,40 @@ public final class ExplorerEventAdaptor
         }
 
         // uml model events
-        if (pce.getPropertyName()
-                .equals("umlModelStructureChanged")) {
-            treeModel.structureChanged();
-        }
+//        - No longer fired from ExplorerNSUMLEventAdapter
+//        if (pce.getPropertyName() 
+//                .equals("umlModelStructureChanged")) {
+//            treeModel.structureChanged();
+//        }
 
-        if (pce.getPropertyName()
-                .equals("modelElementRemoved")) {
-            treeModel.modelElementRemoved(pce.getNewValue());
+//        if (pce.getPropertyName()
+//                .equals("modelElementRemoved")) {
+//            treeModel.modelElementRemoved(pce.getNewValue());
+//        }
+        if (pce instanceof RemoveAssociationEvent) {
+            treeModel.modelElementRemoved(
+                    ((RemoveAssociationEvent)pce).getChangedValue());
         }
+        
 
-        if (pce.getPropertyName()
-                .equals("modelElementAdded")) {
-            treeModel.modelElementAdded(pce.getNewValue());
+//        if (pce.getPropertyName()
+//                .equals("modelElementAdded")) {
+//            treeModel.modelElementAdded(pce.getNewValue());
+//        }
+        if (pce instanceof AddAssociationEvent) {
+            treeModel.modelElementAdded(
+                    ((AddAssociationEvent)pce).getChangedValue());
         }
+        
 
-        if (pce.getPropertyName()
-                .equals("modelElementChanged")) {
-            treeModel.modelElementChanged(pce.getNewValue());
-        }
+//        if (pce.getPropertyName()
+//                .equals("modelElementChanged")) {
+//            treeModel.modelElementChanged(pce.getNewValue());
+//        }
+        if (pce instanceof AttributeChangeEvent) {
+            treeModel.modelElementChanged(pce.getSource());
+         }
+        
+        
     }
 }
