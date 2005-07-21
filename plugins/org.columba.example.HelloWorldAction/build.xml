@@ -82,8 +82,8 @@
  
  <!-- create plugin_id.zip file ready for releasing -->
  <target name="release" depends="jar">
- 	<echo message="zip-file is going to ../${plugin_id}.zip"/>
-  	<zip zipfile="../${plugin_id}.zip" update="true">
+ 	<echo message="zip-file is going to ../${plugin_id}-${plugin_version}.zip"/>
+  	<zip zipfile="../${plugin_id}-${plugin_version}.zip" update="true">
 		<zipfileset dir="." prefix="${plugin_id}">
 			<include name="${jarfile}"/>
 			<include name="plugin.xml"/>
