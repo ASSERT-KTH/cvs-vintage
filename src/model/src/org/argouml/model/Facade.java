@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.9 2005/07/10 15:56:48 linus Exp $
+// $Id: Facade.java,v 1.10 2005/07/21 15:35:45 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2591,11 +2591,16 @@ public interface Facade {
     /**
      * Returns the name of the UML Model class.<p>
      *
-     * E.g. For the NSUML implementation it will return Class for an
-     * object of type MClass.
-     *
      * @param handle The object to check.
      * @return classname of modelelement
      */
     String getUMLClassName(Object handle);
+    
+    /**
+     * Returns a tooltip that should be shown for the given model element.<p>
+     *
+     * @param modelElement The model element for which to gerneate a tip
+     * @return the tip
+     */
+    String getTipString(Object modelElement);
 }

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.179 2005/07/15 20:15:21 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.180 2005/07/21 15:35:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -806,7 +806,7 @@ public abstract class FigNodeModelElement
             && Globals.curEditor().getSelectionManager().containsFig(this)) {
             tip = item.getHeadline() + " ";
         } else if (getOwner() != null) {
-            tip = getOwner().toString();
+            tip = Model.getFacade().getTipString(getOwner());
         } else {
             tip = toString();
         }
