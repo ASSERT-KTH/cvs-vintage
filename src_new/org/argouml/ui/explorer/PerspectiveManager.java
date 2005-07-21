@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.26 2005/07/19 18:43:19 mvw Exp $
+// $Id: PerspectiveManager.java,v 1.27 2005/07/21 08:45:22 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -261,7 +261,7 @@ public class PerspectiveManager {
                             // get the rule name
                             String ruleName = perspectiveDetails.nextToken();
 
-                            // create the rule:
+                            // create the rule
                             try {
                                 Class ruleClass = Class.forName(ruleName);
 
@@ -269,9 +269,11 @@ public class PerspectiveManager {
                                         .newInstance();
 
                                 userDefinedPerspective.addRule(rule);
-
-                            } catch (Exception ex) {
-                                LOG.error("could not create rule ", ex);
+                            } catch (NoClassDefFoundError ex) {
+                                LOG
+                                        .error(
+                                                "could not create rule, you can try to refresh the perspectives to the default settings.",
+                                                ex);
                             }
                         }
                     }
