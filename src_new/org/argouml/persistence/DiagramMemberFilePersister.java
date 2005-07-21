@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.15 2005/07/18 13:43:28 bobtarling Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.16 2005/07/21 19:13:06 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,6 @@ public class DiagramMemberFilePersister extends MemberFilePersister {
     public void load(Project project, InputStream inputStream)
         throws OpenException {
 
-        if (Model.getDiagramInterchangeModel() == null) {
             // If the model repository doesn't manage a DI model
             // then we must generate our Figs by inspecting PGML
             try {
@@ -76,9 +75,6 @@ public class DiagramMemberFilePersister extends MemberFilePersister {
                 }
                 throw new OpenException(e);
             }
-        } else {
-            // Build Figs by reading the DI in the Model
-        }
     }
 
     /**

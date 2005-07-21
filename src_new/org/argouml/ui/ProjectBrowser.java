@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.157 2005/07/18 13:43:28 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.158 2005/07/21 19:13:06 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1119,7 +1119,10 @@ public class ProjectBrowser
                     while (diag.hasNext()) {
                             p.addMember(diag.next());
                     }
-                    p.setActiveDiagram((ArgoDiagram)diagrams.iterator().next());        
+                    if (!diagrams.isEmpty()) {
+                        p.setActiveDiagram((ArgoDiagram) diagrams.iterator()
+                                .next());
+                    }
                 }
                 
                 ProjectBrowser.getInstance().showStatus(
