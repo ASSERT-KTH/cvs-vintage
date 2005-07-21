@@ -29,7 +29,7 @@
   <shortDescription>Columba eMail for the 21st century</shortDescription>
   
   <repository>
-    <connection>scm:cvs:pserver:anonymous@cvs.columba.sourceforge.net:/cvsroot/columba:columba</connection>
+    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/columba:columba</connection>
     <url>http://cvs.sourceforge.net/viewcvs.py/columba/</url>
   </repository>
   
@@ -272,6 +272,16 @@
         </properties>
       </dependency>
       <dependency>
+        <groupId>groovy-all</groupId>
+        <artifactId>groovy-all</artifactId>
+        <version>1.0-jsr-02</version>
+        <type>jar</type>
+        <jar>lib/groovy-all-1.0-jsr-02.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
+      </dependency>
+      <dependency>
         <groupId>columba</groupId>
         <artifactId>usermanual</artifactId>
         <version>0.1</version>
@@ -351,14 +361,19 @@
    </build>
    
    <reports>    
-    <!--report>maven-checkstyle-plugin</report-->
+    <report>maven-jdepend-plugin</report>
+    <report>maven-checkstyle-plugin</report>
+    <report>maven-changelog-plugin</report>
+    <report>maven-developer-activity-plugin</report>
+    <report>maven-file-activity-plugin</report>
     <report>maven-javadoc-plugin</report>
+    <report>maven-jxr-plugin</report>
     <report>maven-pmd-plugin</report>
     <report>maven-jcoverage-plugin</report>
     <report>maven-simian-plugin</report>
+    <report>maven-multiproject-plugin</report>
     <report>maven-junit-report-plugin</report>
-    <!--report>maven-tasklist-plugin</report-->
-    <report>maven-cruisecontrol-plugin</report>
+    <report>maven-tasklist-plugin</report>
    </reports>
   
 </project>
