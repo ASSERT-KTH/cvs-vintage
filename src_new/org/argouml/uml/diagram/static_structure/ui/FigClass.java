@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.155 2005/07/20 18:02:11 mvw Exp $
+// $Id: FigClass.java,v 1.156 2005/07/21 06:43:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -993,7 +993,7 @@ public class FigClass extends FigNodeModelElement
 
         currentY += stereotypeHeight;
 
-        getStereotypeFig().setBounds(x, y, newW, STEREOHEIGHT + 1);
+        getStereotypeFig().setBounds(x, y, newW + 1, STEREOHEIGHT + 2);
 
         if (displayedFigs == 1) {
             height = newH;
