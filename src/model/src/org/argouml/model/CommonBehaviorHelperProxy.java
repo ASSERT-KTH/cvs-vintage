@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelperProxy.java,v 1.2 2005/07/10 15:56:48 linus Exp $
+// $Id: CommonBehaviorHelperProxy.java,v 1.3 2005/07/21 12:23:50 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -287,6 +287,27 @@ public class CommonBehaviorHelperProxy implements CommonBehaviorHelper {
      */
     public void setValue(Object handle, Object value) {
         impl.setValue(handle, value);
+    }
+
+    /**
+     * @see CommonBehaviorHelper#getInstantiation(Object)
+     */
+    public Object getInstantiation(Object createaction) {
+        return impl.getInstantiation(createaction);
+    }
+
+    /**
+     * @see CommonBehaviorHelper#setInstantiation(Object, Object)
+     */
+    public void setInstantiation(Object createaction, Object instantiation) {
+        impl.setInstantiation(createaction, instantiation);
+    }
+
+    /**
+     * @see CommonBehaviorHelper#getActionOwner(Object)
+     */
+    public Object getActionOwner(Object handle) {
+        return impl.getActionOwner(handle);
     }
 
 }
