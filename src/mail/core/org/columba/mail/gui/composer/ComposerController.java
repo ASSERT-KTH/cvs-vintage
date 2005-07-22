@@ -875,22 +875,22 @@ public class ComposerController extends DefaultFrameController implements
 				return priorityController.getView();
 			else if (aComponent.equals(priorityController.getView()))
 				return headerController.getView().getToComboBox()
-						.getTextEditor();
+						;
 			else if (aComponent.equals(headerController.getView()
-					.getToComboBox().getTextEditor()))
+					.getToComboBox()))
 				return headerController.getView().getCcComboBox()
-						.getTextEditor();
+						;
 			else if (aComponent.equals(headerController.getView()
-					.getCcComboBox().getTextEditor()))
+					.getCcComboBox()))
 				return headerController.getView().getBccComboBox()
-						.getTextEditor();
+						;
 			else if (aComponent.equals(headerController.getView()
-					.getBccComboBox().getTextEditor()))
+					.getBccComboBox()))
 				return subjectController.getView();
 			else if (aComponent.equals(subjectController.getView()))
 				return editorController.getComponent();
 
-			return headerController.getView().getToComboBox().getTextEditor();
+			return headerController.getView().getToComboBox();
 		}
 
 		public Component getComponentBefore(Container focusCycleRoot,
@@ -899,17 +899,17 @@ public class ComposerController extends DefaultFrameController implements
 				return subjectController.getView();
 			else if (aComponent.equals(subjectController.getView()))
 				return headerController.getView().getBccComboBox()
-						.getTextEditor();
+						;
 			else if (aComponent.equals(headerController.getView()
-					.getBccComboBox().getTextEditor()))
+					.getBccComboBox()))
 				return headerController.getView().getCcComboBox()
-						.getTextEditor();
+						;
 			else if (aComponent.equals(headerController.getView()
-					.getCcComboBox().getTextEditor()))
+					.getCcComboBox()))
 				return headerController.getView().getToComboBox()
-						.getTextEditor();
+						;
 			else if (aComponent.equals(headerController.getView()
-					.getToComboBox().getTextEditor()))
+					.getToComboBox()))
 				return priorityController.getView();
 			else if (aComponent.equals(priorityController.getView()))
 				return accountController.getView();
@@ -918,7 +918,7 @@ public class ComposerController extends DefaultFrameController implements
 		}
 
 		public Component getDefaultComponent(Container focusCycleRoot) {
-			return headerController.getView().getToComboBox().getTextEditor();
+			return headerController.getView().getToComboBox();
 		}
 
 		public Component getLastComponent(Container focusCycleRoot) {

@@ -17,17 +17,18 @@ package org.columba.mail.gui.composer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.action.AddressbookAction;
-import org.columba.mail.gui.composer.util.FocusAddressComboBox;
-import org.frapuccino.addresscombobox.AddressComboBox;
+import org.frapuccino.addresscombobox.CommaSeparatedAutoCompleter;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -47,11 +48,11 @@ public class HeaderView extends JPanel implements ActionListener {
 
 	private JButton bccButton;
 
-	private AddressComboBox toComboBox;
+	private JTextField toComboBox;
 
-	private AddressComboBox ccComboBox;
+	private JTextField ccComboBox;
 
-	private AddressComboBox bccComboBox;
+	private JTextField bccComboBox;
 
 	public HeaderView(HeaderController controller) {
 		super();
@@ -80,9 +81,13 @@ public class HeaderView extends JPanel implements ActionListener {
 		
 		if (addressCollector != null) {
 		// pass contact data along to AddressComboBox
-		toComboBox.setItemProvider(addressCollector);
-		ccComboBox.setItemProvider(addressCollector);
-		bccComboBox.setItemProvider(addressCollector);
+		new CommaSeparatedAutoCompleter(toComboBox, Arrays.asList(addressCollector.getAddresses()), true);
+		new CommaSeparatedAutoCompleter(ccComboBox, Arrays.asList(addressCollector.getAddresses()), true);
+		new CommaSeparatedAutoCompleter(bccComboBox, Arrays.asList(addressCollector.getAddresses()), true);
+			
+		//toComboBox.setItemProvider(addressCollector);
+		//ccComboBox.setItemProvider(addressCollector);
+		//bccComboBox.setItemProvider(addressCollector);
 		}
 	}
 
@@ -120,29 +125,29 @@ public class HeaderView extends JPanel implements ActionListener {
 		bccButton = new JButton("Bcc:");
 		bccButton.addActionListener(this);
 
-		toComboBox = new FocusAddressComboBox();
-		ccComboBox = new FocusAddressComboBox();
-		bccComboBox = new FocusAddressComboBox();
+		toComboBox = new JTextField();
+		ccComboBox = new JTextField();
+		bccComboBox = new JTextField();
 	}
 
 	/**
 	 * @return Returns the bccComboBox.
 	 */
-	public AddressComboBox getBccComboBox() {
+	public JTextField getBccComboBox() {
 		return bccComboBox;
 	}
 
 	/**
 	 * @return Returns the ccComboBox.
 	 */
-	public AddressComboBox getCcComboBox() {
+	public JTextField getCcComboBox() {
 		return ccComboBox;
 	}
 
 	/**
 	 * @return Returns the toComboBox.
 	 */
-	public AddressComboBox getToComboBox() {
+	public JTextField getToComboBox() {
 		return toComboBox;
 	}
 

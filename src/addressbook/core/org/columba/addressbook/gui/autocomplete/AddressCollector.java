@@ -28,9 +28,8 @@ import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
-import org.frapuccino.addresscombobox.ItemProvider;
 
-public class AddressCollector implements ItemProvider, IAddressCollector {
+public class AddressCollector implements  IAddressCollector {
 
 	private	Hashtable _adds = new Hashtable();
 	private static AddressCollector instance = new AddressCollector();

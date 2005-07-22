@@ -18,13 +18,12 @@
 package org.columba.addressbook.gui.autocomplete;
 
 import org.columba.addressbook.model.IHeaderItem;
-import org.frapuccino.addresscombobox.ItemProvider;
 
 /**
  * @author fdietz
  *
  */
-public interface IAddressCollector extends ItemProvider {
+public interface IAddressCollector  {
 	/**
 	 * Add all contacts and group items to hashmap.
 	 * 
