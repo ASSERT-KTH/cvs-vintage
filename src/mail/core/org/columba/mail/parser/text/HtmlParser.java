@@ -253,18 +253,13 @@ prot + "://  protocol and ://
     	}
 
     	StringBuffer result = new StringBuffer(s.length());
-    	int pos = 0;
     	
     	//replace the other entities
     	Matcher matcher = SPECIAL_PATTERN.matcher(s);
     	while( matcher.find()) {
-    		result.append(s.substring(pos,matcher.start()));
-    		result.append(charset.decode( ByteBuffer.wrap(new byte[]{ (byte) Integer.parseInt(matcher.group(1))})));
-    		
-    		pos = matcher.end();
+    		matcher.appendReplacement(result, charset.decode( ByteBuffer.wrap(new byte[]{ (byte) Integer.parseInt(matcher.group(1))})).toString());    		
     	}
-    	
-    	result.append(pos);
+    	matcher.appendTail(result);
     	
     	//Convert 4 WS in a row to a tab
     	return result.toString().replaceAll("    ","\t");
@@ -302,15 +297,6 @@ prot + "://  protocol and ://
 
         return restoreSpecialCharacters(charset, text);
     }
-    public static String htmlToText(String html, boolean saveNewlines) {
-        // stripHtmlTags called with true ~ p & br => newlines
-        Charset charset = getHtmlCharset(html);
-
-        String text = stripHtmlTags(html, saveNewlines);
-
-        return restoreSpecialCharacters(charset, text);
-    }
-
     /**
      * Replaces special chars - <,>,&,\t,\n," - with the special
      * entities used in html (amp, nbsp, ...). Then the complete
