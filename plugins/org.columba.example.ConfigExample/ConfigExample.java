@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.io.File;
+import java.net.MalformedURLException;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -27,10 +29,15 @@ public class ConfigExample extends AbstractConfigPlugin {
 		super();
 
 		// open configuration file 
-		xmlFile = Facade.getPluginConfiguration("org.columba.example.ConfigExample");
-		xmlFile.load();
-		
-		parent = xmlFile.getRoot();
+		File file = Facade.getPluginConfigFile("org.columba.example.ConfigExample");
+		try {
+			XmlIO xmlIO = new XmlIO(file.toURL());
+			xmlFile.load();
+			
+			parent = xmlFile.getRoot();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 			
 	}
 
