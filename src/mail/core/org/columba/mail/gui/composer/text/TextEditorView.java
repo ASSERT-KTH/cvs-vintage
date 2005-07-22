@@ -15,13 +15,13 @@
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.composer.text;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.nio.charset.Charset;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTextPane;
+import javax.swing.Scrollable;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
@@ -94,4 +94,11 @@ public class TextEditorView extends JTextPane implements Observer,
 
         setContentType("text/plain; charset=\"" + charset.name() + "\"");
     }
+
+	/**
+	 * @see javax.swing.JEditorPane#getScrollableTracksViewportWidth()
+	 */
+	public boolean getScrollableTracksViewportWidth() {		
+		return true;
+	}
 }

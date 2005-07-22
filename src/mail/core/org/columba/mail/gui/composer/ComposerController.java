@@ -41,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
@@ -414,12 +415,12 @@ public class ComposerController extends DefaultFrameController implements
 
 		htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
 
-		// editorPanel.add(htmlToolbar, BorderLayout.NORTH);
+		if( composerModel.isHtml()) editorPanel.getContentPane().add(htmlToolbar, BorderLayout.NORTH);
 
 		editorPanel.getContentPane().add(
-				getEditorController().getViewUIComponent());
+				getEditorController().getViewUIComponent(), BorderLayout.CENTER);
 
-		editorPanel.getContentPane().add(signatureView);
+		editorPanel.getContentPane().add(signatureView, BorderLayout.SOUTH);
 
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		centerPanel.setLayout(new BorderLayout());
@@ -431,27 +432,6 @@ public class ComposerController extends DefaultFrameController implements
 		centerPanel.add(editorPanel, BorderLayout.CENTER);
 
 		attachmentPanelShown = false;
-		
-		/*
-		JScrollPane attachmentScrollPane = new JScrollPane(
-				getAttachmentController().getView());
-		attachmentScrollPane
-				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
-				1));
-
-		attachmentSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				editorPanel, attachmentScrollPane);
-		attachmentSplitPane.setDividerLocation(0.80);
-		attachmentSplitPane.setBorder(null);
-
-		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
-		ViewItem viewItem = getViewItem();
-		int pos = viewItem.getIntegerWithDefault("splitpanes", "attachment",
-				200);
-		attachmentSplitPane.setDividerLocation(pos);
-		*/
-
 	}
 
 	/**
@@ -471,9 +451,11 @@ public class ComposerController extends DefaultFrameController implements
 	public void setNewEditorView() {
 
 		// update panel
-		editorPanel.removeAll();
-		editorPanel.add(getEditorController().getViewUIComponent());
-		editorPanel.validate();
+		editorPanel.getContentPane().removeAll();
+		editorPanel.getContentPane().add(getEditorController().getViewUIComponent(), BorderLayout.CENTER);
+		editorPanel.getContentPane().add(signatureView, BorderLayout.SOUTH);
+		
+		editorPanel.getContentPane().validate();
 	}
 
 	public boolean isAccountInfoPanelVisible() {
@@ -776,9 +758,9 @@ public class ComposerController extends DefaultFrameController implements
 			}
 
 			if (html) {
-				editorPanel.add(htmlToolbar, BorderLayout.NORTH);
+				editorPanel.getContentPane().add(htmlToolbar, BorderLayout.NORTH);
 			} else {
-				editorPanel.remove(htmlToolbar);
+				editorPanel.getContentPane().remove(htmlToolbar);
 			}
 
 			editorPanel.validate();
