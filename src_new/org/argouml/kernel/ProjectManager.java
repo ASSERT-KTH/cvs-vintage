@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.57 2005/07/17 14:49:53 mvw Exp $
+// $Id: ProjectManager.java,v 1.58 2005/07/22 13:13:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,14 +32,14 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
-import org.argouml.model.ClassDiagram;
 import org.argouml.model.MementoCreationObserver;
 import org.argouml.model.Model;
 import org.argouml.model.ModelMemento;
-import org.argouml.model.UseCaseDiagram;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
 import org.argouml.uml.diagram.DiagramFactory;
+import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
+import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.ui.ActionSaveProject;
 import org.tigris.gef.graph.MutableGraphSupport;
 import org.tigris.gef.undo.Memento;
@@ -238,10 +238,10 @@ public final class ProjectManager implements PropertyChangeListener, MementoCrea
         currentProject.setRoot(model);
         currentProject.setCurrentNamespace(model);
         currentProject.addMember(model);
-        ArgoDiagram d = DiagramFactory.getInstance().createDiagram(ClassDiagram.class, model, null);
+        ArgoDiagram d = DiagramFactory.getInstance().createDiagram(UMLClassDiagram.class, model, null);
         currentProject.addMember(d);
         currentProject.addMember(
-                DiagramFactory.getInstance().createDiagram(UseCaseDiagram.class, model, null));
+                DiagramFactory.getInstance().createDiagram(UMLUseCaseDiagram.class, model, null));
         currentProject.addMember(new ProjectMemberTodoList("", currentProject));
         ProjectManager.getManager().setNeedsSave(false);
         currentProject.setActiveDiagram(d);

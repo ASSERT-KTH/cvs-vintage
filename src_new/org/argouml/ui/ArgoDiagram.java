@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.39 2005/07/14 16:31:34 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.40 2005/07/22 13:13:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 
 import org.argouml.cognitive.ItemUID;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.DiDiagram;
 import org.argouml.model.Model;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
@@ -44,8 +43,6 @@ public class ArgoDiagram extends Diagram {
 
     private ItemUID id;
     
-    private DiDiagram diDiagram = null;
-
     /**
      * Hack to use vetocheck in constructing names.
      */

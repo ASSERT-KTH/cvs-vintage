@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.73 2005/07/05 20:11:46 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.74 2005/07/22 13:13:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,10 @@ import javax.swing.Action;
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ClassDiagram;
+import org.argouml.model.DiDiagram;
 import org.argouml.model.Model;
+import org.argouml.ui.GraphChangeAdapter;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
@@ -508,4 +511,5 @@ public class UMLClassDiagram extends UMLDiagram {
 		this.damage();
 		return true;
 	}
+
 } /* end class UMLClassDiagram */

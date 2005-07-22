@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.166 2005/06/20 22:24:01 bobtarling Exp $
+// $Id: Project.java,v 1.167 2005/07/22 13:13:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,7 @@ import org.argouml.uml.ProfileException;
 import org.argouml.uml.ProfileJava;
 import org.argouml.uml.ProjectMemberModel;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
+import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
@@ -414,7 +415,8 @@ public class Project implements java.io.Serializable, TargetListener {
          */
         if (diagrams.size() < 1) {
             Object treeRoot = Model.getModelManagementFactory().getRootModel();
-            ArgoDiagram defaultDiagram = new UMLClassDiagram(treeRoot);
+            ArgoDiagram defaultDiagram =
+                DiagramFactory.getInstance().createDiagram(UMLClassDiagram.class, treeRoot, null);
             addMember(defaultDiagram);
             activeDiagram = defaultDiagram;
             TargetManager.getInstance().setTarget(defaultDiagram);

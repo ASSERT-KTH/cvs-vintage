@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.21 2005/05/18 20:27:01 mvw Exp $
+// $Id: ActionClassDiagram.java,v 1.22 2005/07/22 13:13:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
+import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
@@ -52,7 +53,10 @@ public class ActionClassDiagram extends ActionAddDiagram {
      */
     public UMLDiagram createDiagram(Object ns) {
         if (Model.getFacade().isANamespace(ns)) {
-            return new UMLClassDiagram(ns);
+            return (UMLDiagram)DiagramFactory.getInstance().createDiagram(
+                    UMLClassDiagram.class, 
+                    ns,
+                    null);
         }
         LOG.error("No namespace as argument");
         LOG.error(ns);

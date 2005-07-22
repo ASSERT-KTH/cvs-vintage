@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.32 2005/01/11 21:03:31 mvw Exp $
+// $Id: DiagramInterface.java,v 1.33 2005/07/22 13:13:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
@@ -225,7 +226,13 @@ public class DiagramInterface {
     public void addClassDiagram(Object ns, String name) {
 	Project p = ProjectManager.getManager().getCurrentProject();
 	try {
-	    ArgoDiagram d = new UMLClassDiagram(ns);
+        ArgoDiagram d =
+            DiagramFactory.getInstance().createDiagram(
+                    UMLClassDiagram.class,
+                    ns,
+                    null);
+        
+        
 	    d.setName(getDiagramName(name));
             p.addMember(d);
 	    setCurrentDiagram(d);
@@ -326,12 +333,14 @@ public class DiagramInterface {
      */
     public void createOrSelectClassDiagram(Object currentPackage,
 					   String currentPackageName) {
-	Project p = ProjectManager.getManager().getCurrentProject();
-	String diagramName = currentPackageName.replace('.', '_') + "_classes";
-	UMLClassDiagram d =
-	    new UMLClassDiagram(currentPackage == null
-				? p.getRoot()
-				: currentPackage);
+        Project p = ProjectManager.getManager().getCurrentProject();
+        String diagramName = currentPackageName.replace('.', '_') + "_classes";
+        ArgoDiagram d =
+            DiagramFactory.getInstance().createDiagram(
+                    UMLClassDiagram.class, 
+                    currentPackage == null ? p.getRoot() : currentPackage,
+                    null);
+    
 	if (findDiagramMemberByUniqueName(p, diagramName + ".pgml") == null) {
 	    try {
 		d.setName(diagramName);
