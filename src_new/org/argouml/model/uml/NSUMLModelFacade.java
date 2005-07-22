@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.15 2005/07/21 15:35:44 bobtarling Exp $
+// $Id: NSUMLModelFacade.java,v 1.16 2005/07/22 07:25:36 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -297,6 +297,13 @@ public class NSUMLModelFacade implements Facade {
      */
     public boolean isAAggregationKind(Object handle) {
         return handle instanceof MAggregationKind;
+    }
+    
+    /**
+     * @see org.argouml.model.Facade#isAArgument(java.lang.Object)
+     */
+    public boolean isAArgument(Object modelElement) {
+        return modelElement instanceof MArgument;
     }
 
     /**
@@ -2261,7 +2268,7 @@ public class NSUMLModelFacade implements Facade {
     }
 
     /**
-     * Get the Expression belonging to a Guard, ChangeEvent or timeEvent.
+     * Get the Expression belonging to an Argument, Guard, ChangeEvent or timeEvent.
      *
      * @param handle the Object to get the Expression from
      * @return Object the Expression
@@ -2275,6 +2282,9 @@ public class NSUMLModelFacade implements Facade {
         }
         if (handle instanceof MTimeEvent) {
             return ((MTimeEvent) handle).getWhen();
+        }
+        if (handle instanceof MArgument) {
+            return ((MArgument)handle).getValue();
         }
         return illegalArgumentObject(handle);
     }
@@ -3701,6 +3711,9 @@ public class NSUMLModelFacade implements Facade {
         if (isALink(handle)) {
             return ((MLink) handle).getStimuli();
         }
+        if (isAAction(handle)) {
+            return ((MAction)handle).getStimuli();
+        }
 	return illegalArgumentCollection(handle);
     }
 
@@ -4089,14 +4102,14 @@ public class NSUMLModelFacade implements Facade {
     }
 
     /**
-     * Returns the action belonging to some message.
-     *
-     * @param handle is the message
-     * @return the action
+     * @see org.argouml.model.Facade#getAction(Object)
      */
     public Object getAction(Object handle) {
         if (handle instanceof MMessage) {
             return ((MMessage) handle).getAction();
+        }
+        if (handle instanceof MArgument) {
+            return ((MArgument)handle).getAction();
         }
 	return illegalArgumentObject(handle);
     }
@@ -4650,7 +4663,7 @@ public class NSUMLModelFacade implements Facade {
 	illegalArgument(arg1, arg2);
 	return null;
     }
-
+    
     /**
      * @see org.argouml.model.Facade#getTipString(java.lang.Object)
      */
