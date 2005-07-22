@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.39 2005/04/23 16:30:44 linus Exp $
+// $Id: FigTransition.java,v 1.40 2005/07/22 14:11:56 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,9 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
+import org.argouml.uml.diagram.ui.PathConvPercent2;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.base.Layer;
-import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
@@ -66,7 +66,7 @@ public class FigTransition extends FigEdgeModelElement {
      */
     public FigTransition() {
         super();
-        addPathItem(getNameFig(), new PathConvPercent(this, 50, 10));
+        addPathItem(getNameFig(), new PathConvPercent2(this, getNameFig(), 50, 10));
         _fig.setLineColor(Color.black);
         setDestArrowHead(endArrow);
     }
