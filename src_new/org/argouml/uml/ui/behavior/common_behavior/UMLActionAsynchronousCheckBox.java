@@ -1,4 +1,4 @@
-// $Id: UMLActionAsynchronousCheckBox.java,v 1.1 2005/07/22 11:02:10 mkl Exp $
+// $Id: UMLActionAsynchronousCheckBox.java,v 1.2 2005/07/22 11:23:55 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLCheckBox2;
-import org.argouml.uml.ui.foundation.core.ActionSetAssociationEndNavigable;
 
 /**
  * 
