@@ -1,4 +1,4 @@
-// $Id: PropPanelCreateAction.java,v 1.6 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelCreateAction.java,v 1.7 2005/07/22 07:23:44 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,21 +24,45 @@
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
+import javax.swing.JScrollPane;
+
+import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
+import org.argouml.uml.ui.AbstractActionAddModelElement;
+import org.argouml.uml.ui.UMLMutableLinkedList;
 
 /**
- * The properties panel for a CreateAction.
- *
- * TODO: this property panel needs refactoring to remove dependency on
- *       old gui components.
+ * The properties panel for a CreateAction. TODO: this property panel needs
+ * refactoring to remove dependency on old gui components.
  */
 public class PropPanelCreateAction extends PropPanelAction {
 
     /**
      * The constructor.
-     *
      */
     public PropPanelCreateAction() {
         super("CreateAction", lookupIcon("CreateAction"));
+
+        // addField(Translator.localize( "label.recurrence"),
+        // getRecurrenceScroll());
+
+        UMLMutableLinkedList list = new UMLMutableLinkedList(
+                new UMLCreateActionClassifierListModel(), null, null);
+        list.setVisibleRowCount(1);
+
+        AbstractActionAddModelElement action = new ActionAddCreateActionInstantiation();
+
+        addSeperator();
+
+        JScrollPane instantiationScroll = new JScrollPane(
+                new UMLMutableLinkedList(
+                        new UMLCreateActionClassifierListModel(), action, null,
+                        null, true));
+
+        addField(Translator.localize("label.instantiation"),
+                instantiationScroll);
+
     }
 
 }
