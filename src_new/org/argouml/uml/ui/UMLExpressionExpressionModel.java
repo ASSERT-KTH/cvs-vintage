@@ -1,4 +1,4 @@
-// $Id: UMLExpressionExpressionModel.java,v 1.6 2005/01/30 20:47:49 linus Exp $
+// $Id: UMLExpressionExpressionModel.java,v 1.7 2005/07/22 07:31:14 mkl Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui;
 
 import org.argouml.model.Model;
+import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  * The model for a UML Expression that is obtained from its "parent"
@@ -49,7 +50,7 @@ public class UMLExpressionExpressionModel extends UMLExpressionModel2 {
      * @see org.argouml.uml.ui.UMLExpressionModel2#getExpression()
      */
     public Object getExpression() {
-        return Model.getFacade().getExpression(getContainer().getTarget());
+        return Model.getFacade().getExpression(TargetManager.getInstance().getTarget());
     }
 
     /**
@@ -57,7 +58,7 @@ public class UMLExpressionExpressionModel extends UMLExpressionModel2 {
      */
     public void setExpression(Object expr) {
         Model.getStateMachinesHelper()
-        	.setExpression(getContainer().getTarget(), expr);
+        	.setExpression(TargetManager.getInstance().getTarget(), expr);
     }
 
     /**

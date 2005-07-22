@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.32 2005/06/07 07:19:59 bobtarling Exp $
+// $Id: UMLModelElementListModel2.java,v 1.33 2005/07/22 07:31:14 mkl Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,7 +159,8 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
 
     /**
      * Builds the list of elements. Called from targetChanged every time the
-     * target of the proppanel is changed.
+     * target of the proppanel is changed. Usually the method setAllElements is
+     * called with the result.
      */
     protected abstract void buildModelList();
 

@@ -1,4 +1,4 @@
-// $Id: UMLScriptExpressionModel.java,v 1.8 2005/01/30 20:47:49 linus Exp $
+// $Id: UMLScriptExpressionModel.java,v 1.9 2005/07/22 07:31:14 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui;
 
 import org.argouml.model.Model;
+import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  *
@@ -48,7 +49,7 @@ public class UMLScriptExpressionModel extends UMLExpressionModel2 {
      * @see org.argouml.uml.ui.UMLExpressionModel2#getExpression()
      */
     public Object getExpression() {
-        return Model.getFacade().getScript(getContainer().getTarget());
+        return Model.getFacade().getScript(TargetManager.getInstance().getTarget());
     }
 
     /**
@@ -56,7 +57,7 @@ public class UMLScriptExpressionModel extends UMLExpressionModel2 {
      */
     public void setExpression(Object expression) {
         Model.getCommonBehaviorHelper()
-        	.setScript(getContainer().getTarget(), expression);
+        	.setScript(TargetManager.getInstance().getTarget(), expression);
     }
 
     /**
