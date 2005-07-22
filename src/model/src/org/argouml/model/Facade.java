@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.10 2005/07/21 15:35:45 bobtarling Exp $
+// $Id: Facade.java,v 1.11 2005/07/22 07:26:38 mkl Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2402,9 +2402,9 @@ public interface Facade {
     Collection getSuppliers(Object handle);
 
     /**
-     * Returns the action belonging to some message.
+     * Returns the action belonging to some message or argument.
      *
-     * @param handle is the message
+     * @param handle is the message or argument.
      * @return the action
      */
     Object getAction(Object handle);
@@ -2595,6 +2595,13 @@ public interface Facade {
      * @return classname of modelelement
      */
     String getUMLClassName(Object handle);
+
+    /** 
+     * Recognizer for Arguments
+     * @param modelElement
+     * @return
+     */
+    boolean isAArgument(Object modelElement);
     
     /**
      * Returns a tooltip that should be shown for the given model element.<p>
