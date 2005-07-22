@@ -63,10 +63,7 @@ public class ExtensionHandler implements IExtensionHandler {
 		if ( map.containsKey(id)) {
 			LOG.severe("duplicate id="+id);
 			return;
-			//throw new IllegalArgumentException("duplicate id="+id);
 		}
-		
-		LOG.finest("adding " + getId() + " extension: " + id);
 
 		map.put(id, extension);
 

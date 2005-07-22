@@ -262,8 +262,6 @@ public final class DiskIO {
 		if (path.startsWith("#")) {
 			path = resourceFolder + path.substring(1);
 		}
-
-		System.out.println("path ="+path);
 		
 		//url = ClassLoader.getSystemResource(path);
 		url = DiskIO.class.getResource("/" + path);
@@ -274,8 +272,7 @@ public final class DiskIO {
 			LOG.info("*** failed locating resource: " + path);
 
 			return null;
-		} else
-			System.out.println("url="+url.toString());
+		} 
 
 		return url;
 	}
