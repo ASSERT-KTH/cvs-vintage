@@ -47,6 +47,8 @@ public class MBOXImporter extends AbstractMailboxImporter {
     	MboxMessage[] messages = MboxParser.parseMbox(mboxSource);
     	mboxSource.close();
     	
+    	System.out.println("Found " + messages.length + " messages in MBOX file");
+    	
     	SteerableInputStream in = new SteerableInputStream(new FileInputStream(file));
     	
     	worker.setProgressBarMaximum(messages.length);
@@ -55,6 +57,8 @@ public class MBOXImporter extends AbstractMailboxImporter {
     		in.setPosition(messages[i].getStart());
     		in.setLengthLeft(messages[i].getLength());
     		destFolder.addMessage(in);
+    		// this is necessary to do!
+    		counter++;
     	}
     	
     	in.finalClose();

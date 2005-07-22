@@ -27,12 +27,12 @@ public class MboxMessage {
 	 * 
 	 * @param uid
 	 * @param start
-	 * @param end
+	 * @param length
 	 */
-	public MboxMessage(Object uid, long start, long end) {
+	public MboxMessage(Object uid, long start, long length) {
 		this.uid = uid;
 		this.start = start;
-		this.length = end;
+		this.length = length;
 	}
 	/**
 	 * @return Returns the start.

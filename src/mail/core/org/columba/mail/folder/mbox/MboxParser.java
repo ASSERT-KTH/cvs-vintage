@@ -20,13 +20,18 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.parser.CharSequenceSearcher;
 
 public class MboxParser {	
 	
+	private static final Pattern YEAR_DIGITS = Pattern.compile("\\d{4}$");  
+	
 	public static MboxMessage[] parseMbox(Source mailboxSource) throws IOException {
+		Matcher mboxHeaderMatcher = YEAR_DIGITS.matcher("");
 		List messages = new LinkedList();
 
 		CharSequenceSearcher searcher = new CharSequenceSearcher("From ");
@@ -34,18 +39,32 @@ public class MboxParser {
 
 		Iterator it = boundaries.iterator();
 		int start = ((Integer) it.next()).intValue();
-
 		int lastEnd = findNext(mailboxSource, start + 5, '\n') + 1;
 
 		int newUid = 0;
 
+
 		while (it.hasNext()) {
 			start = ((Integer) it.next()).intValue();
+			
+			int possibleEnd = findNext(mailboxSource, start + 5, '\n') + 1;
+
+			mboxHeaderMatcher.reset(mailboxSource.subSequence(start, possibleEnd-1));
+			while( !mboxHeaderMatcher.find() && it.hasNext()) {
+				start = ((Integer) it.next()).intValue();
+				possibleEnd = findNext(mailboxSource, start + 5, '\n') + 1;
+				mboxHeaderMatcher.reset(mailboxSource.subSequence(start, possibleEnd));
+			}
+			
 			messages.add(new MboxMessage(new Integer(newUid++), lastEnd,
-					start - 1 - lastEnd));
-			lastEnd = findNext(mailboxSource, start + 5, '\n') + 1;
+					start - lastEnd));
+
+			lastEnd = possibleEnd;
 		}
 
+		messages.add(new MboxMessage(new Integer(newUid++), lastEnd,
+				mailboxSource.length() - lastEnd));		
+		
 		return (MboxMessage[]) messages.toArray(new MboxMessage[0]);
 	}
 
