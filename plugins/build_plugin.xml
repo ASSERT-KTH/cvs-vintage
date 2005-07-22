@@ -35,6 +35,7 @@
 	<!-- cleanup build/ directory -->
 	<target name="clean" description="Cleans the build system">
 		<delete dir="${build}" />
+		<delete file="${plugin_src/${jarfile}" />
 	</target>
 
 	<!-- create build/ directory -->
@@ -56,7 +57,7 @@
 
 	<!-- compile the classes -->
 	<target name="compile" depends="copy-resources">
-		<echo message="the classes are going to ${build} " />
+		<echo message="the classes are going to ${build}" />
 		<echo message="columba class files are in ${columba_build}" />
 		<echo message="classpath: ${ownclasspath}" />
 		<javac srcdir="${plugin_src}" destdir="${build}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes" />
@@ -65,11 +66,8 @@
 	<!-- package in plugin.jar -->
 	<target name="jar" depends="compile">
 		<echo message="plug-in packaged in ${jarfile}" />
-		<jar basedir="${build}" jarfile="${jarfile}">
+		<jar basedir="${build}" jarfile="${plugin_src}/${jarfile}">
 			<include name="**/*.class" />
-			<exclude name="${jarfile}" />
-			<exclude name="build.xml" />
-			<exclude name="plugin.xml" />
 
 			<!-- the external classloader should include all libraries automatically
         there's no need to set the classpath in the MANIFEST file again -->
@@ -81,9 +79,9 @@
 
 	<!-- create plugin_id.zip file ready for releasing -->
 	<target name="release" depends="jar">
-		<echo message="zip-file is going to ../${plugin_id}-${plugin_version}.zip" />
-		<zip zipfile="../${plugin_id}-${plugin_version}.zip" update="true">
-			<zipfileset dir="." prefix="${plugin_id}">
+		<echo message="zip-file is going to ${plugin_id}-${plugin_version}.zip" />
+		<zip zipfile="${plugin_id}-${plugin_version}.zip" update="true">
+			<zipfileset dir="${plugin_src}" prefix="${plugin_id}">
 				<include name="${jarfile}" />
 				<include name="plugin.xml" />
 				<include name="lib/**" />
