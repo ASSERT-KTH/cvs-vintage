@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: changelog.xml,v 1.26 2005/07/19 07:40:05 linus Exp $ -->
+<!-- $Id: changelog.xml,v 1.27 2005/07/22 17:58:12 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -64,6 +64,17 @@ Change to XXX.
         </row>
       </tbody>
       -->
+
+      <tbody valign="top">
+        <row>
+          <entry>2005-07-22</entry>
+          <entry>
+Removed the /modules/junit.
+(See <xref linkend="release_process"/>).
+</entry>
+          <entry>Linus Tolke</entry>
+        </row>
+      </tbody>
 
       <tbody valign="top">
         <row>

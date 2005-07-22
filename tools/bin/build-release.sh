@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: build-release.sh,v 1.11 2005/07/20 21:59:44 linus Exp $
+# $Id: build-release.sh,v 1.12 2005/07/22 17:58:12 linus Exp $
 
 # The purpose of this shellscript is to make all the release work.
 
@@ -99,10 +99,6 @@ fi
 echo "$BUILD Will test the release."
 ( cd argouml/src_new && ./build.sh alltests )
 
-echo "$BUILD Starting ArgoUML for you to do the manual testing in modules/junit"
-echo "$BUILD Give the test case TestAll, uncheck Reload at every run"
-echo "$BUILD When done, Exit the tool."
-( cd argouml/modules/junit && ../../tools/ant-1.6.2/bin/ant run )
 echo "$BUILD Tests done."
 
 echo "$BUILD sign the files for Java Web Start"
