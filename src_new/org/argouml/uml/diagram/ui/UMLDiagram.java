@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.75 2005/07/22 13:13:49 bobtarling Exp $
+// $Id: UMLDiagram.java,v 1.76 2005/07/23 16:30:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,12 +36,10 @@ import javax.swing.JToolBar;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.DiDiagram;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
-import org.argouml.ui.GraphChangeAdapter;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
