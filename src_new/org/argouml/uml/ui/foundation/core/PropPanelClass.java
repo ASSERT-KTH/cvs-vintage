@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.73 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelClass.java,v 1.74 2005/07/23 17:13:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
@@ -59,7 +58,9 @@ public class PropPanelClass extends PropPanelClassifier {
      * The constructor.
      */
     public PropPanelClass() {
-        super("Class", ConfigLoader.getTabPropsOrientation());
+        super("Class", 
+            lookupIcon("Class"),
+            ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());

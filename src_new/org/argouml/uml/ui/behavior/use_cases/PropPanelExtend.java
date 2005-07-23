@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.54 2005/05/26 20:35:23 bobtarling Exp $
+// $Id: PropPanelExtend.java,v 1.55 2005/07/23 17:13:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLConditionExpressionModel;
@@ -70,7 +69,8 @@ public class PropPanelExtend extends PropPanelModelElement {
      */
 
     public PropPanelExtend() {
-        super("Extend", ConfigLoader.getTabPropsOrientation());
+        super("Extend", lookupIcon("Extend"), 
+                ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
 		 getNameTextField());

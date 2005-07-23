@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.58 2005/06/01 17:20:54 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.59 2005/07/23 17:13:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -66,7 +65,9 @@ public class PropPanelGeneralization extends PropPanelModelElement {
      *
      */
     public PropPanelGeneralization() {
-        super("Generalization", ConfigLoader.getTabPropsOrientation());
+        super("Generalization", 
+            lookupIcon("Generalization"), 
+            ConfigLoader.getTabPropsOrientation());
         Object[] namesToWatch = {
             Model.getMetaTypes().getStereotype(),
             Model.getMetaTypes().getNamespace(),

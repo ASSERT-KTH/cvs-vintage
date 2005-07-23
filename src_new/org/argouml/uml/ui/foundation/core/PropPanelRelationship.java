@@ -1,4 +1,4 @@
-// $Id: PropPanelRelationship.java,v 1.7 2005/01/09 14:59:09 linus Exp $
+// $Id: PropPanelRelationship.java,v 1.8 2005/07/23 17:13:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 // $header$
 package org.argouml.uml.ui.foundation.core;
 
+import javax.swing.ImageIcon;
+
 import org.tigris.swidgets.Orientation;
 import org.argouml.util.ConfigLoader;
 
@@ -35,6 +37,18 @@ import org.argouml.util.ConfigLoader;
  * @author jaap.branderhorst@xs4all.nl
  */
 public class PropPanelRelationship extends PropPanelModelElement {
+
+    /**
+     * The constructor.
+     * 
+     * @param name
+     * @param icon
+     * @param orientation
+     */
+    public PropPanelRelationship(String name, ImageIcon icon, 
+            Orientation orientation) {
+        super(name, icon, orientation);
+    }
 
     /**
      * Constructor for PropPanelRelationship.

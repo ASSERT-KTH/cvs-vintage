@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.37 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelTransition.java,v 1.38 2005/07/23 17:13:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
@@ -50,7 +49,9 @@ public class PropPanelTransition extends PropPanelModelElement {
      *
      */
     public PropPanelTransition() {
-        super("Transition", ConfigLoader.getTabPropsOrientation());
+        super("Transition", 
+            lookupIcon("Transition"),
+            ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());

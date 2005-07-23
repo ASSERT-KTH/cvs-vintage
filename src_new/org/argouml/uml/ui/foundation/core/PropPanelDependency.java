@@ -1,4 +1,4 @@
-// $Id: PropPanelDependency.java,v 1.30 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelDependency.java,v 1.31 2005/07/23 17:13:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
@@ -89,7 +88,7 @@ public class PropPanelDependency extends PropPanelRelationship {
      * @see org.argouml.uml.ui.PropPanel#PropPanel(String, Orientation)
      */
     protected PropPanelDependency(String name, Orientation orientation) {
-        super(name, orientation);
+        super(name, lookupIcon("Dependency"), orientation);
         JList supplierList = new UMLLinkedList(
                 new UMLDependencySupplierListModel(), true);
         supplierScroll = new JScrollPane(supplierList);
