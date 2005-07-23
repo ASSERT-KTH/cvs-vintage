@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: subsystems.xml,v 1.3 2005/07/19 06:57:20 linus Exp $ -->
+<!-- $Id: subsystems.xml,v 1.4 2005/07/23 07:20:06 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -77,8 +77,11 @@
             . </para>
           <para> The section shall for each subsystem contain the
             responsibilities, the package name, the API, the Facade (if any),
-            all the plug-in interfaces (if any), and documents the insides of the
-            subsystem. </para>
+all the plug-in interfaces (if any).
+This shall be in the first part of the section i.e. not in a subsection.
+It should also document the design of the subsystem.
+This is in subsections.
+</para>
         </listitem>
       </itemizedlist> </para>
     <para> Each subsystem can have:
