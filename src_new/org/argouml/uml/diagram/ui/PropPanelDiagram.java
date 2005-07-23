@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.32 2005/07/06 19:18:59 mvw Exp $
+// $Id: PropPanelDiagram.java,v 1.33 2005/07/23 16:47:57 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -59,8 +60,8 @@ public class PropPanelDiagram extends PropPanel {
      * Constructs a proppanel with a given name.
      * @see org.argouml.ui.AbstractArgoJPanel#AbstractArgoJPanel(String)
      */
-    protected PropPanelDiagram(String diagramName) {
-        super(diagramName, ConfigLoader.getTabPropsOrientation());
+    protected PropPanelDiagram(String diagramName, ImageIcon icon) {
+        super(diagramName, icon, ConfigLoader.getTabPropsOrientation());
 
         JTextField field = new JTextField();
         field.getDocument().addDocumentListener(new DiagramNameDocument(field));
@@ -78,7 +79,7 @@ public class PropPanelDiagram extends PropPanel {
      * diagram.
      */
     public PropPanelDiagram() {
-        this("Diagram");
+        this("Diagram", null);
     }
 
     /**

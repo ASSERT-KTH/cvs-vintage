@@ -1,4 +1,4 @@
-// $Id: PropPanelUMLClassDiagram.java,v 1.6 2005/01/09 14:58:56 linus Exp $
+// $Id: PropPanelUMLClassDiagram.java,v 1.7 2005/07/23 16:47:57 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,8 @@ public class PropPanelUMLClassDiagram extends PropPanelDiagram {
      * Constructor for PropPanelUMLClassDiagram.
      */
     public PropPanelUMLClassDiagram() {
-        super(Translator.localize("label.class-diagram"));
+        super(Translator.localize("label.class-diagram"),
+                lookupIcon("ClassDiagram"));
     }
 
 }

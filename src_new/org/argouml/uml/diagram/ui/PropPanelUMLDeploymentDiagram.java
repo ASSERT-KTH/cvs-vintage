@@ -1,4 +1,4 @@
-// $Id: PropPanelUMLDeploymentDiagram.java,v 1.5 2005/01/09 14:58:56 linus Exp $
+// $Id: PropPanelUMLDeploymentDiagram.java,v 1.6 2005/07/23 16:47:57 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,8 @@ public class PropPanelUMLDeploymentDiagram extends PropPanelDiagram {
      * Constructor for PropPanelUMLDeploymentDiagram.
      */
     public PropPanelUMLDeploymentDiagram() {
-        super(Translator.localize("label.deployment-diagram"));
+        super(Translator.localize("label.deployment-diagram"),
+                lookupIcon("DeploymentDiagram"));
     }
 
 }
