@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.67 2005/07/21 06:50:54 mkl Exp $
+// $Id: TabProps.java,v 1.68 2005/07/23 16:32:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -374,13 +374,11 @@ public class TabProps
     /**
      * A factory method to create a PropPanel for a particular model
      * element.
-     * TODO: Needs completing for all PropPanels
+     * 
      * @param modelElement The model element
      * @return A new prop panel to display any model element of the given type
      */
     private TabModelTarget createPropPanel(Object modelElement) {
-        
-       
 
         // Create prop panels for diagrams
         if (modelElement instanceof UMLActivityDiagram) {
