@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.68 2005/07/23 16:32:19 mvw Exp $
+// $Id: TabProps.java,v 1.69 2005/07/23 17:10:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -420,10 +420,10 @@ public class TabProps
             return new PropPanelActivityGraph();}
         if (Model.getFacade().isAActor(modelElement)) { 
                 return new PropPanelActor();}
-        if (Model.getFacade().isAAssociation(modelElement)) { 
-                return new PropPanelAssociation();}
         if (Model.getFacade().isAAssociationClass(modelElement)) { 
                 return new PropPanelAssociationClass();}
+        if (Model.getFacade().isAAssociation(modelElement)) { 
+                return new PropPanelAssociation();}
         if (Model.getFacade().isAAssociationEnd(modelElement)) { 
                 return new PropPanelAssociationEnd();}
         if (Model.getFacade().isAAssociationEndRole(modelElement)) { 
