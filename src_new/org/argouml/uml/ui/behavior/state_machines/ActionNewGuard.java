@@ -1,4 +1,4 @@
-// $Id: ActionNewGuard.java,v 1.8 2005/01/09 14:59:07 linus Exp $
+// $Id: ActionNewGuard.java,v 1.9 2005/07/24 20:14:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ package org.argouml.uml.ui.behavior.state_machines;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.Model;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
@@ -50,7 +51,8 @@ public class ActionNewGuard extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        Model.getStateMachinesFactory().buildGuard(getTarget());
+        TargetManager.getInstance().setTarget(
+                Model.getStateMachinesFactory().buildGuard(getTarget()));
     }
 
     /**
