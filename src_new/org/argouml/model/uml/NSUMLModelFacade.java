@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.16 2005/07/22 07:25:36 mkl Exp $
+// $Id: NSUMLModelFacade.java,v 1.17 2005/07/24 23:54:42 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4220,6 +4220,8 @@ public class NSUMLModelFacade implements Facade {
             name = ((MModelElement) handle).getName();
 //        } else if (handle instanceof Diagram) {
 //            name = ((Diagram) handle).getName();
+        } else if (handle instanceof MMultiplicity) {
+            name = handle.toString();
         } else if (handle instanceof MOrderingKind) {
             name = ((MOrderingKind) handle).getName();
         } else if (handle instanceof MAggregationKind) {
