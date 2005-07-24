@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.53 2005/06/05 13:07:30 linus Exp $
+// $Id: DetailsPane.java,v 1.54 2005/07/24 07:19:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -240,9 +240,6 @@ public class DetailsPane
                 Component tab = topLevelTabbedPane.getComponentAt(i);
                 if (tab instanceof TabTarget) {
                     if (((TabTarget) tab).shouldBeEnabled(target)) {
-                        if (!(tab instanceof TargetListener)) {
-                            ((TabTarget) tab).setTarget(target);
-                        }
                         topLevelTabbedPane.setSelectedIndex(i);
                         tabSelected = true;
                         lastNonNullTab = i;
