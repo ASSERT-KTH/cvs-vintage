@@ -16,13 +16,11 @@
 package org.columba.core.io;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import com.apple.eio.FileManager;
 
-public class DefaultDesktop implements DesktopInterface {
-
-	public DefaultDesktop() {
-		super();
-	}
+public class MacDesktop implements DesktopInterface {
 
 	public String getMimeType(File file) {
 		return "application/octet-stream";
@@ -33,22 +31,28 @@ public class DefaultDesktop implements DesktopInterface {
 	}
 
 	public boolean supportsOpen() {
-		return false;
+		return true;
 	}
 
 	public boolean open(File file) {
-		return false;
+		try {
+			FileManager.openURL(file.toURL().toString());
+		} catch (MalformedURLException e) {
+			return false;
+		}
+		return true;
 	}
 
 	public boolean openAndWait(File file) {
-		return false;
+		return open(file);
 	}
 
 	public boolean supportsBrowse() {
-		return false;
+		return true;
 	}
 
 	public void browse(URL url) {
+		FileManager.openURL(url.toString());
 	}
 
 }

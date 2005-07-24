@@ -92,7 +92,8 @@
 			<pathelement path="${lib.jpim}"/>			
 			<pathelement path="${lib.je}"/>	
 			<pathelement path="${lib.groovy}"/>
-			<pathelement path="${native.base}/${lib.jdic}"/>						
+			<pathelement path="${native.base}/${lib.jdic}"/>
+			<pathelement path="${lib.mac_moc}"/>
 		</path>
 		<path id="run.classpath" >
 			<path refid="compile.classpath" />

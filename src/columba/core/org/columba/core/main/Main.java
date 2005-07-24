@@ -38,6 +38,7 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.io.JDICDesktop;
+import org.columba.core.io.MacDesktop;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
@@ -190,6 +191,8 @@ public class Main {
 		} else if (OSInfo.isWin32Platform()) {
 			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
 			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
+		} else if( OSInfo.isMac()) {
+			ColumbaDesktop.getInstance().setActiveDesktop(new MacDesktop());
 		}
 	}
 
