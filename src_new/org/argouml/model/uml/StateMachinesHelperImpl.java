@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperImpl.java,v 1.14 2005/07/22 07:35:16 mkl Exp $
+// $Id: StateMachinesHelperImpl.java,v 1.15 2005/07/24 19:14:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,15 +139,15 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
      * model, the parameters of the method are of type Object.<p>
      *
      * @param transition the given transition
-     * @param event the given event
+     * @param event the given event or null
      */
     public void setEventAsTrigger(Object transition, Object event) {
         if (transition == null || !(transition instanceof MTransition)) {
             throw new IllegalArgumentException("Transition either null or not "
 					       + "an instance of MTransition");
         }
-        if (event == null || !(event instanceof MEvent)) {
-            throw new IllegalArgumentException("Event either null or not an "
+        if (event != null && !(event instanceof MEvent)) {
+            throw new IllegalArgumentException("Event not an "
 					       + "instance of MEvent");
         }
         ((MTransition) transition).setTrigger((MEvent) event);

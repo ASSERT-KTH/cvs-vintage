@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.5 2005/07/10 15:56:48 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.6 2005/07/24 19:14:07 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -296,7 +296,7 @@ public interface StateMachinesHelper {
      * Sets the trigger event of a transition.
      *
      * @param handle is the transition
-     * @param event is the trigger event
+     * @param event is the trigger event or null
      */
     void setTrigger(Object handle, Object event);
 
