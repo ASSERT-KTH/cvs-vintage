@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.54 2005/07/24 07:19:36 mvw Exp $
+// $Id: DetailsPane.java,v 1.55 2005/07/24 21:02:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,11 +85,6 @@ public class DetailsPane
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-
-    /**
-     * The currently selected todo item.
-     */
-    private Object selectedTodoItem = null;
 
     /**
      * The top level pane, which is a tabbed pane.
@@ -189,7 +184,6 @@ public class DetailsPane
             }
         }
         setTarget(null);
-        selectedTodoItem = null;
         topLevelTabbedPane.addMouseListener(this);
         topLevelTabbedPane.addChangeListener(this);
     }
@@ -212,12 +206,11 @@ public class DetailsPane
      * @return true if ? Yes when? TODO: Explain.
      */
     public boolean setToDoItem(Object item) {
-        selectedTodoItem = item;
         enableTabs(item);
         for (int i = 0; i < tabPanelList.size(); i++) {
             JPanel t = (JPanel) tabPanelList.elementAt(i);
             if (t instanceof TabToDo) {
-                ((TabToDo) t).setTarget(selectedTodoItem);
+                ((TabToDo) t).setTarget(item);
                 topLevelTabbedPane.setSelectedComponent(t);
                 return true;
             }
