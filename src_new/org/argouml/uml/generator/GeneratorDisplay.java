@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.91 2005/07/11 17:23:14 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.92 2005/07/25 18:57:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -856,6 +856,9 @@ public class GeneratorDisplay extends Generator2 {
      */
     public String generateVisibility(Object o) {
         if (o == null) {
+            return "";
+        }
+        if (!Configuration.getBoolean(Notation.KEY_SHOW_VISIBILITY, true)) {
             return "";
         }
         if (Model.getFacade().isAModelElement(o)) {
