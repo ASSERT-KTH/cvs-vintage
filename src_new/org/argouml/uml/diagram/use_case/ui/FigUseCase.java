@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.67 2005/07/17 18:40:51 mvw Exp $
+// $Id: FigUseCase.java,v 1.68 2005/07/25 10:42:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1211,9 +1211,8 @@ public class FigUseCase extends FigNodeModelElement
 
         ActionAddExtensionPoint.singleton().actionPerformed(null);
 
-        // TODO: in future version of GEF call getFigs returning array
         CompartmentFigText ft =
-            (CompartmentFigText) new Vector(fg.getFigs()).lastElement();
+            (CompartmentFigText) fg.getFigs().get(fg.getFigs().size()-1);
 
         if (ft != null) {
             ft.startTextEditor(ie);
