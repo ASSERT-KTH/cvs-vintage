@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.181 2005/07/25 12:51:57 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.182 2005/07/25 13:13:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -284,22 +284,12 @@ public abstract class FigNodeModelElement
         // is inside it:
         bigPort = new FigRect(10, 10, 0, 0, Color.cyan, Color.cyan);
 
-        name = new FigText(10, 10, 90, 21, true);
-        name.setFont(getLabelFont());
-        name.setTextColor(Color.black);
-        // _name.setFilled(false);
-        name.setAllowsTab(false);
-        name.setMultiLine(false);
-//        name.setReturnAction(FigText.END_EDITING);
-//        name.setTabAction(FigText.END_EDITING);
+        name = new FigSingleLineText(10, 10, 90, 21, true);
         name.setText(placeString());
 
-        stereo = new FigText(10, 10, 90, 15, true);
-        stereo.setFont(getLabelFont());
-        stereo.setTextColor(Color.black);
+        stereo = new FigSingleLineText(10, 10, 90, 15, true);
         stereo.setFilled(false);
         stereo.setLineWidth(0);
-        //_stereo.setLineColor(Color.black);
         stereo.setEditable(false);
 
         readyToEdit = false;
