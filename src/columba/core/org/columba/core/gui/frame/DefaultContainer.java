@@ -494,8 +494,14 @@ public class DefaultContainer extends JFrame implements Container,
 				String extensionId = metadata.getId();
 				AbstractColumbaAction action = handler.getAction(extensionId,
 						mediator);
-				((ExtendableMenuBar) menubar).insertAction(menuId,
-						placeholderId, action);
+				if (action == null) {
+					LOG.severe("action could not be instanciated: "
+							+ extensionId);
+
+				} else {
+					((ExtendableMenuBar) menubar).insertAction(menuId,
+							placeholderId, action);
+				}
 			}
 
 		} catch (PluginHandlerNotFoundException e) {
