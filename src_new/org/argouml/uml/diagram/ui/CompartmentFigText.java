@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.23 2004/11/16 11:33:33 bobtarling Exp $
+// $Id: CompartmentFigText.java,v 1.24 2005/07/25 13:49:04 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.tigris.gef.presentation.FigText;
  *
  * @author thn
  */
-public class CompartmentFigText extends FigText {
+public class CompartmentFigText extends FigSingleLineText {
     private static final Logger LOG =
 	Logger.getLogger(CompartmentFigText.class);
 

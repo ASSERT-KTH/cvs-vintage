@@ -1,4 +1,4 @@
-// $Id: FigMultiLineText.java,v 1.3 2005/07/25 12:51:57 bobtarling Exp $
+// $Id: FigMultiLineText.java,v 1.4 2005/07/25 13:49:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,13 @@ import org.tigris.gef.presentation.FigText;
 
 /**
  * A MultiLine FigText to provide consistency across Figs displaying multiple
- * lines of text. 
+ * lines of text.
+ * By default -
+ * <ul>
+ * <li>Text is black</li>
+ * <li>The display area is transparent</li>
+ * <li>Text is left justified</li>
+ * <li>There is no line border</li>
  * @author Bob Tarling
  */
 public class FigMultiLineText extends FigText {

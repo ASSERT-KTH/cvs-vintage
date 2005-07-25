@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.182 2005/07/25 13:13:13 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.183 2005/07/25 13:49:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -285,11 +285,11 @@ public abstract class FigNodeModelElement
         bigPort = new FigRect(10, 10, 0, 0, Color.cyan, Color.cyan);
 
         name = new FigSingleLineText(10, 10, 90, 21, true);
+        name.setLineWidth(1);
+        name.setFilled(true);
         name.setText(placeString());
 
         stereo = new FigSingleLineText(10, 10, 90, 15, true);
-        stereo.setFilled(false);
-        stereo.setLineWidth(0);
         stereo.setEditable(false);
 
         readyToEdit = false;

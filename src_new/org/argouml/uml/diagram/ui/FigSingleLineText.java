@@ -1,4 +1,4 @@
-// $Id: FigSingleLineText.java,v 1.1 2005/07/25 13:13:13 bobtarling Exp $
+// $Id: FigSingleLineText.java,v 1.2 2005/07/25 13:49:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,9 @@ import org.tigris.gef.presentation.FigText;
 /**
  * A MultiLine FigText to provide consistency across Figs displaying multiple
  * lines of text. 
+ * <li>The display area is transparent</li>
+ * <li>Text is center justified</li>
+ * <li>There is no line border</li>
  * @author Bob Tarling
  */
 public class FigSingleLineText extends FigText {
@@ -43,9 +46,10 @@ public class FigSingleLineText extends FigText {
         
         setFont(FigNodeModelElement.getLabelFont());
         setTextColor(Color.black);
-        // setFilled(false);
+        setFilled(false);
         setAllowsTab(false);
         setMultiLine(false);
+        setLineWidth(0);
 //        name.setReturnAction(FigText.END_EDITING);
 //        name.setTabAction(FigText.END_EDITING);
     }
