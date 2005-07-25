@@ -93,7 +93,7 @@
 			<pathelement path="${lib.je}"/>	
 			<pathelement path="${lib.groovy}"/>
 			<pathelement path="${native.base}/${lib.jdic}"/>
-			<pathelement path="${lib.mac_moc}"/>
+			<pathelement path="${lib.mac_mock}"/>
 		</path>
 		<path id="run.classpath" >
 			<path refid="compile.classpath" />
