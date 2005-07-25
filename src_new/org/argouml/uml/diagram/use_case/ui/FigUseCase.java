@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.68 2005/07/25 10:42:39 bobtarling Exp $
+// $Id: FigUseCase.java,v 1.69 2005/07/25 12:51:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -208,7 +208,8 @@ public class FigUseCase extends FigNodeModelElement
         getNameFig().setTextFilled(false);
         getNameFig().setFilled(false);
         getNameFig().setLineWidth(0);
-        getNameFig().setReturnAction(FigText.END_EDITING);
+        getNameFig().setMultiLine(false);
+//        getNameFig().setReturnAction(FigText.END_EDITING);
 
         // The separator, again with arbitrary bounds for now.
 
@@ -1330,7 +1331,8 @@ public class FigUseCase extends FigNodeModelElement
                     epFig.setFont(getLabelFont());
                     epFig.setTextColor(Color.black);
                     epFig.setJustification(FigText.JUSTIFY_LEFT);
-                    epFig.setReturnAction(FigText.END_EDITING);
+                    epFig.setMultiLine(false);
+//                    epFig.setReturnAction(FigText.END_EDITING);
 
                     epVec.addFig(epFig);
                 } else {

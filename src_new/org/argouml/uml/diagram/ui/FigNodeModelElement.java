@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.180 2005/07/21 15:35:44 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.181 2005/07/25 12:51:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -288,8 +288,10 @@ public abstract class FigNodeModelElement
         name.setFont(getLabelFont());
         name.setTextColor(Color.black);
         // _name.setFilled(false);
-        name.setReturnAction(FigText.END_EDITING);
-        name.setTabAction(FigText.END_EDITING);
+        name.setAllowsTab(false);
+        name.setMultiLine(false);
+//        name.setReturnAction(FigText.END_EDITING);
+//        name.setTabAction(FigText.END_EDITING);
         name.setText(placeString());
 
         stereo = new FigText(10, 10, 90, 15, true);

@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.108 2005/07/21 15:35:44 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.109 2005/07/25 12:51:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,8 +161,10 @@ public abstract class FigEdgeModelElement
         name.setFilled(false);
         name.setLineWidth(0);
         name.setExpandOnly(false);
-        name.setReturnAction(FigText.IGNORE);
-        name.setTabAction(FigText.IGNORE);
+        name.setMultiLine(false);
+        name.setAllowsTab(false);
+//        name.setReturnAction(FigText.IGNORE);
+//        name.setTabAction(FigText.IGNORE);
 
         stereo.setFont(LABEL_FONT);
         stereo.setTextColor(Color.black);
@@ -170,8 +172,10 @@ public abstract class FigEdgeModelElement
         stereo.setFilled(false);
         stereo.setLineWidth(0);
         stereo.setExpandOnly(false);
-        stereo.setReturnAction(FigText.IGNORE);
-        stereo.setTabAction(FigText.IGNORE);
+        stereo.setMultiLine(false);
+        stereo.setAllowsTab(false);
+//        stereo.setReturnAction(FigText.IGNORE);
+//        stereo.setTabAction(FigText.IGNORE);
 
         setBetweenNearestPoints(true);
         ArgoEventPump.addListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);

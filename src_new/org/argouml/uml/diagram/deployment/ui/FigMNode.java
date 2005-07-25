@@ -1,4 +1,4 @@
-// $Id: FigMNode.java,v 1.35 2005/07/18 19:20:29 mvw Exp $
+// $Id: FigMNode.java,v 1.36 2005/07/25 12:51:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,11 +71,13 @@ public class FigMNode extends FigNodeModelElement {
      * Main constructor - only directly used for file loading.
      */
     public FigMNode() {
-	setBigPort(new CubePortFigRect(x, y - d, width + d, height + d, d));
-        getBigPort().setFilled(false);
-        getBigPort().setLineWidth(0);
-	cover = new FigCube(x, y, width, height, Color.black, Color.white);
-        d = cover.getDepth();
+        setBigPort(new CubePortFigRect(x, y - d, width + d, height + d, d));
+            getBigPort().setFilled(false);
+            getBigPort().setLineWidth(0);
+        cover = new FigCube(x, y, width, height, Color.black, Color.white);
+    
+        d = 20;
+        //d = cover.getDepth();
 
 	getNameFig().setLineWidth(0);
 	getNameFig().setFilled(false);

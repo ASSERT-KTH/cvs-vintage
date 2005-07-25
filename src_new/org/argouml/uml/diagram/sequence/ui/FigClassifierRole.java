@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.9 2005/07/12 20:50:54 linus Exp $
+// $Id: FigClassifierRole.java,v 1.10 2005/07/25 12:51:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,7 +161,8 @@ public class FigClassifierRole extends FigNodeModelElement
 				     "Dialog",
 				     12,
 				     false));
-        getStereotypeFigText().setTabAction(FigText.IGNORE);
+        getStereotypeFigText().setAllowsTab(false);
+//        getStereotypeFigText().setTabAction(FigText.IGNORE);
         getStereotypeFigText().setEditable(false);
         getStereotypeFig().setFilled(false);
         getStereotypeFig().setLineWidth(0);
@@ -174,7 +175,8 @@ public class FigClassifierRole extends FigNodeModelElement
 			       12,
 			       false));
         getNameFig().setEditable(false);
-        getNameFig().setTabAction(FigText.IGNORE);
+        getStereotypeFigText().setAllowsTab(false);
+        //getNameFig().setTabAction(FigText.IGNORE);
         getNameFig().setFilled(false);
         getNameFig().setLineWidth(0);
         lifeLine =

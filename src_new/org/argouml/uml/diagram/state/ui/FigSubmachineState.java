@@ -1,4 +1,4 @@
-// $Id: FigSubmachineState.java,v 1.5 2005/07/20 18:08:18 mvw Exp $
+// $Id: FigSubmachineState.java,v 1.6 2005/07/25 12:51:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,8 +93,10 @@ public class FigSubmachineState extends FigState {
         include = new FigText(10, 10, 90, 21, true);
         include.setFont(getLabelFont());
         include.setTextColor(Color.black);
-        include.setReturnAction(FigText.END_EDITING);
-        include.setTabAction(FigText.END_EDITING);
+        include.setAllowsTab(false);
+        include.setMultiLine(false);
+//        include.setReturnAction(FigText.END_EDITING);
+//        include.setTabAction(FigText.END_EDITING);
         include.setText(placeString());
         include.setLineWidth(0);
         include.setBounds(getInitialX() + 2, getInitialY() + 2,

@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.34 2005/07/18 19:20:29 mvw Exp $
+// $Id: FigMNodeInstance.java,v 1.35 2005/07/25 12:51:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,8 @@ public class FigMNodeInstance extends FigNodeModelElement {
         getBigPort().setFilled(false);
         getBigPort().setLineWidth(0);
         cover = new FigCube(x, y, width, height, Color.black, Color.white);
-        d = cover.getDepth();
+        d = 20;
+        //d = cover.getDepth();
 
         getNameFig().setLineWidth(0);
         getNameFig().setFilled(false);

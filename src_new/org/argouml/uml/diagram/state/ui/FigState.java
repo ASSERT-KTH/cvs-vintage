@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.25 2005/07/20 18:08:18 mvw Exp $
+// $Id: FigState.java,v 1.26 2005/07/25 12:51:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,8 @@ public abstract class FigState extends FigStateVertex {
         internal.setLineWidth(0);
         internal.setFilled(false);
         internal.setExpandOnly(true);
-        internal.setReturnAction(FigText.INSERT);
+        internal.setMultiLine(true);
+//        internal.setReturnAction(FigText.INSERT);
         internal.setJustification(FigText.JUSTIFY_LEFT);
     }
 
