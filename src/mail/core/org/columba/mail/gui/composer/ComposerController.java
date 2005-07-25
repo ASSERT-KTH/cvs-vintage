@@ -376,7 +376,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		layout.setColumnGroups(new int[][] { { 1 } });
 
-		// layout.setRowGroups(new int[][] { { 1, 5, 7 } });
+		//layout.setRowGroups(new int[][] { { 1, 5, 7 } });
 
 		builder.add(smtpLabel, cc.xy(1, 1));
 
@@ -413,9 +413,13 @@ public class ComposerController extends DefaultFrameController implements
 
 		layout.setRowGroups(new int[][] { { 1, 5 } });
 
-		htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
+		
 
-		if( composerModel.isHtml()) editorPanel.getContentPane().add(htmlToolbar, BorderLayout.NORTH);
+		if( composerModel.isHtml()) {
+			// htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
+			//htmlToolbar.setBorder(UIManager.getBorder("ToolBar"));
+			editorPanel.getContentPane().add(htmlToolbar, BorderLayout.NORTH);
+		}
 
 		editorPanel.getContentPane().add(
 				getEditorController().getViewUIComponent(), BorderLayout.CENTER);

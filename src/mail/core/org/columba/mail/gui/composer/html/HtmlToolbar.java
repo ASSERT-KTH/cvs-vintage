@@ -25,10 +25,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
+import javax.swing.Box;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
-import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.text.html.HTML;
 
 import org.columba.core.action.AbstractSelectableAction;
@@ -54,7 +55,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
-public class HtmlToolbar extends JPanel implements ActionListener, Observer,
+public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 		ContainerListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -80,6 +81,10 @@ public class HtmlToolbar extends JPanel implements ActionListener, Observer,
 		super();
 		this.controller = controller;
 
+		setRollover(true);
+
+		setFloatable(false);
+		
 		try {
 			initComponents();
 		} catch (Exception e) {
@@ -106,7 +111,7 @@ public class HtmlToolbar extends JPanel implements ActionListener, Observer,
 	}
 
 	protected void initComponents() throws Exception {
-		CellConstraints cc = new CellConstraints();
+		//CellConstraints cc = new CellConstraints();
 
 		// we generate most buttons using the actions already instanciated
 		ActionExtensionHandler handler = null;
@@ -171,27 +176,41 @@ public class HtmlToolbar extends JPanel implements ActionListener, Observer,
 
 		// builder.add(paraLabel, cc.xy(1, 7));
 
-		// nested panel
-
-		FormLayout layout = new FormLayout(
-				"default, 3dlu, default, 3dlu, default, 3dlu, "
-						+ "default, 3dlu, default, 3dlu, default, 3dlu, "
-						+ "default, 6dlu, default, 3dlu, default, 3dlu, "
-						+ "default, 3dlu", "fill:default");
-		PanelBuilder b = new PanelBuilder(this, layout);
-
-		CellConstraints c = new CellConstraints();
-
-		b.add(paragraphComboBox, cc.xy(1, 1));
-		b.add(sizeLabel, cc.xy(3, 1));
-		b.add(sizeComboBox, cc.xy(5, 1));
-		b.add(boldFormatButton, cc.xy(7, 1));
-		b.add(italicFormatButton, cc.xy(9, 1));
-		b.add(underlineFormatButton, cc.xy(11, 1));
-		b.add(strikeoutFormatButton, cc.xy(13, 1));
-		b.add(leftJustifyButton, cc.xy(15, 1));
-		b.add(centerJustifyButton, cc.xy(17, 1));
-		b.add(rightJustifyButton, cc.xy(19, 1));
+		add(paragraphComboBox);
+		addSeparator();
+		add(sizeLabel);
+		add(sizeComboBox);
+		addSeparator();
+		
+		add(boldFormatButton);
+		add(italicFormatButton);
+		add(underlineFormatButton);
+		add(strikeoutFormatButton);
+		addSeparator();
+		add(leftJustifyButton);
+		add(centerJustifyButton);
+		add(rightJustifyButton);
+		
+		add(Box.createHorizontalGlue());
+//		FormLayout layout = new FormLayout(
+//				"default, 3dlu, default, 3dlu, default, 3dlu, "
+//						+ "default, 3dlu, default, 3dlu, default, 3dlu, "
+//						+ "default, 6dlu, default, 3dlu, default, 3dlu, "
+//						+ "default, 3dlu", "fill:default");
+//		PanelBuilder b = new PanelBuilder(this, layout);
+//
+//		CellConstraints c = new CellConstraints();
+//
+//		b.add(paragraphComboBox, cc.xy(1, 1));
+//		b.add(sizeLabel, cc.xy(3, 1));
+//		b.add(sizeComboBox, cc.xy(5, 1));
+//		b.add(boldFormatButton, cc.xy(7, 1));
+//		b.add(italicFormatButton, cc.xy(9, 1));
+//		b.add(underlineFormatButton, cc.xy(11, 1));
+//		b.add(strikeoutFormatButton, cc.xy(13, 1));
+//		b.add(leftJustifyButton, cc.xy(15, 1));
+//		b.add(centerJustifyButton, cc.xy(17, 1));
+//		b.add(rightJustifyButton, cc.xy(19, 1));
 
 		// builder.add(panel, cc.xy(1, 7));
 	}
