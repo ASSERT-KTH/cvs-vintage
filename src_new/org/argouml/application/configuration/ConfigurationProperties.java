@@ -1,4 +1,4 @@
-// $Id: ConfigurationProperties.java,v 1.15 2005/01/09 14:58:03 linus Exp $
+// $Id: ConfigurationProperties.java,v 1.16 2005/07/25 18:12:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -201,9 +201,9 @@ public class ConfigurationProperties extends ConfigurationHandler {
 	} catch (Exception e) {
 	    result = defaultValue;
 	}
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("key '" + key + "' returns '" + result + "'");
-	}
+//	if (LOG.isDebugEnabled()) {
+//	    LOG.debug("key '" + key + "' returns '" + result + "'");
+//	}
 	return result;
     }
 
