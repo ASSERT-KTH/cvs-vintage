@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.25 2005/06/11 06:17:15 mvw Exp $
+// $Id: ExplorerTreeModel.java,v 1.26 2005/07/25 21:07:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,7 +204,7 @@ public class ExplorerTreeModel extends DefaultTreeModel
      * @see org.argouml.ui.explorer.TreeModelUMLEventListener#modelElementChanged(java.lang.Object)
      */
     public void modelElementChanged(Object node) {
-	traverseModified((TreeNode) getRoot(), node);
+        traverseModified((TreeNode) getRoot(), node);
     }
 
     /**
@@ -213,7 +213,7 @@ public class ExplorerTreeModel extends DefaultTreeModel
      * @see org.argouml.ui.explorer.TreeModelUMLEventListener#modelElementAdded(java.lang.Object)
      */
     public void modelElementAdded(Object node) {
-	traverseModified((TreeNode) getRoot(), node);
+        traverseModified((TreeNode) getRoot(), node);
     }
 
     /**
@@ -249,7 +249,7 @@ public class ExplorerTreeModel extends DefaultTreeModel
             }
         }
 
-	traverseModified((TreeNode) getRoot(), node);
+        traverseModified((TreeNode) getRoot(), node);
     }
 
     /**

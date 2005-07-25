@@ -1,4 +1,4 @@
-// $Id: ExplorerNSUMLEventAdaptor.java,v 1.10 2005/07/21 12:49:23 bobtarling Exp $
+// $Id: ExplorerNSUMLEventAdaptor.java,v 1.11 2005/07/25 21:07:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,7 +167,7 @@ public final class ExplorerNSUMLEventAdaptor
                         e.getName(),
                         e.getOldValue(),
                         e.getNewValue(),
-                        e.getSource(),
+                        e.getAddedValue(),
                         e);
 
             this.firePropertyChange(event);
@@ -208,28 +208,10 @@ public final class ExplorerNSUMLEventAdaptor
                         e.getName(),
                         e.getOldValue(),
                         e.getNewValue(),
-                        e.getSource(),
+                        e.getRemovedValue(),
                         e);
 
             this.firePropertyChange(event);
         }
-
     }
-
-    // ------- property change events ----------
-
-//    /**
-//     * Source of the model element changed translates to the new value.
-//     */
-//    private void firePropertyChanged(String propertyName,
-//				     Object source) {
-//        PropertyChangeEvent pce =
-//            new PropertyChangeEvent(
-//                    this,
-//                    propertyName,
-//                    null,
-//                    source);
-//
-//        this.firePropertyChange(pce);
-//    }
 }
