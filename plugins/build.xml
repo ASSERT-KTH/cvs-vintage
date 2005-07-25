@@ -31,9 +31,6 @@
 		 <property name="plugin_src" value="org.columba.core.MetouiaLookAndFeel"/>
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.ThinColumbaLookAndFeel"/>
-		</ant>
-		<ant target="release" inheritall="false" antfile="build_plugin.xml">
 		 <property name="plugin_src" value="org.columba.core.HippoLookAndFeel"/>
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
@@ -41,6 +38,9 @@
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
 		 <property name="plugin_src" value="org.columba.core.WinLAFLookAndFeel"/>
+		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+		 <property name="plugin_src" value="org.columba.core.LogDisplay"/>
 		</ant>
 	</target>
 	
