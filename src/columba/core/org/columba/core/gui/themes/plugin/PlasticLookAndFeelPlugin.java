@@ -28,6 +28,7 @@ import com.jgoodies.looks.LookUtils;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticTheme;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 
 
 /**
@@ -52,7 +53,9 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
         
         Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
         Options.setDefaultIconSize(new Dimension(16, 16));
-        
+        Options.setPopupDropShadowEnabled(true);
+        Options.setUseSystemFonts(true);
+      
         /*
         ClearLookManager.setMode(ClearLookMode.ON);
         ClearLookManager.setPolicy(
@@ -79,10 +82,10 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 
             if (theme != null) {
                 PlasticTheme t = getTheme(theme);
-                LookUtils.setLookAndTheme(new PlasticLookAndFeel(), t);
+                LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
             } else {
                 PlasticTheme t = PlasticLookAndFeel.createMyDefaultTheme();
-                LookUtils.setLookAndTheme(new PlasticLookAndFeel(), t);
+                LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
             }
         } catch (Exception e) {
             System.err.println("Can't set look & feel:" + e);
