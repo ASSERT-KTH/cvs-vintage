@@ -31,6 +31,7 @@ import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 import org.columba.core.gui.util.ErrorDialog;
+import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
@@ -64,6 +65,7 @@ public class ExceptionHandler {
 		
 		if (e instanceof SocketException) {
 			processSocketException((SocketException) e);
+			ConnectionStateImpl.getInstance().setOnline(false);
 		} else if (e instanceof IOException) {
 			processIOException((IOException) e);
 		} else if (e instanceof IMAPException) {
