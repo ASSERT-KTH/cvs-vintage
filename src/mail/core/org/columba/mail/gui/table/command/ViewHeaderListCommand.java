@@ -46,8 +46,10 @@ public class ViewHeaderListCommand extends Command implements ISelectionListener
 		
 		// Register as listener to the SelectionManger
 		// to check for selection changes
+		updateGui = true;
 		frame.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);
-
+		
+		
 		priority = Command.REALTIME_PRIORITY;
 	}
 
@@ -71,7 +73,7 @@ public class ViewHeaderListCommand extends Command implements ISelectionListener
 	public void execute(WorkerStatusController worker) throws Exception {
 		// Register as SelectionListener to track the selection
 		// of the tree
-		updateGui = true;
+		if( !updateGui ) return;
 		
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
