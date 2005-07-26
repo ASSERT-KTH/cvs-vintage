@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.59 2005/07/26 15:29:08 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.60 2005/07/26 23:25:48 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -250,12 +250,13 @@ public final class ProjectManager implements PropertyChangeListener, MementoCrea
                             oldProject, currentProject);
         creatingCurrentProject = false;
         UndoManager.getInstance().empty();
-        if (!ArgoVersion.isDevRelease()) {
+        
+        if (!UndoEnabler.ENABLED) {
             UndoManager.getInstance().setUndoMax(0);
         }
         return currentProject;
     }
-
+    
     /**
      * Test if the model needs to be saved.
      *

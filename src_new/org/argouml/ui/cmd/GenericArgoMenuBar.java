@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.21 2005/07/26 15:29:10 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.22 2005/07/26 23:25:48 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,8 @@ import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoModuleEvent;
 import org.argouml.application.events.ArgoModuleEventListener;
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.ProjectManager;
+import org.argouml.kernel.UndoEnabler;
 import org.argouml.language.ui.ActionNotation;
 import org.argouml.ui.ActionAutoResize;
 import org.argouml.ui.ActionSaveConfiguration;
@@ -483,7 +485,7 @@ public class GenericArgoMenuBar extends JMenuBar
         edit = add(new JMenu(menuLocalize("Edit")));
         setMnemonic(edit, "Edit");
 
-        if (ArgoVersion.isDevRelease()) {
+        if (UndoEnabler.ENABLED) {
             JMenuItem undoItem = 
                 edit.add(ProjectBrowser.getInstance().getUndoAction());
             setMnemonic(undoItem, "Undo");
