@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.20 2005/07/17 14:50:29 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.21 2005/07/26 15:29:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
+import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggableMenu;
 import org.argouml.application.events.ArgoEventPump;
@@ -482,17 +483,19 @@ public class GenericArgoMenuBar extends JMenuBar
         edit = add(new JMenu(menuLocalize("Edit")));
         setMnemonic(edit, "Edit");
 
-        JMenuItem undoItem = 
-            edit.add(ProjectBrowser.getInstance().getUndoAction());
-        setMnemonic(undoItem, "Undo");
-        setAccelerator(undoItem, ctrlZ);
+        if (ArgoVersion.isDevRelease()) {
+            JMenuItem undoItem = 
+                edit.add(ProjectBrowser.getInstance().getUndoAction());
+            setMnemonic(undoItem, "Undo");
+            setAccelerator(undoItem, ctrlZ);
 
-        JMenuItem redoItem = 
-            edit.add(ProjectBrowser.getInstance().getRedoAction());
-        setMnemonic(redoItem, "Redo");
-        setAccelerator(redoItem, ctrlY);
+            JMenuItem redoItem = 
+                edit.add(ProjectBrowser.getInstance().getRedoAction());
+            setMnemonic(redoItem, "Redo");
+            setAccelerator(redoItem, ctrlY);
 
-        edit.addSeparator();
+            edit.addSeparator();
+        }
         
         select = new JMenu(menuLocalize("Select"));
         setMnemonic(select, "Select");

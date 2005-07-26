@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.58 2005/07/22 13:13:49 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.59 2005/07/26 15:29:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.Vector;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.ArgoVersion;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.MementoCreationObserver;
 import org.argouml.model.Model;
@@ -249,6 +250,9 @@ public final class ProjectManager implements PropertyChangeListener, MementoCrea
                             oldProject, currentProject);
         creatingCurrentProject = false;
         UndoManager.getInstance().empty();
+        if (!ArgoVersion.isDevRelease()) {
+            UndoManager.getInstance().setUndoMax(0);
+        }
         return currentProject;
     }
 
