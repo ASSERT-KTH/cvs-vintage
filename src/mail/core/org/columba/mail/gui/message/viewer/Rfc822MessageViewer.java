@@ -249,10 +249,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 			top.add(headerController.getView(), BorderLayout.CENTER);
 
 		add(top, BorderLayout.NORTH);
-
-		if (!showAttachmentsInlineEnabled())
-			add(bodytextViewer, BorderLayout.CENTER);
-
+			
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 
@@ -260,10 +257,12 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 			bottom.add(securityInformationController.getView(),
 					BorderLayout.NORTH);
 
-		if (showAttachmentsInlineEnabled())
+		if (showAttachmentsInlineEnabled()) {
 			bottom.add(inlineAttachmentsViewer, BorderLayout.CENTER);
-		else
-			bottom.add(attachmentsViewer, BorderLayout.CENTER);
+		} else {
+			bottom.add(getBodytextViewer(), BorderLayout.CENTER);
+			bottom.add(attachmentsViewer, BorderLayout.SOUTH);
+		}
 
 		add(bottom, BorderLayout.SOUTH);
 	}
