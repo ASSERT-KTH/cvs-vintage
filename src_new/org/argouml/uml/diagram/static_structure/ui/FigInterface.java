@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.110 2005/07/26 10:39:36 bobtarling Exp $
+// $Id: FigInterface.java,v 1.111 2005/07/26 11:01:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,11 +95,6 @@ public class FigInterface extends FigClassifierBox {
      */
     private Object resident =
             Model.getCoreFactory().createElementResidence();
-
-    /**
-     * Text highlighted by mouse actions on the diagram.<p>
-     */
-    private CompartmentFigText highlightedFigText = null;
 
     ////////////////////////////////////////////////////////////////
     // constructors

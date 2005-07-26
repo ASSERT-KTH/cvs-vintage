@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.161 2005/07/26 10:39:36 bobtarling Exp $
+// $Id: FigClass.java,v 1.162 2005/07/26 11:01:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -284,13 +284,6 @@ public class FigClass extends FigClassifierBox
                 popUpActions.size() - popupAddOffset);
 
         return popUpActions;
-    }
-
-    /**
-     * @return The bounds of the operations compartment.
-     */
-    public Rectangle getOperationsBounds() {
-        return ((FigGroup) getFigAt(OPERATIONS_POSN)).getBounds();
     }
 
     /**

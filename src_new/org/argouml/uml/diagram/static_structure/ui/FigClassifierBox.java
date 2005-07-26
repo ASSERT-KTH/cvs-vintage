@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.3 2005/07/26 10:39:36 bobtarling Exp $
+// $Id: FigClassifierBox.java,v 1.4 2005/07/26 11:01:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,39 +145,6 @@ abstract public class FigClassifierBox extends FigNodeModelElement
      */
     public boolean isOperationsVisible() {
         return operationsFig.isVisible();
-    }
-    
-    /**
-     * @param isVisible true will show the operations compartiment
-     */
-    public void setOperationsVisible(boolean isVisible) {
-        Rectangle rect = getBounds();
-        int h = isCheckSize()
-                ? ((ROWHEIGHT * Math.max(1, operationsFig.getFigs().size() - 1) + 2)
-                * rect.height
-                / getMinimumSize().height)
-                : 0;
-        if (operationsFig.isVisible()) {
-            if (!isVisible) {
-                damage();
-                Iterator it = operationsFig.getFigs().iterator();
-                while (it.hasNext()) {
-                    ((Fig) (it.next())).setVisible(false);
-                }
-                operationsFig.setVisible(false);
-                setBounds(rect.x, rect.y, rect.width, rect.height - h);
-            }
-        } else {
-            if (isVisible) {
-                Iterator it = operationsFig.getFigs().iterator();
-                while (it.hasNext()) {
-                    ((Fig) (it.next())).setVisible(true);
-                }
-                operationsFig.setVisible(true);
-                setBounds(rect.x, rect.y, rect.width, rect.height + h);
-                damage();
-            }
-        }
     }
     
     /**
