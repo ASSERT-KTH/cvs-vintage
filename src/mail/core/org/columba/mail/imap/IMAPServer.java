@@ -1060,10 +1060,15 @@ public class IMAPServer implements IMAPListener, Observer {
 
 			// store the intermediate results in a list
 			for (int i = 0; i < packs.length; i++) {
-				IMAPFlags[] r = protocol.fetchFlags(packs[i]);
-				pos += r.length;
+				try {
+					IMAPFlags[] r = protocol.fetchFlags(packs[i]);
+					pos += r.length;
 
-				allResults.add(r);
+					allResults.add(r);
+				} catch (IMAPException e) {
+					// Entry does not exist on server
+					// -> add nothing
+				}
 
 				// update the progress
 				if (observable != null) {
