@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.49 2005/07/27 11:49:22 pelletib Exp $
+ - $Id: build.xml,v 1.50 2005/07/27 12:16:51 pelletib Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -50,7 +50,7 @@
   <property file="${config}/configure.properties" />
 
   <!-- carol meta information -->
-  <property name="carol.version" value="2.0.6" />
+  <property name="carol.version" value="2.0.7" />
   <property name="carol.name" value="Carol" />
   <property name="carol.package" value="org.objectweb.carol" />
 
