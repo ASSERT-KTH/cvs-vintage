@@ -1,22 +1,46 @@
-/***
- * Jonathan: an Open Distributed Processing Environment 
- * Copyright (C) 1999 France Telecom R&D
- * Copyright (C) 2002, Simon Nieuviarts
- * 
+/**
+ * Copyright (C) 2002-2005 - Bull S.A.
+ *
+ * CMI : Cluster Method Invocation
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- * 
+ * version 2.1 of the License, or any later version.
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ * USA
+ *
+ * --------------------------------------------------------------------------
+ * $Id: NamingContext.java,v 1.2 2005/07/27 11:49:22 pelletib Exp $
+ * --------------------------------------------------------------------------
+ */
+/*
+ * Jonathan: an Open Distributed Processing Environment
+ * Copyright (C) 1999 France Telecom R&D
+ * Copyright (C) 2002-2005, Simon Nieuviarts
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  * Release: 2.0
  *
  * Contact: jonathan@objectweb.org
@@ -25,16 +49,39 @@
  *
  * with contributions from:
  *   Bruno Dumant
- * 
+ *
  */
 package org.objectweb.carol.cmi;
 
 import java.net.MalformedURLException;
 
+/**
+ * To parse a CMI URL.
+ *
+ * @author nieuviar
+ */
 public class NamingContext {
+
+    /**
+     * scheme
+     */
     public String scheme = "";
+
+    /**
+     * host port
+     */
     public NamingContextHostPort[] hp;
+
+    /**
+     * name
+     */
     public String name = "";
+
+    /**
+     * Parse url
+     * @param input url
+     * @throws MalformedURLException if malformed url
+     */
 
     public NamingContext(String input) throws MalformedURLException {
         if (input == null || input.length() == 0) {
@@ -56,6 +103,11 @@ public class NamingContext {
         }
     }
 
+    /**
+     * Parse scheme
+     * @param inputscheme schem
+     * @throws MalformedURLException if malformed scheme
+     */
     private void parseScheme(String inputscheme) throws MalformedURLException {
         if (inputscheme.length() == 0) { // scheme can be empty
             this.scheme = "";
@@ -73,6 +125,11 @@ public class NamingContext {
         }
     }
 
+    /**
+     * Parse Name
+     * @param inputurl url
+     * @throws MalformedURLException  if malformed name
+     */
     private void parseName(String inputurl) throws MalformedURLException {
         // inputurl is expected to start with //
         String inputname = "";
@@ -104,6 +161,12 @@ public class NamingContext {
         this.parseHostsPorts(inputhostport);
     }
 
+    /**
+     * Parse host port
+     * @param inputhostport host port
+     * @param hp output host port
+     * @throws MalformedURLException if parameters are malformed
+     */
     private void parseHostPort(String inputhostport, java.util.ArrayList hp)
         throws MalformedURLException {
         String inputhost = "";
@@ -142,18 +205,25 @@ public class NamingContext {
         hp.add(nchp);
     }
 
+    /**
+     * Parse several [host,port]
+     * @param inputhostsports host,port list
+     * @throws MalformedURLException if if parameters are malformed
+     */
     private void parseHostsPorts(String inputhostsports)
         throws MalformedURLException {
         int start = 0;
         java.util.ArrayList hostsports = new java.util.ArrayList();
         do {
             int end = inputhostsports.indexOf(',', start);
-            if (end < 0)
+            if (end < 0) {
                 parseHostPort(inputhostsports.substring(start), hostsports);
-            else
+            }
+            else {
                 parseHostPort(
                     inputhostsports.substring(start, end),
                     hostsports);
+            }
             start = end + 1;
         } while (start > 0);
         int n = hostsports.size();

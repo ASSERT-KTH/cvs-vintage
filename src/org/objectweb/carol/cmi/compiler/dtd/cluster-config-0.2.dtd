@@ -1,8 +1,0 @@
-<!ELEMENT cluster-config (class*)>
-<!ELEMENT class (name, (lookup|(method*)|(rr*)|(random*)))>
-<!ELEMENT name (#PCDATA)>
-<!ELEMENT method (signature)>
-<!ELEMENT signature (#PCDATA)>
-<!ELEMENT lookup EMPTY>
-<!ELEMENT rr (method*)>
-<!ELEMENT random (method*)>

@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.48 2005/06/09 11:42:43 benoitf Exp $
+ - $Id: build.xml,v 1.49 2005/07/27 11:49:22 pelletib Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -198,7 +198,7 @@
 
   <target name="compile.cmi">
     <rmic base="${build}/classes"
-          classname="org.objectweb.carol.cmi.ClusterRegistryImpl">
+          classname="org.objectweb.carol.cmi.RegistryImpl">
       <classpath refid="carol.classpath" />
     </rmic>
     <rmic base="${build}/classes"

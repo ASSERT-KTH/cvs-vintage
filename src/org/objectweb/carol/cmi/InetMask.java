@@ -1,5 +1,7 @@
-/*
- * Copyright (C) 2002-2003, Simon Nieuviarts
+/**
+ * Copyright (C) 2002-2005 - Bull S.A.
+ *
+ * CMI : Cluster Method Invocation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,6 +17,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
+ *
+ * --------------------------------------------------------------------------
+ * $Id: InetMask.java,v 1.4 2005/07/27 11:49:22 pelletib Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
 
@@ -25,16 +31,25 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 
 /**
- * @author nieuviar
- *
+ * @author Simon Nieuviarts
  */
 public class InetMask {
+
+    /**
+     * Byte array
+     */
     byte[] bits;
+
+    /**
+     * Mask
+     */
     int mask;
 
     /**
      * Generate an IP mask from its textual representation. The special case of a
      * single address is taken into account.
+     * @param textual textual representation of the IP mask
+     * @throws UnknownHostException if exception
      */
     public InetMask(String textual) throws UnknownHostException {
         int i = textual.indexOf('/');
@@ -51,22 +66,35 @@ public class InetMask {
         }
     }
 
+    /**
+     * Test if an IP addr matches with the mask
+     * @param a ip addr
+     * @return true if matches
+     */
     public boolean match(InetAddress a) {
         byte[] b = a.getAddress();
         int l = b.length;
-        if (l != bits.length) return false;
+        if (l != bits.length) {
+            return false;
+        }
         int m = mask;
         for (int i=0; i<l; i++) {
             if (m < 8) {
                 int v1 = b[i];
-                if (v1 < 0) v1 += 256;
+                if (v1 < 0) {
+                    v1 += 256;
+                }
                 int v2 = bits[i];
-                if (v2 < 0) v2 += 256;
+                if (v2 < 0) {
+                    v2 += 256;
+                }
                 int shift = 8 - m;
                 return (v1 >> shift) == (v2 >> shift);
             }
             m -= 8;
-            if (b[i] != bits[i]) return false;
+            if (b[i] != bits[i]) {
+                return false;
+            }
         }
         return false;
     }

@@ -19,33 +19,41 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiInitialContextFactory.java,v 1.3 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: NoServerException.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
  * --------------------------------------------------------------------------
  */
-package org.objectweb.carol.cmi.jndi;
+package org.objectweb.carol.cmi;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.spi.InitialContextFactory;
+import java.rmi.RemoteException;
 
 /**
- * Class <code> CmiInitialContextFactory </code> is the implementation of the InitialContextFactory
- * interface for the CMI protocol
- *
- * @see javax.naming.spi.InitialContextFactory
+ * Thrown when no more remote object is available in the cluster for a
+ * remote procedure call.
  *
  * @author Simon Nieuviarts
  */
-public class CmiInitialContextFactory implements InitialContextFactory {
+public class NoServerException extends RemoteException {
+    /**
+     * Creates an instance without argument
+     *
+     */
+    public NoServerException() {
+        super();
+    }
+    /**
+     * Creates an instance with a message
+     * @param message message
+     */
+    public NoServerException(String message) {
+        super(message);
+    }
 
     /**
-     * @param env environment
-     * @return a new initial context
-     * @throws NamingException if an exception is encountered
+     * Creates an instance with a message and an exception
+     * @param message message
+     * @param ex exception
      */
-    public Context getInitialContext(Hashtable env)
-        throws javax.naming.NamingException {
-        return new FlatCtx(env);
+    public NoServerException(String msg, Throwable ex) {
+        super(msg, ex);
     }
 }

@@ -25,9 +25,9 @@
  */
 package org.objectweb.carol.jndi.ns;
 
-import org.objectweb.carol.cmi.ClusterRegistry;
-import org.objectweb.carol.cmi.ClusterRegistryImpl;
-import org.objectweb.carol.cmi.ClusterRegistryKiller;
+import org.objectweb.carol.cmi.Registry;
+import org.objectweb.carol.cmi.RegistryImpl;
+import org.objectweb.carol.cmi.RegistryKiller;
 import org.objectweb.carol.cmi.DistributedEquiv;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
@@ -46,13 +46,13 @@ public class CmiRegistry extends AbsRegistry implements NameService {
     /**
      * To kill the registry server
      */
-    private ClusterRegistryKiller cregk = null;
+    private RegistryKiller cregk = null;
 
     /**
      * Default constructor
      */
     public CmiRegistry() {
-        super(ClusterRegistry.DEFAULT_PORT);
+        super(Registry.DEFAULT_PORT);
     }
 
 
@@ -69,7 +69,7 @@ public class CmiRegistry extends AbsRegistry implements NameService {
             if (!isStarted()) {
                 if (getPort() >= 0) {
                     de = DistributedEquiv.start();
-                    cregk = ClusterRegistryImpl.start(getPort());
+                    cregk = RegistryImpl.start(getPort());
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
 

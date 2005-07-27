@@ -60,5 +60,9 @@
 		<attributes>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="externals/asm-1.5.3.jar">
+		<attributes>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>

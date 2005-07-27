@@ -1,10 +1,7 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002-2005 - Bull S.A.
  *
- * CAROL: Common Architecture for RMI ObjectWeb Layer
- *
- * This library is developed inside the ObjectWeb Consortium,
- * http://www.objectweb.org
+ * CMI : Cluster Method Invocation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,36 +19,41 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiPRODelegate.java,v 1.4 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: PRODelegate.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
  * --------------------------------------------------------------------------
  */
-package org.objectweb.carol.rmi.multi;
+package org.objectweb.carol.cmi;
 
+// rmi import
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
-import org.objectweb.carol.cmi.PRODelegate;
-
 /**
- * Class <code>CmiPRODelegate</code> for the mapping between cmi
- * UnicastRemoteObject and PortableRemoteObject
+ * Class <code>PRODelegate</code> for use by
+ * <code>PortableRemoteObject</code>.
+ *
  * @author Simon Nieuviarts
  */
-public class CmiPRODelegate implements PortableRemoteObjectDelegate {
+public class PRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * ORB to export clustered objects.
      */
-    private PortableRemoteObjectDelegate cmi;
+    private PortableRemoteObjectDelegate rmi;
+
+    /**
+     * Equiv prefix
+     */
+    public static final String EQUIV_PREFIX = "EXPORT_";
 
     /**
      * Get the lower ORB delegate to export objects.
      */
-    public CmiPRODelegate() {
-        cmi = new PRODelegate();
+    public PRODelegate() {
+        rmi = LowerOrb.getPRODelegate();
     }
 
     /**
@@ -60,7 +62,18 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException exporting remote object problem
      */
     public void exportObject(Remote obj) throws RemoteException {
-        cmi.exportObject(obj);
+        rmi.exportObject(obj);
+        String equiv = StubConfig.clusterEquivAtExport(obj);
+        if (equiv != null) {
+            byte[] ser = CmiOutputStream.serialize(rmi.toStub(obj));
+            try {
+                if (!DistributedEquiv.exportObject(EQUIV_PREFIX + equiv, ser)) {
+                    throw new RemoteException(equiv + " : already exported");
+                }
+            } catch (ServerConfigException e) {
+                throw new RemoteException("", e);
+            }
+        }
     }
 
     /**
@@ -69,7 +82,16 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
-        cmi.unexportObject(obj);
+        String equiv = null;
+        try {
+            equiv = StubConfig.clusterEquivAtExport(obj);
+        } catch (StubConfigException e) {
+        }
+        if (equiv != null) {
+            //XXX
+            throw new NoSuchObjectException("Not supported");
+        }
+        rmi.unexportObject(obj);
     }
 
     /**
@@ -79,7 +101,7 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException if the connection fail
      */
     public void connect(Remote target, Remote source) throws RemoteException {
-        cmi.connect(target, source);
+        throw new RemoteException("not supported");
     }
 
     /**
@@ -91,7 +113,11 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      *            newClass cast
      */
     public Object narrow(Object obj, Class newClass) throws ClassCastException {
-        return cmi.narrow(obj, newClass);
+        if (newClass.isAssignableFrom(obj.getClass())) {
+            return obj;
+        } else {
+            throw new ClassCastException("Can't cast " + obj.getClass().getName() + " in " + newClass.getName());
+        }
     }
 
     /**
@@ -101,6 +127,25 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
-        return cmi.toStub(obj);
+        String equiv = null;
+        try {
+            equiv = StubConfig.clusterEquivAtExport(obj);
+        } catch (StubConfigException e) {
+        }
+        if (equiv != null) {
+            try {
+                ServerStubList sl = DistributedEquiv.getGlobal(EQUIV_PREFIX + equiv);
+                return sl.getClusterStub();
+            } catch (ServerConfigException e) {
+                NoSuchObjectException e0 = new NoSuchObjectException(equiv);
+                e0.initCause(e);
+                throw e0;
+            } catch (RemoteException e) {
+                NoSuchObjectException e0 = new NoSuchObjectException(equiv);
+                e0.initCause(e);
+                throw e0;
+            }
+        }
+        return rmi.toStub(obj);
     }
 }

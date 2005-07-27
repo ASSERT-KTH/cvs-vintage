@@ -19,33 +19,36 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiInitialContextFactory.java,v 1.3 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: StubClassLoader.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
  * --------------------------------------------------------------------------
  */
-package org.objectweb.carol.cmi.jndi;
+package org.objectweb.carol.cmi;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.spi.InitialContextFactory;
 
 /**
- * Class <code> CmiInitialContextFactory </code> is the implementation of the InitialContextFactory
- * interface for the CMI protocol
- *
- * @see javax.naming.spi.InitialContextFactory
+ * Used to build the class of a cluster stub.
  *
  * @author Simon Nieuviarts
  */
-public class CmiInitialContextFactory implements InitialContextFactory {
+public class StubClassLoader extends ClassLoader {
 
     /**
-     * @param env environment
-     * @return a new initial context
-     * @throws NamingException if an exception is encountered
+     * Creates a new class loader
+     * @param parent parent classloader
      */
-    public Context getInitialContext(Hashtable env)
-        throws javax.naming.NamingException {
-        return new FlatCtx(env);
+    public StubClassLoader(ClassLoader parent) {
+        super(parent);
+    }
+
+    /**
+     * Generates a new class for a cluster stub
+     * @param remoteObjClass remote object class
+     * @param conf Distributor class
+     * @return new class
+     */
+    Class generateClusterStub(Class remoteObjClass, Distributor conf) {
+        CodeGenerator cg = new CodeGenerator(remoteObjClass, conf);
+        byte[] data = cg.generate();
+        return defineClass(null, data, 0, data.length);
     }
 }

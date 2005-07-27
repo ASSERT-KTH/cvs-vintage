@@ -19,33 +19,34 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiInitialContextFactory.java,v 1.3 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: StubConfigException.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
  * --------------------------------------------------------------------------
  */
-package org.objectweb.carol.cmi.jndi;
+package org.objectweb.carol.cmi;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.spi.InitialContextFactory;
+import java.rmi.RemoteException;
 
 /**
- * Class <code> CmiInitialContextFactory </code> is the implementation of the InitialContextFactory
- * interface for the CMI protocol
- *
- * @see javax.naming.spi.InitialContextFactory
+ * Thrown when unable to get information on a clustered object.
  *
  * @author Simon Nieuviarts
+ *
  */
-public class CmiInitialContextFactory implements InitialContextFactory {
+public class StubConfigException extends RemoteException {
 
     /**
-     * @param env environment
-     * @return a new initial context
-     * @throws NamingException if an exception is encountered
+     * Creates an exception with a message
+     * @param msg message
      */
-    public Context getInitialContext(Hashtable env)
-        throws javax.naming.NamingException {
-        return new FlatCtx(env);
+    public StubConfigException(String msg) {
+        super(msg);
+    }
+    /**
+     * Creates an exception with a message and an exception
+     * @param msg message
+     * @param ex source exception
+     */
+    public StubConfigException(String msg, Throwable ex) {
+        super(msg, ex);
     }
 }

@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.4 2005/07/20 12:28:31 benoitf Exp $
+ * $Id: ConfigurationRepository.java,v 1.5 2005/07/27 11:49:23 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -295,7 +295,7 @@ public class ConfigurationRepository {
                 // if protocol is cmi, configure it
                 if (protocolName.equals("cmi")) {
                     try {
-                        org.objectweb.carol.cmi.Config.setProperties(properties);
+                        org.objectweb.carol.cmi.ServerConfig.setProperties(properties);
                     } catch (NoClassDefFoundError ncdfe) {
                         if (logger.isDebugEnabled()) {
                             logger.debug("Cmi is not available, don't configure it.");
