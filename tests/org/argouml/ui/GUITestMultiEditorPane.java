@@ -1,4 +1,4 @@
-// $Id: GUITestMultiEditorPane.java,v 1.7 2005/01/02 16:43:51 linus Exp $
+// $Id: GUITestMultiEditorPane.java,v 1.8 2005/07/28 08:17:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,92 +55,8 @@ public class GUITestMultiEditorPane extends TestCase {
      * multieditorpane and even have an editor in it?
      */
     public void testConstruction() {
-        try {
-            MultiEditorPane pane = new MultiEditorPane();
-            assertNotNull(pane);
-            assertEquals(pane.getComponents().length, 1);
-        } catch (Exception ex) {
-            // on a headless system (without display) this will crash
-        }
+	MultiEditorPane pane = new MultiEditorPane();
+	assertNotNull(pane);
+	assertEquals(pane.getComponents().length, 1);
     }
-
-    /**
-     * Test setting a target.
-     */
-    public void testTargetSet() {
-        try {
-            MultiEditorPane pane = new MultiEditorPane();
-            Component[] tabs = pane.getTabs().getComponents();
-            Object target = new Object();
-            boolean[] shouldBeEnabled = getShouldBeEnabled(target, tabs);
-            TargetEvent e =
-                new TargetEvent(this,
-				TargetEvent.TARGET_SET,
-				new Object[] {
-				    null,
-				},
-				new Object[] {
-				    target,
-				});
-            pane.targetSet(e);
-            assertEnabled(pane.getTabs(), shouldBeEnabled);
-            target = new UMLClassDiagram();
-            shouldBeEnabled = getShouldBeEnabled(target, tabs);
-            e = new TargetEvent(
-				this,
-				TargetEvent.TARGET_SET,
-				new Object[] {
-				    null,
-				},
-				new Object[] {
-				    target
-				});
-            pane.targetSet(e);
-            assertEnabled(pane.getTabs(), shouldBeEnabled);
-            target = Model.getCoreFactory().createClass();
-            shouldBeEnabled = getShouldBeEnabled(target, tabs);
-            e =
-                new TargetEvent(this,
-				TargetEvent.TARGET_SET,
-				new Object[] {
-				    null,
-				},
-				new Object[] {
-				    target,
-				});
-            pane.targetSet(e);
-            assertEnabled(pane.getTabs(), shouldBeEnabled);
-            target = new FigText(0, 0, 0, 0);
-            shouldBeEnabled = getShouldBeEnabled(target, tabs);
-            e = new TargetEvent(this,
-				TargetEvent.TARGET_SET,
-				new Object[] {
-				    null,
-				},
-				new Object[] {
-				    target,
-				});
-            pane.targetSet(e);
-            assertEnabled(pane.getTabs(), shouldBeEnabled);
-        } catch (Exception ex) {
-            // on a headless system (without display) this will crash
-        }
-    }
-
-    private boolean[] getShouldBeEnabled(Object target, Component[] tabs) {
-        boolean[] shouldBeEnabled = new boolean[tabs.length];
-        for (int i = 0; i < tabs.length; i++) {
-            shouldBeEnabled[i] = ((TabTarget) tabs[i]).shouldBeEnabled(target);
-        }
-        return shouldBeEnabled;
-    }
-
-    private void assertEnabled(
-        JTabbedPane tabbedPane,
-        boolean[] shouldBeEnabled) {
-        for (int i = 0; i < shouldBeEnabled.length; i++) {
-            assertEquals(shouldBeEnabled[i], tabbedPane.isEnabledAt(i));
-        }
-    }
-
 }

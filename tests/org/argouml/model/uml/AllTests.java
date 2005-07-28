@@ -1,4 +1,4 @@
-// $Id: AllTests.java,v 1.1 2005/01/31 21:41:49 linus Exp $
+// $Id: AllTests.java,v 1.2 2005/07/28 08:17:05 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,6 @@ public final class AllTests {
         suite.addTestSuite(TestCommonBehaviorHelper.class);
         suite.addTestSuite(TestModelManagementHelper.class);
         suite.addTestSuite(TestUmlModel.class);
-        suite.addTestSuite(GUITestCopyHelper.class);
         suite.addTestSuite(TestActivityGraphsHelper.class);
         suite.addTestSuite(TestCollaborationsHelper.class);
         suite.addTestSuite(TestUmlActor.class);
