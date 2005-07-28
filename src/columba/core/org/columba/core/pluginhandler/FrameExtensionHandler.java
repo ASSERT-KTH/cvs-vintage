@@ -45,9 +45,9 @@ public class FrameExtensionHandler extends ExtensionHandler {
 	public String[] getManagedFrames() {
 
 		Vector result = new Vector();
-		Enumeration enum = map.elements();
-		while (enum.hasMoreElements()) {
-			IExtension extension = (IExtension) enum.nextElement();
+		Enumeration _enum = map.elements();
+		while (_enum.hasMoreElements()) {
+			IExtension extension = (IExtension) _enum.nextElement();
 			String managed = extension.getMetadata().getAttribute("managed");
 			if (managed == null)
 				managed = "false";

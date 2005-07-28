@@ -138,9 +138,9 @@ public class ExtensionHandler implements IExtensionHandler {
 	 */
 	public String[] getPluginIdList() {
 		Vector result = new Vector();
-		Enumeration enum = map.elements();
-		while (enum.hasMoreElements()) {
-			IExtension extension = (IExtension) enum.nextElement();
+		Enumeration _enum = map.elements();
+		while (_enum.hasMoreElements()) {
+			IExtension extension = (IExtension) _enum.nextElement();
 			boolean enabled = extension.getMetadata().isEnabled();
 			String id = extension.getMetadata().getId();
 
