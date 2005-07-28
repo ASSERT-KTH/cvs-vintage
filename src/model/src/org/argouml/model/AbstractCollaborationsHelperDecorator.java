@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperProxy.java,v 1.2 2005/07/10 15:56:48 linus Exp $
+// $Id: AbstractCollaborationsHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,14 +27,12 @@ package org.argouml.model;
 import java.util.Collection;
 
 /**
- * A proxy onto a specific implementation of the CollaborationsHelper.
- * The proxy is responsible for any framework processing
- * before and after the implementation is called.
- * For the current implementation that is to generate mementos for any
- * mutable methods.
+ * An abstract Decorator for the {@link CollaborationsHelper}.
+ *
  * @author Bob Tarling
  */
-public class CollaborationsHelperProxy implements CollaborationsHelper {
+public abstract class AbstractCollaborationsHelperDecorator
+	implements CollaborationsHelper {
 
     /**
      * The component.
@@ -45,8 +43,17 @@ public class CollaborationsHelperProxy implements CollaborationsHelper {
     /**
      * @param component The component to decorate.
      */
-    public CollaborationsHelperProxy(CollaborationsHelper component) {
+    AbstractCollaborationsHelperDecorator(CollaborationsHelper component) {
         impl = component;
+    }
+
+    /**
+     * The component we are decorating.
+     *
+     * @return Returns the component.
+     */
+    protected CollaborationsHelper getComponent() {
+        return impl;
     }
 
     /**

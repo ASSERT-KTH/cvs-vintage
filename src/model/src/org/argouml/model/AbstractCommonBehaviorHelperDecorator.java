@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelperProxy.java,v 1.3 2005/07/21 12:23:50 mkl Exp $
+// $Id: AbstractCommonBehaviorHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,15 +28,13 @@ import java.util.Collection;
 import java.util.Vector;
 
 /**
- * A proxy onto a specific implementation of the CommonBehaviorHelper.
- * The proxy is responsible for any framework processing
- * before and after the implementation is called.
- * For the current implementation that is to generate mementos for any
- * mutable methods.
+ * An abstract Decorator for the {@link CommonBehaviorHelper}.
  *
  * @author Bob Tarling
  */
-public class CommonBehaviorHelperProxy implements CommonBehaviorHelper {
+public abstract class AbstractCommonBehaviorHelperDecorator
+	implements CommonBehaviorHelper {
+
     /**
      * The component.
      */
@@ -45,7 +43,7 @@ public class CommonBehaviorHelperProxy implements CommonBehaviorHelper {
     /**
      * @param component The component to decorate.
      */
-    public CommonBehaviorHelperProxy(CommonBehaviorHelper component) {
+    AbstractCommonBehaviorHelperDecorator(CommonBehaviorHelper component) {
         impl = component;
     }
 
@@ -54,6 +52,15 @@ public class CommonBehaviorHelperProxy implements CommonBehaviorHelper {
      */
     public Object getSource(Object link) {
         return impl.getSource(link);
+    }
+
+    /**
+     * The component we are decorating.
+     *
+     * @return Returns the component.
+     */
+    protected CommonBehaviorHelper getComponent() {
+        return impl;
     }
 
     /**

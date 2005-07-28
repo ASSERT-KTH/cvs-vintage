@@ -1,4 +1,4 @@
-// $Id: UmlHelperProxy.java,v 1.2 2005/07/10 15:56:48 linus Exp $
+// $Id: AbstractUmlHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,14 +27,11 @@ package org.argouml.model;
 import java.util.Collection;
 
 /**
- * A proxy onto a specific implementation of the UmlHelper.
- * The proxy is responsible for any framework processing
- * before and after the implementation is called.
- * For the current implementation that is to generate mementos for any
- * mutable methods.
+ * An abstract Decorator for the {@link UmlHelper}.
+ *
  * @author Bob Tarling
  */
-public class UmlHelperProxy implements UmlHelper {
+public abstract class AbstractUmlHelperDecorator implements UmlHelper {
 
     /**
      * The component.
@@ -45,7 +42,7 @@ public class UmlHelperProxy implements UmlHelper {
     /**
      * @param component The component to decorate.
      */
-    public UmlHelperProxy(UmlHelper component) {
+    public AbstractUmlHelperDecorator(UmlHelper component) {
         impl = component;
     }
 
@@ -60,63 +57,63 @@ public class UmlHelperProxy implements UmlHelper {
      * @see org.argouml.model.UmlHelper#getExtensionMechanisms()
      */
     public ExtensionMechanismsHelper getExtensionMechanisms() {
-        return Model.getExtensionMechanismsHelper();
+        return impl.getExtensionMechanisms();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getDataTypes()
      */
     public DataTypesHelper getDataTypes() {
-        return Model.getDataTypesHelper();
+        return impl.getDataTypes();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getCore()
      */
     public CoreHelper getCore() {
-        return Model.getCoreHelper();
+        return impl.getCore();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getCommonBehavior()
      */
     public CommonBehaviorHelper getCommonBehavior() {
-        return Model.getCommonBehaviorHelper();
+        return impl.getCommonBehavior();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getUseCases()
      */
     public UseCasesHelper getUseCases() {
-        return Model.getUseCasesHelper();
+        return impl.getUseCases();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getStateMachines()
      */
     public StateMachinesHelper getStateMachines() {
-        return Model.getStateMachinesHelper();
+        return impl.getStateMachines();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getCollaborations()
      */
     public CollaborationsHelper getCollaborations() {
-        return Model.getCollaborationsHelper();
+        return impl.getCollaborations();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getActivityGraphs()
      */
     public ActivityGraphsHelper getActivityGraphs() {
-        return Model.getActivityGraphsHelper();
+        return impl.getActivityGraphs();
     }
 
     /**
      * @see org.argouml.model.UmlHelper#getModelManagement()
      */
     public ModelManagementHelper getModelManagement() {
-        return Model.getModelManagementHelper();
+        return impl.getModelManagement();
     }
 
     /**

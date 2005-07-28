@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperProxy.java,v 1.4 2005/07/10 15:56:48 linus Exp $
+// $Id: AbstractStateMachinesHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,15 +27,12 @@ package org.argouml.model;
 import java.util.Collection;
 
 /**
- * A proxy onto a specific implementation of the StateMachinesHelper.
- * The proxy is responsible for any framework processing
- * before and after the implementation is called.
- * For the current implementation that is to generate mementos for any
- * mutable methods.
+ * An abstract Decorator for the {@link StateMachinesHelper}.
  *
  * @author Bob Tarling
  */
-public class StateMachinesHelperProxy implements StateMachinesHelper {
+public abstract class AbstractStateMachinesHelperDecorator
+	implements StateMachinesHelper {
 
     /**
      * The component.
@@ -45,8 +42,17 @@ public class StateMachinesHelperProxy implements StateMachinesHelper {
     /**
      * @param component The component to decorate.
      */
-    public StateMachinesHelperProxy(StateMachinesHelper component) {
+    AbstractStateMachinesHelperDecorator(StateMachinesHelper component) {
         impl = component;
+    }
+
+    /**
+     * The component we are decorating.
+     *
+     * @return Returns the component.
+     */
+    protected StateMachinesHelper getComponent() {
+        return impl;
     }
 
     /**

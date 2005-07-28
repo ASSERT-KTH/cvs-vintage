@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperProxy.java,v 1.2 2005/07/10 15:56:48 linus Exp $
+// $Id: AbstractDataTypesHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,12 @@
 package org.argouml.model;
 
 /**
- * A proxy onto a specific implementation of the DataTypesHelper.
- * The proxy is responsible for any framework processing
- * before and after the implementation is called.
- * For the current implementation that is to generate mementos for any
- * mutable methods.
+ * An abstract Decorator for the {@link DataTypesHelper}.
+ *
  * @author Bob Tarling
  */
-public class DataTypesHelperProxy implements DataTypesHelper {
+public abstract class AbstractDataTypesHelperDecorator
+	implements DataTypesHelper {
 
     /**
      * The component.
@@ -42,8 +40,17 @@ public class DataTypesHelperProxy implements DataTypesHelper {
     /**
      * @param component The component to decorate.
      */
-    public DataTypesHelperProxy(DataTypesHelper component) {
+    AbstractDataTypesHelperDecorator(DataTypesHelper component) {
         impl = component;
+    }
+
+    /**
+     * The component we are decorating.
+     *
+     * @return Returns the component.
+     */
+    protected DataTypesHelper getComponent() {
+        return impl;
     }
 
     /**

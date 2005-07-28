@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperProxy.java,v 1.2 2005/07/10 15:56:48 linus Exp $
+// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,12 @@ package org.argouml.model;
 import java.util.Collection;
 
 /**
- * A proxy onto a specific implementation of the ExtensionMechanismsHelper.
- * The proxy is responsible for any framework processing
- * before and after the implementation is called.
- * For the current implementation that is to generate mementos for any
- * mutable methods.
+ * An abstract Decorator for the {@link ExtensionMechanismsHelper}.
  *
  * @author Bob Tarling
  */
-public class ExtensionMechanismsHelperProxy implements
-        ExtensionMechanismsHelper {
+public abstract class AbstractExtensionMechanismsHelperDecorator
+	implements ExtensionMechanismsHelper {
 
     /**
      * The component.
@@ -46,7 +42,8 @@ public class ExtensionMechanismsHelperProxy implements
     /**
      * @param component The component to decorate.
      */
-    public ExtensionMechanismsHelperProxy(ExtensionMechanismsHelper component) {
+    AbstractExtensionMechanismsHelperDecorator(
+            ExtensionMechanismsHelper component) {
         impl = component;
     }
 
@@ -56,6 +53,15 @@ public class ExtensionMechanismsHelperProxy implements
      */
     public Collection getStereotypes(Object ns) {
         return impl.getStereotypes(ns);
+    }
+
+    /**
+     * The component we are decorating.
+     *
+     * @return Returns the component.
+     */
+    protected ExtensionMechanismsHelper getComponent() {
+        return impl;
     }
 
     /**
