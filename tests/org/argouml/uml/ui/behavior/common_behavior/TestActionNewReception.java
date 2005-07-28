@@ -1,4 +1,4 @@
-// $Id: GUITestActionNewReception.java,v 1.3 2005/01/09 14:59:17 linus Exp $
+// $Id: TestActionNewReception.java,v 1.4 2005/07/28 14:09:41 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,31 +22,27 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
 package org.argouml.uml.ui.behavior.common_behavior;
-
-import javax.swing.Action;
 
 import junit.framework.TestCase;
 
+import javax.swing.Action;
+
 import org.argouml.i18n.Translator;
-
-
 
 /**
  * Test for the ActionNewReception.
  *
  * @author mkl
- *
  */
-public class GUITestActionNewReception extends TestCase {
+public class TestActionNewReception extends TestCase {
 
     /**
      * The constructor.
      *
      * @param arg0 the name of the test
      */
-    public GUITestActionNewReception(String arg0) {
+    public TestActionNewReception(String arg0) {
         super(arg0);
     }
 
@@ -60,7 +56,6 @@ public class GUITestActionNewReception extends TestCase {
 
     /**
      * Test whether the icon of this action can be found.
-     *
      */
     public void testHasIcon() {
         ActionNewReception action = new ActionNewReception();

@@ -1,4 +1,4 @@
-// $Id: TestActionUseCaseDiagram.java,v 1.4 2005/01/09 21:10:39 linus Exp $
+// $Id: TestActionUseCaseDiagram.java,v 1.5 2005/07/28 14:09:41 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,41 +24,52 @@
 
 package org.argouml.uml.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.novosoft.uml.foundation.core.MClassifierImpl;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MPackageImpl;
+
 /**
  * Test for actionusecasediagram.
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 9, 2003
  */
-public class TestActionUseCaseDiagram
-    extends GUITestActionUseCaseDiagram
+public class GUITestActionUseCaseDiagram
+    extends AbstractTestActionAddDiagram
 {
 
     /**
      * Constructor
      * @param arg0 test case name.
      */
-    public TestActionUseCaseDiagram(String arg0) {
+    public GUITestActionUseCaseDiagram(String arg0) {
         super(arg0);
     }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
      */
-    public void testCreateDiagram() { }
+    protected ActionAddDiagram getAction() {
+        return new ActionUseCaseDiagram();
+    }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    public void testDifferentNames() { }
+    protected MNamespace getNamespace() {
+        return new MPackageImpl();
+    }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see AbstractTestActionAddDiagram#getValidNamespaceClasses()
      */
-    // public void testValidTestNamespace() { }
-
-    /**
-     * Disable the test that doesn't work without head.
-     */
-    // public void testValidNamespaces() { }
+    protected List getValidNamespaceClasses() {
+        List rl = new ArrayList();
+        rl.add(MPackageImpl.class);
+        rl.add(MClassifierImpl.class);
+        return rl;
+    }
 
 }

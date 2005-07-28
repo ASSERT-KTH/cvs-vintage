@@ -1,16 +1,16 @@
-// $Id: GUITestActionDeploymentDiagram.java,v 1.6 2005/05/18 20:27:00 mvw Exp $
+// $Id: TestActionAddAttribute.java,v 1.4 2005/07/28 14:09:41 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
+// and this paragraph appear in all copies. This software program and
 // documentation are copyrighted by The Regents of the University of
 // California. The software program and documentation are supplied "AS
 // IS", without any accompanying services from The Regents. The Regents
 // does not warrant that the operation of the program will be
 // uninterrupted or error-free. The end-user understands that the program
 // was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
 // UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
 // ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -22,52 +22,44 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.uml.diagram.ui;
 
-import java.util.ArrayList;
-import java.util.List;
+import junit.framework.TestCase;
 
-import org.argouml.kernel.ProjectManager;
+import javax.swing.Action;
 
-import ru.novosoft.uml.foundation.core.MNamespace;
+import org.argouml.i18n.Translator;
+
 
 /**
+ * Test the ActionAddAttribute.
  *
- * @author jaap.branderhorst@xs4all.nl
- * @since Jan 9, 2003
+ * @author mkl
  */
-public class GUITestActionDeploymentDiagram
-    extends AbstractTestActionAddDiagram
-{
+public class TestActionAddAttribute extends TestCase {
 
     /**
-     * Constructor.
-     * @param arg0 test case name.
+     * The constructor.
+     *
+     * @param arg0 the test name
      */
-    public GUITestActionDeploymentDiagram(String arg0) {
+    public TestActionAddAttribute(String arg0) {
         super(arg0);
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
+     * @see TestCase#setUp()
      */
-    protected ActionAddDiagram getAction() {
-        return new ActionDeploymentDiagram();
+    protected void setUp() throws Exception {
+        super.setUp();
+        Translator.init();
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
+     * Test if the action has an icon.
      */
-    protected MNamespace getNamespace() {
-        return (MNamespace) (ProjectManager.getManager().getCurrentProject()
-                .getModel());
+    public void testHasIcon() {
+        ActionAddAttribute action = new ActionAddAttribute();
+        assertNotNull(action.getValue(Action.SMALL_ICON));
     }
-
-    /**
-     * @see AbstractTestActionAddDiagram#getValidNamespaceClasses()
-     */
-    protected List getValidNamespaceClasses() {
-        return new ArrayList();
-    }
-
 }
