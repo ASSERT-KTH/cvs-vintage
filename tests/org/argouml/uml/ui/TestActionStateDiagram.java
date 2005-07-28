@@ -1,4 +1,4 @@
-// $Id: TestActionStateDiagram.java,v 1.6 2005/07/28 14:09:41 linus Exp $
+// $Id: TestActionStateDiagram.java,v 1.7 2005/07/28 14:23:27 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import ru.novosoft.uml.foundation.core.MNamespace;
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 9, 2003
  */
-public class GUITestActionStateDiagram
+public class TestActionStateDiagram
     extends AbstractTestActionAddDiagram {
 
     /**
@@ -45,7 +45,7 @@ public class GUITestActionStateDiagram
      *
      * @param arg0 test case name
      */
-    public GUITestActionStateDiagram(String arg0) {
+    public TestActionStateDiagram(String arg0) {
         super(arg0);
     }
 

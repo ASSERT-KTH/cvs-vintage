@@ -1,4 +1,4 @@
-// $Id: TestActionCollaborationDiagram.java,v 1.5 2005/07/28 14:09:41 linus Exp $
+// $Id: TestActionCollaborationDiagram.java,v 1.6 2005/07/28 14:23:27 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,14 +40,14 @@ import ru.novosoft.uml.foundation.core.MNamespace;
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 9, 2003
  */
-public class GUITestActionCollaborationDiagram
+public class TestActionCollaborationDiagram
     extends AbstractTestActionAddDiagram {
 
     /**
      * Constructor for TestActionCollaborationDiagram.
      * @param arg0 name of the test case
      */
-    public GUITestActionCollaborationDiagram(String arg0) {
+    public TestActionCollaborationDiagram(String arg0) {
         super(arg0);
     }
 

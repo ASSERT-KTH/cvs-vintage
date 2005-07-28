@@ -1,4 +1,4 @@
-// $Id: TestActionUseCaseDiagram.java,v 1.5 2005/07/28 14:09:41 linus Exp $
+// $Id: TestActionUseCaseDiagram.java,v 1.6 2005/07/28 14:23:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,19 +32,18 @@ import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.model_management.MPackageImpl;
 
 /**
- * Test for actionusecasediagram.
+ * Test for {@link ActionUseCaseDiagram}.
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 9, 2003
  */
-public class GUITestActionUseCaseDiagram
-    extends AbstractTestActionAddDiagram
-{
+public class TestActionUseCaseDiagram
+    extends AbstractTestActionAddDiagram {
 
     /**
      * Constructor
      * @param arg0 test case name.
      */
-    public GUITestActionUseCaseDiagram(String arg0) {
+    public TestActionUseCaseDiagram(String arg0) {
         super(arg0);
     }
 
