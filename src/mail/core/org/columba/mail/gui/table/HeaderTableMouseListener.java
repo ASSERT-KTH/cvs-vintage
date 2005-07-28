@@ -85,9 +85,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
             processDoubleClick();
-        } else {
-        	new ViewMessageAction(headerTableViewer.getFrameController()).actionPerformed(null);
-        }
+        } 
     }
 
     protected void processDoubleClick() {
