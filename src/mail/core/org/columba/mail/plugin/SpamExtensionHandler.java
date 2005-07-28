@@ -17,18 +17,21 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
+import java.io.InputStream;
+
 import org.columba.core.plugin.ExtensionHandler;
 
 public class SpamExtensionHandler extends ExtensionHandler {
 
-	public static final String XML_RESOURCE = "org/columba/mail/plugin/spam.xml";
+	public static final String XML_RESOURCE = "/org/columba/mail/plugin/spam.xml";
 
 	public static final String NAME = "org.columba.mail.spam";
 
 	public SpamExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 	}
 
 }

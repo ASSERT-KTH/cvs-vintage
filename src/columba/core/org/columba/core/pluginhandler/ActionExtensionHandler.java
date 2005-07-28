@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -41,14 +42,15 @@ public class ActionExtensionHandler extends ExtensionHandler {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.pluginhandler");
 
-	public static final String XML_RESOURCE = "org/columba/core/action/action.xml";
+	public static final String XML_RESOURCE = "/org/columba/core/action/action.xml";
 
 	public static final String NAME = "org.columba.core.action";
 
 	public ActionExtensionHandler() {
 		super(ActionExtensionHandler.NAME);
 
-		loadExtensionsFromFile(ActionExtensionHandler.XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 
 	}
 

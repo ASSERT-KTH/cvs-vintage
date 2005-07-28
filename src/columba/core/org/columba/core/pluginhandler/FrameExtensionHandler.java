@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -32,14 +33,15 @@ import org.columba.core.plugin.IExtension;
  */
 public class FrameExtensionHandler extends ExtensionHandler {
 
-	public static final String XML_RESOURCE = "org/columba/core/plugin/frame.xml";
+	public static final String XML_RESOURCE = "/org/columba/core/plugin/frame.xml";
 
 	public static final String NAME = "org.columba.core.frame";
 
 	public FrameExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 	}
 
 	public String[] getManagedFrames() {

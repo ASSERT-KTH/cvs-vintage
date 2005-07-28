@@ -1,8 +1,8 @@
 package org.columba.core.plugin.util;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -65,24 +65,11 @@ public class ExtensionXMLParser {
 	 * 
 	 * @return IExtension enumeration
 	 */
-	public Enumeration loadExtensionsFromFile(String xmlResource) {
+	public Enumeration loadExtensionsFromStream(InputStream is) {
 		Vector vector = new Vector();
 
-		// use default resource loader
-		URL url = DiskIO.getResourceURL(xmlResource);
-		
-		// fall-back to class resource loader
-		if (url == null)
-			url = ExtensionXMLParser.class.getResource(xmlResource);
-
-		// abort, if resource could not be found
-		if (url == null) {
-			LOG.severe("unable to load xml resouce file " + xmlResource);
-			return vector.elements();
-		}
-
-		XmlIO xmlFile = new XmlIO(url);
-		xmlFile.load();
+		XmlIO xmlFile = new XmlIO();
+		xmlFile.load(is);
 		XmlElement parent = xmlFile.getRoot().getElement(
 				XML_ELEMENT_EXTENSIONLIST);
 		if (parent == null) {

@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
+import java.io.InputStream;
+
 import org.columba.core.plugin.ExtensionHandler;
 
 /**
@@ -26,7 +28,7 @@ import org.columba.core.plugin.ExtensionHandler;
  */
 public class FilterExtensionHandler extends ExtensionHandler {
 
-	public static final String XML_RESOURCE = "org/columba/mail/plugin/filter.xml";
+	public static final String XML_RESOURCE = "/org/columba/mail/plugin/filter.xml";
 
 	public static final String NAME = "org.columba.mail.filter";
 
@@ -39,6 +41,7 @@ public class FilterExtensionHandler extends ExtensionHandler {
 	public FilterExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 	}
 }

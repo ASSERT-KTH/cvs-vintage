@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.main;
 
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
@@ -74,9 +75,10 @@ public class AddressbookMain implements IComponentPlugin {
 				"org/columba/addressbook/plugin/pluginhandler.xml");
 
 		try {
+			InputStream is = this.getClass().getResourceAsStream(
+					"/org/columba/addressbook/action/action.xml");
 			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
-					ActionExtensionHandler.NAME))
-					.loadExtensionsFromFile("org/columba/addressbook/action/action.xml");
+					ActionExtensionHandler.NAME)).loadExtensionsFromStream(is);
 		} catch (PluginHandlerNotFoundException ex) {
 		}
 

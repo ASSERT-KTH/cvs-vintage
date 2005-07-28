@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -175,10 +176,10 @@ public class ExtensionHandler implements IExtensionHandler {
 
 	
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#loadExtensionsFromFile(java.lang.String)
+	 * @see org.columba.core.plugin.IExtensionHandler#loadExtensionsFromStream(InputStream)
 	 */
-	public void loadExtensionsFromFile(String xmlResource) {
-		Enumeration e = new ExtensionXMLParser().loadExtensionsFromFile(xmlResource);
+	public void loadExtensionsFromStream(InputStream is) {
+		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is);
 		while (e.hasMoreElements()) {
 			IExtension extension = (IExtension) e.nextElement();
 			addExtension(extension.getMetadata().getId(), extension);

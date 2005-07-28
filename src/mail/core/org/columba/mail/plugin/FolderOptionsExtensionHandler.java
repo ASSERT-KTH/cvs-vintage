@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Vector;
 
@@ -29,7 +30,7 @@ import org.columba.core.xml.XmlElement;
  */
 public class FolderOptionsExtensionHandler extends ExtensionHandler {
 
-	public static final String XML_RESOURCE = "org/columba/mail/plugin/folderoptions.xml";
+	public static final String XML_RESOURCE = "/org/columba/mail/plugin/folderoptions.xml";
 
 	public static final String NAME = "org.columba.mail.folderoptions";
 
@@ -40,7 +41,8 @@ public class FolderOptionsExtensionHandler extends ExtensionHandler {
 	public FolderOptionsExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 	}
 
 	/**

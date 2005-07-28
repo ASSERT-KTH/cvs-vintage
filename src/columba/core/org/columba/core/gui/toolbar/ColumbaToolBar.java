@@ -103,13 +103,19 @@ public class ColumbaToolBar extends JToolBar {
 						continue;
 
 					ActionExtensionHandler handler = (ActionExtensionHandler) PluginManager
-							.getInstance().getHandler(ActionExtensionHandler.NAME);
+							.getInstance().getHandler(
+									ActionExtensionHandler.NAME);
 
 					AbstractColumbaAction action = handler.getAction(
 							buttonElement.getAttribute("action"),
 							frameController);
-					
-					addButton(action);
+
+					if (action == null) {
+						LOG.severe("error while instanciating action ="
+								+ buttonElement.getAttribute("action"));
+
+					} else
+						addButton(action);
 				} else if (buttonElement.getName().equals("separator")) {
 					addSeparator();
 				}
@@ -154,8 +160,7 @@ public class ColumbaToolBar extends JToolBar {
 	}
 
 	private void addButton(AbstractColumbaAction action) {
-		if (action == null)
-			throw new IllegalArgumentException("action == null");
+
 		ToolbarButton button = new ToolbarButton(action);
 		button.setRolloverEnabled(true);
 

@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 
 /**
@@ -41,9 +42,9 @@ public interface IExtensionHandler {
 	/**
 	 * Add many extensions at once using a xml file.
 	 * 
-	 * @param xmlResource		xml file path
+	 * @param is		xml file path
 	 */
-	public void loadExtensionsFromFile(String xmlResource);
+	public void loadExtensionsFromStream(InputStream is);
 	
 	/**
 	 * Check if extension exists.

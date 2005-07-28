@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
+import java.io.InputStream;
+
 import org.columba.core.plugin.ExtensionHandler;
 
 /**
@@ -25,7 +27,7 @@ import org.columba.core.plugin.ExtensionHandler;
  */
 public class ViewerExtensionHandler extends ExtensionHandler {
 
-	public static final String XML_RESOURCE = "org/columba/mail/plugin/viewer.xml";
+	public static final String XML_RESOURCE = "/org/columba/mail/plugin/viewer.xml";
 
 	public static final String NAME = "org.columba.mail.viewer";
 
@@ -36,7 +38,8 @@ public class ViewerExtensionHandler extends ExtensionHandler {
 	public ViewerExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 
 	}
 

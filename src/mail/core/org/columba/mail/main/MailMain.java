@@ -16,6 +16,7 @@
 package org.columba.mail.main;
 
 import java.awt.BorderLayout;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
@@ -90,8 +91,9 @@ public class MailMain implements IComponentPlugin {
 				"org/columba/mail/plugin/pluginhandler.xml");
 
 		try {
+			InputStream is = this.getClass().getResourceAsStream("/org/columba/mail/action/action.xml");
 			PluginManager.getInstance().getHandler(ActionExtensionHandler.NAME)
-					.loadExtensionsFromFile("org/columba/mail/action/action.xml");
+					.loadExtensionsFromStream(is);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}

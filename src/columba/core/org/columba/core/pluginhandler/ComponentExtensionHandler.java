@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,7 +42,7 @@ import org.columba.core.xml.XmlElement;
 public class ComponentExtensionHandler extends ExtensionHandler implements
 		IComponentPlugin {
 
-	public static final String XML_RESOURCE = "org/columba/core/plugin/component.xml";
+	public static final String XML_RESOURCE = "/org/columba/core/plugin/component.xml";
 
 	public static final String NAME = "org.columba.core.component";
 
@@ -52,7 +53,8 @@ public class ComponentExtensionHandler extends ExtensionHandler implements
 	public ComponentExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 
 	}
 

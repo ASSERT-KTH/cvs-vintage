@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.io.InputStream;
+
 import org.columba.core.plugin.ExtensionHandler;
 
 /**
@@ -27,7 +29,7 @@ import org.columba.core.plugin.ExtensionHandler;
  * @author fdietz
  */
 public class ConfigExtensionHandler extends ExtensionHandler {
-	public static final String XML_RESOURCE = "org/columba/core/plugin/config.xml";
+	public static final String XML_RESOURCE = "/org/columba/core/plugin/config.xml";
 
 	public static final String NAME = "org.columba.core.config";
 
@@ -38,6 +40,7 @@ public class ConfigExtensionHandler extends ExtensionHandler {
 	public ConfigExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 	}
 }

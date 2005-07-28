@@ -16,6 +16,7 @@
 package org.columba.core.pluginhandler;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.columba.core.config.Config;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
@@ -47,7 +48,7 @@ import org.columba.core.xml.XmlElement;
  */
 public class ExternalToolsExtensionHandler extends ExtensionHandler {
 
-	public static final String XML_RESOURCE = "org/columba/core/plugin/external_tools.xml";
+	public static final String XML_RESOURCE = "/org/columba/core/plugin/external_tools.xml";
 
 	public static final String NAME = "org.columba.core.externaltools";
 
@@ -59,7 +60,8 @@ public class ExternalToolsExtensionHandler extends ExtensionHandler {
 
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 	}
 
 	/**

@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.chat;
 
+import java.io.InputStream;
+
 import org.apache.commons.cli.CommandLine;
 import org.columba.core.main.IComponentPlugin;
 import org.columba.core.plugin.PluginManager;
@@ -26,14 +28,14 @@ import org.jivesoftware.smack.XMPPConnection;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class AlturaComponent implements IComponentPlugin {
 
 	public static XMPPConnection connection;
 
 	/**
-	 *  
+	 * 
 	 */
 	public AlturaComponent() {
 		super();
@@ -45,9 +47,10 @@ public class AlturaComponent implements IComponentPlugin {
 	 */
 	public void init() {
 		try {
+			InputStream is = this.getClass().getResourceAsStream(
+					"/org/columba/chat/action/action.xml");
 			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
-					ActionExtensionHandler.NAME))
-					.loadExtensionsFromFile("org/columba/chat/action/action.xml");
+					ActionExtensionHandler.NAME)).loadExtensionsFromStream(is);
 		} catch (PluginHandlerNotFoundException ex) {
 		}
 

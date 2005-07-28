@@ -30,7 +30,6 @@ import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
-import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -81,12 +80,13 @@ public class AlturaFrameController extends DefaultFrameController implements
 		splitPane.add(conversation, JSplitPane.RIGHT);
 
 		InputStream is = this.getClass().getResourceAsStream(
-				"org/columba/chat/action/menu.xml");
+				"/org/columba/chat/action/menu.xml");
 		getContainer().extendMenuFromURL(this, is);
 
-		XmlIO xmlFile = new XmlIO(DiskIO
-				.getResourceURL("org/columba/chat/action/toolbar.xml"));
-		xmlFile.load();
+		InputStream is2 = this.getClass().getResourceAsStream(
+				"/org/columba/chat/action/toolbar.xml");
+		XmlIO xmlFile = new XmlIO();
+		xmlFile.load(is2);
 
 		XmlElement toolbar = xmlFile.getRoot().getElement("/toolbar");
 

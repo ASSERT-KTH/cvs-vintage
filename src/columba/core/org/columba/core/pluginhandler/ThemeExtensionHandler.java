@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.io.InputStream;
+
 import javax.swing.UIManager;
 
 import org.columba.core.plugin.ExtensionHandler;
@@ -29,7 +31,7 @@ import org.columba.core.plugin.ExtensionHandler;
  */
 public class ThemeExtensionHandler extends ExtensionHandler {
 
-	public static final String XML_RESOURCE = "org/columba/core/plugin/theme.xml";
+	public static final String XML_RESOURCE = "/org/columba/core/plugin/theme.xml";
 
 	public static final String NAME = "org.columba.core.theme";
 
@@ -43,7 +45,8 @@ public class ThemeExtensionHandler extends ExtensionHandler {
 	public ThemeExtensionHandler() {
 		super(NAME);
 
-		loadExtensionsFromFile(XML_RESOURCE);
+		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
+		loadExtensionsFromStream(is);
 
 		// remove all Look and Feels from the list
 		// which aren't supported by this system
