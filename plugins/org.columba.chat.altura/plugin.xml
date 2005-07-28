@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="Altura Messenger" description="Altura Instant Messenger" id="org.columba.chat.altura.AlturaMessenger" version="1.0" category="Application" enabled="true">
+<plugin name="Altura Messenger" 
+        description="Altura Instant Messenger" 
+        id="org.columba.chat.altura.AlturaMessenger" 
+        version="1.0" 
+        category="Application" 
+        enabled="true">
   <extensionlist id="org.columba.core.component">
     <extension id="AlturaMessenger" class="org.columba.chat.AlturaComponent" />
   </extensionlist>
@@ -8,5 +13,4 @@
      <properties managed="true" />
     </extension>
   </extensionlist>
-  <runtime jar="AlturaMessenger.jar" type="java" />
 </plugin>

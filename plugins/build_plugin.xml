@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <project name="plugin" default="jar" basedir=".">
 
-	<!-- root plugin directory -->
-	<property name="src" value="." />
+	
 
 	<!-- include plugin-specific build-variables -->
 
@@ -17,29 +16,32 @@
  -->
 
 	<!-- include plugin-specific build-variables -->
-	<property file="${plugin_src}/build.properties" />
+	<property file="${plugin_dir}/build.properties" />
 
+	<!-- source files -->
+	<property name="src" value="${plugin_sources}/" />
+	
 	<!-- location of class files -->
-	<property name="build" value="${plugin_src}/build" />
+	<property name="build" value="${plugin_dir}/build" />
 
 	<!-- location of columba's build/ directory containing all class files -->
-	<property name="columba_build" value="${plugin_src}/../../classes" />
+	<property name="columba_build" value="${plugin_dir}/../../classes" />
 
 	<!-- jar-file must be called "plugin.jar" -->
 	<property name="jarfile" value="plugin.jar" />
 	
 	<!-- custom classpath, including Columba's build/ directory and 
       plugin-specific directories and libraries -->
-	<property name="ownclasspath" value=".:${columba_classpath}:${columba_build}:${plugin_classpath}" />
+	<property name="ownclasspath" value="${columba_classpath}:${columba_build}:${plugin_classpath}" />
 
 	<!-- cleanup build/ directory -->
 	<target name="clean" description="Cleans the build system">
 		<delete dir="${build}" />
-		<delete file="${plugin_src/${jarfile}" />
+		<delete file="${plugin_dir/${jarfile}" />
 	</target>
 
 	<!-- create build/ directory -->
-	<target name="init" description="Initialises the build system">
+	<target name="init" depends="clean" description="Initialises the build system">
 		<echo message="you are running java version ${ant.java.version}" />
 		<mkdir dir="${build}" />
 	</target>
@@ -48,9 +50,8 @@
 	<target name="copy-resources" if="plugin_resources" depends="init" description="Copies all resources to the ${build} folder">
 		<echo message="copy ressources now" />
 		<copy todir="${build}">
-			<fileset dir="${plugin_src}/${plugin_resources}">
-				<include name="**/*.xml" />
-				<include name="**/*.png" />
+			<fileset dir="${plugin_resources}">
+				<include name="**" />
 			</fileset>
 		</copy>
 	</target>
@@ -60,14 +61,14 @@
 		<echo message="the classes are going to ${build}" />
 		<echo message="columba class files are in ${columba_build}" />
 		<echo message="classpath: ${ownclasspath}" />
-		<javac srcdir="${plugin_src}" destdir="${build}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes" />
+		<javac srcdir="${src}" destdir="${build}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes" />
 	</target>
 
 	<!-- package in plugin.jar -->
 	<target name="jar" depends="compile">
 		<echo message="plug-in packaged in ${jarfile}" />
-		<jar basedir="${build}" jarfile="${plugin_src}/${jarfile}">
-			<include name="**/*.class" />
+		<jar basedir="${build}" jarfile="${plugin_dir}/${jarfile}">
+			<include name="**" />
 
 			<!-- the external classloader should include all libraries automatically
         there's no need to set the classpath in the MANIFEST file again -->
@@ -81,7 +82,7 @@
 	<target name="release" depends="jar">
 		<echo message="zip-file is going to ${plugin_id}-${plugin_version}.zip" />
 		<zip zipfile="${plugin_id}-${plugin_version}.zip" update="true">
-			<zipfileset dir="${plugin_src}" prefix="${plugin_id}">
+			<zipfileset dir="${plugin_dir}" prefix="${plugin_id}">
 				<include name="${jarfile}" />
 				<include name="plugin.xml" />
 				<include name="lib/**" />

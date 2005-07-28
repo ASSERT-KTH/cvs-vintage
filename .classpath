@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/columba/core"/>
+	<classpathentry kind="src" path="plugins/org.columba.chat.altura/res"/>
+	<classpathentry kind="src" path="plugins/org.columba.chat.altura/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.core.HippoLookAndFeel/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.core.KunststoffLookAndFeel/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.core.LiquidLookAndFeel/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.core.LogDisplay/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.core.MetouiaLookAndFeel/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.core.WinLAFLookAndFeel/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.example.ConfigExample/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.example.CSVAddressbookImportFilter/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.example.HelloWorldAction/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.example.MBOXMailImportFilter/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.mail.EudoraMailImportFilter/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.mail.MozillaMailImportFilter/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.mail.PlaySoundFilterAction/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.mail.ToOrCcFilter/src"/>
 	<classpathentry kind="src" path="src/mail/test"/>
 	<classpathentry kind="src" path="src/addressbook/test"/>
 	<classpathentry kind="src" path="src/addressbook/core"/>
@@ -30,5 +46,12 @@
 	<classpathentry kind="lib" path="lib/mac_mock.jar"/>
 	<classpathentry kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.0_RC3.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.chat.altura/lib/smack.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.chat.altura/lib/smackx.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.HippoLookAndFeel/lib/hippolf.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.KunststoffLookAndFeel/lib/kunststoff.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.LiquidLookAndFeel/lib/liquidlnf.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.MetouiaLookAndFeel/lib/metouia.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.WinLAFLookAndFeel/lib/winlaf-0.5.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
