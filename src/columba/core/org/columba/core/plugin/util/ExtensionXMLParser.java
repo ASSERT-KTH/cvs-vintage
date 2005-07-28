@@ -17,7 +17,6 @@ import org.columba.core.plugin.PluginMetadata;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
-
 /**
  * Convenience methods for parsing the various xml-file resources.
  * 
@@ -66,13 +65,22 @@ public class ExtensionXMLParser {
 	 * 
 	 * @return IExtension enumeration
 	 */
-	public static Enumeration loadExtensionsFromFile(String xmlResource) {
+	public Enumeration loadExtensionsFromFile(String xmlResource) {
 		Vector vector = new Vector();
 
+		// use default resource loader
 		URL url = DiskIO.getResourceURL(xmlResource);
-		if ( url == null) 
-			url = ExtensionXMLParser.class.getResource(xmlResource);
 		
+		// fall-back to class resource loader
+		if (url == null)
+			url = ExtensionXMLParser.class.getResource(xmlResource);
+
+		// abort, if resource could not be found
+		if (url == null) {
+			LOG.severe("unable to load xml resouce file " + xmlResource);
+			return vector.elements();
+		}
+
 		XmlIO xmlFile = new XmlIO(url);
 		xmlFile.load();
 		XmlElement parent = xmlFile.getRoot().getElement(
@@ -102,7 +110,7 @@ public class ExtensionXMLParser {
 	 * @param extensionXmlElement
 	 * @return
 	 */
-	public static ExtensionMetadata parseExtensionMetadata(
+	public ExtensionMetadata parseExtensionMetadata(
 			XmlElement extensionXmlElement) {
 		String id = extensionXmlElement.getAttribute(XML_ATTRIBUTE_ID);
 		if (id == null) {
@@ -148,7 +156,7 @@ public class ExtensionXMLParser {
 	 * @param pluginElement
 	 * @return
 	 */
-	public static PluginMetadata parsePluginMetadata(XmlElement pluginElement) {
+	public PluginMetadata parsePluginMetadata(XmlElement pluginElement) {
 
 		String id = pluginElement.getAttribute(XML_ATTRIBUTE_ID);
 		String name = pluginElement.getAttribute(XML_ATTRIBUTE_NAME);
@@ -171,7 +179,7 @@ public class ExtensionXMLParser {
 	 * @param xmlResource
 	 * @return
 	 */
-	public static Enumeration parseExtensionHandlerlist(String xmlResource) {
+	public Enumeration parseExtensionHandlerlist(String xmlResource) {
 		Vector vector = new Vector();
 		XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(xmlResource));
 		xmlFile.load();
@@ -203,12 +211,13 @@ public class ExtensionXMLParser {
 	/**
 	 * "plugin.xml" file parse.
 	 * 
-	 * @param pluginXmlFile		"plugin.xml" containing the plugin metadata
-	 * @param hashtable			hashtable will be filled with Vector of all extensions
-	 * @return					plugin metadata
+	 * @param pluginXmlFile
+	 *            "plugin.xml" containing the plugin metadata
+	 * @param hashtable
+	 *            hashtable will be filled with Vector of all extensions
+	 * @return plugin metadata
 	 */
-	public static PluginMetadata parsePlugin(File pluginXmlFile,
-			Hashtable hashtable) {
+	public PluginMetadata parsePlugin(File pluginXmlFile, Hashtable hashtable) {
 		XmlIO config = new XmlIO();
 
 		try {
@@ -220,7 +229,7 @@ public class ExtensionXMLParser {
 
 		XmlElement pluginElement = config.getRoot().getElement("/plugin");
 
-		PluginMetadata pluginMetadata = ExtensionXMLParser
+		PluginMetadata pluginMetadata = new ExtensionXMLParser()
 				.parsePluginMetadata(pluginElement);
 
 		// loop through all extensions this plugin uses
@@ -245,13 +254,13 @@ public class ExtensionXMLParser {
 				if (extensionXmlElement.getName().equals(XML_ELEMENT_EXTENSION) == false)
 					continue;
 
-				ExtensionMetadata extensionMetadata = ExtensionXMLParser
+				ExtensionMetadata extensionMetadata = new ExtensionXMLParser()
 						.parseExtensionMetadata(extensionXmlElement);
-		
+
 				vector.add(extensionMetadata);
 
 			}
-			
+
 			hashtable.put(extensionpointId, vector);
 		}
 

@@ -18,12 +18,12 @@
 package org.columba.chat.frame;
 
 import java.awt.BorderLayout;
+import java.io.InputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import org.columba.chat.ui.action.ConnectAction;
 import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
@@ -36,7 +36,7 @@ import org.columba.core.xml.XmlIO;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class AlturaFrameController extends DefaultFrameController implements
 		AlturaFrameMediator, ContentPane {
@@ -44,7 +44,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 	private RoasterTree tree;
 
 	private PresenceComboBox presence;
-	
+
 	private ConversationController conversation;
 
 	/**
@@ -59,7 +59,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 		conversation = new ConversationController(this);
 
 		// connect to server
-		//new ConnectAction(this).actionPerformed(null);
+		// new ConnectAction(this).actionPerformed(null);
 
 	}
 
@@ -69,7 +69,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 	public JComponent getComponent() {
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setDividerLocation(200);
-		
+
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
 
@@ -77,11 +77,12 @@ public class AlturaFrameController extends DefaultFrameController implements
 
 		leftPanel.add(tree, BorderLayout.CENTER);
 		leftPanel.add(presence, BorderLayout.SOUTH);
-		
+
 		splitPane.add(conversation, JSplitPane.RIGHT);
 
-		getContainer().extendMenuFromFile(this,
+		InputStream is = this.getClass().getResourceAsStream(
 				"org/columba/chat/action/menu.xml");
+		getContainer().extendMenuFromURL(this, is);
 
 		XmlIO xmlFile = new XmlIO(DiskIO
 				.getResourceURL("org/columba/chat/action/toolbar.xml"));

@@ -109,7 +109,7 @@ public class PluginManager implements IPluginManager {
 	 * @see org.columba.core.plugin.IPluginManager#addHandlers(java.lang.String)
 	 */
 	public void addHandlers(String xmlResource) {
-		Enumeration e = ExtensionXMLParser
+		Enumeration e = new ExtensionXMLParser()
 				.parseExtensionHandlerlist(xmlResource);
 
 		while (e.hasMoreElements()) {
@@ -157,7 +157,7 @@ public class PluginManager implements IPluginManager {
 		Hashtable hashtable = new Hashtable();
 
 		// parse "/plugin.xml" file
-		PluginMetadata pluginMetadata = ExtensionXMLParser.parsePlugin(xmlFile,
+		PluginMetadata pluginMetadata = new ExtensionXMLParser().parsePlugin(xmlFile,
 				hashtable);
 		pluginMetadata.setDirectory(folder);
 
