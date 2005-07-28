@@ -53,7 +53,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.folder.event");
 
-	private static final int UPDATE_DELAY = 50;
+	private static final int UPDATE_DELAY = 500;
 
 	private static FolderEventDelegator instance;
 
