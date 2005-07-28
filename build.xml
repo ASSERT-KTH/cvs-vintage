@@ -726,4 +726,11 @@
 			<arg value="/dGROOVY=${lib.groovy}" />
 		</exec>		
 	</target>
+	
+	<target name="plugins" depends="compile" description="Builds all plugins">
+		<ant target="all" inheritall="false" inheritrefs="false" dir="plugins" antfile="build.xml" >
+		 <property name="columba_classpath" refid="compile.classpath" />
+		</ant>
+	</target>
+		
 </project>

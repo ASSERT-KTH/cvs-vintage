@@ -4,63 +4,67 @@
 
 	<target name="clean" description="Removes all plugin releases.">
 		<delete>
-			<fileset dir="." includes="org*.zip"/>
+			<fileset dir="." includes="org*.zip" />
 		</delete>
 	</target>
-	
+
 	<target name="mail" description="Builds all mail plugins">
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.mail.EudoraMailImportFilter"/>
+			<property name="plugin_src" value="org.columba.mail.EudoraMailImportFilter" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.mail.ToOrCcFilter"/>
+			<property name="plugin_src" value="org.columba.mail.ToOrCcFilter" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.mail.MozillaMailImportFilter"/>
+			<property name="plugin_src" value="org.columba.mail.MozillaMailImportFilter" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.mail.PlaySoundFilterAction"/>
+			<property name="plugin_src" value="org.columba.mail.PlaySoundFilterAction" />
 		</ant>
 	</target>
-	
+
 	<target name="core" description="Builds all core plugins">
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.KunststoffLookAndFeel"/>
+			<property name="plugin_src" value="org.columba.core.KunststoffLookAndFeel" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.MetouiaLookAndFeel"/>
+			<property name="plugin_src" value="org.columba.core.MetouiaLookAndFeel" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.ThinColumbaLookAndFeel"/>
+			<property name="plugin_src" value="org.columba.core.HippoLookAndFeel" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.HippoLookAndFeel"/>
+			<property name="plugin_src" value="org.columba.core.LiquidLookAndFeel" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.LiquidLookAndFeel"/>
+			<property name="plugin_src" value="org.columba.core.WinLAFLookAndFeel" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.WinLAFLookAndFeel"/>
-		</ant>
-		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.core.LogDisplay"/>
+			<property name="plugin_src" value="org.columba.core.LogDisplay" />
 		</ant>
 	</target>
-	
+
 	<target name="examples" description="Builds all example plugins">
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.example.HelloWorldAction"/>
+			<property name="plugin_src" value="org.columba.example.HelloWorldAction" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.example.ConfigExample"/>
+			<property name="plugin_src" value="org.columba.example.ConfigExample" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.example.CSVAddressbookImportFilter"/>
+			<property name="plugin_src" value="org.columba.example.CSVAddressbookImportFilter" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-		 <property name="plugin_src" value="org.columba.example.MBOXMailImportFilter"/>
+			<property name="plugin_src" value="org.columba.example.MBOXMailImportFilter" />
 		</ant>
 	</target>
-	
-	<target name="all" depends="core,mail,examples"/>
+
+	<target name="chat" description="Builds all chat plugins">
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+			<property name="plugin_src" value="org.columba.chat.altura" />
+		</ant>
+	</target>
+
+	<!-- only build if columba classpath variable is set -->
+	<target name="all" if="columba_classpath" depends="core,mail,examples,chat" />
 </project>

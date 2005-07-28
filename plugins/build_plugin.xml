@@ -27,10 +27,10 @@
 
 	<!-- jar-file must be called "plugin.jar" -->
 	<property name="jarfile" value="plugin.jar" />
-
+	
 	<!-- custom classpath, including Columba's build/ directory and 
       plugin-specific directories and libraries -->
-	<property name="ownclasspath" value=".:${columba_build}:${plugin_classpath}" />
+	<property name="ownclasspath" value=".:${columba_classpath}:${columba_build}:${plugin_classpath}" />
 
 	<!-- cleanup build/ directory -->
 	<target name="clean" description="Cleans the build system">
