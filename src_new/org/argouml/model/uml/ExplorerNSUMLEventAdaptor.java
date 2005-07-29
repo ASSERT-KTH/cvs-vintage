@@ -1,4 +1,4 @@
-// $Id: ExplorerNSUMLEventAdaptor.java,v 1.11 2005/07/25 21:07:18 bobtarling Exp $
+// $Id: ExplorerNSUMLEventAdaptor.java,v 1.12 2005/07/29 10:04:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model.uml;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 
 import org.apache.log4j.Logger;
@@ -32,8 +31,6 @@ import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.EventAdapter;
 import org.argouml.model.RemoveAssociationEvent;
-import org.argouml.model.UmlChangeEvent;
-import org.argouml.uml.ProfileJava;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
