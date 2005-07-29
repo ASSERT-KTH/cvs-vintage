@@ -1,4 +1,4 @@
-// $Id: SuffixFilter.java,v 1.6 2005/01/09 14:59:13 linus Exp $
+// $Id: SuffixFilter.java,v 1.7 2005/07/29 20:12:05 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,6 +100,16 @@ public class SuffixFilter extends FileFilter {
      */
     public String getSuffix() {
         return suffix;
+    }
+
+    /**
+     * Adding this function enables easy selection of suffixfilters 
+     * e.g. in a combobox.
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return getDescription();
     }
 
 } /* end class SuffixFilter */
