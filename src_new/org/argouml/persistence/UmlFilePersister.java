@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.30 2005/06/20 07:41:12 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.31 2005/07/29 21:59:26 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -394,6 +394,7 @@ public class UmlFilePersister extends AbstractFilePersister
             // openStream from url and wrap in StreamSource
             StreamSource xsltStreamSource =
                 new StreamSource(xsltUrl.openStream());
+            xsltStreamSource.setSystemId(xsltUrl.toExternalForm());
 
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(xsltStreamSource);
@@ -410,6 +411,7 @@ public class UmlFilePersister extends AbstractFilePersister
             Result result = new StreamResult(writer);
 
             StreamSource inputStreamSource = new StreamSource(file);
+            xsltStreamSource.setSystemId(file);
             transformer.transform(inputStreamSource, result);
 
             writer.close();
