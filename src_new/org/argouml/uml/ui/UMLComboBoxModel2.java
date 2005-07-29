@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.54 2005/07/10 09:13:25 linus Exp $
+// $Id: UMLComboBoxModel2.java,v 1.55 2005/07/29 19:39:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,9 +177,8 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
                 }
             }
         } else if (evt instanceof RemoveAssociationEvent) {
-            Object element = getChangedElement(evt);
-            if (contains(getChangedElement(evt))) {
-                Object o = getChangedElement(evt);
+            Object o = getChangedElement(evt);
+            if (contains(o)) {
                 if (o instanceof Collection) {
                     removeAll((Collection) o);
                 } else {
