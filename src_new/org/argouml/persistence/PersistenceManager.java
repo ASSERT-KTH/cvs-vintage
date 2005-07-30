@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.10 2005/07/30 17:38:21 mvw Exp $
+// $Id: PersistenceManager.java,v 1.11 2005/07/30 19:41:05 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,8 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.argouml.application.api.Configuration;
+import org.argouml.application.api.ConfigurationKey;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.tigris.gef.util.UnexpectedException;
@@ -66,6 +68,17 @@ public class PersistenceManager {
     private List otherPersisters = new ArrayList();
     private UmlFilePersister quickViewDump;
 
+    /**
+     * The configuration key for the "save project" file location.
+     */
+    public static final ConfigurationKey KEY_SAVE_PROJECT_PATH =
+        Configuration.makeKey("project", "save", "path");
+    /**
+     * The configuration key for the "open project" file location.
+     */
+    public static final ConfigurationKey KEY_OPEN_PROJECT_PATH =
+        Configuration.makeKey("project", "open", "path");
+    
     /**
      * Create the default diagram persister.
      */
@@ -138,13 +151,15 @@ public class PersistenceManager {
     public void setOpenFileChooserFilter(JFileChooser chooser) {
         MultitypeFileFilter mf = new MultitypeFileFilter();
         mf.add(defaultPersister);
+        chooser.addChoosableFileFilter(mf);
+        chooser.addChoosableFileFilter(defaultPersister);
         Iterator iter = otherPersisters.iterator();
         while (iter.hasNext()) {
             AbstractFilePersister ff = (AbstractFilePersister) iter.next();
             mf.add(ff);
+            chooser.addChoosableFileFilter(ff);
         }
-        chooser.addChoosableFileFilter(mf);
-        chooser.setFileFilter(mf);            
+        chooser.setFileFilter(mf);
     }
 
     /**
@@ -245,9 +260,6 @@ public class PersistenceManager {
 /**
  * Composite file filter which will accept any
  * file type added to it.
- * 
- * @author Tom Morris
- *
  */
 class MultitypeFileFilter extends FileFilter {
     Vector filters;
