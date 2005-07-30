@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.9 2005/07/30 11:51:48 mvw Exp $
+// $Id: PersistenceManager.java,v 1.10 2005/07/30 17:38:21 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -261,7 +261,7 @@ class MultitypeFileFilter extends FileFilter {
     public boolean add(AbstractFilePersister filter) {
         filters.add(filter);
         desc = ((desc == null) 
-                ? Translator.localize("filechooser.all-types-desc") 
+                ? "" 
                 : desc + ", ") 
             + "*." + filter.getExtension();
         return false;
@@ -283,7 +283,8 @@ class MultitypeFileFilter extends FileFilter {
     }
 
     public String getDescription() {
-        return desc + ")";
+        Object[] s = {desc};
+        return Translator.messageFormat("filechooser.all-types-desc", s);
     }
 
 }
