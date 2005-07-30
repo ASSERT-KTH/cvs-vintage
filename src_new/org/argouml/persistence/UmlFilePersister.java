@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.31 2005/07/29 21:59:26 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.32 2005/07/30 17:56:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,6 @@ import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.OCLExpander;
 import org.tigris.gef.ocl.TemplateReader;
-import org.xml.sax.SAXException;
 
 /**
  * To persist to and from argo (xml file) storage.
@@ -411,7 +410,7 @@ public class UmlFilePersister extends AbstractFilePersister
             Result result = new StreamResult(writer);
 
             StreamSource inputStreamSource = new StreamSource(file);
-            xsltStreamSource.setSystemId(file);
+            inputStreamSource.setSystemId(file);
             transformer.transform(inputStreamSource, result);
 
             writer.close();
