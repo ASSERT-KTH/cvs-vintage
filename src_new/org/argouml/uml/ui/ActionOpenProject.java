@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.61 2005/05/13 14:44:46 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.62 2005/07/30 11:51:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +113,7 @@ public class ActionOpenProject extends AbstractAction
             FileFilter allFiles = chooser.getFileFilter();
             chooser.removeChoosableFileFilter(allFiles);
 
-            pm.setFileChooserFilters(chooser);
+            pm.setOpenFileChooserFilter(chooser);
 
             int retval = chooser.showOpenDialog(pb);
             if (retval == 0) {

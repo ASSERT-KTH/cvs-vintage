@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.44 2005/07/28 21:40:21 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.45 2005/07/30 11:51:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,7 +125,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         FileFilter allFiles = chooser.getFileFilter();
         chooser.removeChoosableFileFilter(allFiles);
 
-        PersistenceManager.getInstance().setFileChooserFilters(chooser);
+        PersistenceManager.getInstance().setSaveFileChooserFilters(chooser);
 
         int retval = chooser.showSaveDialog(pb);
         if (retval == JFileChooser.APPROVE_OPTION) {
