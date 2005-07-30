@@ -1,4 +1,4 @@
-// $Id: ActionSaveAllGraphics.java,v 1.2 2005/07/29 20:12:05 mvw Exp $
+// $Id: ActionSaveAllGraphics.java,v 1.3 2005/07/30 09:33:37 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Category;
+import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -147,10 +148,23 @@ public class ActionSaveAllGraphics extends UMLAction {
      */
     protected File getSaveDir(Project p) {
 	JFileChooser chooser = getFileChooser(p);
+
+        String fn = Configuration.getString(
+                SaveGraphicsManager.KEY_SAVEALL_GRAPHICS_PATH);
+        if (fn.length() > 0) {
+            chooser.setSelectedFile(new File(fn));
+        }
 	ProjectBrowser pb = ProjectBrowser.getInstance();
-	int retval = chooser.showSaveDialog( pb );
-	if ( retval == JFileChooser.APPROVE_OPTION ) {
-	    return chooser.getSelectedFile();
+
+        int retval = chooser.showSaveDialog( pb );
+
+        if ( retval == JFileChooser.APPROVE_OPTION ) {
+            File theFile = chooser.getSelectedFile(); 
+            String path = theFile.getPath();
+            Configuration.setString(
+                    SaveGraphicsManager.KEY_SAVEALL_GRAPHICS_PATH,
+                    path);
+	    return theFile;
 	}
         return null;
     }

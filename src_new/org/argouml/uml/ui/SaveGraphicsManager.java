@@ -1,4 +1,4 @@
-// $Id: SaveGraphicsManager.java,v 1.2 2005/07/30 07:06:20 mvw Exp $
+// $Id: SaveGraphicsManager.java,v 1.3 2005/07/30 09:33:37 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,6 +70,18 @@ public class SaveGraphicsManager {
      */
     public static final ConfigurationKey KEY_DEFAULT_GRAPHICS_FILTER =
         Configuration.makeKey("graphics", "default", "filter");
+
+    /**
+     * The configuration key for the "save graphics" file location.
+     */
+    public static final ConfigurationKey KEY_SAVE_GRAPHICS_PATH =
+        Configuration.makeKey("graphics", "save", "path");
+
+    /**
+     * The configuration key for the "save all graphics" file location.
+     */
+    public static final ConfigurationKey KEY_SAVEALL_GRAPHICS_PATH =
+        Configuration.makeKey("graphics", "save-all", "path");
     
     /**
      * the default file format
