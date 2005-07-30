@@ -42,7 +42,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.38 2005/07/13 03:24:43 copy_paste Exp $
+ * @version $Id: HyperSearchResults.java,v 1.39 2005/07/30 00:12:20 copy_paste Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -435,7 +435,8 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 					"hypersearch-results.open-split",
 					M_OPEN_NEW_SPLIT));
 			}
-			popupMenu.add(new RemoveTreeNodeAction());
+			if (!(userObj instanceof HyperSearchFolderNode))
+				popupMenu.add(new RemoveTreeNodeAction());
 			popupMenu.add(new ExpandChildTreeNodesAction());
 			if (userObj instanceof HyperSearchFolderNode
 					|| userObj instanceof HyperSearchOperationNode)
@@ -479,6 +480,7 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 
 			MutableTreeNode value = (MutableTreeNode)path
 				.getLastPathComponent();
+			HyperSearchOperationNode.removeNodeFromCache(value);
 			resultTreeModel.removeNodeFromParent(value);
 		}
 	}//}}}
