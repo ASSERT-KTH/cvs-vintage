@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.60 2005/07/26 23:25:48 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.61 2005/07/30 07:06:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.util.Vector;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.ArgoVersion;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.MementoCreationObserver;
 import org.argouml.model.Model;

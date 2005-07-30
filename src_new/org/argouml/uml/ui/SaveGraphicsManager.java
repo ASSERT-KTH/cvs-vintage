@@ -1,4 +1,4 @@
-// $Id: SaveGraphicsManager.java,v 1.1 2005/07/29 20:12:05 mvw Exp $
+// $Id: SaveGraphicsManager.java,v 1.2 2005/07/30 07:06:20 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,12 +198,12 @@ public class SaveGraphicsManager {
             /* The next line does not work: */
             // chooser.setSelectedFile(new File(fileName));
             /* So, let's do it the hard way: */
-            SwingUtilities.invokeLater(new r(fileName));
+            SwingUtilities.invokeLater(new Anonymous1(fileName));
         }
         
-        class r implements Runnable {
+        class Anonymous1 implements Runnable {
             private String fileName;
-            r(String fn){
+            Anonymous1(String fn){
                 fileName = fn;
             }
             public void run() {
