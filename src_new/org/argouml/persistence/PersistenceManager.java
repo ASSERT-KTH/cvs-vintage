@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.11 2005/07/30 19:41:05 mvw Exp $
+// $Id: PersistenceManager.java,v 1.12 2005/07/31 08:45:24 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,6 +78,18 @@ public class PersistenceManager {
      */
     public static final ConfigurationKey KEY_OPEN_PROJECT_PATH =
         Configuration.makeKey("project", "open", "path");
+
+    /**
+     * The configuration key for the "export xmi" file location.
+     */
+    public static final ConfigurationKey KEY_EXPORT_XMI_PATH =
+        Configuration.makeKey("xmi", "export", "path");
+
+    /**
+     * The configuration key for the "import xmi" file location.
+     */
+    public static final ConfigurationKey KEY_IMPORT_XMI_PATH =
+        Configuration.makeKey("xmi", "import", "path");
     
     /**
      * Create the default diagram persister.
