@@ -54,13 +54,13 @@ public class ViewMessageAction extends AbstractColumbaAction {
         	// one message is selected
         	
         	
-        	if (oldUid == uids[0]) {
-                LOG.info("this message was already selected, don't fire any event");
-
-                return;
-            }
-
-            oldUid = uids[0];
+//        	if (oldUid == uids[0]) {
+//                LOG.info("this message was already selected, don't fire any event");
+//
+//                return;
+//            }
+//
+//            oldUid = uids[0];
 
             // show selected message
             CommandProcessor.getInstance().addOp(new ViewMessageCommand(

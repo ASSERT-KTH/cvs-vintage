@@ -19,7 +19,10 @@ package org.columba.mail.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,8 +30,10 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
@@ -47,6 +52,12 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.DeleteAction;
+import org.columba.mail.gui.table.action.OpenMessageWithComposerAction;
+import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
+import org.columba.mail.gui.table.action.ViewMessageAction;
+import org.columba.mail.gui.table.model.HeaderTableModel;
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.ITreeController;
@@ -85,6 +96,12 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	public FolderInfoPanel folderInfoPanel;
 
 	/**
+	 * true, if the messagelist table selection event was triggered
+	 * by a popup event. False, otherwise.
+	 */
+	public boolean isPopupEvent;
+
+	/**
 	 * @param container
 	 */
 	public ThreePaneMailFrameController(ViewItem viewItem) {
@@ -97,10 +114,14 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		TableSelectionHandler tableHandler = new TableSelectionHandler(
 				tableController);
 		getSelectionManager().addSelectionHandler(tableHandler);
+		tableHandler.addSelectionListener(this);
 
 		TreeSelectionHandler treeHandler = new TreeSelectionHandler(
 				treeController.getView());
 		getSelectionManager().addSelectionHandler(treeHandler);
+
+		// double-click mouse listener
+		tableController.getView().addMouseListener(new TableMouseListener());
 
 		folderInfoPanel = new FolderInfoPanel(this);
 
@@ -296,10 +317,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// }
 
 		try {
-			InputStream is = DiskIO.getResourceStream("org/columba/mail/action/menu.xml");
-			
-			getContainer().extendMenuFromURL(this,
-					is);
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/mail/action/menu.xml");
+
+			getContainer().extendMenuFromURL(this, is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -314,10 +335,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		messageController.createPopupMenu();
 
 		// TODO: fixme
-//		JFrame frame = (JFrame) getContainer().getFrame();
-//		ColumbaMenu menu = (ColumbaMenu) frame.getJMenuBar();
-//		menu.addMenuItem("my_reply_action_id", new ReplyAction(this),
-//				ColumbaMenu.MENU_VIEW, ColumbaMenu.PLACEHOLDER_BOTTOM);
+		// JFrame frame = (JFrame) getContainer().getFrame();
+		// ColumbaMenu menu = (ColumbaMenu) frame.getJMenuBar();
+		// menu.addMenuItem("my_reply_action_id", new ReplyAction(this),
+		// ColumbaMenu.MENU_VIEW, ColumbaMenu.PLACEHOLDER_BOTTOM);
 
 		return panel;
 	}
@@ -386,13 +407,112 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;
+		// tree selection event
+		if (e instanceof TreeSelectionChangedEvent) {
+			TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;
 
-		AbstractFolder[] selectedFolders = event.getSelected();
-		if (selectedFolders.length == 1 && selectedFolders[0] != null) {
-			getContainer().getFrame().setTitle(selectedFolders[0].getName());
-		} else {
-			getContainer().getFrame().setTitle("");
+			AbstractFolder[] selectedFolders = event.getSelected();
+			if (selectedFolders.length == 1 && selectedFolders[0] != null) {
+				getContainer().getFrame()
+						.setTitle(selectedFolders[0].getName());
+			} else {
+				getContainer().getFrame().setTitle("");
+			}
+		} else if (e instanceof TableSelectionChangedEvent) {
+			// messagelist table selection event
+			TableSelectionChangedEvent event = (TableSelectionChangedEvent) e;
+
+			if (isPopupEvent == false)
+				// show message
+				new ViewMessageAction(this).actionPerformed(null);
+			
+			isPopupEvent = false;
+		} else
+			throw new IllegalArgumentException(
+					"unknown selection changed event");
+	}
+
+	/**
+	 * Double-click mouse listener for message list table component.
+	 * <p>
+	 * If message is marked as draft, the composer will be opened to edit the
+	 * message. Otherwise, the message will be viewed in the message frame.
+	 * 
+	 * @author Frederik Dietz
+	 */
+	class TableMouseListener extends MouseAdapter {
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+		 */
+		public void mousePressed(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
+		 */
+		public void mouseReleased(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
+		 */
+		public void mouseClicked(MouseEvent event) {
+			// if mouse button was pressed twice times
+			if (event.getClickCount() == 2) {
+				// get selected row
+				int selectedRow = tableController.getView().getSelectedRow();
+
+				// get message node at selected row
+				MessageNode node = (MessageNode) ((HeaderTableModel) tableController
+						.getHeaderTableModel())
+						.getMessageNodeAtRow(selectedRow);
+
+				// is the message marked as draft ?
+				boolean markedAsDraft = node.getHeader().getFlags().getDraft();
+
+				if (markedAsDraft) {
+					// edit message in composer
+					new OpenMessageWithComposerAction(
+							ThreePaneMailFrameController.this)
+							.actionPerformed(null);
+				} else {
+					// open message in new message-frame
+					new OpenMessageWithMessageFrameAction(
+							ThreePaneMailFrameController.this)
+							.actionPerformed(null);
+				}
+			}
+		}
+
+		protected void processPopup(final MouseEvent event) {
+
+			isPopupEvent = true;
+
+			JTable table = tableController.getView();
+
+			int selectedRows = table.getSelectedRowCount();
+
+			if (selectedRows <= 1) {
+				// select node
+				int row = table
+						.rowAtPoint(new Point(event.getX(), event.getY()));
+				table.setRowSelectionInterval(row, row);
+			}
+
+			SwingUtilities.invokeLater(new Runnable() {
+
+				public void run() {
+					tableController.getPopupMenu().show(event.getComponent(),
+							event.getX(), event.getY());
+				}
+			});
 		}
 	}
 }

@@ -42,7 +42,6 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
@@ -76,12 +75,6 @@ public class TableController implements ListSelectionListener,
 	 * table model
 	 */
 	private HeaderTableModel headerTableModel;
-
-	/**
-	 * mouse listener responsible for sorting actions fired by the user
-	 * selecting the column headers of the table
-	 */
-	private HeaderTableMouseListener headerTableMouseListener;
 
 	/**
 	 * table view
@@ -155,10 +148,6 @@ public class TableController implements ListSelectionListener,
 
 		// pass tree to model, used by the threaded-view
 		headerTableModel.setTree((Tree) view.getTree());
-
-		// init mouse listener for the column header
-		headerTableMouseListener = new HeaderTableMouseListener(this);
-		view.addMouseListener(headerTableMouseListener);
 
 		// create a new markAsReadTimer
 		markAsReadTimer = new MarkAsReadTimer(this);
@@ -486,6 +475,7 @@ public class TableController implements ListSelectionListener,
 		if (arg0.getValueIsAdjusting())
 			return;
 
+		/*
 		// @author fdietz
 		// bug #983931, message jumps while downloading new messages
 		if (getView().getSelectedNodes().length == 0) {
@@ -496,12 +486,13 @@ public class TableController implements ListSelectionListener,
 				// -> skip to fix above bug
 				return;
 		}
+		*/
 
 		// rememember selected nodes
 		previouslySelectedNodes = getView().getSelectedNodes();
 
 		// show message
-		new ViewMessageAction(getFrameController()).actionPerformed(null);
+		//new ViewMessageAction(getFrameController()).actionPerformed(null);
 	}
 
 	/**
