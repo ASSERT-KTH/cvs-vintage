@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.81 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.82 2005/07/31 21:26:12 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,15 +138,6 @@ public class PropPanelOperation extends PropPanelFeature {
         }
     }
 
-    /**
-     * The button to add a raised signal is pressed.
-     */
-    public void buttonAddRaisedSignal() {
-        Object target = getTarget();
-        if (Model.getFacade().isAOperation(target)) {
-            addRaisedSignal(new Integer(1));
-        }
-    }
 
     private class ActionNewRaisedSignal extends AbstractActionNewModelElement {
 

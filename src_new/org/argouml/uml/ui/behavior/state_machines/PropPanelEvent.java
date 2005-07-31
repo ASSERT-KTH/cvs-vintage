@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.41 2005/04/12 23:34:19 bobtarling Exp $
+// $Id: PropPanelEvent.java,v 1.42 2005/07/31 21:27:37 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,16 +24,11 @@
 
 package org.argouml.uml.ui.behavior.state_machines;
 
-import java.util.Collection;
-
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.ProjectManager;
-import org.argouml.model.Model;
-import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -97,20 +92,6 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
                 lookupIcon("Stereotype")));
     }
 
-    /**
-     * Adds a parameter to the event and navigates towards it.
-     */
-    public void buttonAddParameter() {
-        Object model = ProjectManager.getManager()
-            .getCurrentProject().getModel();
-        Object voidType = ProjectManager.getManager()
-            .getCurrentProject().findType("void");
-        Collection propertyChangeListeners = ProjectManager.getManager()
-            .getCurrentProject().findFigsForMember(getTarget());
-        Object param = Model.getCoreFactory().buildParameter(getTarget(),
-                model, voidType, propertyChangeListeners);
-        TargetManager.getInstance().setTarget(param);
-    }
 
     /**
      * @return the parameter scroll
