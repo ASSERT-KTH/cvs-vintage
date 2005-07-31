@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.17 2005/07/24 23:54:42 bobtarling Exp $
+// $Id: NSUMLModelFacade.java,v 1.18 2005/07/31 21:23:13 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4461,6 +4461,16 @@ public class NSUMLModelFacade implements Facade {
         //
 	return illegalArgumentObject(handle);
     }
+    
+    /** 
+     * @see org.argouml.model.Facade#getWhen(java.lang.Object)
+     */
+    public Object getWhen(Object target) {
+        if (isATimeEvent(target)) {
+            return ((MTimeEvent) target).getWhen();
+        }
+        return illegalArgumentObject(target);
+    }
 
     /**
      * Get the partitions from a container.
@@ -4672,4 +4682,6 @@ public class NSUMLModelFacade implements Facade {
     public String getTipString(Object modelElement) {
         return modelElement.toString();
     }
+
+    
 }

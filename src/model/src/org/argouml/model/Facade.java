@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.11 2005/07/22 07:26:38 mkl Exp $
+// $Id: Facade.java,v 1.12 2005/07/31 21:23:59 mkl Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2610,4 +2610,10 @@ public interface Facade {
      * @return the tip
      */
     String getTipString(Object modelElement);
+
+    /**
+     * @param the TimeEvent
+     * @return TimeExpression
+     */
+    Object getWhen(Object target);
 }
