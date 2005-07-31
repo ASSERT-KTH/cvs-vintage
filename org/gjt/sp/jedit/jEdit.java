@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.249 2005/05/21 20:51:43 spestov Exp $
+ * @version $Id: jEdit.java,v 1.250 2005/07/31 18:40:10 olearyni Exp $
  */
 public class jEdit
 {
@@ -1042,7 +1042,8 @@ public class jEdit
 				continue;
 
 			String path = MiscUtilities.constructPath(directory,plugin);
-
+			if (jEdit.getBooleanProperty("plugin-blacklist."+plugin))
+				continue;
 			// remove this when 4.1 plugin API is deprecated
 			if(plugin.equals("EditBuddy.jar")
 				|| plugin.equals("PluginManager.jar")
