@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.63 2005/07/30 20:03:31 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.64 2005/07/31 08:22:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.CommandLineInterface;
@@ -38,6 +39,7 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.persistence.AbstractFilePersister;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
@@ -120,19 +122,29 @@ public class ActionOpenProject extends AbstractAction
             }
             
             int retval = chooser.showOpenDialog(pb);
-            if (retval == 0) {
+            if (retval == JFileChooser.APPROVE_OPTION) {
                 File theFile = chooser.getSelectedFile();
+                
                 if (!theFile.canRead()) {
-                    /* Try adding the default extension. */
-                    File n =
-                        new File(theFile.getPath() + "."
-                                + pm.getDefaultExtension());
-                    /* The above could have been the selected extension
-                     * in the chooser, but I have no direct means
-                     * of getting the extension of a FileFilter...
-                     */
-                    if (n.canRead()) {
-                        theFile = n;
+                    /* Try adding the extension from the chosen filter. */
+                    FileFilter ffilter = chooser.getFileFilter();
+                    if (ffilter instanceof AbstractFilePersister) {
+                        AbstractFilePersister afp = (AbstractFilePersister) ffilter;
+                        File m =
+                            new File(theFile.getPath() + "."
+                                    + afp.getExtension());
+                        if (m.canRead()) {
+                            theFile = m;
+                        }
+                    }
+                    if (!theFile.canRead()) {
+                        /* Try adding the default extension. */
+                        File n =
+                            new File(theFile.getPath() + "."
+                                    + pm.getDefaultExtension());
+                        if (n.canRead()) {
+                            theFile = n;
+                        }
                     }
                 }
                 if (theFile != null) {
