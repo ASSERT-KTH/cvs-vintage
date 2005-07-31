@@ -48,8 +48,8 @@ public class ReplyToListAction extends AbstractColumbaAction implements
 				"mainframe", "menu_message_replyto_tooltip")
 				.replaceAll("&", ""));
 
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_L,
-				ActionEvent.CTRL_MASK));
+//		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_L,
+//				ActionEvent.CTRL_MASK));
 
 		setEnabled(false);
 
