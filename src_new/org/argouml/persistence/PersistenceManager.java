@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.12 2005/07/31 08:45:24 mvw Exp $
+// $Id: PersistenceManager.java,v 1.13 2005/08/01 17:31:21 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -36,12 +37,14 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
+import org.argouml.ui.ProjectBrowser;
 import org.tigris.gef.util.UnexpectedException;
 
 
@@ -266,6 +269,33 @@ public class PersistenceManager {
     public void setDiagramMemberFilePersister(
             DiagramMemberFilePersister persister) {
     	diagramMemberFilePersister = persister;
+    }
+    
+    /**
+     * Returns true if we are allowed to overwrite the given file.
+     * @param overwrite if true, then the user is not asked
+     * @param file the given file
+     * @return true if we are allowed to overwrite the given file
+     */
+    public boolean confirmOverwrite(boolean overwrite, File file) {
+        if (file.exists() && !overwrite) {
+            String sConfirm =
+                MessageFormat.format(Translator.localize(
+                "optionpane.confirm-overwrite"),
+                new Object[] {file});
+            int nResult =
+                JOptionPane.showConfirmDialog(
+                        ProjectBrowser.getInstance(), 
+                        sConfirm,
+                        Translator.localize(
+                            "optionpane.confirm-overwrite-title"),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+            if (nResult != JOptionPane.YES_OPTION) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

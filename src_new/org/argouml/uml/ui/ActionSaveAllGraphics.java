@@ -1,4 +1,4 @@
-// $Id: ActionSaveAllGraphics.java,v 1.3 2005/07/30 09:33:37 mvw Exp $
+// $Id: ActionSaveAllGraphics.java,v 1.4 2005/08/01 17:31:21 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,10 +172,12 @@ public class ActionSaveAllGraphics extends UMLAction {
     private boolean saveGraphicsToFile(File theFile, CmdSaveGraphics cmd, boolean overwrite) throws IOException {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	if ( theFile.exists() && !overwrite ) {
-	    String t = "Overwrite " + theFile.getPath();
 	    int response =
-		JOptionPane.showConfirmDialog(pb, t, t,
-					      JOptionPane.YES_NO_OPTION);
+		JOptionPane.showConfirmDialog(pb, 
+                    Translator.messageFormat("optionpane.confirm-overwrite", 
+                            new Object[] {theFile}), 
+                    Translator.localize("optionpane.confirm-overwrite-title"), 
+                    JOptionPane.YES_NO_OPTION);
 	    if (response == JOptionPane.NO_OPTION) return false;
 	}
 	FileOutputStream fo = null;

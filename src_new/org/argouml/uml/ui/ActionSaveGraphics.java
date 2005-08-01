@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.36 2005/07/30 09:33:37 mvw Exp $
+// $Id: ActionSaveGraphics.java,v 1.37 2005/08/01 17:31:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,9 +183,12 @@ public class ActionSaveGraphics
                             "Writing " + theFile + "...");
         }
 	if (theFile.exists() && useUI) {
-	    String t = "Overwrite " + theFile;
 	    int response = JOptionPane.showConfirmDialog(
-                ProjectBrowser.getInstance(), t, t, JOptionPane.YES_NO_OPTION);
+                ProjectBrowser.getInstance(), 
+                Translator.messageFormat("optionpane.confirm-overwrite", 
+                        new Object[] {theFile}), 
+                Translator.localize("optionpane.confirm-overwrite-title"), 
+                JOptionPane.YES_NO_OPTION);
 	    if (response != JOptionPane.YES_OPTION) {
 		return false;
 	    }

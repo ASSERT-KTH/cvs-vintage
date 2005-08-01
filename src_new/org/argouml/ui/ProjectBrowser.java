@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.158 2005/07/21 19:13:06 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.159 2005/08/01 17:31:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -932,21 +932,9 @@ public class ProjectBrowser
         PersistenceManager pm = PersistenceManager.getInstance();
 
         try {
-            if (file.exists() && !overwrite) {
-                String sConfirm =
-                    MessageFormat.format(Translator.localize(
-                        "optionpane.save-project-confirm-overwrite"),
-                        new Object[] {file});
-                int nResult =
-                    JOptionPane.showConfirmDialog(this, sConfirm,
-                            Translator.localize(
-                            "optionpane.save-project-confirm-overwrite-title"),
-                                  JOptionPane.YES_NO_OPTION,
-                                  JOptionPane.QUESTION_MESSAGE);
-
-                if (nResult != JOptionPane.YES_OPTION) {
-                    return false;
-                }
+            if (!PersistenceManager.getInstance()
+                    .confirmOverwrite(overwrite, file)) { 
+                return false;
             }
 
             String sStatus =
