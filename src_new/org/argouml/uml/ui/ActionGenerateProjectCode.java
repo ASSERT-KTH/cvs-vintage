@@ -1,4 +1,4 @@
-// $Id: ActionGenerateProjectCode.java,v 1.27 2005/04/28 20:49:32 mvw Exp $
+// $Id: ActionGenerateProjectCode.java,v 1.28 2005/08/01 19:27:52 thn Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,25 +115,29 @@ public class ActionGenerateProjectCode extends UMLAction {
     }
 
     private boolean isCodeRelevantClassifier(Object/*MClassifier*/ cls) {
-	String path = Generator2.getCodePath(cls);
-	String name = Model.getFacade().getName(cls);
-	if (name == null
+        if (cls == null
+            || (!Model.getFacade().isAClass(cls) && !Model.getFacade().isAInterface(cls))) {
+            return false;
+        }
+        String path = Generator2.getCodePath(cls);
+        String name = Model.getFacade().getName(cls);
+        if (name == null
             || name.length() == 0
             || Character.isDigit(name.charAt(0))) {
-	    return false;
-	}
-	if (path != null) {
-	    return (path.length() > 0);
-	}
-	Object/*MNamespace*/ parent = Model.getFacade().getNamespace(cls);
-	while (parent != null) {
-	    path = Generator2.getCodePath(parent);
-	    if (path != null) {
-		return (path.length() > 0);
-	    }
-	    parent = Model.getFacade().getNamespace(parent);
-	}
-	return false;
+            return false;
+        }
+        if (path != null) {
+            return (path.length() > 0);
+        }
+        Object/*MNamespace*/ parent = Model.getFacade().getNamespace(cls);
+        while (parent != null) {
+            path = Generator2.getCodePath(parent);
+            if (path != null) {
+        	    return (path.length() > 0);
+            }
+            parent = Model.getFacade().getNamespace(parent);
+        }
+        return false;
     }
 
 

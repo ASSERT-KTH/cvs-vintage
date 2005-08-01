@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.123 2005/07/23 19:56:58 thn Exp $
+// $Id: Modeller.java,v 1.124 2005/08/01 19:27:52 thn Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,6 +105,16 @@ public class Modeller {
      * Arbitrary attributes.
      */
     private Hashtable attributes = new Hashtable();
+
+    /**
+     * Vector of parsed method calls.
+     */
+    private Vector methodCalls = new Vector();
+
+    /**
+     * HashMap of parsed local variables.
+     */
+    private Hashtable localVariables = new Hashtable();
 
     /**
      * Create a new modeller.
@@ -1730,14 +1740,35 @@ public class Modeller {
     }
 
     /**
-     * This method currently does nothing.<p>
-     *
-     * Once we start reverse engineering interactions, this is used.
+     * Coolects parsed method calls. Used for reverse engineering of interactions.
      *
      * @param method The method name called.
      * @param obj The object it is called in.
      */
-    public void addCall(String method, String obj) {
+    public void addCall(String methodName) {
+        methodCalls.add(methodName);
     }
 
+    public synchronized Vector getMethodCalls() {
+        if (methodCalls == null) {
+            methodCalls = new Vector();
+        }
+        return methodCalls;
+    }
+
+    public void clearMethodCalls() {
+        methodCalls.clear();
+    }
+    
+    public void addLocalVariableDeclaration(String type, String name) {
+        localVariables.put(name, type);
+    }
+    
+    public Hashtable getLocalVariableDeclarations() {
+        return localVariables;
+    }
+    
+    public void clearLocalVariableDeclarations() {
+        localVariables.clear();
+    }
 }
