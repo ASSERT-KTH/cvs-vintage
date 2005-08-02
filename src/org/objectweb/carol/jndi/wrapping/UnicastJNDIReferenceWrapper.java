@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: UnicastJNDIReferenceWrapper.java,v 1.1 2005/03/15 09:57:03 benoitf Exp $
+ * $Id: UnicastJNDIReferenceWrapper.java,v 1.2 2005/08/02 22:02:54 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.wrapping;
@@ -32,8 +32,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import javax.naming.Reference;
-
-import com.sun.jndi.rmi.registry.RemoteReference;
 
 /**
  * Class <code> JNDIReferenceWrapper </code> is the CAROL Remote Reference

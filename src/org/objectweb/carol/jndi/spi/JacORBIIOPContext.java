@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContext.java,v 1.8 2005/04/07 15:07:08 benoitf Exp $
+ * $Id: JacORBIIOPContext.java,v 1.9 2005/08/02 22:02:54 ashah Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -49,12 +49,11 @@ import org.objectweb.carol.jndi.ns.JacORBCosNaming;
 import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
+import org.objectweb.carol.jndi.wrapping.RemoteReference;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 import org.objectweb.carol.util.configuration.ConfigurationRepository;
 import org.objectweb.carol.util.csiv2.SasComponent;
 import org.objectweb.carol.util.csiv2.SasPolicy;
-
-import com.sun.jndi.rmi.registry.RemoteReference;
 
 /**
  * @author Florent Benoit
@@ -124,7 +123,7 @@ public class JacORBIIOPContext extends AbsContext implements Context {
             // first item
             String itf = ids[0];
 
-            if (itf.indexOf(":com.sun.jndi.rmi.registry.RemoteReference:") != -1) {
+            if (itf.indexOf(":org.objectweb.carol.jndi.wrapping.RemoteReference:") != -1) {
                 // build of the Referenceable object with is Reference
                 Reference objRef = ((RemoteReference) PortableRemoteObject.narrow(o, RemoteReference.class))
                         .getReference();

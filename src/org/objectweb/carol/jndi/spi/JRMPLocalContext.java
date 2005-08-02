@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPLocalContext.java,v 1.9 2005/03/15 14:40:30 benoitf Exp $
+ * $Id: JRMPLocalContext.java,v 1.10 2005/08/02 22:02:54 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -32,9 +32,9 @@ import javax.naming.spi.ObjectFactory;
 
 import org.objectweb.carol.jndi.registry.RegistryWrapperContext;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
+import org.objectweb.carol.jndi.wrapping.RemoteReference;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 
-import com.sun.jndi.rmi.registry.RemoteReference;
 
 /**
  * Use the wrapper on registry object defined by RegistryWrapperContext class.

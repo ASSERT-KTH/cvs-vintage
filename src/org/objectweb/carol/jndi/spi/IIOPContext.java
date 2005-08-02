@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPContext.java,v 1.8 2005/04/07 15:07:08 benoitf Exp $
+ * $Id: IIOPContext.java,v 1.9 2005/08/02 22:02:54 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -45,10 +45,9 @@ import org.objectweb.carol.jndi.ns.IIOPCosNaming;
 import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
+import org.objectweb.carol.jndi.wrapping.RemoteReference;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 import org.objectweb.carol.util.configuration.ConfigurationRepository;
-
-import com.sun.jndi.rmi.registry.RemoteReference;
 
 /**
  * @author Guillaume Riviere

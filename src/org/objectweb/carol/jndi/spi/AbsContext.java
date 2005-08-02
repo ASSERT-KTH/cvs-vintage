@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: AbsContext.java,v 1.4 2005/04/07 15:07:08 benoitf Exp $
+ * $Id: AbsContext.java,v 1.5 2005/08/02 22:02:54 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -34,8 +34,10 @@ import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.spi.NamingManager;
 
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
+import org.objectweb.carol.jndi.wrapping.RemoteReference;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
@@ -103,6 +105,10 @@ public abstract class AbsContext implements Context {
         try {
             if (o instanceof JNDIRemoteResource) {
                 return ((JNDIRemoteResource) o).getResource();
+            } else if (o instanceof RemoteReference) {
+                return NamingManager.getObjectInstance
+                    (((RemoteReference) o).getReference(), name, this,
+                     getEnvironment());
             } else {
                 return o;
             }
