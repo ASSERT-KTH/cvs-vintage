@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IRMIContextWrapperFactory.java,v 1.1 2005/05/14 00:03:58 rhs Exp $
+ * $Id: IRMIContextWrapperFactory.java,v 1.2 2005/08/02 21:23:19 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -38,18 +38,6 @@ import javax.naming.spi.InitialContextFactory;
  * @see javax.naming.spi.InitialContextFactory
  */
 public class IRMIContextWrapperFactory extends AbsInitialContextFactory implements InitialContextFactory {
-
-    /**
-     * Referencing factory
-     */
-    public static final String REFERENCING_FACTORY = "com.sun.jndi.rmi.registry.RegistryContextFactory";
-
-    /**
-     * @return the real factory of this wrapper
-     */
-    protected String getReferencingFactory() {
-        return REFERENCING_FACTORY;
-    }
 
     /**
      * @return class of the wrapper (to be instantiated + pool).

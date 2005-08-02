@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPContextWrapperFactory.java,v 1.5 2005/03/14 10:48:17 benoitf Exp $
+ * $Id: IIOPContextWrapperFactory.java,v 1.6 2005/08/02 21:23:18 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -48,18 +48,6 @@ import org.objectweb.carol.util.configuration.CarolDefaultValues;
  * @see javax.naming.spi.InitialContextFactory
  */
 public class IIOPContextWrapperFactory extends AbsInitialContextFactory implements InitialContextFactory {
-
-    /**
-     * Referencing factory
-     */
-    public static final String REFERENCING_FACTORY = "com.sun.jndi.cosnaming.CNCtxFactory";
-
-    /**
-     * @return the real factory of this wrapper
-     */
-    protected String getReferencingFactory() {
-        return REFERENCING_FACTORY;
-    }
 
     /**
      * @return class of the wrapper (to be instantiated + pool).

@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: AbsInitialContextFactory.java,v 1.1 2005/03/10 10:05:02 benoitf Exp $
+ * $Id: AbsInitialContextFactory.java,v 1.2 2005/08/02 21:23:18 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -52,9 +52,14 @@ public abstract class AbsInitialContextFactory implements InitialContextFactory 
 
 
     /**
-     * @return the real factory of this wrapper
+     * @return the real factory of this wrapper. The default is to use the
+     * URLInitialContextFactory which will pass to the NamingManager the
+     * protocol specified in the context url in order to retrieve a context
+     * factory.
      */
-    protected abstract String getReferencingFactory();
+    protected String getReferencingFactory() {
+        return URLInitialContextFactory.class.getName();
+    }
 
     /**
      * @return class of the wrapper (to be instantiated + pool).

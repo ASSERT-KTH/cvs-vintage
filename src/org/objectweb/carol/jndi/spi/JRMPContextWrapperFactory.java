@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPContextWrapperFactory.java,v 1.5 2005/03/10 10:05:01 benoitf Exp $
+ * $Id: JRMPContextWrapperFactory.java,v 1.6 2005/08/02 21:23:19 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -41,18 +41,6 @@ import org.objectweb.carol.util.configuration.CarolDefaultValues;
  * @see javax.naming.spi.InitialContextFactory
  */
 public class JRMPContextWrapperFactory extends AbsInitialContextFactory implements InitialContextFactory {
-
-    /**
-     * Referencing factory
-     */
-    public static final String REFERENCING_FACTORY = "com.sun.jndi.rmi.registry.RegistryContextFactory";
-
-    /**
-     * @return the real factory of this wrapper
-     */
-    protected String getReferencingFactory() {
-        return REFERENCING_FACTORY;
-    }
 
     /**
      * @return class of the wrapper (to be instantiated + pool).

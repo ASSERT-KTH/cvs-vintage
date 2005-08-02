@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContextWrapperFactory.java,v 1.4 2005/03/14 10:48:17 benoitf Exp $
+ * $Id: JacORBIIOPContextWrapperFactory.java,v 1.5 2005/08/02 21:23:19 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -52,18 +52,6 @@ public class JacORBIIOPContextWrapperFactory extends AbsInitialContextFactory im
      */
     public static final String SAS_COMPONENT = "org.objectweb.carol.util.csiv2.SasComponent";
 
-
-    /**
-     * Referencing factory
-     */
-    public static final String REFERENCING_FACTORY = "com.sun.jndi.cosnaming.CNCtxFactory";
-
-    /**
-     * @return the real factory of this wrapper
-     */
-    protected String getReferencingFactory() {
-        return REFERENCING_FACTORY;
-    }
 
     /**
      * @return class of the wrapper (to be instantiated + pool).
