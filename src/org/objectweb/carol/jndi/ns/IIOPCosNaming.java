@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPCosNaming.java,v 1.11 2005/03/10 12:21:46 benoitf Exp $
+ * $Id: IIOPCosNaming.java,v 1.12 2005/08/02 21:28:41 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -167,7 +167,7 @@ public class IIOPCosNaming extends AbsRegistry implements NameService {
             return true;
         }
         Properties prop = new Properties();
-        prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory");
+        prop.put(Context.INITIAL_CONTEXT_FACTORY, "org.objectweb.carol.jndi.spi.URLInitialContextFactory");
         prop.put(Context.PROVIDER_URL, "iiop://localhost:" + getPort());
 
         if (orb == null) {
