@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.43 2005/04/24 20:13:48 mvw Exp $
+// $Id: TabTaggedValues.java,v 1.44 2005/08/02 04:36:50 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,9 +158,10 @@ public class TabTaggedValues extends AbstractArgoJPanel
         //valCol.setWidth(550);
         //valCol.setPreferredWidth(550);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        table.sizeColumnsToFit(0);
-
+        
         tableModel.setTarget(target);
+        table.sizeColumnsToFit(0);
+        
         if (target != null) {
             titleLabel.setText("Target: "
 				+ Model.getFacade().getUMLClassName(target)
