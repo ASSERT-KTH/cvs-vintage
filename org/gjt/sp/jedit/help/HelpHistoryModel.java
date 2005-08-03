@@ -22,6 +22,11 @@
 
 package org.gjt.sp.jedit.help;
 
+/**
+ * History model used by the help browser 
+ * @author Nicholas O'Leary
+ * @version $Id: HelpHistoryModel.java,v 1.2 2005/08/03 21:57:15 olearyni Exp $
+ */
 class HelpHistoryModel
 {
 	//{{{ HelpHistoryModel
