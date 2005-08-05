@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.50 2005/07/04 05:53:02 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.51 2005/08/05 22:29:19 kpouer Exp $
  */
 public class TextUtilities
 {
@@ -643,6 +643,8 @@ loop:		for(int i = pos; i < line.length(); i++)
 
 			if(j > index)
 				return i;
+			if(i == str.length() - 1)
+				return i + 1;
 		}
 	} //}}}
 
@@ -761,6 +763,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 		}
 	} //}}}
 	
+	//{{{ indexIgnoringWhitespace() method
 	public static void indexIgnoringWhitespace(String text, int maxLineLength,
 		int tabSize, StringBuffer buf)
 	{
