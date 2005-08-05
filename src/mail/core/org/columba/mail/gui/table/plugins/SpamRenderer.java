@@ -45,12 +45,18 @@ public class SpamRenderer extends DefaultLabelRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
+    	
+    	super.getTableCellRendererComponent(table, value, isSelected,
+                hasFocus, row, column);
+    	
         if (value == null) {
             setText("");
 
             return this;
         }
 
+        setText("");
+        
         ColumbaHeader header = (ColumbaHeader) ((MessageNode) value).getHeader();
 
         setIcon(null);
@@ -68,7 +74,6 @@ public class SpamRenderer extends DefaultLabelRenderer {
             }
         }
 
-        return super.getTableCellRendererComponent(table, value, isSelected,
-            hasFocus, row, column);
+        return this;
     }
 }

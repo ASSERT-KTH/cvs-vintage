@@ -19,12 +19,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.columba.core.plugin.IExtensionInterface;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -42,15 +39,15 @@ import org.columba.ristretto.message.Flags;
  * 
  * @author dietz
  */
-public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
+public class DefaultLabelRenderer extends DefaultTableCellRenderer implements
 		IExtensionInterface {
-	private Border unselectedBorder = null;
-
-	private Border selectedBorder = null;
-
-	private Color background;
-
-	private Color foreground;
+	// private Border unselectedBorder = null;
+	//
+	// private Border selectedBorder = null;
+	//
+	// private Color background;
+	//
+	// private Color foreground;
 
 	private Font plainFont;
 
@@ -58,7 +55,7 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
 
 	private Font underlinedFont;
 
-	private boolean isBordered = true;
+	// private boolean isBordered = true;
 
 	/**
 	 * Constructor for DefaultLabelRenderer.
@@ -73,6 +70,7 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
 
 		underlinedFont = UIManager.getFont("Tree.font");
 		underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
+
 	}
 
 	/**
@@ -82,29 +80,10 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
-		if (isBordered) {
-			if (isSelected) {
-				if (selectedBorder == null) {
-					selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
-							5, table.getSelectionBackground());
-				}
+		super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+				row, column);
 
-				// setBorder(selectedBorder);
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-
-			} else {
-				if (unselectedBorder == null) {
-					unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
-							5, table.getBackground());
-				}
-
-				setBackground(table.getBackground());
-
-				// setBorder(unselectedBorder);
-				setForeground(table.getForeground());
-			}
-		}
+		setBorder(null);
 
 		// TreePath path = tree.getPathForRow(row);
 		MessageNode messageNode = (MessageNode) value;
@@ -137,66 +116,11 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
 		Color msgColor = (Color) header.get("columba.color");
 
 		if (msgColor != null) {
-			setForeground(msgColor);
-		} else {
-			setForeground(foreground);
+			if (msgColor.equals(Color.BLACK) == false)
+				setForeground(msgColor);
 		}
 
 		return this;
 	}
 
-	public boolean isOpaque() {
-		return (background != null);
-	}
-
-	/**
-	 * Returns the background.
-	 * 
-	 * @return Color
-	 */
-	public Color getBackground() {
-		return background;
-	}
-
-	/**
-	 * Returns the foreground.
-	 * 
-	 * @return Color
-	 */
-	public Color getForeground() {
-		return foreground;
-	}
-
-	/**
-	 * Sets the background.
-	 * 
-	 * @param background
-	 *            The background to set
-	 */
-	public void setBackground(Color background) {
-		this.background = background;
-	}
-
-	/**
-	 * Sets the foreground.
-	 * 
-	 * @param foreground
-	 *            The foreground to set
-	 */
-	public void setForeground(Color foreground) {
-		this.foreground = foreground;
-	}
-
-	/** ************* optimization **************** */
-
-	// if graphics doesn't seem to work correctly
-	// -> comment the following lines
-	/*
-	 * public void paint(Graphics g) { ui.update(g, this); } public void
-	 * repaint() { }
-	 */
-	/*
-	 * protected void firePropertyChange( String propertyName, Object oldValue,
-	 * Object newValue) { // this is only needed when using HTML text labels }
-	 */
 }

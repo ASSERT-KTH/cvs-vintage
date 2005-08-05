@@ -37,6 +37,10 @@ public class ToRenderer extends DefaultLabelRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
+    	
+    	super.getTableCellRendererComponent(table, value, isSelected,
+                hasFocus, row, column);
+    	
         if (value == null) {
             setText("");
 
@@ -52,7 +56,6 @@ public class ToRenderer extends DefaultLabelRenderer {
         	setText(adr.toString());
         	
         
-        return super.getTableCellRendererComponent(table, value, isSelected,
-            hasFocus, row, column);
+        return this;
     }
 }

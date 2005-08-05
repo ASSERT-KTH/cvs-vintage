@@ -73,6 +73,8 @@ public class StatusRenderer extends DefaultLabelRenderer {
             return this;
         }
 
+        setText("");
+        
         if (value instanceof String) {
             System.out
                     .println("statusrenderer-> instanceof String not expected");

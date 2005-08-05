@@ -49,6 +49,8 @@ public class AttachmentRenderer extends DefaultLabelRenderer {
             return this;
         }
 
+        setText("");
+        
         boolean hasAttachment = ((Boolean) ((MessageNode) value).getHeader()
                                             .get("columba.attachment")).booleanValue();
 

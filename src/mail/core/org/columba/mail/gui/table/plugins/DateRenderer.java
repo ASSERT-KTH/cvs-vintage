@@ -68,6 +68,10 @@ public class DateRenderer extends DefaultLabelRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
+    	
+    	super.getTableCellRendererComponent(table, value, isSelected,
+                hasFocus, row, column);
+    	
         if (value == null) {
             setText("");
 
@@ -89,7 +93,6 @@ public class DateRenderer extends DefaultLabelRenderer {
             setText(dfCommon.format(date));
         }
 
-        return super.getTableCellRendererComponent(table, value, isSelected,
-            hasFocus, row, column);
+        return this;
     }
 }

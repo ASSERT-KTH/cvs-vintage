@@ -31,12 +31,16 @@ public class FromRenderer extends DefaultLabelRenderer {
         super();
     }
 
-    public void updateUI() {
-        super.updateUI();
-    }
+//    public void updateUI() {
+//        super.updateUI();
+//    }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
+    	
+    	super.getTableCellRendererComponent(table, value, isSelected,
+                hasFocus, row, column);
+    	
         if (value == null) {
             setText("");
             return this;
@@ -50,7 +54,6 @@ public class FromRenderer extends DefaultLabelRenderer {
             setText("");
         }
 
-        return super.getTableCellRendererComponent(table, value, isSelected,
-            hasFocus, row, column);
+        return this; 
     }
 }

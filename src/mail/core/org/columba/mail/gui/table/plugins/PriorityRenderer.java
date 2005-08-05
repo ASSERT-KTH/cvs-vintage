@@ -47,6 +47,8 @@ public class PriorityRenderer extends DefaultLabelRenderer {
             return this;
         }
 
+        setText("");
+        
         Integer priority = (Integer) ((MessageNode) value).getHeader().get("columba.priority");
 
         Integer in = priority;

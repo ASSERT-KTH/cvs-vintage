@@ -63,6 +63,8 @@ public class FlaggedRenderer extends DefaultLabelRenderer {
         } else {
             setIcon(null);
         }
+        
+        setText("");
 
         return this;
     }
