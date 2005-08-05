@@ -12,6 +12,7 @@
  <extension id="OpenProfileManagerDialog" class="org.columba.core.gui.action.OpenProfileManagerDialogAction"/>
  <extension id="ChoosePerspectiveSubmenu" class="org.columba.core.gui.action.SwitchPerspectiveSubmenu"/>
  <extension id="ViewFolderInfoPanel" class="org.columba.core.gui.action.ViewFolderInfoPanelAction"/>
+ <extension id="ViewLog" class="org.columba.core.gui.action.ViewLogAction"/>
  
  <extension id="Cut" singleton="true" class="org.columba.core.gui.action.CutAction"/>
  <extension id="Copy" singleton="true" class="org.columba.core.gui.action.CopyAction"/>
