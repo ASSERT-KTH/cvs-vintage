@@ -88,7 +88,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		addNativeJarsToClasspath();
 		setLibraryPath();
-		initPlatformServices();
+		
 		
 		Main.getInstance().run(args);
 	}
@@ -236,8 +236,7 @@ public class Main {
 			frame.setVisible(true);
 		}
 
-		// Add the tray icon to the System tray
-		ColumbaTrayIcon.getInstance().addToSystemTray();
+		
 
 		// register protocol handler
 		System.setProperty("java.protocol.handler.pkgs",
@@ -269,6 +268,12 @@ public class Main {
 		// set Look & Feel
 		ThemeSwitcher.setTheme();
 
+		// initialize platform-dependend services
+		initPlatformServices();
+		
+		// Add the tray icon to the System tray
+		ColumbaTrayIcon.getInstance().addToSystemTray();
+		
 		// init font configuration
 		new FontProperties();
 
