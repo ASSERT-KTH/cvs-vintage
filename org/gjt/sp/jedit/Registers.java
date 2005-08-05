@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.28 2005/07/13 20:46:01 spestov Exp $
+ * @version $Id: Registers.java,v 1.29 2005/08/05 07:58:41 olearyni Exp $
  */
 public class Registers
 {
@@ -440,7 +440,11 @@ public class Registers
 			for(int i = 0; i < registers.length; i++)
 			{
 				Register register = registers[i];
-				if(register == null || i == '$' || i == '%')
+				if(register == null || 
+                                   i == '$' || 
+                                   i == '%' || 
+                                   register.toString().length() == 0
+                                  )
 					continue;
 
 				out.write("<REGISTER NAME=\"");
