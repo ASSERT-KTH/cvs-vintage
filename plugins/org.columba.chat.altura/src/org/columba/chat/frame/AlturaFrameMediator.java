@@ -20,13 +20,13 @@ package org.columba.chat.frame;
 import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * @author fdietz
  *  
  */
-public interface AlturaFrameMediator extends FrameMediator {
+public interface AlturaFrameMediator extends IFrameMediator {
 
 	RoasterTree getBuddyTree();
 	

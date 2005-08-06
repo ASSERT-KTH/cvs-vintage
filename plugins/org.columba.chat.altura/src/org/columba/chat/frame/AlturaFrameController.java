@@ -28,7 +28,7 @@ import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.frame.IContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
@@ -38,7 +38,7 @@ import org.columba.core.xml.XmlIO;
  * 
  */
 public class AlturaFrameController extends DefaultFrameController implements
-		AlturaFrameMediator, ContentPane {
+		AlturaFrameMediator, IContentPane {
 
 	private RoasterTree tree;
 
@@ -63,7 +63,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+	 * @see org.columba.core.gui.frame.IContentPane#getComponent()
 	 */
 	public JComponent getComponent() {
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -81,7 +81,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 
 		InputStream is = this.getClass().getResourceAsStream(
 				"/org/columba/chat/action/menu.xml");
-		getContainer().extendMenuFromURL(this, is);
+		getContainer().extendMenu(this, is);
 
 		InputStream is2 = this.getClass().getResourceAsStream(
 				"/org/columba/chat/action/toolbar.xml");
@@ -110,9 +110,9 @@ public class AlturaFrameController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 * @see org.columba.core.gui.frame.IFrameMediator#getContentPane()
 	 */
-	public ContentPane getContentPane() {
+	public IContentPane getContentPane() {
 		return this;
 	}
 

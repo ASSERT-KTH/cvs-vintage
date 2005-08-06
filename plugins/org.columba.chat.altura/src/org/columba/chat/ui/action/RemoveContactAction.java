@@ -25,7 +25,7 @@ import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.chat.jabber.BuddyStatus;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.jivesoftware.smack.RosterEntry;
 
 /**
@@ -38,7 +38,7 @@ public class RemoveContactAction extends AbstractColumbaAction {
 	 * @param mediator
 	 * @param name
 	 */
-	public RemoveContactAction(FrameMediator mediator) {
+	public RemoveContactAction(IFrameMediator mediator) {
 		super(mediator, "Remove Contact...");
 		
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Remove Contact");

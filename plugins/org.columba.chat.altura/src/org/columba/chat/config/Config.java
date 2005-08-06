@@ -55,7 +55,7 @@ public class Config {
 		else
 			account = new Account();
 
-		ShutdownManager.getShutdownManager().register(new Runnable() {
+		ShutdownManager.getInstance().register(new Runnable() {
 
 			public void run() {
 				try {

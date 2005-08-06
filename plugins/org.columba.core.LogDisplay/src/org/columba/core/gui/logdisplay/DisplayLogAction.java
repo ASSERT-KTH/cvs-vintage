@@ -18,7 +18,7 @@ package org.columba.core.gui.logdisplay;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 
 /**
@@ -29,7 +29,7 @@ public class DisplayLogAction extends AbstractColumbaAction {
     /**
      * @param frameMediator frame controller.
      */
-    public DisplayLogAction(FrameMediator frameMediator) {
+    public DisplayLogAction(IFrameMediator frameMediator) {
         super(frameMediator, "Display log");
         // Make sure we get all log info as fast as we can get ahold of it.
         LogRecordList.getInstance();

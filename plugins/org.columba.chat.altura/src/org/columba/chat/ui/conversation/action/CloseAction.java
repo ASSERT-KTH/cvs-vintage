@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * @author fdietz
@@ -33,7 +33,7 @@ public class CloseAction extends AbstractColumbaAction {
      * @param mediator
      * @param name
      */
-    public CloseAction(FrameMediator mediator) {
+    public CloseAction(IFrameMediator mediator) {
         super(mediator, "Close");
 
     }

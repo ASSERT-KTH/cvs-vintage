@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.jivesoftware.smack.XMPPException;
 
 /**
@@ -37,7 +37,7 @@ public class AddContactAction extends AbstractColumbaAction {
      * @param mediator
      * @param name
      */
-    public AddContactAction(FrameMediator mediator) {
+    public AddContactAction(IFrameMediator mediator) {
         super(mediator, "Add Contact...");
         
         putValue(AbstractColumbaAction.TOOLBAR_NAME, "Add Contact");

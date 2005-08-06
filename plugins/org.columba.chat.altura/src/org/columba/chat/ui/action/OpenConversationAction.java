@@ -25,7 +25,7 @@ import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.chat.jabber.BuddyStatus;
 import org.columba.chat.ui.conversation.ChatMediator;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * @author fdietz
@@ -37,7 +37,7 @@ public class OpenConversationAction extends AbstractColumbaAction {
 	 * @param mediator
 	 * @param name
 	 */
-	public OpenConversationAction(FrameMediator mediator) {
+	public OpenConversationAction(IFrameMediator mediator) {
 		super(mediator, "Send message...");
 
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Send");

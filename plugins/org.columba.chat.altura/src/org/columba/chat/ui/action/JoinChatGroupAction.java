@@ -20,7 +20,7 @@ package org.columba.chat.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 
 /**
@@ -33,7 +33,7 @@ public class JoinChatGroupAction extends AbstractColumbaAction {
      * @param mediator
      * @param name
      */
-    public JoinChatGroupAction(FrameMediator mediator) {
+    public JoinChatGroupAction(IFrameMediator mediator) {
         super(mediator, "Join Chat Group...");
        
     }

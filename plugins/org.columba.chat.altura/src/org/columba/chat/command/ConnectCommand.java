@@ -29,7 +29,7 @@ import org.columba.chat.jabber.SubscriptionListener;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SSLXMPPConnection;
@@ -43,7 +43,7 @@ public class ConnectCommand extends Command {
 
 	private boolean success;
 
-	public ConnectCommand(FrameMediator mediator) {
+	public ConnectCommand(IFrameMediator mediator) {
 		super(mediator, new DefaultCommandReference());
 	}
 

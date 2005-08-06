@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * @author fdietz
@@ -34,7 +34,7 @@ public class DisconnectAction extends AbstractColumbaAction {
 	 * @param mediator
 	 * @param name
 	 */
-	public DisconnectAction(FrameMediator mediator) {
+	public DisconnectAction(IFrameMediator mediator) {
 		super(mediator, "Disconnect");
 
 	}

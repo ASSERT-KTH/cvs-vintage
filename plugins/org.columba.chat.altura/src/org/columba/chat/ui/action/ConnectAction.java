@@ -25,7 +25,7 @@ import org.columba.chat.config.Config;
 import org.columba.chat.ui.dialog.AccountDialog;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * @author fdietz
@@ -37,7 +37,7 @@ public class ConnectAction extends AbstractColumbaAction {
 	 * @param mediator
 	 * @param name
 	 */
-	public ConnectAction(FrameMediator mediator) {
+	public ConnectAction(IFrameMediator mediator) {
 		super(mediator, "Connect...");
 
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Connect");
