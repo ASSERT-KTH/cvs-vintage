@@ -22,10 +22,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 public class HelloWorldAction extends AbstractColumbaAction {
-	public HelloWorldAction(FrameMediator controller) {
+	public HelloWorldAction(IFrameMediator controller) {
 		super(controller, "Hello, World!");
 
 		putValue(SHORT_DESCRIPTION, "Show me this tooltip, please");
