@@ -1,4 +1,4 @@
-// $Id: SettingsTabCpp.java,v 1.5 2005/08/03 17:31:29 aslo Exp $
+// $Id: SettingsTabCpp.java,v 1.6 2005/08/06 01:32:28 aslo Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,8 @@ public class SettingsTabCpp extends SettingsTabHelper
     private JComboBox useSect;
 
     /**
-     * Creates the widgets in a JScrollPanel (there may be many options),
-     * but do not initialize them with the values (this is
-     * handleSettingsTabRefresh() duty).
+     * Creates the widgets but do not initialize them with the values
+     * (this is handleSettingsTabRefresh() duty).
      */
     public SettingsTabCpp() {
         super();
