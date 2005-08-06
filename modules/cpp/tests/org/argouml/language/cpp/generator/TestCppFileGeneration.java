@@ -1,4 +1,4 @@
-// $Id: TestCppFileGeneration.java,v 1.14 2005/05/17 22:43:09 euluis Exp $
+// $Id: TestCppFileGeneration.java,v 1.15 2005/08/06 01:35:12 aslo Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -146,6 +146,8 @@ public class TestCppFileGeneration extends BaseTestGeneratorCpp {
      */
     public void testGenerateAfterModifyAndIssue2828() throws IOException {
         genDir = setUpDirectory4Test("testIssue2828");
+	// enable sections, in case they were disabled
+	getGenerator().setUseSect(Section.SECT_NORMAL);
         // generate the classifier for the first time in temp dir
         String filePath = getGenerator().generateFile2(
                 getAClass(), genDir.getPath());
