@@ -411,9 +411,9 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				MailResourceLoader.getString("global", "help")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"folder_options");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"folder_options");
 
 		JPanel buttonPanel = new JPanel();

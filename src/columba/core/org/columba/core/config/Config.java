@@ -101,7 +101,7 @@ public class Config {
         
         // register at shutdown-manager
         // -> this will save all configuration data, when closing Columba
-        ShutdownManager.getShutdownManager().register(new Runnable() {
+        ShutdownManager.getInstance().register(new Runnable() {
 
             public void run() {
                 try {

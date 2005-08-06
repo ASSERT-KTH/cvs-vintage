@@ -20,7 +20,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
@@ -41,7 +41,7 @@ public class MoveUpAction extends AbstractMoveFolderAction {
     /**
      * @param frameMediator the frame cpntroller.
      */
-    public MoveUpAction(FrameMediator frameMediator) {
+    public MoveUpAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_folder_moveup"));

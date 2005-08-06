@@ -19,7 +19,7 @@ package org.columba.mail.gui.tree.util;
 
 import javax.swing.event.TreeSelectionEvent;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.folder.AbstractFolder;
 
 /**
@@ -28,7 +28,7 @@ import org.columba.mail.folder.AbstractFolder;
  */
 public class SelectSearchFolderDialog extends SelectFolderDialog {
 
-	public SelectSearchFolderDialog(FrameMediator mediator) {
+	public SelectSearchFolderDialog(IFrameMediator mediator) {
 		super(mediator);
 	}
 

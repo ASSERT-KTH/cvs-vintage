@@ -39,7 +39,7 @@ import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.Main;
@@ -51,7 +51,7 @@ import org.columba.core.main.Main;
  */
 public class EditPropertiesAction extends DefaultTableAction implements
 		TreeSelectionListener {
-	public EditPropertiesAction(FrameMediator frameController) {
+	public EditPropertiesAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
 				"mainframe", "menu_file_properties"));
 

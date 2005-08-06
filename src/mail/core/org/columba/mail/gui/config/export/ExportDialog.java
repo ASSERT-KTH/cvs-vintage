@@ -151,9 +151,9 @@ public class ExportDialog extends JDialog implements ActionListener {
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"organising_and_managing_your_email_5");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"organising_and_managing_your_email_5");
 	}
 

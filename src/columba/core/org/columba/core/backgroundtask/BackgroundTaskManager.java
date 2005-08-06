@@ -37,7 +37,7 @@ import org.columba.core.command.CommandProcessor;
  *
  * @author fdietz
  */
-public class BackgroundTaskManager implements ActionListener {
+public class BackgroundTaskManager implements ActionListener, IBackgroundTaskManager {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.backgroundtask");
 
@@ -66,8 +66,11 @@ public class BackgroundTaskManager implements ActionListener {
     	return instance;
     }
 
-    public void register(TaskInterface task) {
-        list.add(task);
+    /**
+	 * @see org.columba.core.backgroundtask.IBackgroundTaskManager#register(java.lang.Runnable)
+	 */
+    public void register(Runnable runnable) {
+        list.add(runnable);
     }
 
     /*
@@ -90,7 +93,7 @@ public class BackgroundTaskManager implements ActionListener {
 
     public void runTasks() {
         for (Iterator it = list.iterator(); it.hasNext();) {
-            TaskInterface task = (TaskInterface) it.next();
+            Runnable task = (Runnable) it.next();
             task.run();
         }
     }

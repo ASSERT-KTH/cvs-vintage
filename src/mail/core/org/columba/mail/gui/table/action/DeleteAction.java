@@ -18,7 +18,7 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.ITableController;
 
@@ -31,9 +31,9 @@ import org.columba.mail.gui.table.ITableController;
  */
 public class DeleteAction extends AbstractColumbaAction {
 	ITableController tableController;
-    FrameMediator frameController;
+    IFrameMediator frameController;
 
-    public DeleteAction(FrameMediator frameController) {
+    public DeleteAction(IFrameMediator frameController) {
         super(frameController, "DeleteAction");
         this.tableController = ((TableViewOwner) frameController).getTableController();
         this.frameController = frameController;

@@ -42,7 +42,7 @@ import javax.swing.JScrollPane;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.filter.FilterActionList;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.IExtension;
@@ -65,9 +65,9 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 
 	protected GridBagConstraints c = new GridBagConstraints();
 
-	protected FrameMediator mediator;
+	protected IFrameMediator mediator;
 
-	public ActionList(FrameMediator mediator, Filter filter, JFrame frame) {
+	public ActionList(IFrameMediator mediator, Filter filter, JFrame frame) {
 		super(new BorderLayout());
 		this.mediator = mediator;
 		this.filter = filter;

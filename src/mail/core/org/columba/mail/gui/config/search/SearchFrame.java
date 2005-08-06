@@ -38,7 +38,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.filter.FilterRule;
 import org.columba.core.folder.IFolder;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
@@ -87,9 +87,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 	private JComboBox condList;
 
-	private FrameMediator frameController;
+	private IFrameMediator frameController;
 
-	public SearchFrame(FrameMediator frameController,
+	public SearchFrame(IFrameMediator frameController,
 			AbstractMessageFolder searchFolder) {
 		super(frameController.getView().getFrame(), true);
 
@@ -106,7 +106,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	public SearchFrame(FrameMediator frameController,
+	public SearchFrame(IFrameMediator frameController,
 			AbstractMessageFolder searchFolder,
 			AbstractMessageFolder sourceFolder) {
 		super(frameController.getView().getFrame(), true);

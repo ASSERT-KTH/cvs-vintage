@@ -35,7 +35,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.util.Blowfish;
 import org.columba.mail.config.IncomingItem;
@@ -300,7 +300,7 @@ public class POP3Store implements Observer {
                         // Some error in the client/server communication
                         //  --> fall back to default login process
                         int result = JOptionPane.showConfirmDialog(
-                        		FrameModel.getInstance().getActiveFrame(),
+                        		FrameManager.getInstance().getActiveFrame(),
                             new MultiLineLabel(e.getMessage() + "\n" +
                                 MailResourceLoader.getString("dialog", "error",
                                 "authentication_fallback_to_default")),

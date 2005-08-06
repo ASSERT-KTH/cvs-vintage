@@ -25,7 +25,7 @@ import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.Main;
@@ -36,7 +36,7 @@ import org.columba.core.main.Main;
  * @author fdietz
  */
 public class AddContactCardAction extends DefaultTreeAction {
-	public AddContactCardAction(FrameMediator frameController) {
+	public AddContactCardAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
 				"mainframe", "menu_file_addcontact"));
 

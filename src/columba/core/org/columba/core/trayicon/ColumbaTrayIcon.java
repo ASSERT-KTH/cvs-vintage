@@ -76,7 +76,7 @@ public class ColumbaTrayIcon {
 		activeIcon.addToTray(DEFAULT_ICON, "Columba");
 		activeIcon.setPopupMenu(menu);
 		
-		ShutdownManager.getShutdownManager().register(new Runnable() {
+		ShutdownManager.getInstance().register(new Runnable() {
 			public void run() {
 				ColumbaTrayIcon.getInstance().removeFromSystemTray();
 			}

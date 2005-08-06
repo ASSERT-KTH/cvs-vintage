@@ -28,7 +28,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -55,7 +55,7 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 	 * @param controller
 	 * @param caption
 	 */
-	public HeadersMenu(FrameMediator controller) {
+	public HeadersMenu(IFrameMediator controller) {
 		super(controller, "Show Headers","show_headers_menu");
 
 		ButtonGroup group = new ButtonGroup();

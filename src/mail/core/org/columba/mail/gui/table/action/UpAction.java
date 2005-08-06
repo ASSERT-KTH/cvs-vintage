@@ -22,7 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -48,9 +48,9 @@ public class UpAction extends AbstractColumbaAction {
 
 	ITableController tableController;
 
-	FrameMediator frameController;
+	IFrameMediator frameController;
 
-	public UpAction(FrameMediator frameController) {
+	public UpAction(IFrameMediator frameController) {
 		super(frameController, "UpAction");
 		this.tableController = ((TableViewOwner) frameController)
 				.getTableController();

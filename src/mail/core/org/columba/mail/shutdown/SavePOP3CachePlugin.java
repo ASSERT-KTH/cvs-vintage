@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.shutdown;
 
-import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.mail.pop3.POP3ServerCollection;
 
 
@@ -27,7 +26,7 @@ import org.columba.mail.pop3.POP3ServerCollection;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SavePOP3CachePlugin implements TaskInterface {
+public class SavePOP3CachePlugin implements Runnable {
     /**
  * @see org.columba.core.gui.ShutdownPlugin#run()
  */

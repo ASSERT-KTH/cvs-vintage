@@ -18,7 +18,7 @@ package org.columba.mail.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.gui.config.export.ExportDialog;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -30,7 +30,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class ExportDialogAction extends AbstractColumbaAction {
-    public ExportDialogAction(FrameMediator frameMediator) {
+    public ExportDialogAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_utilities_exportmail"));

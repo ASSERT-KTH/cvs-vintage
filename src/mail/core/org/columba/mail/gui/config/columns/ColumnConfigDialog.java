@@ -126,9 +126,9 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 				MailResourceLoader.getString("global", "help"));
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"configuring_columba");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"configuring_columba");
 
 		JPanel buttonPanel = new JPanel();

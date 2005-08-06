@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.gui.composer.ComposerController;
@@ -34,7 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ExternalEditorAction extends AbstractColumbaAction {
-    public ExternalEditorAction(FrameMediator frameMediator) {
+    public ExternalEditorAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",
                 "menu_edit_extern_edit"));

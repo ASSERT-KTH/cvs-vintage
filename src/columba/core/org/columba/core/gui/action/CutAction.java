@@ -27,7 +27,7 @@ import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -36,7 +36,7 @@ public class CutAction extends AbstractColumbaAction implements
 
 	private JComponent focusOwner = null;
 
-	public CutAction(FrameMediator controller) {
+	public CutAction(IFrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
 				"menu_edit_cut"));
 

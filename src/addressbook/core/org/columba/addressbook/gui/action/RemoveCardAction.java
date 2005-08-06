@@ -34,7 +34,7 @@ import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.Main;
@@ -46,7 +46,7 @@ import org.columba.core.main.Main;
  */
 public class RemoveCardAction extends DefaultTableAction implements
 		TreeSelectionListener {
-	public RemoveCardAction(FrameMediator frameController) {
+	public RemoveCardAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
 				"mainframe", "menu_file_remove"));
 

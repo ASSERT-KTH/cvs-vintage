@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -51,7 +51,7 @@ public class UnderlineFormatAction extends AbstractSelectableAction
      * @param frameMediator
      * @param name
      */
-    public UnderlineFormatAction(FrameMediator frameMediator) {
+    public UnderlineFormatAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",
                 "menu_format_underline"));

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
@@ -42,7 +42,7 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
 
-    public SaveMessageSourceAsAction(FrameMediator controller) {
+    public SaveMessageSourceAsAction(IFrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe", "menu_file_save"));
 

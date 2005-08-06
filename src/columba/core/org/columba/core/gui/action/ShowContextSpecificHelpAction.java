@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 import javax.help.CSH;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 import org.columba.core.util.GlobalResourceLoader;
@@ -35,7 +35,7 @@ import org.columba.core.util.GlobalResourceLoader;
 public class ShowContextSpecificHelpAction extends AbstractColumbaAction {
     protected ActionListener target;
 
-    public ShowContextSpecificHelpAction(FrameMediator frameMediator) {
+    public ShowContextSpecificHelpAction(IFrameMediator frameMediator) {
         super(frameMediator, GlobalResourceLoader.getString(null, null,
             "menu_help_context"));
 
@@ -47,7 +47,7 @@ public class ShowContextSpecificHelpAction extends AbstractColumbaAction {
 
         setShowToolBarText(false);
 
-        target = new CSH.DisplayHelpAfterTracking(HelpManager.getHelpManager()
+        target = new CSH.DisplayHelpAfterTracking(HelpManager.getInstance()
                                                              .getHelpBroker());
     }
 

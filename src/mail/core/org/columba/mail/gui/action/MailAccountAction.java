@@ -20,13 +20,13 @@ package org.columba.mail.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.config.accountlist.AccountListDialog;
 import org.columba.mail.util.MailResourceLoader;
 
 public class MailAccountAction extends AbstractColumbaAction {
-	public MailAccountAction(FrameMediator controller) {
+	public MailAccountAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"menu_edit_accountconfig"));
 

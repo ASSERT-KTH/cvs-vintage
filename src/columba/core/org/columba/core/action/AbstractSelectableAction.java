@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.action;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 
 /**
@@ -29,7 +29,7 @@ public abstract class AbstractSelectableAction extends AbstractColumbaAction {
     /**
      * Creates a new action instance with a default selection state of false.
      */
-    public AbstractSelectableAction(FrameMediator controller, String name) {
+    public AbstractSelectableAction(IFrameMediator controller, String name) {
         super(controller, name);
     }
 

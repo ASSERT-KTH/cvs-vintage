@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -42,7 +42,7 @@ public class MarkFolderAsReadAction extends AbstractColumbaAction implements ISe
     /**
      * @param frameMediator the frame mediator
      */
-    public MarkFolderAsReadAction(FrameMediator frameMediator) {
+    public MarkFolderAsReadAction(IFrameMediator frameMediator) {
         super(frameMediator,
                 MailResourceLoader.getString("menu", "mainframe",
                 "menu_folder_markasread"));

@@ -42,8 +42,8 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
-import org.columba.core.gui.frame.Container;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.IContainer;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -454,9 +454,9 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 				"global", "help"));
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"configuring_columba_8");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"configuring_columba_8");
 	}
 
@@ -475,7 +475,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			ThemeSwitcher.setTheme();
 
 			// notify frame to update
-			Container[] m = FrameModel.getInstance().getOpenFrames();
+			IContainer[] m = FrameManager.getInstance().getOpenFrames();
 			for (int i = 0; i < m.length; i++) {
 				JFrame frame = m[i].getFrame();
 				ThemeSwitcher.updateFrame(frame);

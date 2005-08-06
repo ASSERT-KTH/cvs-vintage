@@ -39,7 +39,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterRule;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -66,7 +66,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 
 	private JComboBox condList;
 
-	private FrameMediator mediator;
+	private IFrameMediator mediator;
 
 	private JLabel nameLabel;
 
@@ -86,7 +86,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 	 */
 	private boolean dialogWasCancelled = true;
 
-	public FilterDialog(FrameMediator mediator, Filter filter) {
+	public FilterDialog(IFrameMediator mediator, Filter filter) {
 		super(mediator.getView().getFrame(), true);
 
 		this.mediator = mediator;
@@ -255,9 +255,9 @@ public class FilterDialog extends JDialog implements ActionListener {
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"organizing_and_managing_your_email_3");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"organizing_and_managing_your_email_3");
 	}
 

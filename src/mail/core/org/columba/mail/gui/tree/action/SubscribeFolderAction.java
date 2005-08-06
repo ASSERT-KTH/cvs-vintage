@@ -21,7 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -44,7 +44,7 @@ public class SubscribeFolderAction extends AbstractColumbaAction
     implements ISelectionListener {
     private IMAPRootFolder rootFolder;
 
-    public SubscribeFolderAction(FrameMediator frameMediator) {
+    public SubscribeFolderAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_folder_subscribe"));

@@ -168,7 +168,7 @@ public class HelpManager {
     /**
  * Returns the singleton help manager instance.
  */
-    public static HelpManager getHelpManager() {
+    public static HelpManager getInstance() {
         if (instance == null) {
             instance = new HelpManager();
         }

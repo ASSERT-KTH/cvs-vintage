@@ -32,7 +32,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
@@ -46,9 +46,9 @@ class LocationStep extends AbstractStep implements ActionListener {
     protected IMailFolder destinationFolder;
     protected JButton sourceButton;
     protected JButton destinationButton;
-    protected FrameMediator mediator;
+    protected IFrameMediator mediator;
     
-    public LocationStep(FrameMediator mediator, DataModel data) {
+    public LocationStep(IFrameMediator mediator, DataModel data) {
         super(MailResourceLoader.getString("dialog", "mailboximport", "location"),
             MailResourceLoader.getString("dialog", "mailboximport",
                 "location_description"));

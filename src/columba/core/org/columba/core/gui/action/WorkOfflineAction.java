@@ -22,7 +22,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -32,7 +32,7 @@ import org.columba.core.util.GlobalResourceLoader;
 public class WorkOfflineAction extends AbstractSelectableAction
     implements ChangeListener {
     
-    public WorkOfflineAction(FrameMediator controller) {
+    public WorkOfflineAction(IFrameMediator controller) {
         super(controller, GlobalResourceLoader.getString(
             null, null, "menu_file_workoffline"));
         ConnectionStateImpl.getInstance().addChangeListener(this);

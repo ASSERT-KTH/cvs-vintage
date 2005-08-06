@@ -21,7 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -42,7 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class RenameFolderAction extends AbstractColumbaAction
     implements ISelectionListener {
-    public RenameFolderAction(FrameMediator frameMediator) {
+    public RenameFolderAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_folder_renamefolder"));

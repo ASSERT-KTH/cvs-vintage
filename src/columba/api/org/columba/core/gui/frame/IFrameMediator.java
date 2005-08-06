@@ -43,10 +43,10 @@ import org.columba.core.plugin.IExtensionInterface;
  * 
  * @author fdietz
  */
-public interface FrameMediator extends IExtensionInterface{
+public interface IFrameMediator extends IExtensionInterface{
 
 	/**
-	 * forwarded from Container.getViewItem()
+	 * forwarded from IContainer.getViewItem()
 	 * 
 	 * @return
 	 */
@@ -65,19 +65,19 @@ public interface FrameMediator extends IExtensionInterface{
 	 */
 	void savePositions(ViewItem viewItem);
 
-	public Container getContainer();
+	public IContainer getContainer();
 
 	/**
 	 * TODO (@author fdietz): adapter only --> will be removed! 
 	 * @return
 	 */
-	public Container getView();
+	public IContainer getView();
 
-	public void setContainer(Container c);
+	public void setContainer(IContainer c);
 
 	String getString(String sPath, String sName, String sID);
 	
-	public ContentPane getContentPane();
+	public IContentPane getContentPane();
 	
 	public void close();
 

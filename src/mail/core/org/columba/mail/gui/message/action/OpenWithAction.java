@@ -20,7 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
@@ -37,7 +37,7 @@ public class OpenWithAction extends AbstractColumbaAction implements Observer {
 	/**
 	 *  
 	 */
-	public OpenWithAction(FrameMediator controller) {
+	public OpenWithAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"viewer_openlinkwith"));
 

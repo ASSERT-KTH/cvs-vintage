@@ -52,9 +52,9 @@ import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.frame.IContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
@@ -80,7 +80,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author frd
  */
 public class ComposerController extends DefaultFrameController implements
-		CharsetOwnerInterface, Observer, ContentPane, DocumentListener {
+		CharsetOwnerInterface, Observer, IContentPane, DocumentListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -135,17 +135,8 @@ public class ComposerController extends DefaultFrameController implements
 	private boolean attachmentPanelShown;
 
 	public ComposerController() {
-		this(new ComposerModel(), FrameModel.getInstance()
+		this(new ComposerModel(), FrameManager.getInstance()
 				.createCustomViewItem("Composer"));
-
-	}
-
-	public ComposerController(ComposerModel model) {
-		this(model, FrameModel.getInstance().createCustomViewItem("Composer"));
-	}
-
-	public ComposerController(ViewItem viewItem) {
-		this(new ComposerModel(), viewItem);
 
 	}
 
@@ -368,7 +359,7 @@ public class ComposerController extends DefaultFrameController implements
 				// 2 columns
 				// "fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu,
 				// fill:default, 3dlu");
-				"fill:default:grow");
+				"fill:default");
 
 		// 3 row
 		PanelBuilder builder = new PanelBuilder(topPanel, layout);
@@ -381,13 +372,13 @@ public class ComposerController extends DefaultFrameController implements
 		builder.add(smtpLabel, cc.xy(1, 1));
 
 		builder.appendRow("3dlu");
-		builder.appendRow("fill:default:grow");
+		builder.appendRow("fill:default");
 
 		JPanel smtpPanel = new JPanel();
 
 		FormLayout l = new FormLayout(
-				"fill:default:grow, 6dlu, right:default:grow, 3dlu, right:default:grow",
-				"fill:default:grow");
+				"fill:pref:grow, 6dlu, right:pref, 3dlu, right:pref",
+				"fill:pref");
 		PanelBuilder b = new PanelBuilder(smtpPanel, l);
 
 		CellConstraints c = new CellConstraints();
@@ -411,7 +402,7 @@ public class ComposerController extends DefaultFrameController implements
 		 * builder.add(htmlToolbar, cc.xywh(3, 7, 2, 1));
 		 */
 
-		layout.setRowGroups(new int[][] { { 1, 5 } });
+		//layout.setRowGroups(new int[][] { { 1, 5 } });
 
 		
 
@@ -795,13 +786,13 @@ public class ComposerController extends DefaultFrameController implements
 		 * 
 		 * if (getToolBar() == null) { return; }
 		 * 
-		 * if (b) { toolbarPane.remove(toolbar); ((FrameMediator)
+		 * if (b) { toolbarPane.remove(toolbar); ((IFrameMediator)
 		 * frameController) .enableToolbar(MAIN_TOOLBAR, false); } else { if
 		 * (isAccountInfoPanelVisible()) { toolbarPane.removeAll();
 		 * toolbarPane.add(toolbar); toolbarPane.add(getAccountInfoPanel()); }
 		 * else { toolbarPane.add(toolbar); }
 		 * 
-		 * ((FrameMediator) frameController).enableToolbar(MAIN_TOOLBAR, true); }
+		 * ((IFrameMediator) frameController).enableToolbar(MAIN_TOOLBAR, true); }
 		 * 
 		 * validate(); repaint();
 		 */
@@ -812,11 +803,11 @@ public class ComposerController extends DefaultFrameController implements
 		/*
 		 * boolean b = isAccountInfoPanelVisible();
 		 * 
-		 * if (b) { toolbarPane.remove(getAccountInfoPanel()); ((FrameMediator)
+		 * if (b) { toolbarPane.remove(getAccountInfoPanel()); ((IFrameMediator)
 		 * frameController).enableToolbar(ACCOUNTINFOPANEL, false); } else {
 		 * toolbarPane.add(getAccountInfoPanel());
 		 * 
-		 * ((FrameMediator) frameController).enableToolbar(ACCOUNTINFOPANEL,
+		 * ((IFrameMediator) frameController).enableToolbar(ACCOUNTINFOPANEL,
 		 * true); }
 		 * 
 		 * validate(); repaint();
@@ -824,7 +815,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#close()
+	 * @see org.columba.core.gui.frame.IFrameMediator#close()
 	 */
 	public void close() {
 
@@ -837,7 +828,7 @@ public class ComposerController extends DefaultFrameController implements
 			getContainer().getFrame().setVisible(false);
 
 			// close Columba, if composer is only visible frame
-			FrameModel.getInstance().close(null);
+			FrameManager.getInstance().close(null);
 
 			return;
 		}
@@ -858,7 +849,7 @@ public class ComposerController extends DefaultFrameController implements
 			getContainer().getFrame().setVisible(false);
 
 			// close Columba, if composer is only visible frame
-			FrameModel.getInstance().close(null);
+			FrameManager.getInstance().close(null);
 		} else if (n == 1) {
 			// cancel question dialog and don't close composer
 		} else {
@@ -866,7 +857,7 @@ public class ComposerController extends DefaultFrameController implements
 			getContainer().getFrame().setVisible(false);
 
 			// close Columba, if composer is only visible frame
-			FrameModel.getInstance().close(null);
+			FrameManager.getInstance().close(null);
 		}
 
 	}
@@ -935,7 +926,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+	 * @see org.columba.core.gui.frame.IContentPane#getComponent()
 	 */
 	public JComponent getComponent() {
 		JPanel panel = new JPanel();
@@ -947,7 +938,7 @@ public class ComposerController extends DefaultFrameController implements
 			InputStream is = DiskIO
 					.getResourceStream("org/columba/mail/action/composer_menu.xml");
 
-			getContainer().extendMenuFromURL(this, is);
+			getContainer().extendMenu(this, is);
 		} catch (IOException e) {
 			LOG.severe(e.getMessage());
 		}
@@ -973,7 +964,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String,
+	 * @see org.columba.core.gui.frame.IFrameMediator#getString(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
@@ -981,9 +972,9 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 * @see org.columba.core.gui.frame.IFrameMediator#getContentPane()
 	 */
-	public ContentPane getContentPane() {
+	public IContentPane getContentPane() {
 		return this;
 	}
 

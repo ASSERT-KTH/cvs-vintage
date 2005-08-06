@@ -28,7 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -46,7 +46,7 @@ public class DateChooserDialog extends JDialog implements ActionListener {
     protected JDialog dialog;
     
     public DateChooserDialog() {
-        super(FrameModel.getInstance().getActiveFrame(), true);
+        super(FrameManager.getInstance().getActiveFrame(), true);
         
         //TODO: i18n
         setTitle("Choose Date...");

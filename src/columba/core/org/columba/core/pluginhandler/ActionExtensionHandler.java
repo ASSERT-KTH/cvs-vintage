@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.ExtensionHandler;
 import org.columba.core.plugin.IExtension;
@@ -54,7 +54,7 @@ public class ActionExtensionHandler extends ExtensionHandler {
 
 	}
 
-	public AbstractColumbaAction getAction(String id, FrameMediator controller) {
+	public AbstractColumbaAction getAction(String id, IFrameMediator controller) {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		if (controller == null)
@@ -79,7 +79,7 @@ public class ActionExtensionHandler extends ExtensionHandler {
 
 	}
 
-	public IMenu getIMenu(String id, FrameMediator controller) throws Exception {
+	public IMenu getIMenu(String id, IFrameMediator controller) throws Exception {
 		IExtension extension = getExtension(id);
 
 		IMenu menu = null;

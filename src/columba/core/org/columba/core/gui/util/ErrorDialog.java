@@ -41,7 +41,7 @@ import javax.swing.UIManager;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.util.GlobalResourceLoader;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -92,7 +92,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 	private Throwable ex;
 
 	public ErrorDialog(String message, Throwable ex) {
-		super(FrameModel.getInstance().getActiveFrame(), true);
+		super(FrameManager.getInstance().getActiveFrame(), true);
 
 		this.message = message;
 		this.ex = ex;
@@ -196,7 +196,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
 		/*
 		 * FormLayout layout = new FormLayout("default", "default, default");
-		 * Container c = getContentPane(); c.setLayout(layout);
+		 * IContainer c = getContentPane(); c.setLayout(layout);
 		 * 
 		 * CellConstraints cc = new CellConstraints();
 		 * c.add(createCenterPanel(detailsButton.isSelected()), cc.xy(1, 1));

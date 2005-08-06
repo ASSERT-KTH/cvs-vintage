@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizardLauncher;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * @author frd
@@ -29,7 +29,7 @@ import org.columba.core.gui.frame.FrameMediator;
  * Generation>Code and Comments
  */
 public class AddressbookImportAction extends AbstractColumbaAction {
-	public AddressbookImportAction(FrameMediator frameController) {
+	public AddressbookImportAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
 				"mainframe", "menu_utilities_addressbook"));
 

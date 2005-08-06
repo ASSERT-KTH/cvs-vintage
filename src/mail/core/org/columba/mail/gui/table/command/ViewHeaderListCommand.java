@@ -20,7 +20,7 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -40,7 +40,7 @@ public class ViewHeaderListCommand extends Command implements ISelectionListener
 
 	private boolean updateGui;
 
-	public ViewHeaderListCommand(FrameMediator frame,
+	public ViewHeaderListCommand(IFrameMediator frame,
 			ICommandReference reference) {
 		super(frame, reference);
 		

@@ -30,7 +30,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -45,7 +45,7 @@ public class SubjectDialog extends JDialog implements ActionListener {
     private JButton okButton;
 
     public SubjectDialog() {
-    	super(FrameModel.getInstance().getActiveFrame(), true);
+    	super(FrameManager.getInstance().getActiveFrame(), true);
     }
 
     public void showDialog(String subject) {

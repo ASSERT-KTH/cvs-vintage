@@ -16,6 +16,9 @@
 package org.columba.core.gui.action;
 
 import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
@@ -27,7 +30,7 @@ import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -36,7 +39,7 @@ public class PasteAction extends AbstractColumbaAction implements
 
 	private JComponent focusOwner = null;
 
-	public PasteAction(FrameMediator controller) {
+	public PasteAction(IFrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
 				"menu_edit_paste"));
 
@@ -97,5 +100,17 @@ public class PasteAction extends AbstractColumbaAction implements
 	 */
 	public boolean isSingleton() {
 		return true;
+	}
+
+	public boolean isEnabled() {
+
+		Transferable contents = Toolkit.getDefaultToolkit()
+				.getSystemClipboard().getContents(this);
+
+		if ( focusOwner == null ) return false;
+		
+		return focusOwner.getTransferHandler().canImport(focusOwner,
+				contents.getTransferDataFlavors());
+
 	}
 }

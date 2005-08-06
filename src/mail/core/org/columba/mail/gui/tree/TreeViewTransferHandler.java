@@ -24,7 +24,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -52,9 +52,9 @@ import org.columba.mail.gui.table.MessageReferencesTransfer;
  */
 public class TreeViewTransferHandler extends TransferHandler {
 
-	private FrameMediator frameMediator;
+	private IFrameMediator frameMediator;
 
-	public TreeViewTransferHandler(FrameMediator frameMediator) {
+	public TreeViewTransferHandler(IFrameMediator frameMediator) {
 		this.frameMediator = frameMediator;
 	}
 

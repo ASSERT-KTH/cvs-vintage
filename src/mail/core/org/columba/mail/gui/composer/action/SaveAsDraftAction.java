@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -42,7 +42,7 @@ import org.columba.ristretto.message.Flags;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SaveAsDraftAction extends AbstractColumbaAction {
-    public SaveAsDraftAction(FrameMediator frameMediator) {
+    public SaveAsDraftAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",
                 "menu_file_savedraft"));

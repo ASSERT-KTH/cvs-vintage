@@ -18,7 +18,7 @@ package org.columba.mail.gui.config.filter.plugins;
 import java.awt.Color;
 
 import org.columba.core.filter.FilterAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ColorComboBox;
 import org.columba.core.gui.util.ColorFactory;
 import org.columba.core.gui.util.ColorItem;
@@ -38,7 +38,7 @@ public class ColorActionConfig extends DefaultActionRow {
  * @param list the action list (?)
  * @param action the action to configure.
  */
-    public ColorActionConfig(FrameMediator mediator,ActionList list, FilterAction action) {
+    public ColorActionConfig(IFrameMediator mediator,ActionList list, FilterAction action) {
         super(mediator, list, action);
     }
 

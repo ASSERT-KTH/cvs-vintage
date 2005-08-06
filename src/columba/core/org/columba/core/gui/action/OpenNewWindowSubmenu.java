@@ -16,7 +16,7 @@
 package org.columba.core.gui.action;
 
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 
@@ -31,7 +31,7 @@ public class OpenNewWindowSubmenu extends IMenu {
  * @param controller
  * @param caption
  */
-    public OpenNewWindowSubmenu(FrameMediator controller, String caption,String id) {
+    public OpenNewWindowSubmenu(IFrameMediator controller, String caption,String id) {
         super(controller,
             GlobalResourceLoader.getString("global", "global",
                 "menu_file_opennewwindow"),id);

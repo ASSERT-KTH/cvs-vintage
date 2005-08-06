@@ -16,7 +16,7 @@
 
 package org.columba.mail.gui.message.filter;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
@@ -80,7 +80,7 @@ public abstract class AbstractFilter implements Filter {
     /**
      * @return Returns the mediator.
      */
-    public FrameMediator getMediator() {
+    public IFrameMediator getMediator() {
         return mediator;
     }
 }

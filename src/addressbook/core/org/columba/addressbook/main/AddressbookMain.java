@@ -23,8 +23,7 @@ import org.apache.commons.cli.Option;
 import org.columba.addressbook.facade.AddressbookServiceProvider;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.IComponentPlugin;
 import org.columba.core.main.Main;
@@ -57,7 +56,7 @@ public class AddressbookMain implements IComponentPlugin {
 	public void handleCommandLineParameters(CommandLine commandLine) {
 		if (commandLine.hasOption("addressbook")) {
 			try {
-				FrameModel.getInstance().openView("Addressbook");
+				FrameManager.getInstance().openView("Addressbook");
 
 				Main.getInstance().setRestoreLastSession(false);
 			} catch (PluginLoadingFailedException e) {
@@ -82,9 +81,9 @@ public class AddressbookMain implements IComponentPlugin {
 		} catch (PluginHandlerNotFoundException ex) {
 		}
 
-		TaskInterface plugin = new SaveAllAddressbooksPlugin();
+		Runnable plugin = new SaveAllAddressbooksPlugin();
 		BackgroundTaskManager.getInstance().register(plugin);
-		ShutdownManager.getShutdownManager().register(plugin);
+		ShutdownManager.getInstance().register(plugin);
 
 		ServiceManager.getInstance().register(
 				AddressbookServiceProvider.CONTACT,

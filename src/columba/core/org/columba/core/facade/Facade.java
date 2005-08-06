@@ -17,31 +17,20 @@ package org.columba.core.facade;
 
 import java.io.File;
 
+import org.columba.core.backgroundtask.BackgroundTaskManager;
+import org.columba.core.backgroundtask.IBackgroundTaskManager;
 import org.columba.core.config.Config;
 import org.columba.core.io.TempFileStore;
+import org.columba.core.plugin.IPluginManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
 
 /**
- * @author fdietz
- * 
- * 
+ * @author fdietz 
  */
 public class Facade {
-	/**
-	 * @param configName
-	 *            id of config-file example: options
-	 * 
-	 * 
-	 * 
-	 * @return XmlElement represents an xml-treenode
-	 */
-	public static XmlElement getConfigElement(String configName) {
-		XmlElement root = Config.getInstance().get(configName);
 
-		return root;
-	}
+	
 
 	/**
 	 * 
@@ -70,4 +59,21 @@ public class Facade {
 		return PluginManager.getInstance().getPluginConfigFile(pluginId);
 	}
 
+	/**
+	 * Get background task manager.
+	 * 
+	 * @return background task manager.
+	 */
+	public static IBackgroundTaskManager getBackgroundTaskManager() {
+		return (IBackgroundTaskManager) BackgroundTaskManager.getInstance();
+	}
+
+	/**
+	 * Get Plugin Manager;
+	 * 
+	 * @return plugin manager;
+	 */
+	public static IPluginManager getPluginManager() {
+		return (IPluginManager) PluginManager.getInstance();
+	}
 }

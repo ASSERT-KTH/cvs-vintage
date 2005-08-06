@@ -22,7 +22,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.xml.XmlElement;
@@ -48,7 +48,7 @@ public class ThreadedViewAction extends AbstractSelectableAction implements
 	 * 
 	 * @param frameMediator
 	 */
-	public ThreadedViewAction(FrameMediator frameMediator) {
+	public ThreadedViewAction(IFrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_view_viewthreaded"));
 

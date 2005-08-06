@@ -68,7 +68,7 @@ import org.columba.core.util.GlobalResourceLoader;
  * 
  * @author fdietz
  */
-public class ShutdownManager {
+public class ShutdownManager implements IShutdownManager {
 
     private static final Logger LOG = Logger
             .getLogger("org.columba.core.shutdown");
@@ -78,7 +78,7 @@ public class ShutdownManager {
     /**
      * The singleton instance of this class.
      */
-    private static ShutdownManager instance;
+    private static IShutdownManager instance;
 
     /**
      * Indicates whether this ShutdownManager instance is registered as a system
@@ -173,9 +173,9 @@ public class ShutdownManager {
         shuttingDown = false;
     }
 
-    /**
-     * Registers a runnable plugin that should be executed on shutdown.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.core.shutdown.IShutdownManager#register(java.lang.Runnable)
+	 */
     public void register(Runnable plugin) {
         list.add(0, plugin);
     }
@@ -204,9 +204,9 @@ public class ShutdownManager {
         shutdownHook = b;
     }
 
-    /**
-     * Starts the shutdown procedure.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.core.shutdown.IShutdownManager#shutdown(int)
+	 */
     public synchronized void shutdown(final int status) {
     	if( !shuttingDown ) {
     	setShutdownHook(false);
@@ -238,7 +238,7 @@ public class ShutdownManager {
     /**
      * Returns the singleton instance of this class.
      */
-    public static synchronized ShutdownManager getShutdownManager() {
+    public static synchronized IShutdownManager getInstance() {
         if (instance == null) {
             instance = new ShutdownManager();
         }

@@ -31,7 +31,7 @@ import org.columba.core.action.IMenu;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.menu.CMenu;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
@@ -85,10 +85,10 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
      */
     //protected CharsetMenuItem selectedMenuItem = new CharsetMenuItem(null);
     /**
-     * Creates a new menu for choosing charsets. The passed FrameMediator
+     * Creates a new menu for choosing charsets. The passed IFrameMediator
      * instance needs to implement CharsetOwnerInterface.
      */
-    public CharacterEncodingSubMenu(FrameMediator controller) {
+    public CharacterEncodingSubMenu(IFrameMediator controller) {
         super(controller, MailResourceLoader.getString("menu", "mainframe",
                 "menu_view_charset"),"menu_view_charset");
 

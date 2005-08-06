@@ -28,7 +28,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
@@ -44,7 +44,7 @@ import org.jdom.input.SAXBuilder;
  * Translation of resources is mostly done in {@link AbstractColumbaAction},
  * for JMenuItem, JCheckboxMenuItem, JRadioButtonMenuItem. But, the menu names,
  * visible on the menubar and the popup menu name are translated here. This is
- * achieved by passing a {@link FrameMediator} instance, and using its
+ * achieved by passing a {@link IFrameMediator} instance, and using its
  * <code>getString()</code> method to pass along the translation to the
  * appropriate resourceloader.
  * <p>
@@ -86,9 +86,9 @@ public class MenuXMLDecoder {
 
 	private ActionExtensionHandler pluginHandler;
 
-	private FrameMediator mediator;
+	private IFrameMediator mediator;
 
-	public MenuXMLDecoder(FrameMediator mediator) {
+	public MenuXMLDecoder(IFrameMediator mediator) {
 		super();
 
 		this.mediator = mediator;

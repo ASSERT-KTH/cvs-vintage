@@ -29,7 +29,7 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Group;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -38,7 +38,7 @@ import org.columba.core.gui.util.ImageLoader;
  * @author fdietz
  */
 public class AddGroupCardAction extends DefaultTreeAction {
-	public AddGroupCardAction(FrameMediator frameController) {
+	public AddGroupCardAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
 				"mainframe", "menu_file_addgroup"));
 

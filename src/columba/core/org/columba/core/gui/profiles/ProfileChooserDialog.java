@@ -231,9 +231,9 @@ implements ActionListener, ListSelectionListener, MouseListener {
             "", "help"));
         
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+        HelpManager.getInstance().enableHelpOnButton(helpButton,
             "extending_columba_2");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+        HelpManager.getInstance().enableHelpKey(getRootPane(),
             "extending_columba_2");
         
         XmlElement profiles = ProfileManager.getInstance().getProfiles();

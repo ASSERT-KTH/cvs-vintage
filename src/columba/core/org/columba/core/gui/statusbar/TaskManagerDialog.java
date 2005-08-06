@@ -190,9 +190,9 @@ public class TaskManagerDialog extends JDialog
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"organising_and_managing_your_email_3");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"organising_and_managing_your_email_3");
 	}
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/columba/core"/>
+	<classpathentry kind="src" path="src/columba/api"/>
 	<classpathentry kind="src" path="plugins/org.columba.chat.altura/res"/>
 	<classpathentry kind="src" path="plugins/org.columba.chat.altura/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.core.HippoLookAndFeel/src"/>

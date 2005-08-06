@@ -32,7 +32,7 @@ import javax.swing.tree.TreePath;
 import org.columba.core.folder.IFolder;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
@@ -84,7 +84,7 @@ public class TableController implements ListSelectionListener,
 	/**
 	 * reference to mail framemediator
 	 */
-	protected FrameMediator frameController;
+	protected IFrameMediator frameController;
 
 	/**
 	 * timer which marks a message as read after a certain amount of time.
@@ -129,7 +129,7 @@ public class TableController implements ListSelectionListener,
 	 * @param mailFrameController
 	 *            mail framemediator
 	 */
-	public TableController(FrameMediator frameController) {
+	public TableController(IFrameMediator frameController) {
 		this.frameController = frameController;
 
 		// init table model
@@ -389,7 +389,7 @@ public class TableController implements ListSelectionListener,
 	 * 
 	 * @return MailFrameController
 	 */
-	public FrameMediator getFrameController() {
+	public IFrameMediator getFrameController() {
 		return frameController;
 	}
 

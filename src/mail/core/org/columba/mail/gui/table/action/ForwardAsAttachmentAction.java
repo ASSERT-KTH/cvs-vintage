@@ -22,7 +22,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -41,7 +41,7 @@ public class ForwardAsAttachmentAction extends AbstractColumbaAction implements
 	/**
 	 * @param frameMediator
 	 */
-	public ForwardAsAttachmentAction(FrameMediator frameMediator) {
+	public ForwardAsAttachmentAction(IFrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_message_forward_as_attachment"));
 

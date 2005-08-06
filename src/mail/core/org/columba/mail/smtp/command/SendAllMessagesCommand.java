@@ -25,7 +25,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -58,7 +58,7 @@ public class SendAllMessagesCommand extends Command {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public SendAllMessagesCommand(Action action, FrameMediator frameMediator,
+	public SendAllMessagesCommand(Action action, IFrameMediator frameMediator,
 			ICommandReference reference) {
 		super(frameMediator, reference);
 

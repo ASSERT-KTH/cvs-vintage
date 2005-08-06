@@ -8,7 +8,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.io.ColumbaDesktop;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -20,7 +20,7 @@ public class EditSignatureAction extends AbstractColumbaAction implements Observ
 	private Identity identity;
 	private ComposerController composerController;
 	
-	public EditSignatureAction(FrameMediator frameMediator) {
+	public EditSignatureAction(IFrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString(
                 "dialog", "account", "editsignature"));
 		
@@ -35,7 +35,7 @@ public class EditSignatureAction extends AbstractColumbaAction implements Observ
 		identity.addObserver(this);
 	}
 
-	public EditSignatureAction(FrameMediator frameMediator, AccountItem item) {
+	public EditSignatureAction(IFrameMediator frameMediator, AccountItem item) {
 		super(frameMediator, MailResourceLoader.getString(
                 "dialog", "account", "editsignature"));
 		

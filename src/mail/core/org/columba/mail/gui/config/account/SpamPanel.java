@@ -27,7 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JRadioButton;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
@@ -64,9 +64,9 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
     private JRadioButton markMoveToRadioButton;
     private JButton markChooseFolderButton;
     private MultiLineLabel label;
-    private FrameMediator mediator;
+    private IFrameMediator mediator;
     
-    public SpamPanel(FrameMediator mediator, AccountItem item) {
+    public SpamPanel(IFrameMediator mediator, AccountItem item) {
         this.item = item;
         this.mediator = mediator;
         

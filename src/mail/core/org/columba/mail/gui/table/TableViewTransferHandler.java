@@ -26,7 +26,7 @@ import javax.swing.TransferHandler;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
@@ -45,7 +45,7 @@ import org.columba.mail.gui.tree.TreeView;
  * @author redsolo
  */
 public class TableViewTransferHandler extends TransferHandler {
-	private FrameMediator frameController;
+	private IFrameMediator frameController;
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -73,7 +73,7 @@ public class TableViewTransferHandler extends TransferHandler {
 	 * @param cont
 	 *            the fram controller, its used to get the selected messages.
 	 */
-	public TableViewTransferHandler(FrameMediator cont) {
+	public TableViewTransferHandler(IFrameMediator cont) {
 		frameController = cont;
 
 		isDragOperation = false;

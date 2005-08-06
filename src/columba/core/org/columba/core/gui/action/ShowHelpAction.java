@@ -18,7 +18,7 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 import org.columba.core.util.GlobalResourceLoader;
@@ -31,7 +31,7 @@ import org.columba.core.util.GlobalResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ShowHelpAction extends AbstractColumbaAction {
-    public ShowHelpAction(FrameMediator frameMediator) {
+    public ShowHelpAction(IFrameMediator frameMediator) {
         super(frameMediator,
             GlobalResourceLoader.getString(null, null, "menu_help_help"));
 
@@ -43,6 +43,6 @@ public class ShowHelpAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        HelpManager.getHelpManager().openHelpFrame();
+        HelpManager.getInstance().openHelpFrame();
     }
 }

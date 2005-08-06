@@ -18,7 +18,6 @@ package org.columba.addressbook.shutdown;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.core.backgroundtask.TaskInterface;
 
 
 /**
@@ -29,7 +28,7 @@ import org.columba.core.backgroundtask.TaskInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SaveAllAddressbooksPlugin implements TaskInterface {
+public class SaveAllAddressbooksPlugin implements Runnable {
     /**
  * Constructor for SaveAllFoldersPlugin.
  */

@@ -58,7 +58,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.facade.DialogFacade;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterList;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
@@ -104,14 +104,14 @@ public class ConfigFrame extends JDialog
 	private JButton exportButton;
 	private AbstractMessageFolder folder;
 
-	private FrameMediator mediator;
+	private IFrameMediator mediator;
 	/**
 	 * Constructs a ConfigFrame for the specified folder.
 	 * 
 	 * @param messageFolder
 	 *            folder to set filter actions for.
 	 */
-	public ConfigFrame(FrameMediator mediator, AbstractMessageFolder messageFolder) {
+	public ConfigFrame(IFrameMediator mediator, AbstractMessageFolder messageFolder) {
 		super(mediator.getView().getFrame(), true);
 		this.mediator = mediator;
 		
@@ -343,9 +343,9 @@ public class ConfigFrame extends JDialog
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"organising_and_managing_your_email_3");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"organising_and_managing_your_email_3");
 	}
 

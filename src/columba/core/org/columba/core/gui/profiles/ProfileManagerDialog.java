@@ -48,7 +48,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.gui.util.DoubleClickListener;
@@ -101,9 +101,9 @@ public class ProfileManagerDialog extends JDialog implements ActionListener,
 
 	protected JCheckBox checkBox;
 
-	private FrameMediator mediator;
+	private IFrameMediator mediator;
 
-	public ProfileManagerDialog(FrameMediator mediator)
+	public ProfileManagerDialog(IFrameMediator mediator)
 			throws HeadlessException {
 		super(mediator.getView().getFrame(), GlobalResourceLoader.getString(
 				RESOURCE_PATH, "profiles", "manager.title"), true);
@@ -240,9 +240,9 @@ public class ProfileManagerDialog extends JDialog implements ActionListener,
 				"", "help"));
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"extending_columba_2");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"extending_columba_2");
 
 		XmlElement profiles = ProfileManager.getInstance().getProfiles();

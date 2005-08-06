@@ -186,6 +186,7 @@
 	<target name="doc" depends="init" description="Creates the JavaDocs of the Columba API in doc/">
 		<javadoc destdir="${doc.api}" doctitle="Columba ${version} API Documentation" windowtitle="Columba API Documentation" link="http://java.sun.com/j2se/1.4.2/docs/api">
 			<classpath refid="compile.classpath" />
+			<packageset dir="${src.columba.api}"/>
 			<packageset dir="${src.columba.core}"/>
 			<packageset dir="${src.mail.api}"/>
 			<packageset dir="${src.mail.core}"/>
@@ -210,15 +211,23 @@
 	<target name="compile" depends="init, copy-resources, version"  description="Compiles the Columba core components">
 		<echo message="the classes are going to ${dest} "/>
 
-		<ant dir="${src.columba.core}" target="compile" inheritrefs="true" />
-	
-		<!-- Compile the APIs -->
+		<!-- compile columba APIs -->
 		<javac destdir="${dest}" target="1.4" source="1.4">
+			<src path="${src.columba.api}"/>
+			<classpath refid="compile.classpath" />
+		</javac>
+		
+		<!-- compile columba core -->
+		<ant dir="${src.columba.core}" target="compile" inheritrefs="true" />
+		
+		<!-- compile mail/addressbook APIs -->
+		<javac destdir="${dest}" target="1.4" source="1.4">
+			<src path="${src.columba.api}"/>
 			<src path="${src.mail.api}"/>
 			<src path="${src.addressbook.api}"/>
 			<classpath refid="compile.classpath" />
 		</javac>
-		
+			
 		<ant dir="${src.mail.core}" target="compile" inheritrefs="true" />
 		<ant dir="${src.addressbook.core}" target="compile" inheritrefs="true" />
 	</target>

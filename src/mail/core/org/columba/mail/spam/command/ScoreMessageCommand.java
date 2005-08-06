@@ -24,7 +24,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.main.Main;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -60,7 +60,7 @@ public class ScoreMessageCommand extends Command {
 	 * @param frame
 	 * @param references
 	 */
-	public ScoreMessageCommand(FrameMediator frame, ICommandReference ref) {
+	public ScoreMessageCommand(IFrameMediator frame, ICommandReference ref) {
 		super(frame, ref);
 	}
 

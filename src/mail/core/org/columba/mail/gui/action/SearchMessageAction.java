@@ -21,7 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
@@ -31,7 +31,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 
 public class SearchMessageAction extends AbstractColumbaAction {
-    public SearchMessageAction(FrameMediator controller) {
+    public SearchMessageAction(IFrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_edit_searchmessages"));

@@ -18,7 +18,7 @@ package org.columba.mail.gui.message.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 
 /**
@@ -30,7 +30,7 @@ public class CopyTextAction extends AbstractColumbaAction {
     /**
      *
      */
-    public CopyTextAction(FrameMediator controller) {
+    public CopyTextAction(IFrameMediator controller) {
         super(controller, "Copy Text");
 
         setEnabled(false);

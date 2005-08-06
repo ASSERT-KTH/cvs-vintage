@@ -5,13 +5,13 @@ import java.io.File;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.Config;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class ViewLogAction extends AbstractColumbaAction {
 
-	public ViewLogAction(FrameMediator frameMediator) {
+	public ViewLogAction(IFrameMediator frameMediator) {
 		super(frameMediator, GlobalResourceLoader.getString(null, null, "menu_utilities_showerrorlog"));
 	}
 

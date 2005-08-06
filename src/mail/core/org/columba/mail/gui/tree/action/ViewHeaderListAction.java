@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MessageViewOwner;
@@ -34,7 +34,7 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 	/**
 	 * @param controller
 	 */
-	public ViewHeaderListAction(FrameMediator controller) {
+	public ViewHeaderListAction(IFrameMediator controller) {
 		super(controller, "ViewHeaderListAction");
 	}
 

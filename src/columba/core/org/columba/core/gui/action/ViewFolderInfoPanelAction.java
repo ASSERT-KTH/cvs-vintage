@@ -18,12 +18,12 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 
 public class ViewFolderInfoPanelAction extends AbstractSelectableAction {
-    public ViewFolderInfoPanelAction(FrameMediator frameMediator) {
+    public ViewFolderInfoPanelAction(IFrameMediator frameMediator) {
         super(frameMediator,
             GlobalResourceLoader.getString("global", "global",
                 "menu_view_folderinfopanel"));

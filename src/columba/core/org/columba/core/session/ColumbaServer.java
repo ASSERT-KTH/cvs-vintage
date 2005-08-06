@@ -116,7 +116,7 @@ public class ColumbaServer {
 		thread.setDaemon(true);
 
 		// stop server when shutting down
-		ShutdownManager.getShutdownManager().register(new Runnable() {
+		ShutdownManager.getInstance().register(new Runnable() {
 			public void run() {
 				stop();
 			}

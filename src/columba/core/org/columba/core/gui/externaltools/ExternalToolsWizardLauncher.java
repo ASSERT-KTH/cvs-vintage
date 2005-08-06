@@ -98,7 +98,7 @@ public class ExternalToolsWizardLauncher {
 				ImageLoader.getSmallImageIcon("stock_preferences.png"));
 
 		CSH.setHelpIDString(wizard, "extending_columba_2");
-		JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpManager()
+		JavaHelpSupport.enableHelp(wizard, HelpManager.getInstance()
 				.getHelpBroker());
 
 		wizard.pack();

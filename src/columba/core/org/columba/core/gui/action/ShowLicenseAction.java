@@ -19,7 +19,7 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -27,7 +27,7 @@ import org.columba.core.util.GlobalResourceLoader;
  * Shows the license tab in the about dialog.
  */
 public class ShowLicenseAction extends AbstractColumbaAction {
-    public ShowLicenseAction(FrameMediator frameMediator) {
+    public ShowLicenseAction(IFrameMediator frameMediator) {
         super(frameMediator,
             GlobalResourceLoader.getString(null, null, "menu_help_license"));
     }

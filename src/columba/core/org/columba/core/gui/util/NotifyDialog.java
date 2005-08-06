@@ -30,14 +30,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 
 public class NotifyDialog extends JDialog {
 
 	private MultiLineLabel textField;
 
 	public NotifyDialog() {
-		super(FrameModel.getInstance().getActiveFrame(), true);
+		super(FrameManager.getInstance().getActiveFrame(), true);
 	}
 
 	public void showDialog(Exception ex) {

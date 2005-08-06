@@ -26,7 +26,7 @@ import net.javaprog.ui.wizard.Step;
 import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
@@ -38,9 +38,9 @@ import org.columba.mail.util.MailResourceLoader;
  * Responsible for starting the mailbox import wizard.
  */
 public class ImportWizardLauncher {
-    private FrameMediator mediator;
+    private IFrameMediator mediator;
 	
-    public ImportWizardLauncher(FrameMediator mediator) {
+    public ImportWizardLauncher(IFrameMediator mediator) {
     	this.mediator = mediator;
     }
 
@@ -72,7 +72,7 @@ public class ImportWizardLauncher {
                 ImageLoader.getSmallImageIcon("stock_convert.png"));
         CSH.setHelpIDString(wizard, "organising_and_managing_your_email_1");
         JavaHelpSupport.enableHelp(wizard,
-            HelpManager.getHelpManager().getHelpBroker());
+            HelpManager.getInstance().getHelpBroker());
         wizard.pack();
         wizard.setLocationRelativeTo(null);
         wizard.setVisible(true);

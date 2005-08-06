@@ -39,7 +39,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class FontSelectionDialog extends JDialog implements ActionListener,
@@ -81,7 +81,7 @@ public class FontSelectionDialog extends JDialog implements ActionListener,
 	protected int status;
 
 	public FontSelectionDialog(Font f) {
-		super(FrameModel.getInstance().getActiveFrame(), true);
+		super(FrameManager.getInstance().getActiveFrame(), true);
 
 		setTitle(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font",
 				"title"));

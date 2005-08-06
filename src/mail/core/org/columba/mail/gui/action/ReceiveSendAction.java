@@ -24,7 +24,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
@@ -33,7 +33,7 @@ import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ReceiveSendAction extends AbstractColumbaAction {
-	public ReceiveSendAction(FrameMediator controller) {
+	public ReceiveSendAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"menu_file_receivesend"));
 

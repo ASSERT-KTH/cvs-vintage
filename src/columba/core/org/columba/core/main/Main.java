@@ -26,14 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.swing.RepaintManager;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.config.Config;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.themes.ThemeSwitcher;
+import org.columba.core.gui.util.DebugRepaintManager;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.io.ColumbaDesktop;
@@ -88,8 +91,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		addNativeJarsToClasspath();
 		setLibraryPath();
-		
-		
+
 		Main.getInstance().run(args);
 	}
 
@@ -133,7 +135,7 @@ public class Main {
 
 		// Setup the path
 		// Platform maintainers: add your platform here
-		// see also initPlatformServices() method 
+		// see also initPlatformServices() method
 		if (OSInfo.isLinux()) {
 			nativeDir = new File("native/linux/lib");
 		} else if (OSInfo.isWin32Platform()) {
@@ -177,7 +179,7 @@ public class Main {
 		// replace with the modified classpath
 		ucp.set(sysloader,
 				new URLClassPath((URL[]) urlList.toArray(new URL[0])));
-		
+
 	}
 
 	/**
@@ -191,7 +193,7 @@ public class Main {
 		} else if (OSInfo.isWin32Platform()) {
 			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
 			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
-		} else if( OSInfo.isMac()) {
+		} else if (OSInfo.isMac()) {
 			ColumbaDesktop.getInstance().setActiveDesktop(new MacDesktop());
 		}
 	}
@@ -213,7 +215,7 @@ public class Main {
 
 		// if user doesn't overwrite logger settings with commandline arguments
 		// just initialize default logging
-		//ColumbaLogger.createDefaultHandler();
+		// ColumbaLogger.createDefaultHandler();
 		ColumbaLogger.createDefaultFileHandler();
 
 		for (int i = 0; i < args.length; i++) {
@@ -224,10 +226,9 @@ public class Main {
 
 		// enable debugging of repaint manager to track down swing gui
 		// access from outside the awt-event dispatcher thread
-		/*
-		 * if (Main.DEBUG) RepaintManager.setCurrentManager(new
-		 * DebugRepaintManager());
-		 */
+
+		if (Main.DEBUG)
+			RepaintManager.setCurrentManager(new DebugRepaintManager());
 
 		// show splash screen
 		StartUpFrame frame = null;
@@ -235,8 +236,6 @@ public class Main {
 			frame = new StartUpFrame();
 			frame.setVisible(true);
 		}
-
-		
 
 		// register protocol handler
 		System.setProperty("java.protocol.handler.pkgs",
@@ -248,7 +247,7 @@ public class Main {
 
 		SaveConfig task = new SaveConfig();
 		BackgroundTaskManager.getInstance().register(task);
-		ShutdownManager.getShutdownManager().register(task);
+		ShutdownManager.getInstance().register(task);
 
 		ComponentExtensionHandler handler = null;
 		try {
@@ -270,10 +269,10 @@ public class Main {
 
 		// initialize platform-dependend services
 		initPlatformServices();
-		
+
 		// Add the tray icon to the System tray
 		ColumbaTrayIcon.getInstance().addToSystemTray();
-		
+
 		// init font configuration
 		new FontProperties();
 
@@ -286,7 +285,7 @@ public class Main {
 
 		// restore frames of last session
 		if (restoreLastSession) {
-			FrameModel.getInstance().openStoredViews();
+			FrameManager.getInstance().openStoredViews();
 		}
 
 		// hide splash screen

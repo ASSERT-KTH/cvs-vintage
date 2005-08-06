@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.config.mailboximport.ImportWizardLauncher;
 import org.columba.mail.util.MailResourceLoader;
@@ -33,7 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ImportAction extends AbstractColumbaAction
     implements ActionListener {
-    public ImportAction(FrameMediator frameMediator) {
+    public ImportAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_utilities_importmailbox"));

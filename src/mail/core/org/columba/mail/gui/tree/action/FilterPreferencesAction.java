@@ -19,7 +19,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -42,7 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class FilterPreferencesAction extends AbstractColumbaAction implements
         ISelectionListener {
 
-    public FilterPreferencesAction(FrameMediator frameMediator) {
+    public FilterPreferencesAction(IFrameMediator frameMediator) {
         super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
                 "menu_folder_filterconfig"));
 

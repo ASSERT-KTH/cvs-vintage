@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.ClipboardManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
@@ -31,9 +31,9 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CopyAction extends AbstractColumbaAction {
-    FrameMediator frameController;
+    IFrameMediator frameController;
 
-    public CopyAction(FrameMediator frameController) {
+    public CopyAction(IFrameMediator frameController) {
         super(frameController, "CopyAction");
         this.frameController = frameController;
     }

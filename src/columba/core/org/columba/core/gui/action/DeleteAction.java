@@ -22,13 +22,13 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
 
 public class DeleteAction extends AbstractColumbaAction {
-    public DeleteAction(FrameMediator controller) {
+    public DeleteAction(IFrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_edit_delete"));
 

@@ -43,7 +43,7 @@ public class cHTMLPart extends cPrintObject {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.print");
 
-    /** Container holding the HTML to be printed (used to control layout etc. */
+    /** IContainer holding the HTML to be printed (used to control layout etc. */
     private JTextPane mPane = null;
 
     /** Y-coordinate in mPane to start printing at */

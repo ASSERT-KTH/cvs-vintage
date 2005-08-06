@@ -27,11 +27,10 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.ConnectionStateImpl;
@@ -98,16 +97,16 @@ public class MailMain implements IComponentPlugin {
 			ex.printStackTrace();
 		}
 
-		TaskInterface plugin = new SaveAllFoldersPlugin();
+		Runnable plugin = new SaveAllFoldersPlugin();
 		BackgroundTaskManager.getInstance().register(plugin);
 
 		plugin = new SavePOP3CachePlugin();
 		BackgroundTaskManager.getInstance().register(plugin);
-		ShutdownManager.getShutdownManager().register(plugin);
+		ShutdownManager.getInstance().register(plugin);
 
 		plugin = new SaveSpamDBPlugin();
 		BackgroundTaskManager.getInstance().register(plugin);
-		ShutdownManager.getShutdownManager().register(plugin);
+		ShutdownManager.getInstance().register(plugin);
 
 		ServiceManager.getInstance().register(
 				"org.columba.mail.facade.IConfigFactory",
@@ -168,7 +167,7 @@ public class MailMain implements IComponentPlugin {
 				}
 			} else {
 				try {
-					FrameModel.getInstance().openView("ThreePaneMail");
+					FrameManager.getInstance().openView("ThreePaneMail");
 
 					Main.getInstance().setRestoreLastSession(false);
 				} catch (PluginLoadingFailedException e) {
@@ -244,7 +243,7 @@ public class MailMain implements IComponentPlugin {
 
 				// Some error in the client/server communication
 				// --> fall back to default login process
-				int result = JOptionPane.showConfirmDialog(FrameModel
+				int result = JOptionPane.showConfirmDialog(FrameManager
 						.getInstance().getActiveFrame(), panel,
 						MailResourceLoader.getString("dialog", "defaultclient",
 								"title"), JOptionPane.YES_NO_OPTION);

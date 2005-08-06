@@ -21,14 +21,14 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
 
 
 public class ExitAction extends AbstractColumbaAction {
-    public ExitAction(FrameMediator controller) {
+    public ExitAction(IFrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_file_exit"));
 
@@ -56,13 +56,13 @@ public class ExitAction extends AbstractColumbaAction {
     	//
     	// @author: fdietz
     	// using shutdown-manager is wrong here, because this
-    	// automatically also calls the FrameModel, which 
+    	// automatically also calls the FrameManager, which 
     	// also starts a second shutdown thread
     	// -> This leads into two parallel shutdown thread which
     	// -> is why sometimes config-files, etc. get messed up
     	//        
     	
-    	//FrameModel.getInstance().storeViews();
+    	//FrameManager.getInstance().storeViews();
         
     	// @author: tstich
     	// Its better to call the Shutdownmanager
@@ -71,7 +71,7 @@ public class ExitAction extends AbstractColumbaAction {
     	// call only, so we never should have multi-shutdown
     	// problems again.
     	
-    	ShutdownManager.getShutdownManager().shutdown(0);
+    	ShutdownManager.getInstance().shutdown(0);
     	
     }
 }

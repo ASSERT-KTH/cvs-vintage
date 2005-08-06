@@ -17,8 +17,11 @@ package org.columba.core.facade;
 
 import java.util.logging.Logger;
 
+import org.columba.core.logging.ColumbaLogger;
+
 /**
  * A facade for logging in columba.
+ * 
  * @author frd
  */
 public final class LoggingFacade {
@@ -31,39 +34,8 @@ public final class LoggingFacade {
     private LoggingFacade() {
     }
 
-    /**
-     * Log a message that are reasonably significant and informative.
-     * The message is intended for end users.
-     * @param infoMessage the message.
-     */
-    public static void logInfo(String infoMessage) {
-        LOG.info(infoMessage);
-    }
-
-    /**
-     * Log a message that are intended for tracing.
-     * The message is intended for developers.
-     * @param debugMessage the message.
-     */
-    public static void logDebug(String debugMessage) {
-        LOG.fine(debugMessage);
-    }
-
-    /**
-     * Log a message when there is a chance Columba may not function properly.
-     * The message is intended for end users or system administrators.
-     * @param errorMessage the message.
-     */
-    public static void logError(String errorMessage) {
-        LOG.severe(errorMessage);
-    }
-
-    /**
-     * Log a message when a potential problem has occurred.
-     * The message is intended for end users or system administrators.
-     * @param warningMessage the message.
-     */
-    public static void logWarning(String warningMessage) {
-        LOG.severe(warningMessage);
+    
+    public static void enableDebuggingMode(boolean enabled) {
+    	ColumbaLogger.setDebugging(enabled);
     }
 }

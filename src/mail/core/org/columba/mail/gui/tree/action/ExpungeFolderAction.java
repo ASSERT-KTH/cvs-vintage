@@ -22,7 +22,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -43,7 +43,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ExpungeFolderAction extends AbstractColumbaAction implements
 		ISelectionListener {
-	public ExpungeFolderAction(FrameMediator frameMediator) {
+	public ExpungeFolderAction(IFrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_folder_expungefolder"));
 

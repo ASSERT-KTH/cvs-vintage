@@ -21,7 +21,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.ClipboardManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
@@ -38,9 +38,9 @@ import org.columba.mail.gui.table.ITableController;
 public class PasteAction extends AbstractColumbaAction {
 	ITableController tableController;
 
-	FrameMediator frameController;
+	IFrameMediator frameController;
 
-	public PasteAction(FrameMediator frameController) {
+	public PasteAction(IFrameMediator frameController) {
 		super(frameController, "PasteAction");
 		this.tableController = ((TableViewOwner) frameController)
 				.getTableController();

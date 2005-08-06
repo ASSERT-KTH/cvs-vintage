@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -37,7 +37,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class AddSenderToAddressbookAction extends AbstractColumbaAction
     implements ISelectionListener {
-    public AddSenderToAddressbookAction(FrameMediator frameMediator) {
+    public AddSenderToAddressbookAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_message_addsender"));

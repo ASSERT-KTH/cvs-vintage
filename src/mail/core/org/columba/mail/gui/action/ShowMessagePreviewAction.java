@@ -25,7 +25,7 @@ import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 
@@ -43,7 +43,7 @@ public class ShowMessagePreviewAction extends AbstractSelectableAction
 	/**
 	 * @param controller
 	 */
-	public ShowMessagePreviewAction(FrameMediator controller) {
+	public ShowMessagePreviewAction(IFrameMediator controller) {
 		super(controller, "Message Preview");
 
 		ViewItem item = frameMediator.getViewItem();

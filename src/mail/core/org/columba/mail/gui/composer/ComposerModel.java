@@ -457,7 +457,7 @@ public class ComposerModel {
 	}
 
 	/*
-	 * public FrameMediator createInstance(String id) { return new
+	 * public IFrameMediator createInstance(String id) { return new
 	 * ComposerController(id, this); }
 	 */
 	public List getRCPTVector() {

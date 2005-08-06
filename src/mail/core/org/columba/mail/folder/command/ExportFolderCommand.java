@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
@@ -55,7 +55,7 @@ public class ExportFolderCommand extends Command {
 	 * @param frame
 	 * @param references
 	 */
-	public ExportFolderCommand(FrameMediator frame,
+	public ExportFolderCommand(IFrameMediator frame,
 			ICommandReference reference) {
 		super(frame, reference);
 	}

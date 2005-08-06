@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.text.StyleConstants;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -50,7 +50,7 @@ public class CenterJustifyAction extends AbstractSelectableAction
      * @param frameMediator
      * @param name
      */
-    public CenterJustifyAction(FrameMediator frameMediator) {
+    public CenterJustifyAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",
                 "menu_format_center_justify"));

@@ -25,7 +25,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.columba.core.filter.FilterAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ComboMenu;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.plugin.IExtensionInterface;
@@ -47,11 +47,11 @@ public class DefaultActionRow implements IExtensionInterface {
 
 	protected int count;
 
-	private FrameMediator mediator;
+	private IFrameMediator mediator;
 
 	private ComboMenu comboMenu;
 
-	public DefaultActionRow(FrameMediator mediator, ActionList list,
+	public DefaultActionRow(IFrameMediator mediator, ActionList list,
 			FilterAction action) {
 		this.filterAction = action;
 		this.actionList = list;
@@ -143,7 +143,7 @@ public class DefaultActionRow implements IExtensionInterface {
 	/**
 	 * @return Returns the mediator.
 	 */
-	public FrameMediator getMediator() {
+	public IFrameMediator getMediator() {
 		return mediator;
 	}
 }

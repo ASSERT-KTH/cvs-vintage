@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.columba.core.gui.frame.ContainerInfoPanel;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.config.IFolderItem;
@@ -53,7 +53,7 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
     private MailboxInfo info;
     private IFolderItem item;
 
-    public FolderInfoPanel(FrameMediator controller) {
+    public FolderInfoPanel(IFrameMediator controller) {
 		super();
     	
     	controller.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);

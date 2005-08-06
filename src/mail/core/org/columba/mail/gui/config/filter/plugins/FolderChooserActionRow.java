@@ -23,7 +23,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import org.columba.core.filter.FilterAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.config.filter.ActionList;
@@ -35,7 +35,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements
 		ActionListener {
 	private JButton treePathButton;
 
-	public FolderChooserActionRow(FrameMediator mediator, ActionList list,
+	public FolderChooserActionRow(IFrameMediator mediator, ActionList list,
 			FilterAction action) {
 		super(mediator, list, action);
 

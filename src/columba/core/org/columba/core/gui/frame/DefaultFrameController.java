@@ -30,7 +30,7 @@ import org.columba.core.util.GlobalResourceLoader;
  * @author fdietz
  *  
  */
-public class DefaultFrameController implements FrameMediator {
+public class DefaultFrameController implements IFrameMediator {
 
 	
 	private static final Logger LOG = Logger
@@ -51,7 +51,7 @@ public class DefaultFrameController implements FrameMediator {
 	 */
 	protected String id;
 
-	private Container container;
+	private IContainer container;
 
 	/**
 	 *  
@@ -109,42 +109,42 @@ public class DefaultFrameController implements FrameMediator {
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getContainer()
+	 * @see org.columba.core.gui.frame.IFrameMediator#getContainer()
 	 */
-	public Container getContainer() {
+	public IContainer getContainer() {
 		return container;
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#loadPositions(org.columba.core.config.ViewItem)
+	 * @see org.columba.core.gui.frame.IFrameMediator#loadPositions(org.columba.core.config.ViewItem)
 	 */
 	public void loadPositions(ViewItem viewItem) {
 
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#savePositions(org.columba.core.config.ViewItem)
+	 * @see org.columba.core.gui.frame.IFrameMediator#savePositions(org.columba.core.config.ViewItem)
 	 */
 	public void savePositions(ViewItem viewItem) {
 
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#setContainer(org.columba.core.gui.frame.Container)
+	 * @see org.columba.core.gui.frame.IFrameMediator#setContainer(org.columba.core.gui.frame.IContainer)
 	 */
-	public void setContainer(Container c) {
+	public void setContainer(IContainer c) {
 		container = c;
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getView()
+	 * @see org.columba.core.gui.frame.IFrameMediator#getView()
 	 */
-	public Container getView() {
+	public IContainer getView() {
 		return container;
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String,
+	 * @see org.columba.core.gui.frame.IFrameMediator#getString(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
@@ -152,19 +152,19 @@ public class DefaultFrameController implements FrameMediator {
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 * @see org.columba.core.gui.frame.IFrameMediator#getContentPane()
 	 */
-	public ContentPane getContentPane() {
+	public IContentPane getContentPane() {
 		return new EmptyContentPane();
 	}
 	
-	class EmptyContentPane implements ContentPane {
+	class EmptyContentPane implements IContentPane {
 		public EmptyContentPane() {
 			super();
 		}
 
 		/**
-		 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+		 * @see org.columba.core.gui.frame.IContentPane#getComponent()
 		 */
 		public JComponent getComponent() {
 			return new JPanel();
@@ -173,7 +173,7 @@ public class DefaultFrameController implements FrameMediator {
 	}
 	
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#close()
+	 * @see org.columba.core.gui.frame.IFrameMediator#close()
 	 */
 	public void close() {
 

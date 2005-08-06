@@ -285,9 +285,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 				"global", "help"));
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"configuring_columba_7");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"configuring_columba_7");
 	}
 

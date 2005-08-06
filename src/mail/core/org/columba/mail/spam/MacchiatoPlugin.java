@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import org.columba.core.config.Config;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.Main;
 import org.columba.mail.folder.IMailbox;
@@ -291,7 +291,7 @@ public class MacchiatoPlugin implements ISpamPlugin {
 				e.printStackTrace();
 			}
 			// TODO (@author fdietz): i18n
-			int value = JOptionPane.showConfirmDialog(FrameModel.getInstance()
+			int value = JOptionPane.showConfirmDialog(FrameManager.getInstance()
 					.getActiveFrame(),
 					"An error occured while saving the spam database.\n"
 							+ "Try again?", "Error saving database",

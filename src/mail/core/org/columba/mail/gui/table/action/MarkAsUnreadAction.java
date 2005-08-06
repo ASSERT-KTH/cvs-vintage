@@ -24,7 +24,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
@@ -46,7 +46,7 @@ public class MarkAsUnreadAction extends AbstractColumbaAction
     /**
      * @param frameMediator
      */
-    public MarkAsUnreadAction(FrameMediator frameMediator) {
+    public MarkAsUnreadAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_message_markasunread"));

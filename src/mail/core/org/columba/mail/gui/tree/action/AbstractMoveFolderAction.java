@@ -21,7 +21,7 @@ import java.util.Observer;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.xml.XmlElement;
@@ -45,7 +45,7 @@ public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
      * @param frameMediator the frame controller.
      * @param name name of action.
      */
-    public AbstractMoveFolderAction(FrameMediator frameMediator, String name) {
+    public AbstractMoveFolderAction(IFrameMediator frameMediator, String name) {
         super(frameMediator, name);
 
         ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);

@@ -22,7 +22,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class RedirectAction extends AbstractColumbaAction
     implements ISelectionListener {
-    public RedirectAction(FrameMediator frameMediator) {
+    public RedirectAction(IFrameMediator frameMediator) {
         
 		//mod: 20040629 SWITT
         super(frameMediator,

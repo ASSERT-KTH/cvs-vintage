@@ -22,7 +22,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * Adds a table selection listener to DefaultTreeAction.
@@ -38,7 +38,7 @@ public abstract class DefaultTableAction extends AbstractColumbaAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public DefaultTableAction(FrameMediator frameMediator, String name) {
+	public DefaultTableAction(IFrameMediator frameMediator, String name) {
 		super(frameMediator, name);
 
 		// register interest on table selection changes

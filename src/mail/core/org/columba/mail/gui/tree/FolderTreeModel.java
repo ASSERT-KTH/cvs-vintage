@@ -69,7 +69,7 @@ public class FolderTreeModel extends DefaultTreeModel {
         
         // register at shutdownmanager
         // -> when closing Columba, this will automatically save all folder data
-        ShutdownManager.getShutdownManager().register(new Runnable() {
+        ShutdownManager.getInstance().register(new Runnable() {
             public void run() {
                 saveFolder((AbstractFolder) getRoot());
             }

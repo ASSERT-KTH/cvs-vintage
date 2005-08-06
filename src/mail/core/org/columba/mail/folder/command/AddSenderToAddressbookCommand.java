@@ -24,7 +24,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
@@ -57,7 +57,7 @@ public class AddSenderToAddressbookCommand extends Command {
  * @param frame
  * @param references
  */
-    public AddSenderToAddressbookCommand(FrameMediator frame,
+    public AddSenderToAddressbookCommand(IFrameMediator frame,
     		ICommandReference reference) {
         super(frame, reference);
     }

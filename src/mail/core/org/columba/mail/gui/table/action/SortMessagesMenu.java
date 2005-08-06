@@ -30,7 +30,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -57,7 +57,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 
 	private AbstractMessageFolder selectedFolder;
 
-	public SortMessagesMenu(FrameMediator controller) {
+	public SortMessagesMenu(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"menu_view_sort"),"menu_view_sort");
 

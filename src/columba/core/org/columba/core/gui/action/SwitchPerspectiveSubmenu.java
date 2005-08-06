@@ -24,9 +24,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.Container;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.IContainer;
+import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.plugin.exception.PluginLoadingFailedException;
@@ -58,7 +58,7 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 	 * @param controller
 	 * @param caption
 	 */
-	public SwitchPerspectiveSubmenu(FrameMediator controller) {
+	public SwitchPerspectiveSubmenu(IFrameMediator controller) {
 		super(controller, "Show View",controller.getViewItem().get("id"));
 
 		String id = getFrameMediator().getViewItem().get("id");
@@ -117,12 +117,12 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String action = arg0.getActionCommand();
 
-		FrameMediator mediator = getFrameMediator();
+		IFrameMediator mediator = getFrameMediator();
 
-		Container container = mediator.getContainer();
+		IContainer container = mediator.getContainer();
 
 		try {
-			FrameModel.getInstance().switchView(container, action);
+			FrameManager.getInstance().switchView(container, action);
 		} catch (PluginLoadingFailedException e) {
 			e.printStackTrace();
 		}

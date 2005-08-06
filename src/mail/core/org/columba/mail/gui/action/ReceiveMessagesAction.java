@@ -23,12 +23,12 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ReceiveMessagesAction extends AbstractColumbaAction {
-	public ReceiveMessagesAction(FrameMediator controller) {
+	public ReceiveMessagesAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"menu_file_receive"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T,

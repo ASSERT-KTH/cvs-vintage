@@ -18,12 +18,12 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 
 public class PrintSetupAction extends AbstractColumbaAction {
-    public PrintSetupAction(FrameMediator controller) {
+    public PrintSetupAction(IFrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString("global", "global",
                 "menu_file_printsetup"));

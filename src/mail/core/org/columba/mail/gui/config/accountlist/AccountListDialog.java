@@ -49,7 +49,7 @@ import javax.swing.event.ListSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.help.HelpManager;
@@ -78,9 +78,9 @@ implements ActionListener, ListSelectionListener {
     protected JButton removeButton;
     protected JButton editButton;
     private int index;
-    private FrameMediator mediator;
+    private IFrameMediator mediator;
     
-    public AccountListDialog(FrameMediator mediator) {
+    public AccountListDialog(IFrameMediator mediator) {
         super(mediator.getView().getFrame(), MailResourceLoader.getString(
             "dialog", "account", "dialog_title"), true);
         this.mediator = mediator;
@@ -241,9 +241,9 @@ implements ActionListener, ListSelectionListener {
         getRootPane().setDefaultButton(closeButton);
         
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+        HelpManager.getInstance().enableHelpOnButton(helpButton,
             "configuring_columba");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+        HelpManager.getInstance().enableHelpKey(getRootPane(),
             "configuring_columba");
     }
     

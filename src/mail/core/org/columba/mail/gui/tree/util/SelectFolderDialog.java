@@ -41,7 +41,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.folder.IFolder;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -76,7 +76,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 
 	private ButtonWithMnemonic cancelButton;
 
-	private FrameMediator mediator;
+	private IFrameMediator mediator;
 
 	public SelectFolderDialog(JFrame parent) {
 		super(parent, true);
@@ -99,7 +99,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		setVisible(true);
 	}
 
-	public SelectFolderDialog(FrameMediator mediator) {
+	public SelectFolderDialog(IFrameMediator mediator) {
 		super(mediator.getView().getFrame(), true);
 
 		this.mediator = mediator;

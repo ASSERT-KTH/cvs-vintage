@@ -17,14 +17,14 @@
 //All Rights Reserved.
 package org.columba.core.action;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.menu.CMenu;
 import org.columba.core.plugin.IExtensionInterface;
 
 public class IMenu extends CMenu implements IExtensionInterface{
-	protected FrameMediator controller;
+	protected IFrameMediator controller;
 
-	public IMenu(FrameMediator controller, String caption,String id) {
+	public IMenu(IFrameMediator controller, String caption,String id) {
 		super(caption,id);
 		this.controller = controller;
 	}
@@ -32,7 +32,7 @@ public class IMenu extends CMenu implements IExtensionInterface{
 	/**
 	 * @return FrameController
 	 */
-	public FrameMediator getFrameMediator() {
+	public IFrameMediator getFrameMediator() {
 		return controller;
 	}
 
@@ -42,7 +42,7 @@ public class IMenu extends CMenu implements IExtensionInterface{
 	 * @param controller
 	 *            The controller to set
 	 */
-	public void setFrameMediator(FrameMediator controller) {
+	public void setFrameMediator(IFrameMediator controller) {
 		this.controller = controller;
 	}
 }

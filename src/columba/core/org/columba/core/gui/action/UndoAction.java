@@ -26,53 +26,53 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
-import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class UndoAction extends AbstractColumbaAction implements TaskManagerListener {
-    protected TaskManager taskManager;
-    
-    public UndoAction(FrameMediator controller) {
-        super(controller,
-            GlobalResourceLoader.getString(null, null, "menu_edit_undo"));
+public class UndoAction extends AbstractColumbaAction implements
+		TaskManagerListener {
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            GlobalResourceLoader.getString(null, null, "menu_edit_undo_tooltip")
-                                .replaceAll("&", ""));
+	protected TaskManager taskManager;
 
-        // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_undo-16.png"));
+	public UndoAction(IFrameMediator controller) {
+		super(controller, GlobalResourceLoader.getString(null, null,
+				"menu_edit_undo"));
 
-        // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_undo.png"));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+				"menu_edit_undo_tooltip").replaceAll("&", ""));
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+		// small icon for menu
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_undo-16.png"));
 
-        // disable toolbar text
-        setShowToolBarText(false);
+		// large icon for toolbar
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_undo.png"));
 
-        setEnabled(false);
+		// shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+				ActionEvent.CTRL_MASK));
 
-        taskManager = CommandProcessor.getInstance().getTaskManager();
-        taskManager.addTaskManagerListener(this);
+		// disable toolbar text
+		setShowToolBarText(false);
 
-        FocusManager.getInstance().setUndoAction(this);
-    }
+		setEnabled(true);
 
-    public void actionPerformed(ActionEvent evt) {
-    	FocusManager.getInstance().undo();
-    }
+		taskManager = CommandProcessor.getInstance().getTaskManager();
+		taskManager.addTaskManagerListener(this);
 
-    public void workerAdded(TaskManagerEvent e) {
-        setEnabled(taskManager.count() > 0);
-    }
-    
-    public void workerRemoved(TaskManagerEvent e) {
-        setEnabled(taskManager.count() > 0);
-    }
+	}
+
+	public void actionPerformed(ActionEvent evt) {
+
+	}
+
+	public void workerAdded(TaskManagerEvent e) {
+		setEnabled(taskManager.count() > 0);
+	}
+
+	public void workerRemoved(TaskManagerEvent e) {
+		setEnabled(taskManager.count() > 0);
+	}
+
 }

@@ -16,7 +16,7 @@
 
 package org.columba.mail.facade;
 
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.plugin.exception.PluginLoadingFailedException;
 
 /**
@@ -32,7 +32,7 @@ public class ComposerFacade implements IComposerFacade {
     public void openComposer() {
         // Choice btw. text and html will be based on stored option
         try {
-        	FrameModel.getInstance().openView("Composer");
+        	FrameManager.getInstance().openView("Composer");
         } catch (PluginLoadingFailedException plfe) {} //should not occur
     }
 }

@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
@@ -37,7 +37,7 @@ public class SaveAsAttachmentAction extends AbstractColumbaAction {
 	 * @param frameMediator
 	 *            frame mediator.
 	 */
-	public SaveAsAttachmentAction(FrameMediator frameMediator) {
+	public SaveAsAttachmentAction(IFrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"attachmentsaveas"));
 

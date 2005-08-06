@@ -23,7 +23,7 @@ import javax.swing.JComponent;
  * @author fdietz
  *
  */
-public interface ContentPane {
+public interface IContentPane {
 
 	JComponent getComponent();
 }

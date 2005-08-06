@@ -42,7 +42,7 @@ import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.util.Blowfish;
 import org.columba.core.util.ListTools;
@@ -550,7 +550,7 @@ public class IMAPServer implements IMAPListener, Observer {
 						// --> fall back to default login process
 						int result = JOptionPane
 								.showConfirmDialog(
-										FrameModel.getInstance()
+										FrameManager.getInstance()
 												.getActiveFrame(),
 										new MultiLineLabel(
 												e.getMessage()

@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -38,7 +38,7 @@ public class ScoreMessageAction extends AbstractColumbaAction implements
 	 * @param frameMediator
 	 * @param name
 	 */
-	public ScoreMessageAction(FrameMediator frameMediator) {
+	public ScoreMessageAction(IFrameMediator frameMediator) {
 		super(frameMediator, "Score Message");
 		setEnabled(false);
 

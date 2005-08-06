@@ -27,14 +27,14 @@ import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class RedoAction extends AbstractColumbaAction implements TaskManagerListener {
     protected TaskManager taskManager;
     
-    public RedoAction(FrameMediator controller) {
+    public RedoAction(IFrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_edit_redo"));
 
@@ -56,15 +56,14 @@ public class RedoAction extends AbstractColumbaAction implements TaskManagerList
         putValue(ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 
-        setEnabled(false);
+        setEnabled(true);
         
         taskManager = CommandProcessor.getInstance().getTaskManager();
         taskManager.addTaskManagerListener(this);
-        FocusManager.getInstance().setRedoAction(this);
     }
 
     public void actionPerformed(ActionEvent evt) {
-    	FocusManager.getInstance().redo();
+    	
     }
 
     public void workerAdded(TaskManagerEvent e) {

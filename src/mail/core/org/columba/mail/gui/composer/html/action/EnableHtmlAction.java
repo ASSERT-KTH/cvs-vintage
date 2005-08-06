@@ -20,7 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
@@ -40,7 +40,7 @@ public class EnableHtmlAction extends AbstractSelectableAction
      * @param frameMediator
      * @param name
      */
-    public EnableHtmlAction(FrameMediator frameMediator) {
+    public EnableHtmlAction(IFrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",
                 "menu_format_enable_html"));

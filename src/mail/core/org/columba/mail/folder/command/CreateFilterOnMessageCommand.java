@@ -23,7 +23,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.filter.Filter;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -69,7 +69,7 @@ public class CreateFilterOnMessageCommand extends Command {
      * @param references
      * @param filterType  Which type of filter to create. Used defined constants
      */
-    public CreateFilterOnMessageCommand(FrameMediator mediator, ICommandReference reference,
+    public CreateFilterOnMessageCommand(IFrameMediator mediator, ICommandReference reference,
         String filterType) {
         super(mediator, reference);
         this.filterType = filterType;

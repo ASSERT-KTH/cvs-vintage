@@ -19,13 +19,13 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.config.GeneralOptionsDialog;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
 
 public class GlobalOptionsAction extends AbstractColumbaAction {
-    public GlobalOptionsAction(FrameMediator controller) {
+    public GlobalOptionsAction(IFrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString("global", "global",
                 "menu_edit_generaloptions"));

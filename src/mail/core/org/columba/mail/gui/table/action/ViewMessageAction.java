@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.IMessageController;
@@ -37,7 +37,7 @@ public class ViewMessageAction extends AbstractColumbaAction {
     /**
      * @param controller
      */
-    public ViewMessageAction(FrameMediator controller) {
+    public ViewMessageAction(IFrameMediator controller) {
         super(controller, "ViewMessageAction");
     }
 

@@ -25,7 +25,7 @@ import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * Action which is listening for tree selection changes.
@@ -40,7 +40,7 @@ public abstract class DefaultTreeAction extends AbstractColumbaAction implements
 	 * @param frameMediator
 	 * @param name
 	 */
-	public DefaultTreeAction(FrameMediator frameMediator, String name) {
+	public DefaultTreeAction(IFrameMediator frameMediator, String name) {
 		super(frameMediator, name);
 
 		// register interest on tree selection changes

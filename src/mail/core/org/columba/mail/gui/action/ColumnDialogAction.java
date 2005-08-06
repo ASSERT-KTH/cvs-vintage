@@ -19,7 +19,7 @@ package org.columba.mail.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -34,7 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class ColumnDialogAction extends AbstractColumbaAction {
-    public ColumnDialogAction(FrameMediator frameMediator) {
+    public ColumnDialogAction(IFrameMediator frameMediator) {
         super(frameMediator, MailResourceLoader.getString(
             "dialog", "columns", "title") + "...");
     }

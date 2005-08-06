@@ -21,7 +21,7 @@ import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -31,7 +31,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class FetchMessageSubMenu extends IMenu implements Observer {
     //private POP3ServerCollection popServer;
 
-    public FetchMessageSubMenu(FrameMediator controller) {
+    public FetchMessageSubMenu(IFrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_file_checkmessage"),"menu_file_checkmessage");

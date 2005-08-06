@@ -31,7 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.config.AccountItem;
@@ -65,10 +65,10 @@ public class AccountDialog extends JDialog implements ActionListener {
     private JPanel selected = null;
 
     private JTabbedPane tp;
-    private FrameMediator mediator;
+    private IFrameMediator mediator;
 
     
-    public AccountDialog(FrameMediator mediator, AccountItem item) {
+    public AccountDialog(IFrameMediator mediator, AccountItem item) {
         super(mediator.getView().getFrame(), true);
 
 
@@ -150,7 +150,7 @@ public class AccountDialog extends JDialog implements ActionListener {
         getRootPane().registerKeyboardAction(this, "CANCEL",
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+        HelpManager.getInstance().enableHelpKey(getRootPane(),
                 "configuring_columba");
     }
 
@@ -180,7 +180,7 @@ public class AccountDialog extends JDialog implements ActionListener {
                 MailResourceLoader.getString("global", "help"));
 
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+        HelpManager.getInstance().enableHelpOnButton(helpButton,
                 "configuring_columba");
 
         JPanel buttonPanel = new JPanel();

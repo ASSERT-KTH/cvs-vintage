@@ -25,11 +25,15 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
+import javax.swing.text.JTextComponent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -38,7 +42,7 @@ public class CopyAction extends AbstractColumbaAction implements
 
 	private JComponent focusOwner = null;
 
-	public CopyAction(FrameMediator controller) {
+	public CopyAction(IFrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
 				"menu_edit_copy"));
 
@@ -72,8 +76,11 @@ public class CopyAction extends AbstractColumbaAction implements
 
 	public void propertyChange(PropertyChangeEvent e) {
 		Object o = e.getNewValue();
-		if (o instanceof JComponent)
+		if (o instanceof JComponent) {
 			focusOwner = (JComponent) o;
+			
+			setEnabled(isEnabled());
+		}
 		else
 			focusOwner = null;
 
@@ -94,10 +101,31 @@ public class CopyAction extends AbstractColumbaAction implements
 
 	}
 
-	/** 
+	/**
 	 * @see org.columba.core.action.AbstractColumbaAction#isSingleton()
 	 */
 	public boolean isSingleton() {
 		return true;
+	}
+
+	/**
+	 * @see javax.swing.AbstractAction#isEnabled()
+	 */
+	public boolean isEnabled() {
+
+		if (focusOwner == null)
+			return false;
+
+		if (focusOwner instanceof JTextComponent) {
+			return ((JTextComponent) focusOwner).getSelectedText() != null ? true:false;
+		} else if (focusOwner instanceof JList) {
+			return ((JList) focusOwner).getSelectedIndex() != -1 ? true:false;
+		} else if (focusOwner instanceof JTable) {
+			return ((JTable) focusOwner).getSelectedRow() != -1 ? true:false;
+		} else if (focusOwner instanceof JTree) {
+			return ((JTree) focusOwner).getSelectionPath() != null ? true:false;
+		}
+		
+		return false;
 	}
 }

@@ -27,8 +27,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.ContentPane;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.IContentPane;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -52,7 +52,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class MessageFrameController extends AbstractMailFrameController
-		implements TableViewOwner, ContentPane {
+		implements TableViewOwner, IContentPane {
 
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.messageframe");
@@ -71,7 +71,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * @param viewItem
 	 */
 	public MessageFrameController() {
-		super(FrameModel.getInstance().createCustomViewItem("Messageframe"));
+		super(FrameManager.getInstance().createCustomViewItem("Messageframe"));
 
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
 		getSelectionManager().addSelectionHandler(tableSelectionHandler);
@@ -151,7 +151,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+	 * @see org.columba.core.gui.frame.IContentPane#getComponent()
 	 */
 	public JComponent getComponent() {
 		JPanel panel = new JPanel();
@@ -164,7 +164,7 @@ public class MessageFrameController extends AbstractMailFrameController
 		try {
 			InputStream is = DiskIO.getResourceStream("org/columba/mail/action/messageframe_menu.xml");
 			
-			getContainer().extendMenuFromURL(this,
+			getContainer().extendMenu(this,
 					is);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -184,7 +184,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String,
+	 * @see org.columba.core.gui.frame.IFrameMediator#getString(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
@@ -192,9 +192,9 @@ public class MessageFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 * @see org.columba.core.gui.frame.IFrameMediator#getContentPane()
 	 */
-	public ContentPane getContentPane() {
+	public IContentPane getContentPane() {
 		return this;
 	}
 }

@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.ClipboardManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -34,9 +34,9 @@ import org.columba.mail.gui.table.ITableController;
  */
 public class CutAction extends AbstractColumbaAction {
     ITableController tableController;
-    FrameMediator frameController;
+    IFrameMediator frameController;
 
-    public CutAction(FrameMediator frameController) {
+    public CutAction(IFrameMediator frameController) {
         super(frameController, "CutAction");
         this.tableController = ((TableViewOwner) frameController).getTableController();
         this.frameController = frameController;

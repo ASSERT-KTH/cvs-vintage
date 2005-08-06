@@ -100,9 +100,9 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+        HelpManager.getInstance().enableHelpOnButton(helpButton,
             "template_dialog");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+        HelpManager.getInstance().enableHelpKey(getRootPane(),
             "template_dialog");
 
         JPanel buttonPanel = new JPanel();

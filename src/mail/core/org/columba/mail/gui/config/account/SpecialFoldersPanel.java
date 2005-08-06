@@ -33,7 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
@@ -73,9 +73,9 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 	private AccountItem accountItem;
 
-	private FrameMediator mediator;
+	private IFrameMediator mediator;
 
-	public SpecialFoldersPanel(FrameMediator mediator, AccountItem accountItem,
+	public SpecialFoldersPanel(IFrameMediator mediator, AccountItem accountItem,
 			SpecialFoldersItem item) {
 		super();
 

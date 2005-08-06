@@ -31,7 +31,7 @@ import org.columba.core.xml.XmlElement;
 
 /**
  * A container is actually a JFrame, which encapsulates a component called
- * {@link FrameMediator}in our case.
+ * {@link IFrameMediator}in our case.
  * <p>
  * The basic default container is a JFrame, with a core menu, toolbar and
  * statusbar. Additionally, it has a content pane in the center.
@@ -41,7 +41,7 @@ import org.columba.core.xml.XmlElement;
  * 
  * @author fdietz
  */
-public interface Container {
+public interface IContainer {
 
 	/**
 	 * internally used toolbar ID
@@ -54,7 +54,7 @@ public interface Container {
 	 * @param m
 	 *            new framemediator
 	 */
-	void setFrameMediator(FrameMediator m);
+	void setFrameMediator(IFrameMediator m);
 
 	/**
 	 * Switch to new framemediator. This also ensures that the menu,
@@ -63,13 +63,13 @@ public interface Container {
 	 * 
 	 * @param m		new framemediator
 	 */
-	void switchFrameMediator(FrameMediator m);
+	void switchFrameMediator(IFrameMediator m);
 	/**
 	 * Get current framemediator this container encapsulates.
 	 * 
 	 * @return current container
 	 */
-	FrameMediator getFrameMediator();
+	IFrameMediator getFrameMediator();
 
 	/**
 	 * Get view item containing the configuration of this container.
@@ -199,7 +199,7 @@ public interface Container {
 	 * @param view
 	 *            new content pane
 	 */
-	void setContentPane(ContentPane view);
+	void setContentPane(IContentPane view);
 
 	/**
 	 * Get current swing JFrame. This could become handy when directly accessing
@@ -247,7 +247,7 @@ public interface Container {
 	 * @param fileUrl
 	 *            path to xml file
 	 */
-	void extendMenuFromURL(FrameMediator mediator, InputStream is);
+	void extendMenu(IFrameMediator mediator, InputStream is);
 
 	/**
 	 * Extend current toolbar from xml element.
@@ -257,7 +257,7 @@ public interface Container {
 	 * @param element
 	 *            xml element
 	 */
-	void extendToolbar(FrameMediator mediator, XmlElement element);
+	void extendToolbar(IFrameMediator mediator, XmlElement element);
 	
 	/**
 	 * Sets the window name which is displayed in the title.

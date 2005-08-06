@@ -25,7 +25,7 @@ import javax.swing.Box;
 import javax.swing.JToolBar;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
@@ -53,9 +53,9 @@ public class ColumbaToolBar extends JToolBar {
 
 	XmlElement rootElement;
 
-	FrameMediator frameController;
+	IFrameMediator frameController;
 
-	public ColumbaToolBar(FrameMediator controller) {
+	public ColumbaToolBar(IFrameMediator controller) {
 		super();
 
 		this.frameController = controller;
@@ -67,7 +67,7 @@ public class ColumbaToolBar extends JToolBar {
 		setFloatable(false);
 	}
 
-	public ColumbaToolBar(XmlElement rootElement, FrameMediator controller) {
+	public ColumbaToolBar(XmlElement rootElement, IFrameMediator controller) {
 		super();
 		this.frameController = controller;
 
@@ -80,7 +80,7 @@ public class ColumbaToolBar extends JToolBar {
 		setFloatable(false);
 	}
 
-	public void extendToolbar(XmlElement rootElement, FrameMediator mediator) {
+	public void extendToolbar(XmlElement rootElement, IFrameMediator mediator) {
 		this.frameController = mediator;
 		extendToolbar(rootElement);
 	}

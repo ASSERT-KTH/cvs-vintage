@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.util.Blowfish;
 import org.columba.mail.composer.SendableMessage;
@@ -207,7 +207,7 @@ public class SMTPServer implements Observer  {
 								// does not support authentication
 								JOptionPane
 								.showMessageDialog(
-										FrameModel.getInstance()
+										FrameManager.getInstance()
 												.getActiveFrame(),
 										new MultiLineLabel(
 												MailResourceLoader
@@ -235,7 +235,7 @@ public class SMTPServer implements Observer  {
 						//  --> fall back to default login process
 						int result = JOptionPane
 								.showConfirmDialog(
-										FrameModel.getInstance()
+										FrameManager.getInstance()
 												.getActiveFrame(),
 										new MultiLineLabel(
 												e.getMessage()

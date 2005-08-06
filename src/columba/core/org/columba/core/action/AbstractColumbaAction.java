@@ -17,7 +17,7 @@ package org.columba.core.action;
 
 import javax.swing.AbstractAction;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.plugin.IExtensionInterface;
 
 
@@ -59,7 +59,7 @@ public abstract class AbstractColumbaAction extends AbstractAction
      * show button text in toolbar
      */
     protected boolean showToolbarText = true;
-    protected FrameMediator frameMediator;
+    protected IFrameMediator frameMediator;
 
     /**
      *
@@ -69,7 +69,7 @@ public abstract class AbstractColumbaAction extends AbstractAction
      * @param name                                        i18n name
      *
      */
-    public AbstractColumbaAction(FrameMediator frameMediator, String name) {
+    public AbstractColumbaAction(IFrameMediator frameMediator, String name) {
         super(name);
         this.frameMediator = frameMediator;
     }
@@ -79,7 +79,7 @@ public abstract class AbstractColumbaAction extends AbstractAction
      *
      * @return FrameController
      */
-    public FrameMediator getFrameMediator() {
+    public IFrameMediator getFrameMediator() {
         return frameMediator;
     }
 
@@ -88,7 +88,7 @@ public abstract class AbstractColumbaAction extends AbstractAction
      *
      * @param frameMediator
      */
-    public void setFrameMediator(FrameMediator frameController) {
+    public void setFrameMediator(IFrameMediator frameController) {
         this.frameMediator = frameController;
     }
 

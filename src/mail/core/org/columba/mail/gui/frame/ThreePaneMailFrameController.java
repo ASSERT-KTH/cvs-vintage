@@ -36,7 +36,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.frame.IContentPane;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.UIFSplitPane;
@@ -74,7 +74,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
-		implements TreeViewOwner, TableViewOwner, ContentPane,
+		implements TreeViewOwner, TableViewOwner, IContentPane,
 		ISelectionListener {
 
 	public TreeController treeController;
@@ -235,7 +235,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+	 * @see org.columba.core.gui.frame.IContentPane#getComponent()
 	 */
 	public JComponent getComponent() {
 		JPanel panel = new JPanel();
@@ -320,7 +320,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			InputStream is = DiskIO
 					.getResourceStream("org/columba/mail/action/menu.xml");
 
-			getContainer().extendMenuFromURL(this, is);
+			getContainer().extendMenu(this, is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -389,7 +389,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String,
+	 * @see org.columba.core.gui.frame.IFrameMediator#getString(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
@@ -397,9 +397,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 * @see org.columba.core.gui.frame.IFrameMediator#getContentPane()
 	 */
-	public ContentPane getContentPane() {
+	public IContentPane getContentPane() {
 		return this;
 	}
 

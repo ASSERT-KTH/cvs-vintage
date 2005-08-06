@@ -28,7 +28,7 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -51,7 +51,7 @@ public class ViewMessageSourceCommand extends Command {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ViewMessageSourceCommand(FrameMediator frameMediator,
+	public ViewMessageSourceCommand(IFrameMediator frameMediator,
 			ICommandReference reference) {
 		super(frameMediator, reference);
 	}

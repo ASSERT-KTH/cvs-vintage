@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.util.Lock;
 
 /**
@@ -71,7 +71,7 @@ public abstract class Command {
 
 	private ICommandReference reference;
 
-	protected FrameMediator frameMediator;
+	protected IFrameMediator frameMediator;
 
 	public Command(ICommandReference reference) {
 		this.reference = reference;
@@ -80,7 +80,7 @@ public abstract class Command {
 		priority = NORMAL_PRIORITY;
 	}
 
-	public Command(FrameMediator frameMediator,
+	public Command(IFrameMediator frameMediator,
 			ICommandReference reference) {
 		this.reference = reference;
 		this.frameMediator = frameMediator;
@@ -181,7 +181,7 @@ public abstract class Command {
 	 * 
 	 * @return FrameController
 	 */
-	public FrameMediator getFrameMediator() {
+	public IFrameMediator getFrameMediator() {
 		return frameMediator;
 	}
 }

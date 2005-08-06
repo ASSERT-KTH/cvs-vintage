@@ -18,12 +18,12 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 
 public class FindAgainAction extends AbstractColumbaAction {
-    public FindAgainAction(FrameMediator controller) {
+    public FindAgainAction(IFrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_edit_findagain"));
 

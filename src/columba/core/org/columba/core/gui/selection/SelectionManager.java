@@ -33,7 +33,7 @@ import org.columba.core.command.ICommandReference;
  * easy to indentify the SelectionHandler.
  * 
  * @see org.columba.core.gui.selection.SelectionHandler
- * @see org.columba.core.gui.frame.FrameMediator
+ * @see org.columba.core.gui.frame.IFrameMediator
  * 
  * @author fdietz, tstich
  */

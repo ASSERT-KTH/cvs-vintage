@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.columba.core.io.StreamUtils;
 import org.columba.core.main.Main;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -97,10 +99,19 @@ public class PGPMessageFilter extends AbstractFilter {
 	}
 
 	public void fireSecurityStatusEvent(SecurityStatusEvent ev) {
+		final SecurityStatusEvent event = ev;
+		
 		Iterator it = listeners.iterator();
 		while (it.hasNext()) {
-			SecurityStatusListener l = (SecurityStatusListener) it.next();
-			l.statusUpdate(ev);
+			final SecurityStatusListener l = (SecurityStatusListener) it.next();
+			Runnable doWorkRunnable = new Runnable() {
+				public void run() {
+					l.statusUpdate(event);
+					
+				}
+			};
+			SwingUtilities.invokeLater(doWorkRunnable);
+			
 		}
 	}
 

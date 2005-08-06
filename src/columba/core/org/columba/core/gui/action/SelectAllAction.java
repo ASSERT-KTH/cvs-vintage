@@ -26,7 +26,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class SelectAllAction extends AbstractColumbaAction implements
@@ -34,7 +34,7 @@ public class SelectAllAction extends AbstractColumbaAction implements
 
 	private JComponent focusOwner = null;
 
-	public SelectAllAction(FrameMediator controller) {
+	public SelectAllAction(IFrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
 				"menu_edit_selectall"));
 

@@ -18,7 +18,6 @@ package org.columba.mail.shutdown;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -32,7 +31,7 @@ import org.columba.mail.gui.tree.FolderTreeModel;
  *
  * @author freddy
  */
-public class SaveAllFoldersPlugin implements TaskInterface {
+public class SaveAllFoldersPlugin implements Runnable {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.shutdown");

@@ -19,7 +19,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -41,7 +41,7 @@ public class FontSizeMenu extends IMenu {
  * @param controller
  * @param caption
  */
-    public FontSizeMenu(FrameMediator controller) {
+    public FontSizeMenu(IFrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "composer",
                 "menu_format_font_size"),"menu_format_font_size");

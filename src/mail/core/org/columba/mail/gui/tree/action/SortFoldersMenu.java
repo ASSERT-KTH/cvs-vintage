@@ -24,7 +24,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.menu.CRadioButtonMenuItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -62,7 +62,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
      * Creates the sort folders submenu.
      * @param controller the controller.
      */
-    public SortFoldersMenu(FrameMediator controller) {
+    public SortFoldersMenu(IFrameMediator controller) {
         super(controller, MailResourceLoader.getString("menu", "mainframe", "menu_view_sort_tree"),"menu_view_sort_tree");
 
         createSubMenu();

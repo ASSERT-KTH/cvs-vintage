@@ -37,7 +37,7 @@ public class IMAPCache implements Runnable {
 		File configDir = Config.getInstance().getConfigDirectory();
 		cache = new StreamCache(new File(configDir, "imap_cache"));
 		
-		ShutdownManager.getShutdownManager().register(this);
+		ShutdownManager.getInstance().register(this);
 	}
 	
 	public static IMAPCache getInstance() {

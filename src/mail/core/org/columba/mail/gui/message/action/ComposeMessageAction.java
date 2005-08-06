@@ -21,7 +21,7 @@ import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MessageViewOwner;
@@ -41,7 +41,7 @@ public class ComposeMessageAction extends AbstractColumbaAction implements
 	/**
 	 *  
 	 */
-	public ComposeMessageAction(FrameMediator controller) {
+	public ComposeMessageAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"viewer_compose"));
 

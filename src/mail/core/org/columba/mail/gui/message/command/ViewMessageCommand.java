@@ -26,7 +26,7 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailbox;
@@ -56,7 +56,7 @@ public class ViewMessageCommand extends Command {
 	 * 
 	 * @param references
 	 */
-	public ViewMessageCommand(FrameMediator frame, ICommandReference reference) {
+	public ViewMessageCommand(IFrameMediator frame, ICommandReference reference) {
 		super(frame, reference);
 
 		priority = Command.REALTIME_PRIORITY;

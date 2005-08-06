@@ -38,7 +38,7 @@ import org.columba.core.xml.XmlIO;
  * 
  * @author fdietz
  */
-public class ProfileManager {
+public class ProfileManager implements IProfileManager {
 
 	/**
 	 * location of configuration directory
@@ -99,13 +99,8 @@ public class ProfileManager {
 		return instance;
 	}
 
-	/**
-	 * Get profile with name
-	 * 
-	 * @param name
-	 *            name of class
-	 * 
-	 * @return return profile if available. Otherwise, return null
+	/* (non-Javadoc)
+	 * @see org.columba.core.profiles.IProfileManager#getProfileForName(java.lang.String)
 	 */
 	public Profile getProfileForName(String name) {
 		if (name.equalsIgnoreCase("default")) {
@@ -167,13 +162,8 @@ public class ProfileManager {
 		return null;
 	}
 
-	/**
-	 * Get profile.
-	 * 
-	 * @param location
-	 *            location of config folder
-	 * 
-	 * @return profile if available. Otherwise, return null
+	/* (non-Javadoc)
+	 * @see org.columba.core.profiles.IProfileManager#getProfile(java.lang.String)
 	 */
 	public Profile getProfile(String location) {
 		// load profiles.xml
@@ -215,11 +205,8 @@ public class ProfileManager {
 		return currentProfile;
 	}
 
-	/**
-	 * Get formely selected profile. This was selected on the previous startup
-	 * of Columba.
-	 * 
-	 * @return selected profile
+	/* (non-Javadoc)
+	 * @see org.columba.core.profiles.IProfileManager#getSelectedProfile()
 	 */
 	public String getSelectedProfile() {
 		String selected = null;
@@ -328,10 +315,8 @@ public class ProfileManager {
 		}
 	}
 
-	/**
-	 * Get profiles configuration.
-	 * 
-	 * @return top-level profiles node
+	/* (non-Javadoc)
+	 * @see org.columba.core.profiles.IProfileManager#getProfiles()
 	 */
 	public XmlElement getProfiles() {
 		return profiles;
@@ -394,8 +379,8 @@ public class ProfileManager {
 		}
 	}
 
-	/**
-	 * @return Returns the currentProfile.
+	/* (non-Javadoc)
+	 * @see org.columba.core.profiles.IProfileManager#getCurrentProfile()
 	 */
 	public Profile getCurrentProfile() {
 		return currentProfile;

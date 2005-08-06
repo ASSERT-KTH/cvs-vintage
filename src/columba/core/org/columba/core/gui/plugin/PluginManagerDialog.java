@@ -259,9 +259,9 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"extending_columba_1");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+		HelpManager.getInstance().enableHelpKey(getRootPane(),
 				"extending_columba_1");
 	}
 

@@ -23,7 +23,7 @@ import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
@@ -46,7 +46,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 	/**
 	 *  
 	 */
-	public AddToAddressbookAction(FrameMediator controller) {
+	public AddToAddressbookAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"viewer_addressbook"));
 

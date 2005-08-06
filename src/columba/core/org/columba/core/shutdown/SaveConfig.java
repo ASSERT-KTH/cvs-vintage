@@ -19,7 +19,6 @@ package org.columba.core.shutdown;
 
 import java.util.logging.Logger;
 
-import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.config.Config;
 import org.columba.core.main.Main;
 
@@ -27,7 +26,7 @@ import org.columba.core.main.Main;
  * @author fdietz
  *  
  */
-public class SaveConfig implements TaskInterface {
+public class SaveConfig implements Runnable {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger

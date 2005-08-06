@@ -17,6 +17,7 @@
 package org.columba.core.facade;
 
 import org.columba.core.gui.util.ErrorDialog;
+import org.columba.core.help.HelpManager;
 
 /**
  * Dialog factory.
@@ -43,5 +44,12 @@ public class DialogFacade {
      */
     public static void showErrorDialog(String message, Exception ex) {
         new ErrorDialog(message, ex);
+    }
+    
+    /**
+     * Show help frame.
+     */
+    public static void showHelpFrame() {
+    	HelpManager.getInstance().openHelpFrame();
     }
 }

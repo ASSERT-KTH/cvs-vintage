@@ -20,7 +20,7 @@ import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 
 
 /**
@@ -28,7 +28,7 @@ import org.columba.core.gui.frame.FrameMediator;
  * 
  * @author fdietz
  */
-public interface AddressbookFrameMediator extends FrameMediator {
+public interface AddressbookFrameMediator extends IFrameMediator {
     /**
  * Get table controller.
  * 

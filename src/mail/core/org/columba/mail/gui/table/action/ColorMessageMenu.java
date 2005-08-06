@@ -25,7 +25,7 @@ import javax.swing.JMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -59,7 +59,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 	 * @param controller
 	 * @param caption
 	 */
-	public ColorMessageMenu(FrameMediator controller) {
+	public ColorMessageMenu(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("dialog", "color",
 				"menu_color_message"),"menu_color_message");
 

@@ -18,8 +18,8 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.Container;
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IContainer;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -32,7 +32,7 @@ public class ViewToolbarAction extends AbstractSelectableAction {
 	 * @param controller
 	 *            the frame controller
 	 */
-	public ViewToolbarAction(FrameMediator controller) {
+	public ViewToolbarAction(IFrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
 				"menu_view_showtoolbar"));
 
@@ -41,7 +41,7 @@ public class ViewToolbarAction extends AbstractSelectableAction {
 				"menu_view_showtoolbar").replaceAll("&", ""));
 
 		setState(frameMediator.getContainer().isToolBarEnabled(
-				Container.MAIN_TOOLBAR));
+				IContainer.MAIN_TOOLBAR));
 	}
 
 	/**
@@ -52,6 +52,6 @@ public class ViewToolbarAction extends AbstractSelectableAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		frameMediator.getContainer()
-				.enableToolBar(Container.MAIN_TOOLBAR, getState());
+				.enableToolBar(IContainer.MAIN_TOOLBAR, getState());
 	}
 }

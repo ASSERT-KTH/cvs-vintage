@@ -54,7 +54,7 @@ public class CMenuItem extends JMenuItem {
         String topicID = (String) action.getValue(AbstractColumbaAction.TOPIC_ID);
 
         if (topicID != null) {
-            HelpManager.getHelpManager().enableHelpOnButton(this, topicID);
+            HelpManager.getInstance().enableHelpOnButton(this, topicID);
         }
 
         // Set text, possibly with a mnemonic if defined using &

@@ -50,7 +50,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.FolderFactory;
@@ -73,9 +73,9 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 	protected JTree tree;
 	protected String name;
 	protected TreePath selected;
-	protected FrameMediator mediator;
+	protected IFrameMediator mediator;
 
-	public CreateFolderDialog(FrameMediator mediator, TreePath selected) {
+	public CreateFolderDialog(IFrameMediator mediator, TreePath selected) {
 		super(mediator.getView().getFrame(), MailResourceLoader.getString(
 				"dialog", "folder", "edit_name"), true);
 

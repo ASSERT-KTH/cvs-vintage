@@ -46,7 +46,7 @@ public class CButton extends JButton {
         String topicID = (String) action.getValue(AbstractColumbaAction.TOPIC_ID);
 
         if (topicID != null) {
-            HelpManager.getHelpManager().enableHelpOnButton(this, topicID);
+            HelpManager.getInstance().enableHelpOnButton(this, topicID);
         }
     }
 }

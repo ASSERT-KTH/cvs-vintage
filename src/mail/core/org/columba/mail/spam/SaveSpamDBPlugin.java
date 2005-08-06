@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.spam;
 
-import org.columba.core.backgroundtask.TaskInterface;
 
 
 /**
@@ -23,7 +22,7 @@ import org.columba.core.backgroundtask.TaskInterface;
  *
  * @author fdietz
  */
-public class SaveSpamDBPlugin implements TaskInterface {
+public class SaveSpamDBPlugin implements Runnable {
     /**
  * @see java.lang.Runnable#run()
  */
