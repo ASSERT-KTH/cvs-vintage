@@ -25,6 +25,10 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import org.columba.api.gui.frame.IContentPane;
+import org.columba.chat.api.IAlturaFrameMediator;
+import org.columba.chat.api.IConversationController;
+import org.columba.chat.api.IPresenceController;
+import org.columba.chat.api.IRoasterTree;
 import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
@@ -38,7 +42,7 @@ import org.columba.core.xml.XmlIO;
  * 
  */
 public class AlturaFrameController extends DefaultFrameController implements
-		AlturaFrameMediator, IContentPane {
+		IAlturaFrameMediator, IContentPane {
 
 	private RoasterTree tree;
 
@@ -53,8 +57,8 @@ public class AlturaFrameController extends DefaultFrameController implements
 	public AlturaFrameController(ViewItem viewItem) {
 		super(viewItem);
 
-		tree = new RoasterTree(this);
-		presence = new PresenceComboBox(this);
+		tree = new RoasterTree();
+		presence = new PresenceComboBox();
 		conversation = new ConversationController(this);
 
 		// connect to server
@@ -96,16 +100,16 @@ public class AlturaFrameController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.chat.frame.AlturaFrameMediator#getBuddyTree()
+	 * @see org.columba.chat.api.IAlturaFrameMediator#getRoasterTree()
 	 */
-	public RoasterTree getBuddyTree() {
+	public IRoasterTree getRoasterTree() {
 		return tree;
 	}
 
 	/**
-	 * @see org.columba.chat.frame.AlturaFrameMediator#getPresenceController()
+	 * @see org.columba.chat.api.IAlturaFrameMediator#getPresenceController()
 	 */
-	public PresenceComboBox getPresenceController() {
+	public IPresenceController getPresenceController() {
 		return presence;
 	}
 
@@ -117,9 +121,9 @@ public class AlturaFrameController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.chat.frame.AlturaFrameMediator#getConversationController()
+	 * @see org.columba.chat.api.IAlturaFrameMediator#getConversationController()
 	 */
-	public ConversationController getConversationController() {
+	public IConversationController getConversationController() {
 		return conversation;
 	}
 }

@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.AlturaComponent;
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IAlturaFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.jivesoftware.smack.XMPPException;
 
@@ -63,7 +63,7 @@ public class AddContactAction extends AbstractColumbaAction {
         	AlturaComponent.connection.getRoster().createEntry(jabberId, "",
                     null);
             System.out.println("update tree");
-            ((AlturaFrameMediator)frameMediator).getBuddyTree().populate();
+            ((IAlturaFrameMediator)frameMediator).getRoasterTree().populate();
         } catch (XMPPException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             e.printStackTrace();

@@ -27,8 +27,9 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
+import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.api.IMessageViewer;
 import org.columba.chat.config.Config;
-import org.columba.chat.jabber.BuddyStatus;
 import org.jivesoftware.smack.packet.Message;
 
 /**
@@ -37,7 +38,7 @@ import org.jivesoftware.smack.packet.Message;
  * @author fdietz
  *  
  */
-public class HTMLViewer extends JEditorPane implements Viewer {
+public class HTMLViewer extends JEditorPane implements IMessageViewer {
 
 	private HTMLEditorKit kit;
 	private HTMLDocument doc;
@@ -96,7 +97,7 @@ public class HTMLViewer extends JEditorPane implements Viewer {
 	 * @see org.altura.ui.conversation.view.IViewer#displayReceivedMessage(org.jivesoftware.smack.packet.Message,
 	 *      org.altura.jabber.BuddyStatus)
 	 */
-	public void displayReceivedMessage(Message message, BuddyStatus buddy) {
+	public void displayReceivedMessage(Message message, IBuddyStatus buddy) {
 		String body = message.getBody();
 		String from = message.getFrom();
 
@@ -113,7 +114,7 @@ public class HTMLViewer extends JEditorPane implements Viewer {
 	 * @see org.altura.ui.conversation.view.IViewer#displaySendMessage(org.jivesoftware.smack.packet.Message,
 	 *      org.altura.jabber.BuddyStatus)
 	 */
-	public void displaySendMessage(Message message, BuddyStatus buddy) {
+	public void displaySendMessage(Message message, IBuddyStatus buddy) {
 		String body = message.getBody();
 		String to = Config.getInstance().getAccount().getId();
 

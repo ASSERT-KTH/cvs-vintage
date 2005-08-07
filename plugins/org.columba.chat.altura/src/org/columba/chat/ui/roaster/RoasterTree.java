@@ -26,7 +26,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.chat.AlturaComponent;
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.api.IRoasterTree;
 import org.columba.chat.jabber.BuddyList;
 import org.columba.chat.jabber.BuddyStatus;
 import org.jivesoftware.smack.Roster;
@@ -36,9 +37,9 @@ import org.jivesoftware.smack.packet.Presence;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class RoasterTree extends JTree {
+public class RoasterTree extends JTree implements IRoasterTree {
 
 	private DefaultTreeModel model;
 
@@ -48,11 +49,8 @@ public class RoasterTree extends JTree {
 
 	private DefaultMutableTreeNode uncategorizedNode;
 
-	private AlturaFrameMediator frameMediator;
-	
-	public RoasterTree(AlturaFrameMediator frameMediator) {
-		this.frameMediator = frameMediator;
-		
+	public RoasterTree() {
+
 		root = new DefaultMutableTreeNode("Roster");
 		uncategorizedNode = new DefaultMutableTreeNode("Uncategorized");
 
@@ -67,7 +65,10 @@ public class RoasterTree extends JTree {
 		setShowsRootHandles(true);
 	}
 
-	public BuddyStatus getSelected() {
+	/* (non-Javadoc)
+	 * @see org.columba.chat.ui.roaster.IRoasterTree#getSelected()
+	 */
+	public IBuddyStatus getSelected() {
 		TreePath path = getSelectionPath();
 		if (path == null)
 			return null;
@@ -75,7 +76,7 @@ public class RoasterTree extends JTree {
 				.getLastPathComponent();
 
 		if (node != null) {
-			BuddyStatus b = (BuddyStatus) node.getUserObject();
+			IBuddyStatus b = (IBuddyStatus) node.getUserObject();
 
 			return b;
 		}
@@ -83,7 +84,10 @@ public class RoasterTree extends JTree {
 		return null;
 	}
 
-	public void updateBuddyPresence(BuddyStatus buddy) {
+	/* (non-Javadoc)
+	 * @see org.columba.chat.ui.roaster.IRoasterTree#updateBuddyPresence(org.columba.chat.api.IBuddyStatus)
+	 */
+	public void updateBuddyPresence(IBuddyStatus buddy) {
 		DefaultMutableTreeNode node = findBuddy(root, buddy);
 		if (node != null) {
 
@@ -94,6 +98,9 @@ public class RoasterTree extends JTree {
 		updateUI();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.chat.ui.roaster.IRoasterTree#populate()
+	 */
 	public void populate() {
 		root = new DefaultMutableTreeNode("Roster");
 
@@ -191,7 +198,7 @@ public class RoasterTree extends JTree {
 	}
 
 	private DefaultMutableTreeNode findBuddy(DefaultMutableTreeNode parent,
-			BuddyStatus buddy) {
+			IBuddyStatus buddy) {
 		for (int i = 0; i < parent.getChildCount(); i++) {
 			DefaultMutableTreeNode child = (DefaultMutableTreeNode) parent
 					.getChildAt(i);
@@ -199,7 +206,7 @@ public class RoasterTree extends JTree {
 			Object o = child.getUserObject();
 
 			if (o instanceof BuddyStatus) {
-				if (buddy.getJabberId().equals(((BuddyStatus) o).getJabberId()))
+				if (buddy.getJabberId().equals(((IBuddyStatus) o).getJabberId()))
 					return child;
 			}
 		}

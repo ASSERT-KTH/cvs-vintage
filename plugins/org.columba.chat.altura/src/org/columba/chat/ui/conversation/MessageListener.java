@@ -15,13 +15,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.chat.jabber;
+package org.columba.chat.ui.conversation;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Logger;
 
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.api.IConversationController;
+import org.columba.chat.jabber.BuddyList;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
@@ -35,12 +37,13 @@ public class MessageListener implements PacketListener {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.chat.jabber");
 
-	private AlturaFrameMediator frameMediator;
+	private IConversationController conversationController;
 
-	public MessageListener(AlturaFrameMediator frameMediator) {
+	public MessageListener(IConversationController conversationController) {
 
-		this.frameMediator = frameMediator;
+		this.conversationController = conversationController;
 	}
+	
 
 	/**
 	 * @see org.jivesoftware.smack.PacketListener#processPacket(org.jivesoftware.smack.packet.Packet)
@@ -65,7 +68,7 @@ public class MessageListener implements PacketListener {
 		// example: fdietz@jabber.org/Jabber-client
 		// -> remove "/Jabber-client"
 		final String normalizedFrom = from.replaceAll("\\/.*", "");
-		final BuddyStatus buddyStatus = BuddyList.getInstance().getBuddy(
+		final IBuddyStatus buddyStatus = BuddyList.getInstance().getBuddy(
 				normalizedFrom);
 
 		if (buddyStatus != null) {
@@ -73,14 +76,13 @@ public class MessageListener implements PacketListener {
 			//	awt-event-thread
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					((AlturaFrameMediator) frameMediator)
-							.getConversationController()
+					conversationController
 							.addChat(normalizedFrom);
 
-					buddyStatus.getChatMediator().getReceiving()
+					buddyStatus.getChatMediator()
 							.displayReceivedMessage(message, buddyStatus);
 
-					buddyStatus.getChatMediator().getSending().requestFocus();
+					buddyStatus.getChatMediator().sendTextFieldRequestFocus();
 
 				}
 			});

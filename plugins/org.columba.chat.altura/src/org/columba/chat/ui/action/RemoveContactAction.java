@@ -23,8 +23,8 @@ import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.AlturaComponent;
-import org.columba.chat.frame.AlturaFrameMediator;
-import org.columba.chat.jabber.BuddyStatus;
+import org.columba.chat.api.IAlturaFrameMediator;
+import org.columba.chat.api.IBuddyStatus;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.jivesoftware.smack.RosterEntry;
 
@@ -52,8 +52,8 @@ public class RemoveContactAction extends AbstractColumbaAction {
 		String jabberId = "";
 
 		// selected buddy in buddylist
-		BuddyStatus buddy = (BuddyStatus) ((AlturaFrameMediator) frameMediator)
-				.getBuddyTree().getSelected();
+		IBuddyStatus buddy = (IBuddyStatus) ((IAlturaFrameMediator) frameMediator)
+				.getRoasterTree().getSelected();
 
 		if (buddy != null) {
 			// use selected buddy
@@ -74,7 +74,7 @@ public class RemoveContactAction extends AbstractColumbaAction {
 		if (option == JOptionPane.YES_OPTION) {
 			AlturaComponent.connection.getRoster().removeEntry(entry);
 			System.out.println("update tree");
-			((AlturaFrameMediator) frameMediator).getBuddyTree().populate();
+			((IAlturaFrameMediator) frameMediator).getRoasterTree().populate();
 		}
 
 		/*

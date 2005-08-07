@@ -25,6 +25,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import org.columba.chat.api.IBuddyStatus;
 import org.columba.chat.jabber.BuddyStatus;
 import org.columba.core.resourceloader.ImageLoader;
 import org.jivesoftware.smack.RosterGroup;
@@ -73,7 +74,7 @@ public class RoasterTreeRenderer extends DefaultTreeCellRenderer {
         
         if (o instanceof BuddyStatus) {
             // contact
-            BuddyStatus entry = (BuddyStatus) o;
+            IBuddyStatus entry = (IBuddyStatus) o;
             Presence.Mode mode = entry.getPresenceMode();
 
             String name = entry.getName();

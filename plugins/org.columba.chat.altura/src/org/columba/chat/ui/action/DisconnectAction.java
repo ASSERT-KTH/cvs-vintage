@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.AlturaComponent;
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IAlturaFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
@@ -46,6 +46,6 @@ public class DisconnectAction extends AbstractColumbaAction {
 
 		AlturaComponent.connection.close();
 
-		((AlturaFrameMediator) frameMediator).getBuddyTree().setEnabled(false);
+		((IAlturaFrameMediator) frameMediator).getRoasterTree().setEnabled(false);
 	}
 }

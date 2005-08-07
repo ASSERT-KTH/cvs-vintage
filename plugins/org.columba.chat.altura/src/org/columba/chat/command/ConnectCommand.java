@@ -22,12 +22,12 @@ import javax.swing.JOptionPane;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.AlturaComponent;
+import org.columba.chat.api.IAlturaFrameMediator;
 import org.columba.chat.config.Account;
 import org.columba.chat.config.Config;
-import org.columba.chat.frame.AlturaFrameMediator;
-import org.columba.chat.jabber.MessageListener;
-import org.columba.chat.jabber.PresenceListener;
-import org.columba.chat.jabber.SubscriptionListener;
+import org.columba.chat.ui.conversation.MessageListener;
+import org.columba.chat.ui.roaster.PresenceListener;
+import org.columba.chat.ui.roaster.SubscriptionListener;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.mail.gui.util.PasswordDialog;
@@ -56,7 +56,7 @@ public class ConnectCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		Account account = Config.getInstance().getAccount();
-		AlturaFrameMediator mediator = (AlturaFrameMediator) m;
+		IAlturaFrameMediator mediator = (IAlturaFrameMediator) m;
 
 		try {
 
@@ -116,11 +116,11 @@ public class ConnectCommand extends Command {
 				Roster.SUBSCRIPTION_MANUAL);
 
 		AlturaComponent.connection.addPacketListener(new MessageListener(
-				mediator), new PacketTypeFilter(Message.class));
+				mediator.getConversationController()), new PacketTypeFilter(Message.class));
 		AlturaComponent.connection.addPacketListener(new PresenceListener(
-				mediator), new PacketTypeFilter(Presence.class));
+				mediator.getRoasterTree()), new PacketTypeFilter(Presence.class));
 		AlturaComponent.connection.addPacketListener(new SubscriptionListener(
-				mediator), new PacketTypeFilter(Presence.class));
+				mediator.getRoasterTree()), new PacketTypeFilter(Presence.class));
 
 	}
 
@@ -132,13 +132,13 @@ public class ConnectCommand extends Command {
 		if (!success)
 			return;
 
-		final AlturaFrameMediator mediator = (AlturaFrameMediator) m;
+		final IAlturaFrameMediator mediator = (IAlturaFrameMediator) m;
 
 		// awt-event-thread
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mediator.getBuddyTree().setEnabled(true);
-				mediator.getBuddyTree().populate();
+				mediator.getRoasterTree().setEnabled(true);
+				mediator.getRoasterTree().populate();
 			}
 		});
 	}

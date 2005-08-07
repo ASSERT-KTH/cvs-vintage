@@ -25,10 +25,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IAlturaFrameMediator;
+import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.api.IChatMediator;
 import org.columba.chat.jabber.BuddyList;
-import org.columba.chat.jabber.BuddyStatus;
-import org.columba.chat.ui.conversation.action.CloseAction;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
@@ -39,9 +39,10 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class ChatMediator extends JPanel implements ActionListener {
+public class ChatMediator extends JPanel implements IChatMediator,
+		ActionListener {
 
 	private Chat chat;
 
@@ -49,13 +50,15 @@ public class ChatMediator extends JPanel implements ActionListener {
 
 	private SendingMessageController sending;
 
-	//	private SendButtonController sendButton;
+	// private SendButtonController sendButton;
 
 	private JButton sendButton;
 
-	private AlturaFrameMediator mediator;
+	private JButton closeButton;
 
-	public ChatMediator(AlturaFrameMediator mediator, Chat chat) {
+	private IAlturaFrameMediator mediator;
+
+	public ChatMediator(IAlturaFrameMediator mediator, Chat chat) {
 		super();
 
 		this.mediator = mediator;
@@ -70,12 +73,16 @@ public class ChatMediator extends JPanel implements ActionListener {
 		layoutComponents();
 	}
 
+	public void registerCloseActionListener(ActionListener actionListener) {
+		closeButton.addActionListener(actionListener);
+	}
+
 	public void layoutComponents() {
 		FormLayout mainLayout = new FormLayout("fill:pref:grow",
 				"fill:default:grow, 3dlu, fill:default, 3dlu, fill:default");
 		setLayout(mainLayout);
-		//JPanel mainPanel = new JPanel(mainLayout);
-		//mainPanel.setBorder(Borders.DIALOG_BORDER);
+		// JPanel mainPanel = new JPanel(mainLayout);
+		// mainPanel.setBorder(Borders.DIALOG_BORDER);
 
 		CellConstraints cc = new CellConstraints();
 
@@ -91,7 +98,9 @@ public class ChatMediator extends JPanel implements ActionListener {
 
 		add(sendingPane, cc.xy(1, 3));
 
-		JButton closeButton = new JButton(new CloseAction(mediator));
+		closeButton = new JButton("Close");
+		closeButton.setActionCommand("CLOSE");
+		
 		ButtonBarBuilder builder = new ButtonBarBuilder();
 		builder.addGlue();
 		builder.addGridded(closeButton);
@@ -138,14 +147,14 @@ public class ChatMediator extends JPanel implements ActionListener {
 
 		if (action.equals("SEND")) {
 
-			//      create message object
+			// create message object
 			Message message = getChat().createMessage();
 
 			// set message body
 			message.setBody(getSending().getText());
 
 			String to = message.getTo();
-			//      example: fdietz@jabber.org/Jabber-client
+			// example: fdietz@jabber.org/Jabber-client
 			// -> remove "/Jabber-client"
 			String normalizedId = to.replaceAll("\\/.*", "");
 
@@ -156,12 +165,10 @@ public class ChatMediator extends JPanel implements ActionListener {
 				// clear text box
 				getSending().setText("");
 
-				BuddyStatus buddyStatus = BuddyList.getInstance().getBuddy(
+				IBuddyStatus buddyStatus = BuddyList.getInstance().getBuddy(
 						normalizedId);
 
-				//if (buddyStatus.getChatMediator() != null)
-				buddyStatus.getChatMediator().getReceiving()
-						.displaySendMessage(message, buddyStatus);
+				displaySendMessage(message, buddyStatus);
 
 			} catch (XMPPException e) {
 				// TODO Auto-generated catch block
@@ -169,6 +176,20 @@ public class ChatMediator extends JPanel implements ActionListener {
 			}
 		}
 
+	}
+
+	public void displayReceivedMessage(Message message, IBuddyStatus buddyStatus) {
+		getReceiving().displayReceivedMessage(message, buddyStatus);
+
+	}
+
+	public void displaySendMessage(Message message, IBuddyStatus buddyStatus) {
+		getReceiving().displaySendMessage(message, buddyStatus);
+
+	}
+
+	public void sendTextFieldRequestFocus() {
+		getSending().requestFocus();
 	}
 
 }

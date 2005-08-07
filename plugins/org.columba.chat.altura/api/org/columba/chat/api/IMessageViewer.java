@@ -15,22 +15,34 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.chat.frame;
+package org.columba.chat.api;
 
-import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.ui.conversation.ConversationController;
-import org.columba.chat.ui.presence.PresenceComboBox;
-import org.columba.chat.ui.roaster.RoasterTree;
+import org.jivesoftware.smack.packet.Message;
+
 
 /**
+ * IViewer used by the conversation/chat window to present messages.
+ * 
  * @author fdietz
- *  
+ *
  */
-public interface AlturaFrameMediator extends IFrameMediator {
+public interface IMessageViewer {
 
-	RoasterTree getBuddyTree();
-	
-	PresenceComboBox getPresenceController();
-	
-	ConversationController getConversationController();
+    /**
+     * Create viewer for a received message.
+     * 
+     * @param message			jabber message 	
+     * @param buddy				jabber id information
+     * @return
+     */
+    void displayReceivedMessage(Message message, IBuddyStatus buddy);
+    
+    /**
+     * Create viewer for a message send by you.
+     * 
+     * @param message			jabber message 	
+     * @param buddy				jabber id information
+     * @return
+     */
+    void displaySendMessage(Message message, IBuddyStatus buddy);
 }

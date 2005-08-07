@@ -109,6 +109,8 @@ public class PasteAction extends AbstractColumbaAction implements
 
 		if ( focusOwner == null ) return false;
 		
+		if ( focusOwner.getTransferHandler() == null ) return false;
+		
 		return focusOwner.getTransferHandler().canImport(focusOwner,
 				contents.getTransferDataFlavors());
 

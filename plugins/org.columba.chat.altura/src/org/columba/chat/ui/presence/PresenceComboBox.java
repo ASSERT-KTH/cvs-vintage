@@ -27,96 +27,88 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.columba.chat.AlturaComponent;
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IPresenceController;
 import org.columba.core.resourceloader.ImageLoader;
 import org.jivesoftware.smack.packet.Presence;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class PresenceComboBox extends JPanel implements ItemListener {
-  private AlturaFrameMediator frameMediator;
-    
-    private JComboBox checkBox;
+public class PresenceComboBox extends JPanel implements ItemListener, IPresenceController {
 
-    private JLabel label;
+	private JComboBox checkBox;
 
-    private ImageIcon available = ImageLoader.getImageIcon("available.png");
+	private JLabel label;
 
-    private ImageIcon extendedaway = ImageLoader
-            .getImageIcon("extended-away.png");
+	private ImageIcon available = ImageLoader.getImageIcon("available.png");
 
-    private ImageIcon away = ImageLoader.getImageIcon("away.png");
+	private ImageIcon extendedaway = ImageLoader
+			.getImageIcon("extended-away.png");
 
-    private ImageIcon busy = ImageLoader.getImageIcon("busy.png");
+	private ImageIcon away = ImageLoader.getImageIcon("away.png");
 
-    private ImageIcon message = ImageLoader.getImageIcon("message.png");
+	private ImageIcon busy = ImageLoader.getImageIcon("busy.png");
 
-    private ImageIcon offline = ImageLoader.getImageIcon("offline.png");
+	private ImageIcon message = ImageLoader.getImageIcon("message.png");
 
-    public PresenceComboBox(AlturaFrameMediator frameMediator) {
-    	this.frameMediator = frameMediator;
-    	
-        
-    	 checkBox = new JComboBox();
+	private ImageIcon offline = ImageLoader.getImageIcon("offline.png");
 
-         checkBox.addItem("Available");
-         checkBox.addItem("Custom Message...");
-         checkBox.addItem("Working");
-         checkBox.addItem("Custom Message...");
-         //checkBox.addItem("Leave...");
+	public PresenceComboBox() {
 
-         label = new JLabel();
+		checkBox = new JComboBox();
 
-         label.setIcon(available);
+		checkBox.addItem("Available");
+		checkBox.addItem("Custom Message...");
+		checkBox.addItem("Working");
+		checkBox.addItem("Custom Message...");
+		// checkBox.addItem("Leave...");
 
-         setLayout(new BorderLayout());
+		label = new JLabel();
 
-         add(label, BorderLayout.WEST);
-         add(checkBox, BorderLayout.CENTER);
+		label.setIcon(available);
 
-         checkBox.addItemListener(this);
-         
-         addItemListener(this);
-    }
+		setLayout(new BorderLayout());
 
-    public void addItemListener(ItemListener l) {
-        checkBox.addItemListener(l);
-    }
+		add(label, BorderLayout.WEST);
+		add(checkBox, BorderLayout.CENTER);
 
-  
+		checkBox.addItemListener(this);
 
-    /**
-     * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-     */
-    public void itemStateChanged(ItemEvent e) {
-        Object source = e.getItemSelectable();
+		addItemListener(this);
+	}
 
-        int index = ((JComboBox) source).getSelectedIndex();
+	public void addItemListener(ItemListener l) {
+		checkBox.addItemListener(l);
+	}
 
-        Presence p = null;
-        switch (index) {
-        case 0:
-            {
-        	 label.setIcon(available);
-        	 
-                p = new Presence(Presence.Type.AVAILABLE);
-                p.setStatus("Available");
-                AlturaComponent.connection.sendPacket(p);
-                break;
-            }
-        case 2:
-            {
-        	 label.setIcon(busy);
-        	 
-                p = new Presence(Presence.Type.UNAVAILABLE);
-                p.setStatus("Away");
-                AlturaComponent.connection.sendPacket(p);
-                break;
-            }
-        }
-        
-        
-    }
+	/**
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
+	public void itemStateChanged(ItemEvent e) {
+		Object source = e.getItemSelectable();
+
+		int index = ((JComboBox) source).getSelectedIndex();
+
+		Presence p = null;
+		switch (index) {
+		case 0: {
+			label.setIcon(available);
+
+			p = new Presence(Presence.Type.AVAILABLE);
+			p.setStatus("Available");
+			AlturaComponent.connection.sendPacket(p);
+			break;
+		}
+		case 2: {
+			label.setIcon(busy);
+
+			p = new Presence(Presence.Type.UNAVAILABLE);
+			p.setStatus("Away");
+			AlturaComponent.connection.sendPacket(p);
+			break;
+		}
+		}
+
+	}
 }

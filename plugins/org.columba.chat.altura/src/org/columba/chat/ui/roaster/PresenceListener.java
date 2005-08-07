@@ -15,35 +15,37 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.chat.jabber;
+package org.columba.chat.ui.roaster;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.api.IRoasterTree;
+import org.columba.chat.jabber.BuddyList;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class PresenceListener implements PacketListener {
 
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.chat.jabber");
 
-	private AlturaFrameMediator frameMediator;
+	private IRoasterTree roasterTree;
 
 	/**
-	 *  
+	 * 
 	 */
-	public PresenceListener(AlturaFrameMediator frameMediator) {
+	public PresenceListener(IRoasterTree roasterTree) {
 		super();
-		this.frameMediator = frameMediator;
+		this.roasterTree = roasterTree;
 
 	}
 
@@ -66,7 +68,7 @@ public class PresenceListener implements PacketListener {
 		// -> remove "/Jabber-client"
 		String normalizedFrom = from.replaceAll("\\/.*", "");
 
-		final BuddyStatus status = BuddyList.getInstance().getBuddy(
+		final IBuddyStatus status = BuddyList.getInstance().getBuddy(
 				normalizedFrom);
 		// just ignore unknown people
 		if (status == null)
@@ -84,7 +86,7 @@ public class PresenceListener implements PacketListener {
 		Runnable updateAComponent = new Runnable() {
 
 			public void run() {
-				frameMediator.getBuddyTree().updateBuddyPresence(status);
+				roasterTree.updateBuddyPresence(status);
 			}
 		};
 

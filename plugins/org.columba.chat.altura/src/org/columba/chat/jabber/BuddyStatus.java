@@ -17,7 +17,8 @@
 //All Rights Reserved.
 package org.columba.chat.jabber;
 
-import org.columba.chat.ui.conversation.ChatMediator;
+import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.api.IChatMediator;
 import org.jivesoftware.smack.packet.Presence;
 
 
@@ -25,74 +26,74 @@ import org.jivesoftware.smack.packet.Presence;
  * @author fdietz
  *
  */
-public class BuddyStatus {
+public class BuddyStatus implements IBuddyStatus {
     private String name;
     private String jabberId;
     private Presence.Mode presenceMode;
     private String statusMessage;
     private boolean signedOn;
-    private ChatMediator mediator;
+    private IChatMediator mediator;
     
     public BuddyStatus(String jabberId) {
         this.jabberId = jabberId;
     }
-    /**
-     * @return Returns the jabberId.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#getJabberId()
+	 */
     public String getJabberId() {
         return jabberId;
     }
-    /**
-     * @return Returns the presenceMode.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#getPresenceMode()
+	 */
     public Presence.Mode getPresenceMode() {
         return presenceMode;
     }
-    /**
-     * @return Returns the signedOn.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#isSignedOn()
+	 */
     public boolean isSignedOn() {
         return signedOn;
     }
-    /**
-     * @return Returns the statusMessage.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#getStatusMessage()
+	 */
     public String getStatusMessage() {
         return statusMessage;
     }
-    /**
-     * @return Returns the mediator.
-     */
-    public ChatMediator getChatMediator() {
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#getChatMediator()
+	 */
+    public IChatMediator getChatMediator() {
         return mediator;
     }
-    /**
-     * @param mediator The mediator to set.
-     */
-    public void setChatMediator(ChatMediator mediator) {
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#setChatMediator(org.columba.chat.api.IChatMediator)
+	 */
+    public void setChatMediator(IChatMediator mediator) {
         this.mediator = mediator;
     }
-    /**
-     * @param presenceMode The presenceMode to set.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#setPresenceMode(org.jivesoftware.smack.packet.Presence.Mode)
+	 */
     public void setPresenceMode(Presence.Mode presenceMode) {
         this.presenceMode = presenceMode;
     }
-    /**
-     * @param signedOn The signedOn to set.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#setSignedOn(boolean)
+	 */
     public void setSignedOn(boolean signedOn) {
         this.signedOn = signedOn;
     }
-    /**
-     * @param statusMessage The statusMessage to set.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#setStatusMessage(java.lang.String)
+	 */
     public void setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
     }
-    /**
-     * @return Returns the user.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.chat.jabber.IBuddyStatus#getName()
+	 */
     public String getName() {
         return name;
     }

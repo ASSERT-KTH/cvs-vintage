@@ -17,13 +17,17 @@
 //All Rights Reserved.
 package org.columba.chat.ui.conversation;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JTabbedPane;
 
 import org.columba.chat.AlturaComponent;
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IAlturaFrameMediator;
+import org.columba.chat.api.IChatMediator;
+import org.columba.chat.api.IConversationController;
 import org.jivesoftware.smack.Chat;
 
 /**
@@ -31,16 +35,17 @@ import org.jivesoftware.smack.Chat;
  * 
  * @author fdietz
  */
-public class ConversationController extends JTabbedPane {
+public class ConversationController extends JTabbedPane implements
+		IConversationController, ActionListener {
 
 	private Map chatMap;
 
-	private AlturaFrameMediator mediator;
+	private IAlturaFrameMediator mediator;
 
 	/**
-	 *  
+	 * 
 	 */
-	public ConversationController(AlturaFrameMediator mediator) {
+	public ConversationController(IAlturaFrameMediator mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -48,16 +53,22 @@ public class ConversationController extends JTabbedPane {
 		chatMap = new HashMap();
 	}
 
-	public ChatMediator addChat(String jabberId) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.chat.ui.conversation.IConversationController#addChat(java.lang.String)
+	 */
+	public IChatMediator addChat(String jabberId) {
 
 		ChatMediator m = null;
 		if (chatMap.containsKey(jabberId)) {
 			m = (ChatMediator) chatMap.get(jabberId);
 		} else {
-			//			 create chat connection
+			// create chat connection
 			Chat chat = AlturaComponent.connection.createChat(jabberId);
 
 			m = new ChatMediator(mediator, chat);
+			m.registerCloseActionListener(this);
 
 			chatMap.put(jabberId, m);
 		}
@@ -67,20 +78,42 @@ public class ConversationController extends JTabbedPane {
 		return m;
 	}
 
-	public ChatMediator getSelected() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.chat.ui.conversation.IConversationController#getSelected()
+	 */
+	public IChatMediator getSelected() {
 		int index = getSelectedIndex();
 
 		return get(index);
 	}
 
-	public ChatMediator get(int index) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.chat.ui.conversation.IConversationController#get(int)
+	 */
+	public IChatMediator get(int index) {
 		return null;
 
-		//return (ChatMediator) chatList.get(index);
+		// return (ChatMediator) chatList.get(index);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.chat.ui.conversation.IConversationController#closeSelected()
+	 */
 	public void closeSelected() {
 		int index = getSelectedIndex();
 		remove(index);
+	}
+
+	public void actionPerformed(ActionEvent event) {
+		if (event.getActionCommand().equals("CLOSE")) {
+			closeSelected();
+		}
+
 	}
 }

@@ -15,12 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.chat.jabber;
+package org.columba.chat.ui.roaster;
 
 import javax.swing.JOptionPane;
 
 import org.columba.chat.AlturaComponent;
-import org.columba.chat.frame.AlturaFrameMediator;
+import org.columba.chat.api.IRoasterTree;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Packet;
@@ -28,19 +28,19 @@ import org.jivesoftware.smack.packet.Presence;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class SubscriptionListener implements PacketListener {
 
-	private AlturaFrameMediator frameMediator;
+	private IRoasterTree roasterTree;
 
 	/**
-	 *  
+	 * 
 	 */
-	public SubscriptionListener(AlturaFrameMediator frameMediator) {
+	public SubscriptionListener(IRoasterTree roasterTree) {
 		super();
 
-		this.frameMediator = frameMediator;
+		this.roasterTree = roasterTree;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class SubscriptionListener implements PacketListener {
 			// ask the user
 			String from = presence.getFrom();
 
-			//          example: fdietz@jabber.org/Jabber-client
+			// example: fdietz@jabber.org/Jabber-client
 			// -> remove "/Jabber-client"
 			String normalizedFrom = from.replaceAll("\\/.*", "");
 
@@ -69,7 +69,7 @@ public class SubscriptionListener implements PacketListener {
 							"Subscription Request", JOptionPane.YES_NO_OPTION);
 
 			if (option == JOptionPane.YES_OPTION) {
-				//              if already in roster
+				// if already in roster
 				if (AlturaComponent.connection.getRoster().contains(
 						normalizedFrom))
 					return;
@@ -92,7 +92,7 @@ public class SubscriptionListener implements PacketListener {
 					AlturaComponent.connection.getRoster().createEntry(from,
 							"", null);
 
-					frameMediator.getBuddyTree().populate();
+					roasterTree.populate();
 				} catch (XMPPException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
 					e.printStackTrace();

@@ -22,9 +22,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.frame.AlturaFrameMediator;
-import org.columba.chat.jabber.BuddyStatus;
-import org.columba.chat.ui.conversation.ChatMediator;
+import org.columba.chat.api.IAlturaFrameMediator;
+import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.api.IChatMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
@@ -52,8 +52,8 @@ public class OpenConversationAction extends AbstractColumbaAction {
 		String jabberId = "";
 
 		// selected buddy in buddylist
-		BuddyStatus buddy = (BuddyStatus) ((AlturaFrameMediator) frameMediator)
-				.getBuddyTree().getSelected();
+		IBuddyStatus buddy = (IBuddyStatus) ((IAlturaFrameMediator) frameMediator)
+				.getRoasterTree().getSelected();
 
 		if (buddy != null) {
 			// use selected buddy
@@ -63,9 +63,9 @@ public class OpenConversationAction extends AbstractColumbaAction {
 			jabberId = JOptionPane.showInputDialog(null, "Enter jabber ID");
 		}
 
-		ChatMediator m =
+		IChatMediator m =
 
-		((AlturaFrameMediator) frameMediator).getConversationController()
+		((IAlturaFrameMediator) frameMediator).getConversationController()
 				.addChat(jabberId);
 
 		buddy.setChatMediator(m);

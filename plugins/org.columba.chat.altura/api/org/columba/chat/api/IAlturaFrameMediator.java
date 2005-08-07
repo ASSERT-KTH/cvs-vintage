@@ -15,37 +15,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.chat.ui.conversation.action;
-
-import java.awt.event.ActionEvent;
+package org.columba.chat.api;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.frame.AlturaFrameMediator;
-import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * @author fdietz
  *  
  */
-public class CloseAction extends AbstractColumbaAction {
+public interface IAlturaFrameMediator extends IFrameMediator {
 
-    /**
-     * @param mediator
-     * @param name
-     */
-    public CloseAction(IFrameMediator mediator) {
-        super(mediator, "Close");
-
-    }
-
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-
-        ((AlturaFrameMediator)frameMediator).getConversationController().closeSelected();
-        
-
-    }
-
+	IRoasterTree getRoasterTree();
+	
+	IPresenceController getPresenceController();
+	
+	IConversationController getConversationController();
 }

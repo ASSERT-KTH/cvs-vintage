@@ -20,6 +20,8 @@ package org.columba.chat.jabber;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.columba.chat.api.IBuddyStatus;
+
 /**
  * Manages a list of buddies.
  * 
@@ -39,7 +41,7 @@ public class BuddyList {
 		return instance;
 	}
 
-	public void add(String jabberId, BuddyStatus buddy) {
+	public void add(String jabberId, IBuddyStatus buddy) {
 		map.put(jabberId, buddy);
 	}
 
