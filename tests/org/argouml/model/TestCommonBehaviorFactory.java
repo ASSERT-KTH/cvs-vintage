@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorFactory.java,v 1.2 2005/01/31 20:54:37 linus Exp $
+// $Id: TestCommonBehaviorFactory.java,v 1.3 2005/08/07 10:06:56 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.model;
 
 import junit.framework.TestCase;
 
-import org.argouml.util.CheckUMLModelHelper;
 
 /**
  * Test the CommonBehaviorFactory.
@@ -104,7 +103,6 @@ public class TestCommonBehaviorFactory extends TestCase {
 	};
 
 	CheckUMLModelHelper.createAndRelease(
-					     this,
 					     Model.getCommonBehaviorFactory(),
 					     objs);
 

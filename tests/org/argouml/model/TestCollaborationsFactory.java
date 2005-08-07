@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsFactory.java,v 1.2 2005/01/31 20:54:37 linus Exp $
+// $Id: TestCollaborationsFactory.java,v 1.3 2005/08/07 10:06:56 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.lang.ref.WeakReference;
 
 import junit.framework.TestCase;
 
-import org.argouml.util.CheckUMLModelHelper;
 
 /**
  * Test the collaborations factory for all model implementations.<p>
@@ -75,7 +74,6 @@ public class TestCollaborationsFactory extends TestCase {
 	};
 
         CheckUMLModelHelper.createAndRelease(
-            this,
             Model.getCollaborationsFactory(),
             objs);
 
@@ -107,7 +105,7 @@ public class TestCollaborationsFactory extends TestCase {
 
         WeakReference cr1wr = new WeakReference(cr1);
         WeakReference rolewr = new WeakReference(role);
-        WeakReference interwr = new WeakReference(inter);
+        // WeakReference interwr = new WeakReference(inter);
         WeakReference meswr = new WeakReference(mes);
 
         Model.getUmlFactory().delete(cr1);

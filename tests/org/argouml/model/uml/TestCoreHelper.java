@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.8 2005/01/29 20:08:22 linus Exp $
+// $Id: TestCoreHelper.java,v 1.9 2005/08/07 10:06:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.CheckUMLModelHelper;
 import org.argouml.model.Model;
-import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MClassifierImpl;
 import ru.novosoft.uml.foundation.core.MGeneralizableElement;
@@ -54,7 +54,6 @@ public class TestCoreHelper extends TestCase {
      */
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
-			 this,
 			 Model.getCoreFactory(),
 			 TestCoreFactory.getAllModelElements());
     }
@@ -64,7 +63,6 @@ public class TestCoreHelper extends TestCase {
      */
     public void testIsValidStereoType() {
         CheckUMLModelHelper.isValidStereoType(
-                          this,
                           Model.getCoreFactory(),
                           TestCoreFactory.getAllModelElements());
     }

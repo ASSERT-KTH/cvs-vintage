@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.5 2005/01/31 20:54:36 linus Exp $
+// $Id: TestCoreFactory.java,v 1.6 2005/08/07 10:06:56 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.lang.ref.WeakReference;
 
 import junit.framework.TestCase;
 
-import org.argouml.util.CheckUMLModelHelper;
 
 /**
  * Test the CoreFactory interface and implementation beyond.
@@ -131,7 +130,6 @@ public class TestCoreFactory extends TestCase {
 	};
 
 	CheckUMLModelHelper.createAndRelease(
-					     this,
 					     Model.getCoreFactory(),
 					     objs);
     }

@@ -1,4 +1,4 @@
-// $Id: TestDataTypesFactory.java,v 1.4 2005/01/02 16:43:41 linus Exp $
+// $Id: TestDataTypesFactory.java,v 1.5 2005/08/07 10:06:55 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,9 @@ import java.util.LinkedList;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.CheckUMLModelHelper;
 import org.argouml.model.DataTypesFactory;
 import org.argouml.model.Model;
-import org.argouml.util.CheckUMLModelHelper;
 
 /**
  * Test the DataTypesFactory class.
@@ -87,22 +87,18 @@ public class TestDataTypesFactory extends TestCase {
 	DataTypesFactory dtf = Model.getDataTypesFactory();
 
 	CheckUMLModelHelper.createAndRelease(
-					     this,
 					     dtf,
 					     objs,
 					     args);
 
 	// Multiplicity
 
-	CheckUMLModelHelper.deleteAndRelease(this,
-					     dtf.createMultiplicity(1, 10));
+	CheckUMLModelHelper.deleteAndRelease(dtf.createMultiplicity(1, 10));
 
 	CheckUMLModelHelper.deleteAndRelease(
-		this,
 		dtf.createMultiplicity(new LinkedList()));
 
-	CheckUMLModelHelper.deleteAndRelease(this,
-					     dtf.createMultiplicity("1..10"));
+	CheckUMLModelHelper.deleteAndRelease(dtf.createMultiplicity("1..10"));
 
 	// Do we need to add tests for the following?
 	//

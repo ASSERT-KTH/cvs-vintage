@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsHelper.java,v 1.4 2005/01/02 16:43:41 linus Exp $
+// $Id: TestCollaborationsHelper.java,v 1.5 2005/08/07 10:06:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.CheckUMLModelHelper;
 import org.argouml.model.Model;
-import org.argouml.util.CheckUMLModelHelper;
 
 /**
  * @since Oct 10, 2002
@@ -50,7 +50,6 @@ public class TestCollaborationsHelper extends TestCase {
      */
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
-			 this,
 			 Model.getCollaborationsFactory(),
 			 TestCollaborationsFactory.getAllModelElements());
     }
@@ -60,7 +59,6 @@ public class TestCollaborationsHelper extends TestCase {
      */
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
-		      this,
 		      Model.getCollaborationsFactory(),
 		      TestCollaborationsFactory.getAllModelElements());
     }
