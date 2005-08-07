@@ -33,6 +33,8 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 
+import org.columba.core.resourceloader.ImageLoader;
+
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 /**

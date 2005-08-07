@@ -19,11 +19,11 @@ package org.columba.mail.spam.command;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.spam.SpamController;
@@ -43,9 +43,9 @@ public class LearnMessageAsSpamCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 
 		// get array of source references
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
@@ -82,7 +82,7 @@ public class LearnMessageAsSpamCommand extends Command {
 					worker.setProgressBarValue(j);
 				}
 			} catch (Exception e) {
-				if (Main.DEBUG) {
+				if (Logging.DEBUG) {
 					e.printStackTrace();
 				}
 			}

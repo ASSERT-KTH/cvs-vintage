@@ -16,7 +16,7 @@
 
 package org.columba.core.facade;
 
-import org.columba.core.gui.util.ErrorDialog;
+import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.help.HelpManager;
 
 /**

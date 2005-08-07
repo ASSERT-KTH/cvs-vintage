@@ -18,7 +18,7 @@ package org.columba.mail.gui.composer;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 
 /**

@@ -38,10 +38,10 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
-import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.config.ComposerItem;
 import org.columba.mail.config.MailConfig;

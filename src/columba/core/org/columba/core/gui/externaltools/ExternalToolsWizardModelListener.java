@@ -22,7 +22,6 @@ import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.core.config.Config;
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.xml.XmlElement;
 
 

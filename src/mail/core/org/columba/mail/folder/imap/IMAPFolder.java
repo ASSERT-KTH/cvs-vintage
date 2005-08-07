@@ -29,11 +29,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.columba.api.command.IStatusObservable;
+import org.columba.core.base.ListTools;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.StatusObservable;
 import org.columba.core.filter.Filter;
-import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -201,7 +201,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.api.command.IWorkerStatusController)
 	 */
 	public IHeaderList getHeaderList() throws Exception {
 		ensureFolderIsSynced();
@@ -685,7 +685,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * change these manually.
 	 * 
 	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.IMailbox,
-	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 *      java.lang.Object, org.columba.api.command.IWorkerStatusController)
 	 */
 	public void innerCopy(IMailbox destiny, Object[] uids) throws Exception {
 		IMAPFolder destFolder = (IMAPFolder) destiny;
@@ -727,7 +727,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 	/**
 	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
+	 *      org.columba.api.command.IWorkerStatusController)
 	 */
 	public void expungeFolder() throws Exception {
 		try {
@@ -740,7 +740,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 	/**
 	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
+	 *      org.columba.api.command.IWorkerStatusController)
 	 * @TODO dont use deprecated method
 	 */
 	public IColumbaHeader getMessageHeader(Object uid) throws Exception {
@@ -845,7 +845,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * 
 	 * @see org.columba.mail.folder.Folder#getObservable()
 	 */
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return ((IMAPRootFolder) getRootFolder()).getObservable();
 	}
 

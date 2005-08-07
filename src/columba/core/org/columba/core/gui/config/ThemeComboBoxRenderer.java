@@ -22,9 +22,9 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import org.columba.core.gui.util.NotifyDialog;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ThemeExtensionHandler;
 
 /**

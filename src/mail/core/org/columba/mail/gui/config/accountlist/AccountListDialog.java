@@ -48,10 +48,10 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.config.Config;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DoubleClickListener;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.DoubleClickListener;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;

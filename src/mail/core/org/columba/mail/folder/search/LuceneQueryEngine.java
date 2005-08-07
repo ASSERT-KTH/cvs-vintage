@@ -43,12 +43,12 @@ import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
-import org.columba.core.command.StatusObservable;
+import org.columba.api.command.IStatusObservable;
+import org.columba.core.base.ListTools;
+import org.columba.core.base.Mutex;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
 import org.columba.core.io.DiskIO;
-import org.columba.core.util.ListTools;
-import org.columba.core.util.Mutex;
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.AbstractLocalFolder;
@@ -508,7 +508,7 @@ public class LuceneQueryEngine implements QueryEngine {
 
     /** {@inheritDoc} */
     public void sync() throws Exception {
-        //ColumbaLogger.log.severe("Lucene Index inconsistent - recreation forced");
+        //Logging.log.severe("Lucene Index inconsistent - recreation forced");
         IDataStorage ds = ((AbstractLocalFolder) folder).getDataStorageInstance();
         IHeaderList hl = ((AbstractLocalFolder) folder).getHeaderList();
 
@@ -561,7 +561,7 @@ public class LuceneQueryEngine implements QueryEngine {
         }
     }
 
-    public StatusObservable getObservable() {
+    public IStatusObservable getObservable() {
         return folder.getObservable();
     }
 }

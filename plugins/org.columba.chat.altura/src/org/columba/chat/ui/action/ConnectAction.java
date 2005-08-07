@@ -19,13 +19,13 @@ package org.columba.chat.ui.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.command.ConnectCommand;
 import org.columba.chat.config.Account;
 import org.columba.chat.config.Config;
 import org.columba.chat.ui.dialog.AccountDialog;
-import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * @author fdietz

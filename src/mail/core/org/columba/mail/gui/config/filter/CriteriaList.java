@@ -38,14 +38,14 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
 import org.columba.mail.plugin.FilterExtensionHandler;
 import org.columba.mail.plugin.FilterUIExtensionHandler;

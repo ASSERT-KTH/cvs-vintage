@@ -17,9 +17,9 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;

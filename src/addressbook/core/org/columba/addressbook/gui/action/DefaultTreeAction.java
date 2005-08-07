@@ -24,8 +24,8 @@ import javax.swing.tree.TreePath;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * Action which is listening for tree selection changes.

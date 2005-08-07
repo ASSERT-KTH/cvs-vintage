@@ -35,9 +35,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.Main;
-import org.columba.core.main.VersionInfo;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.logging.Logging;
+import org.columba.core.versioninfo.VersionInfo;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -428,7 +428,7 @@ public class MessageComposer {
 		return bodyPart;
 	}
 
-	public SendableMessage compose(WorkerStatusController workerStatusController)
+	public SendableMessage compose(IWorkerStatusController workerStatusController)
 			throws Exception {
 		this.accountUid = model.getAccountItem().getUid();
 
@@ -551,7 +551,7 @@ public class MessageComposer {
 				adr = Address.parse((String) headerItemList.get(0));
 				header.getAttributes().put("columba.to", adr);
 			} catch (ParserException e) {
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					e.printStackTrace();
 			}
 		}
@@ -564,7 +564,7 @@ public class MessageComposer {
 				adr = Address.parse((String) headerItemList.get(0));
 				header.getAttributes().put("columba.cc", adr);
 			} catch (ParserException e) {
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					e.printStackTrace();
 			}
 

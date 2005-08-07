@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.subscribe;
 
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.imap.IMAPServer;
 
@@ -37,9 +37,9 @@ public class SubscribeFolderCommand extends Command {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		SubscribeCommandReference subscribeReference = (SubscribeCommandReference) getReference();
 		root = (IMAPRootFolder) subscribeReference.getSourceFolder();
 
@@ -51,7 +51,7 @@ public class SubscribeFolderCommand extends Command {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		SubscribeDialog dialog = ((SubscribeCommandReference) getReference())

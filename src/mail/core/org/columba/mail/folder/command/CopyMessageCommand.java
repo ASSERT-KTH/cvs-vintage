@@ -22,11 +22,11 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -62,7 +62,7 @@ public class CopyMessageCommand extends Command {
 		super(reference);
 	}
 
-	protected void doExecute(WorkerStatusController worker,
+	protected void doExecute(IWorkerStatusController worker,
 			String statusMessage, String errorRetryMessage,
 			String errorIgnoreMessage, String errorCopyMessage,
 			String errorTitle, String canceledMessage) throws Exception {
@@ -174,9 +174,9 @@ public class CopyMessageCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		doExecute(worker, "copy_messages", "err_copy_messages_retry",
 				"err_copy_messages_ignore", "err_copy_messages_msg",
 				"err_copy_messages_title", "copy_messages_cancelled");

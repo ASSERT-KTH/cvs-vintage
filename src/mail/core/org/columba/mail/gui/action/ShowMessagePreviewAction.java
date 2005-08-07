@@ -21,11 +21,12 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.columba.core.action.AbstractSelectableAction;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractSelectableAction;
+import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 
@@ -46,7 +47,7 @@ public class ShowMessagePreviewAction extends AbstractSelectableAction
 	public ShowMessagePreviewAction(IFrameMediator controller) {
 		super(controller, "Message Preview");
 
-		ViewItem item = frameMediator.getViewItem();
+		ViewItem item = ((DefaultFrameController)frameMediator).getViewItem();
 				
 		element = item.getRoot().getElement("splitpanes");
 		if ( element == null ) {

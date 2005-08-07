@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.logging.Logger;
 
-import org.columba.core.command.StatusObservable;
+import org.columba.api.command.IStatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterList;
@@ -111,12 +111,12 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	protected Object lastSelection;
 
 	/**
-	 * Status information updates are handled in using StatusObservable.
+	 * Status information updates are handled in using IStatusObservable.
 	 * <p>
 	 * Every command has to register its interest to this events before
 	 * accessing the folder.
 	 */
-	protected StatusObservable observable = new StatusObservableImpl();
+	protected IStatusObservable observable = new StatusObservableImpl();
 
 	// implement your own search-engine here
 	protected DefaultSearchEngine searchEngine;
@@ -432,7 +432,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	/**
 	 * @return observable containing status information
 	 */
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return observable;
 	}
 

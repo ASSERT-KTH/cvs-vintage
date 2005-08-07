@@ -29,8 +29,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.text.html.HTML;
 
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.menu.IMenu;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;

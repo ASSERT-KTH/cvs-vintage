@@ -17,6 +17,7 @@ package org.columba.mail.gui.composer;
 
 import java.io.File;
 
+import org.columba.core.gui.externaltools.ExternalToolsManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.mail.config.SpellcheckItem;
@@ -45,7 +46,7 @@ public class ComposerSpellCheck {
 			handler = (ExternalToolsExtensionHandler) PluginManager.getInstance()
 					.getHandler(ExternalToolsExtensionHandler.NAME);
 
-			File externalToolFile = handler.getLocationOfExternalTool("aspell");
+			File externalToolFile = ExternalToolsManager.getInstance().getLocationOfExternalTool("aspell");
 
 			if (externalToolFile != null) {
 				ASpellInterface

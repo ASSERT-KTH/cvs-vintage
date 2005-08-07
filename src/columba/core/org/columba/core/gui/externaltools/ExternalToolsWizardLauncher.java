@@ -27,13 +27,12 @@ import net.javaprog.ui.wizard.Step;
 import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
 
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.help.HelpManager;
-import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
+import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Launches external tools wizard.

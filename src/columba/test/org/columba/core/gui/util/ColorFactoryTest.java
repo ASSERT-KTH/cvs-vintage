@@ -5,6 +5,8 @@ package org.columba.core.gui.util;
 
 import java.awt.Color;
 
+import org.columba.core.gui.base.ColorFactory;
+
 import junit.framework.TestCase;
 
 

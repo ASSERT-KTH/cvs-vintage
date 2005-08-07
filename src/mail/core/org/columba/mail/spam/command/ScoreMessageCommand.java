@@ -20,12 +20,11 @@ package org.columba.mail.spam.command;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.plugins.AddressbookFilter;
@@ -56,14 +55,6 @@ public class ScoreMessageCommand extends Command {
 		super(reference);
 	}
 
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public ScoreMessageCommand(IFrameMediator frame, ICommandReference ref) {
-		super(frame, ref);
-	}
-
 	public void updateGUI() throws Exception {
 		// update table
 		if (markAsSpamCommand != null) {
@@ -75,9 +66,9 @@ public class ScoreMessageCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// get source reference
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
@@ -126,7 +117,7 @@ public class ScoreMessageCommand extends Command {
 					break;
 				}
 			} catch (Exception e) {
-				if (Main.DEBUG) {
+				if (Logging.DEBUG) {
 					e.printStackTrace();
 				}
 			}

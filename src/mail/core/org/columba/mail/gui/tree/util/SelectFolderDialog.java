@@ -39,10 +39,10 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.folder.IFolder;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;

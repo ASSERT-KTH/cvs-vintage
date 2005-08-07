@@ -26,9 +26,9 @@ import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.IContact;
-import org.columba.core.gui.util.DoubleClickListener;
-import org.columba.core.gui.util.ErrorDialog;
-import org.columba.core.main.Main;
+import org.columba.core.gui.base.DoubleClickListener;
+import org.columba.core.gui.dialog.ErrorDialog;
+import org.columba.core.logging.Logging;
 
 
 /**
@@ -72,7 +72,7 @@ public class TableMouseListener extends DoubleClickListener
       catch (Exception ex)
       {
 
-        if (Main.DEBUG)
+        if (Logging.DEBUG)
           ex.printStackTrace();
 
         new ErrorDialog(ex.getMessage(), ex);
@@ -91,7 +91,7 @@ public class TableMouseListener extends DoubleClickListener
         }
         catch (Exception e1)
         {
-          if (Main.DEBUG)
+          if (Logging.DEBUG)
             e1.printStackTrace();
 
           new ErrorDialog(e1.getMessage(), e1);

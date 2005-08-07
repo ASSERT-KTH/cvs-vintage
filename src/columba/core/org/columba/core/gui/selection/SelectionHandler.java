@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.command.ICommandReference;
+import org.columba.api.command.ICommandReference;
 
 /**
  * Handles the selection of a component identified with an id.

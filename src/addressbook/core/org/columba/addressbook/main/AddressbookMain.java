@@ -20,20 +20,19 @@ import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
-import org.columba.addressbook.facade.AddressbookServiceProvider;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
+import org.columba.core.component.IComponentPlugin;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
-import org.columba.core.main.IComponentPlugin;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
-import org.columba.core.plugin.exception.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
-import org.columba.core.services.ServiceManager;
+import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Main entrypoint for addressbook component
@@ -51,7 +50,7 @@ public class AddressbookMain implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#handleCommandLineParameters()
+	 * @see org.columba.core.component.IComponentPlugin#handleCommandLineParameters()
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 		if (commandLine.hasOption("addressbook")) {
@@ -66,7 +65,7 @@ public class AddressbookMain implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#init()
+	 * @see org.columba.core.component.IComponentPlugin#init()
 	 */
 	public void init() {
 		// init addressbook plugin handlers
@@ -85,30 +84,31 @@ public class AddressbookMain implements IComponentPlugin {
 		BackgroundTaskManager.getInstance().register(plugin);
 		ShutdownManager.getInstance().register(plugin);
 
-		ServiceManager.getInstance().register(
-				AddressbookServiceProvider.CONTACT,
+		ServiceRegistry.getInstance().register(
+				org.columba.addressbook.facade.IContactFacade.class,
 				"org.columba.addressbook.facade.ContactFacade");
-		ServiceManager.getInstance().register(
-				AddressbookServiceProvider.FOLDER,
+		ServiceRegistry.getInstance().register(
+				org.columba.addressbook.facade.IFolderFacade.class,
 				"org.columba.addressbook.facade.FolderFacade");
-		ServiceManager.getInstance().register(
-				AddressbookServiceProvider.CONFIG,
+		ServiceRegistry.getInstance().register(
+				org.columba.addressbook.facade.IConfigFacade.class,
 				"org.columba.addressbook.facade.ConfigFacade");
-		ServiceManager.getInstance().register(
-				AddressbookServiceProvider.DIALOG,
+		ServiceRegistry.getInstance().register(
+				org.columba.addressbook.facade.IDialogFacade.class,
 				"org.columba.addressbook.facade.DialogFacade");
-		ServiceManager.getInstance().register(AddressbookServiceProvider.MODEL,
+		ServiceRegistry.getInstance().register(
+				org.columba.addressbook.facade.IModelFacade.class,
 				"org.columba.addressbook.facade.ModelFacade");
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#postStartup()
+	 * @see org.columba.core.component.IComponentPlugin#postStartup()
 	 */
 	public void postStartup() {
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#registerCommandLineArguments()
+	 * @see org.columba.core.component.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
 		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();

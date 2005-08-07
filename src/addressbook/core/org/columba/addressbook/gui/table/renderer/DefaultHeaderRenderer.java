@@ -28,8 +28,8 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
 import org.columba.addressbook.gui.table.model.SortDecorator;
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
+import org.columba.core.gui.base.AscendingIcon;
+import org.columba.core.gui.base.DescendingIcon;
 
 /**
  * @author fdietz

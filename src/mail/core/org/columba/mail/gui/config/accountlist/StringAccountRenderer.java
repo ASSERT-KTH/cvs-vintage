@@ -24,7 +24,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 
 public class StringAccountRenderer extends JLabel implements TableCellRenderer {

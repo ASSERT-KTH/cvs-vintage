@@ -31,7 +31,7 @@ import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 
@@ -162,7 +162,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 		return directoryFile;
 	}
 
-	public void createChildren(WorkerStatusController worker) {
+	public void createChildren(IWorkerStatusController worker) {
 	}
 
 	/**

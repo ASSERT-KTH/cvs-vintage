@@ -21,7 +21,7 @@ import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
 import org.columba.addressbook.plugin.ImportExtensionHandler;
-import org.columba.core.plugin.IExtension;
+import org.columba.api.plugin.IExtension;
 
 class AddressbookImporter implements WizardModelListener {
 	protected DataModel data;

@@ -34,12 +34,11 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.WizardTextField;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.base.MultiLineLabel;
+import org.columba.core.gui.base.WizardTextField;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 
 /**

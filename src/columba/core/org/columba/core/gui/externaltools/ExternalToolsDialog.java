@@ -42,18 +42,17 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.DoubleClickListener;
+import org.columba.core.gui.base.InfoViewerDialog;
 import org.columba.core.gui.util.DialogHeaderPanel;
-import org.columba.core.gui.util.DoubleClickListener;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.help.HelpManager;
-import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

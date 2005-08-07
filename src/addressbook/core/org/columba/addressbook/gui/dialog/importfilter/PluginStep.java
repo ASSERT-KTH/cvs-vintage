@@ -38,8 +38,8 @@ import net.javaprog.ui.wizard.DefaultDataLookup;
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
 import org.columba.addressbook.plugin.ImportExtensionHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.plugin.IExtension;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.base.MultiLineLabel;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
 	protected DataModel data;

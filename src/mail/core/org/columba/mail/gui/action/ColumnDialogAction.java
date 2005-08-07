@@ -18,8 +18,8 @@ package org.columba.mail.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;

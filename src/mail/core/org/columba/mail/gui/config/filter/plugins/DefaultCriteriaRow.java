@@ -25,9 +25,9 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.filter.FilterCriteria;
-import org.columba.core.gui.util.ComboMenu;
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.core.gui.base.ComboMenu;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.plugin.FilterExtensionHandler;
 

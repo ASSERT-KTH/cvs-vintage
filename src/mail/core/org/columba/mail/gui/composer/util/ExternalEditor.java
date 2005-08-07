@@ -25,9 +25,9 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.util.FontProperties;
-import org.columba.core.io.ColumbaDesktop;
-import org.columba.core.io.TempFileStore;
+import org.columba.core.util.TempFileStore;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MimeHeader;

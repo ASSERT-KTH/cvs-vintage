@@ -23,9 +23,9 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.text.DateFormat;
 import java.util.logging.Logger;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
@@ -97,7 +97,7 @@ public class ReplyCommand extends Command {
         controller.getEditorController().getViewUIComponent().select(0,0);
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(IWorkerStatusController worker) throws Exception {
         // create composer model
         model = new ComposerModel();
 

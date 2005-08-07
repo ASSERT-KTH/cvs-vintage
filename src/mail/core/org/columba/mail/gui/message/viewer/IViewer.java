@@ -19,7 +19,7 @@ package org.columba.mail.gui.message.viewer;
 
 import javax.swing.JComponent;
 
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.api.plugin.IExtensionInterface;
 
 /**
  * Implementing classes should retrieve the necessary information from the

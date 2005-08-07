@@ -23,7 +23,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeType;

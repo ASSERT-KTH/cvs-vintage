@@ -22,8 +22,8 @@ import javax.swing.JPanel;
 
 import net.javaprog.ui.wizard.AbstractStep;
 
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.gui.base.MultiLineLabel;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 
 /**

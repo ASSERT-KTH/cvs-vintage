@@ -18,10 +18,10 @@ package org.columba.mail.gui.message.command;
 import java.io.File;
 import java.util.logging.Logger;
 
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.io.TempFileStore;
-import org.columba.core.util.Semaphore;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.base.Semaphore;
+import org.columba.core.util.TempFileStore;
 import org.columba.ristretto.message.MimeHeader;
 
 
@@ -59,7 +59,7 @@ public class SaveAttachmentTemporaryCommand extends SaveAttachmentCommand {
     }
 
     /** {@inheritDoc} */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(IWorkerStatusController worker) throws Exception {
         super.execute(worker);
         commandSemaphore.release();
     }

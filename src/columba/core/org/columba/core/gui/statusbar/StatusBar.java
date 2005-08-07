@@ -41,9 +41,8 @@ import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.toolbar.ToolbarButton;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.ConnectionStateImpl;
+import org.columba.core.connectionstate.ConnectionStateImpl;
+import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * A status bar intended to be displayed at the bottom of each window.
@@ -71,8 +70,8 @@ import org.columba.core.main.ConnectionStateImpl;
  * you would see all those little move tasks. Instead now, you only see the POP3
  * tasks which is much more comfortable for the user.
  * <p>
- * There's yet another Timer ;-), clearTextTimer which automatically clears the 
- * statusbar after a delay of 2000 ms. 
+ * There's yet another Timer ;-), clearTextTimer which automatically clears the
+ * statusbar after a delay of 2000 ms.
  */
 public class StatusBar extends JComponent implements TaskManagerListener,
 		ActionListener, ChangeListener {
@@ -132,12 +131,6 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	private TaskManager taskManager;
 
 	/**
-	 * timer used by the spinner component showing tasks activity (right-most
-	 * component on the toolbar)
-	 */
-	private ImageSequenceTimer imageSequenceTimer;
-
-	/**
 	 * connection state button
 	 */
 	private JButton onlineButton;
@@ -178,7 +171,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 
 		// init update timer
 		updateTimer = new Timer(UPDATE_TIMER_INTERVAL, this);
-		//updateTimer.start();
+		// updateTimer.start();
 
 		addWorkerTimer = new Timer(ADDWORKER_TIMER_INTERVAL, this);
 
@@ -188,12 +181,11 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	 * init components
 	 */
 	private void initComponents() {
-		imageSequenceTimer = new ImageSequenceTimer(taskManager);
 
 		label = new JLabel("");
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		onlineButton = new ToolbarButton();
+		onlineButton = new JButton();
 		onlineButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		onlineButton.setRolloverEnabled(true);
 		onlineButton.setActionCommand("ONLINE");
@@ -205,7 +197,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 		progressBar.setBorderPainted(false);
 		progressBar.setValue(0);
 
-		taskButton = new ToolbarButton();
+		taskButton = new JButton();
 		taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
 		taskButton.setToolTipText("Show list of running tasks");
 		taskButton.setRolloverEnabled(true);
@@ -314,7 +306,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 			lastMessage = e.getWorker().getDisplayText();
 
 			// immediately update text and progress bar
-			//updateGui();
+			// updateGui();
 
 			Worker[] workers = taskManager.getWorkers();
 			setDisplayedWorker(workers.length > 0 ? workers[0] : null);
@@ -390,7 +382,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	 * Runs in awt-event dispatcher thread
 	 */
 	private void updateGui() {
-		//System.out.println("update-gui");
+		// System.out.println("update-gui");
 
 		if (displayedWorker != null) {
 			label.setText(displayedWorker.getDisplayText());
@@ -416,15 +408,6 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	}
 
 	/**
-	 * Returns the imageSequenceTimer.
-	 * 
-	 * @return ImageSequenceTimer
-	 */
-	public ImageSequenceTimer getImageSequenceTimer() {
-		return imageSequenceTimer;
-	}
-
-	/**
 	 * Returns the task manager this status bar is attached to.
 	 */
 	public TaskManager getTaskManager() {
@@ -434,11 +417,11 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	public void stateChanged(ChangeEvent e) {
 		if (ConnectionStateImpl.getInstance().isOnline()) {
 			onlineButton.setIcon(onlineIcon);
-			//TODO (@author fdietz): i18n
+			// TODO (@author fdietz): i18n
 			onlineButton.setToolTipText("You are in ONLINE state");
 		} else {
 			onlineButton.setIcon(offlineIcon);
-			//TODO (@author fdietz): i18n
+			// TODO (@author fdietz): i18n
 			onlineButton.setToolTipText("You are in OFFLINE state");
 		}
 	}

@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.columba.api.plugin.ExtensionMetadata;
+
 public class PluginMetadata {
 
 	

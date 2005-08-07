@@ -18,11 +18,11 @@ package org.columba.mail.gui.composer.command;
 import java.io.InputStream;
 import java.util.List;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.composer.MessageComposer;
@@ -53,9 +53,9 @@ public class SaveMessageCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		ComposerCommandReference r = (ComposerCommandReference) getReference();
 
 		ComposerController composerController = r.getComposerController();

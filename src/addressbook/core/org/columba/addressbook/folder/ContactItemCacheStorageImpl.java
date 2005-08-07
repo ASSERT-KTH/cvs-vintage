@@ -29,7 +29,7 @@ import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.WrongFileFormatException;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
@@ -210,7 +210,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	                
 	                folder.setNextMessageUid(i+1);
 	            } catch (WrongFileFormatException ex) {
-	            	if (Main.DEBUG)
+	            	if (Logging.DEBUG)
 	            		ex.printStackTrace();
 	            	// delete corrupt file
 	            	newFile.delete();

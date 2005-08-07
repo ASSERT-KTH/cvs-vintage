@@ -21,11 +21,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.chat.jabber.BuddyStatus;
 import org.columba.chat.ui.conversation.ChatMediator;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * @author fdietz

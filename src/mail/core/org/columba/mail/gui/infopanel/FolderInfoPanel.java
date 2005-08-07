@@ -27,8 +27,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.frame.ContainerInfoPanel;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.config.IFolderItem;

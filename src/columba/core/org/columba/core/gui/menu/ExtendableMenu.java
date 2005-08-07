@@ -25,6 +25,8 @@ import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import org.columba.core.gui.base.CMenu;
+
 public class ExtendableMenu extends CMenu {
 
 	private MenuModel model;

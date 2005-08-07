@@ -48,10 +48,10 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.RadioButtonWithMnemonic;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.base.RadioButtonWithMnemonic;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 /**
  * A dialog for configurating the use of a proxy server.

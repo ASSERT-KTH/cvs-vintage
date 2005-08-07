@@ -33,9 +33,9 @@ import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.WizardTextField;
+import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.base.MultiLineLabel;
+import org.columba.core.gui.base.WizardTextField;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;

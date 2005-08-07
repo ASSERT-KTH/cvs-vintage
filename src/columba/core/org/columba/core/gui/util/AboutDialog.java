@@ -47,10 +47,12 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.Main;
-import org.columba.core.main.VersionInfo;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.logging.Logging;
+import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.ImageLoader;
+import org.columba.core.versioninfo.VersionInfo;
 
 /**
  * This dialog shows information about Columba.
@@ -253,7 +255,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
             "about", "ackPane"), ackPanel);
         
-        if (Main.DEBUG) {
+        if (Logging.DEBUG) {
             tabbedPane.addTab("Memory", new MemoryPanel());
         }
         

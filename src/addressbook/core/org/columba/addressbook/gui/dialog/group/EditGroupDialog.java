@@ -52,7 +52,7 @@ import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;

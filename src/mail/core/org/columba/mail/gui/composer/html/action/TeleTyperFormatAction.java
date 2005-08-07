@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractSelectableAction;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;

@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
 
-import org.columba.core.command.ICommandReference;
+import org.columba.api.command.ICommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractMessageFolder;

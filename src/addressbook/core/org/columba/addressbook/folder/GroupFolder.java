@@ -27,8 +27,8 @@ import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IGroup;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -71,7 +71,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 		group = new Group(e, getUid());
 	}
 
-	public void createChildren(WorkerStatusController worker) {
+	public void createChildren(IWorkerStatusController worker) {
 	}
 
 	/**

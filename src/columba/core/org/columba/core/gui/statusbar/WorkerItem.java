@@ -20,7 +20,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import org.columba.core.util.SwingWorker;
+import org.columba.core.base.SwingWorker;
 
 
 class WorkerItem {

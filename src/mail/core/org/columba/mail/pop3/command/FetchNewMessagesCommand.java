@@ -24,16 +24,16 @@ import java.util.logging.Logger;
 
 import javax.swing.Action;
 
+import org.columba.api.command.IWorkerStatusChangeListener;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.command.WorkerStatusChangedEvent;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -75,9 +75,9 @@ public class FetchNewMessagesCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		POP3CommandReference r = (POP3CommandReference) getReference();
 
 		server = r.getServer();
@@ -99,7 +99,7 @@ public class FetchNewMessagesCommand extends Command {
 
 			if ( worker.cancelled() ) throw new CommandCancelledException();
 			
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				LOG.fine(newMessagesUidList.toString());
 			}
 
@@ -153,12 +153,12 @@ public class FetchNewMessagesCommand extends Command {
 				server.getFolderName() + ": " + message);
 	}
 
-	public void downloadMessage(Object serverUID, WorkerStatusController worker)
+	public void downloadMessage(Object serverUID, IWorkerStatusController worker)
 			throws Exception {
 		// server message numbers start with 1
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
-		WorkerStatusChangeListener listener = new WorkerStatusChangeListener() {
+		IWorkerStatusChangeListener listener = new IWorkerStatusChangeListener() {
 			public void workerStatusChanged(WorkerStatusChangedEvent e) {
 				if( e.getSource().cancelled() ) {
 					try {
@@ -216,7 +216,7 @@ public class FetchNewMessagesCommand extends Command {
 	}
 
 	public void downloadNewMessages(List newMessagesUIDList,
-			WorkerStatusController worker) throws Exception {
+			IWorkerStatusController worker) throws Exception {
 		LOG.fine("need to fetch " + newMessagesUIDList.size() + " messages.");
 
 		int totalSize = calculateTotalSize(newMessagesUIDList);
@@ -292,7 +292,7 @@ public class FetchNewMessagesCommand extends Command {
 		}
 	}
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		if( action != null ) {

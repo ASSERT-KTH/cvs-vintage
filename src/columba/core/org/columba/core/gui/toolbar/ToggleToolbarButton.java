@@ -26,9 +26,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.util.ButtonStateAdapter;
-import org.columba.core.gui.util.ImageUtil;
+import org.columba.core.gui.action.AbstractSelectableAction;
+import org.columba.core.gui.base.ButtonStateAdapter;
+import org.columba.core.gui.base.ImageUtil;
 
 
 /**

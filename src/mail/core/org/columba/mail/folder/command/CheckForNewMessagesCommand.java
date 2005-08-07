@@ -20,11 +20,11 @@ import java.io.IOException;
 
 import javax.swing.Action;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -50,9 +50,9 @@ public class CheckForNewMessagesCommand extends Command {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
@@ -106,7 +106,7 @@ public class CheckForNewMessagesCommand extends Command {
 				/*
 				 * String file = item.get("sound_file");
 				 * 
-				 * ColumbaLogger.log.fine("playing sound file=" + file);
+				 * Logging.log.fine("playing sound file=" + file);
 				 * 
 				 * if (file.equalsIgnoreCase("default")) {
 				 * PlaySound.play("newmail.wav"); } else { try {
@@ -124,7 +124,7 @@ public class CheckForNewMessagesCommand extends Command {
 	//  END public void execute(Worker worker) throws Exception
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		// Reenable the action

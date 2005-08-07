@@ -32,8 +32,8 @@ import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.model.VCARD;
-import org.columba.core.main.Main;
-import org.columba.core.services.ServiceNotFoundException;
+import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.core.logging.Logging;
 import org.columba.mail.connector.ServiceConnector;
 
 /**
@@ -118,7 +118,7 @@ public class ListBuilder {
 						item = collected.get(uid);
 
 				} catch (Exception e) {
-					if (Main.DEBUG)
+					if (Logging.DEBUG)
 						e.printStackTrace();
 				}
 

@@ -18,6 +18,8 @@ package org.columba.core.util;
 
 import java.security.NoSuchAlgorithmException;
 
+import org.columba.core.base.Blowfish;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

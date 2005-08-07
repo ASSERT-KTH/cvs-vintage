@@ -28,8 +28,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.mail.config.SecurityItem;
 import org.columba.mail.util.MailResourceLoader;
 

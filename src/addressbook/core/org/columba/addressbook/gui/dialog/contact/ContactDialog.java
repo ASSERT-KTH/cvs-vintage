@@ -35,7 +35,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

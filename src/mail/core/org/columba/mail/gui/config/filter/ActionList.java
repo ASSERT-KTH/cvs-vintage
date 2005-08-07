@@ -39,15 +39,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.filter.FilterActionList;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.filter.MailFilterAction;
 import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
 import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
@@ -147,7 +147,7 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 			pluginUIHandler = (FilterActionUIExtensionHandler) PluginManager
 			.getInstance().getHandler(FilterActionUIExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				ex.printStackTrace();
 			}
 		}

@@ -21,7 +21,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.util.Mutex;
+import org.columba.core.base.Mutex;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.message.ColumbaHeader;

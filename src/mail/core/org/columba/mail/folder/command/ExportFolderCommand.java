@@ -25,10 +25,10 @@ import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
@@ -51,21 +51,12 @@ public class ExportFolderCommand extends Command {
 		super(reference);
 	}
 
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public ExportFolderCommand(IFrameMediator frame,
-			ICommandReference reference) {
-		super(frame, reference);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
@@ -138,7 +129,7 @@ public class ExportFolderCommand extends Command {
 					JOptionPane.ERROR_MESSAGE);
 		} finally {
 			try {
-				//close output stream
+				// close output stream
 				if (os != null) {
 					os.close();
 				}

@@ -17,10 +17,10 @@ package org.columba.mail.folder.command;
 
 import javax.swing.tree.TreeNode;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 
@@ -52,7 +52,7 @@ public class RemoveFolderCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	/*
 	 * public void updateGUI() throws Exception { // update treemodel with more
@@ -61,9 +61,9 @@ public class RemoveFolderCommand extends Command {
 	 */
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// get source folder
 		AbstractMessageFolder childFolder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
 				.getSourceFolder();

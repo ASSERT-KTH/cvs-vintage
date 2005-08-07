@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.CompoundCommand;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterList;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -59,7 +59,7 @@ public class AddPOP3MessageCommand extends Command {
 	}
 
 	/** {@inheritDoc} */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		inboxFolder = (AbstractMessageFolder) r.getSourceFolder();
@@ -97,7 +97,7 @@ public class AddPOP3MessageCommand extends Command {
 	 *            message uid.
 	 * @throws Exception
 	 */
-	private boolean applySpamFilter(Object uid, WorkerStatusController worker)
+	private boolean applySpamFilter(Object uid, IWorkerStatusController worker)
 			throws Exception {
 		// message belongs to which account?
 		AccountItem item = CommandHelper.retrieveAccountItem(inboxFolder, uid);

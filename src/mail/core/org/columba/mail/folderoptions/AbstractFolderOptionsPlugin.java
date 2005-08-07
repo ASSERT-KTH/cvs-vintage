@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.IMailbox;

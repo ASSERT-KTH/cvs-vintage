@@ -20,8 +20,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 

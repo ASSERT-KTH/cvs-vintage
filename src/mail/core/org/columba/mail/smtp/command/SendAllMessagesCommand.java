@@ -20,12 +20,11 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -42,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  * 
  * Send all messages in folder Outbox
- *  
+ * 
  */
 public class SendAllMessagesCommand extends Command {
 	protected SendListManager sendListManager = new SendListManager();
@@ -51,24 +50,16 @@ public class SendAllMessagesCommand extends Command {
 
 	private Action action;
 
-	/**
-	 * Constructor for SendAllMessagesCommand.
-	 * 
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public SendAllMessagesCommand(Action action, IFrameMediator frameMediator,
-			ICommandReference reference) {
-		super(frameMediator, reference);
-
+	public SendAllMessagesCommand(Action action, ICommandReference reference) {
+		super(reference);
+		
 		this.action = action;
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// display status message
@@ -104,22 +95,24 @@ public class SendAllMessagesCommand extends Command {
 			if (message.getAccountUid() != actAccountUid) {
 				actAccountUid = message.getAccountUid();
 
-				AccountItem accountItem = MailConfig.getInstance().getAccountList()
-						.uidGet(actAccountUid);
+				AccountItem accountItem = MailConfig.getInstance()
+						.getAccountList().uidGet(actAccountUid);
 
-				if (accountItem == null)
-				{
-					//use the default account
-				  accountItem = MailConfig.getInstance().getAccountList().getDefaultAccount();
-				  
-				  if (accountItem == null)
-				    continue; //skip message if there's no account available to send it
+				if (accountItem == null) {
+					// use the default account
+					accountItem = MailConfig.getInstance().getAccountList()
+							.getDefaultAccount();
+
+					if (accountItem == null)
+						continue; // skip message if there's no account
+					// available to send it
 				}
 
 				// Sent folder
-				sentFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
-						.getFolder(Integer.parseInt(accountItem
-								.getSpecialFoldersItem().get("sent")));
+				sentFolder = (AbstractMessageFolder) FolderTreeModel
+						.getInstance().getFolder(
+								Integer.parseInt(accountItem
+										.getSpecialFoldersItem().get("sent")));
 
 				// open connection to SMTP server
 				smtpServer = new SMTPServer(accountItem);
@@ -152,8 +145,8 @@ public class SendAllMessagesCommand extends Command {
 	 *            Sent folder
 	 */
 	protected void moveToSentFolder(List v, AbstractMessageFolder sentFolder) {
-		MailFolderCommandReference r = new MailFolderCommandReference(outboxFolder,
-				sentFolder, v.toArray());
+		MailFolderCommandReference r = new MailFolderCommandReference(
+				outboxFolder, sentFolder, v.toArray());
 
 		// start move command
 		MoveMessageCommand c = new MoveMessageCommand(r);
@@ -162,7 +155,7 @@ public class SendAllMessagesCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		if (action != null)

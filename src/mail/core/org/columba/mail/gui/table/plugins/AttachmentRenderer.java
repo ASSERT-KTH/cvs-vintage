@@ -21,7 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.util.MailResourceLoader;
 

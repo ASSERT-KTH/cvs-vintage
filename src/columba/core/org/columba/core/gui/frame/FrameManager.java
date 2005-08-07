@@ -27,21 +27,24 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
+import org.columba.api.exception.PluginException;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IFrameManager;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginException;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
-import org.columba.core.plugin.exception.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.FrameExtensionHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 
 /**
- * FrameManager manages all frames. It keeps a list of every controller. Its also
- * the place to create a new frame, or save and close all frames at once.
+ * FrameManager manages all frames. It keeps a list of every controller. Its
+ * also the place to create a new frame, or save and close all frames at once.
  * 
  * Frame controllers are plugins.
  * 
@@ -129,7 +132,7 @@ public class FrameManager implements IFrameManager {
 		// we cannot use an iterator here because the close method
 		// manipulates the list
 		while (activeFrameCtrls.size() > 0) {
-			IContainer c = (IContainer) activeFrameCtrls.get(0);
+			DefaultContainer c = (DefaultContainer) activeFrameCtrls.get(0);
 			v = c.getViewItem();
 
 			// store every open frame in our temporary list
@@ -182,7 +185,9 @@ public class FrameManager implements IFrameManager {
 		return (IContainer[]) activeFrameCtrls.toArray(new IContainer[0]);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.gui.frame.IFrameManager#getActiveFrameMediator()
 	 */
 	public IContainer getActiveFrameMediator() {
@@ -239,7 +244,7 @@ public class FrameManager implements IFrameManager {
 				frame = (IFrameMediator) extension.instanciateExtension(args);
 			} catch (PluginException e) {
 				LOG.severe(e.getMessage());
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 			}
@@ -257,14 +262,16 @@ public class FrameManager implements IFrameManager {
 
 		IFrameMediator frame = instanciateFrameMediator(viewItem);
 
-		IContainer c = new DefaultContainer(frame);
+		IContainer c = new DefaultContainer((DefaultFrameController)frame);
 
 		activeFrameCtrls.add(c);
 
 		return frame;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.gui.frame.IFrameManager#openView(java.lang.String)
 	 */
 	public IFrameMediator openView(String id)
@@ -282,8 +289,11 @@ public class FrameManager implements IFrameManager {
 		return controller;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.IFrameManager#switchView(org.columba.core.gui.frame.IContainer, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.frame.IFrameManager#switchView(org.columba.core.gui.frame.IContainer,
+	 *      java.lang.String)
 	 */
 	public IFrameMediator switchView(IContainer c, String id)
 			throws PluginLoadingFailedException {
@@ -296,7 +306,8 @@ public class FrameManager implements IFrameManager {
 		// Create a frame controller for this view
 
 		// save old framemediator in cache (use containers's old id)
-		frameMediatorCache.put(c.getViewItem().get("id"), c.getFrameMediator());
+		frameMediatorCache.put(((DefaultContainer) c).getViewItem().get("id"),
+				c.getFrameMediator());
 
 		IFrameMediator frame = instanciateFrameMediator(view);
 
@@ -378,7 +389,7 @@ public class FrameManager implements IFrameManager {
 
 		// Check if the frame controller has been registered, else do nothing
 		if (activeFrameCtrls.contains(c)) {
-			ViewItem v = c.getViewItem();
+			ViewItem v = ((DefaultContainer) c).getViewItem();
 
 			// save in cache
 			frameMediatorCache.put(v.get("id"), c.getFrameMediator());

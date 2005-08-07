@@ -16,11 +16,11 @@
 
 package org.columba.mail.folder.command;
 
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaMessage;
@@ -48,9 +48,9 @@ public class AddMessageCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
+     * @see org.columba.api.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker)
+    public void execute(IWorkerStatusController worker)
         throws Exception {
         // get reference
         MailFolderCommandReference r = (MailFolderCommandReference) getReference();

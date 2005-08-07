@@ -22,9 +22,12 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.columba.api.command.IWorkerStatusController;
+
+
 public class ProgressObservedInputStream extends FilterInputStream {
 
-	private WorkerStatusController status;
+	private IWorkerStatusController status;
 
 	private int read;
 
@@ -34,7 +37,7 @@ public class ProgressObservedInputStream extends FilterInputStream {
 	 * @param arg0
 	 */
 	public ProgressObservedInputStream(InputStream arg0,
-			WorkerStatusController status) {
+			IWorkerStatusController status) {
 		this(arg0, status, false);
 	}
 
@@ -44,7 +47,7 @@ public class ProgressObservedInputStream extends FilterInputStream {
 	 * @param arg0
 	 */
 	public ProgressObservedInputStream(InputStream arg0,
-			WorkerStatusController status, boolean relative) {
+			IWorkerStatusController status, boolean relative) {
 		super(arg0);
 		this.status = status;
 

@@ -16,9 +16,9 @@
 
 package org.columba.mail.folder.imap;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.ristretto.imap.IMAPFlags;
 
@@ -36,9 +36,9 @@ public class UpdateFlagCommand extends Command {
 		this.flag = flag;
 	}
 	/**
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.IWorkerStatusController)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 

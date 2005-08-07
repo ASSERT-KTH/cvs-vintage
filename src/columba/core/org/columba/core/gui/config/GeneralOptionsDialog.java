@@ -40,26 +40,26 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.gui.frame.IContainer;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
-import org.columba.core.gui.frame.IContainer;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.dialog.FontSelectionDialog;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.gui.util.FontProperties;
-import org.columba.core.gui.util.FontSelectionDialog;
-import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
-import org.columba.core.plugin.exception.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.ConfigExtensionHandler;
 import org.columba.core.pluginhandler.ThemeExtensionHandler;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -163,7 +163,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 	public void updateComponents(boolean b) {
 
-		GuiItem item = Config.getInstance().getOptionsConfig().getGuiItem();
+		GuiItem item = ((Config)Config.getInstance()).getOptionsConfig().getGuiItem();
 
 		if (b) {
 			// look and feel

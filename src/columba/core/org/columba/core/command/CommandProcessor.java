@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.core.util.Mutex;
+import org.columba.api.command.ICommand;
+import org.columba.core.base.Mutex;
 
 /**
  * Scheduler for background threads
@@ -32,7 +33,7 @@ import org.columba.core.util.Mutex;
 public class CommandProcessor implements Runnable {
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.command");
+			.getLogger("org.columba.api.command");
 
 	public final static int MAX_WORKERS = 5;
 
@@ -42,16 +43,14 @@ public class CommandProcessor implements Runnable {
 
 	private Mutex oneMutex;
 
-	private TaskManager taskManager;
-
 	private int timeStamp;
-	
+
 	private static CommandProcessor instance = new CommandProcessor();
 
 	public CommandProcessor() {
 		this(true);
 	}
-	
+
 	public static CommandProcessor getInstance() {
 		return instance;
 	}
@@ -70,8 +69,6 @@ public class CommandProcessor implements Runnable {
 		}
 
 		oneMutex = new Mutex();
-
-		taskManager = new TaskManager();
 
 		timeStamp = 0;
 
@@ -185,7 +182,7 @@ public class CommandProcessor implements Runnable {
 	 * @param w
 	 *            the worker himself
 	 */
-	public void operationFinished(final Command op, final Worker w) {
+	public void operationFinished(final ICommand op, final Worker w) {
 		boolean needToRelease = false;
 
 		try {
@@ -273,8 +270,6 @@ public class CommandProcessor implements Runnable {
 					worker.process(opItem.getOperation(), opItem
 							.getOperationMode(), timeStamp++);
 
-					worker.register(taskManager);
-
 					worker.start();
 				} else {
 					sleep = true;
@@ -288,14 +283,6 @@ public class CommandProcessor implements Runnable {
 		return sleep;
 	}
 
-	/**
-	 * Returns the taskManager.
-	 * 
-	 * @return TaskManager
-	 */
-	public TaskManager getTaskManager() {
-		return taskManager;
-	}
 }
 
 /**

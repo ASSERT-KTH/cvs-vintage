@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
+import org.columba.core.base.ListTools;
+
 import junit.framework.TestCase;
 
 

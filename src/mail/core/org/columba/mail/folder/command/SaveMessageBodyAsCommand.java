@@ -31,11 +31,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
@@ -105,9 +105,9 @@ public class SaveMessageBodyAsCommand extends Command {
      * header or attachment information is saved with the message!
      *
      * @param worker
-     * @see org.columba.core.command.Command#execute(Worker)
+     * @see org.columba.api.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker)
+    public void execute(IWorkerStatusController worker)
         throws Exception {
         MailFolderCommandReference r = (MailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
@@ -324,7 +324,7 @@ public class SaveMessageBodyAsCommand extends Command {
      * @return body part of message
      */
     private void setupMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
-        WorkerStatusController worker) throws Exception {
+        IWorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
         XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
                                               .getRoot().getElement("/options/html");

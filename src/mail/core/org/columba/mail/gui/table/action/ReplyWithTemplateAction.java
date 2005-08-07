@@ -19,63 +19,64 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyWithTemplateCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * Reply to selected message with user-definable template.
- *
+ * 
  * @author fdietz
  */
-public class ReplyWithTemplateAction extends AbstractColumbaAction
-    implements ISelectionListener {
-    /**
-     *
-     */
-    public ReplyWithTemplateAction(IFrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_replywithtemplate"));
+public class ReplyWithTemplateAction extends AbstractColumbaAction implements
+		ISelectionListener {
+	/**
+	 * 
+	 */
+	public ReplyWithTemplateAction(IFrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_message_replywithtemplate"));
 
-        //tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_replywithtemplate_tooltip").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_message_replywithtemplate_tooltip")
+				.replaceAll("&", ""));
 
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator)
+				.registerTableSelectionListener(this);
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-    	IMailFolderCommandReference r1 = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		IMailFolderCommandReference r1 = ((MailFrameMediator) getFrameMediator())
+				.getTableSelection();
 
-        CommandProcessor.getInstance().addOp(new ReplyWithTemplateCommand(r1));
-    }
+		CommandProcessor.getInstance().addOp(
+				new ReplyWithTemplateCommand(getFrameMediator(), r1));
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-     */
-    public void selectionChanged(SelectionChangedEvent e) {
-        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+	}
 }

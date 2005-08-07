@@ -19,8 +19,8 @@ import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizardLauncher;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * @author frd

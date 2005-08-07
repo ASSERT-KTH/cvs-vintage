@@ -43,8 +43,8 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.io.DiskIO;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;

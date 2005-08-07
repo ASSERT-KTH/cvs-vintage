@@ -29,8 +29,8 @@ import javax.swing.JTextField;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

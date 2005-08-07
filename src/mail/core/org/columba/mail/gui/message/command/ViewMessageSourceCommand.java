@@ -23,17 +23,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.io.ColumbaDesktop;
-import org.columba.core.io.TempFileStore;
+import org.columba.core.desktop.ColumbaDesktop;
+import org.columba.core.util.TempFileStore;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 
 /**
  * @author freddy
@@ -51,23 +49,21 @@ public class ViewMessageSourceCommand extends Command {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ViewMessageSourceCommand(IFrameMediator frameMediator,
-			ICommandReference reference) {
-		super(frameMediator, reference);
+	public ViewMessageSourceCommand(ICommandReference reference) {
+		super(reference);
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		ColumbaDesktop.getInstance().open(tempFile);
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
-		AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
+	public void execute(IWorkerStatusController worker) throws Exception {
 
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 

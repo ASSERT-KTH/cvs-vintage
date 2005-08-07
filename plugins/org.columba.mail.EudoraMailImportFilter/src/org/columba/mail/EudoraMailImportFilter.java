@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.ristretto.coder.EncodedWord;
@@ -102,7 +102,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 */
 	public void importMailboxFile(
 		File file,
-		WorkerStatusController worker,
+		IWorkerStatusController worker,
 		AbstractMessageFolder destFolder)
 		throws Exception {
 		LOG.fine(
@@ -200,7 +200,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 		} catch (java.util.NoSuchElementException e) {
 			// invalid date format - not enough tokens in it!!
 			
-			//ColumbaLogger.log.severe(
+			//Logging.log.severe(
 			//	"Not enough tokens in \""
 			//		+ dateStr
 			//		+ "\" to create Date: header. Returning null",
@@ -232,7 +232,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	private boolean convertAndSaveMessage(
 		String msg,
 		String replacementDate,
-		WorkerStatusController worker,
+		IWorkerStatusController worker,
 		AbstractMessageFolder destFolder) {
 		// divide message into headers and body
 		String[] divided = divideMessage(msg);
@@ -424,7 +424,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	private boolean saveMessage(
 		String headers,
 		String body,
-		WorkerStatusController worker,
+		IWorkerStatusController worker,
 		AbstractMessageFolder destFolder) {
 		StringBuffer buf = new StringBuffer();
 		// create full msg from headers and body
@@ -439,7 +439,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			saveMessage(buf.toString(), worker, destFolder);
 			return true;
 		} catch (Exception e) {
-			//ColumbaLogger.log.severe("Error saving converted message", e);
+			//Logging.log.severe("Error saving converted message", e);
 			LOG.severe("Error saving converted message: " 
 					+ e.getMessage());
 			return false;
@@ -570,7 +570,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			try {
 				line = reader.readLine();
 			} catch (IOException e) {
-				//ColumbaLogger.log.severe("Error while looking for charset", e);
+				//Logging.log.severe("Error while looking for charset", e);
 				LOG.severe("Error while looking for charset: "
 						+ e.getMessage());
 			}
@@ -617,7 +617,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 				try {
 					line = reader.readLine();
 				} catch (IOException e) {
-					//ColumbaLogger.log.severe(
+					//Logging.log.severe(
 					//	"Error while looking for charset",
 					//	e);
 					LOG.severe("Error while looking for charset: "
@@ -774,7 +774,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 				return retVal;
 			}
 		} catch (IOException e) {
-			//ColumbaLogger.log.severe("Error parsing body for attachments", e);
+			//Logging.log.severe("Error parsing body for attachments", e);
 			LOG.severe("Error parsing body for attachments: "
 					+ e.getMessage());
 			return null;

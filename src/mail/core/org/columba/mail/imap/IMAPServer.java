@@ -35,17 +35,18 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommand;
+import org.columba.api.command.IStatusObservable;
+import org.columba.core.base.Blowfish;
+import org.columba.core.base.ListTools;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.NullWorkerStatusController;
-import org.columba.core.command.StatusObservable;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
+import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.util.Blowfish;
-import org.columba.core.util.ListTools;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
@@ -198,7 +199,7 @@ public class IMAPServer implements IMAPListener, Observer {
 	/**
 	 * @return
 	 */
-	protected StatusObservable getObservable() {
+	protected IStatusObservable getObservable() {
 		if (selectedFolder != null)
 			return selectedFolder.getObservable();
 		else if (imapRoot != null) {
@@ -590,7 +591,7 @@ public class IMAPServer implements IMAPListener, Observer {
 		// Sync subscribed folders if this is the first login
 		// in this session
 		if (firstLogin) {
-			Command c = new FetchSubFolderListCommand(
+			ICommand c = new FetchSubFolderListCommand(
 					new MailFolderCommandReference(imapRoot));
 			try {
 				// MainInterface.processor.addOp(c);
@@ -965,7 +966,7 @@ public class IMAPServer implements IMAPListener, Observer {
 	 */
 	public Integer[] fetchUids(SequenceSet set, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
-		StatusObservable observable = getObservable();
+		IStatusObservable observable = getObservable();
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"fetch_uid_list"));
 
@@ -1039,7 +1040,7 @@ public class IMAPServer implements IMAPListener, Observer {
 	 */
 	public IMAPFlags[] fetchFlagsListStartFrom(int startIdx, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
-		StatusObservable observable = getObservable();
+		IStatusObservable observable = getObservable();
 
 		ensureSelectedState(folder);
 		if (selectedStatus.getMessages() - startIdx >= 0) {

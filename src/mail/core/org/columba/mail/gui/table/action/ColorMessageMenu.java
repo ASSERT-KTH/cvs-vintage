@@ -23,9 +23,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
-import org.columba.core.action.IMenu;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.menu.IMenu;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;

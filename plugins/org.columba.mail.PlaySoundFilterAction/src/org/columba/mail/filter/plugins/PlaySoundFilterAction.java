@@ -19,14 +19,14 @@ package org.columba.mail.filter.plugins;
 import java.io.File;
 import java.net.URL;
 
+import org.columba.api.command.ICommand;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.folder.DefaultFolderCommandReference;
 import org.columba.core.folder.IFolder;
-import org.columba.core.util.PlaySound;
 
 /**
  * @author freddy
@@ -41,7 +41,7 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 	/**
 	 * @see org.columba.mail.filter.plugins.AbstractFilterAction#getCommand()
 	 */
-	public Command getCommand(
+	public ICommand getCommand(
 		FilterAction filterAction,
 		IFolder srcFolder,
 		Object[] uids)
@@ -78,7 +78,7 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 			super(reference);
 		}
 
-		public void execute(WorkerStatusController worker) throws Exception {
+		public void execute(IWorkerStatusController worker) throws Exception {
 
 			// you need a sound.wav in your program folder
 			File soundFile = new File("sound.wav");

@@ -5,7 +5,7 @@ import java.io.File;
 
 import javax.swing.AbstractAction;
 
-import org.columba.core.io.ColumbaDesktop;
+import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimePart;

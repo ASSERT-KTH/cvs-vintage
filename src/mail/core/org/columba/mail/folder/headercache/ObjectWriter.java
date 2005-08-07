@@ -22,7 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 
 /**
  * Object stream writer used to save header-cache files.
@@ -108,7 +108,7 @@ public class ObjectWriter {
 			oos.close();
 			ostream.close();
 		} catch (IOException e) {
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 
 			// wasn't able to successfully finish saving the ".backup" file

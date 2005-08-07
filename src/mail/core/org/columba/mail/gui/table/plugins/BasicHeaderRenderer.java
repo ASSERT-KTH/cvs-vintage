@@ -24,8 +24,8 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
+import org.columba.core.gui.base.AscendingIcon;
+import org.columba.core.gui.base.DescendingIcon;
 import org.columba.mail.gui.table.model.TableModelSorter;
 
 

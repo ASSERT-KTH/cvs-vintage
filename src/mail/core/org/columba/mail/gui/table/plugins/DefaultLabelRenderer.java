@@ -23,7 +23,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IColumbaHeader;

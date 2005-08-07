@@ -25,7 +25,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 /**
  * Parsing the commandline arguments and setting states, that can be used from

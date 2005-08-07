@@ -46,7 +46,7 @@ public class FlagsFilter extends AbstractFilter {
 	/**
 	 * @see org.columba.core.filter.AbstractFilter#process(java.lang.Object,
 	 *      org.columba.mail.folder.Folder, java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
+	 *      org.columba.api.command.IWorkerStatusController)
 	 */
 	public boolean process(IFolder folder, Object uid)
 			throws Exception {

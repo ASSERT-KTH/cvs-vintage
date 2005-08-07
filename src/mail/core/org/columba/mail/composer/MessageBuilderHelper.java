@@ -24,8 +24,8 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.regex.Pattern;
 
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.services.ServiceNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
@@ -384,8 +384,8 @@ public class MessageBuilderHelper {
 			 * buf.append(bodyText.substring(pos, end)); buf.append(quoteEnd);
 			 * buf.append(bodyText.substring(end));
 			 * 
-			 * ColumbaLogger.log.info("Source:\n" + bodyText);
-			 * ColumbaLogger.log.info("Result:\n" + buf.toString());
+			 * Logging.log.info("Source:\n" + bodyText);
+			 * Logging.log.info("Result:\n" + buf.toString());
 			 * 
 			 * quotedBodyText = buf.toString();
 			 */

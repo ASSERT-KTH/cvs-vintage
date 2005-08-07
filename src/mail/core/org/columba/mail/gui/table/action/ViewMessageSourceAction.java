@@ -20,61 +20,64 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+public class ViewMessageSourceAction extends AbstractColumbaAction implements
+		ISelectionListener {
+	public ViewMessageSourceAction(IFrameMediator controller) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"menu_view_source"));
 
-public class ViewMessageSourceAction extends AbstractColumbaAction
-    implements ISelectionListener {
-    public ViewMessageSourceAction(IFrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe", "menu_view_source"));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_view_source_tooltip").replaceAll("&", ""));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_source_tooltip").replaceAll("&", ""));
+		// small icon for menu
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("viewsource.png"));
 
-        // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("viewsource.png"));
+		// short cut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_U,
+				ActionEvent.CTRL_MASK));
 
-        // short cut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+		setEnabled(false);
+		((MailFrameMediator) frameMediator)
+				.registerTableSelectionListener(this);
+	}
 
-        setEnabled(false);
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+				.getTableSelection();
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+		ViewMessageSourceCommand c = new ViewMessageSourceCommand(r);
 
-        ViewMessageSourceCommand c = new ViewMessageSourceCommand(getFrameMediator(),
-                r);
+		CommandProcessor.getInstance().addOp(c);
+	}
 
-        CommandProcessor.getInstance().addOp(c);
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-     */
-    public void selectionChanged(SelectionChangedEvent e) {
-        if (((TableSelectionChangedEvent) e).getUids().length > 0) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		if (((TableSelectionChangedEvent) e).getUids().length > 0) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
+	}
 }

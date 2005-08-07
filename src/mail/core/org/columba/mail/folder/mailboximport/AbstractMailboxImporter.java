@@ -20,10 +20,10 @@ import java.io.File;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
@@ -63,7 +63,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
      * should be read and passed to the folder using saveMessage.
      */
     public abstract void importMailboxFile(File file,
-        WorkerStatusController worker, AbstractMessageFolder destFolder)
+        IWorkerStatusController worker, AbstractMessageFolder destFolder)
         throws Exception;
 
     /**
@@ -97,7 +97,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
      * This method calls your overridden importMailbox(File)-method
      * and handles exceptions.
      */
-    public void run(WorkerStatusController worker) {
+    public void run(IWorkerStatusController worker) {
         //TODO (@author fdietz): i18n
         worker.setDisplayText("Importing messages...");
 
@@ -129,7 +129,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
      *
      * @param worker
      */
-    public void importMailbox(WorkerStatusController worker) {
+    public void importMailbox(IWorkerStatusController worker) {
         File[] listing = getSourceFiles();
 
         for (int i = 0; i < listing.length; i++) {
@@ -158,7 +158,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
     /**
      * Use this method to save a message in the specified destination folder.
      */
-    protected void saveMessage(String rawString, WorkerStatusController worker,
+    protected void saveMessage(String rawString, IWorkerStatusController worker,
         AbstractMessageFolder destFolder) throws Exception {
         /*
          * *20031231, karlpeder* Using InputStream instead of rawString

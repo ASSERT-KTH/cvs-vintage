@@ -26,8 +26,8 @@ import javax.swing.Scrollable;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.config.Config;
+import org.columba.core.gui.base.UndoDocument;
 import org.columba.core.gui.util.FontProperties;
-import org.columba.core.gui.util.UndoDocument;
 import org.columba.core.xml.XmlElement;
 
 

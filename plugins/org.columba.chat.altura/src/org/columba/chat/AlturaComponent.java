@@ -20,9 +20,9 @@ package org.columba.chat;
 import java.io.InputStream;
 
 import org.apache.commons.cli.CommandLine;
-import org.columba.core.main.IComponentPlugin;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.core.component.IComponentPlugin;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.jivesoftware.smack.XMPPConnection;
 
@@ -43,7 +43,7 @@ public class AlturaComponent implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#init()
+	 * @see org.columba.core.component.IComponentPlugin#init()
 	 */
 	public void init() {
 		try {
@@ -59,21 +59,21 @@ public class AlturaComponent implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#postStartup()
+	 * @see org.columba.core.component.IComponentPlugin#postStartup()
 	 */
 	public void postStartup() {
 
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#registerCommandLineArguments()
+	 * @see org.columba.core.component.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
 
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#handleCommandLineParameters(org.apache.commons.cli.CommandLine)
+	 * @see org.columba.core.component.IComponentPlugin#handleCommandLineParameters(org.apache.commons.cli.CommandLine)
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 

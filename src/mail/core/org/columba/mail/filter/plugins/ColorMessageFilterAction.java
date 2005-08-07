@@ -2,7 +2,7 @@ package org.columba.mail.filter.plugins;
 
 import java.awt.Color;
 
-import org.columba.core.command.Command;
+import org.columba.api.command.ICommand;
 import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.folder.IFolder;
@@ -21,7 +21,7 @@ import org.columba.mail.folder.command.ColorMessageCommand;
  */
 public class ColorMessageFilterAction extends AbstractFilterAction {
     /** {@inheritDoc} */
-    public Command getCommand(FilterAction filterAction, IFolder srcFolder,
+    public ICommand getCommand(FilterAction filterAction, IFolder srcFolder,
         Object[] uids) throws Exception {
         int rgb = filterAction.getIntegerWithDefault("rgb", Color.black.getRGB());
 

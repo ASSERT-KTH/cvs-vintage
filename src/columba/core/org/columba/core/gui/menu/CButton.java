@@ -19,7 +19,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.help.HelpManager;
 
 

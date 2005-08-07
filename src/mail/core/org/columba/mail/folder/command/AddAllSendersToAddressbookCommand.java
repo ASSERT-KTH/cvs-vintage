@@ -20,13 +20,12 @@ package org.columba.mail.folder.command;
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.folder.IFolderCommandReference;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Header;
@@ -51,20 +50,9 @@ public class AddAllSendersToAddressbookCommand extends Command {
 	}
 
 	/**
-	 * Constructor for AddAllSendersToAddressbookCommand.
-	 * 
-	 * @param frame
-	 * @param references
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public AddAllSendersToAddressbookCommand(IFrameMediator frame,
-			ICommandReference reference) {
-		super(frame, reference);
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// get reference
 		IFolderCommandReference r = (IFolderCommandReference) getReference();
 
@@ -72,7 +60,8 @@ public class AddAllSendersToAddressbookCommand extends Command {
 		Object[] uids = r.getUids();
 
 		// selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
+		AbstractMessageFolder folder = (AbstractMessageFolder) r
+				.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
@@ -84,8 +73,8 @@ public class AddAllSendersToAddressbookCommand extends Command {
 			e.printStackTrace();
 			return;
 		}
-        // ask the user which addressbook he wants to save this address to
-        ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
+		// ask the user which addressbook he wants to save this address to
+		ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
 
 		selectedFolder = dialog.getSelectedFolder();
 

@@ -17,11 +17,11 @@ package org.columba.mail.gui.config.filter.plugins;
 
 import java.awt.Color;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.filter.FilterAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ColorComboBox;
-import org.columba.core.gui.util.ColorFactory;
-import org.columba.core.gui.util.ColorItem;
+import org.columba.core.gui.base.ColorComboBox;
+import org.columba.core.gui.base.ColorFactory;
+import org.columba.core.gui.base.ColorItem;
 import org.columba.mail.gui.config.filter.ActionList;
 
 

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.main.ConnectionStateImpl;
+import org.columba.core.connectionstate.ConnectionStateImpl;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;

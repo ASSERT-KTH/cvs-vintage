@@ -44,7 +44,7 @@ import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 
 public class SelectAddressbookFolderDialog extends JDialog implements
 		ActionListener, TreeSelectionListener, ISelectFolderDialog {

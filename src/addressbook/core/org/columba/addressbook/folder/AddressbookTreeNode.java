@@ -24,10 +24,10 @@ import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.plugin.IExtensionInterface;
-import org.columba.core.util.Lock;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.plugin.IExtensionInterface;
+import org.columba.core.base.Lock;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
 public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
@@ -178,7 +178,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
 		return node.getElement("property").getAttributes();
 	}
 
-	public abstract void createChildren(WorkerStatusController worker);
+	public abstract void createChildren(IWorkerStatusController worker);
 
 	public void addFolder(String name, Class childClass) throws Exception {
 		Method m_getDefaultProperties = childClass.getMethod(

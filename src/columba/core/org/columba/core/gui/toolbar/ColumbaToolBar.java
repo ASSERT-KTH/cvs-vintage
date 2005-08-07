@@ -24,9 +24,10 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.JToolBar;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.statusbar.ImageSequenceTimer;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.command.TaskManager;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.xml.XmlElement;
@@ -55,8 +56,17 @@ public class ColumbaToolBar extends JToolBar {
 
 	IFrameMediator frameController;
 
-	public ColumbaToolBar(IFrameMediator controller) {
+	ImageSequenceTimer image;
+
+	/**
+	 * manager of all running tasks
+	 */
+	private TaskManager taskManager;
+
+	public ColumbaToolBar(TaskManager taskManager, IFrameMediator controller) {
 		super();
+
+		this.taskManager = taskManager;
 
 		this.frameController = controller;
 
@@ -106,13 +116,15 @@ public class ColumbaToolBar extends JToolBar {
 							.getInstance().getHandler(
 									ActionExtensionHandler.NAME);
 
-					AbstractColumbaAction action = handler.getAction(
-							buttonElement.getAttribute("action"),
-							frameController);
+					String extensionId = buttonElement.getAttribute("action");
+					IExtension extension = handler.getExtension(extensionId);
+
+					AbstractColumbaAction action = (AbstractColumbaAction) extension
+							.instanciateExtension(new Object[] { frameController });
 
 					if (action == null) {
 						LOG.severe("error while instanciating action ="
-								+ buttonElement.getAttribute("action"));
+								+ extensionId);
 
 					} else
 						addButton(action);
@@ -143,8 +155,11 @@ public class ColumbaToolBar extends JToolBar {
 			ActionExtensionHandler handler = (ActionExtensionHandler) PluginManager
 					.getInstance().getHandler(ActionExtensionHandler.NAME);
 
-			AbstractColumbaAction action = handler.getAction("Cancel",
-					frameController);
+			String extensionId = "Cancel";
+			IExtension extension = handler.getExtension(extensionId);
+
+			AbstractColumbaAction action = (AbstractColumbaAction) extension
+					.instanciateExtension(new Object[] { frameController });
 
 			addButton(action);
 		} catch (Exception e) {
@@ -154,8 +169,8 @@ public class ColumbaToolBar extends JToolBar {
 
 		add(Box.createHorizontalGlue());
 
-		ImageSequenceTimer image = frameController.getContainer()
-				.getStatusBar().getImageSequenceTimer();
+		image = new ImageSequenceTimer(taskManager);
+
 		add(image);
 	}
 

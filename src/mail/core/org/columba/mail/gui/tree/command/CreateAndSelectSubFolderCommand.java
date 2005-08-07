@@ -23,10 +23,10 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.IMailFolder;
@@ -56,7 +56,7 @@ public class CreateAndSelectSubFolderCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
+     * @see org.columba.api.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
         if (success) {
@@ -71,9 +71,9 @@ public class CreateAndSelectSubFolderCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
+     * @see org.columba.api.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(IWorkerStatusController worker) throws Exception {
         parentFolder = (IMailFolder) ((MailFolderCommandReference) getReference())
                 .getSourceFolder();
 

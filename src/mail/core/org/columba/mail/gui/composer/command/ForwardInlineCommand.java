@@ -25,8 +25,8 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -70,7 +70,7 @@ public class ForwardInlineCommand extends ForwardCommand {
 		super(reference);
 	}
 
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// create composer model
 		model = new ComposerModel();
 

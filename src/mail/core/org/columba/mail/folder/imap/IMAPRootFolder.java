@@ -19,7 +19,7 @@ package org.columba.mail.folder.imap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.core.command.StatusObservable;
+import org.columba.api.command.IStatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.filter.Filter;
 import org.columba.mail.config.AccountItem;
@@ -74,12 +74,12 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	private String parentPath;
 
 	/**
-	 * Status information updates are handled in using StatusObservable.
+	 * Status information updates are handled in using IStatusObservable.
 	 * <p>
 	 * Every command has to register its interest to this events before
 	 * accessing the folder.
 	 */
-	protected StatusObservable observable;
+	protected IStatusObservable observable;
 
 	public IMAPRootFolder(FolderItem folderItem, String path) {
 		//super(node, folderItem);
@@ -132,7 +132,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	/**
 	 * @return observable containing status information
 	 */
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return observable;
 	}
 
@@ -330,7 +330,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 	/**
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
-	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 *      java.lang.Object, org.columba.api.command.IWorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 			throws Exception {
@@ -339,7 +339,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 	/**
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
-	 *      org.columba.core.command.WorkerStatusController)
+	 *      org.columba.api.command.IWorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter) throws Exception {
 		return null;

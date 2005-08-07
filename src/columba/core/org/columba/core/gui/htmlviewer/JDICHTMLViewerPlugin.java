@@ -14,8 +14,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.columba.core.io.StreamUtils;
-import org.columba.core.io.TempFileStore;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
+import org.columba.core.util.TempFileStore;
 import org.jdesktop.jdic.browser.WebBrowser;
 
 /**
@@ -62,13 +62,13 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 		} catch (Error e) {
 			LOG.severe("Error while initializing JDIC native browser: "
 					+ e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		} catch (Exception e) {
 			LOG
 					.severe("Exception error while initializing JDIC native browser: "
 							+ e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		}
 

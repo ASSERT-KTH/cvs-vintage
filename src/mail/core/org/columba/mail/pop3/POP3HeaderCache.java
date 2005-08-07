@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import org.columba.core.command.StatusObservable;
+import org.columba.api.command.IStatusObservable;
 import org.columba.core.main.Main;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
@@ -56,7 +56,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		this.server = server;
 	}
 
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return server.getObservable();
 	}
 

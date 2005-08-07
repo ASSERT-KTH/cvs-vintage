@@ -22,10 +22,10 @@ import java.util.Hashtable;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderCreationException;
 import org.columba.mail.folder.FolderFactory;
@@ -54,9 +54,9 @@ public class CreateSubFolderCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		parentFolder = (IMailFolder) ((MailFolderCommandReference) getReference()).getSourceFolder();
 
 		String name = ((MailFolderCommandReference) getReference()).getFolderName();

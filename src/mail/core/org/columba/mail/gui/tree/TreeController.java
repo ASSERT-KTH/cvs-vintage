@@ -28,7 +28,7 @@ import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;

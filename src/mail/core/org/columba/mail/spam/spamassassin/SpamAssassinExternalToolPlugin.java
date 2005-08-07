@@ -1,6 +1,6 @@
 package org.columba.mail.spam.spamassassin;
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.util.OSInfo;
+import org.columba.core.base.OSInfo;
+import org.columba.core.gui.externaltools.AbstractExternalToolsPlugin;
 
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 

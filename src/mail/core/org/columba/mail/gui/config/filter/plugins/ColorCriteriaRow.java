@@ -20,8 +20,8 @@ import java.awt.Color;
 import javax.swing.JComboBox;
 
 import org.columba.core.filter.FilterCriteria;
-import org.columba.core.gui.util.ColorComboBox;
-import org.columba.core.gui.util.ColorItem;
+import org.columba.core.gui.base.ColorComboBox;
+import org.columba.core.gui.base.ColorItem;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.plugin.FilterExtensionHandler;
 

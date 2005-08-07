@@ -36,14 +36,14 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.filter.FilterRule;
 import org.columba.core.folder.IFolder;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;

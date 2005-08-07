@@ -20,7 +20,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.mh.MHMessageFileFilter;
 
@@ -48,10 +48,10 @@ public class MHImporter extends AbstractMailboxImporter {
     }
 
     /* (non-Javadoc)
- * @see org.columba.mail.folder.mailboximport.AbstractMailboxImporter#importMailbox(java.io.File, org.columba.core.command.WorkerStatusController)
+ * @see org.columba.mail.folder.mailboximport.AbstractMailboxImporter#importMailbox(java.io.File, org.columba.api.command.IWorkerStatusController)
  */
     public void importMailboxFile(File directory,
-        WorkerStatusController worker, AbstractMessageFolder destFolder)
+        IWorkerStatusController worker, AbstractMessageFolder destFolder)
         throws Exception {
         File[] list = directory.listFiles(MHMessageFileFilter.getInstance());
 
@@ -74,7 +74,7 @@ public class MHImporter extends AbstractMailboxImporter {
         }
     }
 
-    protected void importMessage(File file, WorkerStatusController worker)
+    protected void importMessage(File file, IWorkerStatusController worker)
         throws Exception {
         StringBuffer strbuf = new StringBuffer();
 

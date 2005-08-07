@@ -19,10 +19,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -36,7 +36,7 @@ public class ActivateVirtualFolderCommand extends Command {
 	}
 
 
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		VirtualFolder vFolder = (VirtualFolder)((IFolderCommandReference)getReference()).getSourceFolder();
 		
 		worker.setDisplayText(MessageFormat.format(MailResourceLoader.getString(

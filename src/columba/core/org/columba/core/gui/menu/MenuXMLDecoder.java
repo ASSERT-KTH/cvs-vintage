@@ -19,19 +19,21 @@ package org.columba.core.gui.menu;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
 import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.main.Main;
+import org.columba.api.exception.PluginException;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.action.AbstractSelectableAction;
+import org.columba.core.gui.base.CCheckBoxMenuItem;
+import org.columba.core.gui.base.CMenuItem;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -79,7 +81,6 @@ public class MenuXMLDecoder {
 
 	private static final String MENUITEM = "menuitem";
 
-
 	private static final String MENU = "menu";
 
 	private static final String MENUBAR = "menubar";
@@ -94,11 +95,51 @@ public class MenuXMLDecoder {
 		this.mediator = mediator;
 
 		try {
-			pluginHandler = (ActionExtensionHandler) PluginManager.getInstance()
-					.getHandler(ActionExtensionHandler.NAME);
+			pluginHandler = (ActionExtensionHandler) PluginManager
+					.getInstance().getHandler(ActionExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private AbstractColumbaAction getAction(String id, IFrameMediator controller) {
+		if (id == null)
+			throw new IllegalArgumentException("id == null");
+		if (controller == null)
+			throw new IllegalArgumentException("controller == null");
+
+		IExtension extension = pluginHandler.getExtension(id);
+
+		AbstractColumbaAction a = null;
+
+		try {
+			if (extension != null)
+				a = (AbstractColumbaAction) extension
+						.instanciateExtension(new Object[] { controller });
+		} catch (PluginException e) {
+			LOG.severe(e.getMessage());
+			if (Logging.DEBUG)
+				e.printStackTrace();
+
+		}
+
+		return a;
+
+	}
+
+	private IMenu getIMenu(String id, IFrameMediator controller)
+			throws Exception {
+		IExtension extension = pluginHandler.getExtension(id);
+
+		IMenu menu = null;
+		try {
+			menu = (IMenu) extension
+					.instanciateExtension(new Object[] { controller });
+		} catch (PluginException e) {
+			e.printStackTrace();
+		}
+
+		return menu;
 	}
 
 	public ExtendablePopupMenu createPopupMenu(InputStream is) {
@@ -186,8 +227,7 @@ public class MenuXMLDecoder {
 				parentMenu.add(menu);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractColumbaAction action = pluginHandler.getAction(id,
-						mediator);
+				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -195,8 +235,8 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.CHECKBOXMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractSelectableAction action = (AbstractSelectableAction) pluginHandler
-						.getAction(id, mediator);
+				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
+						id, mediator);
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -204,8 +244,7 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractColumbaAction action = pluginHandler.getAction(id,
-						mediator);
+				AbstractColumbaAction action = getAction(id, mediator);
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -216,11 +255,11 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				IMenu imenu;
 				try {
-					imenu = pluginHandler.getIMenu(id, mediator);
+					imenu = getIMenu(id, mediator);
 					parentMenu.add(imenu);
 				} catch (Exception e) {
 					LOG.severe(e.getMessage());
-					if ( Main.DEBUG)
+					if (Logging.DEBUG)
 						e.printStackTrace();
 				}
 			} else if (menuElement.getName().equals(MenuXMLDecoder.PLACEHOLDER)) {
@@ -249,8 +288,7 @@ public class MenuXMLDecoder {
 				parentMenu.add(menu);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractColumbaAction action = pluginHandler.getAction(id,
-						mediator);
+				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -258,8 +296,8 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.CHECKBOXMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractSelectableAction action = (AbstractSelectableAction) pluginHandler
-						.getAction(id, mediator);
+				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
+						id, mediator);
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -267,8 +305,7 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractColumbaAction action = pluginHandler.getAction(id,
-						mediator);
+				AbstractColumbaAction action = getAction(id, mediator);
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -279,7 +316,7 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				IMenu imenu;
 				try {
-					imenu = pluginHandler.getIMenu(id, mediator);
+					imenu = getIMenu(id, mediator);
 					parentMenu.add(imenu);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -365,8 +402,7 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 
-				AbstractColumbaAction action = pluginHandler.getAction(id,
-						mediator);
+				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -374,8 +410,8 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.CHECKBOXMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractSelectableAction action = (AbstractSelectableAction) pluginHandler
-						.getAction(id, mediator);
+				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
+						id, mediator);
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -383,8 +419,7 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-				AbstractColumbaAction action = pluginHandler.getAction(id,
-						mediator);
+				AbstractColumbaAction action = getAction(id, mediator);
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
 				menuItem.addMouseListener(mediator.getContainer()
 						.getMouseTooltipHandler());
@@ -395,11 +430,11 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				IMenu imenu;
 				try {
-					imenu = pluginHandler.getIMenu(id, mediator);
+					imenu = getIMenu(id, mediator);
 					parentMenu.insert(imenu, placeholderId);
 				} catch (Exception e) {
 					LOG.severe(e.getMessage());
-					if ( Main.DEBUG)
+					if (Logging.DEBUG)
 						e.printStackTrace();
 				}
 			} else if (menuElement.getName().equals(MenuXMLDecoder.PLACEHOLDER)) {

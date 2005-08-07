@@ -26,7 +26,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import org.columba.core.io.ColumbaDesktop;
+import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;

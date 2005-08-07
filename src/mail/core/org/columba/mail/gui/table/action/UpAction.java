@@ -20,9 +20,9 @@ import java.util.logging.Logger;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;

@@ -29,7 +29,7 @@ import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
 

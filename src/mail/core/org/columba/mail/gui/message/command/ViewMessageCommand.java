@@ -16,17 +16,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
-import java.net.SocketException;
-
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailbox;
@@ -37,11 +35,10 @@ import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MimeTree;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- *  
+ * 
  */
 public class ViewMessageCommand extends Command {
 
@@ -51,24 +48,28 @@ public class ViewMessageCommand extends Command {
 
 	private Object uid;
 
+	private IFrameMediator mediator;
+
 	/**
 	 * Constructor for ViewMessageCommand.
 	 * 
 	 * @param references
 	 */
-	public ViewMessageCommand(IFrameMediator frame, ICommandReference reference) {
-		super(frame, reference);
+	public ViewMessageCommand(IFrameMediator mediator,
+			ICommandReference reference) {
+		super(reference);
 
+		this.mediator = mediator;
 		priority = Command.REALTIME_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 
-		IMessageController messageController = ((MessageViewOwner) frameMediator)
+		IMessageController messageController = ((MessageViewOwner) mediator)
 				.getMessageController();
 
 		// display changes
@@ -77,26 +78,25 @@ public class ViewMessageCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController wsc) throws Exception {
+	public void execute(IWorkerStatusController wsc) throws Exception {
 		// get command reference
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get selected folder
 		srcFolder = (IMailbox) r.getSourceFolder();
-		
-		
+
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
 
 		// get selected message UID
 		uid = r.getUids()[0];
 
-		if( !srcFolder.exists(uid)) {
+		if (!srcFolder.exists(uid)) {
 			return;
 		}
-		
+
 		try {
 			// get flags
 			flags = srcFolder.getFlags(uid);
@@ -109,13 +109,13 @@ public class ViewMessageCommand extends Command {
 					null, options, options[0]);
 
 			CommandProcessor.getInstance().addOp(
-					new ViewHeaderListCommand(getFrameMediator(), r));
+					new ViewHeaderListCommand(mediator, r));
 
 			return;
 		}
 
 		// get messagecontroller of frame
-		IMessageController messageController = ((MessageViewOwner) frameMediator)
+		IMessageController messageController = ((MessageViewOwner) mediator)
 				.getMessageController();
 
 		messageController.showMessage(srcFolder, uid);
@@ -132,10 +132,10 @@ public class ViewMessageCommand extends Command {
 		if (!flags.getSeen() && !srcFolder.isReadOnly()) {
 			// restart timer which marks the message as read
 			// after a user configurable time interval
-			if ( frameMediator instanceof ThreePaneMailFrameController )
-			((TableViewOwner) frameMediator).getTableController()
-					.restartMarkAsReadTimer(
-							(MailFolderCommandReference) getReference());
+			if (mediator instanceof ThreePaneMailFrameController)
+				((TableViewOwner) mediator).getTableController()
+						.restartMarkAsReadTimer(
+								(MailFolderCommandReference) getReference());
 		}
 	}
 }

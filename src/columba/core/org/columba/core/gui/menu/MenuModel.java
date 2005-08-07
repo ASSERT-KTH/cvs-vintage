@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 
 public class MenuModel {
 
@@ -108,7 +108,7 @@ public class MenuModel {
 		if ( placeholderId == null ) throw new IllegalArgumentException("placeholderId == null, for element "+element.toString());
 		
 		if (placeholders.containsKey(placeholderId) == false) {
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				printDebugPlaceholders();
 			
 			LOG.severe("no matching placeholder with id <" + placeholderId

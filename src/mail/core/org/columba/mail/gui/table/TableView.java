@@ -22,11 +22,11 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelSorter;
@@ -136,7 +136,7 @@ public class TableView extends TreeTable {
 				IExtension extension = handler.getExtension(name);
 				r = (DefaultLabelRenderer) extension.instanciateExtension(null);
 			} catch (Exception e) {
-				if (Main.DEBUG) {
+				if (Logging.DEBUG) {
 					e.printStackTrace();
 				}
 
@@ -214,7 +214,7 @@ public class TableView extends TreeTable {
 			tc.setMaxWidth(size);
 			tc.setMinWidth(size);
 		} else {
-			// ColumbaLogger.log.info("setting size =" + size);
+			// Logging.log.info("setting size =" + size);
 			tc.setPreferredWidth(size);
 		}
 	}

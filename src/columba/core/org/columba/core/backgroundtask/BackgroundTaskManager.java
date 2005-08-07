@@ -27,7 +27,8 @@ import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
-import org.columba.core.command.CommandProcessor;
+import org.columba.api.backgroundtask.IBackgroundTaskManager;
+import org.columba.core.command.TaskManager;
 
 /**
  * This manager runs in background.
@@ -39,7 +40,7 @@ import org.columba.core.command.CommandProcessor;
  */
 public class BackgroundTaskManager implements ActionListener, IBackgroundTaskManager {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.backgroundtask");
+    private static final Logger LOG = Logger.getLogger("org.columba.api.backgroundtask");
 
     // one second (=1000 ms)
     private static final int ONE_SECOND = 1000;
@@ -67,7 +68,7 @@ public class BackgroundTaskManager implements ActionListener, IBackgroundTaskMan
     }
 
     /**
-	 * @see org.columba.core.backgroundtask.IBackgroundTaskManager#register(java.lang.Runnable)
+	 * @see org.columba.api.backgroundtask.IBackgroundTaskManager#register(java.lang.Runnable)
 	 */
     public void register(Runnable runnable) {
         list.add(runnable);
@@ -82,7 +83,7 @@ public class BackgroundTaskManager implements ActionListener, IBackgroundTaskMan
         // test if a task is already running
         EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
 
-        if ((queue.peekEvent() == null) && (CommandProcessor.getInstance().getTaskManager().count() == 0)) {
+        if ((queue.peekEvent() == null) && (TaskManager.getInstance().count() == 0)) {
             // no java task running -> start background tasks
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Starting background tasks...");

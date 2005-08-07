@@ -16,7 +16,7 @@
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.xml.XmlElement;
 
 
@@ -39,7 +39,7 @@ public class Root extends AddressbookTreeNode {
         return null;
     }
 
-    public void createChildren(WorkerStatusController c) {
+    public void createChildren(IWorkerStatusController c) {
     }
 
     /* (non-Javadoc)

@@ -29,9 +29,7 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.io.ColumbaDesktop;
+import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.message.LocalMimePart;
@@ -40,311 +38,333 @@ import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * Controller for the attachment view.
- *
+ * 
  * @author frdietz
  * @author redsolo
  */
-public class AttachmentController implements KeyListener, FocusOwner, ListSelectionListener {
+public class AttachmentController implements KeyListener, ListSelectionListener {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer");
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.composer");
 
-    private AttachmentView view;
+	private AttachmentView view;
 
-    private ComposerController composerController;
+	private ComposerController composerController;
 
-    private AttachmentActionListener actionListener;
+	private AttachmentActionListener actionListener;
 
-    private AttachmentMenu menu;
+	private AttachmentMenu menu;
 
-    private JFileChooser fileChooser;
+	private JFileChooser fileChooser;
 
-    /**
-     * Creates the attachment controller.
-     * @param controller the main composer controller.
-     */
-    public AttachmentController(ComposerController controller) {
-        this.composerController = controller;
+	/**
+	 * Creates the attachment controller.
+	 * 
+	 * @param controller
+	 *            the main composer controller.
+	 */
+	public AttachmentController(ComposerController controller) {
+		this.composerController = controller;
 
-        view = new AttachmentView(this);
+		view = new AttachmentView(this);
 
-        actionListener = new AttachmentActionListener(this);
+		actionListener = new AttachmentActionListener(this);
 
-        menu = new AttachmentMenu(this);
+		menu = new AttachmentMenu(this);
 
-        view.addPopupListener(new PopupListener());
+		view.addPopupListener(new PopupListener());
 
-        // register Component as FocusOwner
-        FocusManager.getInstance().registerComponent(this);
+		// register Component as FocusOwner
+		// FocusManager.getInstance().registerComponent(this);
 
-        fileChooser = new JFileChooser();
+		fileChooser = new JFileChooser();
 
-        installListener();
+		installListener();
 
-        //view.addListSelectionListener(this);
-    }
+		// view.addListSelectionListener(this);
+	}
 
-    /**
-     * Returns the action listener for this attachment controller.
-     * @return the action listener for this attachment controller.
-     */
-    public ActionListener getActionListener() {
-        return actionListener;
-    }
+	/**
+	 * Returns the action listener for this attachment controller.
+	 * 
+	 * @return the action listener for this attachment controller.
+	 */
+	public ActionListener getActionListener() {
+		return actionListener;
+	}
 
-    /**
-     * Installs this object as a listener to the view.
-     */
-    public void installListener() {
-        view.installListener(this);
-    }
+	/**
+	 * Installs this object as a listener to the view.
+	 */
+	public void installListener() {
+		view.installListener(this);
+	}
 
-    /**
-     * Synchronizes model and view.
-     *
-     * @param b If true, model data is transferred to the view. If false, view data
-     *            is saved in the model.
-     */
-    public void updateComponents(boolean b) {
-        if (b) {
-            // transfer attachments from model to view
+	/**
+	 * Synchronizes model and view.
+	 * 
+	 * @param b
+	 *            If true, model data is transferred to the view. If false, view
+	 *            data is saved in the model.
+	 */
+	public void updateComponents(boolean b) {
+		if (b) {
+			// transfer attachments from model to view
 
-            /*
-             * clear existing attachments from the view *20031105, karlpeder* Added
-             * to avoid dupplicating attachments when switching btw. html and plain
-             * text.
-             */
-            view.clear();
+			/*
+			 * clear existing attachments from the view *20031105, karlpeder*
+			 * Added to avoid dupplicating attachments when switching btw. html
+			 * and plain text.
+			 */
+			view.clear();
 
-            // add attachments (mimeparts) from model to the view
-            for (int i = 0; i < composerController.getModel().getAttachments().size(); i++) {
-                StreamableMimePart p = (StreamableMimePart) composerController.getModel().getAttachments().get(i);
-                view.add(p);
-            }
-        } else {
-            // transfer attachments from view to model
-            // clear existing attachments from the model
-            composerController.getModel().getAttachments().clear();
+			// add attachments (mimeparts) from model to the view
+			for (int i = 0; i < composerController.getModel().getAttachments()
+					.size(); i++) {
+				StreamableMimePart p = (StreamableMimePart) composerController
+						.getModel().getAttachments().get(i);
+				view.add(p);
+			}
+		} else {
+			// transfer attachments from view to model
+			// clear existing attachments from the model
+			composerController.getModel().getAttachments().clear();
 
-            // add attachments (mimeparts) from view to the model
-            for (int i = 0; i < view.count(); i++) {
-                StreamableMimePart mp = (StreamableMimePart) view.get(i);
-                composerController.getModel().getAttachments().add(mp);
-            }
-        }
-    }
+			// add attachments (mimeparts) from view to the model
+			for (int i = 0; i < view.count(); i++) {
+				StreamableMimePart mp = (StreamableMimePart) view.get(i);
+				composerController.getModel().getAttachments().add(mp);
+			}
+		}
+	}
 
-    /**
-     * Add the mime part as an attachment to the email.
-     * @param part mime part.
-     */
-    private void add(StreamableMimePart part) {
-        view.add(part);
-        ((ComposerModel) composerController.getModel()).getAttachments().add(part);
-    }
+	/**
+	 * Add the mime part as an attachment to the email.
+	 * 
+	 * @param part
+	 *            mime part.
+	 */
+	private void add(StreamableMimePart part) {
+		view.add(part);
+		((ComposerModel) composerController.getModel()).getAttachments().add(
+				part);
+	}
 
-    /**
-     * Removes the current selected attachments.
-     */
-    public void removeSelected() {       
-          view.removeSelected();  
-          
-          // hide/show attachment panel
-          composerController.showAttachmentPanel();
-    }
+	/**
+	 * Removes the current selected attachments.
+	 */
+	public void removeSelected() {
+		view.removeSelected();
 
-    /**
-     * Opens up a file chooser and lets the user select the files to import.
-     */
-    public void addFileAttachment() {
-        int returnValue;
-        File[] files;
+		// hide/show attachment panel
+		composerController.showAttachmentPanel();
+	}
 
-        fileChooser.setDialogTitle(MailResourceLoader.getString("menu", "composer", "menu_message_attachFile")); //$NON-NLS-1$
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setMultiSelectionEnabled(true);
-        returnValue = fileChooser.showOpenDialog(view);
+	/**
+	 * Opens up a file chooser and lets the user select the files to import.
+	 */
+	public void addFileAttachment() {
+		int returnValue;
+		File[] files;
 
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            files = fileChooser.getSelectedFiles();
+		fileChooser.setDialogTitle(MailResourceLoader.getString(
+				"menu", "composer", "menu_message_attachFile")); //$NON-NLS-1$
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setMultiSelectionEnabled(true);
+		returnValue = fileChooser.showOpenDialog(view);
 
-            for (int i = 0; i < files.length; i++) {
-                addFileAttachment(files[i]);
-            }
-        }
-        
-        // show attachment panel
-        composerController.showAttachmentPanel();
-    }
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			files = fileChooser.getSelectedFiles();
 
-    /**
-     * Attaches a file to the email as an attachment.
-     * This method accepts only files and not directories.
-     * @param file the file to attach to the email.
-     */
-    public void addFileAttachment(File file) {
-    	 if (file.isFile()) {
+			for (int i = 0; i < files.length; i++) {
+				addFileAttachment(files[i]);
+			}
+		}
 
-           String mimetype = ColumbaDesktop.getInstance().getMimeType(file);
+		// show attachment panel
+		composerController.showAttachmentPanel();
+	}
 
-            MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
-            header.putContentParameter("name", file.getName());
-            header.setContentDisposition("attachment");
-            header.putDispositionParameter("filename", file.getName());
-            header.setContentTransferEncoding("base64");
+	/**
+	 * Attaches a file to the email as an attachment. This method accepts only
+	 * files and not directories.
+	 * 
+	 * @param file
+	 *            the file to attach to the email.
+	 */
+	public void addFileAttachment(File file) {
+		if (file.isFile()) {
 
-            try {
-                LocalMimePart mimePart = new LocalMimePart(header, new FileSource(file));
+			String mimetype = ColumbaDesktop.getInstance().getMimeType(file);
 
-                view.add(mimePart);
-            } catch (IOException e) {
-                LOG.warning("Could not add the file '" + file + "' to the attachment list, due to:" + e);
-            }
-        }
-    }
-    
-    public AttachmentView getView() {
-        return view;
-    }
+			MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype
+					.indexOf('/')), mimetype
+					.substring(mimetype.indexOf('/') + 1));
+			header.putContentParameter("name", file.getName());
+			header.setContentDisposition("attachment");
+			header.putDispositionParameter("filename", file.getName());
+			header.setContentTransferEncoding("base64");
 
-    /** ***************** KeyListener *************************** */
+			try {
+				LocalMimePart mimePart = new LocalMimePart(header,
+						new FileSource(file));
 
-    /** {@inheritDoc} */
-    public void keyPressed(KeyEvent k) {
-        switch (k.getKeyCode()) {
-        case (KeyEvent.VK_DELETE):
-            delete();
+				view.add(mimePart);
+			} catch (IOException e) {
+				LOG.warning("Could not add the file '" + file
+						+ "' to the attachment list, due to:" + e);
+			}
+		}
+	}
 
-            break;
-        }
-    }
+	public AttachmentView getView() {
+		return view;
+	}
 
-    /** {@inheritDoc} */
-    public void keyReleased(KeyEvent k) {
-    }
+	/** ***************** KeyListener *************************** */
 
-    /** {@inheritDoc} */
-    public void keyTyped(KeyEvent k) {
-    }
+	/** {@inheritDoc} */
+	public void keyPressed(KeyEvent k) {
+		switch (k.getKeyCode()) {
+		case (KeyEvent.VK_DELETE):
+			delete();
 
-    /** ******************** FocusOwner implementation ****************** */
+			break;
+		}
+	}
 
-    /** {@inheritDoc} */
-    public void copy() {
-        // attachment controller doesn't support copy-operation
-    }
+	/** {@inheritDoc} */
+	public void keyReleased(KeyEvent k) {
+	}
 
-    /** {@inheritDoc} */
-    public void cut() {
-        if (view.count() > 0) {
-            removeSelected();
-        }
-    }
+	/** {@inheritDoc} */
+	public void keyTyped(KeyEvent k) {
+	}
 
-    /** {@inheritDoc} */
-    public void delete() {
-        if (view.count() > 0) {
-            removeSelected();
-        }
-    }
+	/** ******************** FocusOwner implementation ****************** */
 
-    /** {@inheritDoc} */
-    public JComponent getComponent() {
-        return view;
-    }
+	/** {@inheritDoc} */
+	public void copy() {
+		// attachment controller doesn't support copy-operation
+	}
 
-    /** {@inheritDoc} */
-    public boolean isCopyActionEnabled() {
-        // attachment controller doesn't support copy actions
-        return false;
-    }
+	/** {@inheritDoc} */
+	public void cut() {
+		if (view.count() > 0) {
+			removeSelected();
+		}
+	}
 
-    /** {@inheritDoc} */
-    public boolean isCutActionEnabled() {
-        return (view.getSelectedValues().length > 0);
-    }
+	/** {@inheritDoc} */
+	public void delete() {
+		if (view.count() > 0) {
+			removeSelected();
+		}
+	}
 
-    /** {@inheritDoc} */
-    public boolean isDeleteActionEnabled() {
-        return (view.getSelectedValues().length > 0);
-    }
+	/** {@inheritDoc} */
+	public JComponent getComponent() {
+		return view;
+	}
 
-    /** {@inheritDoc} */
-    public boolean isPasteActionEnabled() {
-        // attachment controller doesn't support paste actions
-        return false;
-    }
+	/** {@inheritDoc} */
+	public boolean isCopyActionEnabled() {
+		// attachment controller doesn't support copy actions
+		return false;
+	}
 
-    /** {@inheritDoc} */
-    public boolean isSelectAllActionEnabled() {
-        return (view.count() > 0);
-    }
+	/** {@inheritDoc} */
+	public boolean isCutActionEnabled() {
+		return (view.getSelectedValues().length > 0);
+	}
 
-    /** {@inheritDoc} */
-    public void paste() {
-        // attachment controller doesn't support paste actions
-    }
+	/** {@inheritDoc} */
+	public boolean isDeleteActionEnabled() {
+		return (view.getSelectedValues().length > 0);
+	}
 
-    /** {@inheritDoc} */
-    public boolean isRedoActionEnabled() {
-        // attachment controller doesn't support redo operation
-        return false;
-    }
+	/** {@inheritDoc} */
+	public boolean isPasteActionEnabled() {
+		// attachment controller doesn't support paste actions
+		return false;
+	}
 
-    /** {@inheritDoc} */
-    public boolean isUndoActionEnabled() {
-        // attachment controller doesn't support undo operation
-        return false;
-    }
+	/** {@inheritDoc} */
+	public boolean isSelectAllActionEnabled() {
+		return (view.count() > 0);
+	}
 
-    /** {@inheritDoc} */
-    public void redo() {
-        // attachment controller doesn't support redo operation
-    }
+	/** {@inheritDoc} */
+	public void paste() {
+		// attachment controller doesn't support paste actions
+	}
 
-    /** {@inheritDoc} */
-    public void selectAll() {
-        //view.setSelectionInterval(0, view.count() - 1);
-    }
+	/** {@inheritDoc} */
+	public boolean isRedoActionEnabled() {
+		// attachment controller doesn't support redo operation
+		return false;
+	}
 
-    /** {@inheritDoc} */
-    public void undo() {
-        // attachment controller doesn't support undo operation
-    }
+	/** {@inheritDoc} */
+	public boolean isUndoActionEnabled() {
+		// attachment controller doesn't support undo operation
+		return false;
+	}
 
-    /** ******************* ListSelectionListener interface ********************** */
+	/** {@inheritDoc} */
+	public void redo() {
+		// attachment controller doesn't support redo operation
+	}
 
-    /** {@inheritDoc} */
-    public void valueChanged(ListSelectionEvent arg0) {
-    	FocusManager.getInstance().updateActions();
-    }
+	/** {@inheritDoc} */
+	public void selectAll() {
+		// view.setSelectionInterval(0, view.count() - 1);
+	}
 
-    /** ******************** MouseListener **************************** */
-    class PopupListener extends MouseAdapter {
+	/** {@inheritDoc} */
+	public void undo() {
+		// attachment controller doesn't support undo operation
+	}
 
-        /** {@inheritDoc} */
-        public void mousePressed(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+	/**
+	 * ******************* ListSelectionListener interface
+	 * **********************
+	 */
 
-        /** {@inheritDoc} */
-        public void mouseReleased(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+	/** {@inheritDoc} */
+	public void valueChanged(ListSelectionEvent arg0) {
+		// FocusManager.getInstance().updateActions();
+	}
 
-        /**
-         * Shows the popup menu.
-         * @param e the mouse event used to get the selected attachment.
-         */
-        private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger()) {
-                Object[] values = view.getSelectedValues();
+	/** ******************** MouseListener **************************** */
+	class PopupListener extends MouseAdapter {
 
-                if (values.length == 0) {
-                    view.fixSelection(e.getX(), e.getY());
-                }
+		/** {@inheritDoc} */
+		public void mousePressed(MouseEvent e) {
+			maybeShowPopup(e);
+		}
 
-                menu.show(e.getComponent(), e.getX(), e.getY());
-            }
-        }
-    }
+		/** {@inheritDoc} */
+		public void mouseReleased(MouseEvent e) {
+			maybeShowPopup(e);
+		}
+
+		/**
+		 * Shows the popup menu.
+		 * 
+		 * @param e
+		 *            the mouse event used to get the selected attachment.
+		 */
+		private void maybeShowPopup(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				Object[] values = view.getSelectedValues();
+
+				if (values.length == 0) {
+					view.fixSelection(e.getX(), e.getY());
+				}
+
+				menu.show(e.getComponent(), e.getX(), e.getY());
+			}
+		}
+	}
 }

@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 public class ExtendableMenuBar extends JMenuBar {
 

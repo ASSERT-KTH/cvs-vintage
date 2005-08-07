@@ -3,42 +3,42 @@
 
 <extensionlist>
  <!--<extension id="OpenNewWindow" class="org.columba.core.gui.menu.OpenNewWindowSubmenu"/>-->
- <extension id="OpenNewMailWindow" class="org.columba.core.gui.action.OpenNewMailWindowAction"/>
- <extension id="OpenNewAddressbookWindow" class="org.columba.core.gui.action.OpenNewAddressbookWindowAction"/>
+ <extension id="OpenNewMailWindow" class="org.columba.core.gui.globalactions.OpenNewMailWindowAction"/>
+ <extension id="OpenNewAddressbookWindow" class="org.columba.core.gui.globalactions.OpenNewAddressbookWindowAction"/>
  <extension id="OpenNewMessageFrameWindow" class="org.columba.core.gui.action.OpenNewMessageFrameWindowAction"/>
- <extension id="PluginManagerDialog" class="org.columba.core.gui.action.PluginManagerAction" />
- <extension id="GlobalOptions" class="org.columba.core.gui.action.GlobalOptionsAction"/>
- <extension id="OpenExternalToolsDialog" class="org.columba.core.gui.action.OpenExternalToolsDialogAction"/>
- <extension id="OpenProfileManagerDialog" class="org.columba.core.gui.action.OpenProfileManagerDialogAction"/>
- <extension id="ChoosePerspectiveSubmenu" class="org.columba.core.gui.action.SwitchPerspectiveSubmenu"/>
- <extension id="ViewFolderInfoPanel" class="org.columba.core.gui.action.ViewFolderInfoPanelAction"/>
- <extension id="ViewLog" class="org.columba.core.gui.action.ViewLogAction"/>
+ <extension id="PluginManagerDialog" class="org.columba.core.gui.globalactions.PluginManagerAction" />
+ <extension id="GlobalOptions" class="org.columba.core.gui.globalactions.GlobalOptionsAction"/>
+ <extension id="OpenExternalToolsDialog" class="org.columba.core.gui.globalactions.OpenExternalToolsDialogAction"/>
+ <extension id="OpenProfileManagerDialog" class="org.columba.core.gui.globalactions.OpenProfileManagerDialogAction"/>
+ <extension id="ChoosePerspectiveSubmenu" class="org.columba.core.gui.globalactions.SwitchPerspectiveSubmenu"/>
+ <extension id="ViewFolderInfoPanel" class="org.columba.core.gui.globalactions.ViewFolderInfoPanelAction"/>
+ <extension id="ViewLog" class="org.columba.core.gui.globalactions.ViewLogAction"/>
  
- <extension id="Cut" singleton="true" class="org.columba.core.gui.action.CutAction"/>
- <extension id="Copy" singleton="true" class="org.columba.core.gui.action.CopyAction"/>
- <extension id="Paste" singleton="true" class="org.columba.core.gui.action.PasteAction"/>
- <extension id="Delete" singleton="true" class="org.columba.core.gui.action.DeleteAction"/>
- <extension id="SelectAll" singleton="true" class="org.columba.core.gui.action.SelectAllAction"/>
- <extension id="PrintSetup" class="org.columba.core.gui.action.PrintSetupAction"/> 
+ <extension id="Cut" singleton="true" class="org.columba.core.gui.globalactions.CutAction"/>
+ <extension id="Copy" singleton="true" class="org.columba.core.gui.globalactions.CopyAction"/>
+ <extension id="Paste" singleton="true" class="org.columba.core.gui.globalactions.PasteAction"/>
+ <extension id="Delete" singleton="true" class="org.columba.core.gui.globalactions.DeleteAction"/>
+ <extension id="SelectAll" singleton="true" class="org.columba.core.gui.globalactions.SelectAllAction"/>
+ <extension id="PrintSetup" class="org.columba.core.gui.globalactions.PrintSetupAction"/> 
 
- <extension id="WorkOffline" class="org.columba.core.gui.action.WorkOfflineAction"/> 
- <extension id="Close" class="org.columba.core.gui.action.CloseAction"/> 
- <extension id="Exit" class="org.columba.core.gui.action.ExitAction"/> 
- <extension id="Undo" singleton="true" class="org.columba.core.gui.action.UndoAction"/> 
- <extension id="Redo" singleton="true" class="org.columba.core.gui.action.RedoAction"/> 
- <extension id="Find" class="org.columba.core.gui.action.FindAction"/> 
- <extension id="FindAgain" class="org.columba.core.gui.action.FindAgainAction"/> 
- <extension id="ViewToolbar" class="org.columba.core.gui.action.ViewToolbarAction"/> 
- <extension id="Cancel" class="org.columba.core.gui.action.CancelAction"/> 
+ <extension id="WorkOffline" class="org.columba.core.gui.globalactions.WorkOfflineAction"/> 
+ <extension id="Close" class="org.columba.core.gui.globalactions.CloseAction"/> 
+ <extension id="Exit" class="org.columba.core.gui.globalactions.ExitAction"/> 
+ <extension id="Undo" singleton="true" class="org.columba.core.gui.globalactions.UndoAction"/> 
+ <extension id="Redo" singleton="true" class="org.columba.core.gui.globalactions.RedoAction"/> 
+ <extension id="Find" class="org.columba.core.gui.globalactions.FindAction"/> 
+ <extension id="FindAgain" class="org.columba.core.gui.globalactions.FindAgainAction"/> 
+ <extension id="ViewToolbar" class="org.columba.core.gui.globalactions.ViewToolbarAction"/> 
+ <extension id="Cancel" class="org.columba.core.gui.globalactions.CancelAction"/> 
  
  <!-- help menu -->
- <extension id="ShowHomepage" class="org.columba.core.gui.action.ShowHomepageAction"/>
- <extension id="ShowBugDatabase" class="org.columba.core.gui.action.ShowBugDatabaseAction"/>
- <extension id="ShowFAQ" class="org.columba.core.gui.action.ShowFAQAction"/>
- <extension id="ShowHelp" class="org.columba.core.gui.action.ShowHelpAction"/>
- <extension id="ShowLicense" class="org.columba.core.gui.action.ShowLicenseAction"/>
- <extension id="ShowProjectPage" class="org.columba.core.gui.action.ShowProjectPageAction"/>
- <extension id="AboutDialog" class="org.columba.core.gui.action.AboutDialogAction"/>
- <extension id="ShowContextSpecificHelp" class="org.columba.core.gui.action.ShowContextSpecificHelpAction" />
- <extension id="Donate" class="org.columba.core.gui.action.DonateAction" />
+ <extension id="ShowHomepage" class="org.columba.core.gui.globalactions.ShowHomepageAction"/>
+ <extension id="ShowBugDatabase" class="org.columba.core.gui.globalactions.ShowBugDatabaseAction"/>
+ <extension id="ShowFAQ" class="org.columba.core.gui.globalactions.ShowFAQAction"/>
+ <extension id="ShowHelp" class="org.columba.core.gui.globalactions.ShowHelpAction"/>
+ <extension id="ShowLicense" class="org.columba.core.gui.globalactions.ShowLicenseAction"/>
+ <extension id="ShowProjectPage" class="org.columba.core.gui.globalactions.ShowProjectPageAction"/>
+ <extension id="AboutDialog" class="org.columba.core.gui.globalactions.AboutDialogAction"/>
+ <extension id="ShowContextSpecificHelp" class="org.columba.core.gui.globalactions.ShowContextSpecificHelpAction" />
+ <extension id="Donate" class="org.columba.core.gui.globalactions.DonateAction" />
 </extensionlist>

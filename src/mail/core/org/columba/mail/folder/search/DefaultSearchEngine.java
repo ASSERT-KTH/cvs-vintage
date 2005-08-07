@@ -25,14 +25,14 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.StatusObservable;
+import org.columba.api.command.IStatusObservable;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.base.ListTools;
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
-import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.util.ListTools;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
@@ -112,7 +112,7 @@ public class DefaultSearchEngine {
 		});
 	}
 
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return folder.getObservable();
 	}
 
@@ -252,7 +252,7 @@ public class DefaultSearchEngine {
 
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter,
-	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 *      java.lang.Object, org.columba.api.command.IWorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 			throws Exception {
@@ -335,7 +335,7 @@ public class DefaultSearchEngine {
 
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter,
-	 *      org.columba.core.command.WorkerStatusController)
+	 *      org.columba.api.command.IWorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter) throws Exception {
 		if (getObservable() != null) {
@@ -357,7 +357,7 @@ public class DefaultSearchEngine {
 
 	/**
 	 * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule,
-	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 *      java.lang.Object, org.columba.api.command.IWorkerStatusController)
 	 */
 	protected List queryEngine(FilterRule filter, Object[] uids)
 			throws Exception {
@@ -366,7 +366,7 @@ public class DefaultSearchEngine {
 
 	/**
 	 * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule,
-	 *      org.columba.core.command.WorkerStatusController)
+	 *      org.columba.api.command.IWorkerStatusController)
 	 */
 	protected List queryEngine(FilterRule filter) throws Exception {
 		Object[] uids = folder.getUids();

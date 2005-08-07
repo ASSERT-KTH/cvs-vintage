@@ -24,9 +24,9 @@ import java.util.Vector;
 
 import javax.swing.event.EventListenerList;
 
+import org.columba.core.base.Mutex;
+import org.columba.core.base.SwingWorker.ThreadVar;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.util.Mutex;
-import org.columba.core.util.SwingWorker.ThreadVar;
 
 /**
  * TaskManager keeps a list of currently running {@link Worker} objects.
@@ -41,7 +41,7 @@ import org.columba.core.util.SwingWorker.ThreadVar;
  *
  * @author fdietz
  */
-public class TaskManager {
+public class TaskManager  {
     /**
      * List of currently running {@link Worker} objects
      */
@@ -58,13 +58,18 @@ public class TaskManager {
      */
     protected EventListenerList listenerList = new EventListenerList();
 
+    private static TaskManager instance = new TaskManager();
+    
     /**
      * Default constructor
      */
-    public TaskManager() {
+    private TaskManager() {
         workerList = new Vector();
-
         workerListMutex = new Mutex();
+    }
+    
+    public static TaskManager getInstance() {
+    	return instance;
     }
 
     /**
@@ -98,11 +103,9 @@ public class TaskManager {
         return workerList.size();
     }
 
-    /**
-     * Register new {@link Worker} at TaskManager.
-     *
-     * @param t                new worker
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.core.taskmanager.ITaskManager#register(org.columba.core.command.Worker)
+	 */
     public void register(Worker t) {
         try {
             workerListMutex.lock();
@@ -115,11 +118,9 @@ public class TaskManager {
         fireWorkerAdded(t);
     }
 
-    /**
-     * Remove {@link Worker} from TaskManager
-     *
-     * @param tvar                Thread encapusulated in Worker
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.core.taskmanager.ITaskManager#unregister(org.columba.core.util.SwingWorker.ThreadVar)
+	 */
     public void unregister(ThreadVar tvar) {
         Worker worker;
 
@@ -140,18 +141,16 @@ public class TaskManager {
         }
     }
 
-    /**
-     * Register interest on events.
-     *
-     * @param l                listener
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.core.taskmanager.ITaskManager#addTaskManagerListener(org.columba.core.taskmanager.TaskManagerListener)
+	 */
     public void addTaskManagerListener(TaskManagerListener l) {
         listenerList.add(TaskManagerListener.class, l);
     }
     
-    /**
-     * Remove a previously registered listener.
-     */
+    /* (non-Javadoc)
+	 * @see org.columba.core.taskmanager.ITaskManager#removeTaskManagerListener(org.columba.core.taskmanager.TaskManagerListener)
+	 */
     public void removeTaskManagerListener(TaskManagerListener l) {
         listenerList.remove(TaskManagerListener.class, l);
     }

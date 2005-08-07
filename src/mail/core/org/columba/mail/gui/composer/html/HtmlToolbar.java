@@ -32,11 +32,16 @@ import javax.swing.JList;
 import javax.swing.JToolBar;
 import javax.swing.text.html.HTML;
 
-import org.columba.core.action.AbstractSelectableAction;
+import org.columba.api.exception.PluginException;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.action.AbstractSelectableAction;
+import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.toolbar.ToggleToolbarButton;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -45,10 +50,6 @@ import org.columba.mail.gui.composer.html.action.FontSizeMenu;
 import org.columba.mail.gui.composer.html.action.ParagraphMenu;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
 import org.columba.mail.util.MailResourceLoader;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * JPanel with useful HTML related actions.
@@ -74,6 +75,8 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 	 */
 	private boolean ignoreFormatAction = false;
 
+	private ActionExtensionHandler handler = null;
+
 	/**
 	 * 
 	 */
@@ -84,7 +87,14 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 		setRollover(true);
 
 		setFloatable(false);
-		
+
+		try {
+			handler = (ActionExtensionHandler) PluginManager.getInstance()
+					.getHandler(ActionExtensionHandler.NAME);
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		try {
 			initComponents();
 		} catch (Exception e) {
@@ -111,17 +121,9 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 	}
 
 	protected void initComponents() throws Exception {
-		//CellConstraints cc = new CellConstraints();
+		// CellConstraints cc = new CellConstraints();
 
 		// we generate most buttons using the actions already instanciated
-		ActionExtensionHandler handler = null;
-
-		try {
-			handler = (ActionExtensionHandler) PluginManager.getInstance()
-					.getHandler(ActionExtensionHandler.NAME);
-		} catch (PluginHandlerNotFoundException e) {
-			e.printStackTrace();
-		}
 
 		// init components
 		LabelWithMnemonic paraLabel = new LabelWithMnemonic(MailResourceLoader
@@ -153,26 +155,26 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 		sizeComboBox.setEnabled(false);
 
 		ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(
-				(AbstractSelectableAction) handler.getAction(
-						"BoldFormatAction", getFrameController()));
+				(AbstractSelectableAction) getAction("BoldFormatAction",
+						getFrameController()));
 		ToggleToolbarButton italicFormatButton = new ToggleToolbarButton(
-				(AbstractSelectableAction) handler.getAction(
-						"ItalicFormatAction", getFrameController()));
+				(AbstractSelectableAction) getAction("ItalicFormatAction",
+						getFrameController()));
 		ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton(
-				(AbstractSelectableAction) handler.getAction(
-						"UnderlineFormatAction", getFrameController()));
+				(AbstractSelectableAction) getAction("UnderlineFormatAction",
+						getFrameController()));
 		ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton(
-				(AbstractSelectableAction) handler.getAction(
-						"StrikeoutFormatAction", getFrameController()));
+				(AbstractSelectableAction) getAction("StrikeoutFormatAction",
+						getFrameController()));
 		ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton(
-				(AbstractSelectableAction) handler.getAction(
-						"LeftJustifyAction", getFrameController()));
+				(AbstractSelectableAction) getAction("LeftJustifyAction",
+						getFrameController()));
 		ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton(
-				(AbstractSelectableAction) handler.getAction(
-						"CenterJustifyAction", getFrameController()));
+				(AbstractSelectableAction) getAction("CenterJustifyAction",
+						getFrameController()));
 		ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton(
-				(AbstractSelectableAction) handler.getAction(
-						"RightJustifyAction", getFrameController()));
+				(AbstractSelectableAction) getAction("RightJustifyAction",
+						getFrameController()));
 
 		// builder.add(paraLabel, cc.xy(1, 7));
 
@@ -181,7 +183,7 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 		add(sizeLabel);
 		add(sizeComboBox);
 		addSeparator();
-		
+
 		add(boldFormatButton);
 		add(italicFormatButton);
 		add(underlineFormatButton);
@@ -190,27 +192,27 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 		add(leftJustifyButton);
 		add(centerJustifyButton);
 		add(rightJustifyButton);
-		
+
 		add(Box.createHorizontalGlue());
-//		FormLayout layout = new FormLayout(
-//				"default, 3dlu, default, 3dlu, default, 3dlu, "
-//						+ "default, 3dlu, default, 3dlu, default, 3dlu, "
-//						+ "default, 6dlu, default, 3dlu, default, 3dlu, "
-//						+ "default, 3dlu", "fill:default");
-//		PanelBuilder b = new PanelBuilder(this, layout);
-//
-//		CellConstraints c = new CellConstraints();
-//
-//		b.add(paragraphComboBox, cc.xy(1, 1));
-//		b.add(sizeLabel, cc.xy(3, 1));
-//		b.add(sizeComboBox, cc.xy(5, 1));
-//		b.add(boldFormatButton, cc.xy(7, 1));
-//		b.add(italicFormatButton, cc.xy(9, 1));
-//		b.add(underlineFormatButton, cc.xy(11, 1));
-//		b.add(strikeoutFormatButton, cc.xy(13, 1));
-//		b.add(leftJustifyButton, cc.xy(15, 1));
-//		b.add(centerJustifyButton, cc.xy(17, 1));
-//		b.add(rightJustifyButton, cc.xy(19, 1));
+		// FormLayout layout = new FormLayout(
+		// "default, 3dlu, default, 3dlu, default, 3dlu, "
+		// + "default, 3dlu, default, 3dlu, default, 3dlu, "
+		// + "default, 6dlu, default, 3dlu, default, 3dlu, "
+		// + "default, 3dlu", "fill:default");
+		// PanelBuilder b = new PanelBuilder(this, layout);
+		//
+		// CellConstraints c = new CellConstraints();
+		//
+		// b.add(paragraphComboBox, cc.xy(1, 1));
+		// b.add(sizeLabel, cc.xy(3, 1));
+		// b.add(sizeComboBox, cc.xy(5, 1));
+		// b.add(boldFormatButton, cc.xy(7, 1));
+		// b.add(italicFormatButton, cc.xy(9, 1));
+		// b.add(underlineFormatButton, cc.xy(11, 1));
+		// b.add(strikeoutFormatButton, cc.xy(13, 1));
+		// b.add(leftJustifyButton, cc.xy(15, 1));
+		// b.add(centerJustifyButton, cc.xy(17, 1));
+		// b.add(rightJustifyButton, cc.xy(19, 1));
 
 		// builder.add(panel, cc.xy(1, 7));
 	}
@@ -339,5 +341,30 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 					.getString("menu", "composer", "menu_format_paragraph_"
 							+ value.toString()), index, selected, hasFocus);
 		}
+	}
+
+	private AbstractColumbaAction getAction(String id, IFrameMediator controller) {
+		if (id == null)
+			throw new IllegalArgumentException("id == null");
+		if (controller == null)
+			throw new IllegalArgumentException("controller == null");
+
+		IExtension extension = handler.getExtension(id);
+
+		AbstractColumbaAction a = null;
+
+		try {
+			if (extension != null)
+				a = (AbstractColumbaAction) extension
+						.instanciateExtension(new Object[] { controller });
+		} catch (PluginException e) {
+			LOG.severe(e.getMessage());
+			if (Logging.DEBUG)
+				e.printStackTrace();
+
+		}
+
+		return a;
+
 	}
 }

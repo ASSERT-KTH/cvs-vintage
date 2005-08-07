@@ -20,7 +20,7 @@ import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
 
 
 /**

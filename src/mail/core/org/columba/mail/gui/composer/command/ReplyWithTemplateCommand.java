@@ -20,9 +20,10 @@ package org.columba.mail.gui.composer.command;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -42,14 +43,16 @@ import org.columba.ristretto.message.MimeTree;
  */
 public class ReplyWithTemplateCommand extends ReplyCommand {
 
-	/**
-	 * @param references
-	 */
-	public ReplyWithTemplateCommand(ICommandReference reference) {
+	private IFrameMediator mediator;
+
+	public ReplyWithTemplateCommand(IFrameMediator mediator,
+			ICommandReference reference) {
 		super(reference);
+
+		this.mediator = mediator;
 	}
 
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// create composer model
 		model = new ComposerModel();
 
@@ -60,10 +63,11 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 		// get first selected message
 		Object[] uids = ((MailFolderCommandReference) getReference()).getUids();
 
-		//      ->set source reference in composermodel
+		// ->set source reference in composermodel
 		// when replying this is the original sender's message
 		// you selected and replied to
-		MailFolderCommandReference ref = new MailFolderCommandReference(folder, uids);
+		MailFolderCommandReference ref = new MailFolderCommandReference(folder,
+				uids);
 		model.setSourceReference(ref);
 
 		// setup to, references and account
@@ -106,15 +110,15 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 	private String getTemplateBody() throws Exception,
 			CommandCancelledException, IOException {
 		// template folder has uid=107
-		AbstractMessageFolder templateFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
-				.getFolder(107);
+		AbstractMessageFolder templateFolder = (AbstractMessageFolder) FolderTreeModel
+				.getInstance().getFolder(107);
 
 		// retrieve headerlist of tempate folder
 		IHeaderList list = templateFolder.getHeaderList();
 
 		// choose template
-		ChooseTemplateDialog d = new ChooseTemplateDialog(getFrameMediator()
-				.getView().getFrame(), list);
+		ChooseTemplateDialog d = new ChooseTemplateDialog(mediator.getView()
+				.getFrame(), list);
 
 		Object uid = null;
 
@@ -129,7 +133,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 		MimeTree tree = templateFolder.getMimePartTree(uid);
 
 		// *20030926, karlpeder* Added html support
-		//MimePart mp = tree.getFirstTextPart("plain");
+		// MimePart mp = tree.getFirstTextPart("plain");
 		MimePart mp;
 
 		if (model.isHtml()) {

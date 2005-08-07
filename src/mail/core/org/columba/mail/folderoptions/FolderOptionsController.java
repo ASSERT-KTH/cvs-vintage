@@ -18,9 +18,9 @@ package org.columba.mail.folderoptions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.columba.core.plugin.IExtension;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;

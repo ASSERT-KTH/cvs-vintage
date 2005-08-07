@@ -27,12 +27,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.columba.api.command.IStatusObservable;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.base.ListTools;
+import org.columba.core.base.Lock;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.ProgressObservedInputStream;
-import org.columba.core.command.StatusObservable;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.util.ListTools;
-import org.columba.core.util.Lock;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
@@ -246,7 +246,7 @@ public class POP3Server {
 		return getStore().getMessageCount();
 	}
 
-	public ColumbaMessage getMessage(Object uid, WorkerStatusController worker)
+	public ColumbaMessage getMessage(Object uid, IWorkerStatusController worker)
 			throws IOException, POP3Exception, CommandCancelledException, ParserException {
 		InputStream messageStream = new ProgressObservedInputStream(getStore()
 				.fetchMessage(store.getIndex(uid)), worker, true);
@@ -312,7 +312,7 @@ public class POP3Server {
 		return store;
 	}
 
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return store.getObservable();
 	}
 

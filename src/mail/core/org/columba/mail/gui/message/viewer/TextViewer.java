@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
@@ -38,19 +37,18 @@ import javax.swing.JPanel;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import org.columba.api.exception.PluginException;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
-import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.io.TempFileStore;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginException;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.HTMLViewerExtensionHandler;
+import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OptionsItem;
@@ -79,8 +77,9 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.message.viewer");
 
-	private static final Pattern CIDPattern = Pattern.compile("cid:([^\"]+)", Pattern.CASE_INSENSITIVE);
-	
+	private static final Pattern CIDPattern = Pattern.compile("cid:([^\"]+)",
+			Pattern.CASE_INSENSITIVE);
+
 	// parser to transform text to html
 	private DocumentParser parser;
 
@@ -102,10 +101,12 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	// overwrite look and feel font settings
 	private boolean overwrite;
 
-	/*private String body;
+	/*
+	 * private String body;
+	 * 
+	 * private URL url;
+	 */
 
-	private URL url;*/
-	
 	private String body;
 
 	/**
@@ -150,7 +151,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			viewerPlugin = createHTMLViewerPluginInstance("JDICHTMLViewerPlugin");
 			// in case of an error -> fall-back to Swing's built-in JTextPane
 			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false)) {
-				LOG.severe("Error while trying to load JDIC based html viewer -> falling back to Swing's JTextPane instead");
+				LOG
+						.severe("Error while trying to load JDIC based html viewer -> falling back to Swing's JTextPane instead");
 
 				viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
 			}
@@ -168,21 +170,21 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 					.getInstance().getHandler(HTMLViewerExtensionHandler.NAME);
 
 			IExtension extension = handler.getExtension(pluginId);
-			
+
 			plugin = (IHTMLViewerPlugin) extension.instanciateExtension(null);
 
 			return plugin;
 		} catch (PluginHandlerNotFoundException e) {
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		} catch (PluginException e) {
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		} catch (Exception e) {
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -261,7 +263,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		this.folder = folder;
 		this.uid = uid;
-		
+
 		MimePart bodyPart = null;
 		InputStream bodyStream;
 
@@ -281,15 +283,15 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 					.getAddress());
 		}
 
-		bodyStream = MessageParser.decodeBodyStream(bodyPart,
-				bodyStream);
+		bodyStream = MessageParser.decodeBodyStream(bodyPart, bodyStream);
 
 		// Which Charset shall we use ?
-		if( !htmlMessage ) {
+		if (!htmlMessage) {
 			Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
 			charset = MessageParser.extractCharset(charset, bodyPart);
 
-			bodyStream = new FallbackCharsetDecoderInputStream(bodyStream, charset);
+			bodyStream = new FallbackCharsetDecoderInputStream(bodyStream,
+					charset);
 		}
 
 		// Read Stream in String
@@ -305,10 +307,10 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		}
 
 		if (htmlMessage) {
-			// this is a HTML message			
+			// this is a HTML message
 			body = text.toString();
-			
-			//Download any CIDs in the html mail
+
+			// Download any CIDs in the html mail
 			body = downloadCIDParts(body, mimePartTree);
 
 		} else {
@@ -377,7 +379,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	 */
 	public void updateGUI() throws Exception {
 		System.out.println(body);
-		
+
 		viewerPlugin.view(body);
 	}
 
@@ -385,74 +387,80 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
 	 */
 	public void caretUpdate(CaretEvent arg0) {
-		FocusManager.getInstance().updateActions();
+		// FocusManager.getInstance().updateActions();
 	}
-
 
 	private String downloadCIDParts(String body, MimeTree mimeTree) {
 		Matcher matcher = CIDPattern.matcher(body);
-		
-		if( !matcher.find()) {
+
+		if (!matcher.find()) {
 			return body;
 		}
-		
+
 		StringBuffer modifiedBody = new StringBuffer(body.length());
 		File mimePartFile;
 		List mimeParts = mimeTree.getAllLeafs();
-		
+
 		MimePart CIDPart = findMimePart(mimeParts, matcher.group(1));
-		if( CIDPart != null ) {
+		if (CIDPart != null) {
 			mimePartFile = TempFileStore.createTempFile();
 			try {
-				downloadMimePart( CIDPart, mimePartFile);
-				
-				matcher.appendReplacement(modifiedBody, mimePartFile.toURL().toString());
+				downloadMimePart(CIDPart, mimePartFile);
+
+				matcher.appendReplacement(modifiedBody, mimePartFile.toURL()
+						.toString());
 			} catch (Exception e) {
-				matcher.appendReplacement(modifiedBody, "missing");				
+				matcher.appendReplacement(modifiedBody, "missing");
 			}
 		} else {
-			matcher.appendReplacement(modifiedBody, "missing");							
+			matcher.appendReplacement(modifiedBody, "missing");
 		}
-			
+
 		while (matcher.find()) {
 			CIDPart = findMimePart(mimeParts, matcher.group(1));
-			if( CIDPart != null ) {
+			if (CIDPart != null) {
 				mimePartFile = TempFileStore.createTempFile();
 				try {
-					downloadMimePart( CIDPart, mimePartFile);
-					
-					matcher.appendReplacement(modifiedBody, mimePartFile.toURL().toString());
+					downloadMimePart(CIDPart, mimePartFile);
+
+					matcher.appendReplacement(modifiedBody, mimePartFile
+							.toURL().toString());
 				} catch (Exception e) {
-					matcher.appendReplacement(modifiedBody, "missing");				
+					matcher.appendReplacement(modifiedBody, "missing");
 				}
 			} else {
-				matcher.appendReplacement(modifiedBody, "missing");							
-			}		 }
+				matcher.appendReplacement(modifiedBody, "missing");
+			}
+		}
 
 		matcher.appendTail(modifiedBody);
-		
+
 		return modifiedBody.toString();
 	}
-	
+
 	private MimePart findMimePart(List mimeParts, String findCid) {
 		MimePart result;
 		Iterator it = mimeParts.iterator();
-		while( it.hasNext() ) {
+		while (it.hasNext()) {
 			result = (MimePart) it.next();
-			
+
 			String cid = result.getHeader().getContentID();
-			if(  cid != null && cid.substring(1,cid.length()-1).equalsIgnoreCase(findCid) ){
+			if (cid != null
+					&& cid.substring(1, cid.length() - 1).equalsIgnoreCase(
+							findCid)) {
 				return result;
 			}
 		}
-		
+
 		return null;
 	}
 
-	private void downloadMimePart(MimePart part, File destFile) throws Exception {
+	private void downloadMimePart(MimePart part, File destFile)
+			throws Exception {
 		MimeHeader header = part.getHeader();
 
-		InputStream bodyStream = folder.getMimePartBodyStream(uid, part.getAddress());
+		InputStream bodyStream = folder.getMimePartBodyStream(uid, part
+				.getAddress());
 
 		int encoding = header.getContentTransferEncoding();
 
@@ -479,5 +487,5 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	public boolean isHtmlMessage() {
 		return htmlMessage;
 	}
-	
+
 }

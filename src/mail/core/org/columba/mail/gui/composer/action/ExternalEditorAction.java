@@ -18,10 +18,10 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.io.ColumbaDesktop;
-import org.columba.core.util.SwingWorker;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.base.SwingWorker;
+import org.columba.core.desktop.ColumbaDesktop;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.util.MailResourceLoader;

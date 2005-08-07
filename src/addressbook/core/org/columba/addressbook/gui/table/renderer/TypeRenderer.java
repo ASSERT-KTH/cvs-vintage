@@ -22,7 +22,7 @@ import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 
 /**

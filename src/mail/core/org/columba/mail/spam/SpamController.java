@@ -19,11 +19,11 @@ package org.columba.mail.spam;
 
 import java.util.logging.Logger;
 
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
+import org.columba.api.exception.PluginException;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginException;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.plugin.SpamExtensionHandler;
 
@@ -64,12 +64,12 @@ public class SpamController implements ISpamPlugin {
 
 		} catch (PluginHandlerNotFoundException e) {
 			LOG.severe(e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 
 		} catch (PluginException e) {
 			LOG.severe(e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		}
 	}

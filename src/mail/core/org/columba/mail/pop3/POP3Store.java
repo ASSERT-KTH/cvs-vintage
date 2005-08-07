@@ -32,12 +32,12 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.IStatusObservable;
+import org.columba.core.base.Blowfish;
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.util.Blowfish;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.util.PasswordDialog;
@@ -516,7 +516,7 @@ public class POP3Store implements Observer {
         return result;
     }
     
-    public StatusObservable getObservable() {
+    public IStatusObservable getObservable() {
         return observable;
     }
     

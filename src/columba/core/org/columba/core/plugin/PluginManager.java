@@ -25,10 +25,13 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.main.Main;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
-import org.columba.core.plugin.util.ExtensionXMLParser;
-import org.columba.core.plugin.util.PluginFinder;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.ExtensionHandlerMetadata;
+import org.columba.api.plugin.ExtensionMetadata;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IPluginManager;
+import org.columba.core.logging.Logging;
+import org.columba.core.util.PluginFinder;
 import org.columba.core.xml.XmlIO;
 
 /**
@@ -69,8 +72,8 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#addHandler(java.lang.String,
-	 *      org.columba.core.plugin.IExtensionHandler)
+	 * @see org.columba.api.plugin.IPluginManager#addHandler(java.lang.String,
+	 *      org.columba.api.plugin.IExtensionHandler)
 	 */
 	public void addHandler(String id, IExtensionHandler handler) {
 		if (id == null)
@@ -85,7 +88,7 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#getHandler(java.lang.String)
+	 * @see org.columba.api.plugin.IPluginManager#getHandler(java.lang.String)
 	 */
 	public IExtensionHandler getHandler(String id)
 			throws PluginHandlerNotFoundException {
@@ -106,7 +109,7 @@ public class PluginManager implements IPluginManager {
 	 *            xml-file validating against pluginhandler.dtd
 	 */
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#addHandlers(java.lang.String)
+	 * @see org.columba.api.plugin.IPluginManager#addHandlers(java.lang.String)
 	 */
 	public void addHandlers(String xmlResource) {
 		Enumeration e = new ExtensionXMLParser()
@@ -124,24 +127,24 @@ public class PluginManager implements IPluginManager {
 			} catch (ClassNotFoundException ex) {
 				LOG.severe("Error while adding handler from " + xmlResource
 						+ ": " + ex.getMessage());
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					ex.printStackTrace();
 			} catch (InstantiationException ex) {
 				LOG.severe("Error while adding handler from " + xmlResource
 						+ ": " + ex.getMessage());
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					ex.printStackTrace();
 			} catch (IllegalAccessException ex) {
 				LOG.severe("Error while adding handler from " + xmlResource
 						+ ": " + ex.getMessage());
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					ex.printStackTrace();
 			}
 		}
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#addPlugin(java.io.File)
+	 * @see org.columba.api.plugin.IPluginManager#addPlugin(java.io.File)
 	 */
 	public String addPlugin(File folder) {
 		LOG.fine("registering plugin: " + folder);
@@ -197,7 +200,7 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#initPlugins()
+	 * @see org.columba.api.plugin.IPluginManager#initPlugins()
 	 */
 	public void initPlugins() {
 		// find all possible plugin directories
@@ -217,7 +220,7 @@ public class PluginManager implements IPluginManager {
 
 	
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#getPluginConfigFile(java.lang.String)
+	 * @see org.columba.api.plugin.IPluginManager#getPluginConfigFile(java.lang.String)
 	 */
 	public File getPluginConfigFile(String id) {
 
@@ -229,7 +232,7 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#getPluginMetadata(java.lang.String)
+	 * @see org.columba.api.plugin.IPluginManager#getPluginMetadata(java.lang.String)
 	 */
 	public PluginMetadata getPluginMetadata(String id) {
 		if (id == null)
@@ -240,7 +243,7 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#getInfoURL(java.lang.String)
+	 * @see org.columba.api.plugin.IPluginManager#getInfoURL(java.lang.String)
 	 */
 	public URL getInfoURL(String id) {
 		PluginMetadata metadata = (PluginMetadata) pluginMap.get(id);
@@ -278,7 +281,7 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#getPluginIds()
+	 * @see org.columba.api.plugin.IPluginManager#getPluginIds()
 	 */
 	public String[] getPluginIds() {
 		Vector result = new Vector();
@@ -295,7 +298,7 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#getPluginMetadataEnumeration()
+	 * @see org.columba.api.plugin.IPluginManager#getPluginMetadataEnumeration()
 	 */
 	public Enumeration getPluginMetadataEnumeration() {
 		return pluginMap.elements();

@@ -15,6 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
+import org.columba.core.base.Semaphore;
+import org.columba.core.base.StopWatch;
+
 import junit.framework.TestCase;
 
 /**

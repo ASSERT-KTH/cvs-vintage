@@ -17,10 +17,10 @@
 //All Rights Reserved.
 package org.columba.chat.frame;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
-import org.columba.core.gui.frame.IFrameMediator;
 
 /**
  * @author fdietz

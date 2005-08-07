@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.folder;
 
-import org.columba.core.command.ICommandReference;
+import org.columba.api.command.ICommandReference;
 
 
 /**

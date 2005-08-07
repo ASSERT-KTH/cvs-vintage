@@ -18,9 +18,9 @@ package org.columba.mail.folder.command;
 
 import java.text.MessageFormat;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
@@ -56,7 +56,7 @@ public class MarkFolderAsReadCommand extends Command {
     }
 
     /** {@inheritDoc} */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(IWorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
         folderToBeRead = (AbstractMessageFolder) ((MailFolderCommandReference) getReference()).getSourceFolder();
 

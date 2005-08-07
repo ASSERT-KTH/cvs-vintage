@@ -19,6 +19,8 @@ package org.columba.chat.command;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.AlturaComponent;
 import org.columba.chat.config.Account;
 import org.columba.chat.config.Config;
@@ -28,8 +30,6 @@ import org.columba.chat.jabber.PresenceListener;
 import org.columba.chat.jabber.SubscriptionListener;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SSLXMPPConnection;
@@ -43,16 +43,20 @@ public class ConnectCommand extends Command {
 
 	private boolean success;
 
+	private IFrameMediator m;
+
 	public ConnectCommand(IFrameMediator mediator) {
-		super(mediator, new DefaultCommandReference());
+		super(new DefaultCommandReference());
+
+		this.m = mediator;
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.IWorkerStatusController)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		Account account = Config.getInstance().getAccount();
-		final AlturaFrameMediator mediator = (AlturaFrameMediator) getFrameMediator();
+		AlturaFrameMediator mediator = (AlturaFrameMediator) m;
 
 		try {
 
@@ -81,7 +85,7 @@ public class ConnectCommand extends Command {
 
 		while (!success) {
 
-			if ( (password == null) || ( password.length == 0 ) ){
+			if ((password == null) || (password.length == 0)) {
 				dialog.showDialog("<html>Enter password for <b>"
 						+ account.getId() + "</b> at <b>" + account.getHost()
 						+ "</b></html>", "", false);
@@ -121,14 +125,14 @@ public class ConnectCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 
 		if (!success)
 			return;
 
-		final AlturaFrameMediator mediator = (AlturaFrameMediator) getFrameMediator();
+		final AlturaFrameMediator mediator = (AlturaFrameMediator) m;
 
 		// awt-event-thread
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {

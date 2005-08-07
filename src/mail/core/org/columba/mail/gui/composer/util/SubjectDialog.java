@@ -30,8 +30,8 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

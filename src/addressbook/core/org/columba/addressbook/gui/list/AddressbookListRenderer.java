@@ -28,7 +28,7 @@ import org.columba.addressbook.gui.util.ToolTipFactory;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 public class AddressbookListRenderer extends JLabel implements ListCellRenderer {
 	ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");

@@ -25,10 +25,10 @@ import java.util.Observer;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.core.action.IMenu;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.menu.IMenu;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;

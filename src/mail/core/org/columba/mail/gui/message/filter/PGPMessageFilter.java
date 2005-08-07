@@ -26,7 +26,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 
 import org.columba.core.io.StreamUtils;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -358,7 +358,7 @@ public class PGPMessageFilter extends AbstractFilter {
 
 		} catch (JSCFException e) {
 
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 
 			pgpMode = EncryptionStatusViewer.VERIFICATION_FAILURE;

@@ -21,8 +21,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * Adds a table selection listener to DefaultTreeAction.

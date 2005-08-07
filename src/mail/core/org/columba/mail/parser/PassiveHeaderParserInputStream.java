@@ -20,8 +20,8 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.columba.core.util.Barrier;
-import org.columba.core.util.Mutex;
+import org.columba.core.base.Barrier;
+import org.columba.core.base.Mutex;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.parser.HeaderParser;

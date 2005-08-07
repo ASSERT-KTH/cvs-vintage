@@ -35,11 +35,11 @@ import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
+import org.columba.api.gui.frame.IContentPane;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.IContentPane;
+import org.columba.core.gui.base.UIFSplitPane;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.util.UIFSplitPane;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -235,7 +235,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContentPane#getComponent()
+	 * @see org.columba.api.gui.frame.IContentPane#getComponent()
 	 */
 	public JComponent getComponent() {
 		JPanel panel = new JPanel();
@@ -389,7 +389,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IFrameMediator#getString(java.lang.String,
+	 * @see org.columba.api.gui.frame.IFrameMediator#getString(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
@@ -397,7 +397,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IFrameMediator#getContentPane()
+	 * @see org.columba.api.gui.frame.IFrameMediator#getContentPane()
 	 */
 	public IContentPane getContentPane() {
 		return this;

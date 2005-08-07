@@ -48,15 +48,13 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.DoubleClickListener;
 import org.columba.core.gui.util.DialogHeaderPanel;
-import org.columba.core.gui.util.DoubleClickListener;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
-import org.columba.core.profiles.Profile;
-import org.columba.core.profiles.ProfileManager;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
 import com.jgoodies.forms.layout.CellConstraints;

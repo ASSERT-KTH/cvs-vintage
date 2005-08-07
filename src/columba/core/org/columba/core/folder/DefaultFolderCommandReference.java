@@ -100,14 +100,14 @@ public class DefaultFolderCommandReference implements IFolderCommandReference {
 	}
 
 	/**
-	 * @see org.columba.core.command.ICommandReference#tryToGetLock(java.lang.Object)
+	 * @see org.columba.api.command.ICommandReference#tryToGetLock(java.lang.Object)
 	 */
 	public boolean tryToGetLock(Object locker) {
 		return sourceFolder.tryToGetLock(locker);
 	}
 
 	/**
-	 * @see org.columba.core.command.ICommandReference#releaseLock(java.lang.Object)
+	 * @see org.columba.api.command.ICommandReference#releaseLock(java.lang.Object)
 	 */
 	public void releaseLock(Object locker) {
 		sourceFolder.releaseLock(locker);

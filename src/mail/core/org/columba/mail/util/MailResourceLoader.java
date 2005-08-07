@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.util;
 
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 
 public class MailResourceLoader extends GlobalResourceLoader {

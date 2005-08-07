@@ -18,6 +18,9 @@ package org.columba.core.command;
 
 import java.util.EventObject;
 
+
+
+
 /**
  * Encapsulates an event from a worker list.
  */

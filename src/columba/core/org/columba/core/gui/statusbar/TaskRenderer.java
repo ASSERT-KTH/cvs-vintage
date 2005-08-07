@@ -25,67 +25,71 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.ListCellRenderer;
 
-import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.Worker;
 
-
 /**
- * Custom renderer using a JLabel for status messages and
- * a JProgressBar for worker progress.
+ * Custom renderer using a JLabel for status messages and a JProgressBar for
+ * worker progress.
  * 
  * @author fdietz
  */
 public class TaskRenderer extends JPanel implements ListCellRenderer {
-    private TaskManager tm;
+	private TaskManager tm;
 
-    private JLabel label;
-    private JProgressBar progressBar;
-    private JPanel progressPanel;
-    
-    public TaskRenderer() {
-        super();
+	private JLabel label;
 
-        tm = CommandProcessor.getInstance().getTaskManager();
-        
-        setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-        
-        label = new JLabel();
-        progressBar = new JProgressBar();
-        progressPanel = new JPanel();
-        progressPanel.setLayout(new BorderLayout());
-        progressPanel.setBorder(BorderFactory.createEmptyBorder(2,10,2,10));
-        progressPanel.add(progressBar, BorderLayout.CENTER);
-        
-        setLayout(new BorderLayout());
-        add(label, BorderLayout.NORTH);
-        add(progressPanel, BorderLayout.CENTER);
-    }
+	private JProgressBar progressBar;
 
-    /* (non-Javadoc)
- * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
- */
-    public Component getListCellRendererComponent(JList list, Object value,
-        int index, boolean isSelected, boolean hasFocus) {
-       
-    	if ( isSelected) {
-    		setBackground(list.getSelectionBackground());
-    		setForeground(list.getSelectionForeground());
-    		progressPanel.setBackground(list.getSelectionBackground());
-    		progressPanel.setForeground(list.getSelectionForeground());
-    	} else {
-    		setBackground(list.getBackground());
-    		setForeground(list.getForeground());
-    		progressPanel.setBackground(list.getBackground());
+	private JPanel progressPanel;
+
+	public TaskRenderer() {
+		super();
+
+		tm = TaskManager.getInstance();
+
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+		label = new JLabel();
+		progressBar = new JProgressBar();
+		progressPanel = new JPanel();
+		progressPanel.setLayout(new BorderLayout());
+		progressPanel.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
+		progressPanel.add(progressBar, BorderLayout.CENTER);
+
+		setLayout(new BorderLayout());
+		add(label, BorderLayout.NORTH);
+		add(progressPanel, BorderLayout.CENTER);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList,
+	 *      java.lang.Object, int, boolean, boolean)
+	 */
+	public Component getListCellRendererComponent(JList list, Object value,
+			int index, boolean isSelected, boolean hasFocus) {
+
+		if (isSelected) {
+			setBackground(list.getSelectionBackground());
+			setForeground(list.getSelectionForeground());
+			progressPanel.setBackground(list.getSelectionBackground());
+			progressPanel.setForeground(list.getSelectionForeground());
+		} else {
+			setBackground(list.getBackground());
+			setForeground(list.getForeground());
+			progressPanel.setBackground(list.getBackground());
 			progressPanel.setForeground(list.getForeground());
-    	}
+		}
 
-        Worker worker = (Worker) value;
-        label.setText(worker.getDisplayText());
-        progressBar.setMaximum(worker.getProgessBarMaximum());
-        progressBar.setValue(worker.getProgressBarValue());
+		Worker worker = (Worker) value;
+		label.setText(worker.getDisplayText());
+		progressBar.setMaximum(worker.getProgessBarMaximum());
+		progressBar.setValue(worker.getProgressBarValue());
 
-        //return super.getListCellRendererComponent(arg0, arg1, arg2, arg3, arg4);
-        return this;
-    }
+		// return super.getListCellRendererComponent(arg0, arg1, arg2, arg3,
+		// arg4);
+		return this;
+	}
 }

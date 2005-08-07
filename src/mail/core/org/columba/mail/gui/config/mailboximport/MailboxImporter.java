@@ -23,10 +23,10 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
+import org.columba.api.exception.PluginException;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
-import org.columba.core.plugin.exception.PluginException;
+import org.columba.core.logging.Logging;
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ImportMessageCommand;
@@ -54,7 +54,7 @@ class MailboxImporter implements WizardModelListener {
 			importer = (AbstractMailboxImporter) extension
 					.instanciateExtension(args);
 		} catch (PluginException e1) {
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e1.printStackTrace();
 
 			return;

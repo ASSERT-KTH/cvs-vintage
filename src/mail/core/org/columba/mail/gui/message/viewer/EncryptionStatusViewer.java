@@ -24,7 +24,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;

@@ -15,16 +15,20 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.util.Lock;
+import org.columba.api.command.ICommand;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.base.Lock;
 
 /**
  * A Command uses the information provided from {@link DefaultCommandReference}
  * to execute itself.
+ * <p>
+ * TODO: remove IFrameMediator dependency
  * 
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
-public abstract class Command {
+public abstract class Command implements ICommand {
 
 	/**
 	 * Commands that can not be undone but previous commands can be undone, e.g.
@@ -71,19 +75,8 @@ public abstract class Command {
 
 	private ICommandReference reference;
 
-	protected IFrameMediator frameMediator;
-
 	public Command(ICommandReference reference) {
 		this.reference = reference;
-
-		commandType = NORMAL_OPERATION;
-		priority = NORMAL_PRIORITY;
-	}
-
-	public Command(IFrameMediator frameMediator,
-			ICommandReference reference) {
-		this.reference = reference;
-		this.frameMediator = frameMediator;
 
 		commandType = NORMAL_OPERATION;
 		priority = NORMAL_PRIORITY;
@@ -94,17 +87,16 @@ public abstract class Command {
 		execute(worker);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.api.command.ICommand#updateGUI()
+	 */
 	public void updateGUI() throws Exception {
 	}
 
-	/**
-	 * Command must implement this method Executes the Command when run the
-	 * first time
-	 * 
-	 * @param worker
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.api.command.ICommand#execute(org.columba.api.command.IWorkerStatusController)
 	 */
-	public abstract void execute(WorkerStatusController worker)
+	public abstract void execute(IWorkerStatusController worker)
 			throws Exception;
 
 	public boolean canBeProcessed() {
@@ -168,20 +160,14 @@ public abstract class Command {
 		this.timeStamp = timeStamp;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.api.command.ICommand#getReference()
+	 */
 	public ICommandReference getReference() {
 		return reference;
 	}
 
 	public void finish() throws Exception {
 		updateGUI();
-	}
-
-	/**
-	 * Returns the frameMediator.
-	 * 
-	 * @return FrameController
-	 */
-	public IFrameMediator getFrameMediator() {
-		return frameMediator;
 	}
 }

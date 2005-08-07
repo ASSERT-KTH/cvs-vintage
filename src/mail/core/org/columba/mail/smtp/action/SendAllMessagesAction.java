@@ -16,15 +16,12 @@
 package org.columba.mail.smtp.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
-import javax.swing.KeyStroke;
-
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.ConnectionStateImpl;
+import org.columba.core.connectionstate.ConnectionStateImpl;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -36,7 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * This action is responsible for starting the command which does the actual
  * work. It is visually represented with a menuentry and a toolbar.
- *  
+ * 
  */
 public class SendAllMessagesAction extends AbstractColumbaAction {
 	/**
@@ -56,7 +53,8 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
 
 		// shortcut key
 		// no shortcut here, because F10 conflicts with system accelerator key
-		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
+		// putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10,
+		// 0));
 	}
 
 	/**
@@ -78,8 +76,7 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
 		MailFolderCommandReference r = new MailFolderCommandReference(folder);
 
 		// start command
-		SendAllMessagesCommand c = new SendAllMessagesCommand(this,
-				frameMediator, r);
+		SendAllMessagesCommand c = new SendAllMessagesCommand(this, r);
 
 		CommandProcessor.getInstance().addOp(c);
 	}

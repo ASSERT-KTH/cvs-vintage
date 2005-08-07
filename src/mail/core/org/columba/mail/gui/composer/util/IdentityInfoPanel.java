@@ -25,7 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import org.columba.core.gui.frame.ContainerInfoPanel;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.AccountItem;
 import org.columba.ristretto.message.Address;
 

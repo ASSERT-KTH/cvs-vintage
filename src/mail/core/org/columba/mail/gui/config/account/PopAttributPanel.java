@@ -27,7 +27,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
 

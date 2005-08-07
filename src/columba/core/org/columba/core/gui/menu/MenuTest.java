@@ -24,7 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 public class MenuTest {
 	private static final String MENUID1 = "menu1";

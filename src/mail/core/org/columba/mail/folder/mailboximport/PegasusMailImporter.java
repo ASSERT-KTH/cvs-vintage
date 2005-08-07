@@ -23,7 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -44,7 +44,7 @@ public class PegasusMailImporter extends AbstractMailboxImporter {
         return TYPE_FILE;
     }
 
-    public void importMailboxFile(File file, WorkerStatusController worker,
+    public void importMailboxFile(File file, IWorkerStatusController worker,
         AbstractMessageFolder destFolder) throws Exception {
         int count = 0;
         boolean sucess = false;

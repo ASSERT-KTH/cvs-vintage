@@ -28,8 +28,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 
 /**

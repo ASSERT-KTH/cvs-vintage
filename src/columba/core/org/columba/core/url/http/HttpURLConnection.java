@@ -25,7 +25,7 @@ import java.security.Permission;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.columba.core.main.ConnectionStateImpl;
+import org.columba.core.connectionstate.ConnectionStateImpl;
 
 /**
  * This class acts as a proxy between clients using HTTP URLs and the underlying

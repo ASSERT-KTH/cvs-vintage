@@ -23,12 +23,14 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.api.exception.PluginException;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -67,12 +69,20 @@ public class ReceiveSendAction extends AbstractColumbaAction {
 
 		try {
 			// send all unsent messages found in Outbox
-			Action sendAllAction = ((ActionExtensionHandler) PluginManager
+
+			Action sendAllAction;
+
+			IExtension extension = ((ActionExtensionHandler) PluginManager
 					.getInstance().getHandler(ActionExtensionHandler.NAME))
-					.getAction("SendAll", getFrameMediator());
+					.getExtension("SendAll");
+			sendAllAction = (Action) extension
+					.instanciateExtension(new Object[] { getFrameMediator() });
 			if (sendAllAction.isEnabled())
 				sendAllAction.actionPerformed(evt);
+
 		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		} catch (PluginException e) {
 			e.printStackTrace();
 		}
 	}

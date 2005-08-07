@@ -21,6 +21,9 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.Window;
 
+import org.columba.core.gui.base.TransparentWindow;
+import org.columba.core.resourceloader.ImageLoader;
+
 
 public class StartUpFrame extends Frame {
     private Window window;

@@ -18,9 +18,9 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 
-import org.columba.core.action.AbstractColumbaAction;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.IMessageController;

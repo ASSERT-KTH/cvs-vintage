@@ -43,10 +43,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CTabbedPane;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.CTabbedPane;
+import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;

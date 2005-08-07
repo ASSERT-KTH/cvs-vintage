@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.util;
 
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 
 public class AddressbookResourceLoader extends GlobalResourceLoader {

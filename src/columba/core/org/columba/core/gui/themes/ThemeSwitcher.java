@@ -23,10 +23,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.columba.api.plugin.IExtension;
 import org.columba.core.config.Config;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ThemeExtensionHandler;
 import org.columba.core.xml.XmlElement;
@@ -69,7 +69,7 @@ public class ThemeSwitcher {
 			theme.setLookAndFeel();
 		} catch (Exception ex) {
 
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				ex.printStackTrace();
 
 			JOptionPane.showMessageDialog(null, "Error while trying to load "

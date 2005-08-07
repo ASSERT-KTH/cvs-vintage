@@ -26,8 +26,7 @@ import junit.framework.TestCase;
 
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.config.Config;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.main.MailMain;
 
@@ -89,8 +88,8 @@ public class AbstractFolderTst extends TestCase {
 
 		new Config(file);
 
-		Main.DEBUG = true;
-		ColumbaLogger.createDefaultHandler();
+		Logging.DEBUG = true;
+		Logging.createDefaultHandler();
 
 		// init mail component
 		new MailMain().init();

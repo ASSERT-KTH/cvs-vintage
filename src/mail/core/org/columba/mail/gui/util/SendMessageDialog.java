@@ -32,12 +32,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import org.columba.api.command.IWorkerStatusChangeListener;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.command.WorkerStatusChangedEvent;
 import org.columba.core.command.Command;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Dialog shows progress while sending message.
@@ -51,20 +51,20 @@ import org.columba.core.gui.util.ImageLoader;
  * @author fdietz
  */
 public class SendMessageDialog extends JDialog implements
-		WorkerStatusChangeListener, ActionListener {
+		IWorkerStatusChangeListener, ActionListener {
 	private JProgressBar progressBar;
 
 	private JButton cancelButton;
 
 	private JLabel label;
 
-	private WorkerStatusController worker;
+	private IWorkerStatusController worker;
 
 	/**
 	 * @param arg0
 	 * @throws java.awt.HeadlessException
 	 */
-	public SendMessageDialog(WorkerStatusController worker)
+	public SendMessageDialog(IWorkerStatusController worker)
 			throws HeadlessException {
 		super(new JFrame(), "Sending message...", false);
 
@@ -187,7 +187,7 @@ public void workerStatusChanged(WorkerStatusChangedEvent e) {
 	 * @param worker
 	 *            The worker to set.
 	 */
-	public void setWorker(WorkerStatusController worker) {
+	public void setWorker(IWorkerStatusController worker) {
 		this.worker = worker;
 
 		worker.addWorkerStatusChangeListener(this);

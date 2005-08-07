@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 
 import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.jivesoftware.smack.packet.Presence;
 
 /**

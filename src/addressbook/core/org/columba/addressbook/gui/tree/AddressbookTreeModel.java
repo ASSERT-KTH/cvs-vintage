@@ -30,11 +30,11 @@ import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.plugin.FolderExtensionHandler;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.config.DefaultXmlConfig;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 
 public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel {

@@ -33,15 +33,15 @@ import org.columba.addressbook.folder.FolderEvent;
 import org.columba.addressbook.folder.FolderListener;
 import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IFolderEvent;
+import org.columba.addressbook.gui.focus.FocusManager;
+import org.columba.addressbook.gui.focus.FocusOwner;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.model.AddressbookTableModel;
 import org.columba.addressbook.gui.table.model.FilterDecorator;
 import org.columba.addressbook.gui.table.model.SortDecorator;
 import org.columba.addressbook.model.IContactItem;
-import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.util.ErrorDialog;
-import org.columba.core.main.Main;
+import org.columba.core.gui.dialog.ErrorDialog;
+import org.columba.core.logging.Logging;
 
 /**
  * @author fdietz
@@ -156,7 +156,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 						.setContactItemMap(((AbstractFolder) selectedFolder)
 								.getContactItemMap());
 			} catch (Exception e1) {
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					e1.printStackTrace();
 
 				new ErrorDialog(e1.getMessage(), e1);
@@ -232,35 +232,35 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	/** ************* FocusOwner Implementation ****************** */
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#copy()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#copy()
 	 */
 	public void copy() {
 
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#cut()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#cut()
 	 */
 	public void cut() {
 
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#delete()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#delete()
 	 */
 	public void delete() {
 
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#getComponent()
 	 */
 	public JComponent getComponent() {
 		return getView();
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#isCopyActionEnabled()
 	 */
 	public boolean isCopyActionEnabled() {
 
@@ -268,7 +268,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#isCutActionEnabled()
 	 */
 	public boolean isCutActionEnabled() {
 
@@ -276,7 +276,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#isDeleteActionEnabled()
 	 */
 	public boolean isDeleteActionEnabled() {
 
@@ -284,7 +284,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#isPasteActionEnabled()
 	 */
 	public boolean isPasteActionEnabled() {
 
@@ -292,7 +292,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#isRedoActionEnabled()
 	 */
 	public boolean isRedoActionEnabled() {
 
@@ -300,7 +300,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#isSelectAllActionEnabled()
 	 */
 	public boolean isSelectAllActionEnabled() {
 		if (getView().getRowCount() > 0) {
@@ -311,7 +311,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#isUndoActionEnabled()
 	 */
 	public boolean isUndoActionEnabled() {
 
@@ -319,28 +319,28 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#paste()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#paste()
 	 */
 	public void paste() {
 
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#redo()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#redo()
 	 */
 	public void redo() {
 
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#selectAll()
 	 */
 	public void selectAll() {
 		getView().selectAll();
 	}
 
 	/**
-	 * @see org.columba.core.gui.focus.FocusOwner#undo()
+	 * @see org.columba.addressbook.gui.focus.FocusOwner#undo()
 	 */
 	public void undo() {
 

@@ -21,8 +21,6 @@ import java.util.Observable;
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
 
-import org.columba.core.gui.focus.FocusOwner;
-
 
 /**
  * This class serves as a common super class for the Editor
@@ -36,7 +34,7 @@ import org.columba.core.gui.focus.FocusOwner;
  * @author Karl Peder Olesen (karlpeder), 2003-09-06
  */
 public abstract class AbstractEditorController extends Observable
-    implements FocusOwner {
+   {
     /** Reference to the controller */
     protected ComposerController controller;
 

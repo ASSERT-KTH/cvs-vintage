@@ -19,8 +19,8 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
 
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -46,7 +46,7 @@ public class ReplyAsAttachmentCommand extends ReplyCommand {
 		super(reference);
 	}
 
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// create composer model
 		model = new ComposerModel();
 

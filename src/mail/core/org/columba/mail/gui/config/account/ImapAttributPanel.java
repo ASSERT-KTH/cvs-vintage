@@ -20,7 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.util.MailResourceLoader;
 

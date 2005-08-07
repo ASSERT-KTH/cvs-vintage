@@ -20,7 +20,7 @@ package org.columba.mail.gui.charset;
 
 import java.nio.charset.Charset;
 
-import org.columba.core.gui.menu.CRadioButtonMenuItem;
+import org.columba.core.gui.base.CRadioButtonMenuItem;
 import org.columba.mail.util.MailResourceLoader;
 
 

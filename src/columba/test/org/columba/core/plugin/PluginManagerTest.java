@@ -21,6 +21,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.columba.api.plugin.IPluginManager;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 

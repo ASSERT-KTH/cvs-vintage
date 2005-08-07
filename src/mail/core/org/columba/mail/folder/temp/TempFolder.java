@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.filter.Filter;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.config.FolderItem;
@@ -104,7 +104,7 @@ public class TempFolder extends AbstractMessageFolder {
     }
 
     /**
-     * @see org.columba.modules.mail.folder.Folder#getHeaderList(WorkerStatusController)
+     * @see org.columba.modules.mail.folder.Folder#getHeaderList(IWorkerStatusController)
      */
     public IHeaderList getHeaderList() throws Exception {
         return headerList;
@@ -138,7 +138,7 @@ public class TempFolder extends AbstractMessageFolder {
 
     /**
      * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object,
-     *      WorkerStatusController)
+     *      IWorkerStatusController)
      * @TODO dont use deprecated method
      */
     public IColumbaHeader getMessageHeader(Object uid) throws Exception {
@@ -149,7 +149,7 @@ public class TempFolder extends AbstractMessageFolder {
 
     /**
      * @see org.columba.modules.mail.folder.Folder#getMessage(Object,
-     *      WorkerStatusController)
+     *      IWorkerStatusController)
      */
     public IColumbaMessage getMessage(Object uid) throws Exception {
         IColumbaMessage message = (IColumbaMessage) messageList.get(uid);
@@ -159,7 +159,7 @@ public class TempFolder extends AbstractMessageFolder {
 
     /**
      * @see org.columba.modules.mail.folder.Folder#searchMessages(Filter,
-     *      Object[], WorkerStatusController)
+     *      Object[], IWorkerStatusController)
      */
     public Object[] searchMessages(Filter filter, Object[] uids)
         throws Exception {
@@ -168,7 +168,7 @@ public class TempFolder extends AbstractMessageFolder {
 
     /**
      * @see org.columba.modules.mail.folder.Folder#searchMessages(Filter,
-     *      WorkerStatusController)
+     *      IWorkerStatusController)
      */
     public Object[] searchMessages(Filter filter) throws Exception {
         return getSearchEngine().searchMessages(filter);
@@ -343,7 +343,7 @@ public class TempFolder extends AbstractMessageFolder {
     
     /**
      * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage,
-     *      WorkerStatusController)
+     *      IWorkerStatusController)
      */
     public Object addMessage(IColumbaMessage message) throws Exception {
         Object newUid = generateNextUid();

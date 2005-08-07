@@ -22,13 +22,13 @@ import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusChangeListener;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.command.WorkerStatusChangedEvent;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -135,9 +135,9 @@ public class SendMessageCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 
 		ComposerCommandReference r = (ComposerCommandReference) getReference();
 
@@ -205,7 +205,7 @@ public class SendMessageCommand extends Command {
 			worker.setDisplayText(MailResourceLoader.getString("statusbar",
 					"message", "send_message"));
 
-			WorkerStatusChangeListener listener = new WorkerStatusChangeListener() {
+			IWorkerStatusChangeListener listener = new IWorkerStatusChangeListener() {
 				public void workerStatusChanged(WorkerStatusChangedEvent e) {
 					if( e.getSource().cancelled() ) {
 						try {

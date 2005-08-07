@@ -24,8 +24,8 @@ import net.javaprog.ui.wizard.Step;
 import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
 
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 

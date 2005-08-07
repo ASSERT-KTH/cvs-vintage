@@ -16,6 +16,10 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import org.columba.api.command.IStatusObservable;
+import org.columba.api.command.IWorkerStatusController;
+
+
 
 
 /**
@@ -37,16 +41,16 @@ package org.columba.core.command;
  * 
  * @author fdietz
  */
-public class StatusObservableImpl implements StatusObservable {
+public class StatusObservableImpl implements IStatusObservable {
     /**
  * encapsulated worker
  */
-    private WorkerStatusController worker;
+    private IWorkerStatusController worker;
 
     public StatusObservableImpl() {
     }
 
-    public StatusObservableImpl(WorkerStatusController worker) {
+    public StatusObservableImpl(IWorkerStatusController worker) {
         this.worker = worker;
     }
 
@@ -119,7 +123,7 @@ public class StatusObservableImpl implements StatusObservable {
  * 
  * @return
  */
-    public WorkerStatusController getWorker() {
+    public IWorkerStatusController getWorker() {
         return worker;
     }
 
@@ -128,14 +132,14 @@ public class StatusObservableImpl implements StatusObservable {
  * 
  * @param worker
  */
-    public void setWorker(WorkerStatusController worker) {
+    public void setWorker(IWorkerStatusController worker) {
         this.worker = worker;
     }
 
     /*
  * (non-Javadoc)
  * 
- * @see org.columba.core.command.StatusObservable#getCancelled()
+ * @see org.columba.api.command.IStatusObservable#getCancelled()
  */
     public boolean isCancelled() {
         return worker.cancelled();

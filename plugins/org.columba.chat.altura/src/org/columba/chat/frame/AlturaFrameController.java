@@ -24,11 +24,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import org.columba.api.gui.frame.IContentPane;
 import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.IContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
@@ -63,7 +63,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContentPane#getComponent()
+	 * @see org.columba.api.gui.frame.IContentPane#getComponent()
 	 */
 	public JComponent getComponent() {
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -110,7 +110,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IFrameMediator#getContentPane()
+	 * @see org.columba.api.gui.frame.IFrameMediator#getContentPane()
 	 */
 	public IContentPane getContentPane() {
 		return this;

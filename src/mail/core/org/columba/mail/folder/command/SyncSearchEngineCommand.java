@@ -16,9 +16,9 @@
 
 package org.columba.mail.folder.command;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
@@ -36,7 +36,7 @@ public class SyncSearchEngineCommand extends Command {
         super(reference);
     }
 
-    public void execute(WorkerStatusController worker)
+    public void execute(IWorkerStatusController worker)
         throws Exception {
         // get source folder
         parentFolder = (AbstractLocalFolder) ((MailFolderCommandReference) getReference()).getSourceFolder();

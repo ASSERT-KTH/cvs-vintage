@@ -31,8 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.OutgoingItem;

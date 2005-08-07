@@ -29,10 +29,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.folder.IFolder;
 import org.columba.core.folder.IFolderCommandReference;
-import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
@@ -468,7 +467,7 @@ public class TableController implements ListSelectionListener,
 	public void valueChanged(ListSelectionEvent arg0) {
 
 		// enable/disable cut/copy/paste/selectall actions
-		FocusManager.getInstance().updateActions();
+		// FocusManager.getInstance().updateActions();
 
 		// if user is currently changing selection, don't do anything
 		// -> wait until the final selection is available
@@ -476,23 +475,19 @@ public class TableController implements ListSelectionListener,
 			return;
 
 		/*
-		// @author fdietz
-		// bug #983931, message jumps while downloading new messages
-		if (getView().getSelectedNodes().length == 0) {
-			// skip if no message selected
-
-			if (getView().getRowCount() > 0)
-				// if folder contains messages
-				// -> skip to fix above bug
-				return;
-		}
-		*/
+		 * // @author fdietz // bug #983931, message jumps while downloading new
+		 * messages if (getView().getSelectedNodes().length == 0) { // skip if
+		 * no message selected
+		 * 
+		 * if (getView().getRowCount() > 0) // if folder contains messages // ->
+		 * skip to fix above bug return; }
+		 */
 
 		// rememember selected nodes
 		previouslySelectedNodes = getView().getSelectedNodes();
 
 		// show message
-		//new ViewMessageAction(getFrameController()).actionPerformed(null);
+		// new ViewMessageAction(getFrameController()).actionPerformed(null);
 	}
 
 	/**

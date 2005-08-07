@@ -22,7 +22,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.columba.core.plugin.util.ExtensionXMLParser;
+import org.columba.api.plugin.ExtensionMetadata;
+import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+
 
 /**
  * Extension handler is a registry for extensions and resembles a hook to extend
@@ -52,8 +55,8 @@ public class ExtensionHandler implements IExtensionHandler {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#addExtension(java.lang.String,
-	 *      org.columba.core.plugin.IExtension)
+	 * @see org.columba.api.plugin.IExtensionHandler#addExtension(java.lang.String,
+	 *      org.columba.api.plugin.IExtension)
 	 */
 	public void addExtension(String id, IExtension extension) {
 		if (id == null)
@@ -71,7 +74,7 @@ public class ExtensionHandler implements IExtensionHandler {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#getExtension(java.lang.String)
+	 * @see org.columba.api.plugin.IExtensionHandler#getExtension(java.lang.String)
 	 */
 	public IExtension getExtension(String id) {
 		if (id == null)
@@ -84,14 +87,14 @@ public class ExtensionHandler implements IExtensionHandler {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#getId()
+	 * @see org.columba.api.plugin.IExtensionHandler#getId()
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#exists(java.lang.String)
+	 * @see org.columba.api.plugin.IExtensionHandler#exists(java.lang.String)
 	 */
 	public boolean exists(String id) {
 		return map.containsKey(id);
@@ -135,7 +138,7 @@ public class ExtensionHandler implements IExtensionHandler {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#getPluginIdList()
+	 * @see org.columba.api.plugin.IExtensionHandler#getPluginIdList()
 	 */
 	public String[] getPluginIdList() {
 		Vector result = new Vector();
@@ -152,14 +155,14 @@ public class ExtensionHandler implements IExtensionHandler {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#getExtensionEnumeration()
+	 * @see org.columba.api.plugin.IExtensionHandler#getExtensionEnumeration()
 	 */
 	public Enumeration getExtensionEnumeration() {
 		return map.elements();
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#getExternalExtensionsEnumeration()
+	 * @see org.columba.api.plugin.IExtensionHandler#getExternalExtensionsEnumeration()
 	 */
 	public Enumeration getExternalExtensionsEnumeration() {
 		Enumeration e = getExtensionEnumeration();
@@ -176,7 +179,7 @@ public class ExtensionHandler implements IExtensionHandler {
 
 	
 	/**
-	 * @see org.columba.core.plugin.IExtensionHandler#loadExtensionsFromStream(InputStream)
+	 * @see org.columba.api.plugin.IExtensionHandler#loadExtensionsFromStream(InputStream)
 	 */
 	public void loadExtensionsFromStream(InputStream is) {
 		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is);

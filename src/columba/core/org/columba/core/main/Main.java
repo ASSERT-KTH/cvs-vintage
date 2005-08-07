@@ -32,29 +32,33 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
+import org.columba.api.backgroundtask.IBackgroundTaskManager;
+import org.columba.api.plugin.IPluginManager;
+import org.columba.api.shutdown.IShutdownManager;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
+import org.columba.core.base.OSInfo;
+import org.columba.core.component.ComponentManager;
 import org.columba.core.config.Config;
+import org.columba.core.config.IConfig;
+import org.columba.core.config.SaveConfig;
+import org.columba.core.desktop.ColumbaDesktop;
+import org.columba.core.desktop.JDICDesktop;
+import org.columba.core.desktop.MacDesktop;
+import org.columba.core.gui.base.DebugRepaintManager;
 import org.columba.core.gui.frame.FrameManager;
+import org.columba.core.gui.profiles.Profile;
+import org.columba.core.gui.profiles.ProfileManager;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.DebugRepaintManager;
+import org.columba.core.gui.trayicon.ColumbaTrayIcon;
+import org.columba.core.gui.trayicon.JDICTrayIcon;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
-import org.columba.core.io.ColumbaDesktop;
-import org.columba.core.io.JDICDesktop;
-import org.columba.core.io.MacDesktop;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ComponentExtensionHandler;
-import org.columba.core.profiles.Profile;
-import org.columba.core.profiles.ProfileManager;
-import org.columba.core.session.SessionController;
-import org.columba.core.shutdown.SaveConfig;
+import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.trayicon.ColumbaTrayIcon;
-import org.columba.core.trayicon.JDICTrayIcon;
-import org.columba.core.util.GlobalResourceLoader;
-import org.columba.core.util.OSInfo;
+import org.columba.core.versioninfo.VersionInfo;
 
 import sun.misc.URLClassPath;
 
@@ -62,9 +66,6 @@ import sun.misc.URLClassPath;
  * Columba's main class used to start the application.
  */
 public class Main {
-	/** If true, enables debugging output from org.columba.core.logging */
-	public static boolean DEBUG = false;
-
 	private static final Logger LOG = Logger.getLogger("org.columba.core.main");
 
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
@@ -199,7 +200,7 @@ public class Main {
 	}
 
 	public void run(String args[]) {
-		ColumbaLogger.createDefaultHandler();
+		Logging.createDefaultHandler();
 		registerCommandLineArguments();
 
 		// handle commandline parameters
@@ -210,13 +211,26 @@ public class Main {
 		// prompt user for profile
 		Profile profile = ProfileManager.getInstance().getProfile(path);
 
+		// register shutdown manager in service registry
+		ServiceRegistry.getInstance().register(IShutdownManager.class,
+				ShutdownManager.getInstance());
+
+		// register background task manager in service registry
+		ServiceRegistry.getInstance().register(IBackgroundTaskManager.class,
+				BackgroundTaskManager.getInstance());
+
 		// initialize configuration with selected profile
 		new Config(profile.getLocation());
 
+		// register Config in service registry
+		ServiceRegistry.getInstance().register(IConfig.class,
+				Config.getInstance());
+
 		// if user doesn't overwrite logger settings with commandline arguments
 		// just initialize default logging
-		// ColumbaLogger.createDefaultHandler();
-		ColumbaLogger.createDefaultFileHandler();
+		// Logging.createDefaultHandler();
+		Logging.createDefaultFileHandler(Config.getInstance()
+				.getConfigDirectory());
 
 		for (int i = 0; i < args.length; i++) {
 			LOG.info("arg[" + i + "]=" + args[i]);
@@ -227,7 +241,7 @@ public class Main {
 		// enable debugging of repaint manager to track down swing gui
 		// access from outside the awt-event dispatcher thread
 
-		if (Main.DEBUG)
+		if (Logging.DEBUG)
 			RepaintManager.setCurrentManager(new DebugRepaintManager());
 
 		// show splash screen
@@ -249,29 +263,21 @@ public class Main {
 		BackgroundTaskManager.getInstance().register(task);
 		ShutdownManager.getInstance().register(task);
 
-		ComponentExtensionHandler handler = null;
-		try {
-			handler = (ComponentExtensionHandler) PluginManager.getInstance()
-					.getHandler(ComponentExtensionHandler.NAME);
-		} catch (PluginHandlerNotFoundException e) {
-			e.printStackTrace();
-		}
-
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();
 
+		ServiceRegistry.getInstance().register(IPluginManager.class,
+				PluginManager.getInstance());
+
 		// init all components
-		handler.init();
-		handler.registerCommandLineArguments();
+		ComponentManager.getInstance().init();
+		ComponentManager.getInstance().registerCommandLineArguments();
 
 		// set Look & Feel
 		ThemeSwitcher.setTheme();
 
 		// initialize platform-dependend services
 		initPlatformServices();
-
-		// Add the tray icon to the System tray
-		ColumbaTrayIcon.getInstance().addToSystemTray();
 
 		// init font configuration
 		new FontProperties();
@@ -280,8 +286,8 @@ public class Main {
 		FontProperties.setFont();
 
 		// handle the commandline arguments of the modules
-		handler.handleCommandLineParameters(ColumbaCmdLineParser.getInstance()
-				.getParsedCommandLine());
+		ComponentManager.getInstance().handleCommandLineParameters(
+				ColumbaCmdLineParser.getInstance().getParsedCommandLine());
 
 		// restore frames of last session
 		if (restoreLastSession) {
@@ -293,9 +299,14 @@ public class Main {
 			frame.setVisible(false);
 		}
 
+		// Add the tray icon to the System tray
+//		ColumbaTrayIcon.getInstance().addToSystemTray(
+//				FrameManager.getInstance().getActiveFrameMediator()
+//						.getFrameMediator());
+
 		// call the postStartups of the modules
 		// e.g. check for default mailclient
-		handler.postStartup();
+		ComponentManager.getInstance().postStartup();
 
 	}
 
@@ -371,8 +382,8 @@ public class Main {
 		}
 
 		if (commandLine.hasOption("debug")) {
-			DEBUG = true;
-			ColumbaLogger.setDebugging(true);
+			Logging.DEBUG = true;
+			Logging.setDebugging(true);
 		}
 
 		if (commandLine.hasOption("nosplash")) {

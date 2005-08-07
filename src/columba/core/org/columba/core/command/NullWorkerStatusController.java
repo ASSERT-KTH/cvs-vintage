@@ -16,7 +16,9 @@
 
 package org.columba.core.command;
 
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+import org.columba.api.command.IWorkerStatusChangeListener;
+import org.columba.api.command.IWorkerStatusController;
+
 
 /**
  * @author timo
@@ -26,12 +28,12 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class NullWorkerStatusController implements WorkerStatusController {
+public class NullWorkerStatusController implements IWorkerStatusController {
 	/* (non-Javadoc)
-	 * @see org.columba.core.command.WorkerStatusController#removeWorkerStatusChangeListener(org.columba.core.gui.statusbar.event.WorkerStatusChangeListener)
+	 * @see org.columba.api.command.IWorkerStatusController#removeWorkerStatusChangeListener(org.columba.core.gui.statusbar.event.WorkerStatusChangeListener)
 	 */
 	public void removeWorkerStatusChangeListener(
-			WorkerStatusChangeListener listener) {
+			IWorkerStatusChangeListener listener) {
 		// TODO Auto-generated method stub
 
 	}
@@ -49,94 +51,94 @@ public class NullWorkerStatusController implements WorkerStatusController {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#setDisplayText(java.lang.String)
+     * @see org.columba.api.command.IWorkerStatusController#setDisplayText(java.lang.String)
      */
     public void setDisplayText(String text) {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#clearDisplayText()
+     * @see org.columba.api.command.IWorkerStatusController#clearDisplayText()
      */
     public void clearDisplayText() {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#clearDisplayTextWithDelay()
+     * @see org.columba.api.command.IWorkerStatusController#clearDisplayTextWithDelay()
      */
     public void clearDisplayTextWithDelay() {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#getDisplayText()
+     * @see org.columba.api.command.IWorkerStatusController#getDisplayText()
      */
     public String getDisplayText() {
         return null;
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#setProgressBarMaximum(int)
+     * @see org.columba.api.command.IWorkerStatusController#setProgressBarMaximum(int)
      */
     public void setProgressBarMaximum(int max) {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#setProgressBarValue(int)
+     * @see org.columba.api.command.IWorkerStatusController#setProgressBarValue(int)
      */
     public void setProgressBarValue(int value) {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#resetProgressBar()
+     * @see org.columba.api.command.IWorkerStatusController#resetProgressBar()
      */
     public void resetProgressBar() {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#incProgressBarValue()
+     * @see org.columba.api.command.IWorkerStatusController#incProgressBarValue()
      */
     public void incProgressBarValue() {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#incProgressBarValue(int)
+     * @see org.columba.api.command.IWorkerStatusController#incProgressBarValue(int)
      */
     public void incProgressBarValue(int increment) {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#getProgessBarMaximum()
+     * @see org.columba.api.command.IWorkerStatusController#getProgessBarMaximum()
      */
     public int getProgessBarMaximum() {
         return 0;
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#getProgressBarValue()
+     * @see org.columba.api.command.IWorkerStatusController#getProgressBarValue()
      */
     public int getProgressBarValue() {
         return 0;
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#cancel()
+     * @see org.columba.api.command.IWorkerStatusController#cancel()
      */
     public void cancel() {
     }
 
     /**
-     * @see org.columba.core.command.WorkerStatusController#cancelled()
+     * @see org.columba.api.command.IWorkerStatusController#cancelled()
      */
     public boolean cancelled() {
         return false;
     }
     
     /* (non-Javadoc)
-     * @see org.columba.core.command.WorkerStatusController#addWorkerStatusChangeListener(org.columba.core.gui.statusbar.event.WorkerStatusChangeListener)
+     * @see org.columba.api.command.IWorkerStatusController#addWorkerStatusChangeListener(org.columba.core.gui.statusbar.event.WorkerStatusChangeListener)
      */
-    public void addWorkerStatusChangeListener(WorkerStatusChangeListener l) {
+    public void addWorkerStatusChangeListener(IWorkerStatusChangeListener l) {
     }
     /* (non-Javadoc)
-     * @see org.columba.core.command.WorkerStatusController#getTimeStamp()
+     * @see org.columba.api.command.IWorkerStatusController#getTimeStamp()
      */
     public int getTimeStamp() {
             return 0;

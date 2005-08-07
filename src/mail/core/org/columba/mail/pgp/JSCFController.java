@@ -22,10 +22,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.externaltools.ExternalToolsManager;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SecurityItem;
@@ -115,11 +116,12 @@ public class JSCFController {
 						.getInstance().getHandler(
 								"org.columba.core.externaltools");
 				LOG.fine("recived Handler ... getting path from it");
-				path = handler.getLocationOfExternalTool("gpg").getPath();
+				path = ExternalToolsManager.getInstance()
+						.getLocationOfExternalTool("gpg").getPath();
 				LOG.fine("setting path: " + path);
 			} catch (PluginHandlerNotFoundException e) {
 				LOG.fine("PluginHandler not found" + e);
-				if (Main.DEBUG) {
+				if (Logging.DEBUG) {
 					e.printStackTrace();
 				}
 			}

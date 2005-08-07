@@ -27,11 +27,11 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
@@ -61,9 +61,9 @@ public class SaveMessageSourceAsCommand extends Command {
     /**
      * Executes the command, i.e. saves source for selected
      * messages.
-     * @see org.columba.core.command.Command#execute(Worker)
+     * @see org.columba.api.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker)
+    public void execute(IWorkerStatusController worker)
         throws Exception {
         MailFolderCommandReference r = (MailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save

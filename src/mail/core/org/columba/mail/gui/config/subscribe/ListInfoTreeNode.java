@@ -18,7 +18,7 @@ package org.columba.mail.gui.config.subscribe;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.frapuccino.checkabletree.CheckableItemImpl;
 
 

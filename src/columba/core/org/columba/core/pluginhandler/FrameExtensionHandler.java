@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.columba.api.plugin.IExtension;
 import org.columba.core.plugin.ExtensionHandler;
-import org.columba.core.plugin.IExtension;
 
 /**
  * Frames found in package org.columba.core.gui.frame are loaded dynamically.

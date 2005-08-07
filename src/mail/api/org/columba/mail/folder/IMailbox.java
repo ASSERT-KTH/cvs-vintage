@@ -19,7 +19,7 @@ package org.columba.mail.folder;
 
 import java.io.InputStream;
 
-import org.columba.core.command.StatusObservable;
+import org.columba.api.command.IStatusObservable;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
@@ -275,7 +275,7 @@ public interface IMailbox extends IMailFolder{
      */
     public boolean isReadOnly();
     
-    StatusObservable getObservable();
+    IStatusObservable getObservable();
     
     Object getLastSelection();
     void setLastSelection(Object lastSel);

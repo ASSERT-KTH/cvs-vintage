@@ -24,18 +24,18 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.base.cFileChooser;
+import org.columba.core.base.cFileFilter;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.io.TempFileStore;
-import org.columba.core.util.cFileChooser;
-import org.columba.core.util.cFileFilter;
+import org.columba.core.util.TempFileStore;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
@@ -77,7 +77,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 
@@ -109,9 +109,9 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 		AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
 		Object[] uids = r.getUids();

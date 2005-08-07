@@ -21,9 +21,9 @@ import javax.swing.JFrame;
 
 import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.ISelectAddressDialog;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.services.ServiceNotFoundException;
+import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;

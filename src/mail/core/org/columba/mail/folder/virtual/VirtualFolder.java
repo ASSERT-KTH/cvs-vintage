@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
@@ -535,7 +535,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#searchMessages(Filter,
-	 *      Object[], WorkerStatusController)
+	 *      Object[], IWorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 			throws Exception {
@@ -776,7 +776,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#getUids(org.columba.api.command.IWorkerStatusController)
 	 */
 	public Object[] getUids() throws Exception {
 		if( !active ) {

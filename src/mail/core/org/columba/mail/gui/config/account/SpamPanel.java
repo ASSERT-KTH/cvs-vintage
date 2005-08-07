@@ -27,11 +27,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JRadioButton;
 
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.RadioButtonWithMnemonic;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.MultiLineLabel;
+import org.columba.core.gui.base.RadioButtonWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpamItem;
 import org.columba.mail.folder.AbstractMessageFolder;

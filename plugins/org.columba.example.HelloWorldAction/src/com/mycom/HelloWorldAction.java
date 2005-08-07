@@ -21,8 +21,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
 public class HelloWorldAction extends AbstractColumbaAction {
 	public HelloWorldAction(IFrameMediator controller) {

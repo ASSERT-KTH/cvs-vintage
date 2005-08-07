@@ -31,7 +31,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.config.Config;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.CloneStreamMaster;
-import org.columba.core.main.Main;
+import org.columba.core.logging.Logging;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.rules.RuleList;
@@ -204,7 +204,7 @@ public class MacchiatoPlugin implements ISpamPlugin {
 			hasChanged = true;
 		} catch (IOException e1) {
 			LOG.severe(e1.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e1.printStackTrace();
 		} catch (NoSuchAlgorithmException nsae) {
 		} // does not occur
@@ -266,7 +266,7 @@ public class MacchiatoPlugin implements ISpamPlugin {
 			hasChanged = true;
 		} catch (IOException e1) {
 			LOG.severe(e1.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e1.printStackTrace();
 		} catch (NoSuchAlgorithmException nsae) {
 		} // does not occur
@@ -287,7 +287,7 @@ public class MacchiatoPlugin implements ISpamPlugin {
 				db.close();
 			}
 		} catch (Exception e) {
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				e.printStackTrace();
 			}
 			// TODO (@author fdietz): i18n

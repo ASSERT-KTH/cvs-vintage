@@ -20,12 +20,13 @@ package org.columba.mail.folder.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.columba.api.command.ICommand;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractFolder;
@@ -51,7 +52,7 @@ import org.columba.ristretto.message.Flags;
  */
 public class ToggleMarkCommand extends Command {
 
-	private WorkerStatusController worker;
+	private IWorkerStatusController worker;
 
 	private List commandList;
 
@@ -68,9 +69,9 @@ public class ToggleMarkCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		this.worker = worker;
 
 		/*
@@ -214,7 +215,7 @@ public class ToggleMarkCommand extends Command {
 					new Object[] { uids[j] });
 
 			// create command
-			Command c = null;
+			ICommand c = null;
 			if (markVariant == MarkMessageCommand.MARK_AS_SPAM)
 				c = new LearnMessageAsSpamCommand(ref);
 			else

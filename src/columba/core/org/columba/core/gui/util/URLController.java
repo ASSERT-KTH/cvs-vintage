@@ -23,7 +23,7 @@ import java.net.URL;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.io.ColumbaDesktop;
+import org.columba.core.desktop.ColumbaDesktop;
 
 public class URLController implements ActionListener {
     private String address;

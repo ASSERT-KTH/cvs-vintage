@@ -18,17 +18,8 @@
 package org.columba.core.pluginhandler;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-import org.apache.commons.cli.CommandLine;
-import org.columba.core.main.IComponentPlugin;
 import org.columba.core.plugin.ExtensionHandler;
-import org.columba.core.plugin.IExtension;
-import org.columba.core.plugin.exception.PluginException;
-import org.columba.core.plugin.exception.PluginLoadingFailedException;
-import org.columba.core.xml.XmlElement;
 
 /**
  * Handler provides access to main entrypoint of components like addressbook and
@@ -39,8 +30,7 @@ import org.columba.core.xml.XmlElement;
  * 
  * @author fdietz
  */
-public class ComponentExtensionHandler extends ExtensionHandler implements
-		IComponentPlugin {
+public class ComponentExtensionHandler extends ExtensionHandler{
 
 	public static final String XML_RESOURCE = "/org/columba/core/plugin/component.xml";
 
@@ -58,131 +48,14 @@ public class ComponentExtensionHandler extends ExtensionHandler implements
 
 	}
 
-	private void initDefaultPlugins() {
-		getPlugin("MailComponent");
-		getPlugin("AddressbookComponent");
-	}
-
-	public IComponentPlugin getPlugin(String id) {
-		IComponentPlugin component = null;
-
-		IExtension extension = getExtension(id);
-
-		try {
-			component = (IComponentPlugin) extension.instanciateExtension(null);
-		} catch (Exception e) {
-			handlePluginError(id);
-		}
-
-		return component;
-	}
-
-	/**
-	 * @see org.columba.core.main.IComponentPlugin#init()
-	 */
-	public void init() {
-		Iterator it = getMap().values().iterator();
-		while (it.hasNext()) {
-			IExtension ext = (IExtension) it.next();
-			IComponentPlugin p;
-			try {
-				p = (IComponentPlugin) ext.instanciateExtension(null);
-				p.init();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * @see org.columba.core.main.IComponentPlugin#postStartup()
-	 */
-	public void postStartup() {
-		Iterator it = getMap().values().iterator();
-		while (it.hasNext()) {
-			IExtension ext = (IExtension) it.next();
-			IComponentPlugin p;
-			try {
-				p = (IComponentPlugin) ext.instanciateExtension(null);
-				p.postStartup();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * @see org.columba.core.main.IComponentPlugin#registerCommandLineArguments()
-	 */
-	public void registerCommandLineArguments() {
-		// init mail/addressbook internal components
-		// FIXME
-		//initDefaultPlugins();
-
-		Iterator it = getMap().values().iterator();
-		while (it.hasNext()) {
-			IExtension ext = (IExtension) it.next();
-			IComponentPlugin p;
-			try {
-				p = (IComponentPlugin) ext.instanciateExtension(null);
-				p.registerCommandLineArguments();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-	}
-
-	/**
-	 * @see org.columba.core.main.IComponentPlugin#handleCommandLineParameters(org.apache.commons.cli.CommandLine)
-	 */
-	public void handleCommandLineParameters(CommandLine commandLine) {
-		Iterator it = getMap().values().iterator();
-		while (it.hasNext()) {
-			IExtension ext = (IExtension) it.next();
-			IComponentPlugin p;
-			try {
-				p = (IComponentPlugin) ext.instanciateExtension(null);
-				p.handleCommandLineParameters(commandLine);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
 	/**
 	 * @see org.columba.core.plugin.ExtensionHandler#addExtension(java.lang.String,
 	 *      org.columba.core.plugin.IExtension)
 	 */
-	public void addExtension(String id, IExtension extension) {
-		super.addExtension(id, extension);
-
-		IComponentPlugin plugin = getPlugin(id);
-
-		// TODO implement
-		//plugin.registerCommandLineArguments();
-		//plugin.init();
-
-	}
-
-	// /**
-	// * @see
-	// org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String,
-	// * org.columba.core.xml.XmlElement)
-	// */
-	// public void addExtension(String id, XmlElement extension) {
+	// public void addExtension(String id, IExtension extension) {
 	// super.addExtension(id, extension);
 	//
-	// // init plugin
-	// XmlElement child = extension.getElement(0);
-	// String name = child.getAttribute("name");
+	// IComponentPlugin plugin = getPlugin(id);
 	//
-	// IComponentPlugin plugin = getPlugin(name);
-	// plugin.registerCommandLineArguments();
-	// plugin.init();
-	// }
+	//	}
 }

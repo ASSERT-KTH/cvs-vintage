@@ -30,12 +30,12 @@ import java.util.Observer;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.base.Blowfish;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.ProgressObservedInputStream;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.util.Blowfish;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -495,7 +495,7 @@ public class SMTPServer implements Observer  {
 	 * @throws Exception
 	 */
 	public void sendMessage(SendableMessage message,
-			WorkerStatusController workerStatusController)
+			IWorkerStatusController workerStatusController)
 			throws SMTPException, IOException, CommandCancelledException {
 		ensureAuthenticated();
 		

@@ -21,8 +21,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.filter.FilterAction;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.filter.MailFilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.util.MailResourceLoader;

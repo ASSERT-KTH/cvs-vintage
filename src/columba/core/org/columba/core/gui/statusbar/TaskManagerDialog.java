@@ -45,17 +45,15 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.command.CommandProcessor;
+import org.columba.api.command.IWorkerStatusChangeListener;
+import org.columba.api.command.WorkerStatusChangedEvent;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.util.GlobalResourceLoader;
-
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 /**
  * Dialog showing all running tasks.
@@ -64,18 +62,17 @@ import org.columba.core.util.GlobalResourceLoader;
  * 
  * @author fdietz
  */
-public class TaskManagerDialog extends JDialog
-		implements
-			TaskManagerListener,
-			ActionListener,
-			WorkerStatusChangeListener, ListSelectionListener {
+public class TaskManagerDialog extends JDialog implements TaskManagerListener,
+		ActionListener, IWorkerStatusChangeListener, ListSelectionListener {
 
-	
 	private static TaskManagerDialog instance;
 
 	private TaskManager taskManager;
+
 	private JButton cancelButton;
+
 	private JButton killButton;
+
 	private JList list;
 
 	public TaskManagerDialog(TaskManager tm) {
@@ -91,8 +88,7 @@ public class TaskManagerDialog extends JDialog
 
 	public static TaskManagerDialog createInstance() {
 		if (instance == null) {
-			instance = new TaskManagerDialog(CommandProcessor.getInstance()
-					.getTaskManager());
+			instance = new TaskManagerDialog(TaskManager.getInstance());
 		}
 
 		if (!instance.isVisible()) {
@@ -133,13 +129,12 @@ public class TaskManagerDialog extends JDialog
 
 		// disabled Kill button, because feature is not supported
 		/*
-		Component strut1 = Box.createRigidArea(new Dimension(30, 6));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
-
-		gridBagLayout.setConstraints(killButton, c);
-		eastPanel.add(killButton);
-		*/
+		 * Component strut1 = Box.createRigidArea(new Dimension(30, 6));
+		 * gridBagLayout.setConstraints(strut1, c); eastPanel.add(strut1);
+		 * 
+		 * gridBagLayout.setConstraints(killButton, c);
+		 * eastPanel.add(killButton);
+		 */
 
 		Component glue = Box.createVerticalGlue();
 		glue = Box.createVerticalGlue();
@@ -237,19 +232,19 @@ public class TaskManagerDialog extends JDialog
 
 		switch (e.getType()) {
 
-			case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED :
-				break;
+		case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED:
+			break;
 
-			case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED :
-				break;
+		case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED:
+			break;
 
-			case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED :
-				break;
+		case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED:
+			break;
 
-			case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED :
-				break;
+		case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED:
+			break;
 
-			case WorkerStatusChangedEvent.FINISHED :
+		case WorkerStatusChangedEvent.FINISHED:
 		}
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -264,14 +259,15 @@ public class TaskManagerDialog extends JDialog
 		});
 
 	}
-	
+
 	/**
 	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
 	 */
 	public void valueChanged(ListSelectionEvent ev) {
-		if ( ev.getValueIsAdjusting() ) return;
-		
-		if ( list.getSelectedIndex() != -1) 
+		if (ev.getValueIsAdjusting())
+			return;
+
+		if (list.getSelectedIndex() != -1)
 			cancelButton.setEnabled(true);
 		else
 			cancelButton.setEnabled(false);

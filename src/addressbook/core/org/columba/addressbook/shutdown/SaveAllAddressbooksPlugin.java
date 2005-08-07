@@ -37,7 +37,7 @@ public class SaveAllAddressbooksPlugin implements Runnable {
     }
 
     /**
- * @see org.columba.core.shutdown.ShutdownPlugin#run()
+ * @see org.columba.api.shutdown.ShutdownPlugin#run()
  */
     public void run() {
         saveFolders((AddressbookTreeNode) AddressbookTreeModel.getInstance().getRoot());

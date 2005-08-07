@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.Command;
+import org.columba.api.command.ICommand;
 import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.folder.IFolder;
@@ -34,7 +34,7 @@ public class MarkMessageAsReadAction extends AbstractFilterAction {
 	/**
 	 * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
 	 */
-	public Command getCommand(FilterAction filterAction,
+	public ICommand getCommand(FilterAction filterAction,
 			IFolder srcFolder, Object[] uids) throws Exception {
 		MailFolderCommandReference r = new MailFolderCommandReference(
 				srcFolder, uids);

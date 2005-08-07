@@ -6,10 +6,9 @@
  */
 package org.columba.mail.folder.command;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
@@ -32,21 +31,12 @@ public class ImportMessageCommand extends Command {
 		super(reference);
 	}
 
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public ImportMessageCommand(IFrameMediator frame,
-			ICommandReference reference) {
-		super(frame, reference);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		ImportFolderCommandReference r = (ImportFolderCommandReference) getReference();
 
 		AbstractMailboxImporter importer = r.getImporter();

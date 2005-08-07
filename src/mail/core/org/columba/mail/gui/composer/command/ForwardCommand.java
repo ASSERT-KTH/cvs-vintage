@@ -20,9 +20,9 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -68,7 +68,7 @@ public class ForwardCommand extends Command {
 		controller.updateComponents(true);
 	}
 
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// get selected folder
 		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
 				.getSourceFolder();

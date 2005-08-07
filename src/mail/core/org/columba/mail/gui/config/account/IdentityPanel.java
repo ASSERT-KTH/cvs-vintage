@@ -30,8 +30,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.config.MailConfig;

@@ -24,13 +24,13 @@ import java.awt.Insets;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.filter.FilterAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ComboMenu;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.core.gui.base.ComboMenu;
+import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.plugin.FilterActionExtensionHandler;
 

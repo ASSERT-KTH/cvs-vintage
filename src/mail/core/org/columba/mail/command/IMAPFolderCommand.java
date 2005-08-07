@@ -8,7 +8,6 @@ package org.columba.mail.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 
 /**
@@ -27,15 +26,6 @@ public abstract class IMAPFolderCommand extends Command {
 			DefaultCommandReference reference) {
 		super(reference);
 		this.rootFolder = rootFolder;
-	}
-
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public IMAPFolderCommand(IFrameMediator frame,
-			DefaultCommandReference reference) {
-		super(frame, reference);
 	}
 
 	/**

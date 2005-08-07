@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.Command;
+import org.columba.api.command.ICommand;
 import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.folder.IFolder;
@@ -34,7 +34,7 @@ public class ScoreMessageFilterAction extends AbstractFilterAction {
      * @see org.columba.core.filter.AbstractFilterAction#getCommand(org.columba.mail.filter.FilterAction,
      *      IFolder, java.lang.Object[])
      */
-    public Command getCommand(FilterAction filterAction, IFolder srcFolder,
+    public ICommand getCommand(FilterAction filterAction, IFolder srcFolder,
             Object[] uids) throws Exception {
 
         MailFolderCommandReference r = new MailFolderCommandReference(srcFolder, uids);

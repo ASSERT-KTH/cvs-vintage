@@ -166,14 +166,14 @@
 			
 		<jreleaseinfo
 		   className="ColumbaVersionInfo" 
-		   packageName="org.columba.core.main"
+		   packageName="org.columba.core.versioninfo"
 		   targetDir="${src.columba.core}"
 		   version="${version}" >
 		</jreleaseinfo>
 		
-		<javac target="1.4" source="1.4" srcdir="${src.columba.core}/org/columba/core/main/" includes="ColumbaVersionInfo.java" destdir="${dest}" />
+		<javac target="1.4" source="1.4" srcdir="${src.columba.core}/org/columba/core/versioninfo/" includes="ColumbaVersionInfo.java" destdir="${dest}" />
 		
-		<delete file="${src.columba.core}/org/columba/core/main/ColumbaVersionInfo.java"/>
+		<delete file="${src.columba.core}/org/columba/core/versioninfo/ColumbaVersionInfo.java"/>
 	</target>
 	
 	<target name="update" description="Updates the source when checked out via CVS">

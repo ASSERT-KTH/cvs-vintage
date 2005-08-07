@@ -25,8 +25,8 @@ import javax.swing.JOptionPane;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.plugin.IExtensionInterface;
 
 /**
  * Abstract base class for addressbook data importers.

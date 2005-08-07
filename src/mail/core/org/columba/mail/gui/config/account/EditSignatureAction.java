@@ -7,9 +7,9 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.io.ColumbaDesktop;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.desktop.ColumbaDesktop;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.gui.composer.ComposerController;

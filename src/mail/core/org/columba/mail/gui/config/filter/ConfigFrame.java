@@ -55,11 +55,11 @@ import javax.swing.filechooser.FileFilter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.facade.DialogFacade;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterList;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;

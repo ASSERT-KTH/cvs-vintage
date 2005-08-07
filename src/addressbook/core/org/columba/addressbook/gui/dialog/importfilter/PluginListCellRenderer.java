@@ -22,10 +22,10 @@ import javax.swing.JList;
 import javax.swing.UIManager;
 
 import org.columba.addressbook.plugin.ImportExtensionHandler;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.IExtension;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {

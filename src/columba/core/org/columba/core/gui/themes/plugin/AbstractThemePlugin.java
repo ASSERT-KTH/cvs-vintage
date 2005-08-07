@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.themes.plugin;
 
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.api.plugin.IExtensionInterface;
 
 /**
  * @author frd

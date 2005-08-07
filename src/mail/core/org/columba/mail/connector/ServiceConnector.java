@@ -17,14 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.connector;
 
-import org.columba.addressbook.facade.AddressbookServiceProvider;
 import org.columba.addressbook.facade.IConfigFacade;
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.facade.IModelFacade;
-import org.columba.core.services.ServiceManager;
-import org.columba.core.services.ServiceNotFoundException;
+import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.core.services.ServiceRegistry;
 
 /**
  * Provides access to internal functionality for external components.
@@ -33,35 +32,36 @@ import org.columba.core.services.ServiceNotFoundException;
  */
 public final class ServiceConnector {
 
-	private ServiceConnector() {}
+	private ServiceConnector() {
+	}
 
 	public static IContactFacade getContactFacade()
 			throws ServiceNotFoundException {
-		return (IContactFacade) ServiceManager.getInstance().createService(
-				AddressbookServiceProvider.CONTACT);
+		return (IContactFacade) ServiceRegistry.getInstance().getService(
+				IContactFacade.class);
 	}
 
 	public static IFolderFacade getFolderFacade()
 			throws ServiceNotFoundException {
-		return (IFolderFacade) ServiceManager.getInstance().createService(
-				AddressbookServiceProvider.FOLDER);
+		return (IFolderFacade) ServiceRegistry.getInstance().getService(
+				IFolderFacade.class);
 	}
 
 	public static IConfigFacade getConfigFacade()
 			throws ServiceNotFoundException {
-		return (IConfigFacade) ServiceManager.getInstance().createService(
-				AddressbookServiceProvider.CONFIG);
+		return (IConfigFacade) ServiceRegistry.getInstance().getService(
+				IConfigFacade.class);
 	}
 
 	public static IDialogFacade getDialogFacade()
 			throws ServiceNotFoundException {
-		return (IDialogFacade) ServiceManager.getInstance().createService(
-				AddressbookServiceProvider.DIALOG);
+		return (IDialogFacade) ServiceRegistry.getInstance().getService(
+				IDialogFacade.class);
 	}
 
 	public static IModelFacade getModelFacade() throws ServiceNotFoundException {
-		return (IModelFacade) ServiceManager.getInstance().createService(
-				AddressbookServiceProvider.MODEL);
+		return (IModelFacade) ServiceRegistry.getInstance().getService(
+				IModelFacade.class);
 	}
 
 }

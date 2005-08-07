@@ -25,7 +25,7 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
-import org.columba.core.services.ServiceNotFoundException;
+import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.action.AddressbookAction;
 import org.frapuccino.addresscombobox.CommaSeparatedAutoCompleter;

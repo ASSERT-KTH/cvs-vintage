@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.columba.core.command.ICommandReference;
+import org.columba.api.command.ICommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;

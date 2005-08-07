@@ -20,101 +20,100 @@ package org.columba.core.gui.util;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
-import org.columba.core.gui.focus.FocusOwner;
-
+import org.columba.core.gui.base.UndoDocument;
 
 /**
  * Additionally registers at the FocusManager.
- *
+ * 
  * @author fdietz
  */
-public class CTextField extends JTextField implements FocusOwner {
-    /**
- *
- */
-    public CTextField() {
-        super();
+public class CTextField extends JTextField {
+	/**
+	 * 
+	 */
+	public CTextField() {
+		super();
 
-        setDocument(new UndoDocument());
-    }
+		setDocument(new UndoDocument());
+	}
 
-    /**
- * @param arg0
- */
-    public CTextField(String arg0) {
-        this();
+	/**
+	 * @param arg0
+	 */
+	public CTextField(String arg0) {
+		this();
 
-        setText(arg0);
-    }
+		setText(arg0);
+	}
 
-    /** ****************** FocusOwner implementation ************************* */
-    public JComponent getComponent() {
-        return this;
-    }
+	/** ****************** FocusOwner implementation ************************* */
+	public JComponent getComponent() {
+		return this;
+	}
 
-    public boolean isCopyActionEnabled() {
-        if (getSelectedText() == null) {
-            return false;
-        }
+	public boolean isCopyActionEnabled() {
+		if (getSelectedText() == null) {
+			return false;
+		}
 
-        if (getSelectedText().length() > 0) {
-            return true;
-        }
+		if (getSelectedText().length() > 0) {
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public boolean isCutActionEnabled() {
-        if (getSelectedText() == null) {
-            return false;
-        }
+	public boolean isCutActionEnabled() {
+		if (getSelectedText() == null) {
+			return false;
+		}
 
-        if (getSelectedText().length() > 0) {
-            return true;
-        }
+		if (getSelectedText().length() > 0) {
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public boolean isDeleteActionEnabled() {
-        if (getSelectedText() == null) {
-            return false;
-        }
+	public boolean isDeleteActionEnabled() {
+		if (getSelectedText() == null) {
+			return false;
+		}
 
-        if (getSelectedText().length() > 0) {
-            return true;
-        }
+		if (getSelectedText().length() > 0) {
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public boolean isPasteActionEnabled() {
-        return true;
-    }
+	public boolean isPasteActionEnabled() {
+		return true;
+	}
 
-    public boolean isRedoActionEnabled() {
-        // TODO: use UndoableEditEvent to make this really work
-        return true;
-    }
+	public boolean isRedoActionEnabled() {
+		// TODO: use UndoableEditEvent to make this really work
+		return true;
+	}
 
-    public boolean isSelectAllActionEnabled() {
-        return true;
-    }
+	public boolean isSelectAllActionEnabled() {
+		return true;
+	}
 
-    public boolean isUndoActionEnabled() {
-        // TODO: use UndoableEditEvent to make this really work
-        return true;
-    }
+	public boolean isUndoActionEnabled() {
+		// TODO: use UndoableEditEvent to make this really work
+		return true;
+	}
 
-    public void delete() {
-        replaceSelection("");
-    }
+	public void delete() {
+		replaceSelection("");
+	}
 
-    public void redo() {
-        ((UndoDocument) getDocument()).Redo();
-    }
+	public void redo() {
+		((UndoDocument) getDocument()).Redo();
+	}
 
-    public void undo() {
-        ((UndoDocument) getDocument()).Undo();
-    }
+	public void undo() {
+		((UndoDocument) getDocument()).Undo();
+	}
 }

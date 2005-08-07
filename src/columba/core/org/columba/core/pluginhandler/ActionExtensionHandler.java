@@ -16,17 +16,9 @@
 package org.columba.core.pluginhandler;
 
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.main.Main;
 import org.columba.core.plugin.ExtensionHandler;
-import org.columba.core.plugin.IExtension;
-import org.columba.core.plugin.exception.PluginException;
 
 /**
  * Every action in Columba is handled by this class.
@@ -52,45 +44,6 @@ public class ActionExtensionHandler extends ExtensionHandler {
 		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
 		loadExtensionsFromStream(is);
 
-	}
-
-	public AbstractColumbaAction getAction(String id, IFrameMediator controller) {
-		if (id == null)
-			throw new IllegalArgumentException("id == null");
-		if (controller == null)
-			throw new IllegalArgumentException("controller == null");
-
-		IExtension extension = getExtension(id);
-
-		AbstractColumbaAction a = null;
-
-		try {
-			if (extension != null)
-				a = (AbstractColumbaAction) extension
-						.instanciateExtension(new Object[] { controller });
-		} catch (PluginException e) {
-			LOG.severe(e.getMessage());
-			if (Main.DEBUG)
-				e.printStackTrace();
-
-		}
-
-		return a;
-
-	}
-
-	public IMenu getIMenu(String id, IFrameMediator controller) throws Exception {
-		IExtension extension = getExtension(id);
-
-		IMenu menu = null;
-		try {
-			menu = (IMenu) extension
-					.instanciateExtension(new Object[] { controller });
-		} catch (PluginException e) {
-			e.printStackTrace();
-		}
-
-		return menu;
 	}
 
 }

@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.jivesoftware.smack.XMPPException;
 
 /**

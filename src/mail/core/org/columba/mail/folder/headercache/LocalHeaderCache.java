@@ -22,8 +22,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import org.columba.core.command.StatusObservable;
-import org.columba.core.main.Main;
+import org.columba.api.command.IStatusObservable;
+import org.columba.core.logging.Logging;
 import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IDataStorage;
@@ -62,7 +62,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		configurationChanged = false;
 	}
 
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return folder.getObservable();
 	}
 
@@ -174,7 +174,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 			/*
 			 * // Check if the count of the if (needToSync(capacity)) {
-			 * ColumbaLogger.log.fine( "need to recreateHeaderList() because
+			 * Logging.log.fine( "need to recreateHeaderList() because
 			 * capacity is not matching");
 			 * 
 			 * throw new FolderInconsistentException(); }
@@ -186,7 +186,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		} catch (Exception e) {
 			LOG.severe("Error loading local header cache!");
 
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				e.printStackTrace();
 			}
 		} finally {
@@ -213,7 +213,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		try {
 			writer = new ObjectWriter(headerFile);
 		} catch (Exception e) {
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				e.printStackTrace();
 			}
 		}

@@ -19,9 +19,9 @@ package org.columba.mail.mailchecking;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.menu.IMenu;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

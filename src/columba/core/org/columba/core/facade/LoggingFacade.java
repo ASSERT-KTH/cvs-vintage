@@ -17,7 +17,7 @@ package org.columba.core.facade;
 
 import java.util.logging.Logger;
 
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.logging.Logging;
 
 /**
  * A facade for logging in columba.
@@ -36,6 +36,6 @@ public final class LoggingFacade {
 
     
     public static void enableDebuggingMode(boolean enabled) {
-    	ColumbaLogger.setDebugging(enabled);
+    	Logging.setDebugging(enabled);
     }
 }

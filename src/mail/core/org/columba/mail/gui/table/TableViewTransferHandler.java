@@ -24,9 +24,9 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;

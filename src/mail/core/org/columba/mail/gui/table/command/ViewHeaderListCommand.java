@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.command;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -31,55 +31,62 @@ import org.columba.mail.message.IHeaderList;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- *  
+ * 
  */
-public class ViewHeaderListCommand extends Command implements ISelectionListener {
+public class ViewHeaderListCommand extends Command implements
+		ISelectionListener {
 	private IHeaderList headerList;
 
 	private AbstractMessageFolder folder;
 
 	private boolean updateGui;
 
-	public ViewHeaderListCommand(IFrameMediator frame,
+	private IFrameMediator mediator;
+
+	public ViewHeaderListCommand(IFrameMediator mediator,
 			ICommandReference reference) {
-		super(frame, reference);
-		
+		super(reference);
+
+		this.mediator = mediator;
+
 		// Register as listener to the SelectionManger
 		// to check for selection changes
 		updateGui = true;
-		frame.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);
-		
-		
+		mediator.getSelectionManager().getHandler("mail.tree")
+				.addSelectionListener(this);
+
 		priority = Command.REALTIME_PRIORITY;
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		frameMediator.getSelectionManager().getHandler("mail.tree").removeSelectionListener(this);
+		mediator.getSelectionManager().getHandler("mail.tree")
+				.removeSelectionListener(this);
 
-		//Update only if the selection did not change
-		if( updateGui ) {
-			((TableViewOwner) frameMediator).getTableController().showHeaderList(
+		// Update only if the selection did not change
+		if (updateGui) {
+			((TableViewOwner) mediator).getTableController().showHeaderList(
 					folder, headerList);
 		}
 
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
+	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		// Register as SelectionListener to track the selection
 		// of the tree
-		if( !updateGui ) return;
-		
+		if (!updateGui)
+			return;
+
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		folder = (AbstractMessageFolder) r.getSourceFolder();
-		
-		//	register for status events
+
+		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
 		// fetch the headerlist
@@ -87,20 +94,23 @@ public class ViewHeaderListCommand extends Command implements ISelectionListener
 			headerList = (folder).getHeaderList();
 		} catch (Exception e) {
 			updateGui = false;
-			
-			// Reset the selection			
-			frameMediator.getSelectionManager().getHandler("mail.tree").setSelection(null);
-			new ViewHeaderListAction(frameMediator).actionPerformed(null);
-			
-			//((TableViewOwner) frameMediator).getTableController().clear();
-			
+
+			// Reset the selection
+			mediator.getSelectionManager().getHandler("mail.tree")
+					.setSelection(null);
+			new ViewHeaderListAction(mediator).actionPerformed(null);
+
+			// ((TableViewOwner) frameMediator).getTableController().clear();
+
 			throw e;
 		}
-		
+
 		updateGui &= !worker.cancelled();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {

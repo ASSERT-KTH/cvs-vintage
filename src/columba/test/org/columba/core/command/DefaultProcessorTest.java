@@ -15,238 +15,274 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import junit.framework.TestCase;
 
+import org.columba.api.command.IWorkerStatusController;
+
+import junit.framework.TestCase;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- *
+ * 
  */
 public class DefaultProcessorTest extends TestCase {
-    private CommandProcessor processor;
-    
-    int executedID;
-    int finishedID;
-    
-    /**
- * Constructor for DefaultProcessorTest.
- * @param arg0
- */
-    public DefaultProcessorTest(String arg0) {
-        super(arg0);
-    }
+	private CommandProcessor processor;
 
-    public void testAddOp_PriorityOrdering() {
-    	processor = new CommandProcessor(false);
-    	
-    	TestCommand command1 = new TestCommand(this, 1);
-        command1.setPriority(Command.NORMAL_PRIORITY);
-        processor.addOp(command1);
+	int executedID;
 
-        TestCommand command2 = new TestCommand(this, 2);
-        command2.setPriority(Command.NORMAL_PRIORITY);
-        processor.addOp(command2);
+	int finishedID;
 
-        TestCommand command3 = new TestCommand(this, 3);
-        command3.setPriority(Command.REALTIME_PRIORITY);
-        processor.addOp(command3);
+	/**
+	 * Constructor for DefaultProcessorTest.
+	 * 
+	 * @param arg0
+	 */
+	public DefaultProcessorTest(String arg0) {
+		super(arg0);
+	}
 
-        TestCommand command4 = new TestCommand(this, 4);
-        command4.setPriority(Command.DAEMON_PRIORITY);
-        processor.addOp(command4);
+	public void testAddOp_PriorityOrdering() {
+		processor = new CommandProcessor(false);
 
-        TestCommand command5 = new TestCommand(this, 5);
-        command5.setPriority(Command.NORMAL_PRIORITY);
-        processor.addOp(command5);
+		TestCommand command1 = new TestCommand(this, 1);
+		command1.setPriority(Command.NORMAL_PRIORITY);
+		processor.addOp(command1);
 
-        assertEquals(3, ((TestCommand)((OperationItem) processor.operationQueue.get(0)).getOperation()).getId());
-        assertEquals(1, ((TestCommand)((OperationItem) processor.operationQueue.get(1)).getOperation()).getId());
-        assertEquals(2, ((TestCommand)((OperationItem) processor.operationQueue.get(2)).getOperation()).getId());
-        assertEquals(5, ((TestCommand)((OperationItem) processor.operationQueue.get(3)).getOperation()).getId());
-        assertEquals(4, ((TestCommand)((OperationItem) processor.operationQueue.get(4)).getOperation()).getId());
-    }
+		TestCommand command2 = new TestCommand(this, 2);
+		command2.setPriority(Command.NORMAL_PRIORITY);
+		processor.addOp(command2);
 
-    public void testAddOp_PriorityOrderingWithSynchronized() {
-    	processor = new CommandProcessor(false);
-    	
-        TestCommand command1 = new TestCommand(this, 1);
-        command1.setPriority(Command.NORMAL_PRIORITY);
-        processor.addOp(command1, Command.FIRST_EXECUTION);
+		TestCommand command3 = new TestCommand(this, 3);
+		command3.setPriority(Command.REALTIME_PRIORITY);
+		processor.addOp(command3);
 
-        TestCommand command2 = new TestCommand(this, 2);
-        command2.setPriority(Command.NORMAL_PRIORITY);
-        command2.setSynchronize(true);
-        processor.addOp(command2, Command.FIRST_EXECUTION);
+		TestCommand command4 = new TestCommand(this, 4);
+		command4.setPriority(Command.DAEMON_PRIORITY);
+		processor.addOp(command4);
 
-        TestCommand command3 = new TestCommand(this, 3);
-        command3.setPriority(Command.REALTIME_PRIORITY);
-        processor.addOp(command3, Command.FIRST_EXECUTION);
+		TestCommand command5 = new TestCommand(this, 5);
+		command5.setPriority(Command.NORMAL_PRIORITY);
+		processor.addOp(command5);
 
-        TestCommand command4 = new TestCommand(this, 4);
-        command4.setPriority(Command.DAEMON_PRIORITY);
-        command4.setSynchronize(true);
-        processor.addOp(command4, Command.FIRST_EXECUTION);
+		assertEquals(
+				3,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(0))
+						.getOperation()).getId());
+		assertEquals(
+				1,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(1))
+						.getOperation()).getId());
+		assertEquals(
+				2,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(2))
+						.getOperation()).getId());
+		assertEquals(
+				5,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(3))
+						.getOperation()).getId());
+		assertEquals(
+				4,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(4))
+						.getOperation()).getId());
+	}
 
-        TestCommand command5 = new TestCommand(this, 5);
-        command5.setPriority(Command.NORMAL_PRIORITY);
-        processor.addOp(command5, Command.FIRST_EXECUTION);
+	public void testAddOp_PriorityOrderingWithSynchronized() {
+		processor = new CommandProcessor(false);
 
-        assertEquals(1, ((TestCommand)((OperationItem) processor.operationQueue.get(0)).getOperation()).getId());
-        assertEquals(2, ((TestCommand)((OperationItem) processor.operationQueue.get(1)).getOperation()).getId());
-        assertEquals(3, ((TestCommand)((OperationItem) processor.operationQueue.get(2)).getOperation()).getId());
-        assertEquals(4, ((TestCommand)((OperationItem) processor.operationQueue.get(3)).getOperation()).getId());
-        assertEquals(5, ((TestCommand)((OperationItem) processor.operationQueue.get(4)).getOperation()).getId());
-    }
+		TestCommand command1 = new TestCommand(this, 1);
+		command1.setPriority(Command.NORMAL_PRIORITY);
+		processor.addOp(command1, Command.FIRST_EXECUTION);
 
+		TestCommand command2 = new TestCommand(this, 2);
+		command2.setPriority(Command.NORMAL_PRIORITY);
+		command2.setSynchronize(true);
+		processor.addOp(command2, Command.FIRST_EXECUTION);
 
-    public void testReserveForRealtime() throws Exception {
-    	processor = new CommandProcessor(false);
-	
-    	// empty the worker list until one is left
-    	while( processor.getWorker(Command.NORMAL_PRIORITY) != null );
-    	
-    	assertEquals( 1, processor.worker.size());
-    	
-    	assertTrue( processor.getWorker(Command.REALTIME_PRIORITY) != null );
-    }
-    
-    public void testRunOne() throws Exception {
-    	processor = new CommandProcessor(false);
+		TestCommand command3 = new TestCommand(this, 3);
+		command3.setPriority(Command.REALTIME_PRIORITY);
+		processor.addOp(command3, Command.FIRST_EXECUTION);
 
-    	TestCommand command1 = new TestCommand(this, 1);
-        command1.setPriority(Command.NORMAL_PRIORITY);
-        processor.addOp(command1, Command.FIRST_EXECUTION);
+		TestCommand command4 = new TestCommand(this, 4);
+		command4.setPriority(Command.DAEMON_PRIORITY);
+		command4.setSynchronize(true);
+		processor.addOp(command4, Command.FIRST_EXECUTION);
 
-        TestCommand command2 = new TestCommand(this, 2);
-        command2.setPriority(Command.NORMAL_PRIORITY);
-        command2.setSynchronize(true);
-        processor.addOp(command2, Command.FIRST_EXECUTION);
-    	
-    	processor.startOperation();
-    	assertEquals(CommandProcessor.MAX_WORKERS-1, processor.worker.size());
-    	
-    	Thread.sleep(1000);
-    	
-    	assertEquals( 1, executedID );
-    	assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
-    	
-    	processor.startOperation();
-    	assertEquals(CommandProcessor.MAX_WORKERS-1, processor.worker.size());
-    	
-    	Thread.sleep(1000);
-    	
-    	assertEquals( 2, executedID );
-    	assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
-    }
-    
-    public void testRunMultiple() throws Exception {
-    	processor = new CommandProcessor(false);
+		TestCommand command5 = new TestCommand(this, 5);
+		command5.setPriority(Command.NORMAL_PRIORITY);
+		processor.addOp(command5, Command.FIRST_EXECUTION);
 
-    	TestCommand command1 = new TestCommand(this, 1);
-        command1.setPriority(Command.NORMAL_PRIORITY);
-        processor.addOp(command1, Command.FIRST_EXECUTION);
+		assertEquals(
+				1,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(0))
+						.getOperation()).getId());
+		assertEquals(
+				2,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(1))
+						.getOperation()).getId());
+		assertEquals(
+				3,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(2))
+						.getOperation()).getId());
+		assertEquals(
+				4,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(3))
+						.getOperation()).getId());
+		assertEquals(
+				5,
+				((TestCommand) ((OperationItem) processor.operationQueue.get(4))
+						.getOperation()).getId());
+	}
 
-        TestCommand command2 = new TestCommand(this, 2);
-        command2.setPriority(Command.NORMAL_PRIORITY);
-        command2.setSynchronize(true);
-        processor.addOp(command2, Command.FIRST_EXECUTION);
-    	
-    	processor.startOperation();
-    	processor.startOperation();
-    	assertEquals(CommandProcessor.MAX_WORKERS-2, processor.worker.size());
-    	
-    	Thread.sleep(1000);
-    	
-    	assertEquals( 2, executedID );
-    	assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
-    }
-    
-    public void testRunMax() throws Exception {
-    	processor = new CommandProcessor(false);
+	public void testReserveForRealtime() throws Exception {
+		processor = new CommandProcessor(false);
 
-        processor.addOp( new TestCommand(this, 1));
-        processor.addOp( new TestCommand(this, 2));
-        processor.addOp( new TestCommand(this, 3));
-        processor.addOp( new TestCommand(this, 4));
-        processor.addOp( new TestCommand(this, 5));
+		// empty the worker list until one is left
+		while (processor.getWorker(Command.NORMAL_PRIORITY) != null)
+			;
 
-    	
-    	processor.startOperation();
-    	processor.startOperation();
-    	processor.startOperation();
-    	processor.startOperation();
-    	processor.startOperation();
-    	assertEquals(1, processor.worker.size());
-    	
-    	Thread.sleep(1000);
-    	
-    	assertEquals( 1, processor.operationQueue.size() );
-    	assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
+		assertEquals(1, processor.worker.size());
 
-    	processor.startOperation();
-    	assertEquals(CommandProcessor.MAX_WORKERS - 1, processor.worker.size());
-    	assertEquals( 0, processor.operationQueue.size()  );
-    }
+		assertTrue(processor.getWorker(Command.REALTIME_PRIORITY) != null);
+	}
 
-    public void testRunRealtime() throws Exception {
-    	processor = new CommandProcessor(true);
+	public void testRunOne() throws Exception {
+		processor = new CommandProcessor(false);
 
-        processor.addOp( new TestCommand(this, 1));
-        processor.addOp( new TestCommand(this, 2));
-        processor.addOp( new TestCommand(this, 3));
-        processor.addOp( new TestCommand(this, 4, Command.REALTIME_PRIORITY));
-        processor.addOp( new TestCommand(this, 5));
-        processor.addOp( new TestCommand(this, 1));
-        processor.addOp( new TestCommand(this, 2));
-        processor.addOp( new TestCommand(this, 3));
-        processor.addOp( new TestCommand(this, 4));
-        processor.addOp( new TestCommand(this, 5, Command.REALTIME_PRIORITY));
-        processor.addOp( new TestCommand(this, 1));
-        processor.addOp( new TestCommand(this, 2));
-        processor.addOp( new TestCommand(this, 3));
-        processor.addOp( new TestCommand(this, 4));
-        processor.addOp( new TestCommand(this, 5));
+		TestCommand command1 = new TestCommand(this, 1);
+		command1.setPriority(Command.NORMAL_PRIORITY);
+		processor.addOp(command1, Command.FIRST_EXECUTION);
 
-    	Thread.sleep(3000);
+		TestCommand command2 = new TestCommand(this, 2);
+		command2.setPriority(Command.NORMAL_PRIORITY);
+		command2.setSynchronize(true);
+		processor.addOp(command2, Command.FIRST_EXECUTION);
 
-    	assertEquals( 0, processor.operationQueue.size()  );
-    	assertEquals( CommandProcessor.MAX_WORKERS, processor.worker.size());
-    }
-    
+		processor.startOperation();
+		assertEquals(CommandProcessor.MAX_WORKERS - 1, processor.worker.size());
+
+		Thread.sleep(1000);
+
+		assertEquals(1, executedID);
+		assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
+
+		processor.startOperation();
+		assertEquals(CommandProcessor.MAX_WORKERS - 1, processor.worker.size());
+
+		Thread.sleep(1000);
+
+		assertEquals(2, executedID);
+		assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
+	}
+
+	public void testRunMultiple() throws Exception {
+		processor = new CommandProcessor(false);
+
+		TestCommand command1 = new TestCommand(this, 1);
+		command1.setPriority(Command.NORMAL_PRIORITY);
+		processor.addOp(command1, Command.FIRST_EXECUTION);
+
+		TestCommand command2 = new TestCommand(this, 2);
+		command2.setPriority(Command.NORMAL_PRIORITY);
+		command2.setSynchronize(true);
+		processor.addOp(command2, Command.FIRST_EXECUTION);
+
+		processor.startOperation();
+		processor.startOperation();
+		assertEquals(CommandProcessor.MAX_WORKERS - 2, processor.worker.size());
+
+		Thread.sleep(1000);
+
+		assertEquals(2, executedID);
+		assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
+	}
+
+	public void testRunMax() throws Exception {
+		processor = new CommandProcessor(false);
+
+		processor.addOp(new TestCommand(this, 1));
+		processor.addOp(new TestCommand(this, 2));
+		processor.addOp(new TestCommand(this, 3));
+		processor.addOp(new TestCommand(this, 4));
+		processor.addOp(new TestCommand(this, 5));
+
+		processor.startOperation();
+		processor.startOperation();
+		processor.startOperation();
+		processor.startOperation();
+		processor.startOperation();
+		assertEquals(1, processor.worker.size());
+
+		Thread.sleep(1000);
+
+		assertEquals(1, processor.operationQueue.size());
+		assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
+
+		processor.startOperation();
+		assertEquals(CommandProcessor.MAX_WORKERS - 1, processor.worker.size());
+		assertEquals(0, processor.operationQueue.size());
+	}
+
+	public void testRunRealtime() throws Exception {
+		processor = new CommandProcessor(true);
+
+		processor.addOp(new TestCommand(this, 1));
+		processor.addOp(new TestCommand(this, 2));
+		processor.addOp(new TestCommand(this, 3));
+		processor.addOp(new TestCommand(this, 4, Command.REALTIME_PRIORITY));
+		processor.addOp(new TestCommand(this, 5));
+		processor.addOp(new TestCommand(this, 1));
+		processor.addOp(new TestCommand(this, 2));
+		processor.addOp(new TestCommand(this, 3));
+		processor.addOp(new TestCommand(this, 4));
+		processor.addOp(new TestCommand(this, 5, Command.REALTIME_PRIORITY));
+		processor.addOp(new TestCommand(this, 1));
+		processor.addOp(new TestCommand(this, 2));
+		processor.addOp(new TestCommand(this, 3));
+		processor.addOp(new TestCommand(this, 4));
+		processor.addOp(new TestCommand(this, 5));
+
+		Thread.sleep(3000);
+
+		assertEquals(0, processor.operationQueue.size());
+		assertEquals(CommandProcessor.MAX_WORKERS, processor.worker.size());
+	}
+
 }
 
 class TestCommand extends Command {
 	private int id;
+
 	private DefaultProcessorTest test;
-	
-    public TestCommand(DefaultProcessorTest test, int id) {
-    	this( test, id, Command.NORMAL_PRIORITY);
-    }
 
-    public TestCommand(DefaultProcessorTest test, int id, int priority ) {
-        super(null, null);
-        this.id = id;
-        this.test = test;
-        this.priority = priority; 
-    }
+	public TestCommand(DefaultProcessorTest test, int id) {
+		this(test, id, Command.NORMAL_PRIORITY);
+	}
 
-    public void updateGUI() {
-    	test.finishedID = id;
-    }
+	public TestCommand(DefaultProcessorTest test, int id, int priority) {
+		super(null);
+		this.id = id;
+		this.test = test;
+		this.priority = priority;
+	}
 
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-    	test.executedID = id;
-    	Thread.sleep(50);
-    }
+	public void updateGUI() {
+		test.finishedID = id;
+	}
+
+	public void execute(IWorkerStatusController worker) throws Exception {
+		test.executedID = id;
+		Thread.sleep(50);
+	}
+
 	/**
 	 * @return Returns the id.
 	 */
 	public int getId() {
 		return id;
 	}
+
 	/**
-	 * @param id The id to set.
+	 * @param id
+	 *            The id to set.
 	 */
 	public void setId(int id) {
 		this.id = id;

@@ -18,8 +18,8 @@ package org.columba.mail.gui.tree.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.MailFolderCommandReference;

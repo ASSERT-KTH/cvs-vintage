@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
 
+
 public class URLLabel extends JLabel implements MouseListener {
     private JPopupMenu popup;
     boolean entered = false;

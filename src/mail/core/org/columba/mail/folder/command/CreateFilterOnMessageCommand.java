@@ -17,160 +17,166 @@ package org.columba.mail.folder.command;
 
 import java.util.logging.Logger;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.filter.Filter;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.filter.FilterDialog;
 import org.columba.ristretto.message.Header;
 
-
 /**
- * This class is used to create a filter based on the currently selected
- * message (if multiple selected, the first one in the selection array is used) -
- * either using Subject, To or From.
- *
+ * This class is used to create a filter based on the currently selected message
+ * (if multiple selected, the first one in the selection array is used) - either
+ * using Subject, To or From.
+ * 
  * @author Karl Peder Olesen (karlpeder), 20030620
  */
 public class CreateFilterOnMessageCommand extends Command {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.command");
 
-    /** Used for creating a filter based on Subject */
-    public static final String FILTER_ON_SUBJECT = "Subject";
+	/** Used for creating a filter based on Subject */
+	public static final String FILTER_ON_SUBJECT = "Subject";
 
-    /** Used for creating a filter based on From */
-    public static final String FILTER_ON_FROM = "From";
+	/** Used for creating a filter based on From */
+	public static final String FILTER_ON_FROM = "From";
 
-    /** Used for creating a filter based on To */
-    public static final String FILTER_ON_TO = "To";
+	/** Used for creating a filter based on To */
+	public static final String FILTER_ON_TO = "To";
 
-    /** Type of filter to create */
-    private String filterType;
+	/** Type of filter to create */
+	private String filterType;
 
-    /** Filter created */
-    private Filter filter = null;
+	/** Filter created */
+	private Filter filter = null;
 
-    /** The source folder where the filter should be added to. */
-    private AbstractMessageFolder srcFolder;
+	private IFrameMediator mediator;
 
-    /**
-     * Constructor for CreateFilterOnMessageCommand. Calls super constructor
-     * and saves flag for which kind of filter to create. Default for filter
-     * type is FILTER_ON_SUBJECT.
-     *
-     * @param references
-     * @param filterType  Which type of filter to create. Used defined constants
-     */
-    public CreateFilterOnMessageCommand(IFrameMediator mediator, ICommandReference reference,
-        String filterType) {
-        super(mediator, reference);
-        this.filterType = filterType;
-    }
+	/** The source folder where the filter should be added to. */
+	private AbstractMessageFolder srcFolder;
 
-    /**
-     * Displays filter dialog for user modifications after creation of the
-     * filter in execute. If the user cancels the dialog then the filter is not
-     * stored into the filter list in the source folder.
-     *
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-        if ((filter != null) && (srcFolder != null)) {
-            FilterDialog dialog = new FilterDialog(getFrameMediator(), filter);
+	/**
+	 * Constructor for CreateFilterOnMessageCommand. Calls super constructor and
+	 * saves flag for which kind of filter to create. Default for filter type is
+	 * FILTER_ON_SUBJECT.
+	 * 
+	 * @param references
+	 * @param filterType
+	 *            Which type of filter to create. Used defined constants
+	 */
+	public CreateFilterOnMessageCommand(IFrameMediator mediator,
+			ICommandReference reference, String filterType) {
+		super(reference);
+		this.filterType = filterType;
 
-            if (!dialog.wasCancelled()) {
-                srcFolder.getFilterList().add(filter);
-            }
-        }
-    }
+		this.mediator = mediator;
+	}
 
-    /**
-     * This method generates filter based on Subject, From or To (depending on
-     * parameter transferred to constructor) of the currently selected message.
-     *
-     * @param worker
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        // get references to selected folder and message
-        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
-        Object[] uids = r.getUids(); // uid for messages to save
+	/**
+	 * Displays filter dialog for user modifications after creation of the
+	 * filter in execute. If the user cancels the dialog then the filter is not
+	 * stored into the filter list in the source folder.
+	 * 
+	 * @see org.columba.api.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		if ((filter != null) && (srcFolder != null)) {
+			FilterDialog dialog = new FilterDialog(mediator, filter);
 
-        if (uids.length == 0) {
-            LOG.fine(
-                "No filter created since no message was selected");
+			if (!dialog.wasCancelled()) {
+				srcFolder.getFilterList().add(filter);
+			}
+		}
+	}
 
-            return; // no message selected.
-        }
+	/**
+	 * This method generates filter based on Subject, From or To (depending on
+	 * parameter transferred to constructor) of the currently selected message.
+	 * 
+	 * @param worker
+	 * @see org.columba.api.command.Command#execute(Worker)
+	 */
+	public void execute(IWorkerStatusController worker) throws Exception {
+		// get references to selected folder and message
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		Object[] uids = r.getUids(); // uid for messages to save
 
-        Object uid = uids[0];
-        srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		if (uids.length == 0) {
+			LOG.fine("No filter created since no message was selected");
 
-        // register for status events
-        ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+			return; // no message selected.
+		}
 
-        // get value of Subject, From or To header
-        Header header = srcFolder.getHeaderFields(uid,
-                new String[] {"Subject", "From", "To"});
-        String headerValue = (String) header.get(filterType);
+		Object uid = uids[0];
+		srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
-        if (headerValue == null) {
-            LOG.warning("Error getting " + filterType
-                    + " header. No filter created");
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-            return;
-        }
+		// get value of Subject, From or To header
+		Header header = srcFolder.getHeaderFields(uid, new String[] {
+				"Subject", "From", "To" });
+		String headerValue = (String) header.get(filterType);
 
-        // create filter
-        String descr = filterType + " contains [" + headerValue + "]";
-        filter = createFilter(descr, filterType, headerValue);
-    }
+		if (headerValue == null) {
+			LOG.warning("Error getting " + filterType
+					+ " header. No filter created");
 
-    /**
-     * Private utility for creating a filter on a given headerfield. The
-     * criteria used is "contains" and the action is set to "Mark as Read".
-     *
-     * @param filterDescr  Name / description to assign to filter
-     * @param headerField  The header field to base filter on
-     * @param pattern  The pattern to use in the filter
-     * @return The filter created
-     */
-    public Filter createFilter(String filterDescr, String headerField,
-        String pattern) {
-        // create filter element
-        XmlElement filter = new XmlElement("filter");
-        filter.addAttribute("description", filterDescr);
-        filter.addAttribute("enabled", "true");
+			return;
+		}
 
-        XmlElement rules = new XmlElement("rules");
-        rules.addAttribute("condition", "matchall");
+		// create filter
+		String descr = filterType + " contains [" + headerValue + "]";
+		filter = createFilter(descr, filterType, headerValue);
+	}
 
-        // create criteria list
-        XmlElement criteria = new XmlElement("criteria");
-        criteria.addAttribute("type", headerField);
-        criteria.addAttribute("headerfield", headerField);
-        criteria.addAttribute("criteria", "contains");
-        criteria.addAttribute("pattern", pattern);
-        rules.addElement(criteria);
-        filter.addElement(rules);
+	/**
+	 * Private utility for creating a filter on a given headerfield. The
+	 * criteria used is "contains" and the action is set to "Mark as Read".
+	 * 
+	 * @param filterDescr
+	 *            Name / description to assign to filter
+	 * @param headerField
+	 *            The header field to base filter on
+	 * @param pattern
+	 *            The pattern to use in the filter
+	 * @return The filter created
+	 */
+	public Filter createFilter(String filterDescr, String headerField,
+			String pattern) {
+		// create filter element
+		XmlElement filter = new XmlElement("filter");
+		filter.addAttribute("description", filterDescr);
+		filter.addAttribute("enabled", "true");
 
-        // create action list
-        XmlElement actionList = new XmlElement("actionlist");
-        XmlElement action = new XmlElement("action");
-        action.addAttribute("type", "Mark as Read");
-        actionList.addElement(action);
-        filter.addElement(actionList);
+		XmlElement rules = new XmlElement("rules");
+		rules.addAttribute("condition", "matchall");
 
-        // return filter based on the XmlElement just created
-        return new Filter(filter);
-    }
+		// create criteria list
+		XmlElement criteria = new XmlElement("criteria");
+		criteria.addAttribute("type", headerField);
+		criteria.addAttribute("headerfield", headerField);
+		criteria.addAttribute("criteria", "contains");
+		criteria.addAttribute("pattern", pattern);
+		rules.addElement(criteria);
+		filter.addElement(rules);
+
+		// create action list
+		XmlElement actionList = new XmlElement("actionlist");
+		XmlElement action = new XmlElement("action");
+		action.addAttribute("type", "Mark as Read");
+		actionList.addElement(action);
+		filter.addElement(actionList);
+
+		// return filter based on the XmlElement just created
+		return new Filter(filter);
+	}
 }

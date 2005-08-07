@@ -39,7 +39,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;

@@ -28,9 +28,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.base.ListTools;
 import org.columba.core.command.Command;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.util.ListTools;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.ristretto.imap.ListInfo;
@@ -59,9 +59,9 @@ public class SynchronizeFolderListCommand extends Command {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		root = (IMAPRootFolder) ((SubscribeCommandReference) getReference())
 				.getSourceFolder();
 
@@ -217,7 +217,7 @@ public class SynchronizeFolderListCommand extends Command {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.command.Command#updateGUI()
+	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		SubscribeDialog dialog = ((SubscribeCommandReference) getReference())

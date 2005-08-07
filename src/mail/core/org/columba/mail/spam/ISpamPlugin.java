@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.spam;
 
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.mail.folder.IMailbox;
 
 public interface ISpamPlugin extends IExtensionInterface{

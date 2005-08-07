@@ -27,17 +27,17 @@ import javax.swing.tree.TreePath;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.IGroupFolder;
+import org.columba.addressbook.gui.focus.FocusManager;
+import org.columba.addressbook.gui.focus.FocusOwner;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ErrorDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.Main;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.dialog.ErrorDialog;
+import org.columba.core.logging.Logging;
+import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Delete selected contact or group item.
@@ -98,7 +98,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 				try {
 					folder.remove(uids[i]);
 				} catch (Exception e) {
-					if (Main.DEBUG)
+					if (Logging.DEBUG)
 						e.printStackTrace();
 
 					new ErrorDialog(e.getMessage(), e);

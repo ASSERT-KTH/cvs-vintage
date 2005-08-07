@@ -17,7 +17,7 @@ package org.columba.core.gui.selection;
 
 import java.util.Hashtable;
 
-import org.columba.core.command.ICommandReference;
+import org.columba.api.command.ICommandReference;
 
 /**
  * Manages selection handling of a complete frame which can have many different
@@ -33,7 +33,7 @@ import org.columba.core.command.ICommandReference;
  * easy to indentify the SelectionHandler.
  * 
  * @see org.columba.core.gui.selection.SelectionHandler
- * @see org.columba.core.gui.frame.IFrameMediator
+ * @see org.columba.api.gui.frame.IFrameMediator
  * 
  * @author fdietz, tstich
  */

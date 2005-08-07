@@ -19,9 +19,9 @@ package org.columba.mail.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.config.accountlist.AccountListDialog;
 import org.columba.mail.util.MailResourceLoader;
 

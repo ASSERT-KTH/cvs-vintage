@@ -21,11 +21,11 @@ import java.util.MissingResourceException;
 
 import javax.swing.tree.DefaultTreeModel;
 
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.config.Config;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;

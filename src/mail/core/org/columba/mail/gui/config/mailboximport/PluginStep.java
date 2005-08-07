@@ -35,10 +35,10 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.IExtension;
-import org.columba.core.plugin.exception.PluginException;
+import org.columba.api.exception.PluginException;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.gui.base.MultiLineLabel;
+import org.columba.core.logging.Logging;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.mail.plugin.ImportExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
@@ -129,7 +129,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 			String description = importer.getDescription();
 			descriptionLabel.setText(description);
 		} catch (PluginException e) {
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				e.printStackTrace();
 			}
 		}

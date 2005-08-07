@@ -19,8 +19,8 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import org.columba.core.command.StatusObservable;
-import org.columba.core.main.Main;
+import org.columba.api.command.IStatusObservable;
+import org.columba.core.logging.Logging;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -54,7 +54,7 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		configurationChanged = false;
 	}
 
-	public StatusObservable getObservable() {
+	public IStatusObservable getObservable() {
 		return folder.getObservable();
 	}
 
@@ -66,7 +66,7 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 			reader = new ObjectReader(headerFile);
 		} catch (Exception e) {
 			LOG.severe(e.getMessage());
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				e.printStackTrace();
 			}
 		}
@@ -123,7 +123,7 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 			writer = new ObjectWriter(headerFile);
 		} catch (Exception e) {
 			LOG.severe(e.getMessage());
-			if (Main.DEBUG) {
+			if (Logging.DEBUG) {
 				e.printStackTrace();
 			}
 		}

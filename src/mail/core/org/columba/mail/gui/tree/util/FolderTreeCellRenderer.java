@@ -24,7 +24,7 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;

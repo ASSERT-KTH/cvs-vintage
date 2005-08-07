@@ -22,8 +22,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.filter.FilterAction;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.config.filter.ActionList;

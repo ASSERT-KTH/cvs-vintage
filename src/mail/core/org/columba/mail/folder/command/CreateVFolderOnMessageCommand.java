@@ -17,13 +17,13 @@ package org.columba.mail.folder.command;
 
 import java.util.logging.Logger;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.filter.FilterRule;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -64,6 +64,8 @@ public class CreateVFolderOnMessageCommand extends Command {
     /** Virtual folder created created */
     private VirtualFolder vfolder = null;
 
+    private IFrameMediator mediator;
+    
     /**
      * Constructor for CreateVFolderOnMessageCommand. Calls super constructor
      * and saves flag for which kind of virtual folder to create. Default for
@@ -76,22 +78,23 @@ public class CreateVFolderOnMessageCommand extends Command {
      */
     public CreateVFolderOnMessageCommand(IFrameMediator frameController,
     		ICommandReference reference, String vfolderType) {
-        super(frameController, reference);
+        super(reference);
         this.vfolderType = vfolderType;
+        this.mediator = mediator;
     }
 
     /**
      * Displays search dialog for user modifications after creation of the
      * virtual folder in execute. Also refreshes the tree view.
      *
-     * @see org.columba.core.command.Command#updateGUI()
+     * @see org.columba.api.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
     	FolderTreeModel.getInstance().nodeStructureChanged(parentFolder);
 
         if (vfolder != null) {
             //vfolder.showFilterDialog((AbstractMailFrameController) getFrameMediator());
-            new ConfigFrame(getFrameMediator(), vfolder);
+            new ConfigFrame(mediator, vfolder);
         }
     }
 
@@ -101,9 +104,9 @@ public class CreateVFolderOnMessageCommand extends Command {
      * selected message.
      *
      * @param worker
-     * @see org.columba.core.command.Command#execute(Worker)
+     * @see org.columba.api.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker)
+    public void execute(IWorkerStatusController worker)
         throws Exception {
         // get references to selected folder and message
         MailFolderCommandReference r = (MailFolderCommandReference) getReference();

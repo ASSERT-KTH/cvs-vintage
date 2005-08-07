@@ -18,7 +18,7 @@
 
 package org.columba.mail.nativ.defaultmailclient;
 
-import org.columba.core.util.OSInfo;
+import org.columba.core.base.OSInfo;
 
 /**
  * @author Timo

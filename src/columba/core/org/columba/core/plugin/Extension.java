@@ -26,11 +26,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.main.Main;
-import org.columba.core.plugin.exception.PluginException;
-import org.columba.core.plugin.util.ClassLoaderHelper;
-import org.columba.core.plugin.util.DefaultPluginLoader;
-import org.columba.core.plugin.util.ExternalClassLoader;
+import org.columba.api.exception.PluginException;
+import org.columba.api.plugin.ExtensionMetadata;
+import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionInterface;
+import org.columba.core.logging.Logging;
 
 /**
  * An extension providing the metadata of an extension and the runtime context
@@ -74,14 +74,14 @@ public class Extension implements IExtension {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtension#getMetadata()
+	 * @see org.columba.api.plugin.IExtension#getMetadata()
 	 */
 	public ExtensionMetadata getMetadata() {
 		return metadata;
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtension#instanciateExtension(java.lang.Object[])
+	 * @see org.columba.api.plugin.IExtension#instanciateExtension(java.lang.Object[])
 	 */
 	public IExtensionInterface instanciateExtension(Object[] arguments)
 			throws PluginException {
@@ -153,11 +153,11 @@ public class Extension implements IExtension {
 	private void handleException(Throwable e) {
 		if (e.getCause() != null) {
 			LOG.severe(e.getCause().getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.getCause().printStackTrace();
 		} else {
 			LOG.severe(e.getMessage());
-			if (Main.DEBUG)
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		}
 	}
@@ -236,7 +236,7 @@ public class Extension implements IExtension {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IExtension#isInternal()
+	 * @see org.columba.api.plugin.IExtension#isInternal()
 	 */
 	public boolean isInternal() {
 		return internalPlugin;
@@ -306,7 +306,7 @@ public class Extension implements IExtension {
 			url[i] = (URL) urlList.get(i);
 		}
 
-		if (Main.DEBUG) {
+		if (Logging.DEBUG) {
 			for (int i = 0; i < url.length; i++) {
 				LOG.finest("url[" + i + "]=" + url[i]);
 			}

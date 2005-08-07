@@ -23,7 +23,7 @@ import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.addressbook.folder.AddressbookTreeNode;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 
 public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {

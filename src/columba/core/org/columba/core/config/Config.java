@@ -26,21 +26,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.api.shutdown.IShutdownManager;
+import org.columba.core.base.OSInfo;
 import org.columba.core.io.DiskIO;
-import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.util.OSInfo;
+import org.columba.core.services.ServiceRegistry;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
 /**
  * Main entrypoint for configuration management.
  * <p>
- * Stores a list of all xml files in a hashtable. Hashtable key is the name of 
+ * Stores a list of all xml files in a hashtable. Hashtable key is the name of
  * the xml file. Value is {@link XmlIO} object.
  * <p>
- * Mail and Addressbook components are just wrappers, encapsulating this 
- * class. Using these wrapper classes, you don't need to specify the module
- * name (for example: mail, or addressbook) manually.
+ * Mail and Addressbook components are just wrappers, encapsulating this class.
+ * Using these wrapper classes, you don't need to specify the module name (for
+ * example: mail, or addressbook) manually.
  * <p>
  * Note that all configuration file have default templates in the /res directory
  * in package org.columba.core.config. These default configuration files are
@@ -48,247 +50,260 @@ import org.columba.core.xml.XmlIO;
  * started.
  * <p>
  * Config creates the top-level directory for Columba's configuration in
- * ".columba", which usually resides in the user's home directory or on
- * older Windows versions in Columba's program folder.
+ * ".columba", which usually resides in the user's home directory or on older
+ * Windows versions in Columba's program folder.
  * <p>
  * Saving and loading of all configuration files is handled here, too.
  * <p>
+ * 
  * @see org.columba.mail.config.MailConfig
  * @see org.columba.addressbook.config.AddressbookConfig
- *  
+ * 
  * @author fdietz
  */
-public class Config {
+public class Config implements IConfig {
 
-    private static final String CORE_STR = "core";
+	private static final String CORE_STR = "core";
 
-    private static final Logger LOG = Logger
-            .getLogger("org.columba.core.config");
-    
-    protected Map pluginList = new Hashtable();
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.config");
 
-    protected File path;
+	protected Map pluginList = new Hashtable();
 
-    protected File optionsFile;
+	protected File path;
 
-    protected File toolsFile;
-    
-    protected File viewsFile;
-    
-    private static Config instance;
+	protected File optionsFile;
 
-    /**
-     * Creates a new configuration from the given directory.
-     */
-    public Config(File path) {
-        if (path == null) {
-            path = getDefaultConfigPath();
-        }
+	protected File toolsFile;
 
-        this.path = path;
-        path.mkdir();
-        optionsFile = new File(path, "options.xml");
-        toolsFile = new File(path, "external_tools.xml");
-        viewsFile = new File(path, "views.xml");
-        
-        registerPlugin(CORE_STR, optionsFile.getName(), new OptionsXmlConfig(
-                optionsFile));
+	protected File viewsFile;
 
-        registerPlugin(CORE_STR, toolsFile.getName(), new DefaultXmlConfig(
-                toolsFile));
-        registerPlugin(CORE_STR, viewsFile.getName(), new DefaultXmlConfig(
-        		viewsFile));
-        
-        // register at shutdown-manager
-        // -> this will save all configuration data, when closing Columba
-        ShutdownManager.getInstance().register(new Runnable() {
+	private static Config instance;
 
-            public void run() {
-                try {
-                    save();
-                } catch (Exception e) {
-                    LOG.severe(e.getMessage());
-                }
-            }
-        });
-        
-        instance = this;
-    }
+	/**
+	 * Creates a new configuration from the given directory.
+	 */
+	public Config(File path) {
+		if (path == null) {
+			path = getDefaultConfigPath();
+		}
 
-    public static Config getInstance() {
-    	if( instance == null) {
-    		throw new RuntimeException("Must call Constructor first!");
-    	}
-    	
-    	return instance;
-    }
-    
-    /**
-     * Returns the directory the configuration is located in.
-     */
-    public File getConfigDirectory() {
-        return path;
-    }
+		this.path = path;
+		path.mkdir();
+		optionsFile = new File(path, "options.xml");
+		toolsFile = new File(path, "external_tools.xml");
+		viewsFile = new File(path, "views.xml");
 
-    /**
-     * Method registerPlugin.
-     * 
-     * @param moduleName
-     * @param id
-     * @param configPlugin
-     */
-    public void registerPlugin(String moduleName, String id,
-            DefaultXmlConfig configPlugin) {
-        File directory;
+		registerPlugin(CORE_STR, optionsFile.getName(), new OptionsXmlConfig(
+				optionsFile));
 
-        if (moduleName.equals(CORE_STR)) {
-            directory = getConfigDirectory();
-        } else {
-            directory = new File(getConfigDirectory(), moduleName);
-        }
+		registerPlugin(CORE_STR, toolsFile.getName(), new DefaultXmlConfig(
+				toolsFile));
+		registerPlugin(CORE_STR, viewsFile.getName(), new DefaultXmlConfig(
+				viewsFile));
 
-        File destination = new File(directory, id);
+		// register at shutdown manager
+		// -> this will save all configuration data, when closing Columba
+		IShutdownManager shutdownManager = null;
+		try {
+			shutdownManager = ((IShutdownManager) ServiceRegistry.getInstance()
+					.getService(IShutdownManager.class));
+		} catch (ServiceNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
-        if (!destination.exists()) {
-            String hstr = "org/columba/" + moduleName + "/config/" + id;
+		shutdownManager.register(new Runnable() {
+			public void run() {
+				try {
+					save();
+				} catch (Exception e) {
+					LOG.severe(e.getMessage());
+				}
+			}
+		});
 
-            try {
-                DiskIO.copyResource(hstr, destination);
-            } catch (IOException e) {
-            }
-        }
+		instance = this;
+	}
 
-        if (!pluginList.containsKey(moduleName)) {
-            Map map = new Hashtable();
-            pluginList.put(moduleName, map);
-        }
+	public static Config getInstance() {
+		if (instance == null) {
+			throw new RuntimeException("Must call Constructor first!");
+		}
 
-        addPlugin(moduleName, id, configPlugin);
-        
-        // load config-file from disk
-        configPlugin.load();
-    }
+		return instance;
+	}
 
-    /**
-     * Method getPlugin.
-     * 
-     * @param moduleName
-     * @param id
-     * @return DefaultXmlConfig
-     */
-    public DefaultXmlConfig getPlugin(String moduleName, String id) {
-        if (pluginList.containsKey(moduleName)) {
-            Map map = (Map) pluginList.get(moduleName);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.config.IConfig#getConfigDirectory()
+	 */
+	public File getConfigDirectory() {
+		return path;
+	}
 
-            if (map.containsKey(id)) {
-                DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(id);
+	/**
+	 * Method registerPlugin.
+	 * 
+	 * @param moduleName
+	 * @param id
+	 * @param configPlugin
+	 */
+	public void registerPlugin(String moduleName, String id,
+			DefaultXmlConfig configPlugin) {
+		File directory;
 
-                return plugin;
-            }
-        }
+		if (moduleName.equals(CORE_STR)) {
+			directory = getConfigDirectory();
+		} else {
+			directory = new File(getConfigDirectory(), moduleName);
+		}
 
-        return null;
-    }
+		File destination = new File(directory, id);
 
-    /**
-     * Method addPlugin.
-     * 
-     * @param moduleName
-     * @param id
-     * @param configPlugin
-     */
-    public void addPlugin(String moduleName, String id,
-            DefaultXmlConfig configPlugin) {
-        Map map = (Map) pluginList.get(moduleName);
+		if (!destination.exists()) {
+			String hstr = "org/columba/" + moduleName + "/config/" + id;
 
-        if (map != null) {
-            map.put(id, configPlugin);
-        }
-    }
+			try {
+				DiskIO.copyResource(hstr, destination);
+			} catch (IOException e) {
+			}
+		}
 
-    /**
-     * Method getPluginList.
-     * 
-     * @return List
-     */
-    public List getPluginList() {
-        List list = new LinkedList();
+		if (!pluginList.containsKey(moduleName)) {
+			Map map = new Hashtable();
+			pluginList.put(moduleName, map);
+		}
 
-        for (Iterator keys = pluginList.keySet().iterator(); keys.hasNext();) {
-            String key = (String) keys.next();
-            Map map = (Map) pluginList.get(key);
+		addPlugin(moduleName, id, configPlugin);
 
-            if (map != null) {
-                for (Iterator keys2 = map.keySet().iterator(); keys2.hasNext();) {
-                    String key2 = (String) keys2.next();
-                    DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(key2);
+		// load config-file from disk
+		configPlugin.load();
+	}
 
-                    list.add(plugin);
-                }
-            }
-        }
+	/**
+	 * Method getPlugin.
+	 * 
+	 * @param moduleName
+	 * @param id
+	 * @return DefaultXmlConfig
+	 */
+	public DefaultXmlConfig getPlugin(String moduleName, String id) {
+		if (pluginList.containsKey(moduleName)) {
+			Map map = (Map) pluginList.get(moduleName);
 
-        return list;
-    }
+			if (map.containsKey(id)) {
+				DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(id);
 
-    /**
-     * Method save.
-     */
-    public void save() throws Exception {
-        List list = getPluginList();
+				return plugin;
+			}
+		}
 
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
+		return null;
+	}
 
-            if (plugin == null) {
-                continue;
-            }
+	/**
+	 * Method addPlugin.
+	 * 
+	 * @param moduleName
+	 * @param id
+	 * @param configPlugin
+	 */
+	public void addPlugin(String moduleName, String id,
+			DefaultXmlConfig configPlugin) {
+		Map map = (Map) pluginList.get(moduleName);
 
-            plugin.save();
-        }
-    }
+		if (map != null) {
+			map.put(id, configPlugin);
+		}
+	}
 
-    /**
-     * Loads all plugins and template plugins.
-     */
-    protected void load() {
-        List list = getPluginList();
+	/**
+	 * Method getPluginList.
+	 * 
+	 * @return List
+	 */
+	public List getPluginList() {
+		List list = new LinkedList();
 
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
+		for (Iterator keys = pluginList.keySet().iterator(); keys.hasNext();) {
+			String key = (String) keys.next();
+			Map map = (Map) pluginList.get(key);
 
-            if (plugin == null) {
-                continue;
-            }
+			if (map != null) {
+				for (Iterator keys2 = map.keySet().iterator(); keys2.hasNext();) {
+					String key2 = (String) keys2.next();
+					DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(key2);
 
-            plugin.load();
-        }
-    }
+					list.add(plugin);
+				}
+			}
+		}
 
-    public XmlElement get(String name) {
-        DefaultXmlConfig xml = getPlugin(CORE_STR, name + ".xml");
+		return list;
+	}
 
-        return xml.getRoot();
-    }
+	/**
+	 * Method save.
+	 */
+	public void save() throws Exception {
+		List list = getPluginList();
 
-    /**
-     * Method getOptionsMainInterface.config.
-     * 
-     * @return OptionsXmlConfig
-     */
-    public OptionsXmlConfig getOptionsConfig() {
-        return (OptionsXmlConfig) getPlugin(CORE_STR, optionsFile.getName());
-    }
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
 
-    /**
-     * Returns the default configuration path. This value depends on the
-     * underlying operating system. This method must never return null.
-     */
-    public static File getDefaultConfigPath() {
-        if (OSInfo.isWindowsPlatform()) {
-            return new File("config");
-        } else {
-            return new File(System.getProperty("user.home"), ".columba");
-        }
-    }
+			if (plugin == null) {
+				continue;
+			}
+
+			plugin.save();
+		}
+	}
+
+	/**
+	 * Loads all plugins and template plugins.
+	 */
+	protected void load() {
+		List list = getPluginList();
+
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
+
+			if (plugin == null) {
+				continue;
+			}
+
+			plugin.load();
+		}
+	}
+
+	/**
+	 * @see org.columba.core.config.IConfig#get(java.lang.String)
+	 */
+	public XmlElement get(String name) {
+		DefaultXmlConfig xml = getPlugin(CORE_STR, name + ".xml");
+
+		return xml.getRoot();
+	}
+
+	/**
+	 * Method getOptionsMainInterface.config.
+	 * 
+	 * @return OptionsXmlConfig
+	 */
+	public OptionsXmlConfig getOptionsConfig() {
+		return (OptionsXmlConfig) getPlugin(CORE_STR, optionsFile.getName());
+	}
+
+	/**
+	 * Returns the default configuration path. This value depends on the
+	 * underlying operating system. This method must never return null.
+	 */
+	public static File getDefaultConfigPath() {
+		if (OSInfo.isWindowsPlatform()) {
+			return new File("config");
+		} else {
+			return new File(System.getProperty("user.home"), ".columba");
+		}
+	}
 }

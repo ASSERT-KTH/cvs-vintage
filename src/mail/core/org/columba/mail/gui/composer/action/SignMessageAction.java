@@ -21,8 +21,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.logging.Logger;
 
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.action.AbstractSelectableAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SecurityItem;
 import org.columba.mail.gui.composer.AccountView;

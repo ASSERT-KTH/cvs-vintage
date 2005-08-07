@@ -24,6 +24,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.columba.core.gui.base.LinkLabel;
+
 
 public class AddressLabel extends JPanel implements MouseListener //, ActionListener
  {

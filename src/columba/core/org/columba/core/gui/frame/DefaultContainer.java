@@ -27,7 +27,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,21 +38,25 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.text.View;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.command.CommandProcessor;
+import org.columba.api.exception.PluginException;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IContentPane;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.ExtensionMetadata;
+import org.columba.api.plugin.IExtension;
+import org.columba.core.command.TaskManager;
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.menu.ExtendableMenuBar;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ColumbaToolBar;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.ExtensionMetadata;
-import org.columba.core.plugin.IExtension;
+import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -62,7 +65,7 @@ import org.columba.core.xml.XmlElement;
  */
 /**
  * @author Frederik Dietz
- *
+ * 
  */
 public class DefaultContainer extends JFrame implements IContainer,
 		WindowListener {
@@ -82,7 +85,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.gui.frame");
 
-	private IFrameMediator mediator;
+	private DefaultFrameController mediator;
 
 	private View view;
 
@@ -116,7 +119,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	private boolean defaultCloseOperation;
 
-	public DefaultContainer(IFrameMediator mediator) {
+	public DefaultContainer(DefaultFrameController mediator) {
 		super();
 
 		this.viewItem = mediator.getViewItem();
@@ -165,8 +168,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		setTitle("");
 
 		// register statusbar at global taskmanager
-		statusBar = new StatusBar(CommandProcessor.getInstance()
-				.getTaskManager());
+		statusBar = new StatusBar(TaskManager.getInstance());
 
 		// add tooltip handler
 		mouseTooltipHandler = new TooltipMouseHandler(statusBar);
@@ -202,7 +204,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		}
 
 		// create toolbar
-		toolbar = new ColumbaToolBar(mediator);
+		toolbar = new ColumbaToolBar(TaskManager.getInstance(), mediator);
 		setToolBar(toolbar);
 
 		setInfoPanel(new ContainerInfoPanel());
@@ -230,17 +232,17 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#setFrameMediator(org.columba.core.gui.frame.IFrameMediator)
+	 * @see org.columba.api.gui.frame.IContainer#setFrameMediator(org.columba.api.gui.frame.IFrameMediator)
 	 */
 	public void setFrameMediator(final IFrameMediator m) {
 		LOG.fine("set framemediator to " + m.getClass());
 
-		this.mediator = m;
+		this.mediator = (DefaultFrameController) m;
 
 		m.setContainer(this);
 
 		// use new viewitem
-		viewItem = m.getViewItem();
+		viewItem = mediator.getViewItem();
 
 		switchedFrameMediator = false;
 
@@ -254,17 +256,17 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#switchFrameMediator(org.columba.core.gui.frame.IFrameMediator)
+	 * @see org.columba.api.gui.frame.IContainer#switchFrameMediator(org.columba.api.gui.frame.IFrameMediator)
 	 */
 	public void switchFrameMediator(IFrameMediator m) {
 		LOG.fine("switching framemediator to " + m.getClass());
 
-		this.mediator = m;
+		this.mediator = (DefaultFrameController) m;
 
 		m.setContainer(this);
 
 		// use new viewitem
-		viewItem = m.getViewItem();
+		viewItem = mediator.getViewItem();
 
 		switchedFrameMediator = true;
 
@@ -280,7 +282,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 			LOG.severe(e.getMessage());
 		}
 		// default toolbar
-		toolbar = new ColumbaToolBar(mediator);
+		toolbar = new ColumbaToolBar(TaskManager.getInstance(), mediator);
 		setToolBar(toolbar);
 		// default infopanel
 		setInfoPanel(new ContainerInfoPanel());
@@ -291,7 +293,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#getFrameMediator()
+	 * @see org.columba.api.gui.frame.IContainer#getFrameMediator()
 	 */
 	public IFrameMediator getFrameMediator() {
 
@@ -299,7 +301,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#getViewItem()
+	 * @see org.columba.api.gui.frame.IContainer#getViewItem()
 	 */
 	public ViewItem getViewItem() {
 		return viewItem;
@@ -393,7 +395,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// }
 
-		getFrameMediator().loadPositions(viewItem);
+		mediator.loadPositions(viewItem);
 	}
 
 	/**
@@ -419,7 +421,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 			item.setInteger(ViewItem.WINDOW, ViewItem.HEIGHT_INT, d.height);
 		}
 
-		getFrameMediator().savePositions(viewItem);
+		mediator.savePositions(viewItem);
 	}
 
 	/**
@@ -466,17 +468,16 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.View#getToolBar()
+	 * @see org.columba.api.gui.frame.View#getToolBar()
 	 */
 	public ColumbaToolBar getToolBar() {
 
 		return toolbar;
 	}
 
-	
-	
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#extendMenu(org.columba.core.gui.frame.IFrameMediator, java.io.InputStream)
+	 * @see org.columba.api.gui.frame.IContainer#extendMenu(org.columba.api.gui.frame.IFrameMediator,
+	 *      java.io.InputStream)
 	 */
 	public void extendMenu(IFrameMediator mediator, InputStream is) {
 
@@ -498,15 +499,17 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 				// add action to menu
 				String extensionId = metadata.getId();
-				AbstractColumbaAction action = handler.getAction(extensionId,
-						mediator);
-				if (action == null) {
-					LOG.severe("action could not be instanciated: "
-							+ extensionId);
-
-				} else {
-					((ExtendableMenuBar) menubar).insertAction(menuId,
-							placeholderId, action);
+				try {
+					AbstractColumbaAction action = (AbstractColumbaAction) extension
+							.instanciateExtension(new Object[] { mediator });
+					if (action == null)
+						LOG.severe("action could not be instanciated: "
+								+ extensionId);
+					else
+						((ExtendableMenuBar) menubar).insertAction(menuId,
+								placeholderId, action);
+				} catch (PluginException e1) {
+					e1.printStackTrace();
 				}
 			}
 
@@ -516,7 +519,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.View#setContentPane(org.columba.core.gui.frame.neu.FrameView)
+	 * @see org.columba.api.gui.frame.View#setContentPane(org.columba.api.gui.frame.neu.FrameView)
 	 */
 	public void setContentPane(IContentPane view) {
 
@@ -557,7 +560,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.View#extendToolbar(org.columba.core.xml.XmlElement)
+	 * @see org.columba.api.gui.frame.View#extendToolbar(org.columba.core.xml.XmlElement)
 	 */
 	public void extendToolbar(IFrameMediator mediator, XmlElement element) {
 
@@ -566,7 +569,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.View#getFrame()
+	 * @see org.columba.api.gui.frame.View#getFrame()
 	 */
 	public JFrame getFrame() {
 		return this;
@@ -609,21 +612,21 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#addToolBar(javax.swing.JComponent)
+	 * @see org.columba.api.gui.frame.IContainer#addToolBar(javax.swing.JComponent)
 	 */
 	public void addToolBar(JComponent c) {
 		toolbarPane.add(c);
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#getInfoPanel()
+	 * @see org.columba.api.gui.frame.IContainer#getInfoPanel()
 	 */
 	public ContainerInfoPanel getInfoPanel() {
 		return infoPanel;
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#setInfoPanel(org.columba.core.gui.frame.ContainerInfoPanel)
+	 * @see org.columba.api.gui.frame.IContainer#setInfoPanel(org.columba.core.gui.frame.ContainerInfoPanel)
 	 */
 	public void setInfoPanel(ContainerInfoPanel panel) {
 		this.infoPanel = panel;
@@ -636,7 +639,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#setToolBar(org.columba.core.gui.toolbar.ToolBar)
+	 * @see org.columba.api.gui.frame.IContainer#setToolBar(org.columba.core.gui.toolbar.ToolBar)
 	 */
 	public void setToolBar(ColumbaToolBar toolbar) {
 		this.toolbar = toolbar;
@@ -649,7 +652,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#enableInfoPanel(boolean)
+	 * @see org.columba.api.gui.frame.IContainer#enableInfoPanel(boolean)
 	 */
 	public void enableInfoPanel(boolean enable) {
 		getViewItem().setBoolean("toolbars", "infopanel", enable);
@@ -675,7 +678,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#isInfoPanelEnabled()
+	 * @see org.columba.api.gui.frame.IContainer#isInfoPanelEnabled()
 	 */
 	public boolean isInfoPanelEnabled() {
 		return getViewItem().getBooleanWithDefault("toolbars", "infopanel",
@@ -688,7 +691,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	public void setTitle(String arg0) {
 		String title = windowname;
 
-		if (Main.DEBUG) {
+		if (Logging.DEBUG) {
 			title += " DEBUG MODE";
 		}
 
@@ -700,7 +703,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#setWindowName(java.lang.String)
+	 * @see org.columba.api.gui.frame.IContainer#setWindowName(java.lang.String)
 	 */
 	public void setWindowName(String name) {
 		this.windowname = name;
@@ -708,7 +711,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.IContainer#setCloseOperation(boolean)
+	 * @see org.columba.api.gui.frame.IContainer#setCloseOperation(boolean)
 	 */
 	public void setCloseOperation(boolean close) {
 		this.defaultCloseOperation = close;

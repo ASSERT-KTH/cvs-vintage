@@ -27,13 +27,13 @@ import java.util.Hashtable;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.core.action.IMenu;
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.menu.CMenu;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.base.CMenu;
+import org.columba.core.gui.menu.IMenu;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

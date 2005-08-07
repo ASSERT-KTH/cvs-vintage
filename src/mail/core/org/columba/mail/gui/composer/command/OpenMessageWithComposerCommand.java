@@ -22,9 +22,9 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
@@ -84,7 +84,7 @@ public class OpenMessageWithComposerCommand extends Command {
 		controller.updateComponents(true);
 	}
 
-	public void execute(WorkerStatusController worker) throws Exception {
+	public void execute(IWorkerStatusController worker) throws Exception {
 		model = new ComposerModel();
 
 		// get selected folder

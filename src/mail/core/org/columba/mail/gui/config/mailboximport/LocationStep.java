@@ -32,10 +32,10 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.WizardTextField;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.base.MultiLineLabel;
+import org.columba.core.gui.base.WizardTextField;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.util.MailResourceLoader;

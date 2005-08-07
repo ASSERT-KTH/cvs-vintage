@@ -20,9 +20,9 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;

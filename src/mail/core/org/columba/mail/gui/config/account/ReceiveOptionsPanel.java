@@ -37,8 +37,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.IncomingItem;

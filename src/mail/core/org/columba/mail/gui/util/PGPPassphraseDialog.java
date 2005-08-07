@@ -35,9 +35,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 

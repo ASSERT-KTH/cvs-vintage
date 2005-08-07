@@ -1,7 +1,7 @@
 package org.columba.core.facade;
 
+import org.columba.api.gui.frame.IFrameManager;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.frame.IFrameManager;
 
 public class FrameFacade {
 

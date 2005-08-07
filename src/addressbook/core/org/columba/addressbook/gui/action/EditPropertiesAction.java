@@ -31,18 +31,18 @@ import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
+import org.columba.addressbook.gui.focus.FocusManager;
+import org.columba.addressbook.gui.focus.FocusOwner;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.IFrameMediator;
-import org.columba.core.gui.util.ErrorDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.Main;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.dialog.ErrorDialog;
+import org.columba.core.logging.Logging;
+import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Edit properties of selected contact or group.
@@ -107,7 +107,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 				card = (IContact) folder.get(uids[0]);
 			} catch (Exception e) {
 
-				if (Main.DEBUG)
+				if (Logging.DEBUG)
 					e.printStackTrace();
 
 				new ErrorDialog(e.getMessage(), e);
@@ -122,7 +122,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 					// modify card properties in folder
 					folder.modify(uids[0], card);
 				} catch (Exception e1) {
-					if (Main.DEBUG)
+					if (Logging.DEBUG)
 						e1.printStackTrace();
 
 					new ErrorDialog(e1.getMessage(), e1);

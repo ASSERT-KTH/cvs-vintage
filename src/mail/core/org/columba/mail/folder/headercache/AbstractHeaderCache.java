@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.gui.util.ColorFactory;
+import org.columba.core.base.BooleanCompressor;
+import org.columba.core.gui.base.ColorFactory;
 import org.columba.core.main.Main;
-import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Address;

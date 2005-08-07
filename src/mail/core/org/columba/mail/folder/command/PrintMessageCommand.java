@@ -32,15 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.io.TempFileStore;
 import org.columba.core.print.cCmUnit;
 import org.columba.core.print.cDocument;
 import org.columba.core.print.cHGroup;
@@ -50,6 +49,7 @@ import org.columba.core.print.cParagraph;
 import org.columba.core.print.cPrintObject;
 import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
+import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -165,7 +165,7 @@ public class PrintMessageCommand extends Command {
     }
 
     /**
-         * @see org.columba.core.command.Command#updateGUI()
+         * @see org.columba.api.command.Command#updateGUI()
          */
     public void updatedGUI() throws Exception {
     }
@@ -174,9 +174,9 @@ public class PrintMessageCommand extends Command {
      * This method executes the print action, i.e. it prints the selected
      * messages.
      *
-     * @see org.columba.core.command.Command#execute(Worker)
+     * @see org.columba.api.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker)
+    public void execute(IWorkerStatusController worker)
         throws Exception {
         /*
                  * *20030604, karlpeder* Fixed minor flaws to be able to print text
@@ -472,7 +472,7 @@ public class PrintMessageCommand extends Command {
      * @return body part of message
      */
     private void setupMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
-        WorkerStatusController worker) throws Exception {
+        IWorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
         XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
                                               .getRoot().getElement("/options/html");

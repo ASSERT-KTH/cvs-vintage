@@ -43,14 +43,14 @@ public class POP3CommandReference extends DefaultCommandReference {
     }
 
     /**
- * @see org.columba.core.command.DefaultCommandReference#releaseLock(java.lang.Object)
+ * @see org.columba.api.command.DefaultCommandReference#releaseLock(java.lang.Object)
  */
     public void releaseLock(Object locker) {
         server.releaseLock(locker);
     }
 
     /**
- * @see org.columba.core.command.DefaultCommandReference#tryToGetLock(java.lang.Object)
+ * @see org.columba.api.command.DefaultCommandReference#tryToGetLock(java.lang.Object)
  */
     public boolean tryToGetLock(Object locker) {
         return server.tryToGetLock(locker);

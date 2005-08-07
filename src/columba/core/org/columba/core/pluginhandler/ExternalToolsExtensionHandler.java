@@ -15,14 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
-import java.io.File;
 import java.io.InputStream;
 
-import org.columba.core.config.Config;
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.gui.externaltools.ExternalToolsWizardLauncher;
 import org.columba.core.plugin.ExtensionHandler;
-import org.columba.core.xml.XmlElement;
 
 /**
  * Provides an easy way to integrate external apps in Columba.
@@ -42,7 +37,7 @@ import org.columba.core.xml.XmlElement;
  * 
  * <p>
  * 
- * @see org.columba.core.plugin.external_tools.xml
+ * @see org.columba.api.plugin.external_tools.xml
  * 
  * @author fdietz
  */
@@ -64,90 +59,4 @@ public class ExternalToolsExtensionHandler extends ExtensionHandler {
 		loadExtensionsFromStream(is);
 	}
 
-	/**
-	 * Gets the location of an external commandline tool.
-	 * 
-	 * @param toolID
-	 *            id of tool
-	 * @return location of tool
-	 */
-	public File getLocationOfExternalTool(String toolID) {
-		// TODO implement
-		
-//		AbstractExternalToolsPlugin plugin = null;
-//
-//		try {
-//			plugin = (AbstractExternalToolsPlugin) getPlugin(toolID, null);
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//
-//			return null;
-//		}
-//
-//		// check configuration
-//		XmlElement root = getConfiguration(toolID);
-//
-//		if (root == null) {
-//			// create xml node
-//			XmlElement parent = Config.getInstance().get("external_tools")
-//					.getElement("tools");
-//			XmlElement child = new XmlElement("tool");
-//			child.addAttribute("first_time", "true");
-//			child.addAttribute("name", toolID);
-//			parent.addElement(child);
-//
-//			root = child;
-//		}
-//
-//		boolean firsttime = false;
-//
-//		if (root.getAttribute("first_time").equals("true")) {
-//			firsttime = true;
-//		}
-//
-//		if (firsttime) {
-//			// start the configuration wizard
-//			ExternalToolsWizardLauncher launcher = new ExternalToolsWizardLauncher();
-//			launcher.launchWizard(toolID, true);
-//
-//			if (launcher.isFinished()) {
-//				// ok, now the tool is initialized correctly
-//				XmlElement r = getConfiguration(toolID);
-//				File file = new File(r.getAttribute("location"));
-//
-//				return file;
-//			}
-//		} else {
-//			String location = root.getAttribute("location");
-//
-//			File file = new File(location);
-//
-//			return file;
-//		}
-
-		return null;
-	}
-
-	/**
-	 * Gets xml configuration of tool with id.
-	 * 
-	 * @param id
-	 *            id of tool
-	 * @return xml treenode
-	 */
-	public XmlElement getConfiguration(String id) {
-		XmlElement root = Config.getInstance().get("external_tools")
-				.getElement("tools");
-		boolean firsttime = false;
-
-		for (int i = 0; i < root.count(); i++) {
-			XmlElement child = root.getElement(i);
-
-			if (child.getAttribute("name").equals(id)) {
-				return child;
-			}
-		}
-
-		return null;
-	}
 }

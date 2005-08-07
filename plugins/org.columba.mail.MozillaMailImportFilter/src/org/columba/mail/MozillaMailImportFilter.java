@@ -22,7 +22,7 @@ import java.io.FileReader;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.facade.DialogFacade;
 import org.columba.core.folder.IFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -54,7 +54,7 @@ public class MozillaMailImportFilter extends AbstractMailboxImporter {
         return "Mozilla Mail Import filter for a complete account tree\n";
     }
     
-    public void importMailboxFile(File file, WorkerStatusController worker,
+    public void importMailboxFile(File file, IWorkerStatusController worker,
     		AbstractMessageFolder destFolder) throws Exception {
         
         boolean sucess = false;
@@ -101,7 +101,7 @@ public class MozillaMailImportFilter extends AbstractMailboxImporter {
     }
     
     protected void generateDirectoryListing(File parent, Vector v,
-    		AbstractMessageFolder destination, WorkerStatusController worker) {
+    		AbstractMessageFolder destination, IWorkerStatusController worker) {
         // list all files
         File[] list = parent.listFiles();
         
@@ -156,7 +156,7 @@ public class MozillaMailImportFilter extends AbstractMailboxImporter {
         }
     }
     
-    public void importMailbox(WorkerStatusController worker) {
+    public void importMailbox(IWorkerStatusController worker) {
         File[] listing = getSourceFiles();
         
         // we just want to import one profile

@@ -50,7 +50,7 @@ import javax.swing.tree.TreeSelectionModel;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.command.MailFolderCommandReference;

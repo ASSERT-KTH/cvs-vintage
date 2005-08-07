@@ -17,14 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.filter;
 
-import org.columba.core.command.Command;
+import org.columba.api.command.ICommand;
+import org.columba.api.plugin.IExtension;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.filter.FilterActionList;
 import org.columba.core.folder.IFolder;
-import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.plugin.FilterActionExtensionHandler;
@@ -68,7 +68,7 @@ public class FilterCompoundCommand extends CompoundCommand {
 			}
 
 			// retrieve Command of filter action
-			Command command = instance.getCommand(action,
+			ICommand command = instance.getCommand(action,
 					(AbstractMessageFolder) sourceFolder, uids);
 
 			// add command to CompoundCommand

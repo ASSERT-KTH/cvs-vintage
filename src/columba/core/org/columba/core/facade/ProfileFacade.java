@@ -1,7 +1,7 @@
 package org.columba.core.facade;
 
-import org.columba.core.profiles.IProfileManager;
-import org.columba.core.profiles.ProfileManager;
+import org.columba.core.gui.profiles.IProfileManager;
+import org.columba.core.gui.profiles.ProfileManager;
 
 public class ProfileFacade {
 

@@ -1,0 +1,32 @@
+/*
+ * Created on 24.03.2003
+ *
+ * To change this generated comment go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
+ */
+package org.columba.api.exception;
+
+import org.columba.core.plugin.PluginManager;
+
+/**
+ * {@link PluginManager}throws this exception if it can't find the requested
+ * plugin handler.
+ * 
+ * @author fdietz
+ */
+public class PluginHandlerNotFoundException extends Exception {
+	/**
+	 *  
+	 */
+	public PluginHandlerNotFoundException() {
+		super();
+	}
+
+	/**
+	 * @param arg0
+	 */
+	public PluginHandlerNotFoundException(String arg0) {
+		super(arg0);
+	}
+
+}

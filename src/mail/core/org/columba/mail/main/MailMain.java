@@ -26,23 +26,23 @@ import javax.swing.JPanel;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
+import org.columba.core.component.IComponentPlugin;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
+import org.columba.core.connectionstate.ConnectionStateImpl;
+import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.main.ColumbaCmdLineParser;
-import org.columba.core.main.ConnectionStateImpl;
-import org.columba.core.main.IComponentPlugin;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
-import org.columba.core.plugin.exception.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
-import org.columba.core.services.ServiceManager;
+import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OutgoingItem;
 import org.columba.mail.folder.AbstractFolder;
@@ -90,7 +90,8 @@ public class MailMain implements IComponentPlugin {
 				"org/columba/mail/plugin/pluginhandler.xml");
 
 		try {
-			InputStream is = this.getClass().getResourceAsStream("/org/columba/mail/action/action.xml");
+			InputStream is = this.getClass().getResourceAsStream(
+					"/org/columba/mail/action/action.xml");
 			PluginManager.getInstance().getHandler(ActionExtensionHandler.NAME)
 					.loadExtensionsFromStream(is);
 		} catch (PluginHandlerNotFoundException ex) {
@@ -108,20 +109,20 @@ public class MailMain implements IComponentPlugin {
 		BackgroundTaskManager.getInstance().register(plugin);
 		ShutdownManager.getInstance().register(plugin);
 
-		ServiceManager.getInstance().register(
-				"org.columba.mail.facade.IConfigFactory",
+		ServiceRegistry.getInstance().register(
+				org.columba.mail.facade.IConfigFacade.class,
 				"org.columba.mail.facade.ConfigFactory");
-		ServiceManager.getInstance().register(
-				"org.columba.mail.facade.IComposerFactory",
+		ServiceRegistry.getInstance().register(
+				org.columba.mail.facade.IComposerFacade.class,
 				"org.columba.mail.facade.ComposerFactory");
-		ServiceManager.getInstance().register(
-				"org.columba.mail.facade.IDialogFactory",
+		ServiceRegistry.getInstance().register(
+				org.columba.mail.facade.IDialogFacade.class,
 				"org.columba.mail.facade.DialogFactory");
-		ServiceManager.getInstance().register(
-				"org.columba.mail.facade.IFolderFactory",
+		ServiceRegistry.getInstance().register(
+				org.columba.mail.facade.IFolderFacade.class,
 				"org.columba.mail.facade.FolderFactory");
-		ServiceManager.getInstance().register(
-				"org.columba.mail.facade.ISelectionFactory",
+		ServiceRegistry.getInstance().register(
+				org.columba.mail.facade.ISelectionFacade.class,
 				"org.columba.mail.facade.SelectionFactory");
 	}
 
@@ -144,7 +145,7 @@ public class MailMain implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.main.IComponentPlugin#handleCommandLineParameters(java.lang.String[])
+	 * @see org.columba.core.component.IComponentPlugin#handleCommandLineParameters(java.lang.String[])
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 

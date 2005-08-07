@@ -20,10 +20,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.Timer;
 
-import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.main.ConnectionStateImpl;
+import org.columba.core.connectionstate.ConnectionStateImpl;
+import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 

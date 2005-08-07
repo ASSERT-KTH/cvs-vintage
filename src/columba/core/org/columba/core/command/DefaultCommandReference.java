@@ -15,7 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.core.util.Lock;
+import org.columba.api.command.ICommandReference;
+import org.columba.core.base.Lock;
 
 /**
  * Encapsulates the reference for a {@link Command}.

@@ -30,7 +30,7 @@ import javax.swing.Timer;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.TreeNode;
 
-import org.columba.core.util.Mutex;
+import org.columba.core.base.Mutex;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.gui.table.model.TableModelChangedListener;

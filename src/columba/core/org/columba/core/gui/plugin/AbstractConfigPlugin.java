@@ -17,7 +17,7 @@ package org.columba.core.gui.plugin;
 
 import javax.swing.JPanel;
 
-import org.columba.core.plugin.IExtensionInterface;
+import org.columba.api.plugin.IExtensionInterface;
 
 /**
  * 

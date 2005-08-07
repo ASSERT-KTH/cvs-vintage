@@ -15,9 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.filter;
 
+import org.columba.api.command.ICommand;
+import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.command.Command;
 import org.columba.core.folder.IFolder;
-import org.columba.core.plugin.IExtensionInterface;
 
 /**
  * Action which is executed if a filter found a matching set of messages.
@@ -45,6 +46,6 @@ public abstract class AbstractFilterAction implements IExtensionInterface {
 	 * @throws Exception
 	 *             exception is just passed to the upper-level
 	 */
-	public abstract Command getCommand(FilterAction filterAction,
+	public abstract ICommand getCommand(FilterAction filterAction,
 			IFolder srcFolder, Object[] uids) throws Exception;
 }
