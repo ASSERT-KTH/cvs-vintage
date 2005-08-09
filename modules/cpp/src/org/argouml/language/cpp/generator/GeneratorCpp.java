@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.55 2005/08/06 01:45:32 aslo Exp $
+// $Id: GeneratorCpp.java,v 1.56 2005/08/09 22:44:53 aslo Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1369,22 +1369,28 @@ public class GeneratorCpp extends Generator2
     public String generatePackage(Object p) {
         StringBuffer sb = new StringBuffer();
         String packName = 
-                generateName(Model.getDataTypesHelper().getLanguage(p));
-        sb.append("// package ").append(packName).append(" {")
+                generateName(Model.getFacade().getName(p));
+        sb.append("namespace ").append(packName).append(" {")
             .append(LINE_SEPARATOR);
         Collection ownedElements = Model.getFacade().getOwnedElements(p);
         if (ownedElements != null) {
             Iterator ownedEnum = ownedElements.iterator();
             while (ownedEnum.hasNext()) {
                 Object me = ownedEnum.next();
-                sb.append(generate(me));
+		cleanupGenerator();
+		currClass = me;
+		actualNamespace = p;
+		generatorPass = HEADER_PASS;
+                sb.append(indentString(generate(me), 1));
                 sb.append(LINE_SEPARATOR).append(LINE_SEPARATOR);
             }
+	    cleanupGenerator();
+	    generatorPass = NONE_PASS;
         }
         else {
-            sb.append("(no elements)");
+            sb.append("// no elements");
         }
-        sb.append(LINE_SEPARATOR).append(LINE_SEPARATOR);
+        sb.append("}").append(LINE_SEPARATOR);
         return sb.toString();
     }
 
@@ -1532,10 +1538,12 @@ public class GeneratorCpp extends Generator2
 	// This works only with jdk 1.5: return s.replace("\n", "\n" + ind);
 	StringBuffer result = new StringBuffer();
 	for (int i = s.indexOf('\n'); i != -1; i = s.indexOf('\n')) {
-	    result.append(s.substring(0, i+1)).append(ind);
+	    result.append(ind).append(s.substring(0, i+1));
 	    s = s.substring(i+1);
 	}
-	result.append(s);
+	if (s.length() > 0) {
+	    result.append(ind).append(s);
+	}
 	return result.toString();
     }
 
