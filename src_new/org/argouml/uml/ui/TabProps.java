@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.70 2005/07/23 20:52:03 mvw Exp $
+// $Id: TabProps.java,v 1.71 2005/08/09 17:45:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -426,14 +426,14 @@ public class TabProps
                 return new PropPanelActor();}
         if (Model.getFacade().isAAssociationClass(modelElement)) { 
                 return new PropPanelAssociationClass();}
+        if (Model.getFacade().isAAssociationRole(modelElement)) { 
+            return new PropPanelAssociationRole();}
         if (Model.getFacade().isAAssociation(modelElement)) { 
                 return new PropPanelAssociation();}
+        if (Model.getFacade().isAAssociationEndRole(modelElement)) { 
+            return new PropPanelAssociationEndRole();}
         if (Model.getFacade().isAAssociationEnd(modelElement)) { 
                 return new PropPanelAssociationEnd();}
-        if (Model.getFacade().isAAssociationEndRole(modelElement)) { 
-                return new PropPanelAssociationEndRole();}
-        if (Model.getFacade().isAAssociationRole(modelElement)) { 
-                return new PropPanelAssociationRole();}
         if (Model.getFacade().isAAttribute(modelElement)) { 
                 return new PropPanelAttribute();}
         if (Model.getFacade().isACallAction(modelElement)) { 
