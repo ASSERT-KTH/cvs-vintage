@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.162 2005/07/26 11:01:10 bobtarling Exp $
+// $Id: FigClass.java,v 1.163 2005/08/10 19:36:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,6 @@ import org.argouml.uml.diagram.ui.FigCompartment;
 import org.argouml.uml.diagram.ui.FigEmptyRect;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigOperationsCompartment;
-import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Editor;
