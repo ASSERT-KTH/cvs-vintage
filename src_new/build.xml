@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.187 2005/08/08 21:26:42 linus Exp $
+<!-- $Id: build.xml,v 1.188 2005/08/10 22:35:34 linus Exp $
 This requires ANT 1.6.2
 
 if you get a message like:
@@ -186,6 +186,7 @@ Property files to be searched:
 
     <path id="argouml-mdr.runtime.classpath">
       <fileset dir="../../argouml-mdr/build" includes="*.jar"/>
+      <fileset dir="../../argouml-mdr/lib" includes="*.jar"/>
     </path>
 
     <!-- In order to use ant optional tasks which use jars that are not -->
