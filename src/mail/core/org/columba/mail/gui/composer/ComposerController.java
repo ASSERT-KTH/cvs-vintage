@@ -23,6 +23,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
 import java.awt.event.ContainerListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -416,6 +418,26 @@ public class ComposerController extends DefaultFrameController implements
 				getEditorController().getViewUIComponent(), BorderLayout.CENTER);
 
 		editorPanel.getContentPane().add(signatureView, BorderLayout.SOUTH);
+		
+		editorPanel.addMouseListener(new MouseListener() {
+
+			public void mouseClicked(MouseEvent e) {
+				editorController.getComponent().requestFocus();
+			}
+
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			public void mouseExited(MouseEvent e) {
+			}
+
+			public void mousePressed(MouseEvent e) {
+			}
+
+			public void mouseReleased(MouseEvent e) {
+			}
+			
+		});
 
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		centerPanel.setLayout(new BorderLayout());
