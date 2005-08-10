@@ -78,9 +78,11 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
         	
         	// delete source message
         	MailFolderCommandReference r = model.getSourceReference();
-        	r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
-        	CommandProcessor.getInstance().addOp(new MarkMessageCommand(r));
-        	CommandProcessor.getInstance().addOp(new ExpungeFolderCommand(r));
+        	if( r != null) {
+        		r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+        		CommandProcessor.getInstance().addOp(new MarkMessageCommand(r));
+        		CommandProcessor.getInstance().addOp(new ExpungeFolderCommand(r));
+        	}
         }
         
         // mark as read, mark as draft
@@ -91,7 +93,8 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
         
         // create command reference
         ComposerCommandReference r =  new ComposerCommandReference(composerController, destFolder);
-     
+        r.setAppendSignature(false);
+        
         // create command
         SaveMessageCommand c = new SaveMessageCommand(r);
 

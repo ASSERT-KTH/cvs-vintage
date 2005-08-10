@@ -67,7 +67,7 @@ public class SaveMessageCommand extends Command {
 
 		if (message == null) {
 			message = new MessageComposer(((ComposerModel) composerController
-					.getModel())).compose(worker);
+					.getModel())).compose(worker, r.isAppendSignature());
 		}
 		
 		

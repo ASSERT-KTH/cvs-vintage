@@ -237,12 +237,12 @@ public class MessageComposer {
 	 * @return The composed mime part for the message body
 	 * @author Karl Peder Olesen (karlpeder)
 	 */
-	private StreamableMimePart composeMultipartAlternativeMimePart() {
+	private StreamableMimePart composeMultipartAlternativeMimePart(boolean appendSignature) {
 		// compose text part
-		StreamableMimePart textPart = composeTextMimePart();
+		StreamableMimePart textPart = composeTextMimePart(appendSignature);
 
 		// compose html part
-		StreamableMimePart htmlPart = composeHtmlMimePart();
+		StreamableMimePart htmlPart = composeHtmlMimePart(appendSignature);
 
 		// merge mimeparts and return
 		LocalMimePart bodyPart = new LocalMimePart(new MimeHeader("multipart",
@@ -263,7 +263,7 @@ public class MessageComposer {
 	 * @return The composed text/html mime part
 	 * @author Karl Peder Olesen (karlpeder)
 	 */
-	private StreamableMimePart composeHtmlMimePart() {
+	private StreamableMimePart composeHtmlMimePart(boolean appendSignature) {
 		// Init Mime-Header with Default-Values (text/html)
 		LocalMimePart bodyPart = new LocalMimePart(new MimeHeader("text",
 				"html"));
@@ -370,10 +370,11 @@ public class MessageComposer {
 	 * If the model contains a html message, tags are stripped to get plain
 	 * text. <br>
 	 * If a signature is defined, it is added to the body.
+	 * @param appendSignature 
 	 * 
 	 * @return The composed text/plain mime part
 	 */
-	private StreamableMimePart composeTextMimePart() {
+	private StreamableMimePart composeTextMimePart(boolean appendSignature) {
 		// Init Mime-Header with Default-Values (text/plain)
 		LocalMimePart bodyPart = new LocalMimePart(new MimeHeader("text",
 				"plain"));
@@ -396,7 +397,7 @@ public class MessageComposer {
 		Identity identity = item.getIdentity();
 		File signatureFile = identity.getSignature();
 
-		if (signatureFile != null) {
+		if (appendSignature && signatureFile != null) {
 			String signature = getSignature(signatureFile);
 
 			if (signature != null) {
@@ -428,7 +429,9 @@ public class MessageComposer {
 		return bodyPart;
 	}
 
-	public SendableMessage compose(IWorkerStatusController workerStatusController)
+	
+
+	public SendableMessage compose(IWorkerStatusController workerStatusController, boolean appendSignature)
 			throws Exception {
 		this.accountUid = model.getAccountItem().getUid();
 
@@ -474,14 +477,14 @@ public class MessageComposer {
 
 			if (multipart.equals("true")) {
 				// send as multipart/alternative
-				body = composeMultipartAlternativeMimePart();
+				body = composeMultipartAlternativeMimePart(appendSignature);
 			} else {
 				// send as text/html
-				body = composeHtmlMimePart();
+				body = composeHtmlMimePart(appendSignature);
 			}
 		} else {
 			// compose message body as text/plain
-			body = composeTextMimePart();
+			body = composeTextMimePart(appendSignature);
 		}
 
 		if (body != null) {

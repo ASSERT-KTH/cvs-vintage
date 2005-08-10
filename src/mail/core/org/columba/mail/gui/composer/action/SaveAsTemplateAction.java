@@ -69,7 +69,8 @@ public class SaveAsTemplateAction extends AbstractColumbaAction {
 				.getFolder(destUid);
 
 		ComposerCommandReference r =new ComposerCommandReference(composerController, destFolder);
-
+		r.setAppendSignature(false);
+		
 		SaveMessageCommand c = new SaveMessageCommand(r);
 
 		CommandProcessor.getInstance().addOp(c);

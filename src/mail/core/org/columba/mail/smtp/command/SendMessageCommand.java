@@ -172,7 +172,7 @@ public class SendMessageCommand extends Command {
 
 		try {
 			// compose the message suitable for sending
-			message = new MessageComposer(model).compose(worker);
+			message = new MessageComposer(model).compose(worker, r.isAppendSignature());
 
 		} catch (JSCFException e1) {
 			if (e1 instanceof CancelledException) {

@@ -31,6 +31,8 @@ import org.columba.mail.message.ColumbaMessage;
 public class ComposerCommandReference extends MailFolderCommandReference {
     protected ComposerController composerController;
 
+    protected boolean appendSignature = true;
+    
     /**
  * Constructor for ComposerCommandReference.
  * @param folder
@@ -78,4 +80,18 @@ public class ComposerCommandReference extends MailFolderCommandReference {
     public ComposerController getComposerController() {
         return composerController;
     }
+
+	/**
+	 * @return Returns the appendSignature.
+	 */
+	public boolean isAppendSignature() {
+		return appendSignature;
+	}
+
+	/**
+	 * @param appendSignature The appendSignature to set.
+	 */
+	public void setAppendSignature(boolean appendSignature) {
+		this.appendSignature = appendSignature;
+	}
 }
