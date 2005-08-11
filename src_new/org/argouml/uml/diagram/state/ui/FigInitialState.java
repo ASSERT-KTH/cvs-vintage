@@ -1,4 +1,4 @@
-// $Id: FigInitialState.java,v 1.21 2005/01/30 20:48:12 linus Exp $
+// $Id: FigInitialState.java,v 1.22 2005/08/11 20:00:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -47,7 +46,6 @@ public class FigInitialState extends FigStateVertex {
     ////////////////////////////////////////////////////////////////
     // constants
 
-    private static final int MARGIN = 2;
     private static final int X = 10;
     private static final int Y = 10;
     private static final int WIDTH = 16;
@@ -76,7 +74,6 @@ public class FigInitialState extends FigStateVertex {
         setBigPort(bigPort);
 
         setBlinkPorts(false); //make port invisble unless mouse enters
-        Rectangle r = getBounds();
     }
 
     /**
