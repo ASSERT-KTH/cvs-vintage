@@ -1,4 +1,4 @@
-// $Id: TestActionDeploymentDiagram.java,v 1.6 2005/07/28 14:23:27 linus Exp $
+// $Id: TestActionDeploymentDiagram.java,v 1.7 2005/08/12 19:30:27 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,6 @@ import java.util.List;
 
 import org.argouml.kernel.ProjectManager;
 
-import ru.novosoft.uml.foundation.core.MNamespace;
-
 /**
  *
  * @author jaap.branderhorst@xs4all.nl
@@ -57,9 +55,9 @@ public class TestActionDeploymentDiagram
     /**
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    protected MNamespace getNamespace() {
-        return (MNamespace) (ProjectManager.getManager().getCurrentProject()
-                .getModel());
+    protected Object getNamespace() {
+        return ProjectManager.getManager().getCurrentProject()
+                .getModel();
     }
 
     /**

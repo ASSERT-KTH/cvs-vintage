@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: CoreFactory.java,v 1.2 2005/08/12 19:30:25 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -616,4 +616,9 @@ public interface CoreFactory {
      * @param target the target namespace
      */
     void doCopyNamespace(Object source, Object target);
+    
+    //additional support for generalization
+    
+    Object createGeneralization();
+    
 }

@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationInteractionListModel.java,v 1.13 2005/01/20 23:20:33 linus Exp $
+// $Id: TestUMLCollaborationInteractionListModel.java,v 1.14 2005/08/12 19:30:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,6 @@ package org.argouml.uml.ui.foundation.core;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 import org.argouml.uml.ui.behavior.collaborations.UMLCollaborationInteractionListModel;
-
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.behavior.collaborations.MInteraction;
 
 /**
  * @since Oct 28, 2002
@@ -77,8 +74,7 @@ public class TestUMLCollaborationInteractionListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MCollaboration) getElem()).removeInteraction(
-                    (MInteraction) elements[i]);
+        		Model.getCollaborationsHelper().removeInteraction(getElem(),elements[i]);
         }
     }
 

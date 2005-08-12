@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.26 2005/07/18 13:57:46 mkl Exp $
+// $Id: CoreHelperImpl.java,v 1.27 2005/08/12 19:30:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,11 +26,9 @@ package org.argouml.model.uml;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -2279,13 +2277,7 @@ class CoreHelperImpl implements CoreHelper {
      * @param taggedValue TaggedValue
      */
     public void addTaggedValue(Object handle, Object taggedValue) {
-        if (handle instanceof MModelElement
-                && taggedValue instanceof MTaggedValue) {
-            ((MModelElement) handle).addTaggedValue((MTaggedValue) taggedValue);
-            return;
-        }
-        throw new IllegalArgumentException("handle: " + handle
-                + " or taggedValue: " + taggedValue);
+    		nsmodel.getExtensionMechanismsHelper().addTaggedValue(handle,taggedValue);
     }
 
     /**
@@ -3416,5 +3408,41 @@ class CoreHelperImpl implements CoreHelper {
         throw new IllegalArgumentException("handle: " + handle
                 + " or node: " + node);
     }
+
+	/* (non-Javadoc)
+	 * @see org.argouml.model.CoreHelper#addElementResidence(java.lang.Object, java.lang.Object)
+	 */
+	public void addElementResidence(Object handle, Object residence) {
+        if (handle instanceof MModelElement && residence instanceof MElementResidence) {
+            ((MModelElement) handle).addElementResidence((MElementResidence) residence);
+            return;
+        }	
+        throw new IllegalArgumentException("handle: " + handle
+                + " or residence: " + residence);        
+	}
+
+	/* (non-Javadoc)
+	 * @see org.argouml.model.CoreHelper#removeConnection(java.lang.Object, java.lang.Object)
+	 */
+	public void removeConnection(Object handle, Object connection) {
+        if (handle instanceof MAssociationRole && connection instanceof MAssociationEnd) {
+            ((MAssociationRole) handle).removeConnection((MAssociationEnd) connection);
+            return;
+        }	
+        throw new IllegalArgumentException("handle: " + handle
+                + " or connection: " + connection);        
+	}
+
+	/* (non-Javadoc)
+	 * @see org.argouml.model.CoreHelper#removeElementResidence(java.lang.Object, java.lang.Object)
+	 */
+	public void removeElementResidence(Object handle, Object residence) {
+        if (handle instanceof MModelElement && residence instanceof MElementResidence) {
+            ((MModelElement) handle).removeElementResidence((MElementResidence) residence);
+            return;
+        }	
+        throw new IllegalArgumentException("handle: " + handle
+                + " or residence: " + residence);        
+	}
 
 }

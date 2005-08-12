@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementConstraintListModel.java,v 1.15 2005/01/20 23:20:34 linus Exp $
+// $Id: TestUMLModelElementConstraintListModel.java,v 1.16 2005/08/12 19:30:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,6 @@ import junit.framework.TestCase;
 
 import org.argouml.model.Model;
 
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * @since Oct 27, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -54,7 +52,7 @@ public class TestUMLModelElementConstraintListModel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ns = Model.getModelManagementFactory().createModel();
-        elem = (MModelElement) Model.getCoreFactory().buildClass(ns);
+        elem = Model.getCoreFactory().buildClass(ns);
         model = new UMLModelElementConstraintListModel();
         model.setTarget(elem);
     }

@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.17 2005/07/28 07:15:52 linus Exp $
+// $Id: Model.java,v 1.18 2005/08/12 19:30:25 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,7 @@ public final class Model {
      * The decorated helper.
      */
     private static UseCasesHelper useCasesHelper;
-
+    
     /**
      * Constructor to prohibit creation.
      */
@@ -379,7 +379,7 @@ public final class Model {
      * @return the helper
      */
     public static UseCasesHelper getUseCasesHelper() {
-        return useCasesHelper;
+        return impl.getUseCasesHelper();
     }
 
     /**
@@ -546,5 +546,9 @@ public final class Model {
         if (mco != null) {
             mco.mementoCreated(memento);
         }
+    }
+    
+    public static CopyHelper getCopyHelper() {
+    		return impl.getCopyHelper();
     }
 }

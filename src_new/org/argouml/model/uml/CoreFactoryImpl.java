@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.23 2005/03/01 23:57:25 bobtarling Exp $
+// $Id: CoreFactoryImpl.java,v 1.24 2005/08/12 19:30:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -324,7 +324,7 @@ public class CoreFactoryImpl
      *
      * @return an initialized UML Generalization instance.
      */
-    Object createGeneralization() {
+    public Object createGeneralization() {
 	MGeneralization modelElement =
 	    MFactory.getDefaultFactory().createGeneralization();
 	super.initialize(modelElement);

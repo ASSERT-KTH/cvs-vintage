@@ -1,4 +1,4 @@
-// $Id: AbstractCoreHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
+// $Id: AbstractCoreHelperDecorator.java,v 1.2 2005/08/12 19:30:25 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1080,4 +1080,25 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
     public void setVisibility(Object handle, Object visibility) {
         impl.setVisibility(handle, visibility);
     }
+
+	/**
+	 * @see org.argouml.model.CoreHelper#removeConnection(java.lang.Object, java.lang.Object)
+	 */
+	public void removeConnection(Object handle, Object connection) {
+		impl.removeConnection(handle, connection);
+	}
+
+	/**
+	 * @see org.argouml.model.CoreHelper#addElementResidence(java.lang.Object, java.lang.Object)
+	 */
+	public void addElementResidence(Object handle, Object residence) {
+		impl.addElementResidence(handle, residence);
+	}
+
+	/**
+	 * @see org.argouml.model.CoreHelper#removeElementResidence(java.lang.Object, java.lang.Object)
+	 */
+	public void removeElementResidence(Object handle, Object residence) {
+		impl.removeElementResidence(handle, residence);
+	}
 }

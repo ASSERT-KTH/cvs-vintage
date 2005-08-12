@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.18 2005/07/31 21:23:13 mkl Exp $
+// $Id: NSUMLModelFacade.java,v 1.19 2005/08/12 19:30:26 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4683,5 +4683,21 @@ public class NSUMLModelFacade implements Facade {
         return modelElement.toString();
     }
 
-    
+
+	/**
+	 * Not implemented in the UML 1.3 metamodel.
+	 * @see org.argouml.model.Facade#isATagDefinition(java.lang.Object)
+	 */
+	public boolean isATagDefinition(Object handle) {
+		return false;
+	}
+
+	/**
+	 * Not implemented in the UML 1.3 metamodel.
+	 * @see org.argouml.model.Facade#isATagDefinition(java.lang.Object)
+	 */
+	public boolean isAEnumeration(Object handle) {
+		return false;
+	}
+	
 }

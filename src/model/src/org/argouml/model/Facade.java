@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.12 2005/07/31 21:23:59 mkl Exp $
+// $Id: Facade.java,v 1.13 2005/08/12 19:30:25 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2616,4 +2616,12 @@ public interface Facade {
      * @return TimeExpression
      */
     Object getWhen(Object target);
+    /**
+     * Recognizer for TagDefinition. Implemented only in UML 1.4+ metamodels.
+     *
+     * @param handle candidate
+     * @return true if handle is a TagDefinition
+     */
+    boolean isATagDefinition(Object handle);
+        
 }

@@ -1,4 +1,4 @@
-// $Id: TestActionCollaborationDiagram.java,v 1.6 2005/07/28 14:23:27 linus Exp $
+// $Id: TestActionCollaborationDiagram.java,v 1.7 2005/08/12 19:30:27 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,6 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-import ru.novosoft.uml.foundation.core.MClassImpl;
-import ru.novosoft.uml.foundation.core.MClassifierImpl;
-import ru.novosoft.uml.foundation.core.MNamespace;
-
 /**
  *
  * @author jaap.branderhorst@xs4all.nl
@@ -61,9 +57,9 @@ public class TestActionCollaborationDiagram
     /**
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    protected MNamespace getNamespace() {
-        //return new MCollaborationImpl();
-        MNamespace c = new MClassImpl();
+    protected Object getNamespace() {
+        //return new CollaborationImpl();
+        Object c = Model.getCoreFactory().createClass();
         TargetManager.getInstance().setTarget(c);
         return c;
     }
@@ -73,7 +69,7 @@ public class TestActionCollaborationDiagram
      */
     protected List getValidNamespaceClasses() {
         List rl = new ArrayList();
-        rl.add(MClassifierImpl.class);
+        rl.add(Model.getMetaTypes().getUMLClass());
         return rl;
     }
 

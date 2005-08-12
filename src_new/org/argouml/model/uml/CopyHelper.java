@@ -1,4 +1,4 @@
-// $Id: CopyHelper.java,v 1.14 2005/01/07 09:11:01 linus Exp $
+// $Id: CopyHelper.java,v 1.15 2005/08/12 19:30:26 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import ru.novosoft.uml.model_management.MPackage;
  * @author Michael Stockman
  * @since 0.13.2
  */
-final class CopyHelper {
+final class CopyHelper implements org.argouml.model.CopyHelper {
 
     /**
      * The model implementation.
@@ -73,7 +73,7 @@ final class CopyHelper {
      *
      * @throws IllegalArgumentException if element is null.
      */
-    Object copy(Object anelement, Object ans) {
+    public Object copy(Object anelement, Object ans) {
 	// Don't explicitly check if element is null
         MModelElement element = (MModelElement) anelement;
         MNamespace ns = (MNamespace) ans;

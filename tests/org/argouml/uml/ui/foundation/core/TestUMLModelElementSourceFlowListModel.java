@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementSourceFlowListModel.java,v 1.12 2005/01/20 23:20:34 linus Exp $
+// $Id: TestUMLModelElementSourceFlowListModel.java,v 1.13 2005/08/12 19:30:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@ package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
-
-import ru.novosoft.uml.foundation.core.MFlow;
 
 /**
  * @since Oct 30, 2002
@@ -64,7 +62,7 @@ public class TestUMLModelElementSourceFlowListModel
     protected Object[] fillModel() {
         Object[] ext = new Object[10];
         for (int i = 0; i < 10; i++) {
-            ext[i] = (MFlow) Model.getCoreFactory().createFlow();
+            ext[i] = Model.getCoreFactory().createFlow();
             Model.getCoreHelper().addSourceFlow(getElem(), ext[i]);
         }
         return ext;

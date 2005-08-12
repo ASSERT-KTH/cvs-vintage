@@ -1,4 +1,4 @@
-// $Id: TestActionStateDiagram.java,v 1.7 2005/07/28 14:23:27 linus Exp $
+// $Id: TestActionStateDiagram.java,v 1.8 2005/08/12 19:30:27 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,8 @@ package org.argouml.uml.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
-
-import ru.novosoft.uml.foundation.core.MClassifierImpl;
-import ru.novosoft.uml.foundation.core.MNamespace;
 
 /**
  *
@@ -59,8 +57,8 @@ public class TestActionStateDiagram
     /**
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    protected MNamespace getNamespace() {
-        return new MClassifierImpl();
+    protected Object getNamespace() {
+        return Model.getCoreFactory().createClassifier();
     }
 
     /**
@@ -68,7 +66,7 @@ public class TestActionStateDiagram
      */
     protected List getValidNamespaceClasses() {
         List rl = new ArrayList();
-        rl.add(MClassifierImpl.class);
+        rl.add(Model.getMetaTypes().getClassifier());
         return rl;
     }
 
@@ -77,7 +75,8 @@ public class TestActionStateDiagram
      */
     protected void setUp() {
         super.setUp();
-        TargetManager.getInstance().setTarget(new MClassifierImpl());
+        TargetManager.getInstance().setTarget(
+        		Model.getCoreFactory().createClassifier());
     }
 
 }

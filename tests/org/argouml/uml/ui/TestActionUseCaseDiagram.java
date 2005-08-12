@@ -1,4 +1,4 @@
-// $Id: TestActionUseCaseDiagram.java,v 1.6 2005/07/28 14:23:27 linus Exp $
+// $Id: TestActionUseCaseDiagram.java,v 1.7 2005/08/12 19:30:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,7 @@ package org.argouml.uml.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.novosoft.uml.foundation.core.MClassifierImpl;
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MPackageImpl;
+import org.argouml.model.Model;
 
 /**
  * Test for {@link ActionUseCaseDiagram}.
@@ -57,8 +55,8 @@ public class TestActionUseCaseDiagram
     /**
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    protected MNamespace getNamespace() {
-        return new MPackageImpl();
+    protected Object getNamespace() {
+        return Model.getModelManagementFactory().createPackage();
     }
 
     /**
@@ -66,8 +64,8 @@ public class TestActionUseCaseDiagram
      */
     protected List getValidNamespaceClasses() {
         List rl = new ArrayList();
-        rl.add(MPackageImpl.class);
-        rl.add(MClassifierImpl.class);
+        rl.add(Model.getMetaTypes().getPackage());
+        rl.add(Model.getMetaTypes().getClassifier());
         return rl;
     }
 

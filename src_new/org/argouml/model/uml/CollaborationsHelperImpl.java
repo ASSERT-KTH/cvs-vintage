@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperImpl.java,v 1.10 2005/01/30 20:48:14 linus Exp $
+// $Id: CollaborationsHelperImpl.java,v 1.11 2005/08/12 19:30:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1030,5 +1030,17 @@ class CollaborationsHelperImpl implements CollaborationsHelper {
                 "handle: " + handle
                 + " or sender: " + sender);
     }
+
+	/* (non-Javadoc)
+	 * @see org.argouml.model.CollaborationsHelper#removeInteraction(java.lang.Object, java.lang.Object)
+	 */
+	public void removeInteraction(Object collab, Object interaction) {
+		if (collab instanceof MCollaboration && interaction instanceof MInteraction) {
+			((MCollaboration)collab).getInteractions().remove(interaction);
+		}
+        throw new IllegalArgumentException(
+                "collab: " + collab
+                + " or interaction: " + interaction);		
+	}
 }
 

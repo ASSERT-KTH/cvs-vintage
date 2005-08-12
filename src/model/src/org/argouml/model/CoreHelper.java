@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.5 2005/06/28 13:14:44 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.6 2005/08/12 19:30:25 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1202,4 +1202,29 @@ public interface CoreHelper {
      * @param node Node
      */
     void removeDeploymentLocation(Object handle, Object node);
+
+    //additional support for Connection [IIRC, perhaps it was already here]    
+    /**
+     * 
+     * @param handle
+     * @param connection
+     */
+    void removeConnection(Object handle, Object connection);
+    
+    //additional support for ElementResidence
+    
+    /**
+     * 
+     * @param handle
+     * @param residence
+     */
+    void addElementResidence(Object handle, Object residence);
+
+    /**
+     * 
+     * @param handle
+     * @param residence
+     */
+    void removeElementResidence(Object handle, Object residence);
+    
 }

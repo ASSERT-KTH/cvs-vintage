@@ -1,4 +1,4 @@
-// $Id: TestActionClassDiagram.java,v 1.4 2005/07/28 14:23:27 linus Exp $
+// $Id: TestActionClassDiagram.java,v 1.5 2005/08/12 19:30:27 mvw Exp $
 // Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,7 @@ package org.argouml.uml.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MModelImpl;
-import ru.novosoft.uml.model_management.MPackageImpl;
+import org.argouml.model.Model;
 
 /**
  * Test for {@link ActionClassDiagram}.
@@ -55,8 +53,9 @@ public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
     /**
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    protected MNamespace getNamespace() {
-	return new MPackageImpl();
+    protected Object getNamespace() {
+    	//The nsuml test return a package.
+	return Model.getModelManagementFactory().createPackage();
     }
 
     /**
@@ -65,8 +64,8 @@ public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
      */
     protected List getValidNamespaceClasses() {
 	List returnList = new ArrayList();
-	returnList.add(MPackageImpl.class);
-	returnList.add(MModelImpl.class);
+	returnList.add(Model.getMetaTypes().getPackage());
+	returnList.add(Model.getMetaTypes().getModel());
 	return returnList;
     }
 

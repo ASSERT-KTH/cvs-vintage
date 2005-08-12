@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorFactory.java,v 1.6 2005/01/06 23:04:51 linus Exp $
+// $Id: TestCommonBehaviorFactory.java,v 1.7 2005/08/12 19:30:26 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 package org.argouml.model.uml;
 
 import junit.framework.TestCase;
+
+import org.argouml.model.Model;
 
 /**
  * Test the NSUML-implementation of the CommonBehaviorFactory.<p>
@@ -63,8 +65,6 @@ public class TestCommonBehaviorFactory extends TestCase {
 	"UninterpretedAction",
     };
 
-    private NSUMLModelImplementation nsumlmodel;
-
     /**
      * The constructor.
      *
@@ -78,7 +78,8 @@ public class TestCommonBehaviorFactory extends TestCase {
      * @see junit.framework.TestCase#setUp()
      */
     public void setUp() {
-        nsumlmodel = new NSUMLModelImplementation();
+    		//This should instantiate a new model implementation
+        Model.getFacade();
     }
 
     /**
@@ -114,7 +115,7 @@ public class TestCommonBehaviorFactory extends TestCase {
 
 	CheckNSUMLModelHelper.createAndRelease(
 	        this,
-	        nsumlmodel.getCommonBehaviorFactory(),
+	        Model.getCommonBehaviorFactory(),
 	        objs);
 
     }
@@ -125,7 +126,7 @@ public class TestCommonBehaviorFactory extends TestCase {
     public void testDeleteComplete() {
 	CheckNSUMLModelHelper.deleteComplete(
 	        this,
-		nsumlmodel.getCommonBehaviorFactory(),
+		Model.getCommonBehaviorFactory(),
 		allModelElements);
     }
 
