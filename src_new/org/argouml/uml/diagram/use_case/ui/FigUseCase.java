@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.69 2005/07/25 12:51:56 bobtarling Exp $
+// $Id: FigUseCase.java,v 1.70 2005/08/13 10:28:24 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -449,7 +449,7 @@ public class FigUseCase extends FigNodeModelElement
         // First case is where the extension points are currently displayed and
         // we are asked to turn them off.
 
-        if (epVec.isVisible() & (!isVisible)) {
+        if (epVec.isVisible() && (!isVisible)) {
 
             // Tell GEF that we are starting to make a change. Loop through the
             // epVec marking each element as not visible.
@@ -476,7 +476,7 @@ public class FigUseCase extends FigNodeModelElement
         // Second case is where the extension points are not currently
         // displayed and we are asked to turn them on.
 
-        else if ((!epVec.isVisible()) & isVisible) {
+        else if ((!epVec.isVisible()) && isVisible) {
 
             // Tell GEF that we are starting to make a change. Loop through the
             // epVec marking each element as visible.
