@@ -1,4 +1,4 @@
-// $Id: ActionImportXMI.java,v 1.1 2005/08/02 17:32:07 mvw Exp $
+// $Id: ActionImportXMI.java,v 1.2 2005/08/13 08:49:17 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,7 +109,8 @@ public class ActionImportXMI extends AbstractAction {
                     /* Try adding the extension from the chosen filter. */
                     FileFilter ffilter = chooser.getFileFilter();
                     if (ffilter instanceof AbstractFilePersister) {
-                        AbstractFilePersister afp = (AbstractFilePersister) ffilter;
+                        AbstractFilePersister afp = 
+                            (AbstractFilePersister) ffilter;
                         File m =
                             new File(theFile.getPath() + "."
                                     + afp.getExtension());
@@ -123,7 +124,8 @@ public class ActionImportXMI extends AbstractAction {
                             PersistenceManager.KEY_IMPORT_XMI_PATH,
                             theFile.getPath());
 
-                    if (ProjectBrowser.getInstance().loadProject(theFile, true)) {
+                    if (ProjectBrowser.getInstance()
+                            .loadProject(theFile, true)) {
                         // notification of menu bar
                         GenericArgoMenuBar menuBar =
                             (GenericArgoMenuBar) pb.getJMenuBar();

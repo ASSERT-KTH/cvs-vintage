@@ -1,4 +1,4 @@
-// $Id: TransferableModelElements.java,v 1.1 2005/07/02 18:57:30 mvw Exp $
+// $Id: TransferableModelElements.java,v 1.2 2005/08/13 08:49:17 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,9 @@ import java.util.Collection;
  */
 public class TransferableModelElements implements Transferable {
 
+    /**
+     * The data flavor we use for collections of UML elements. 
+     */
     public static final DataFlavor UML_COLLECTION_FLAVOR =
         new DataFlavor(Collection.class, "UML ModelElements Collection");
 
@@ -47,6 +50,11 @@ public class TransferableModelElements implements Transferable {
 
     private Collection theModelElements;
 
+    /**
+     * The constructor.
+     * 
+     * @param data the collection of UML elements
+     */
     public TransferableModelElements(Collection data) {
 
         theModelElements = data;

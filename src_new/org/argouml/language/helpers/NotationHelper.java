@@ -1,4 +1,4 @@
-// $Id: NotationHelper.java,v 1.17 2005/05/16 11:10:49 mvw Exp $
+// $Id: NotationHelper.java,v 1.18 2005/08/13 08:49:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,7 @@ import org.argouml.application.api.Notation;
  * their double bracket alternative, 
  * based on the choice made by the user in the Settings menu.
  */
-public class NotationHelper
-    {
+public class NotationHelper {
 
     /**
      * @return the left pointing guillemot, i.e. << or the one-character symbol

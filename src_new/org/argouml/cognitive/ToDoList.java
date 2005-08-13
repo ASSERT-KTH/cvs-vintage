@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.30 2005/07/10 09:13:25 linus Exp $
+// $Id: ToDoList.java,v 1.31 2005/08/13 08:49:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -527,6 +527,13 @@ public class ToDoList extends Observable implements Runnable, Serializable {
         return res;
     }
 
+    /**
+     * Add the given resolved critic to the list of resolved critics.
+     * 
+     * @param rc the resolved critic
+     * @return <code>true</code> if successfully added; 
+     *         <code>false</code> otherwise
+     */
     public boolean addResolvedCritic(ResolvedCritic rc) {
         return resolvedItems.add(rc);
     }

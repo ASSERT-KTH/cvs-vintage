@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.159 2005/08/01 17:31:21 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.160 2005/08/13 08:49:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,12 +178,14 @@ public class ProjectBrowser
     /**
      * The action to redo the last undone action
      */
-    private final RedoAction redoAction = new RedoAction(Translator.localize("action.redo"));
+    private final RedoAction redoAction = 
+        new RedoAction(Translator.localize("action.redo"));
 
     /**
      * The action to undo the last user interaction
      */
-    private final UndoAction undoAction = new UndoAction(Translator.localize("action.undo"));
+    private final UndoAction undoAction = 
+        new UndoAction(Translator.localize("action.undo"));
     
     /**
      * The action to remove the current selected Figs from the diagram
@@ -888,8 +890,8 @@ public class ProjectBrowser
         Editor editor = Globals.curEditor();
         boolean removeEnabled =
             !editor.getSelectionManager().getFigs().isEmpty();
-        if (editor.getGraphModel() instanceof ActivityDiagramGraphModel ||
-                editor.getGraphModel() instanceof StateDiagramGraphModel) {
+        if (editor.getGraphModel() instanceof ActivityDiagramGraphModel 
+            || editor.getGraphModel() instanceof StateDiagramGraphModel) {
             removeEnabled = false;
         }
         removeFromDiagram.setEnabled(removeEnabled);
@@ -1102,10 +1104,11 @@ public class ProjectBrowser
                 p = persister.doLoad(file);
 
                 if (Model.getDiagramInterchangeModel() != null) {
-                    Collection diagrams = DiagramFactory.getInstance().getDiagram();
+                    Collection diagrams = 
+                        DiagramFactory.getInstance().getDiagram();
                     Iterator diag = diagrams.iterator();
                     while (diag.hasNext()) {
-                            p.addMember(diag.next());
+                        p.addMember(diag.next());
                     }
                     if (!diagrams.isEmpty()) {
                         p.setActiveDiagram((ArgoDiagram) diagrams.iterator()

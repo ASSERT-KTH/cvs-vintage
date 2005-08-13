@@ -1,4 +1,4 @@
-// $Id: FigSubmachineState.java,v 1.6 2005/07/25 12:51:56 bobtarling Exp $
+// $Id: FigSubmachineState.java,v 1.7 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,9 +190,9 @@ public class FigSubmachineState extends FigState {
         Dimension includeDim = include.getMinimumSize();
 
         int h = SPACE_TOP + nameDim.height 
-        + SPACE_MIDDLE + includeDim.height
-        + SPACE_MIDDLE + internalDim.height 
-        + SPACE_BOTTOM;
+            + SPACE_MIDDLE + includeDim.height
+            + SPACE_MIDDLE + internalDim.height 
+            + SPACE_BOTTOM;
         int waux = Math.max(nameDim.width, 
                 internalDim.width) + 2 * MARGIN;
         int w = Math.max(waux, includeDim.width + 50);
@@ -239,9 +239,12 @@ public class FigSubmachineState extends FigState {
 
         getInternal().setBounds(
                 x + MARGIN,
-                y + SPACE_TOP + nameDim.height + SPACE_TOP + includeDim.height + SPACE_MIDDLE,
+                y + SPACE_TOP + nameDim.height 
+                    + SPACE_TOP + includeDim.height + SPACE_MIDDLE,
                 w - 2 * MARGIN, 
-                h - SPACE_TOP - nameDim.height - SPACE_TOP - includeDim.height - SPACE_MIDDLE - SPACE_BOTTOM);
+                h - SPACE_TOP - nameDim.height 
+                    - SPACE_TOP - includeDim.height 
+                    - SPACE_MIDDLE - SPACE_BOTTOM);
 
         circle1.setBounds(x + w - 55,
                 y + h - 15,

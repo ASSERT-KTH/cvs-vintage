@@ -1,4 +1,4 @@
-// $Id: FigMessagePort.java,v 1.4 2005/07/12 20:50:54 linus Exp $
+// $Id: FigMessagePort.java,v 1.5 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,6 +61,9 @@ public class FigMessagePort extends FigGroup {
         setVisible(false);
     }
 
+    /**
+     * @see org.tigris.gef.presentation.FigGroup#addFig(org.tigris.gef.presentation.Fig)
+     */
     public void addFig(Fig toAdd) {
         if (toAdd instanceof FigLine && getFigs().size() == 0) {
             toAdd.setVisible(false);
@@ -73,6 +76,9 @@ public class FigMessagePort extends FigGroup {
         }
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#setBoundsImpl(int, int, int, int)
+     */
     protected void setBoundsImpl(int x, int y, int w, int h) {
         if (getFigs().size() > 0) {
             getMyLine().setShape(x, y, x + w, y + h);
@@ -80,6 +86,9 @@ public class FigMessagePort extends FigGroup {
         }
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#calcBounds()
+     */
     public void calcBounds() {
         if (getFigs().size() > 0) {
             FigLine line = getMyLine();

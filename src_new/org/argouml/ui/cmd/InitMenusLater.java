@@ -1,4 +1,4 @@
-// $Id: InitMenusLater.java,v 1.5 2005/06/22 21:07:21 bobtarling Exp $
+// $Id: InitMenusLater.java,v 1.6 2005/08/13 08:49:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-import org.tigris.gef.base.AlignAction;
 import org.tigris.gef.base.AlignAction;
 import org.tigris.gef.base.CmdDistribute;
 import org.tigris.gef.base.CmdNudge;
@@ -128,18 +127,21 @@ class InitMenusLater implements Runnable {
 				   KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK);
 
 	// ---------------------------------------------- Arrange Menu
-        JMenuItem alignTops = align.add(new AlignAction(AlignAction.ALIGN_TOPS));
+        JMenuItem alignTops = 
+            align.add(new AlignAction(AlignAction.ALIGN_TOPS));
 	GenericArgoMenuBar.setMnemonic(alignTops, "align tops");
 
         JMenuItem alignBottoms =
 	    align.add(new AlignAction(AlignAction.ALIGN_BOTTOMS));
 	GenericArgoMenuBar.setMnemonic(alignBottoms, "align bottoms");
 
-	JMenuItem alignRights = align.add(new AlignAction(AlignAction.ALIGN_RIGHTS));
+	JMenuItem alignRights = 
+            align.add(new AlignAction(AlignAction.ALIGN_RIGHTS));
 	GenericArgoMenuBar.setMnemonic(alignRights, "align rights");
 	GenericArgoMenuBar.setAccelerator(alignRights, ctrlR);
 
-	JMenuItem alignLefts = align.add(new AlignAction(AlignAction.ALIGN_LEFTS));
+	JMenuItem alignLefts = 
+            align.add(new AlignAction(AlignAction.ALIGN_LEFTS));
 	GenericArgoMenuBar.setMnemonic(alignLefts, "align lefts");
 	GenericArgoMenuBar.setAccelerator(alignLefts, ctrlL);
 

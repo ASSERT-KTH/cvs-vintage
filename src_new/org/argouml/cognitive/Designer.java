@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.47 2005/07/17 15:29:05 mvw Exp $
+// $Id: Designer.java,v 1.48 2005/08/13 08:49:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,6 +90,10 @@ public final class Designer
         unspecGoalVector.addElement(Goal.getUnspecifiedGoal());
     }
 
+    /**
+     * The key to remember persistently the latest choice made 
+     * for the menuitem Toggle Auto-Critique. 
+     */
     public static final ConfigurationKey AUTO_CRITIQUE =
         Configuration.makeKey("cognitive", "autocritique");
 
@@ -281,7 +285,8 @@ public final class Designer
 
             // the critiquing thread should wait if disabled.
             synchronized (this) {
-                while (!Configuration.getBoolean(Designer.AUTO_CRITIQUE, true)) {
+                while (!Configuration.getBoolean(
+                        Designer.AUTO_CRITIQUE, true)) {
                     try {
                         this.wait();
                     } catch (InterruptedException ignore) {

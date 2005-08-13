@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.39 2005/08/04 16:49:57 mvw Exp $
+// $Id: ProfileJava.java,v 1.40 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -297,11 +297,11 @@ public class ProfileJava extends Profile {
         String nsumlImpl = "org.argouml.model.uml.NSUMLModelImplementation";
         String mdrImpl = "org.argouml.model.mdr.MDRModelImplementation";
         
-        if (modelFileName==null) {
+        if (modelFileName == null) {
             //TODO: Remove the ",nsumlImpl" when we will switch the 
             //default metamodel to UML 1.4/MDR.
             if (nsumlImpl.equals(System.getProperty(
-                    "argouml.model.implementation",nsumlImpl))) {
+                    "argouml.model.implementation", nsumlImpl))) {
                 modelFileName = "/org/argouml/default.xmi";           		
             } else if (mdrImpl.equals(System.getProperty(
                 "argouml.model.implementation"))) {
@@ -340,7 +340,7 @@ public class ProfileJava extends Profile {
             } 
             LOG.error("Value of property argo.defaultModel ("
                     + modelFileName
-                    + ") did not correspond to an available file.\n");    			
+                    + ") did not correspond to an available file.\n");
         }
         return Model.getModelManagementFactory().createModel();
     }

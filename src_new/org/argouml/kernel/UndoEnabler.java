@@ -1,4 +1,4 @@
-// $Id: UndoEnabler.java,v 1.1 2005/07/26 23:25:48 bobtarling Exp $
+// $Id: UndoEnabler.java,v 1.2 2005/08/13 08:49:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ public class UndoEnabler {
      * Change this value to true to enable undo.
      * Do not commit to CVS in this state.
      */
-    public final static boolean ENABLED = false;
+    public static final boolean ENABLED = false;
     
     private UndoEnabler() {
         super();

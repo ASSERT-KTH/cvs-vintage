@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.3 2005/07/12 20:50:54 linus Exp $
+// $Id: FigMessage.java,v 1.4 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,6 +85,9 @@ public abstract class FigMessage
         return null;
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
+     */
     public void setOwner(Object newOwner) {
         super.setOwner(newOwner);
         if (Model.getFacade().isAMessage(newOwner)) {
@@ -232,6 +235,9 @@ public abstract class FigMessage
         return Model.getFacade().getReceiver(owner);
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
+     */
     public void modelChanged(PropertyChangeEvent pce) {
         super.modelChanged(pce);
         textGroup.calcBounds();
@@ -260,6 +266,9 @@ public abstract class FigMessage
         return true;
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#makeSelection()
+     */
     public Selection makeSelection() {
         return new SelectionMessage(this);
     }

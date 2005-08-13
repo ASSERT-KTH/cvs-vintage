@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.80 2005/08/10 14:42:08 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.81 2005/08/13 08:49:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -407,24 +407,24 @@ public class UMLActivityDiagram extends UMLDiagram {
     public Object getDependentElement() {
         return getStateMachine(); /* The ActivityGraph. */
     }
-
-	/** 
-	 * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
-	 */
-	public boolean isRelocationAllowed(Object base) {
-		return false; 
-		/* TODO: We may return the following when the 
-		 * relocate() has been implemented. */
-//		Model.getActivityGraphsHelper()
-//        	.isAddingActivityGraphAllowed(base);
-	}
-
-	/**
-	 * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
-	 */
-	public boolean relocate(Object base) {
-		return false;
-	}
+    
+    /** 
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
+     */
+    public boolean isRelocationAllowed(Object base) {
+        return false; 
+        /* TODO: We may return the following when the 
+         * relocate() has been implemented. */
+//      Model.getActivityGraphsHelper()
+//      .isAddingActivityGraphAllowed(base);
+    }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
+     */
+    public boolean relocate(Object base) {
+        return false;
+    }
 
 
 } /* end class UMLActivityDiagram */

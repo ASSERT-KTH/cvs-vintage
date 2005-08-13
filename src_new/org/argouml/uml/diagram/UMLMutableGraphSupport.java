@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.33 2005/07/14 16:31:34 bobtarling Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.34 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -540,14 +540,16 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
     
     /**
      * Package scope. Only the factory is supposed to set this.
-     * @param diDiagram
+     * @param dd
      */
-    void setDiDiagram(DiDiagram diDiagram) {
-        this.diDiagram = diDiagram;
+    void setDiDiagram(DiDiagram dd) {
+        this.diDiagram = dd;
     }
     
     /**
-     * Get the object that represents this diagram in the DiagramInterchangeModel
+     * Get the object that represents this diagram 
+     * in the DiagramInterchangeModel.
+     * 
      * @return the Diagram Interchange Diagram.
      */
     public DiDiagram getDiDiagram() {

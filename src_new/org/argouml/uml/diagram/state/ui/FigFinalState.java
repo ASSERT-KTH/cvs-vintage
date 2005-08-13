@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.28 2005/08/11 20:01:44 mvw Exp $
+// $Id: FigFinalState.java,v 1.29 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -222,7 +222,8 @@ public class FigFinalState extends FigStateVertex {
      *
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    /*public void setBoundsImpl(int boundX, int boundY, int boundW, int boundH) {
+    /*public void setBoundsImpl(int boundX, int boundY, 
+        int boundW, int boundH) {
         _x = boundX;
         _y = boundY;
         getBigPort().setX(boundX);

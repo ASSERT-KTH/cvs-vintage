@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.32 2005/07/20 18:08:18 mvw Exp $
+// $Id: FigCompositeState.java,v 1.33 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -143,8 +143,8 @@ public class FigCompositeState extends FigState {
         Dimension internalDim = getInternal().getMinimumSize();
 
         int h = SPACE_TOP + nameDim.height 
-        + SPACE_MIDDLE + internalDim.height 
-        + SPACE_BOTTOM;
+            + SPACE_MIDDLE + internalDim.height 
+            + SPACE_BOTTOM;
         int w = Math.max(nameDim.width + 2 * MARGIN, 
                 internalDim.width + 2 * MARGIN);
         return new Dimension(w, h);

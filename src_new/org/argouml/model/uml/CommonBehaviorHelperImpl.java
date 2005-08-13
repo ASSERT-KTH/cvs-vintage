@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelperImpl.java,v 1.7 2005/07/21 12:23:18 mkl Exp $
+// $Id: CommonBehaviorHelperImpl.java,v 1.8 2005/08/13 08:49:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -568,7 +568,8 @@ class CommonBehaviorHelperImpl implements CommonBehaviorHelper {
 
     public void setInstantiation(Object createaction, Object instantiation) {
         if (createaction instanceof MCreateAction
-                && (instantiation instanceof MClassifier || instantiation == null)) {
+            && (instantiation instanceof MClassifier 
+                    || instantiation == null)) {
             ((MCreateAction) createaction)
                     .setInstantiation((MClassifier) instantiation);
             return;
@@ -578,22 +579,22 @@ class CommonBehaviorHelperImpl implements CommonBehaviorHelper {
     }
 
     public Object getActionOwner(Object action) {
-            if (!(Model.getFacade().isAAction(action)))
-                return null;
-            
-            if (Model.getFacade().getStimuli(action)!=null){
-                Iterator iter = Model.getFacade().getStimuli(action).iterator();
-                if (iter.hasNext()){
-                    return iter.next();
-                }
+        if (!(Model.getFacade().isAAction(action)))
+            return null;
+        
+        if (Model.getFacade().getStimuli(action) != null) {
+            Iterator iter = Model.getFacade().getStimuli(action).iterator();
+            if (iter.hasNext()) {
+                return iter.next();
             }
-
-            if (Model.getFacade().getMessages(action)!=null){
-                Iterator iter = Model.getFacade().getMessages(action).iterator();
-                if (iter.hasNext()){
-                    return iter.next();
-                }
+        }
+        
+        if (Model.getFacade().getMessages(action) != null) {
+            Iterator iter = Model.getFacade().getMessages(action).iterator();
+            if (iter.hasNext()) {
+                return iter.next();
             }
+        }
 /*
             if (Model.getFacade().getState1(action)!=null){
                 return Model.getFacade().getState1(action);
@@ -615,13 +616,13 @@ class CommonBehaviorHelperImpl implements CommonBehaviorHelper {
                 
             }
  */           
-            if (Model.getFacade().getTransition(action)!=null){
-                return Model.getFacade().getTransition(action);
-                
-            }
+        if (Model.getFacade().getTransition(action) != null) {
+            return Model.getFacade().getTransition(action);
             
-            return null;
-        }    
-    }
+        }
+        
+        return null;
+    }    
+}
 
 

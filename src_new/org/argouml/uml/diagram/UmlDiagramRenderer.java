@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.13 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: UmlDiagramRenderer.java,v 1.14 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,7 @@
 
 package org.argouml.uml.diagram;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.argouml.model.Model;

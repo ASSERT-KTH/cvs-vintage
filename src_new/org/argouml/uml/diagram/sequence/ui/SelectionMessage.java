@@ -1,4 +1,4 @@
-// $Id: SelectionMessage.java,v 1.2 2005/07/12 20:50:54 linus Exp $
+// $Id: SelectionMessage.java,v 1.3 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,9 @@ public class SelectionMessage extends SelectionReshape {
     /**
      * Override drag handle so that it no longer allows dragging of handles.
      * TODO: Need to figure out how I can get this to drag the fig up and down.
+     *
+     * @see org.tigris.gef.base.Selection#dragHandle(int, int, int, int, 
+     * org.tigris.gef.presentation.Handle)
      */
     public void dragHandle(int mX, int mY, int anX, int anY, Handle h) {
     }

@@ -1,4 +1,4 @@
-// $Id: ContainerDispatcherImpl.java,v 1.3 2005/06/02 10:00:09 bobtarling Exp $
+// $Id: ContainerDispatcherImpl.java,v 1.4 2005/08/13 08:49:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,14 +37,23 @@ import ru.novosoft.uml.MElementListener;
  * This listens for events on a component and dispatches the events to all its
  * interested child components.
  */
-public class ContainerDispatcherImpl implements ContainerDispatcher, MElementListener {
+public class ContainerDispatcherImpl 
+    implements ContainerDispatcher, MElementListener {
 
     private Container container;
     
-    public ContainerDispatcherImpl (Container container) {
-        this.container = container;
+    /**
+     * The constructor.
+     * 
+     * @param ctr the container
+     */
+    public ContainerDispatcherImpl (Container ctr) {
+        this.container = ctr;
     }
     
+    /**
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
     public void propertyChange(PropertyChangeEvent event) {
     }
 
@@ -158,17 +167,17 @@ public class ContainerDispatcherImpl implements ContainerDispatcher, MElementLis
                     Model.getMetaTypes().getNamespace(),
                     clazz)) {
                 UmlModelEventPump.getPump()
-            .addClassModelEventListener(this, clazz, "ownedElement");
+                    .addClassModelEventListener(this, clazz, "ownedElement");
             }
             if (Model.getCoreHelper().isSubType(
                     Model.getMetaTypes().getModelElement(),
                     clazz)) {
                 UmlModelEventPump.getPump()
-            .addClassModelEventListener(this, clazz, "name");
+                    .addClassModelEventListener(this, clazz, "name");
             }
             if (clazz.equals(Model.getMetaTypes().getStereotype())) {
                 UmlModelEventPump.getPump()
-            .addClassModelEventListener(this, clazz, "baseClass");
+                    .addClassModelEventListener(this, clazz, "baseClass");
             }
         }
     }

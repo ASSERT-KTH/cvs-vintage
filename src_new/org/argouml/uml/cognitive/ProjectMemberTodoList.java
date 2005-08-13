@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.14 2005/05/21 12:52:51 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.15 2005/08/13 08:49:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,14 +26,13 @@ package org.argouml.uml.cognitive;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.Vector;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ResolvedCritic;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.kernel.Project;
 import org.argouml.kernel.AbstractProjectMember;
+import org.argouml.kernel.Project;
 import org.argouml.persistence.ResolvedCriticXMLHelper;
 import org.argouml.persistence.ToDoItemXMLHelper;
 
@@ -109,7 +108,6 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
         Vector out;
     	ResolvedCritic rci;
     	Designer dsgr;
-    	int i;
 
     	dsgr = Designer.theDesigner();
     	in = dsgr.getToDoList().getResolvedItems();

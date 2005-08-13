@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.61 2005/07/30 07:06:20 mvw Exp $
+// $Id: ProjectManager.java,v 1.62 2005/08/13 08:49:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,8 @@ import org.tigris.gef.undo.UndoManager;
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
  */
-public final class ProjectManager implements PropertyChangeListener, MementoCreationObserver {
+public final class ProjectManager 
+    implements PropertyChangeListener, MementoCreationObserver {
 
     /**
      * The name of the property that defines the current project.
@@ -238,10 +239,11 @@ public final class ProjectManager implements PropertyChangeListener, MementoCrea
         currentProject.setRoot(model);
         currentProject.setCurrentNamespace(model);
         currentProject.addMember(model);
-        ArgoDiagram d = DiagramFactory.getInstance().createDiagram(UMLClassDiagram.class, model, null);
+        ArgoDiagram d = DiagramFactory.getInstance()
+            .createDiagram(UMLClassDiagram.class, model, null);
         currentProject.addMember(d);
-        currentProject.addMember(
-                DiagramFactory.getInstance().createDiagram(UMLUseCaseDiagram.class, model, null));
+        currentProject.addMember(DiagramFactory.getInstance()
+                .createDiagram(UMLUseCaseDiagram.class, model, null));
         currentProject.addMember(new ProjectMemberTodoList("", currentProject));
         ProjectManager.getManager().setNeedsSave(false);
         currentProject.setActiveDiagram(d);
@@ -311,12 +313,14 @@ public final class ProjectManager implements PropertyChangeListener, MementoCrea
     }
 
     /**
-     * Called when the model subsystem creates a memento. We must add this to the
-     * UndoManager.
+     * Called when the model subsystem creates a memento. 
+     * We must add this to the UndoManager.
+     *
+     * @see org.argouml.model.MementoCreationObserver#mementoCreated(org.argouml.model.ModelMemento)
      */
     public void mementoCreated(final ModelMemento memento) {
         Memento wrappedMemento = new Memento() {
-            ModelMemento modelMemento = memento;
+            private ModelMemento modelMemento = memento;
             public void undo() {
                 modelMemento.undo();
             }

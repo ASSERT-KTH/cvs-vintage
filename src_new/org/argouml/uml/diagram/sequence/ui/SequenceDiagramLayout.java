@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.24 2005/07/12 20:50:54 linus Exp $
+// $Id: SequenceDiagramLayout.java,v 1.25 2005/08/13 08:49:16 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -272,6 +272,9 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
         }
     }
 
+    /**
+     * @see org.tigris.gef.base.Layer#remove(org.tigris.gef.presentation.Fig)
+     */
     public void remove(Fig f) {
         if (f instanceof FigMessage) {
             FigMessage fm = (FigMessage) f;
