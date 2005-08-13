@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.79 2005/08/10 14:42:09 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.80 2005/08/13 09:18:12 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,7 +112,7 @@ public class UMLStateDiagram extends UMLDiagram {
         }
 
         if (namespace != null && Model.getFacade().getName(namespace) != null) {
-            if (Model.getFacade().getName(namespace).trim() != "") {
+            if (!Model.getFacade().getName(namespace).trim().equals("")) {
                 String name = null;
                 String diagramName = Model.getFacade().getName(namespace);
                 int number =

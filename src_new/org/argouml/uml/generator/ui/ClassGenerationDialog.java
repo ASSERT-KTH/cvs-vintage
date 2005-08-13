@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.48 2005/05/16 09:10:44 mvw Exp $
+// $Id: ClassGenerationDialog.java,v 1.49 2005/08/13 09:18:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -379,7 +379,7 @@ public class ClassGenerationDialog
                         .getSelectedItem());
 
             if (chooser == null) {
-                chooser = FileChooserFactory.getFileChooser();
+                chooser = new JFileChooser();
             }
 
             chooser.setFileHidingEnabled(true);
@@ -390,7 +390,7 @@ public class ClassGenerationDialog
             chooser.showDialog(this, Translator.localize(
                     "dialog.generation.chooser.approve-button-text"));
 
-            if ("" != chooser.getSelectedFile().getPath()) {
+            if (!"".equals(chooser.getSelectedFile().getPath())) {
                 String path = chooser.getSelectedFile().getPath();
                 outputDirectoryComboBox.addItem(path);
                 outputDirectoryComboBox.getModel().setSelectedItem(path);
@@ -575,9 +575,8 @@ public class ClassGenerationDialog
             } else if (col >= 0 && col < getLanguagesCount()) {
                 if (checked[col].contains(cls)) {
                     return Boolean.TRUE;
-                } else {
-                    return Boolean.FALSE;
-                }
+                } 
+                return Boolean.FALSE;
             } else {
                 return "CC-r:" + row + " c:" + col;
             }
