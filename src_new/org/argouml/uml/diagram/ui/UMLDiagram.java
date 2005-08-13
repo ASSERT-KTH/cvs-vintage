@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.76 2005/07/23 16:30:56 mvw Exp $
+// $Id: UMLDiagram.java,v 1.77 2005/08/13 10:53:24 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -247,7 +247,7 @@ public abstract class UMLDiagram
             throw new IllegalArgumentException("Given object not a namespace");
         }
         if ((namespace != null) && (namespace != ns)) {
-        	Model.getPump().removeModelEventListener(this, namespace);
+            Model.getPump().removeModelEventListener(this, namespace);
         }
         namespace = ns;
         // add the diagram as a listener to the namspace so
@@ -627,6 +627,8 @@ public abstract class UMLDiagram
      * e.g. a statechart diagram should return its statemachine.
      *
      * @author mvw@tigris.org
+     *
+     * @return the dependent element - in the general case there aren't, so null
      */
     public Object getDependentElement() {
         return null;

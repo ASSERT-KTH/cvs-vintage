@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.33 2005/08/04 18:31:00 mvw Exp $
+// $Id: FigActor.java,v 1.34 2005/08/13 10:53:23 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,15 +72,15 @@ public class FigActor extends FigNodeModelElement {
      */
     public FigActor() {
         // Put this rectangle behind the rest, so it goes first
-        FigRect bigPort = new ActorPortFigRect(10, 30-20, 15, 60, this);
+        FigRect bigPort = new ActorPortFigRect(10, 10, 15, 60, this);
         bigPort.setVisible(false);
         FigCircle head =
-            new FigCircle(10, 30-20, 15, 15, Color.black, Color.white);
-        FigLine body = new FigLine(20, 45-20, 20, 60-20, Color.black);
-        FigLine arms = new FigLine(10, 50-20, 30, 50-20, Color.black);
-        FigLine leftLeg = new FigLine(20, 60-20, 15, 75-20, Color.black);
-        FigLine rightLeg = new FigLine(20, 60-20, 25, 75-20, Color.black);
-        getNameFig().setBounds(5, 75-20, 35, 20);
+            new FigCircle(10, 10, 15, 15, Color.black, Color.white);
+        FigLine body = new FigLine(20, 25, 20, 40, Color.black);
+        FigLine arms = new FigLine(10, 30, 30, 30, Color.black);
+        FigLine leftLeg = new FigLine(20, 40, 15, 55, Color.black);
+        FigLine rightLeg = new FigLine(20, 40, 25, 55, Color.black);
+        getNameFig().setBounds(5, 55, 35, 20);
 
         getNameFig().setTextFilled(false);
         getNameFig().setFilled(false);

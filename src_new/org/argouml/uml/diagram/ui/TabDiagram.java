@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.58 2005/07/02 18:57:30 mvw Exp $
+// $Id: TabDiagram.java,v 1.59 2005/08/13 10:53:24 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -277,7 +277,7 @@ public class TabDiagram
 
             List removedTargets = new ArrayList(currentSelection);
             Iterator i = sels.iterator();
-            while(i.hasNext()) {
+            while (i.hasNext()) {
                 Object o = i.next();
                 o = TargetManager.getInstance().getOwner(o);
                 if (currentSelection.contains(o)) {
