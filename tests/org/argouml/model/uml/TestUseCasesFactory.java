@@ -1,4 +1,4 @@
-// $Id: TestUseCasesFactory.java,v 1.9 2005/08/12 19:30:26 mvw Exp $
+// $Id: TestUseCasesFactory.java,v 1.10 2005/08/13 07:30:09 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,9 +96,7 @@ public class TestUseCasesFactory extends TestCase {
             	.buildExtend(base, extension, point);
         assertTrue("extensionpoint not added to base",
 		   !Model.getFacade().getExtensionPoints(base).isEmpty());
-        //TODO: Check that extended use cases are getExtends2 (else use getExtendingUseCases)
-        assertTrue("extend not added to base", !Model.getUseCasesHelper().getExtendedUseCases(base).isEmpty());
-        //TODO: Check that this is ok to use getExtends, and not getExtends2
+        assertTrue("extend not added to base", !Model.getUseCasesHelper().getExtendingUseCases(base).isEmpty());
         assertTrue("extend not added to extension",
 		   !Model.getFacade().getExtends(extension).isEmpty());
         assertTrue("extend not added to correct extensionpoint",

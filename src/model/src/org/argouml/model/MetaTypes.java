@@ -1,4 +1,4 @@
-// $Id: MetaTypes.java,v 1.4 2005/07/10 15:56:48 linus Exp $
+// $Id: MetaTypes.java,v 1.5 2005/08/13 07:30:09 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -401,6 +401,12 @@ public interface MetaTypes {
     Object getSynchState();
 
     /**
+     * @since UML 1.4
+     * @return Returns the TagDefinition, or null in UML 1.3
+     */
+    Object getTagDefinition();
+    
+    /**
      * @return Returns the TerminateAction.
      */
     Object getTerminateAction();
@@ -424,4 +430,10 @@ public interface MetaTypes {
      * @return Returns the VisibilityKind.
      */
     Object getVisibilityKind();
+    
+    /**
+     * @return Returns the Interaction
+     */
+    Object getInteraction();
+    
 }

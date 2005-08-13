@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.13 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: TestModelFacade2.java,v 1.14 2005/08/13 07:30:09 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,8 @@ public class TestModelFacade2 extends TestCase {
      */
     public void testGetStereotypes() {
         Object cls = Model.getCoreFactory().buildClass();
-        
+        Model.getCoreHelper().setNamespace(cls,
+        		Model.getModelManagementFactory().createPackage());
         Collection coll1 = Model.getFacade().getStereotypes(cls);
         assertEquals(0, coll1.size());
         

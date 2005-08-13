@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.19 2005/08/12 19:30:26 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.20 2005/08/13 07:30:09 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4230,6 +4230,8 @@ public class NSUMLModelFacade implements Facade {
             name = ((MVisibilityKind) handle).getName();
         } else if (handle instanceof MCallConcurrencyKind) {
             name = ((MCallConcurrencyKind) handle).getName();
+        } else if (handle instanceof MParameterDirectionKind) {
+        		name = ((MParameterDirectionKind) handle).getName();
         } else {
             illegalArgument(handle);
         }

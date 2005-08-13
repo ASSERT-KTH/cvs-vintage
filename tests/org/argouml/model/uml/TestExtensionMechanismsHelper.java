@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsHelper.java,v 1.11 2005/08/12 19:30:26 mvw Exp $
+// $Id: TestExtensionMechanismsHelper.java,v 1.12 2005/08/13 07:30:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,10 +52,9 @@ public class TestExtensionMechanismsHelper extends TestCase {
      * isolating the project from the projectbrowser.
      */
     public void testGetAllPossibleStereotypes1() {
-        Object ns = Model.getCoreFactory().createNamespace();
+        Object ns = Model.getModelManagementFactory().createPackage();
         Object clazz = Model.getCoreFactory().buildClass(ns);
-        Model model =
-            (Model) ProjectManager.getManager().getCurrentProject()
+        Object model = ProjectManager.getManager().getCurrentProject()
             	.getModel();
         Collection models =
             ProjectManager.getManager().getCurrentProject()
