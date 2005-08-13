@@ -1,4 +1,4 @@
-// $Id: ConfigurationHandler.java,v 1.15 2005/01/09 14:58:03 linus Exp $
+// $Id: ConfigurationHandler.java,v 1.16 2005/08/13 09:48:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -360,10 +360,10 @@ public abstract class ConfigurationHandler {
     public final boolean getBoolean(ConfigurationKey key,
 				    boolean defaultValue) {
 	loadIfNecessary();
-	Boolean dflt = new Boolean(defaultValue);
+	Boolean dflt = Boolean.valueOf(defaultValue);
 	Boolean b =
 	    key != null
-	    ? new Boolean(getValue(key.getKey(), dflt.toString()))
+	    ? Boolean.valueOf(getValue(key.getKey(), dflt.toString()))
 	    : dflt;
 	return b.booleanValue();
     }
@@ -424,7 +424,7 @@ public abstract class ConfigurationHandler {
      * @param value the value to set the key to.
      */
     public final void setBoolean(ConfigurationKey key, boolean value) {
-	Boolean bool = new Boolean(value);
+	Boolean bool = Boolean.valueOf(value);
 	workerSetValue(key, bool.toString());
     }
 
