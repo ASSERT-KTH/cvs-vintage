@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory.java,v 1.16 2005/05/16 11:10:49 mvw Exp $
+// $Id: NotationProviderFactory.java,v 1.17 2005/08/13 09:34:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,7 @@ public final class NotationProviderFactory
      *
      * @throws Throwable if something goes wrong in the super finalize.
      */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
 	ArgoEventPump.removeListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);
 	super.finalize();
     }

@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.71 2005/08/09 17:45:53 mvw Exp $
+// $Id: TabProps.java,v 1.72 2005/08/13 09:34:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -211,7 +211,7 @@ public class TabProps
     /**
      * @see java.lang.Object#finalize()
      */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         super.finalize();
         ArgoEventPump.removeListener(ArgoEventTypes.ANY_MODULE_EVENT, this);
     }

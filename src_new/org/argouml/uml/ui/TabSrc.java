@@ -1,4 +1,4 @@
-// $Id: TabSrc.java,v 1.25 2005/03/03 19:39:38 mvw Exp $
+// $Id: TabSrc.java,v 1.26 2005/08/13 09:34:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,7 @@ public class TabSrc
     /**
      * @see java.lang.Object#finalize()
      */
-    public void finalize() {
+    protected void finalize() {
         NotationComboBox.getInstance().removeItemListener(this);
     }
     

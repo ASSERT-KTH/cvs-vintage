@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.63 2005/06/29 16:47:33 mvw Exp $
+// $Id: Notation.java,v 1.64 2005/08/13 09:34:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -151,7 +151,7 @@ public final class Notation implements PropertyChangeListener {
      * Remove the notation change listener.
      * <code>finalize</code> should never happen, but play it safe.
      */
-    public void finalize() {
+    protected void finalize() {
         Configuration.removeListener(KEY_DEFAULT_NOTATION, this);
         Configuration.removeListener(KEY_USE_GUILLEMOTS, this);
         Configuration.removeListener(KEY_UML_NOTATION_ONLY, this);

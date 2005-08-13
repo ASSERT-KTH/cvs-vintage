@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.109 2005/07/25 12:51:57 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.110 2005/08/13 09:34:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -196,7 +196,7 @@ public abstract class FigEdgeModelElement
     /**
      * @see java.lang.Object#finalize()
      */
-    public void finalize() {
+    protected void finalize() {
         ArgoEventPump.removeListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);
     }
 
