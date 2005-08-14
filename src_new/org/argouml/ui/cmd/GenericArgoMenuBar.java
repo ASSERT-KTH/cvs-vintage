@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.25 2005/08/13 08:49:15 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.26 2005/08/14 08:48:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.UndoEnabler;
 import org.argouml.language.ui.ActionNotation;
 import org.argouml.ui.ActionAutoResize;
+import org.argouml.ui.ActionExportXMI;
 import org.argouml.ui.ActionImportXMI;
 import org.argouml.ui.ActionSaveConfiguration;
 import org.argouml.ui.ActionSettings;
@@ -753,12 +754,12 @@ public class GenericArgoMenuBar extends JMenuBar
     private void initMenuTools() {
         tools = new JMenu(menuLocalize("Tools"));
         setMnemonic(tools, "Tools");
-        tools.setEnabled(false);
+        
+        tools.add(new ActionExportXMI());
         tools.add(new ActionImportXMI());
+        
         appendPluggableMenus(tools, PluggableMenu.KEY_TOOLS);
         add(tools);
-
-        // tools.add(ActionTest.getInstance());
     }
 
     /**
