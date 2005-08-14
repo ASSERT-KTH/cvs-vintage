@@ -1,4 +1,4 @@
-// $Id: ConfigurationHandler.java,v 1.16 2005/08/13 09:48:47 mvw Exp $
+// $Id: ConfigurationHandler.java,v 1.17 2005/08/14 12:40:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,7 @@ public abstract class ConfigurationHandler {
      *
      * @return the default configuration path or url.
      */
-    public abstract String getDefaultPath();
+    abstract String getDefaultPath();
 
     /**
      * Internal worker which is called prior to any getValue
@@ -561,7 +561,7 @@ public abstract class ConfigurationHandler {
      * @return the value of the key or the default value
      * if the key does not exist.
      */
-    public abstract String getValue(String key, String defaultValue);
+    abstract String getValue(String key, String defaultValue);
 
     /**
      * Sets the string value of a configuration property.
