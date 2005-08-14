@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer save request.
  * @author Slava Pestov
- * @version $Id: BufferSaveRequest.java,v 1.2 2005/08/11 23:51:14 kpouer Exp $
+ * @version $Id: BufferSaveRequest.java,v 1.3 2005/08/14 22:31:16 spestov Exp $
  */
 public class BufferSaveRequest extends BufferIORequest
 {
@@ -76,39 +76,8 @@ public class BufferSaveRequest extends BufferIORequest
 
 
 			boolean overwriteReadOnly = false;
-			//{{{ handle read only flag
-			VFSFile vfsFile = vfs._getFile(session, path, view);
-			if(!vfsFile.isWriteable())
-			{
-				if(vfsRenameCap)
-				{
-					int result = GUIUtilities.confirm(
-						view, "vfs.overwrite-readonly",
-						new Object[]{path},
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE);
-					if(result == JOptionPane.YES_OPTION)
-					{
-						overwriteReadOnly = true;
-					}
-					else
-					{
-						VFSManager.error(view,
-							path,
-							"ioerror.no-write",
-							null);
-						return;
-					}
-				}
-				else
-				{
-					VFSManager.error(view,
-						path,
-						"ioerror.no-write",
-						null);
-					return;
-				}
-			} //}}}
+
+			VFSManager.error(view,path,"ioerror.no-write",null);
 
 			// Only backup once per session
 			if(buffer.getProperty(Buffer.BACKED_UP) == null
