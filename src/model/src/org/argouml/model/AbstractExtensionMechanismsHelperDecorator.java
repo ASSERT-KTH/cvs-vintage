@@ -1,4 +1,4 @@
-// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.2 2005/08/12 19:30:25 mvw Exp $
+// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.3 2005/08/14 05:08:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,24 +190,27 @@ public abstract class AbstractExtensionMechanismsHelperDecorator
         impl.setValueOfTag(handle, value);
     }
 
-	/**
-	 * @see org.argouml.model.ExtensionMechanismsHelper#addTaggedValue(java.lang.Object, java.lang.Object)
-	 */
-	public void addTaggedValue(Object handle, Object taggedValue) {
-		impl.addTaggedValue(handle,taggedValue);
-	}
+    /**
+     * @see org.argouml.model.ExtensionMechanismsHelper#addTaggedValue(
+     *         java.lang.Object, java.lang.Object)
+     */
+    public void addTaggedValue(Object handle, Object taggedValue) {
+        impl.addTaggedValue(handle, taggedValue);
+    }
 
-	/**
-	 * @see org.argouml.model.ExtensionMechanismsHelper#removeTaggedValue(java.lang.Object, java.lang.Object)
-	 */
-	public void removeTaggedValue(Object handle, Object taggedValue) {
-		impl.removeTaggedValue(handle,taggedValue);
-	}
+    /**
+     * @see org.argouml.model.ExtensionMechanismsHelper#removeTaggedValue(
+     *         java.lang.Object, java.lang.Object)
+     */
+    public void removeTaggedValue(Object handle, Object taggedValue) {
+        impl.removeTaggedValue(handle, taggedValue);
+    }
 
-	/**
-	 * @see org.argouml.model.ExtensionMechanismsHelper#setTaggedValue(java.lang.Object, java.util.Collection)
-	 */
-	public void setTaggedValue(Object handle, Collection taggedValues) {
-		impl.setTaggedValue(handle,taggedValues);		
- 	}
+    /**
+     * @see org.argouml.model.ExtensionMechanismsHelper#setTaggedValue(
+     *         java.lang.Object, java.util.Collection)
+     */
+    public void setTaggedValue(Object handle, Collection taggedValues) {
+        impl.setTaggedValue(handle, taggedValues);
+    }
 }

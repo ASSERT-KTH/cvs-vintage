@@ -1,4 +1,4 @@
-// $Id: AbstractCollaborationsHelperDecorator.java,v 1.2 2005/08/12 19:30:25 mvw Exp $
+// $Id: AbstractCollaborationsHelperDecorator.java,v 1.3 2005/08/14 05:08:05 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -312,11 +312,12 @@ public abstract class AbstractCollaborationsHelperDecorator
         impl.setSender(handle, sender);
     }
 
-	/**
-	 * @see org.argouml.model.CollaborationsHelper#removeInteraction(java.lang.Object, java.lang.Object)
-	 */
-	public void removeInteraction(Object collab, Object interaction) {
-		impl.removeInteraction(collab, interaction);
-	}
+    /**
+     * @see org.argouml.model.CollaborationsHelper#removeInteraction(
+     *         java.lang.Object, java.lang.Object)
+     */
+    public void removeInteraction(Object collab, Object interaction) {
+        impl.removeInteraction(collab, interaction);
+    }
 
 }
