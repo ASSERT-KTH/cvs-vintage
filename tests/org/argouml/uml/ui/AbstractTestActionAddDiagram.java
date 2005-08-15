@@ -1,4 +1,4 @@
-// $Id: AbstractTestActionAddDiagram.java,v 1.11 2005/08/12 19:30:27 mvw Exp $
+// $Id: AbstractTestActionAddDiagram.java,v 1.12 2005/08/15 20:43:19 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
@@ -172,23 +173,19 @@ public abstract class AbstractTestActionAddDiagram extends TestCase {
     /**
      * Tests if the list with namespaces defined in getValidNamespaceClasses
      * contains only valid namespaces.
-     *
-     * @throws InstantiationException if we cannot create a new object from
-     * 	                              the namespace.
-     *                                @see java.lang.Class#newInstance()
-     * @throws IllegalAccessException if the constructor of the class cannot
-     *                                be called.
-     *                                @see java.lang.Class#newInstance()
      */
-    public void testValidNamespaces()
-	throws InstantiationException, IllegalAccessException {
+    public void testValidNamespaces() {
 	Iterator it = validNamespaces.iterator();
 	while (it.hasNext()) {
-	    Class clazz = (Class) it.next();
+	    Object type = it.next();
 
-	    Object o = clazz.newInstance();
+	    Object o = Model.getUmlFactory().buildNode(type);
+	    String objDesc = "" + o;
+	    if (o != null) {
+	        objDesc += " (" + o.getClass() + ")";
+	    }
 	    assertTrue(
-		       clazz.getName()
+		       objDesc
 		       + " is no valid namespace for the diagram",
 		       action.isValidNamespace(o));
 	}
