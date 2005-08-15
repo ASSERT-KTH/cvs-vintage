@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.19 2005/01/09 14:58:13 linus Exp $
+// $Id: LookAndFeelMgr.java,v 1.20 2005/08/15 21:14:08 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -254,19 +254,18 @@ public class LookAndFeelMgr {
 
         if (currentLookAndFeel == null) {
             return DEFAULT_KEY;
-        } else {
-            String name = null;
-
-            UIManager.LookAndFeelInfo[] lafs =
-		UIManager.getInstalledLookAndFeels();
-            for (int i = 0; i < lafs.length; ++i) {
-                if (lafs[i].getClassName().equals(currentLookAndFeel)) {
-		    name = lafs[i].getName();
-                }
+        } 
+        String name = null;
+        
+        UIManager.LookAndFeelInfo[] lafs =
+            UIManager.getInstalledLookAndFeels();
+        for (int i = 0; i < lafs.length; ++i) {
+            if (lafs[i].getClassName().equals(currentLookAndFeel)) {
+                name = lafs[i].getName();
             }
-
-            return name;
         }
+        
+        return name;
     }
 
     /**
@@ -318,16 +317,15 @@ public class LookAndFeelMgr {
 
         if (currentTheme == null) {
             return DEFAULT_THEME.getName();
-        } else {
-            String name = null;
-
-            for (int i = 0; i < THEMES.length; ++i) {
-                if (THEMES[i].getClass().getName().equals(currentTheme)) {
-                    name = THEMES[i].getName();
-                }
+        } 
+        String name = null;
+        
+        for (int i = 0; i < THEMES.length; ++i) {
+            if (THEMES[i].getClass().getName().equals(currentTheme)) {
+                name = THEMES[i].getName();
             }
-            return name;
         }
+        return name;
     }
 
     /**
@@ -372,9 +370,7 @@ public class LookAndFeelMgr {
         if (font.getSize2D() >= 12f) {
             return font.deriveFont(font.getSize2D() - 2f);
         }
-        else {
-            return font;
-        }
+        return font;
     }
 
     /**
