@@ -6,17 +6,17 @@
  */
 package org.columba.api.exception;
 
-import org.columba.core.plugin.PluginManager;
+import org.columba.api.plugin.IPluginManager;
 
 /**
- * {@link PluginManager}throws this exception if it can't find the requested
+ * {@link IPluginManager}throws this exception if it can't find the requested
  * plugin handler.
  * 
  * @author fdietz
  */
 public class PluginHandlerNotFoundException extends Exception {
 	/**
-	 *  
+	 * 
 	 */
 	public PluginHandlerNotFoundException() {
 		super();

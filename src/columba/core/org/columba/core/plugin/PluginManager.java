@@ -30,6 +30,7 @@ import org.columba.api.plugin.ExtensionHandlerMetadata;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IPluginManager;
+import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.logging.Logging;
 import org.columba.core.util.PluginFinder;
 import org.columba.core.xml.XmlIO;

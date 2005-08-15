@@ -27,8 +27,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.PluginMetadata;
 
 
 /**

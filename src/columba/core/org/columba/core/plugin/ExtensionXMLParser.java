@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import org.columba.api.plugin.ExtensionHandlerMetadata;
 import org.columba.api.plugin.ExtensionMetadata;
+import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;

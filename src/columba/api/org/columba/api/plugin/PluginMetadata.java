@@ -15,13 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.core.plugin;
+package org.columba.api.plugin;
 
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.columba.api.plugin.ExtensionMetadata;
 
 public class PluginMetadata {
 

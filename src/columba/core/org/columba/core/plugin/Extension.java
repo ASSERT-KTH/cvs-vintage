@@ -30,6 +30,7 @@ import org.columba.api.exception.PluginException;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionInterface;
+import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.logging.Logging;
 
 /**

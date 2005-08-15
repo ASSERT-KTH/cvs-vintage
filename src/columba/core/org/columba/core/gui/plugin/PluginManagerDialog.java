@@ -52,6 +52,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.config.Config;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.InfoViewerDialog;
@@ -59,7 +60,6 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.PluginMetadata;
 import org.columba.core.pluginhandler.ConfigExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
