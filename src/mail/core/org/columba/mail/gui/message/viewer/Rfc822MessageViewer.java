@@ -129,6 +129,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
+		layoutComponents();
 		
 		getHeaderController().updateGUI();
 
@@ -141,8 +142,6 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 			
 		getSpamStatusViewer().updateGUI();
 		getSecurityInformationViewer().updateGUI();
-
-		layoutComponents();
 	}
 
 	/**
