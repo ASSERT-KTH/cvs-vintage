@@ -1,4 +1,4 @@
-// $Id: TestUmlFactoryBuildNode.java,v 1.1 2005/08/15 21:10:30 linus Exp $
+// $Id: TestUmlFactoryBuildNode.java,v 1.2 2005/08/16 05:03:55 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,15 @@ import junit.framework.TestCase;
  * all conceivable alternatives.
  */
 public class TestUmlFactoryBuildNode extends TestCase {
+    /**
+     * Constructor.
+     *
+     * @param arg0 name of the test case
+     */
+    public TestUmlFactoryBuildNode(String arg0) {
+        super(arg0);
+    }
+
     /**
      * Testing Core elements.
      */
