@@ -115,9 +115,21 @@ public class DefaultLabelRenderer extends DefaultTableCellRenderer implements
 
 		Color msgColor = (Color) header.get("columba.color");
 
+		if (isSelected)
+			setBackground(UIManager.getColor("Table.selectionBackground"));
+		else
+			setBackground(table.getBackground());
+
 		if (msgColor != null) {
-			if (msgColor.equals(Color.BLACK) == false)
-				setForeground(msgColor);
+			if (isSelected)
+				setForeground(UIManager.getColor("Table.selectionForeground"));
+			else {
+				if (msgColor.equals(Color.BLACK) == false)
+					setForeground(msgColor);
+				else
+					setForeground(table.getForeground());
+
+			}
 		}
 
 		return this;

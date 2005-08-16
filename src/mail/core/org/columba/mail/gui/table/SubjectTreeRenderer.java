@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -45,9 +46,13 @@ import org.columba.ristretto.message.Flags;
  */
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 	private Font plainFont;
+
 	private Font boldFont;
+
 	private Font underlinedFont;
+
 	private JTable table;
+
 	private TableColumn tc;
 
 	/**
@@ -80,8 +85,7 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 		super.setBounds(x, y, tc.getWidth() - x, h);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
 	 *      java.lang.Object, boolean, boolean, int, int)
@@ -107,16 +111,6 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 			return this;
 		}
 
-		/*
-		if (selected) {
-			setBackground(table.getSelectionBackground());
-			setForeground(table.getSelectionForeground());
-		} else {
-			setBackground(table.getBackground());
-			setForeground(table.getForeground());
-		}
-		*/
-
 		Flags flags = ((ColumbaHeader) header).getFlags();
 
 		if (flags != null) {
@@ -132,6 +126,25 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 				if (!getFont().equals(plainFont)) {
 					setFont(plainFont);
 				}
+			}
+		}
+
+		Color msgColor = (Color) header.get("columba.color");
+
+		if (selected)
+			setBackground(UIManager.getColor("Table.selectionBackground"));
+		else
+			setBackground(table.getBackground());
+
+		if (msgColor != null) {
+			if (selected)
+				setForeground(UIManager.getColor("Table.selectionForeground"));
+			else {
+				if (msgColor.equals(Color.BLACK) == false)
+					setForeground(msgColor);
+				else
+					setForeground(table.getForeground());
+
 			}
 		}
 
