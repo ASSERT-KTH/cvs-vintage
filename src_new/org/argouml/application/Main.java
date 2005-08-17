@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.131 2005/08/14 13:33:10 mvw Exp $
+// $Id: Main.java,v 1.132 2005/08/17 21:01:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,13 +157,13 @@ public class Main {
         // the name of a project file to load.
         //--------------------------------------------
 
-        String themeMemory = null;
+        String theTheme = null;
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("-")) {
-		String theme =
-		    LookAndFeelMgr.getInstance().getThemeFromArg(args[i]);
-                if (theme != null) {
-		    themeMemory = theme;
+		String themeName = LookAndFeelMgr.getInstance()
+                    .getThemeClassNameFromArg(args[i]);
+                if (themeName != null) {
+		    theTheme = themeName;
                 } else if (
                     args[i].equalsIgnoreCase("-help")
                         || args[i].equalsIgnoreCase("-h")
@@ -213,7 +213,7 @@ public class Main {
 	// The reason the gui is initialized before the commands are run
 	// is that some of the commands will use the projectbrowser.
 	st.mark("initialize gui");
-        SplashScreen splash = initializeGUI(doSplash && !batch, themeMemory);
+        SplashScreen splash = initializeGUI(doSplash && !batch, theTheme);
         
         // Register the default notation.
         org.argouml.uml.generator.GeneratorDisplay.getInstance();
@@ -595,14 +595,14 @@ public class Main {
      * Do a part of the initialization that is very much GUI-stuff.
      *
      * @param doSplash true if we are updating the splash
-     * @param themeMemory is the theme to set.
+     * @param theTheme is the theme to set.
      */
     private static SplashScreen initializeGUI(
-                    boolean doSplash, String themeMemory) {
+                    boolean doSplash, String theTheme) {
 	// initialize the correct look and feel
 	LookAndFeelMgr.getInstance().initializeLookAndFeel();
-	if (themeMemory != null) {
-	    LookAndFeelMgr.getInstance().setCurrentTheme(themeMemory);
+	if (theTheme != null) {
+	    LookAndFeelMgr.getInstance().setCurrentTheme(theTheme);
 	}
 
         SplashScreen splash = null;

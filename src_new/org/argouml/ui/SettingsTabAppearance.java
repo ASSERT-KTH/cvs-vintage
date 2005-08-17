@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.7 2005/06/14 20:39:15 mvw Exp $
+// $Id: SettingsTabAppearance.java,v 1.8 2005/08/17 21:01:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,13 +167,9 @@ public class SettingsTabAppearance
      * @see org.argouml.application.api.SettingsTabPanel#handleSettingsTabSave()
      */
     public void handleSettingsTabSave() {
-        LookAndFeelMgr.getInstance().setCurrentLookAndFeel(
-            LookAndFeelMgr.getInstance().getLookAndFeelFromName(
-                (String) lookAndFeel.getSelectedItem()));
-
-        LookAndFeelMgr.getInstance().setCurrentTheme(
-            LookAndFeelMgr.getInstance().getThemeFromName(
-                (String) metalTheme.getSelectedItem()));
+        LookAndFeelMgr.getInstance().setCurrentLAFAndThemeByName(
+                (String) lookAndFeel.getSelectedItem(),
+                (String) metalTheme.getSelectedItem());
 
         Configuration.setBoolean(Argo.KEY_SMOOTH_EDGES,
             smoothEdges.isSelected());
