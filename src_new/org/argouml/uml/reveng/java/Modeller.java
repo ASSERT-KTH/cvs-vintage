@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.124 2005/08/01 19:27:52 thn Exp $
+// $Id: Modeller.java,v 1.125 2005/08/18 12:32:24 thn Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1750,9 +1750,6 @@ public class Modeller {
     }
 
     public synchronized Vector getMethodCalls() {
-        if (methodCalls == null) {
-            methodCalls = new Vector();
-        }
         return methodCalls;
     }
 
