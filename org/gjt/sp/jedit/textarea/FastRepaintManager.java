@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * The text area does not use Swing's built-in double buffering, so that
  * we have access to the graphics context for fast scrolling.
  * @author Slava Pestov
- * @version $Id: FastRepaintManager.java,v 1.3 2005/02/13 22:42:08 spestov Exp $
+ * @version $Id: FastRepaintManager.java,v 1.4 2005/08/19 04:51:42 spestov Exp $
  */
 class FastRepaintManager
 {
@@ -58,9 +58,9 @@ class FastRepaintManager
 		int width = painter.getWidth();
 		int height = painter.getHeight();
 		/* A little hack */
-		if(width == 0)
+		if(width <= 0)
 			width = 1;
-		if(height == 0)
+		if(height <= 0)
 			height = 1;
 		img = painter.getGraphicsConfiguration()
 			.createCompatibleImage(width,height,

@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer save request.
  * @author Slava Pestov
- * @version $Id: BufferSaveRequest.java,v 1.3 2005/08/14 22:31:16 spestov Exp $
+ * @version $Id: BufferSaveRequest.java,v 1.4 2005/08/19 04:51:41 spestov Exp $
  */
 public class BufferSaveRequest extends BufferIORequest
 {
@@ -74,10 +74,7 @@ public class BufferSaveRequest extends BufferIORequest
 			boolean vfsRenameCap = (vfs.getCapabilities() & 
 				VFS.RENAME_CAP) != 0;
 
-
 			boolean overwriteReadOnly = false;
-
-			VFSManager.error(view,path,"ioerror.no-write",null);
 
 			// Only backup once per session
 			if(buffer.getProperty(Buffer.BACKED_UP) == null
