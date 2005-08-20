@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationRepresentedClassifierListModel.java,v 1.16 2005/01/28 21:41:36 linus Exp $
+// $Id: TestUMLCollaborationRepresentedClassifierListModel.java,v 1.17 2005/08/20 09:31:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ public class TestUMLCollaborationRepresentedClassifierListModel
      * Test setRepresentedClassifier().
      */
     public void testSetRepresentedOperation() {
-        Object oper = Model.getCoreFactory().createClassifier();
+        Object oper = Model.getCoreFactory().createClass();
         Model.getCollaborationsHelper().setRepresentedClassifier(elem, oper);
         assertEquals(1, model.getSize());
         assertEquals(oper, model.getElementAt(0));
@@ -80,7 +80,7 @@ public class TestUMLCollaborationRepresentedClassifierListModel
      * Test removing the represented operation.
      */
     public void testRemoveRepresentedOperation() {
-	Object oper = Model.getCoreFactory().createClassifier();
+	Object oper = Model.getCoreFactory().createClass();
         Model.getCollaborationsHelper().setRepresentedClassifier(elem, oper);
         Model.getCollaborationsHelper().setRepresentedClassifier(elem, null);
         assertEquals(0, model.getSize());

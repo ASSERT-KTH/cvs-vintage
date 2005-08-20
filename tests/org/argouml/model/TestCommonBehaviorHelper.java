@@ -1,5 +1,5 @@
-// $Id: TestActionClassDiagram.java,v 1.6 2005/08/20 09:31:08 linus Exp $
-// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
+// $Id: TestCommonBehaviorHelper.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,51 +22,40 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.argouml.model.Model;
+import junit.framework.TestCase;
 
 /**
- * Test for {@link ActionClassDiagram}.
- * @author JBranderhorst
+ * @since Oct 10, 2002
+ * @author jaap.branderhorst@xs4all.nl
  */
-public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
+public class TestCommonBehaviorHelper extends TestCase {
 
     /**
-     * Constructor for GUITestActionClassDiagram.
-     * @param arg0 the name of the test case.
+     * Constructor for TestCommonBehaviorHelper.
+     *
+     * @param arg0 is the test case name.
      */
-    public TestActionClassDiagram(String arg0) {
+    public TestCommonBehaviorHelper(String arg0) {
 	super(arg0);
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
+     * Test the metamodel name.
      */
-    protected ActionAddDiagram getAction() {
-	return new ActionClassDiagram();
+    public void testGetMetaModelName() {
+	CheckUMLModelHelper.metaModelNameCorrect(
+			 Model.getCommonBehaviorFactory(),
+			 TestCommonBehaviorFactory.getAllModelElements());
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
+     * Test if the stereotype is valid.
      */
-    protected Object getNamespace() {
-    	// Return a package to use as the Namespace.
-	return Model.getModelManagementFactory().createPackage();
+    public void testIsValidStereoType() {
+	CheckUMLModelHelper.isValidStereoType(
+		      Model.getCommonBehaviorFactory(),
+		      TestCommonBehaviorFactory.getAllModelElements());
     }
-
-    /**
-     * @see org.argouml.uml.ui.
-     * AbstractTestActionAddDiagram#getValidNamespaceClasses()
-     */
-    protected List getValidNamespaceClasses() {
-	List returnList = new ArrayList();
-	returnList.add(Model.getMetaTypes().getPackage());
-	returnList.add(Model.getMetaTypes().getModel());
-	return returnList;
-    }
-
 }

@@ -1,4 +1,4 @@
-// $Id: AbstractUMLModelElementListModel2Test.java,v 1.14 2005/08/12 19:30:27 mvw Exp $
+// $Id: AbstractUMLModelElementListModel2Test.java,v 1.15 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,6 +55,7 @@ public abstract class AbstractUMLModelElementListModel2Test extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         buildElement();
+        // TODO: is this commented out for a reason?  Remove? - tfm
         //oldEventPolicy = MFactoryImpl.getEventPolicy();
         //MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         buildModel();
@@ -81,6 +82,7 @@ public abstract class AbstractUMLModelElementListModel2Test extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         Model.getUmlFactory().delete(elem);
+        // TODO: review - tfm
         //MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }

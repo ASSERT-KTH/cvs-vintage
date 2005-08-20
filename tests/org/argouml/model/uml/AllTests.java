@@ -1,4 +1,4 @@
-// $Id: AllTests.java,v 1.2 2005/07/28 08:17:05 linus Exp $
+// $Id: AllTests.java,v 1.3 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,33 +45,9 @@ public final class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for org.argouml.model.uml");
         //$JUnit-BEGIN$
-        suite.addTestSuite(TestActivityGraphsFactory.class);
-        suite.addTestSuite(TestCommonBehaviorHelper.class);
-        suite.addTestSuite(TestModelManagementHelper.class);
-        suite.addTestSuite(TestUmlModel.class);
-        suite.addTestSuite(TestActivityGraphsHelper.class);
-        suite.addTestSuite(TestCollaborationsHelper.class);
-        suite.addTestSuite(TestUmlActor.class);
-        suite.addTestSuite(TestUml.class);
-        suite.addTestSuite(TestUmlUseCase.class);
-        suite.addTestSuite(TestUmlNamespace.class);
-        suite.addTestSuite(TestUseCasesFactory.class);
-        suite.addTestSuite(TestCopyHelper.class);
-        suite.addTestSuite(TestModelManagementFactory.class);
+
         suite.addTestSuite(TestUmlModelEventPumpDeprecated.class);
-        suite.addTestSuite(TestExtensionMechanismsHelper.class);
-        suite.addTestSuite(TestExtensionMechanismsFactory.class);
-        suite.addTestSuite(TestCoreHelper.class);
-        suite.addTestSuite(TestUmlFactory.class);
-        suite.addTest(TestAgainstUmlModel.suite());
-        suite.addTestSuite(TestStateMachinesFactory.class);
-        suite.addTestSuite(TestUmlModelElement.class);
-        suite.addTestSuite(TestCoreFactory.class);
-        suite.addTestSuite(TestCollaborationsFactory.class);
-        suite.addTestSuite(TestStateMachinesHelper.class);
-        suite.addTestSuite(TestDataTypesFactory.class);
-        suite.addTestSuite(TestCommonBehaviorFactory.class);
-        suite.addTestSuite(TestUseCasesHelper.class);
+
         //$JUnit-END$
         return suite;
     }

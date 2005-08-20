@@ -1,4 +1,4 @@
-// $Id: AllTests.java,v 1.1 2005/01/31 21:41:49 linus Exp $
+// $Id: AllTests.java,v 1.2 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,18 +43,40 @@ public final class AllTests {
      * @return a list of all test cases.
      */
     public static Test suite() {
-        TestSuite suite = new TestSuite("Test for org.argouml.model");
+        TestSuite suite = new TestSuite("Tests for org.argouml.model");
         //$JUnit-BEGIN$
+        suite.addTestSuite(TestCommonBehaviorHelper.class);
+        suite.addTestSuite(TestCopyHelper.class);
+        suite.addTestSuite(TestUseCasesHelper.class);
+        suite.addTestSuite(TestModelManagementFactory.class);
+        suite.addTestSuite(TestModelFacade2.class);
+        suite.addTestSuite(TestCollaborationsFactory.class);
         suite.addTestSuite(TestCommonBehaviorFactory.class);
+        suite.addTestSuite(TestActivityGraphsHelper.class);
+        suite.addTestSuite(TestUmlUseCase.class);
         suite.addTest(TestModelFacade3.suite());
         suite.addTestSuite(TestModel2.class);
-        suite.addTestSuite(TestCoreFactory.class);
-        suite.addTestSuite(TestModelEventPump.class);
-        suite.addTestSuite(TestModelFacade2.class);
+        suite.addTestSuite(TestUseCasesFactory.class);
         suite.addTest(TestModel.suite());
-        suite.addTestSuite(TestCollaborationsFactory.class);
+        suite.addTestSuite(TestUmlFactoryBuildNode.class);
+        suite.addTestSuite(TestStateMachinesFactory.class);
+        suite.addTestSuite(TestUmlModel.class);
+        suite.addTestSuite(TestUmlFactory.class);
+        suite.addTestSuite(TestUmlActor.class);
+        suite.addTest(TestAgainstUmlModel.suite());
+        suite.addTestSuite(TestExtensionMechanismsFactory.class);
+        suite.addTestSuite(TestActivityGraphsFactory.class);
+        suite.addTestSuite(TestUmlModelElement.class);
+        suite.addTestSuite(TestDataTypesFactory.class);
+        suite.addTestSuite(TestCoreFactory.class);
+        suite.addTestSuite(TestCoreHelper.class);
+        suite.addTestSuite(TestStateMachinesHelper.class);
+        suite.addTestSuite(TestExtensionMechanismsHelper.class);
+        suite.addTestSuite(TestUml.class);
+        suite.addTestSuite(TestModelEventPump.class);
+        suite.addTestSuite(TestModelManagementHelper.class);
+        suite.addTestSuite(TestCollaborationsHelper.class);
         //$JUnit-END$
         return suite;
     }
 }
-

@@ -1,5 +1,5 @@
-// $Id: TestActionClassDiagram.java,v 1.6 2005/08/20 09:31:08 linus Exp $
-// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
+// $Id: TestModelManagementFactory.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,51 +22,64 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.argouml.model.Model;
+import junit.framework.TestCase;
 
 /**
- * Test for {@link ActionClassDiagram}.
- * @author JBranderhorst
+ * Test the ModelManagementFactory class.
+ *
  */
-public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
+public class TestModelManagementFactory extends TestCase {
+    /**
+     * The model elements to test.
+     */
+    private static String[] allModelElements = {
+	"ElementImport", "Model", "Package", "Subsystem",
+    };
 
     /**
-     * Constructor for GUITestActionClassDiagram.
-     * @param arg0 the name of the test case.
+     * The constructor.
+     *
+     * @param n the name
      */
-    public TestActionClassDiagram(String arg0) {
-	super(arg0);
+    public TestModelManagementFactory(String n) {
+	super(n);
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
+     * Test if this class is really a singleton.
      */
-    protected ActionAddDiagram getAction() {
-	return new ActionClassDiagram();
+    public void testSingleton() {
+
+	Object o1 = Model.getModelManagementFactory();
+
+	Object o2 = Model.getModelManagementFactory();
+
+	assertTrue("Different singletons", o1 == o2);
+
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
+     * Test creation.
      */
-    protected Object getNamespace() {
-    	// Return a package to use as the Namespace.
-	return Model.getModelManagementFactory().createPackage();
+    public void testCreates() {
+
+	String[] objs = {
+	    "ElementImport", "Model", "Package", "Subsystem",
+	    null,
+	};
+
+	CheckUMLModelHelper.createAndRelease(
+		     Model.getModelManagementFactory(),
+		     objs);
+
     }
 
     /**
-     * @see org.argouml.uml.ui.
-     * AbstractTestActionAddDiagram#getValidNamespaceClasses()
+     * @return Returns the allModelElements.
      */
-    protected List getValidNamespaceClasses() {
-	List returnList = new ArrayList();
-	returnList.add(Model.getMetaTypes().getPackage());
-	returnList.add(Model.getMetaTypes().getModel());
-	return returnList;
+    protected static String[] getAllModelElements() {
+        return allModelElements;
     }
-
 }

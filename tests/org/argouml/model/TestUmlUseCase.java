@@ -1,5 +1,5 @@
-// $Id: TestActionClassDiagram.java,v 1.6 2005/08/20 09:31:08 linus Exp $
-// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
+// $Id: TestUmlUseCase.java,v 1.4 2005/08/20 09:31:08 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,51 +22,46 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.argouml.model.Model;
 
 /**
- * Test for {@link ActionClassDiagram}.
- * @author JBranderhorst
+ * @author Thierry Lach
  */
-public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
-
+public class TestUmlUseCase extends GenericUmlObjectTestFixture {
     /**
-     * Constructor for GUITestActionClassDiagram.
-     * @param arg0 the name of the test case.
+     * Constructor.
+     *
+     * @param arg0 test name
      */
-    public TestActionClassDiagram(String arg0) {
-	super(arg0);
+    public TestUmlUseCase(String arg0) {
+	super(arg0, Model.getMetaTypes().getUseCase());
+	validateTestClassIsGeneric(this);
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
+     * Test creating a usecase.
      */
-    protected ActionAddDiagram getAction() {
-	return new ActionClassDiagram();
+    public void testUseCase() {
+	Object o =
+	    Model.getUmlFactory().buildNode(Model.getMetaTypes().getUseCase());
+	assertNotNull("Didn't create object", o);
+	assertTrue("Should be a base", Model.getFacade().isABase(o));
+	assertTrue("Should be a use case", Model.getFacade().isAUseCase(o));
+	runTruthTests(o);
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
+     * @see junit.framework.TestCase#setUp()
      */
-    protected Object getNamespace() {
-    	// Return a package to use as the Namespace.
-	return Model.getModelManagementFactory().createPackage();
-    }
-
-    /**
-     * @see org.argouml.uml.ui.
-     * AbstractTestActionAddDiagram#getValidNamespaceClasses()
-     */
-    protected List getValidNamespaceClasses() {
-	List returnList = new ArrayList();
-	returnList.add(Model.getMetaTypes().getPackage());
-	returnList.add(Model.getMetaTypes().getModel());
-	return returnList;
+    protected void setUp() throws Exception {
+        super.setUp();
+        setTruth(Model.getMetaTypes().getModelElement(), true);
+        setTruth(Model.getMetaTypes().getGeneralizableElement(), true);
+        setTruth(Model.getMetaTypes().getNamespace(), true);
+        setTruth(Model.getMetaTypes().getClassifier(), true);
+        setTruth(Model.getMetaTypes().getUseCase(), true);
     }
 
 }

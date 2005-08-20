@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsFactory.java,v 1.3 2005/08/07 10:06:56 linus Exp $
+// $Id: TestCollaborationsFactory.java,v 1.4 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,6 +59,14 @@ public class TestCollaborationsFactory extends TestCase {
     }
 
     /**
+     * @see junit.framework.TestCase#setUp()
+     */
+    public void setUp() {
+	//this should instantiate a new implementation
+	Model.getFacade();
+    }
+
+    /**
      * Test the creation of the elements.
      */
     public void testCreates() {
@@ -80,32 +88,34 @@ public class TestCollaborationsFactory extends TestCase {
     }
 
     /**
-     * Test to check whether elements which are attached to a
-     * ClassifierRole get deleted upon deletion of the
-     * ClassifierRole. These elements are Interaction, Message,
-     * AssociationRole.
+     * Test for delete methods.
+     */
+    public void testAllDeleteMethodsAvailable() {
+        CheckUMLModelHelper.hasDeleteMethod(Model.getCollaborationsFactory(),
+                allModelElements);
+    }
+
+    /**
+     * Test to check whether elements which are attached to a ClassifierRole get
+     * deleted upon deletion of the ClassifierRole. These elements are
+     * Interaction, Message, AssociationRole.
      */
     public void testDeleteClassifierRole() {
-
         Object model = Model.getModelManagementFactory().createModel();
+
         Object collab =
-            Model.getCollaborationsFactory().buildCollaboration(model);
-        Object cr1 =
-            Model.getCollaborationsFactory().createClassifierRole();
-        Object cr2 =
-            Model.getCollaborationsFactory().createClassifierRole();
+	    Model.getCollaborationsFactory().buildCollaboration(model);
+        Object cr1 = Model.getCollaborationsFactory().createClassifierRole();
+        Object cr2 = Model.getCollaborationsFactory().createClassifierRole();
         Object role =
-            Model.getCollaborationsFactory().buildAssociationRole(cr1, cr2);
+	    Model.getCollaborationsFactory().buildAssociationRole(cr1, cr2);
         Object inter =
-            Model.getCollaborationsFactory().buildInteraction(collab);
-        Object mes =
-            Model.getCollaborationsFactory().buildMessage(
-                inter,
-                role);
+	    Model.getCollaborationsFactory().buildInteraction(collab);
+        Object mes = Model.getCollaborationsFactory().buildMessage(inter, role);
 
         WeakReference cr1wr = new WeakReference(cr1);
         WeakReference rolewr = new WeakReference(role);
-        // WeakReference interwr = new WeakReference(inter);
+        WeakReference interwr = new WeakReference(inter);
         WeakReference meswr = new WeakReference(mes);
 
         Model.getUmlFactory().delete(cr1);

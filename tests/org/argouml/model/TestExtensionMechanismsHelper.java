@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsHelper.java,v 1.1 2005/06/18 20:21:45 mvw Exp $
+// $Id: TestExtensionMechanismsHelper.java,v 1.2 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,14 @@ package org.argouml.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.argouml.kernel.ProjectManager;
+
 import junit.framework.TestCase;
 
 /**
+ * TODO: This is currently just a mechanical merge of the tests in
+ * from the generic Model test and the NSUML tests.  They need to be
+ * reviewed & merged.
  * 
  * @author euluis
  * @since 0.19.2
@@ -99,5 +104,60 @@ public class TestExtensionMechanismsHelper extends TestCase {
         assertTrue("The \"" + theStereotype
                 + "\" isn't returned, but is possible.", stereotypes
                 .contains(theStereotype));
+    }
+
+
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Tests from NSUML test converted to generic
+    // TODO: review and merge
+    ////////////////////////////////////////////////////////////////////////////
+    /**
+     * This test does not work yet since there are problems with
+     * isolating the project from the projectbrowser.
+     */
+    public void testGetAllPossibleStereotypes1() {
+        Object ns = Model.getModelManagementFactory().createPackage();
+        Object clazz = Model.getCoreFactory().buildClass(ns);
+        Object model = ProjectManager.getManager().getCurrentProject()
+                .getModel();
+        Collection models =
+            ProjectManager.getManager().getCurrentProject()
+                .getModels();
+        Object stereo1 = Model.getExtensionMechanismsFactory().buildStereotype(
+                        clazz,
+                        "test1",
+                        model,
+                        models);
+        Object stereo2 = Model.getExtensionMechanismsFactory().buildStereotype(
+                        clazz,
+                        "test2",
+                        model,
+                        models);
+        Collection col =
+            Model.getExtensionMechanismsHelper()
+                .getAllPossibleStereotypes(models, clazz);
+        assertTrue("stereotype not in list of possible stereotypes",
+                   col.contains(stereo1));
+        assertTrue("stereotype not in list of possible stereotypes",
+                   col.contains(stereo2));
+    }
+
+    /**
+     * Test if we can create modelelements with the names given.
+     */
+    public void testGetMetaModelName() {
+        CheckUMLModelHelper.metaModelNameCorrect(
+                Model.getExtensionMechanismsFactory(),
+                TestExtensionMechanismsFactory.getAllModelElements());
+    }
+
+    /**
+     * Test if we can create a valid stereotype for all the modelelements.
+     */
+    public void testIsValidStereoType() {
+        CheckUMLModelHelper.isValidStereoType(
+                Model.getExtensionMechanismsFactory(),
+                TestExtensionMechanismsFactory.getAllModelElements());
     }
 }

@@ -1,5 +1,5 @@
-// $Id: TestActionClassDiagram.java,v 1.6 2005/08/20 09:31:08 linus Exp $
-// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
+// $Id: TestActivityGraphsFactory.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,51 +22,69 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import junit.framework.TestCase;
 
-import org.argouml.model.Model;
 
 /**
- * Test for {@link ActionClassDiagram}.
- * @author JBranderhorst
+ * Test the ActivityGraphsFactoryImpl class.
+ *
  */
-public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
+public class TestActivityGraphsFactory extends TestCase {
 
     /**
-     * Constructor for GUITestActionClassDiagram.
-     * @param arg0 the name of the test case.
+     * All the ModelElements we are going to test.
      */
-    public TestActionClassDiagram(String arg0) {
-	super(arg0);
+    private static String[] allModelElements = {
+        "ActivityGraph",
+        "ActionState",
+        "CallState",
+        "ClassifierInState",
+        "ObjectFlowState",
+        "Partition",
+        "SubactivityState",
+    };
+
+    /**
+     * The constructor.
+     *
+     * @param n the name
+     */
+    public TestActivityGraphsFactory(String n) { super(n); }
+
+    /**
+     * Test the singleton pattern for the ActivityGraphsFactoryImpl class.
+     */
+    public void testSingleton() {
+	Object o1 = Model.getActivityGraphsFactory();
+	Object o2 = Model.getActivityGraphsFactory();
+	assertTrue("Different singletons", o1 == o2);
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
+     * The test for creation.
      */
-    protected ActionAddDiagram getAction() {
-	return new ActionClassDiagram();
+    public void testCreates() {
+	String [] objs = {
+	    "ActionState",
+	    "ActivityGraph",
+	    "CallState",
+	    "ClassifierInState",
+	    "ObjectFlowState",
+	    "Partition",
+	    "SubactivityState",
+	    null,
+	};
+
+	CheckUMLModelHelper.createAndRelease(Model.getActivityGraphsFactory(),
+					     objs);
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
+     * @return Returns the allModelElements.
      */
-    protected Object getNamespace() {
-    	// Return a package to use as the Namespace.
-	return Model.getModelManagementFactory().createPackage();
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
-
-    /**
-     * @see org.argouml.uml.ui.
-     * AbstractTestActionAddDiagram#getValidNamespaceClasses()
-     */
-    protected List getValidNamespaceClasses() {
-	List returnList = new ArrayList();
-	returnList.add(Model.getMetaTypes().getPackage());
-	returnList.add(Model.getMetaTypes().getModel());
-	return returnList;
-    }
-
 }

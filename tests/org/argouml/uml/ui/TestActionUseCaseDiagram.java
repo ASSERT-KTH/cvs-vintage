@@ -1,4 +1,4 @@
-// $Id: TestActionUseCaseDiagram.java,v 1.7 2005/08/12 19:30:27 mvw Exp $
+// $Id: TestActionUseCaseDiagram.java,v 1.8 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,16 @@ public class TestActionUseCaseDiagram
     protected List getValidNamespaceClasses() {
         List rl = new ArrayList();
         rl.add(Model.getMetaTypes().getPackage());
-        rl.add(Model.getMetaTypes().getClassifier());
+        /*
+         * This needs to be a concrete metatype, so we can't use
+         * the general, but abstract, Classifier.  Replace with its
+         * concrete subtypes.
+         */
+        rl.add(Model.getMetaTypes().getUMLClass());
+        rl.add(Model.getMetaTypes().getInterface());
+        rl.add(Model.getMetaTypes().getDataType());
+        rl.add(Model.getMetaTypes().getNode());
+        rl.add(Model.getMetaTypes().getComponent());
         return rl;
     }
 

@@ -1,5 +1,5 @@
-// $Id: TestActionClassDiagram.java,v 1.6 2005/08/20 09:31:08 linus Exp $
-// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
+// $Id: ExtensionMechanismsTestSuite.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,51 +22,29 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.argouml.model.Model;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
- * Test for {@link ActionClassDiagram}.
- * @author JBranderhorst
+ * @author Thierry Lach
  */
-public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
+public class ExtensionMechanismsTestSuite {
 
-    /**
-     * Constructor for GUITestActionClassDiagram.
-     * @param arg0 the name of the test case.
+    /** Test suite for this package
+     *
+     * @return the junit test suite
      */
-    public TestActionClassDiagram(String arg0) {
-	super(arg0);
-    }
-
-    /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
-     */
-    protected ActionAddDiagram getAction() {
-	return new ActionClassDiagram();
-    }
-
-    /**
-     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
-     */
-    protected Object getNamespace() {
-    	// Return a package to use as the Namespace.
-	return Model.getModelManagementFactory().createPackage();
-    }
-
-    /**
-     * @see org.argouml.uml.ui.
-     * AbstractTestActionAddDiagram#getValidNamespaceClasses()
-     */
-    protected List getValidNamespaceClasses() {
-	List returnList = new ArrayList();
-	returnList.add(Model.getMetaTypes().getPackage());
-	returnList.add(Model.getMetaTypes().getModel());
-	return returnList;
+    public static Test suite() {
+	TestSuite suite =
+	    new TestSuite("Tests for "
+			  + (ExtensionMechanismsTestSuite.class
+			     .getPackage().getName()));
+	suite.addTestSuite(TestExtensionMechanismsFactory.class);
+	suite.addTestSuite(TestExtensionMechanismsHelper.class);
+        return suite;
     }
 
 }

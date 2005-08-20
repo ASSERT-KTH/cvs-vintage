@@ -1,4 +1,4 @@
-// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.16 2005/02/20 15:47:15 bobtarling Exp $
+// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.17 2005/08/20 09:31:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
             Model.getModelManagementFactory().createModel();
         Model.getCoreHelper().setName(mmodel, "untitledModel");
         Model.getModelManagementFactory().setRootModel(mmodel);
-        namespace = Model.getCoreFactory().createNamespace();
+        namespace = Model.getModelManagementFactory().createPackage();
         child = Model.getCoreFactory().buildClass("child", namespace);
         parent = Model.getCoreFactory().buildClass("parent", namespace);
         elem = Model.getCoreFactory().buildGeneralization(child, parent);
@@ -74,7 +74,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
         ProjectManager.getManager().getCurrentProject().setRoot(m);
         Model.getCoreHelper().setNamespace(elem, m);
         for (int i = 0; i < 10; i++) {
-            types[i] = Model.getCoreFactory().createClassifier();
+            types[i] = Model.getCoreFactory().createClass();
             Model.getCoreHelper().addOwnedElement(m, types[i]);
         }
     }

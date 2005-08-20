@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.16 2005/01/30 10:08:09 linus Exp $
+// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.17 2005/08/20 09:31:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class TestUMLModelElementSupplierDependencyListModel
     public void setUp() throws Exception {
         super.setUp();
 
-        namespace = Model.getCoreFactory().createNamespace();
+        namespace = Model.getModelManagementFactory().createPackage();
         from = Model.getCoreFactory().buildClass("from", namespace);
         to = Model.getCoreFactory().buildClass("to", namespace);
     }

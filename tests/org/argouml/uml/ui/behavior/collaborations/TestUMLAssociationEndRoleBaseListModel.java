@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.20 2005/01/30 20:48:43 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.21 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,8 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
 
         elem = Model.getCollaborationsFactory().createAssociationEndRole();
 
-        Object classNamespace = Model.getCoreFactory().createNamespace();
+        Object classNamespace =
+	    Model.getModelManagementFactory().createPackage();
         baseAssoc =
             Model.getCoreFactory().buildAssociation(
                     Model.getCoreFactory().buildClass("from", classNamespace),

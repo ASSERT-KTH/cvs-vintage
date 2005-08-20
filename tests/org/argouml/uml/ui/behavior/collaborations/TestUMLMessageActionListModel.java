@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActionListModel.java,v 1.16 2005/01/28 21:41:36 linus Exp $
+// $Id: TestUMLMessageActionListModel.java,v 1.17 2005/08/20 09:31:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,8 @@ public class TestUMLMessageActionListModel
      * Test setAction().
      */
     public void testSetAction() {
-        Object action = Model.getCommonBehaviorFactory().createAction();
+        Object action =
+	    Model.getCommonBehaviorFactory().createUninterpretedAction();
         Model.getCollaborationsHelper().setAction(elem, action);
         assertEquals(1, model.getSize());
         assertEquals(action, model.getElementAt(0));
@@ -80,7 +81,8 @@ public class TestUMLMessageActionListModel
      * Test setAction() for removing.
      */
     public void testRemoveAction() {
-        Object action = Model.getCommonBehaviorFactory().createAction();
+        Object action =
+	    Model.getCommonBehaviorFactory().createUninterpretedAction();
         Model.getCollaborationsHelper().setAction(elem, action);
         Model.getCollaborationsHelper().setAction(elem, null);
         assertEquals(0, model.getSize());

@@ -1,4 +1,4 @@
-// $Id: TestActionCollaborationDiagram.java,v 1.7 2005/08/12 19:30:27 mvw Exp $
+// $Id: TestActionCollaborationDiagram.java,v 1.8 2005/08/20 09:31:08 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class TestActionCollaborationDiagram
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
     protected Object getNamespace() {
-        //return new CollaborationImpl();
+        // Return a Class to use for the enclosing namespace
         Object c = Model.getCoreFactory().createClass();
         TargetManager.getInstance().setTarget(c);
         return c;
