@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: CommonBehaviorFactory.java,v 1.2 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,12 +31,6 @@ package org.argouml.model;
  * Created from the old CommonBehaviorFactory.
  */
 public interface CommonBehaviorFactory {
-    /**
-     * Create an empty but initialized instance of a UML Action.
-     *
-     * @return an initialized UML Action instance.
-     */
-    Object createAction();
 
     /**
      * Create an empty but initialized instance of a UML ActionSequence.
@@ -93,13 +87,6 @@ public interface CommonBehaviorFactory {
      * @return an initialized UML Exception instance.
      */
     Object createException();
-
-    /**
-     * Create an empty but initialized instance of a UML Instance.
-     *
-     * @return an initialized UML Instance instance.
-     */
-    Object createInstance();
 
     /**
      * Create an empty but initialized instance of a UML Link.

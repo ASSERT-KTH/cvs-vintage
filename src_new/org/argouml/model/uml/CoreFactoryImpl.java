@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.25 2005/08/13 07:30:09 mvw Exp $
+// $Id: CoreFactoryImpl.java,v 1.26 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -225,18 +225,6 @@ public class CoreFactoryImpl
     }
 
     /**
-     * Create an empty but initialized instance of a UML Classifier.
-     *
-     * @return an initialized UML Classifier instance.
-     */
-    public Object createClassifier() {
-	MClassifier modelElement =
-	    MFactory.getDefaultFactory().createClassifier();
-	super.initialize(modelElement);
-	return modelElement;
-    }
-
-    /**
      * Create an empty but initialized instance of a UML Comment.
      *
      * @return an initialized UML Comment instance.
@@ -355,18 +343,6 @@ public class CoreFactoryImpl
     }
 
     /**
-     * Create an empty but initialized instance of a UML Namespace.
-     *
-     * @return an initialized UML Namespace instance.
-     */
-    public Object createNamespace() {
-	MNamespace modelElement =
-	    MFactory.getDefaultFactory().createNamespace();
-	super.initialize(modelElement);
-	return modelElement;
-    }
-
-    /**
      * Create an empty but initialized instance of a UML Node.
      *
      * @return an initialized UML Node instance.
@@ -409,18 +385,6 @@ public class CoreFactoryImpl
     public Object createPermission() {
 	MPermission modelElement =
 	    MFactory.getDefaultFactory().createPermission();
-	super.initialize(modelElement);
-	return modelElement;
-    }
-
-    /**
-     * Create an empty but initialized instance of a UML Relationship.
-     *
-     * @return an initialized UML Relationship instance.
-     */
-    public Object createRelationship() {
-	MRelationship modelElement =
-	    MFactory.getDefaultFactory().createRelationship();
 	super.initialize(modelElement);
 	return modelElement;
     }

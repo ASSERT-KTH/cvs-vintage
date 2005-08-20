@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.27 2005/08/12 19:30:26 mvw Exp $
+// $Id: CoreHelperImpl.java,v 1.28 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2630,8 +2630,21 @@ class CoreHelperImpl implements CoreHelper {
      *
      * @param handle the ElementResidence
      * @param component the Component
+     * @deprecated UML 1.3 only see setContainer
      */
-    public void setImplementationLocation(
+    public void setImplementationLocation(Object handle, Object component) {
+        setContainer(handle, component);
+    }
+
+    /**
+     * Set the Container of the given ElementResidence to the given Component.
+     *
+     * @param handle
+     *            the ElementResidence
+     * @param component
+     *            the Component
+     */
+    public void setContainer(
         Object handle,
         Object component) {
         if (handle instanceof MElementResidence

@@ -1,4 +1,4 @@
-// $Id: KindsImpl.java,v 1.1 2005/01/30 14:05:20 linus Exp $
+// $Id: KindsImpl.java,v 1.2 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,10 +73,17 @@ public class KindsImpl
     }
 
     /**
-     * @return Returns the Branch PseudostateKind.
+     * @return Returns the Branch/Choice PseudostateKind.
      */
     public Object getBranch() {
         return MPseudostateKind.BRANCH;
+    }
+
+    /**
+     * @return Returns the Branch/Choice PseudostateKind.
+     */
+    public Object getChoice() {
+        return getBranch(); // NSUML uses Branch, not Choice
     }
 
     /**
@@ -266,13 +273,6 @@ public class KindsImpl
      */
     public Object getShallowHistory() {
         return MPseudostateKind.SHALLOW_HISTORY;
-    }
-
-    /**
-     * @return Returns the Sorted OrderingKind.
-     */
-    public Object getSorted() {
-        return MOrderingKind.SORTED;
     }
 
     /**

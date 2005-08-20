@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.41 2005/03/05 10:37:20 mvw Exp $
+// $Id: Init.java,v 1.42 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -299,7 +299,7 @@ public class Init {
         Object namespaceCls = Model.getMetaTypes().getNamespace();
         Object genElementCls = Model.getMetaTypes().getGeneralizableElement();
         Object genCls = Model.getMetaTypes().getGeneralization();
-        Object datatypeCls = Model.getMetaTypes().getDatatype();
+        Object datatypeCls = Model.getMetaTypes().getDataType();
         Object useCaseCls = Model.getMetaTypes().getUseCase();
         Object actorCls = Model.getMetaTypes().getActor();
         Object stateVertexCls = Model.getMetaTypes().getStateVertex();

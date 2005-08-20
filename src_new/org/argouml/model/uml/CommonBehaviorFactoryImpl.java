@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactoryImpl.java,v 1.9 2005/01/31 20:54:36 linus Exp $
+// $Id: CommonBehaviorFactoryImpl.java,v 1.10 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,17 +83,6 @@ public class CommonBehaviorFactoryImpl
      */
     CommonBehaviorFactoryImpl(NSUMLModelImplementation implementation) {
         nsmodel = implementation;
-    }
-
-    /**
-     * Create an empty but initialized instance of a UML Action.
-     *
-     * @return an initialized UML Action instance.
-     */
-    public Object createAction() {
-        Object modelElement = MFactory.getDefaultFactory().createAction();
-        super.initialize(modelElement);
-        return modelElement;
     }
 
     /**
@@ -199,17 +188,6 @@ public class CommonBehaviorFactoryImpl
     public Object createException() {
         MException modelElement =
             MFactory.getDefaultFactory().createException();
-        super.initialize(modelElement);
-        return modelElement;
-    }
-
-    /**
-     * Create an empty but initialized instance of a UML Instance.
-     *
-     * @return an initialized UML Instance instance.
-     */
-    public Object createInstance() {
-        MInstance modelElement = MFactory.getDefaultFactory().createInstance();
         super.initialize(modelElement);
         return modelElement;
     }

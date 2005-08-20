@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.32 2005/05/24 17:38:08 mvw Exp $
+// $Id: UmlFactoryImpl.java,v 1.33 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -446,12 +446,14 @@ class UmlFactoryImpl
             return getCore().buildClass();
         } else if (elementType == nsmodel.getMetaTypes().getInterface()) {
             return getCore().buildInterface();
+        } else if (elementType == nsmodel.getMetaTypes().getDataType()) {
+            return getCore().createDataType();
         } else if (elementType == nsmodel.getMetaTypes().getPackage()) {
             return getModelManagement().createPackage();
         } else if (elementType == nsmodel.getMetaTypes().getModel()) {
             return getModelManagement().createModel();
         } else if (elementType == nsmodel.getMetaTypes().getInstance()) {
-            return getCommonBehavior().createInstance();
+            throw new RuntimeException("Attempt to instantiate abstract type");
         } else if (elementType == nsmodel.getMetaTypes().getSubsystem()) {
             return getModelManagement().createSubsystem();
         } else if (elementType == nsmodel.getMetaTypes().getCallState()) {
@@ -476,7 +478,7 @@ class UmlFactoryImpl
         } else if (elementType == nsmodel.getMetaTypes().getSynchState()) {
             return getStateMachines().createSynchState();
         } else if (elementType == nsmodel.getMetaTypes().getState()) {
-            return getStateMachines().createState();
+            throw new RuntimeException("Attempt to instantiate abstract type");
         } else if (elementType == nsmodel.getMetaTypes().getClassifierRole()) {
             return getCollaborations().createClassifierRole();
         } else if (elementType == nsmodel.getMetaTypes().getComponent()) {
@@ -493,7 +495,7 @@ class UmlFactoryImpl
         } else if (elementType == nsmodel.getMetaTypes().getComment()) {
             return getCore().createComment();
         } else if (elementType == nsmodel.getMetaTypes().getNamespace()) {
-            return getCore().createNamespace();
+            throw new RuntimeException("Attempt to instantiate abstract type");
         }
         return modelElement;
     }

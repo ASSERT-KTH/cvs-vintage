@@ -1,4 +1,4 @@
-// $Id: MetaTypes.java,v 1.5 2005/08/13 07:30:09 mvw Exp $
+// $Id: MetaTypes.java,v 1.6 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -173,7 +173,7 @@ public interface MetaTypes {
     /**
      * @return Returns the Datatype.
      */
-    Object getDatatype();
+    Object getDataType();
 
     /**
      * @return Returns the Dependency.

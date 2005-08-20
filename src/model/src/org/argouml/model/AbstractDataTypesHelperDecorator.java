@@ -1,4 +1,4 @@
-// $Id: AbstractDataTypesHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
+// $Id: AbstractDataTypesHelperDecorator.java,v 1.2 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,6 +102,13 @@ public abstract class AbstractDataTypesHelperDecorator
      */
     public boolean equalsBRANCHKind(Object kind) {
         return impl.equalsBRANCHKind(kind);
+    }
+
+    /**
+     * @see org.argouml.model.DataTypesHelper#equalsCHOICEKind(java.lang.Object)
+     */
+    public boolean equalsCHOICEKind(Object kind) {
+        return impl.equalsCHOICEKind(kind);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: SelectionState.java,v 1.29 2005/06/21 12:12:18 bobtarling Exp $
+// $Id: SelectionState.java,v 1.30 2005/08/20 09:29:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -192,12 +192,6 @@ public class SelectionState extends SelectionNodeClarifiers {
 	}
     }
 
-    /**
-     * @see org.tigris.gef.base.SelectionButtons#getNewNode(int)
-     */
-    protected Object getNewNode(int buttonCode) {
-	return Model.getStateMachinesFactory().createState();
-    }
 
     /**
      * @see org.tigris.gef.base.SelectionButtons#createEdgeAbove(

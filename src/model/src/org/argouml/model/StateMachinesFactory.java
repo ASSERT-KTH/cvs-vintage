@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.3 2005/07/10 15:56:48 linus Exp $
+// $Id: StateMachinesFactory.java,v 1.4 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,13 +86,6 @@ public interface StateMachinesFactory {
      * @return an initialized UML SimpleState instance.
      */
     Object createSimpleState();
-
-    /**
-     * Create an empty but initialized instance of a UML State.
-     *
-     * @return an initialized UML State instance.
-     */
-    Object createState();
 
     /**
      * Create an empty but initialized instance of a UML StateMachine.

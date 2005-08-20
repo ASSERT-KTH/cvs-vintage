@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperImpl.java,v 1.5 2005/03/19 22:05:07 linus Exp $
+// $Id: DataTypesHelperImpl.java,v 1.6 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -154,8 +154,17 @@ class DataTypesHelperImpl implements DataTypesHelper {
     /**
      * @param kind the pseudostate kind (Choice)
      * @return if this is a branch-choice kind
+     * @deprecated UML 1.3 only - use equalsCHOICEKind
      */
     public boolean equalsBRANCHKind(Object kind) {
+        return equalsCHOICEKind(kind);
+    }
+
+    /**
+     * @param kind the pseudostate kind (Choice)
+     * @return if this is a branch-choice kind
+     */
+    public boolean equalsCHOICEKind(Object kind) {
 
         if (!(kind instanceof MPseudostateKind)) {
             throw new IllegalArgumentException();

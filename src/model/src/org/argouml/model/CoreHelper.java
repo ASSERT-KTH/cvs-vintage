@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.6 2005/08/12 19:30:25 mvw Exp $
+// $Id: CoreHelper.java,v 1.7 2005/08/20 09:29:13 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -908,6 +908,7 @@ public interface CoreHelper {
      *
      * @param handle the ElementResidence
      * @param component the Component
+     * @deprecated UML 1.3 only - use setModelElementContainer
      */
     void setImplementationLocation(Object handle, Object component);
 
