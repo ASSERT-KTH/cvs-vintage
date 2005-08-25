@@ -3,8 +3,6 @@ package org.columba.mail.gui.composer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,13 +17,16 @@ public class TextEditorPanel extends JScrollPane{
 	
 	public TextEditorPanel() {
 		super();
+		
+
 		contentPane = new VerticalScrollablePanel();
 		
 		contentPane.setBorder(null);
 		contentPane.setLayout(new BorderLayout());
 		
+		
 		setViewportView(contentPane);
-		getViewport().setBackground(UIManager.getColor("List.background"));
+		getViewport().setBackground(UIManager.getColor("TextArea.background"));
 	}
 
 	/**
@@ -55,7 +56,7 @@ class VerticalScrollablePanel extends JPanel implements Scrollable {
 	}
 
 	public Dimension getPreferredScrollableViewportSize() {
-		return null;
+		return getPreferredSize();
 	}
 
 	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {

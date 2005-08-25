@@ -23,6 +23,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
 import java.awt.event.ContainerListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -43,7 +45,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
@@ -60,6 +61,8 @@ import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
@@ -82,7 +85,8 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author frd
  */
 public class ComposerController extends DefaultFrameController implements
-		CharsetOwnerInterface, Observer, IContentPane, DocumentListener {
+		CharsetOwnerInterface, Observer, IContentPane, DocumentListener,
+		ItemListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -158,6 +162,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		priorityController = new PriorityController(this);
 		accountController = new AccountController(this);
+		accountController.getView().addItemListener(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
 
 		signatureView = new SignatureView(this);
@@ -267,9 +272,9 @@ public class ComposerController extends DefaultFrameController implements
 	 * attachment panel. Otherwise, hide the attachment panel.
 	 */
 	public void showAttachmentPanel() {
-		if( attachmentPanelShown == getAttachmentController().getView().count() > 0 )
+		if (attachmentPanelShown == getAttachmentController().getView().count() > 0)
 			return;
-		
+
 		// remove all components from container
 		centerPanel.removeAll();
 
@@ -303,7 +308,7 @@ public class ComposerController extends DefaultFrameController implements
 			int pos = viewItem.getIntegerWithDefault("splitpanes",
 					"attachment", 200);
 			attachmentSplitPane.setDividerLocation(pos);
-			
+
 			attachmentPanelShown = true;
 		} else {
 			// no attachments
@@ -314,13 +319,12 @@ public class ComposerController extends DefaultFrameController implements
 		}
 
 		// re-paint composer-view
-		SwingUtilities.invokeLater( new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				if (getContainer() != null)
-					getContainer().getFrame().validate();				
+					getContainer().getFrame().validate();
 			}
-		}
-		);
+		});
 
 	}
 
@@ -369,7 +373,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		layout.setColumnGroups(new int[][] { { 1 } });
 
-		//layout.setRowGroups(new int[][] { { 1, 5, 7 } });
+		// layout.setRowGroups(new int[][] { { 1, 5, 7 } });
 
 		builder.add(smtpLabel, cc.xy(1, 1));
 
@@ -404,21 +408,23 @@ public class ComposerController extends DefaultFrameController implements
 		 * builder.add(htmlToolbar, cc.xywh(3, 7, 2, 1));
 		 */
 
-		//layout.setRowGroups(new int[][] { { 1, 5 } });
-
-		
-
-		if( composerModel.isHtml()) {
-			// htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
-			//htmlToolbar.setBorder(UIManager.getBorder("ToolBar"));
+		// layout.setRowGroups(new int[][] { { 1, 5 } });
+		if (composerModel.isHtml()) {
+			// htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5,
+			// 0));
+			// htmlToolbar.setBorder(UIManager.getBorder("ToolBar"));
 			editorPanel.getContentPane().add(htmlToolbar, BorderLayout.NORTH);
 		}
 
-		editorPanel.getContentPane().add(
-				getEditorController().getViewUIComponent(), BorderLayout.CENTER);
+		editorPanel.getContentPane()
+				.add(getEditorController().getViewUIComponent(),
+						BorderLayout.CENTER);
 
-		editorPanel.getContentPane().add(signatureView, BorderLayout.SOUTH);
-		
+		AccountItem item = (AccountItem) getAccountController().getView()
+				.getSelectedItem();
+		if (item.getIdentity().getSignature() != null)
+			editorPanel.getContentPane().add(signatureView, BorderLayout.SOUTH);
+
 		editorPanel.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
@@ -436,7 +442,7 @@ public class ComposerController extends DefaultFrameController implements
 
 			public void mouseReleased(MouseEvent e) {
 			}
-			
+
 		});
 
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -469,9 +475,15 @@ public class ComposerController extends DefaultFrameController implements
 
 		// update panel
 		editorPanel.getContentPane().removeAll();
-		editorPanel.getContentPane().add(getEditorController().getViewUIComponent(), BorderLayout.CENTER);
-		editorPanel.getContentPane().add(signatureView, BorderLayout.SOUTH);
-		
+		editorPanel.getContentPane()
+				.add(getEditorController().getViewUIComponent(),
+						BorderLayout.CENTER);
+
+		AccountItem item = (AccountItem) getAccountController().getView()
+				.getSelectedItem();
+		if (item.getIdentity().getSignature() != null)
+			editorPanel.getContentPane().add(signatureView, BorderLayout.SOUTH);
+
 		editorPanel.getContentPane().validate();
 	}
 
@@ -775,7 +787,8 @@ public class ComposerController extends DefaultFrameController implements
 			}
 
 			if (html) {
-				editorPanel.getContentPane().add(htmlToolbar, BorderLayout.NORTH);
+				editorPanel.getContentPane().add(htmlToolbar,
+						BorderLayout.NORTH);
 			} else {
 				editorPanel.getContentPane().remove(htmlToolbar);
 			}
@@ -891,16 +904,13 @@ public class ComposerController extends DefaultFrameController implements
 			if (aComponent.equals(accountController.getView()))
 				return priorityController.getView();
 			else if (aComponent.equals(priorityController.getView()))
-				return headerController.getView().getToComboBox()
-						;
+				return headerController.getView().getToComboBox();
 			else if (aComponent.equals(headerController.getView()
 					.getToComboBox()))
-				return headerController.getView().getCcComboBox()
-						;
+				return headerController.getView().getCcComboBox();
 			else if (aComponent.equals(headerController.getView()
 					.getCcComboBox()))
-				return headerController.getView().getBccComboBox()
-						;
+				return headerController.getView().getBccComboBox();
 			else if (aComponent.equals(headerController.getView()
 					.getBccComboBox()))
 				return subjectController.getView();
@@ -915,16 +925,13 @@ public class ComposerController extends DefaultFrameController implements
 			if (aComponent.equals(editorController.getComponent()))
 				return subjectController.getView();
 			else if (aComponent.equals(subjectController.getView()))
-				return headerController.getView().getBccComboBox()
-						;
+				return headerController.getView().getBccComboBox();
 			else if (aComponent.equals(headerController.getView()
 					.getBccComboBox()))
-				return headerController.getView().getCcComboBox()
-						;
+				return headerController.getView().getCcComboBox();
 			else if (aComponent.equals(headerController.getView()
 					.getCcComboBox()))
-				return headerController.getView().getToComboBox()
-						;
+				return headerController.getView().getToComboBox();
 			else if (aComponent.equals(headerController.getView()
 					.getToComboBox()))
 				return priorityController.getView();
@@ -1052,5 +1059,24 @@ public class ComposerController extends DefaultFrameController implements
 	 */
 	public void setPromptOnDialogClosing(boolean promptOnDialogClosing) {
 		this.promptOnDialogClosing = promptOnDialogClosing;
+	}
+
+	public void itemStateChanged(ItemEvent e) {
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+
+			AccountItem item = (AccountItem) getAccountController().getView()
+					.getSelectedItem();
+			if (item.getIdentity().getSignature() != null) {
+				// show signature viewer
+				editorPanel.getContentPane().add(signatureView,
+						BorderLayout.SOUTH);
+				editorPanel.revalidate();
+			} else {
+				// hide signature viewer
+				editorPanel.getContentPane().remove(signatureView);
+				editorPanel.revalidate();
+			}
+		}
+
 	}
 }
