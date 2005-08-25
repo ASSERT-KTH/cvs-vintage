@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.20 2005/08/13 07:30:09 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.21 2005/08/25 20:07:16 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2472,7 +2472,7 @@ public class NSUMLModelFacade implements Facade {
      */
     public Collection getIncludes2(Object handle) {
         if (handle instanceof MUseCase) {
-            return ((MUseCase) handle).getIncludes();
+            return ((MUseCase) handle).getIncludes2();
         }
 	return illegalArgumentCollection(handle);
     }
