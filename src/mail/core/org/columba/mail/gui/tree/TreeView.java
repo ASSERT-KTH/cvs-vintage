@@ -138,7 +138,8 @@ public class TreeView extends SortedJTree {
 		if (dropTargetPath != null) {
 			node = (AbstractFolder) dropTargetPath.getLastPathComponent();
 		} else {
-			node = (AbstractFolder) getSelectionPath().getLastPathComponent();
+			if ( getSelectionPath() != null)
+				node = (AbstractFolder) getSelectionPath().getLastPathComponent();
 		}
 
 		return node;
