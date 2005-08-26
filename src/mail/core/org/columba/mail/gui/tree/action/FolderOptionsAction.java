@@ -18,6 +18,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -29,6 +30,7 @@ import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.tree.command.MailboxSizeCommand;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -70,8 +72,11 @@ public class FolderOptionsAction extends AbstractColumbaAction implements
 		IMailFolder folder = (IMailFolder) r.getSourceFolder();
 
 		// cast to Folder
-		new FolderOptionsDialog((AbstractMessageFolder) folder, true,
+		FolderOptionsDialog dialog = new FolderOptionsDialog((AbstractMessageFolder) folder, true,
 				(AbstractMailFrameController) frameMediator);
+		
+		// calculate mailbox size in background worker
+		CommandProcessor.getInstance().addOp(new MailboxSizeCommand(r,dialog));
 	}
 
 	public void selectionChanged(SelectionChangedEvent e) {

@@ -71,7 +71,10 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * AbstractMessageFolder Options Dialog.
+ * Folder Options Dialog. Shows status information about selected folder.
+ * <p>
+ * Note, that this dialog is not modal. A background thread is used to 
+ * calculate the total mailbox size.
  * 
  * @author fdietz
  */
@@ -128,7 +131,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 	private JButton disableButton;
 
-	//JCheckBox overwriteOptionsCheckBox;
+	// JCheckBox overwriteOptionsCheckBox;
 	private CheckableTooltipList checkableList;
 
 	private MailFrameMediator mediator;
@@ -141,10 +144,10 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	 * @param renameFolder
 	 *            this is a "rename folder" operation
 	 */
-	public FolderOptionsDialog(AbstractMessageFolder folder, boolean renameFolder,
-			MailFrameMediator mediator) {
+	public FolderOptionsDialog(AbstractMessageFolder folder,
+			boolean renameFolder, MailFrameMediator mediator) {
 		super(mediator.getView().getFrame(), MailResourceLoader.getString(
-				"dialog", "folderoptions", "dialog_title"), true);
+				"dialog", "folderoptions", "dialog_title"), false);
 
 		this.folder = folder;
 		this.renameFolder = renameFolder;
@@ -172,7 +175,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	 * @param folder
 	 *            selected folder
 	 */
-	public FolderOptionsDialog(AbstractMessageFolder folder, MailFrameMediator mediator) {
+	public FolderOptionsDialog(AbstractMessageFolder folder,
+			MailFrameMediator mediator) {
 		super(mediator.getView().getFrame(), MailResourceLoader.getString(
 				"dialog", "folderoptions", "dialog_title"), true);
 
@@ -320,7 +324,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		sizeLabel = new JLabel(MailResourceLoader.getString("dialog",
 				"folderoptions", "mailbox_size")); //$NON-NLS-1$
 		sizeLabel.setFont(boldFont);
-		sizeLabel2 = new JLabel("2"); //$NON-NLS-1$
+		sizeLabel2 = new JLabel(); //$NON-NLS-1$
 
 		locationLabel = new JLabel(MailResourceLoader.getString("dialog",
 				"folderoptions", "location")); //$NON-NLS-1$
@@ -388,9 +392,9 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 
-		//bottom.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
-		//bottom.add( Box.createHorizontalStrut());
+		// bottom.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		// bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
+		// bottom.add( Box.createHorizontalStrut());
 		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -413,8 +417,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		// associate with JavaHelp
 		HelpManager.getInstance().enableHelpOnButton(helpButton,
 				"folder_options");
-		HelpManager.getInstance().enableHelpKey(getRootPane(),
-				"folder_options");
+		HelpManager.getInstance()
+				.enableHelpKey(getRootPane(), "folder_options");
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -423,7 +427,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(helpButton);
 
-		//bottom.add( Box.createHorizontalGlue() );
+		// bottom.add( Box.createHorizontalGlue() );
 		bottom.add(buttonPanel, BorderLayout.EAST);
 
 		return bottom;
@@ -478,7 +482,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					MailFolderCommandReference r = new MailFolderCommandReference(
 							folder);
 					r.setFolderName(nameTextField.getText());
-					CommandProcessor.getInstance().addOp(new RenameFolderCommand(r));
+					CommandProcessor.getInstance().addOp(
+							new RenameFolderCommand(r));
 				}
 			}
 
@@ -498,7 +503,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				property.addElement(optionsItem.getElement());
 			}
 
-			//	only local folders have an full-text indexing capability
+			// only local folders have an full-text indexing capability
 			if (folder instanceof AbstractLocalFolder) {
 				item = folder.getConfiguration();
 
@@ -511,16 +516,16 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				DefaultSearchEngine engine = null;
 
 				if (bool) {
-					//engine = new LuceneQueryEngine(localFolder);
+					// engine = new LuceneQueryEngine(localFolder);
 					localFolder.setSearchEngine(null);
 
 					// execute resyncing command
 					MailFolderCommandReference r = new MailFolderCommandReference(
 							folder);
-					CommandProcessor.getInstance()
-							.addOp(new SyncSearchEngineCommand(r));
+					CommandProcessor.getInstance().addOp(
+							new SyncSearchEngineCommand(r));
 				} else {
-					//engine = new LocalSearchEngine(localFolder);
+					// engine = new LocalSearchEngine(localFolder);
 					localFolder.setSearchEngine(null);
 				}
 			}
@@ -530,9 +535,10 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					FolderOptionsController.STATE_BEFORE);
 
 			// re-select folder to make changes visible to the user
-			MailFolderCommandReference r = new MailFolderCommandReference(folder);
-			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
-					getMediator(), r));
+			MailFolderCommandReference r = new MailFolderCommandReference(
+					folder);
+			CommandProcessor.getInstance().addOp(
+					new ViewHeaderListCommand(getMediator(), r));
 		}
 	}
 
@@ -565,7 +571,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 			setVisible(false);
 
-			MailFolderCommandReference r = new MailFolderCommandReference(folder);
+			MailFolderCommandReference r = new MailFolderCommandReference(
+					folder);
 			r.setDestFile(destFile);
 			CommandProcessor.getInstance().addOp(new ExportFolderCommand(r));
 		} else if (action.equals("RESET")) { //$NON-NLS-1$
@@ -640,6 +647,24 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 			CheckableItem item = (CheckableItem) checkableList.getSelected();
 			updateButtonState(item.isSelected());
 		}
+	}
+
+	/**
+	 * Set size of mailbox.
+	 * 
+	 * @param size
+	 *            size of mailbox
+	 */
+	public void setMailboxSize(int sizeInKB) {
+		StringBuffer buf = new StringBuffer();
+
+		// if size > than 1000 KB, transform to MB
+		if (sizeInKB > 1000)
+			buf.append(new Integer(sizeInKB / 1000).toString() + " MB");
+		else
+			buf.append(new Integer(sizeInKB).toString() + " KB");
+
+		sizeLabel2.setText(buf.toString());
 	}
 
 	/**

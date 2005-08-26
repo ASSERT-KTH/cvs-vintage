@@ -38,5 +38,7 @@ public interface IHeaderList {
 
 	Enumeration keys();
 
+	Enumeration elements();
+	
 	void clear();
 }

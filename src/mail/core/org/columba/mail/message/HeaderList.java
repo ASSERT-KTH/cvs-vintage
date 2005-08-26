@@ -19,7 +19,6 @@ package org.columba.mail.message;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Map;
 
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
@@ -38,7 +37,7 @@ import org.columba.mail.folder.headercache.CachedHeaderfields;
  * @author fdietz
  */
 public class HeaderList implements IHeaderList {
-    protected Map map;
+    protected Hashtable map;
 
     public HeaderList() {
         map = new Hashtable();
@@ -73,7 +72,11 @@ public class HeaderList implements IHeaderList {
     }
 
     public Enumeration keys() {
-        return ((Hashtable) map).keys();
+        return map.keys();
+    }
+    
+    public Enumeration elements() {
+    	return map.elements();
     }
 
     public void clear() {
