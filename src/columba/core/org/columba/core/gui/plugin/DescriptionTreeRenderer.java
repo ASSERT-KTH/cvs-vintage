@@ -51,16 +51,16 @@ public class DescriptionTreeRenderer extends DefaultTreeCellRenderer {
 
         String id = node.getId();
         
-        String description = null;
+        String name = null;
         
         PluginMetadata metadata = PluginManager.getInstance().getPluginMetadata(id);
         
         if ( metadata != null)
-        	description = metadata.getDescription();
+        	name = metadata.getName();
         else
-        	description = id;
+        	name = id;
         
-        setText(description);
+        setText(name);
 
         String tooltip = node.getTooltip();
         setToolTipText(tooltip);
