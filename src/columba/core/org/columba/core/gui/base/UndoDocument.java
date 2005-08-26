@@ -29,15 +29,23 @@ public class UndoDocument extends DefaultStyledDocument {
         this.addUndoableEditListener(undoManager);
     }
 
-    public void Undo() {
+    public void undo() {
         if (undoManager.canUndo()) {
             undoManager.undo();
         }
     }
 
-    public void Redo() {
+    public void redo() {
         if (undoManager.canRedo()) {
             undoManager.redo();
         }
+    }
+    
+    public boolean canRedo() {
+    	return undoManager.canRedo();
+    }
+    
+    public boolean canUndo() {
+    	return undoManager.canUndo();
     }
 }

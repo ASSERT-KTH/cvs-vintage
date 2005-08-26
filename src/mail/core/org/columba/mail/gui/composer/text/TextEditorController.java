@@ -141,11 +141,11 @@ public class TextEditorController extends AbstractEditorController
     }
 
     public void undo() {
-        document.Undo();
+        document.undo();
     }
 
     public void redo() {
-        document.Redo();
+        document.redo();
     }
 
     /************* DocumentListener implementation *******************/

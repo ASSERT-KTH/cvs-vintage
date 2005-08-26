@@ -102,17 +102,17 @@ public class PasteAction extends AbstractColumbaAction implements
 		return true;
 	}
 
-	public boolean isEnabled() {
-
-		Transferable contents = Toolkit.getDefaultToolkit()
-				.getSystemClipboard().getContents(this);
-
-		if ( focusOwner == null ) return false;
-		
-		if ( focusOwner.getTransferHandler() == null ) return false;
-		
-		return focusOwner.getTransferHandler().canImport(focusOwner,
-				contents.getTransferDataFlavors());
-
-	}
+//	public boolean isEnabled() {
+//
+//		Transferable contents = Toolkit.getDefaultToolkit()
+//				.getSystemClipboard().getContents(this);
+//
+//		if ( focusOwner == null ) return false;
+//		
+//		if ( focusOwner.getTransferHandler() == null ) return false;
+//		
+//		return focusOwner.getTransferHandler().canImport(focusOwner,
+//				contents.getTransferDataFlavors());
+//
+//	}
 }

@@ -16,23 +16,28 @@
 
 package org.columba.core.gui.globalactions;
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
+import javax.swing.undo.UndoManager;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.command.TaskManager;
-import org.columba.core.command.TaskManagerEvent;
-import org.columba.core.command.TaskManagerListener;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.base.UndoDocument;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class UndoAction extends AbstractColumbaAction implements
-		TaskManagerListener {
+		PropertyChangeListener {
 
-	protected TaskManager taskManager;
+	private JComponent focusOwner = null;
 
 	public UndoAction(IFrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
@@ -56,22 +61,33 @@ public class UndoAction extends AbstractColumbaAction implements
 		setShowToolBarText(false);
 
 		setEnabled(true);
+		KeyboardFocusManager manager = KeyboardFocusManager
+				.getCurrentKeyboardFocusManager();
 
-		taskManager = TaskManager.getInstance();
-		taskManager.addTaskManagerListener(this);
+		manager.addPropertyChangeListener("permanentFocusOwner", this);
+
+	}
+
+	public void propertyChange(PropertyChangeEvent e) {
+		Object o = e.getNewValue();
+		if (o instanceof JComponent)
+			focusOwner = (JComponent) o;
+		else
+			focusOwner = null;
 
 	}
 
 	public void actionPerformed(ActionEvent evt) {
+		if (focusOwner == null)
+			return;
 
-	}
-
-	public void workerAdded(TaskManagerEvent e) {
-		setEnabled(taskManager.count() > 0);
-	}
-
-	public void workerRemoved(TaskManagerEvent e) {
-		setEnabled(taskManager.count() > 0);
+		if (focusOwner instanceof JTextComponent) {
+			Document doc = ((JTextComponent)focusOwner).getDocument();
+			
+			if ( doc instanceof UndoDocument) {
+				((UndoDocument)doc).undo();
+			}
+		}
 	}
 
 }

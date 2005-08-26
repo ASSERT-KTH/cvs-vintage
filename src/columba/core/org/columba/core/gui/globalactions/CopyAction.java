@@ -111,21 +111,21 @@ public class CopyAction extends AbstractColumbaAction implements
 	/**
 	 * @see javax.swing.AbstractAction#isEnabled()
 	 */
-	public boolean isEnabled() {
-
-		if (focusOwner == null)
-			return false;
-
-		if (focusOwner instanceof JTextComponent) {
-			return ((JTextComponent) focusOwner).getSelectedText() != null ? true:false;
-		} else if (focusOwner instanceof JList) {
-			return ((JList) focusOwner).getSelectedIndex() != -1 ? true:false;
-		} else if (focusOwner instanceof JTable) {
-			return ((JTable) focusOwner).getSelectedRow() != -1 ? true:false;
-		} else if (focusOwner instanceof JTree) {
-			return ((JTree) focusOwner).getSelectionPath() != null ? true:false;
-		}
-		
-		return false;
-	}
+//	public boolean isEnabled() {
+//
+//		if (focusOwner == null)
+//			return false;
+//
+//		if (focusOwner instanceof JTextComponent) {
+//			return ((JTextComponent) focusOwner).getSelectedText() != null ? true:false;
+//		} else if (focusOwner instanceof JList) {
+//			return ((JList) focusOwner).getSelectedIndex() != -1 ? true:false;
+//		} else if (focusOwner instanceof JTable) {
+//			return ((JTable) focusOwner).getSelectedRow() != -1 ? true:false;
+//		} else if (focusOwner instanceof JTree) {
+//			return ((JTree) focusOwner).getSelectionPath() != null ? true:false;
+//		}
+//		
+//		return false;
+//	}
 }

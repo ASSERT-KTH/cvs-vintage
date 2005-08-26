@@ -110,10 +110,10 @@ public class CTextField extends JTextField {
 	}
 
 	public void redo() {
-		((UndoDocument) getDocument()).Redo();
+		((UndoDocument) getDocument()).redo();
 	}
 
 	public void undo() {
-		((UndoDocument) getDocument()).Undo();
+		((UndoDocument) getDocument()).undo();
 	}
 }
