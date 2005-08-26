@@ -19,46 +19,60 @@ package org.columba.core.connectionstate;
 
 import java.net.Socket;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
-
 /**
  * Default implementation for ConnectionState.
- *
+ * 
  * @author javaprog
  * @author fdietz
  */
 public class ConnectionStateImpl implements ConnectionState {
 	protected boolean online = false;
+
 	protected EventListenerList listenerList = new EventListenerList();
+
 	protected ChangeEvent e;
+
 	private static ConnectionStateImpl instance;
 
 	protected String connectionName;
+
 	protected int connectionPort;
-	
+
 	public ConnectionStateImpl() {
 		e = new ChangeEvent(this);
 	}
-	
+
 	public void checkPhysicalState() {
-		if( connectionName != null ) {
+		if (connectionName != null) {
 			try {
-				Socket testSocket = new Socket(connectionName,connectionPort);
+				Socket testSocket = new Socket(connectionName, connectionPort);
 				testSocket.close();
-				
-				setOnline(true);
-			}  catch (Exception e) {
-				setOnline(false);
-			}			
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						setOnline(true);
+					}
+				});
+
+			} catch (Exception e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						setOnline(false);
+					}
+				});
+			}
 		}
 	}
-	
+
 	public static ConnectionStateImpl getInstance() {
-		if ( instance == null ) instance = new ConnectionStateImpl();
-		
+		if (instance == null)
+			instance = new ConnectionStateImpl();
+
 		return instance;
 	}
 
@@ -87,7 +101,7 @@ public class ConnectionStateImpl implements ConnectionState {
 			}
 		}
 	}
-	
+
 	public void setTestConnection(String name, int port) {
 		connectionName = name;
 		connectionPort = port;
