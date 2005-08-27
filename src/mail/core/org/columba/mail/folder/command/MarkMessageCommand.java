@@ -23,7 +23,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * Mark selected messages with specific variant.
@@ -94,7 +94,7 @@ public class MarkMessageCommand extends Command {
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

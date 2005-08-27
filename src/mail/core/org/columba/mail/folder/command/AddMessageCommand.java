@@ -22,8 +22,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.message.IColumbaMessage;
 import org.columba.ristretto.io.SourceInputStream;
 
@@ -32,41 +31,42 @@ import org.columba.ristretto.io.SourceInputStream;
  * <p>
  * This command isn't used right now, and will most probably be removed in the
  * future.
- *
+ * 
  * @author fdietz
  */
 public class AddMessageCommand extends Command {
-    private AbstractMessageFolder folder;
+	private IMailbox folder;
 
-    /**
-     * Constructor for AddMessageCommand.
-     *
-     * @param references command arguments.
-     */
-    public AddMessageCommand(DefaultCommandReference reference) {
-        super(reference);
-    }
+	/**
+	 * Constructor for AddMessageCommand.
+	 * 
+	 * @param references
+	 *            command arguments.
+	 */
+	public AddMessageCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    /**
-     * @see org.columba.api.command.Command#execute(Worker)
-     */
-    public void execute(IWorkerStatusController worker)
-        throws Exception {
-        // get reference
-        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+	/**
+	 * @see org.columba.api.command.Command#execute(Worker)
+	 */
+	public void execute(IWorkerStatusController worker) throws Exception {
+		// get reference
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
-        // get source folder
-        folder = (AbstractMessageFolder) r.getSourceFolder();
+		// get source folder
+		folder = (IMailbox) r.getSourceFolder();
 
-        // register for status events
-        ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+		// register for status events
+		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-        // get message from reference
-        IColumbaMessage message = (IColumbaMessage) r.getMessage();
+		// get message from reference
+		IColumbaMessage message = (IColumbaMessage) r.getMessage();
 
-        // add message to folder
-        SourceInputStream messageStream = new SourceInputStream(message.getSource());
-        folder.addMessage(messageStream);
-        messageStream.close();
-    }
+		// add message to folder
+		SourceInputStream messageStream = new SourceInputStream(message
+				.getSource());
+		folder.addMessage(messageStream);
+		messageStream.close();
+	}
 }

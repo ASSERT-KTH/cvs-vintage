@@ -27,10 +27,9 @@ import javax.swing.JOptionPane;
 
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
-import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.Command;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -67,14 +66,14 @@ public class ExportFolderCommand extends Command {
 			os = new BufferedOutputStream(new FileOutputStream(r.getDestFile()));
 
 			int counter = 0;
-			AbstractMessageFolder srcFolder;
+			IMailbox srcFolder;
 			Object[] uids;
 			InputStream in;
 			int read;
 			byte[] buffer = new byte[1024];
 
 			// get source folder
-			srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+			srcFolder = (IMailbox) r.getSourceFolder();
 
 			// get array of message UIDs
 			uids = srcFolder.getUids();

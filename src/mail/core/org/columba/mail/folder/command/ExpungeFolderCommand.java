@@ -23,7 +23,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * Expunge folder.
@@ -53,7 +53,7 @@ public class ExpungeFolderCommand extends Command {
 		// get source references
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

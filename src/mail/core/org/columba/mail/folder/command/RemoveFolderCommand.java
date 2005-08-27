@@ -22,7 +22,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * Delete this folder.
@@ -65,7 +65,7 @@ public class RemoveFolderCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get source folder
-		AbstractMessageFolder childFolder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+		IMailbox childFolder = (IMailbox) ((MailFolderCommandReference) getReference())
 				.getSourceFolder();
 
 		// need to store the data for the proper event generation.

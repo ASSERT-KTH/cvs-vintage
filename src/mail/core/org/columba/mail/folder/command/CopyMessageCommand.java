@@ -27,9 +27,10 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
@@ -48,7 +49,7 @@ public class CopyMessageCommand extends Command {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.folder.command");
 
-	protected AbstractMessageFolder destFolder;
+	protected IMailbox destFolder;
 
 	protected IMailFolderCommandReference r;
 	
@@ -70,7 +71,7 @@ public class CopyMessageCommand extends Command {
 		 r = (MailFolderCommandReference) getReference();
 
 		// get destination foldedr
-		destFolder = (AbstractMessageFolder) r.getDestinationFolder();
+		destFolder = (IMailbox) r.getDestinationFolder();
 
 		Object[] uids = r.getUids();
 

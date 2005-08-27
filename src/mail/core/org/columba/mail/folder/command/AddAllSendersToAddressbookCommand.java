@@ -28,6 +28,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
 
 /**
@@ -60,8 +61,7 @@ public class AddAllSendersToAddressbookCommand extends Command {
 		Object[] uids = r.getUids();
 
 		// selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) r
-				.getSourceFolder();
+		IMailbox folder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);

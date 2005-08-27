@@ -53,7 +53,7 @@ import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.message.viewer.AttachmentModel;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.text.HtmlParser;
@@ -186,7 +186,7 @@ public class PrintMessageCommand extends Command {
 
         Object[] uids = r.getUids(); // uid for messages to print
 
-        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+        IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 
         //register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
@@ -471,7 +471,7 @@ public class PrintMessageCommand extends Command {
      * @param worker
      * @return body part of message
      */
-    private void setupMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
+    private void setupMessageBodyPart(Object uid, IMailbox srcFolder,
         IWorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
         XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
