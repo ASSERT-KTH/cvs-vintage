@@ -34,6 +34,8 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.event.IFolderEvent;
+import org.columba.mail.folder.event.IFolderListener;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.ristretto.message.MailboxInfo;
@@ -44,14 +46,14 @@ import org.columba.ristretto.message.MailboxInfo;
  * @author fdietz
  *
  */
-public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionListener {
+public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionListener, IFolderListener {
     private JLabel leftLabel;
     private JLabel readLabel;
     private JLabel unreadLabel;
     private JLabel recentLabel;
     private JPanel rightPanel;
     private MailboxInfo info;
-    private IFolderItem item;
+    private IMailFolder folder;
 
     public FolderInfoPanel(IFrameMediator controller) {
 		super();
@@ -140,31 +142,37 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
     }
 
     public void resetRenderer() {
+    	if( folder != null ) folder.removeFolderListener(this);
         initComponents();
     }
 
     public void setFolder(IMailFolder newFolder) {
-        item = newFolder.getConfiguration();
-
-        if (item == null) {
-            return;
-        }
-
         if  (!( newFolder instanceof AbstractMessageFolder) ) return;
+
+        if( folder != null ) folder.removeFolderListener(this);
         
         info = ((AbstractMessageFolder) newFolder).getMessageFolderInfo();
 
         if (info == null) {
             return;
         }
+        this.folder = newFolder;
+        
+        leftLabel.setIcon(FolderTreeCellRenderer.getFolderIcon(newFolder, false));
 
-        int total = info.getExists();
+        update();
+        
+        newFolder.addFolderListener(this);
+    }
+
+	private void update() {
+        info = ((AbstractMessageFolder) folder).getMessageFolderInfo();		
+		int total = info.getExists();
         int unread = info.getUnseen();
         int recent = info.getRecent();
 
-        leftLabel.setIcon(FolderTreeCellRenderer.getFolderIcon(newFolder, false));
 
-        leftLabel.setText(newFolder.getName() + " ( total: " + total + " )");
+        leftLabel.setText(folder.getName() + " ( total: " + total + " )");
         unreadLabel.setText(" unread: " + unread);
         readLabel.setText(" read: " + (total - unread) + "  ");
 
@@ -173,20 +181,8 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
         } else {
             recentLabel.setText("");
         }
-    }
+	}
 
-    /* (non-Javadoc)
- * @see org.columba.mail.gui.tree.selection.TreeSelectionListener#folderSelectionChanged(org.columba.mail.folder.FolderTreeNode)
- */
-    /*
-public void folderSelectionChanged(AbstractFolder newFolder) {
-        if (newFolder == null)
-                return;
-
-        setFolder((AbstractMessageFolder) newFolder);
-
-}
-*/
     public void selectionChanged(SelectionChangedEvent e) {
         TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
 
@@ -199,4 +195,23 @@ public void folderSelectionChanged(AbstractFolder newFolder) {
         	resetRenderer();
         }
     }
+
+	public void messageAdded(IFolderEvent e) {
+	}
+
+	public void messageRemoved(IFolderEvent e) {
+	}
+
+	public void messageFlagChanged(IFolderEvent e) {
+	}
+
+	public void folderPropertyChanged(IFolderEvent e) {
+		update();
+	}
+
+	public void folderAdded(IFolderEvent e) {
+	}
+
+	public void folderRemoved(IFolderEvent e) {
+	}
 }
