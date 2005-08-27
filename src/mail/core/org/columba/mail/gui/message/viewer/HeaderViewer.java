@@ -83,6 +83,9 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 	private boolean hasAttachment;
 
 	private MessageController mediator;
+	
+	private static DateFormat DATE_FORMATTER = DateFormat.getDateTimeInstance(DateFormat.LONG,
+			DateFormat.MEDIUM);
 
 	public HeaderViewer(MessageController mediator) {
 
@@ -235,9 +238,7 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 			str = AddressListRenderer.renderToHTMLWithLinks(
 					new Address[] { (Address) bHeader.getFrom() }).toString();
 		} else if (key.equals("Date")) {
-			DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
-					DateFormat.MEDIUM);
-			str = df.format(bHeader.getDate());
+			str = DATE_FORMATTER.format(bHeader.getDate());
 
 			// substitute special characters like:
 			//  <,>,&,\t,\n,"
