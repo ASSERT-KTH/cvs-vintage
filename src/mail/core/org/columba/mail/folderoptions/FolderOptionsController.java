@@ -15,9 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
@@ -62,11 +59,6 @@ public class FolderOptionsController implements IFolderOptionsController {
 	private MailFrameMediator mediator;
 
 	/**
-	 * Stores all instanciated plugins for later re-use
-	 */
-	private Map map;
-
-	/**
 	 * plugin handler for instanciating folder options plugins
 	 */
 	private FolderOptionsExtensionHandler handler;
@@ -80,13 +72,11 @@ public class FolderOptionsController implements IFolderOptionsController {
 	public FolderOptionsController(MailFrameMediator mediator) {
 		this.mediator = mediator;
 
-		// init map
-		map = new HashMap();
-
 		// init plugin handler
 		try {
-			handler = (FolderOptionsExtensionHandler) PluginManager.getInstance()
-					.getHandler(FolderOptionsExtensionHandler.NAME);
+			handler = (FolderOptionsExtensionHandler) PluginManager
+					.getInstance().getHandler(
+							FolderOptionsExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException e) {
 			// TODO (@author fdietz): show error dialoghere
 			e.printStackTrace();
@@ -101,28 +91,21 @@ public class FolderOptionsController implements IFolderOptionsController {
 	 * @return instance of plugin
 	 */
 	public AbstractFolderOptionsPlugin getPlugin(String name) {
-		// check if this plugin was already loaded
-		if (map.containsKey(name)) {
-			// already loaded -> re-use it
-			return (AbstractFolderOptionsPlugin) map.get(name);
-		} else {
-			AbstractFolderOptionsPlugin plugin = null;
 
-			try {
-				IExtension extension = handler.getExtension(name);
+		AbstractFolderOptionsPlugin plugin = null;
 
-				plugin = (AbstractFolderOptionsPlugin) extension
-						.instanciateExtension(new Object[] { mediator });
-			} catch (Exception e) {
-				// TODO (@author fdietz): add error dialog
-				e.printStackTrace();
-			}
+		try {
+			IExtension extension = handler.getExtension(name);
 
-			// save plugin instance in map
-			map.put(name, plugin);
-
-			return plugin;
+			plugin = (AbstractFolderOptionsPlugin) extension
+					.instanciateExtension(new Object[] { mediator });
+		} catch (Exception e) {
+			// TODO (@author fdietz): add error dialog
+			e.printStackTrace();
 		}
+
+		return plugin;
+
 	}
 
 	/**
@@ -136,8 +119,23 @@ public class FolderOptionsController implements IFolderOptionsController {
 		String[] ids = handler.getPluginIdList(state);
 
 		for (int i = 0; i < ids.length; i++) {
-			AbstractFolderOptionsPlugin plugin = getPlugin(ids[i]);
-			plugin.loadOptionsFromXml(folder);
+			try {
+				IExtension extension = handler.getExtension(ids[i]);
+				String stateString = extension.getMetadata().getAttribute(
+						"state");
+				AbstractFolderOptionsPlugin plugin = (AbstractFolderOptionsPlugin) extension
+						.instanciateExtension(new Object[] { mediator });
+
+				if ((state == STATE_BEFORE) && (stateString.equals("before"))) {
+					plugin.loadOptionsFromXml(null);
+				} else if ((state == STATE_AFTER)
+						&& (stateString.equals("after"))) {
+					plugin.loadOptionsFromXml(folder);
+				}
+			} catch (Exception e) {
+				// TODO (@author fdietz): add error dialog
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -166,8 +164,23 @@ public class FolderOptionsController implements IFolderOptionsController {
 		String[] ids = handler.getPluginIdList(state);
 
 		for (int i = 0; i < ids.length; i++) {
-			AbstractFolderOptionsPlugin plugin = getPlugin(ids[i]);
-			plugin.loadOptionsFromXml(null);
+			try {
+				IExtension extension = handler.getExtension(ids[i]);
+				String stateString = extension.getMetadata().getAttribute(
+						"state");
+				AbstractFolderOptionsPlugin plugin = (AbstractFolderOptionsPlugin) extension
+						.instanciateExtension(new Object[] { mediator });
+
+				if ((state == STATE_BEFORE) && (stateString.equals("before"))) {
+					plugin.loadOptionsFromXml(null);
+				} else if ((state == STATE_AFTER)
+						&& (stateString.equals("after"))) {
+					plugin.loadOptionsFromXml(null);
+				}
+			} catch (Exception e) {
+				// TODO (@author fdietz): add error dialog
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -178,11 +191,11 @@ public class FolderOptionsController implements IFolderOptionsController {
 	 * found in options.xml and tree.xml:<br>
 	 * 
 	 * <pre>
-	 * 
-	 *  
-	 *    &lt;sorting column=&quot;Date&quot; order=&quot;true&quot; /&gt;
-	 *   
-	 *  
+	 *        
+	 *         
+	 *           &lt;sorting column=&quot;Date&quot; order=&quot;true&quot; /&gt;
+	 *          
+	 *         
 	 * </pre>
 	 * 
 	 * <p>
@@ -294,7 +307,6 @@ public class FolderOptionsController implements IFolderOptionsController {
 	 * instanceof AbstractMessageFolder) { if
 	 * (isOverwritingDefaults((AbstractMessageFolder) folder)) {
 	 * 
-	 * save((AbstractMessageFolder)folder); } else { save(null); } }
-	 *  }
+	 * save((AbstractMessageFolder)folder); } else { save(null); } } }
 	 */
 }
