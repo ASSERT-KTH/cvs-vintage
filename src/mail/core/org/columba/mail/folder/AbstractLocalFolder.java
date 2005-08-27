@@ -284,7 +284,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 		// parse header
 		Source source = getDataStorageInstance().getMessageSource(newUid);
-
+		int messageSize = source.length();		
+		
 		Header header = HeaderParser.parse(source);
 
 		if ((attributes != null) && (flags != null)) {
@@ -293,7 +294,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 					.addMessage(newUid, header, attributes, flags);
 		} else {
 			ColumbaHeader h = new ColumbaHeader(header);
-			h.set("columba.size",new Integer(source.length() / 1024));
+			h.set("columba.size",new Integer(messageSize / 1024));
 			getHeaderListStorage().addMessage(newUid, header,
 					h.getAttributes(), h.getFlags());
 		}
