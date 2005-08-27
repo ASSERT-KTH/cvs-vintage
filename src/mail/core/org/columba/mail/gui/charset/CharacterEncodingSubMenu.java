@@ -46,7 +46,7 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
     // String definitions for the charsetnames
     // NOTE: these are also used to look up the
     // menuentries from the resourceloader
-    private static final String[] charsets = {
+    private static final String[] CHARSET_STRINGS = {
 
     // Global # 1
             "UTF-8", "UTF-16", "US-ASCII",
@@ -71,6 +71,8 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
             "TIS620", "IBM857", "ISO-8859-9", "MacTurkish", "windows-1254",
             "windows-1258"};
 
+    private static final Charset[] CHARSETS = createCharsetArray();
+    
     private static final String[] groups = { "global", "westeurope",
             "easteurope", "eastasian", "seswasian"};
 
@@ -80,6 +82,7 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
 
     private Hashtable hashtable;
 
+    
     /**
      * The menu item showing the currently selected charset.
      */
@@ -88,20 +91,15 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
      * Creates a new menu for choosing charsets. The passed IFrameMediator
      * instance needs to implement CharsetOwnerInterface.
      */
-    public CharacterEncodingSubMenu(IFrameMediator controller) {
-        super(controller, MailResourceLoader.getString("menu", "mainframe",
+    public CharacterEncodingSubMenu(IFrameMediator mediator) {
+        super(mediator, MailResourceLoader.getString("menu", "mainframe",
                 "menu_view_charset"),"menu_view_charset");
 
         setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
 
-        ((CharsetOwnerInterface) controller).addCharsetListener(this);
-
         group = new ButtonGroup();
 
         hashtable = new Hashtable();
-
-        //add(selectedMenuItem);
-        //addSeparator();
 
         add(createMenuItem(null));
 
@@ -117,25 +115,36 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
             for (int j = groupOffset[i]; j < groupOffset[i + 1]; j++) {
                 try {
                     subsubMenu
-                            .add(createMenuItem(Charset.forName(charsets[j])));
+                            .add(createMenuItem(CHARSETS[j]));
                 } catch (UnsupportedCharsetException ex) {
                     //ignore this
                 }
             }
         }
+        
+        ((CharsetOwnerInterface) controller).addCharsetListener(this);
 
         //simulate charset changed to initialize selectedMenuItem
         charsetChanged(new CharsetEvent(this,
-                ((CharsetOwnerInterface) controller).getCharset()));
+                ((CharsetOwnerInterface) controller).getCharset()));        
+        
+
     }
 
-    /**
+    private static Charset[] createCharsetArray() {
+    	Charset[] result = new Charset[CHARSET_STRINGS.length];
+    	for( int i=0; i<CHARSET_STRINGS.length; i++) {
+    		result[i] = Charset.forName(CHARSET_STRINGS[i]);
+    	}
+		return result;
+	}
+
+	/**
      * Creates a menu item and registers action and mouse listeners.
      */
     protected CharsetMenuItem createMenuItem(Charset charset) {
         CharsetMenuItem menuItem = new CharsetMenuItem(charset);
         group.add(menuItem);
-        menuItem.addMouseListener(controller.getContainer().getMouseTooltipHandler());
         menuItem.addActionListener(this);
         if (charset != null) hashtable.put(charset, menuItem);
 
