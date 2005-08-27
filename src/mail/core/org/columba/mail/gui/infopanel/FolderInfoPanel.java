@@ -25,13 +25,13 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.event.IFolderEvent;
@@ -44,157 +44,172 @@ import org.columba.ristretto.message.MailboxInfo;
  * Shows summary information of the currently selected folder.
  * 
  * @author fdietz
- *
+ * 
  */
-public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionListener, IFolderListener {
-    private JLabel leftLabel;
-    private JLabel readLabel;
-    private JLabel unreadLabel;
-    private JLabel recentLabel;
-    private JPanel rightPanel;
-    private MailboxInfo info;
-    private IMailFolder folder;
+public class FolderInfoPanel extends ContainerInfoPanel implements
+		ISelectionListener, IFolderListener {
+	private JLabel leftLabel;
 
-    public FolderInfoPanel(IFrameMediator controller) {
+	private JLabel readLabel;
+
+	private JLabel unreadLabel;
+
+	private JLabel recentLabel;
+
+	private JPanel rightPanel;
+
+	private MailboxInfo info;
+
+	private IMailFolder folder;
+
+	public FolderInfoPanel(IFrameMediator controller) {
 		super();
-    	
-    	controller.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);
+
+		controller.getSelectionManager().getHandler("mail.tree")
+				.addSelectionListener(this);
 	}
 
 	public void initComponents() {
-        super.initComponents();
+		super.initComponents();
 
-        leftLabel = new JLabel("Total: Unseen:");
-        leftLabel.setForeground(UIManager.getColor("List.selectionForeground"));
-        leftLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-        leftLabel.setFont(font);
-        leftLabel.setIconTextGap(10);
+		leftLabel = new JLabel("Total: Unseen:");
+		leftLabel.setForeground(UIManager.getColor("List.selectionForeground"));
+		leftLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		leftLabel.setFont(font);
+		leftLabel.setIconTextGap(10);
 
-        leftLabel.setText("Folder");
+		leftLabel.setText("Folder");
 
-        gridbagConstraints.gridx = 0;
-        gridbagConstraints.weightx = 0.0;
-        gridbagConstraints.anchor = GridBagConstraints.WEST;
+		gridbagConstraints.gridx = 0;
+		gridbagConstraints.weightx = 0.0;
+		gridbagConstraints.anchor = GridBagConstraints.WEST;
 
-        gridbagLayout.setConstraints(leftLabel, gridbagConstraints);
-        panel.add(leftLabel);
+		gridbagLayout.setConstraints(leftLabel, gridbagConstraints);
+		panel.add(leftLabel);
 
-        Component box = Box.createHorizontalGlue();
-        gridbagConstraints.gridx = 1;
-        gridbagConstraints.weightx = 1.0;
-        gridbagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridbagLayout.setConstraints(box, gridbagConstraints);
-        panel.add(box);
+		Component box = Box.createHorizontalGlue();
+		gridbagConstraints.gridx = 1;
+		gridbagConstraints.weightx = 1.0;
+		gridbagConstraints.fill = GridBagConstraints.HORIZONTAL;
+		gridbagLayout.setConstraints(box, gridbagConstraints);
+		panel.add(box);
 
-        gridbagConstraints.gridx = 2;
-        gridbagConstraints.weightx = 0.0;
-        gridbagConstraints.fill = GridBagConstraints.NONE;
+		gridbagConstraints.gridx = 2;
+		gridbagConstraints.weightx = 0.0;
+		gridbagConstraints.fill = GridBagConstraints.NONE;
 
-        gridbagConstraints.anchor = GridBagConstraints.EAST;
+		gridbagConstraints.anchor = GridBagConstraints.EAST;
 
-        GridBagLayout layout = new GridBagLayout();
-        rightPanel = new JPanel();
-        rightPanel.setLayout(layout);
-        rightPanel.setOpaque(false);
-        gridbagLayout.setConstraints(rightPanel, gridbagConstraints);
-        panel.add(rightPanel);
+		GridBagLayout layout = new GridBagLayout();
+		rightPanel = new JPanel();
+		rightPanel.setLayout(layout);
+		rightPanel.setOpaque(false);
+		gridbagLayout.setConstraints(rightPanel, gridbagConstraints);
+		panel.add(rightPanel);
 
-        readLabel = new JLabel();
+		readLabel = new JLabel();
 
-        readLabel.setFont(font);
-        readLabel.setForeground(UIManager.getColor("List.selectionForeground"));
-        readLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		readLabel.setFont(font);
+		readLabel.setForeground(UIManager.getColor("List.selectionForeground"));
+		readLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-        unreadLabel = new JLabel();
+		unreadLabel = new JLabel();
 
-        unreadLabel.setFont(font);
-        unreadLabel.setForeground(UIManager.getColor("List.selectionForeground"));
-        unreadLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		unreadLabel.setFont(font);
+		unreadLabel.setForeground(UIManager
+				.getColor("List.selectionForeground"));
+		unreadLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-        recentLabel = new JLabel();
-        recentLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-        recentLabel.setFont(font);
-        recentLabel.setForeground(UIManager.getColor("List.selectionForeground"));
-        recentLabel.setIconTextGap(10);
+		recentLabel = new JLabel();
+		recentLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		recentLabel.setFont(font);
+		recentLabel.setForeground(UIManager
+				.getColor("List.selectionForeground"));
+		recentLabel.setIconTextGap(10);
 
-        gridbagConstraints = new GridBagConstraints();
-        gridbagConstraints.gridx = 0;
-        gridbagConstraints.weightx = 0.0;
-        gridbagConstraints.anchor = GridBagConstraints.SOUTH;
-        gridbagConstraints.insets = new Insets(0, 0, 0, 0);
+		gridbagConstraints = new GridBagConstraints();
+		gridbagConstraints.gridx = 0;
+		gridbagConstraints.weightx = 0.0;
+		gridbagConstraints.anchor = GridBagConstraints.SOUTH;
+		gridbagConstraints.insets = new Insets(0, 0, 0, 0);
 
-        gridbagConstraints.gridx = 0;
-        gridbagConstraints.insets = new Insets(0, 0, 0, 0);
-        gridbagConstraints.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(readLabel, gridbagConstraints);
-        rightPanel.add(readLabel);
+		gridbagConstraints.gridx = 0;
+		gridbagConstraints.insets = new Insets(0, 0, 0, 0);
+		gridbagConstraints.anchor = GridBagConstraints.WEST;
+		layout.setConstraints(readLabel, gridbagConstraints);
+		rightPanel.add(readLabel);
 
-        gridbagConstraints.gridx = 1;
-        gridbagConstraints.insets = new Insets(0, 0, 0, 0);
-        gridbagConstraints.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(unreadLabel, gridbagConstraints);
-        rightPanel.add(unreadLabel);
+		gridbagConstraints.gridx = 1;
+		gridbagConstraints.insets = new Insets(0, 0, 0, 0);
+		gridbagConstraints.anchor = GridBagConstraints.WEST;
+		layout.setConstraints(unreadLabel, gridbagConstraints);
+		rightPanel.add(unreadLabel);
 
-        gridbagConstraints.gridx = 2;
-        gridbagConstraints.insets = new Insets(0, 0, 0, 0);
-        layout.setConstraints(recentLabel, gridbagConstraints);
-        rightPanel.add(recentLabel);
-    }
-
-    public void resetRenderer() {
-    	if( folder != null ) folder.removeFolderListener(this);
-        initComponents();
-    }
-
-    public void setFolder(IMailFolder newFolder) {
-        if  (!( newFolder instanceof AbstractMessageFolder) ) return;
-
-        if( folder != null ) folder.removeFolderListener(this);
-        
-        info = ((AbstractMessageFolder) newFolder).getMessageFolderInfo();
-
-        if (info == null) {
-            return;
-        }
-        this.folder = newFolder;
-        
-        leftLabel.setIcon(FolderTreeCellRenderer.getFolderIcon(newFolder, false));
-
-        update();
-        
-        newFolder.addFolderListener(this);
-    }
-
-	private void update() {
-        info = ((AbstractMessageFolder) folder).getMessageFolderInfo();		
-		int total = info.getExists();
-        int unread = info.getUnseen();
-        int recent = info.getRecent();
-
-
-        leftLabel.setText(folder.getName() + " ( total: " + total + " )");
-        unreadLabel.setText(" unread: " + unread);
-        readLabel.setText(" read: " + (total - unread) + "  ");
-
-        if (recent > 0) {
-            recentLabel.setText(" recent: " + recent);
-        } else {
-            recentLabel.setText("");
-        }
+		gridbagConstraints.gridx = 2;
+		gridbagConstraints.insets = new Insets(0, 0, 0, 0);
+		layout.setConstraints(recentLabel, gridbagConstraints);
+		rightPanel.add(recentLabel);
 	}
 
-    public void selectionChanged(SelectionChangedEvent e) {
-        TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
+	public void resetRenderer() {
+		if (folder != null)
+			folder.removeFolderListener(this);
+		initComponents();
+	}
 
-        // we are only interested in folders containing messages 
-        // meaning of instance AbstractMessageFolder and not of instance FolderTreeNode
-        // -> casting here to Folder
-        if (treeEvent.getSelected()[0] != null && treeEvent.getSelected()[0] instanceof AbstractMessageFolder) {
-            setFolder((AbstractMessageFolder) treeEvent.getSelected()[0]);
-        } else {
-        	resetRenderer();
-        }
-    }
+	public void setFolder(IMailFolder newFolder) {
+		if (!(newFolder instanceof AbstractMessageFolder))
+			return;
+
+		if (folder != null)
+			folder.removeFolderListener(this);
+
+		info = ((AbstractMessageFolder) newFolder).getMessageFolderInfo();
+
+		if (info == null) {
+			return;
+		}
+		this.folder = newFolder;
+
+		leftLabel.setIcon(FolderTreeCellRenderer
+				.getFolderIcon(newFolder, false));
+
+		update();
+
+		newFolder.addFolderListener(this);
+	}
+
+	private void update() {
+		info = ((AbstractMessageFolder) folder).getMessageFolderInfo();
+		int total = info.getExists();
+		int unread = info.getUnseen();
+		int recent = info.getRecent();
+
+		leftLabel.setText(folder.getName() + " ( total: " + total + " )");
+		unreadLabel.setText(" unread: " + unread);
+		readLabel.setText(" read: " + (total - unread) + "  ");
+
+		if (recent > 0) {
+			recentLabel.setText(" recent: " + recent);
+		} else {
+			recentLabel.setText("");
+		}
+	}
+
+	public void selectionChanged(SelectionChangedEvent e) {
+		TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
+
+		// we are only interested in folders containing messages
+		// meaning of instance AbstractMessageFolder and not of instance
+		// FolderTreeNode
+		// -> casting here to Folder
+		if (treeEvent.getSelected()[0] != null
+				&& treeEvent.getSelected()[0] instanceof AbstractMessageFolder) {
+			setFolder((AbstractMessageFolder) treeEvent.getSelected()[0]);
+		} else {
+			resetRenderer();
+		}
+	}
 
 	public void messageAdded(IFolderEvent e) {
 	}
@@ -206,7 +221,13 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
 	}
 
 	public void folderPropertyChanged(IFolderEvent e) {
-		update();
+		Runnable doWorkRunnable = new Runnable() {
+			public void run() {
+				update();
+			}
+		};
+		SwingUtilities.invokeLater(doWorkRunnable);
+
 	}
 
 	public void folderAdded(IFolderEvent e) {
