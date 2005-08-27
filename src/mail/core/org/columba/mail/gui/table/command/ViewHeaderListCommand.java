@@ -24,17 +24,24 @@ import org.columba.core.command.Worker;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.message.IHeaderList;
 
 /**
- * @author Timo Stich (tstich@users.sourceforge.net)
+ * Show header list in message list component.
+ * <p>
+ * Registers as tree selection listener.
  * 
+ * @author Timo Stich (tstich@users.sourceforge.net)
+ * @author fdietz
  */
 public class ViewHeaderListCommand extends Command implements
 		ISelectionListener {
+	
 	private IHeaderList headerList;
 
 	private AbstractMessageFolder folder;
@@ -108,12 +115,22 @@ public class ViewHeaderListCommand extends Command implements
 		updateGui &= !worker.cancelled();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		updateGui = false;
+		
+		// old command-specific selection
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		
+		// new selection
+		AbstractFolder[] folders = ((TreeSelectionChangedEvent)e).getSelected();
+		// abort if nothing selected
+		if ( folders.length == 0) return;
+		
+		// cancel command execution/updateGUI methods, if folder selection
+		// has been modified
+		if ( r.getSourceFolder().getUid() != folders[0].getUid() ) 
+			updateGui = false;
 	}
 }

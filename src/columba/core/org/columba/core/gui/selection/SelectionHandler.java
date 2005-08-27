@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.selection;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -82,8 +81,8 @@ public abstract class SelectionHandler {
 	 *            change event
 	 */
 	protected void fireSelectionChanged(SelectionChangedEvent e) {
-		for (Iterator it = selectionListener.iterator(); it.hasNext();) {
-			((ISelectionListener) it.next()).selectionChanged(e);
+		for ( int i=0; i<selectionListener.size(); i++) {
+			((ISelectionListener)selectionListener.get(i)).selectionChanged(e);
 		}
 	}
 
