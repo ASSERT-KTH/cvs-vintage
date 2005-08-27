@@ -35,35 +35,27 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
 import javax.swing.JOptionPane;
 
-import org.columba.api.command.ICommand;
 import org.columba.api.command.IStatusObservable;
 import org.columba.core.base.Blowfish;
 import org.columba.core.base.ListTools;
-import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.filter.MailFilterCriteria;
-import org.columba.mail.folder.command.CheckForNewMessagesCommand;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.folder.imap.UpdateFlagCommand;
-import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IHeaderList;
-import org.columba.mail.pop3.AuthenticationManager;
-import org.columba.mail.pop3.AuthenticationSecurityComparator;
+import org.columba.mail.util.AuthenticationManager;
+import org.columba.mail.util.AuthenticationSecurityComparator;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.auth.AuthenticationException;
 import org.columba.ristretto.auth.AuthenticationFactory;
@@ -80,15 +72,11 @@ import org.columba.ristretto.imap.MailboxStatus;
 import org.columba.ristretto.imap.NamespaceCollection;
 import org.columba.ristretto.imap.SearchKey;
 import org.columba.ristretto.imap.SequenceSet;
-import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.ConnectionDroppedException;
 import org.columba.ristretto.io.SequenceInputStream;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
-import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.parser.HeaderParser;
-import org.columba.ristretto.parser.ParserException;
 
 /**
  * IMAPStore encapsulates IMAPProtocol and the parsers for IMAPFolder.
@@ -129,7 +117,7 @@ public class IMAPServer implements IMAPListener, Observer {
 	/**
 	 * currently selected mailbox
 	 */
-	private IMAPFolder selectedFolder;
+	private IMailbox selectedFolder;
 
 	/**
 	 * Holds the actual MailboxStatus. Updated by the IMAPListener.
@@ -153,11 +141,6 @@ public class IMAPServer implements IMAPListener, Observer {
 	 */
 	private ImapItem item;
 
-	/**
-	 * reference to root folder
-	 */
-	private IMAPRootFolder imapRoot;
-
 	private MimeTree aktMimeTree;
 
 	private Object aktMessageUid;
@@ -179,9 +162,14 @@ public class IMAPServer implements IMAPListener, Observer {
 	// the automatic updated mechanism is
 	private boolean updatesEnabled;
 
-	public IMAPServer(ImapItem item, IMAPRootFolder root) {
+	private IFirstLoginAction firstLoginAction;
+
+	private IUpdateFlagAction updateFlagAction;
+
+	private IExistsChangedAction existsChangedAction;
+
+	public IMAPServer(ImapItem item) {
 		this.item = item;
-		this.imapRoot = root;
 
 		item.getRoot().addObserver(this);
 		
@@ -200,12 +188,11 @@ public class IMAPServer implements IMAPListener, Observer {
 	 * @return
 	 */
 	protected IStatusObservable getObservable() {
-		if (selectedFolder != null)
+		if (selectedFolder != null) {
 			return selectedFolder.getObservable();
-		else if (imapRoot != null) {
-			return imapRoot.getObservable();
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -591,20 +578,18 @@ public class IMAPServer implements IMAPListener, Observer {
 		// Sync subscribed folders if this is the first login
 		// in this session
 		if (firstLogin) {
-			ICommand c = new FetchSubFolderListCommand(
-					new MailFolderCommandReference(imapRoot));
-			try {
-				// MainInterface.processor.addOp(c);
-				c.execute(NullWorkerStatusController.getInstance());
-				c.updateGUI();
-			} catch (Exception e) {
-				e.printStackTrace();
+			if( firstLoginAction != null) {
+				firstLoginAction.actionPerformed();
 			}
 		}
 
 		firstLogin = false;
 	}
 
+	public void setFirstLoginAction( IFirstLoginAction action) {
+		this.firstLoginAction = action;		
+	}
+	
 	/**
 	 * Check if mailbox is already selected.
 	 * <p>
@@ -1102,21 +1087,6 @@ public class IMAPServer implements IMAPListener, Observer {
 	}
 
 	/**
-	 * @param headerString
-	 * @return
-	 */
-	private ColumbaHeader parseMessage(String headerString) {
-		try {
-			ColumbaHeader h = new ColumbaHeader(HeaderParser
-					.parse(new CharSequenceSource(headerString)));
-
-			return h;
-		} catch (ParserException e) {
-			return null;
-		}
-	}
-
-	/**
 	 * Fetch list of headers and parse them.
 	 * <p>
 	 * We fetch headers in pieces of 100 headers. This means we tokenize the
@@ -1182,8 +1152,6 @@ public class IMAPServer implements IMAPListener, Observer {
 			header.getAttributes().put("columba.accountuid", getAccountUid());
 
 			// set the attachment flag
-			String contentType = (String) header.get("Content-Type");
-
 			header.getAttributes().put("columba.attachment",
 					header.hasAttachments());
 
@@ -1203,8 +1171,6 @@ public class IMAPServer implements IMAPListener, Observer {
 
 	protected synchronized void ensureConnectedState() throws CommandCancelledException,
 			IOException, IMAPException {
-		int actState;
-
 		if (Math.abs(System.currentTimeMillis() - lastCommunication) > MIN_IDLE) {
 			try {
 				protocol.noop();
@@ -1230,8 +1196,6 @@ public class IMAPServer implements IMAPListener, Observer {
 	 */
 	protected void ensureLoginState() throws IOException, IMAPException,
 			CommandCancelledException {
-		int actState;
-
 		ensureConnectedState();
 
 		if (protocol.getState() < IMAPProtocol.AUTHENTICATED) {
@@ -1877,12 +1841,12 @@ public class IMAPServer implements IMAPListener, Observer {
 		selectedStatus.setMessages(arg1);
 
 		if (updatesEnabled) {
+			if( existsChangedAction != null) {
+				existsChangedAction.actionPerformed(selectedFolder);
+			}
+			
 			LOG.fine("Exists changed -> triggering update");
 
-			// Trigger synchronization of the IMAPFolder
-			Command updateFolderCommand = new CheckForNewMessagesCommand(null,
-					new MailFolderCommandReference(imapRoot));
-			CommandProcessor.getInstance().addOp(updateFolderCommand);
 		}
 	}
 
@@ -1893,10 +1857,10 @@ public class IMAPServer implements IMAPListener, Observer {
 	public void flagsChanged(String arg0, IMAPFlags arg1) {
 		LOG.fine("Flag changed -> triggering update");
 
-		// Trigger synchronization of the IMAPFolder
-		Command updateFlagCommand = new UpdateFlagCommand(
-				new MailFolderCommandReference(selectedFolder), arg1);
-		CommandProcessor.getInstance().addOp(updateFlagCommand);
+		if( updateFlagAction != null) {
+			updateFlagAction.actionPerformed(selectedFolder, arg1);
+		}
+		
 	}
 
 	/**
@@ -1933,5 +1897,19 @@ public class IMAPServer implements IMAPListener, Observer {
 
 	public void update(Observable o, Object arg) {
 		protocol = new IMAPProtocol(item.get("host"), item.getInteger("port"));		
+	}
+
+	/**
+	 * @param existsChangedAction The existsChangedAction to set.
+	 */
+	public void setExistsChangedAction(IExistsChangedAction existsChangedAction) {
+		this.existsChangedAction = existsChangedAction;
+	}
+
+	/**
+	 * @param updateFlagAction The updateFlagAction to set.
+	 */
+	public void setUpdateFlagAction(IUpdateFlagAction updateFlagAction) {
+		this.updateFlagAction = updateFlagAction;
 	}
 }

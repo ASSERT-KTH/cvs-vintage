@@ -56,14 +56,11 @@ public class CheckForNewMessagesCommand extends Command {
 		// get references
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
-		// get IMAP rootfolder
-		IMAPRootFolder srcFolder = (IMAPRootFolder) r.getSourceFolder();
-
+		inboxFolder = (IMAPFolder) r.getSourceFolder();
+		
 		// register for status events
-		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+		((StatusObservableImpl) inboxFolder.getObservable()).setWorker(worker);
 
-		// we only check inbox
-		inboxFolder = (IMAPFolder) srcFolder.findChildWithName("Inbox", false);
 
 		// Find old numbers
 		int total = inboxFolder.getMessageFolderInfo().getExists();
@@ -88,8 +85,8 @@ public class CheckForNewMessagesCommand extends Command {
 		if ((newRecent != recent) || (newTotal != total)
 				|| (newUnseen != unseen)) {
 
-			ImapItem item = srcFolder.getAccountItem().getImapItem();
-
+			// TODO :(tstich) Renable sound
+			/*
 			if ((newTotal != total) && (item.getBoolean("enable_sound"))) {
 				// the number of "recent" messages has changed, so play a sound
 				// of told to for new messages on server
@@ -103,17 +100,7 @@ public class CheckForNewMessagesCommand extends Command {
 				Toolkit kit = Toolkit.getDefaultToolkit();
 				kit.beep(); //system beep
 
-				/*
-				 * String file = item.get("sound_file");
-				 * 
-				 * Logging.log.fine("playing sound file=" + file);
-				 * 
-				 * if (file.equalsIgnoreCase("default")) {
-				 * PlaySound.play("newmail.wav"); } else { try {
-				 * PlaySound.play(new URL(file)); } catch (Exception ex) {
-				 * ex.printStackTrace(); } } // END else
-				 */
-			}
+			}*/
 
 			//  END if((newRecent != recent) && (item.getBoolean...
 		}

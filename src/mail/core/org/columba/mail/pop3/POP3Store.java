@@ -41,6 +41,8 @@ import org.columba.core.gui.frame.FrameManager;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.util.PasswordDialog;
+import org.columba.mail.util.AuthenticationManager;
+import org.columba.mail.util.AuthenticationSecurityComparator;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.auth.AuthenticationException;
 import org.columba.ristretto.auth.AuthenticationFactory;

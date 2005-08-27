@@ -19,19 +19,32 @@ package org.columba.mail.folder.imap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.columba.api.command.ICommand;
 import org.columba.api.command.IStatusObservable;
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
+import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.filter.Filter;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.RootFolder;
+import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.imap.FetchSubFolderListCommand;
+import org.columba.mail.imap.IExistsChangedAction;
+import org.columba.mail.imap.IFirstLoginAction;
 import org.columba.mail.imap.IMAPServer;
+import org.columba.mail.imap.IMAPServerOwner;
+import org.columba.mail.imap.IUpdateFlagAction;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.IMAPFlags;
 import org.columba.ristretto.imap.IMAPProtocol;
 import org.columba.ristretto.imap.ListInfo;
 
@@ -65,6 +78,8 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	private AccountItem accountItem;
 
 	private IMAPServer server;
+
+	private IMAPRootFolder thisFolder = this;
 
 	/**
 	 * parent directory for mail folders
@@ -325,7 +340,44 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	}
 
 	public void updateConfiguration() {
-		server = new IMAPServer(accountItem.getImapItem(), this);
+		
+		server = new IMAPServer(accountItem.getImapItem());
+		server.setFirstLoginAction( new IFirstLoginAction() {
+			public void actionPerformed() {
+			ICommand c = new FetchSubFolderListCommand(
+					new MailFolderCommandReference(thisFolder));
+			try {
+				// MainInterface.processor.addOp(c);
+				c.execute(NullWorkerStatusController.getInstance());
+				c.updateGUI();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}
+		});
+		
+		server.setExistsChangedAction(new IExistsChangedAction() {
+
+			public void actionPerformed(IMailFolder folder) {
+				// Trigger synchronization of the selected Folder
+				Command updateFolderCommand = new CheckForNewMessagesCommand(null,
+						new MailFolderCommandReference(folder));
+				CommandProcessor.getInstance().addOp(updateFolderCommand);
+			}
+			
+		});
+		
+		server.setUpdateFlagAction( new IUpdateFlagAction() {
+
+			public void actionPerformed(IMailFolder folder, IMAPFlags flags) {
+				// Trigger synchronization of the IMAPFolder
+				Command updateFlagCommand = new UpdateFlagCommand(
+						new MailFolderCommandReference(folder), flags);
+				CommandProcessor.getInstance().addOp(updateFlagCommand);
+				
+			}
+			
+		});
 	}
 
 	/**

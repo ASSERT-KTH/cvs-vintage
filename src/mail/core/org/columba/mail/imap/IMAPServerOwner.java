@@ -14,26 +14,9 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.config.account;
+package org.columba.mail.imap;
 
-import java.awt.Component;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
-
-import org.columba.mail.util.AuthenticationManager;
-
-public class AuthenticationListCellRenderer extends DefaultListCellRenderer {
-	
-	/**
-	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-	 */
-	public Component getListCellRendererComponent(JList arg0, Object arg1,
-			int arg2, boolean arg3, boolean arg4) {
-		super.getListCellRendererComponent(arg0, arg1, arg2, arg3, arg4);
-		setText( AuthenticationManager.getLocalizedString(((Integer) arg1).intValue()));
-		
-		return this; 
-	}
+public interface IMAPServerOwner {
+    public IMAPServer getServer();
 }
-

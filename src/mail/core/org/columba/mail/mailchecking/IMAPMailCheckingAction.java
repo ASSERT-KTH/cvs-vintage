@@ -19,6 +19,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
+import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
 
@@ -50,8 +51,9 @@ public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
 		setEnabled(false);
 		IMAPRootFolder imapRootFolder = (IMAPRootFolder) FolderTreeModel.getInstance()
 				.getImapFolder(accountUid);
-		MailFolderCommandReference r = new MailFolderCommandReference(imapRootFolder);
+		IMAPFolder inboxFolder = (IMAPFolder) imapRootFolder.findChildWithName("Inbox", false);
 
+		MailFolderCommandReference r = new MailFolderCommandReference(inboxFolder);
 		CommandProcessor.getInstance().addOp(new CheckForNewMessagesCommand(this, r));
 	}
 

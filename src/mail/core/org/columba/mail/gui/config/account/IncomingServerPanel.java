@@ -588,7 +588,7 @@ public class IncomingServerPanel extends DefaultPanel implements
                 new ExceptionHandler().processException(e);
             }
         } else {
-            IMAPServer server = new IMAPServer(/*accountItem.getImapItem()*/(ImapItem)serverItem,null);
+            IMAPServer server = new IMAPServer((ImapItem)serverItem);
 
             try {
                 list = server.checkSupportedAuthenticationMethods();

@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.pop3;
+package org.columba.mail.util;
 
 import java.util.Comparator;
 

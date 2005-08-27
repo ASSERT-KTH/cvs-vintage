@@ -51,8 +51,8 @@ import org.columba.core.gui.exception.ExceptionHandler;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OutgoingItem;
-import org.columba.mail.pop3.AuthenticationManager;
 import org.columba.mail.smtp.SMTPServer;
+import org.columba.mail.util.AuthenticationManager;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.smtp.SMTPException;
 

@@ -14,9 +14,8 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.pop3;
+package org.columba.mail.util;
 
-import org.columba.mail.util.MailResourceLoader;
 
 public class AuthenticationManager {
 	
