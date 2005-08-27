@@ -21,8 +21,6 @@ import java.util.logging.Logger;
 
 import javax.swing.JPopupMenu;
 import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeModel;
@@ -36,20 +34,18 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
-import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**
  * this class shows the the folder hierarchy
  */
-public class TreeController implements TreeWillExpandListener,
-		TreeSelectionListener, ITreeController {
+public class TreeController implements TreeWillExpandListener, ITreeController {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.tree");
 
-	private FolderTreeMouseListener mouseListener;
+	// private FolderTreeMouseListener mouseListener;
 
 	private IMailFolder selectedFolder;
 
@@ -75,12 +71,12 @@ public class TreeController implements TreeWillExpandListener,
 
 		view.addTreeWillExpandListener(this);
 
-		mouseListener = new FolderTreeMouseListener(this);
+		// mouseListener = new FolderTreeMouseListener(this);
 
-		view.addMouseListener(mouseListener);
+		// view.addMouseListener(mouseListener);
 
 		// add tree selection listener
-		view.addTreeSelectionListener(this);
+		// view.addTreeSelectionListener(this);
 
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
 		view.setCellRenderer(renderer);
@@ -118,9 +114,8 @@ public class TreeController implements TreeWillExpandListener,
 
 		view.requestFocus();
 		/*
-		view.setLeadSelectionPath(path);
-		view.setAnchorSelectionPath(path);
-		*/
+		 * view.setLeadSelectionPath(path); view.setAnchorSelectionPath(path);
+		 */
 		view.setSelectionPath(path);
 		view.expandPath(path);
 
@@ -133,10 +128,10 @@ public class TreeController implements TreeWillExpandListener,
 	 */
 	public void createPopupMenu() {
 		try {
-			InputStream is = DiskIO.getResourceStream("org/columba/mail/action/tree_contextmenu.xml");
-			
-			menu = new MenuXMLDecoder(frameController).createPopupMenu(
-					is);
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/mail/action/tree_contextmenu.xml");
+
+			menu = new MenuXMLDecoder(frameController).createPopupMenu(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -214,32 +209,12 @@ public class TreeController implements TreeWillExpandListener,
 		XmlElement property = item.getElement("property");
 
 		// Note: we negate the expanded state because this is
-		//       a will-expand/collapse listener
+		// a will-expand/collapse listener
 		if (!getView().isExpanded(path)) {
 			property.addAttribute("expanded", "true");
 		} else {
 			property.addAttribute("expanded", "false");
 		}
-	}
-
-	/**
-	 * 
-	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-	 */
-	public void valueChanged(TreeSelectionEvent e) {
-
-		if (e.getPath() == null) {
-			return;
-		}
-
-		// If the tree is in a DND action then we dont need to update all //
-		// listeners, since this only a temporary folder selection.
-		if (view.isInDndAction()) {
-			return;
-		}
-
-		new ViewHeaderListAction(getFrameController()).actionPerformed(null);
-
 	}
 
 	/**

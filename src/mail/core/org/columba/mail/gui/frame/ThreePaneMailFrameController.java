@@ -34,6 +34,7 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.TreePath;
 
 import org.columba.api.gui.frame.IContentPane;
 import org.columba.core.config.ViewItem;
@@ -65,6 +66,7 @@ import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.action.MoveDownAction;
 import org.columba.mail.gui.tree.action.MoveUpAction;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.util.MailResourceLoader;
@@ -96,10 +98,16 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	public FolderInfoPanel folderInfoPanel;
 
 	/**
-	 * true, if the messagelist table selection event was triggered
-	 * by a popup event. False, otherwise.
+	 * true, if the messagelist table selection event was triggered by a popup
+	 * event. False, otherwise.
 	 */
-	public boolean isPopupEvent;
+	public boolean isTablePopupEvent;
+
+	/**
+	 * true, if the tree selection event was triggered by a popup event. False,
+	 * otherwise.
+	 */
+	public boolean isTreePopupEvent;
 
 	/**
 	 * @param container
@@ -123,6 +131,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// double-click mouse listener
 		tableController.getView().addMouseListener(new TableMouseListener());
 
+		treeController.getView().addMouseListener(new TreeMouseListener());
+		
 		folderInfoPanel = new FolderInfoPanel(this);
 
 		// table registers interest in tree selection events
@@ -418,15 +428,21 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			} else {
 				getContainer().getFrame().setTitle("");
 			}
+
+			if (isTreePopupEvent == false)
+				new ViewHeaderListAction(this).actionPerformed(null);
+			
+			isTreePopupEvent = false;
+			
 		} else if (e instanceof TableSelectionChangedEvent) {
 			// messagelist table selection event
 			TableSelectionChangedEvent event = (TableSelectionChangedEvent) e;
 
-			if (isPopupEvent == false)
+			if (isTablePopupEvent == false)
 				// show message
 				new ViewMessageAction(this).actionPerformed(null);
-			
-			isPopupEvent = false;
+
+			isTablePopupEvent = false;
 		} else
 			throw new IllegalArgumentException(
 					"unknown selection changed event");
@@ -493,7 +509,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		protected void processPopup(final MouseEvent event) {
 
-			isPopupEvent = true;
+			isTablePopupEvent = true;
 
 			JTable table = tableController.getView();
 
@@ -510,6 +526,56 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 				public void run() {
 					tableController.getPopupMenu().show(event.getComponent(),
+							event.getX(), event.getY());
+				}
+			});
+		}
+	}
+
+	class TreeMouseListener extends MouseAdapter {
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+		 */
+		public void mousePressed(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
+		 */
+		public void mouseReleased(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
+		 */
+		public void mouseClicked(MouseEvent event) {
+			// if mouse button was pressed twice times
+			if (event.getClickCount() == 2) {
+				// get selected row
+
+			}
+		}
+
+		protected void processPopup(final MouseEvent event) {
+
+			isTreePopupEvent = true;
+
+			Point point = event.getPoint();
+			TreePath path = treeController.getView().getClosestPathForLocation(
+					point.x, point.y);
+			treeController.getView().setSelectionPath(path);
+
+			SwingUtilities.invokeLater(new Runnable() {
+
+				public void run() {
+					treeController.getPopupMenu().show(event.getComponent(),
 							event.getX(), event.getY());
 				}
 			});
