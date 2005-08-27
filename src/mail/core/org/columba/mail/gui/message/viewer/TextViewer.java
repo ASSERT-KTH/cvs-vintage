@@ -341,10 +341,11 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		// read configuration from options.xml file
 		// create css-stylesheet string
 		// set font of html-element <P>
-		css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" + name
-				+ "\"; font-size:\"" + size + "pt; \"}"
-				+ ".quoting {color:#949494;}; -->" +
-						"body a { color: blue; text-decoration: underline }</style>";
+		css = "<style type=\"text/css\">\n" +
+			"body {font-family:\"" + name + "\"; font-size:\"" + size + "pt; \"} \n" +
+			"a { color: blue; text-decoration: underline }\n" +
+			"font.quoting {color:#949494;} \n"+
+			"</style>\n";
 	}
 
 	/*
