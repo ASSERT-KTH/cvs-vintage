@@ -51,25 +51,9 @@ public class ViewMessageAction extends AbstractColumbaAction {
         Object[] uids = references.getUids();
 
         if (uids.length == 1) {
-        	// one message is selected
-        	
-        	
-//        	if (oldUid == uids[0]) {
-//                LOG.info("this message was already selected, don't fire any event");
-//
-//                return;
-//            }
-//
-//            oldUid = uids[0];
-
             // show selected message
             CommandProcessor.getInstance().addOp(new ViewMessageCommand(
                     getFrameMediator(), references));
-        } else if ( uids.length == 0){
-        	// no message selected
-        	
-        	IMessageController c = ((MessageViewOwner)getFrameMediator()).getMessageController();
-        	c.clear();
         }
     }
 }
