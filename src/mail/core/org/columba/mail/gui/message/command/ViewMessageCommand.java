@@ -25,14 +25,19 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
 
@@ -40,7 +45,7 @@ import org.columba.ristretto.message.Flags;
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
-public class ViewMessageCommand extends Command {
+public class ViewMessageCommand extends Command implements ISelectionListener {
 
 	private Flags flags;
 
@@ -49,6 +54,8 @@ public class ViewMessageCommand extends Command {
 	private Object uid;
 
 	private IFrameMediator mediator;
+
+	private boolean updateGui;
 
 	/**
 	 * Constructor for ViewMessageCommand.
@@ -62,18 +69,33 @@ public class ViewMessageCommand extends Command {
 		this.mediator = mediator;
 		priority = Command.REALTIME_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
+
+		updateGui = true;
+		
+		// Register as listener to the SelectionManger
+		// to check for selection changes
+
+		((MailFrameMediator) mediator).getSelectionManager().getHandler(
+				"mail.table").addSelectionListener(this);
+
+		
 	}
 
 	/**
 	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
+		mediator.getSelectionManager().getHandler("mail.table")
+				.removeSelectionListener(this);
 
-		IMessageController messageController = ((MessageViewOwner) mediator)
-				.getMessageController();
+		// Update only if the selection did not change
+		if (updateGui) {
+			IMessageController messageController = ((MessageViewOwner) mediator)
+					.getMessageController();
 
-		// display changes
-		messageController.updateGUI();
+			// display changes
+			messageController.updateGUI();
+		}
 
 	}
 
@@ -81,6 +103,9 @@ public class ViewMessageCommand extends Command {
 	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
 	public void execute(IWorkerStatusController wsc) throws Exception {
+		if (!updateGui)
+			return;
+
 		// get command reference
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
@@ -137,5 +162,40 @@ public class ViewMessageCommand extends Command {
 						.restartMarkAsReadTimer(
 								(MailFolderCommandReference) getReference());
 		}
+	}
+
+	/**
+	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+
+		// old command-specific selection
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+
+		// get selected folder
+		IMailbox folder = (IMailbox) r.getSourceFolder();
+
+		// get selected message UID
+		Object[] uid = r.getUids();
+
+		// new selection
+		IMailFolder newFolder = ((TableSelectionChangedEvent) e).getFolder();
+		Object[] newUid = ((TableSelectionChangedEvent) e).getUids();
+
+		// abort if nothing selected
+		if (folder == null)
+			return;
+		if (newUid == null || newUid.length == 0)
+			return;
+
+		// cancel command execution/updateGUI methods, if folder or message
+		// selection
+		// has been modified
+		if (folder.getUid() != newFolder.getUid())
+			updateGui = false;
+
+		if (uid[0].equals(newUid[0])==false)
+			updateGui = false;
+
 	}
 }
