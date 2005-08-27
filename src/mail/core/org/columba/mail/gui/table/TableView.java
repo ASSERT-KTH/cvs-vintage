@@ -386,6 +386,7 @@ public class TableView extends TreeTable {
 			// and getting the uid for this node
 			Object uid = selectedNode.getUid();
 
+			makeRowVisible(row);
 			/*
 			 * // scrolling to the first row
 			 * scrollRectToVisible(getCellRect(row, 0, false)); requestFocus();

@@ -1200,5 +1200,13 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		}
 		super.removeFolder();
 	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractMessageFolder#getLastSelection()
+	 */
+	public Object getLastSelection() {
+		// not supported by virtual folder
+		return null;
+	}
 	
 }
