@@ -439,7 +439,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 		// has the imap account no trash folder using the default trash folder
 		if (ret == null) {
-			ret = FolderTreeModel.getInstance().getTrashFolder();
+			ret = (AbstractFolder) FolderTreeModel.getInstance().getTrashFolder();
 		}
 
 		return ret;

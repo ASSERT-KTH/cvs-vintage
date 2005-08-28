@@ -40,7 +40,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractHeaderListStorage;
 import org.columba.mail.folder.AbstractRemoteFolder;
 import org.columba.mail.folder.IHeaderListStorage;
@@ -773,10 +772,10 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		StringBuffer path = new StringBuffer();
 		path.append(getName());
 
-		AbstractFolder child = this;
+		IMailFolder child = this;
 
 		while (true) {
-			child = (AbstractFolder) child.getParent();
+			child = (IMailFolder) child.getParent();
 
 			if (child instanceof IMAPRootFolder) {
 				break;

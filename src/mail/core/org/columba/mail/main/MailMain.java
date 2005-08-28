@@ -45,7 +45,7 @@ import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OutgoingItem;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.ActivateVirtualFolderCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -214,9 +214,8 @@ public class MailMain implements IComponentPlugin {
 		}
 
 		// Activate all Virtual Folders
-		ActivateVirtualFolderCommand
-				.activateAll((AbstractFolder) FolderTreeModel.getInstance()
-						.getRoot());
+		ActivateVirtualFolderCommand.activateAll((IMailFolder) FolderTreeModel
+				.getInstance().getRoot());
 	}
 
 	private void checkDefaultClient() {

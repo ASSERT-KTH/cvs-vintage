@@ -32,8 +32,8 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
@@ -41,235 +41,236 @@ import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.plugin.FolderExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * @author freddy
  * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class FolderTreeModel extends DefaultTreeModel {
-    protected FolderXmlConfig folderXmlConfig;
-    protected TempFolder tempFolder;
-    private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
+	protected FolderXmlConfig folderXmlConfig;
 
-    private static FolderTreeModel instance = new FolderTreeModel(MailConfig.getInstance().getFolderConfig());
-    
-    public FolderTreeModel(FolderXmlConfig folderConfig) {
-        super(new Root(folderConfig.getRoot().getElement("tree")));
-        this.folderXmlConfig = folderConfig;
+	protected TempFolder tempFolder;
 
-        // create temporary folder in "<your-config-folder>/mail/"
-        tempFolder = new TempFolder(Config.getInstance().getConfigDirectory() +
-                "/mail/");
+	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
-        createDirectories(((AbstractFolder) getRoot()).getConfiguration().getRoot(),
-            (AbstractFolder) getRoot());
-        
-        // register at shutdownmanager
-        // -> when closing Columba, this will automatically save all folder data
-        ShutdownManager.getInstance().register(new Runnable() {
-            public void run() {
-                saveFolder((AbstractFolder) getRoot());
-            }
+	private static FolderTreeModel instance = new FolderTreeModel(MailConfig
+			.getInstance().getFolderConfig());
 
-            protected void saveFolder(AbstractFolder parentFolder) {
-                AbstractFolder child;
+	public FolderTreeModel(FolderXmlConfig folderConfig) {
+		super(new Root(folderConfig.getRoot().getElement("tree")));
+		this.folderXmlConfig = folderConfig;
 
-                for (Enumeration e = parentFolder.children();
-                        e.hasMoreElements();) {
-                    child = (AbstractFolder) e.nextElement();
+		// create temporary folder in "<your-config-folder>/mail/"
+		tempFolder = new TempFolder(Config.getInstance().getConfigDirectory()
+				+ "/mail/");
 
-                    if (child instanceof AbstractMessageFolder) {
-                        try {
-                            ((AbstractMessageFolder) child).save();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+		createDirectories(((IMailFolder) getRoot()).getConfiguration()
+				.getRoot(), (IMailFolder) getRoot());
 
-                    saveFolder(child);
-                }
-            }
-        });
-    }
-    
-    public static FolderTreeModel getInstance() {
-    	return instance;
-    }
+		// register at shutdownmanager
+		// -> when closing Columba, this will automatically save all folder data
+		ShutdownManager.getInstance().register(new Runnable() {
+			public void run() {
+				saveFolder((IMailFolder) getRoot());
+			}
 
-    public void createDirectories(XmlElement parentTreeNode,
-        AbstractFolder parentFolder) {
-        int count = parentTreeNode.count();
-        XmlElement child;
+			protected void saveFolder(IMailFolder parentFolder) {
+				IMailFolder child;
 
-        if (count > 0) {
-            for (int i = 0; i < count; i++) {
-                child = parentTreeNode.getElement(i);
+				for (Enumeration e = parentFolder.children(); e
+						.hasMoreElements();) {
+					child = (IMailFolder) e.nextElement();
 
-                String name = child.getName();
+					if (child instanceof AbstractMessageFolder) {
+						try {
+							((AbstractMessageFolder) child).save();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
 
-                if (name.equals("folder")) {
-                    AbstractFolder folder = add(child, parentFolder);
+					saveFolder(child);
+				}
+			}
+		});
+	}
 
-                    if (folder != null) {
-                        createDirectories(child, folder);
-                    }
-                }
-            }
-        }
-    }
+	public static FolderTreeModel getInstance() {
+		return instance;
+	}
 
-    public AbstractFolder add(XmlElement childNode, AbstractFolder parentFolder) {
-        FolderItem item = new FolderItem(childNode);
+	public void createDirectories(XmlElement parentTreeNode,
+			IMailFolder parentFolder) {
+		int count = parentTreeNode.count();
+		XmlElement child;
 
-        if (item == null) {
-            return null;
-        }
+		if (count > 0) {
+			for (int i = 0; i < count; i++) {
+				child = parentTreeNode.getElement(i);
 
-        // i18n stuff
-        String name = null;
+				String name = child.getName();
 
-        //XmlElement.printNode(item.getRoot(), "");
-        int uid = item.getInteger("uid");
+				if (name.equals("folder")) {
+					IMailFolder folder = add(child, parentFolder);
 
-        try {
-            if (uid == 100) {
-                name = MailResourceLoader.getString("tree", "localfolders");
-            } else if (uid == 101) {
-                name = MailResourceLoader.getString("tree", "inbox");
-            } else if (uid == 102) {
-                name = MailResourceLoader.getString("tree", "drafts");
-            } else if (uid == 103) {
-                name = MailResourceLoader.getString("tree", "outbox");
-            } else if (uid == 104) {
-                name = MailResourceLoader.getString("tree", "sent");
-            } else if (uid == 105) {
-                name = MailResourceLoader.getString("tree", "trash");
-            } else if (uid == 106) {
-                name = MailResourceLoader.getString("tree", "search");
-            } else if (uid == 107) {
-                name = MailResourceLoader.getString("tree", "templates");
-            } else {
-                name = item.getString("property", "name");
-            }
+					if (folder != null) {
+						createDirectories(child, folder);
+					}
+				}
+			}
+		}
+	}
 
-            item.setString("property", "name", name);
-        } catch (MissingResourceException ex) {
-            name = item.getString("property", "name");
-        }
+	public IMailFolder add(XmlElement childNode, IMailFolder parentFolder) {
+		FolderItem item = new FolderItem(childNode);
 
-        // now instanciate the folder classes
-        String type = item.get("type");
-        FolderExtensionHandler handler = null;
+		if (item == null) {
+			return null;
+		}
 
-        try {
-            handler = (FolderExtensionHandler) PluginManager.getInstance().getHandler(
-            		FolderExtensionHandler.NAME);
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
+		// i18n stuff
+		String name = null;
 
-        // parent directory for mail folders
-        // for example: ".columba/mail/"
-        String path = Config.getInstance().getConfigDirectory() + "/mail/";
-        Object[] args = { item, path };
-        AbstractFolder folder = null;
+		// XmlElement.printNode(item.getRoot(), "");
+		int uid = item.getInteger("uid");
 
-        try {
-        	IExtension extension = handler.getExtension(type);
-        	
-            folder = (AbstractFolder) extension.instanciateExtension(args);
-            parentFolder.add(folder);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+		try {
+			if (uid == 100) {
+				name = MailResourceLoader.getString("tree", "localfolders");
+			} else if (uid == 101) {
+				name = MailResourceLoader.getString("tree", "inbox");
+			} else if (uid == 102) {
+				name = MailResourceLoader.getString("tree", "drafts");
+			} else if (uid == 103) {
+				name = MailResourceLoader.getString("tree", "outbox");
+			} else if (uid == 104) {
+				name = MailResourceLoader.getString("tree", "sent");
+			} else if (uid == 105) {
+				name = MailResourceLoader.getString("tree", "trash");
+			} else if (uid == 106) {
+				name = MailResourceLoader.getString("tree", "search");
+			} else if (uid == 107) {
+				name = MailResourceLoader.getString("tree", "templates");
+			} else {
+				name = item.getString("property", "name");
+			}
 
-        return folder;
-    }
+			item.setString("property", "name", name);
+		} catch (MissingResourceException ex) {
+			name = item.getString("property", "name");
+		}
 
-    public AbstractFolder getFolder(int uid) {
-        AbstractFolder root = (AbstractFolder) getRoot();
+		// now instanciate the folder classes
+		String type = item.get("type");
+		FolderExtensionHandler handler = null;
 
-        for (Enumeration e = root.breadthFirstEnumeration();
-                e.hasMoreElements();) {
-            AbstractFolder node = (AbstractFolder) e.nextElement();
-            int id = node.getUid();
+		try {
+			handler = (FolderExtensionHandler) PluginManager.getInstance()
+					.getHandler(FolderExtensionHandler.NAME);
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
-            if (uid == id) {
-                return node;
-            }
-        }
+		// parent directory for mail folders
+		// for example: ".columba/mail/"
+		String path = Config.getInstance().getConfigDirectory() + "/mail/";
+		Object[] args = { item, path };
+		IMailFolder folder = null;
 
-        return null;
-    }
+		try {
+			IExtension extension = handler.getExtension(type);
 
-    public AbstractFolder getTrashFolder() {
-        return getFolder(105);
-    }
+			folder = (IMailFolder) extension.instanciateExtension(args);
+			parentFolder.add(folder);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-    public AbstractFolder getImapFolder(int accountUid) {
-        AbstractFolder root = (AbstractFolder) getRoot();
+		return folder;
+	}
 
-        for (Enumeration e = root.breadthFirstEnumeration();
-                e.hasMoreElements();) {
-            AbstractFolder node = (AbstractFolder) e.nextElement();
-            IFolderItem item = node.getConfiguration();
+	public IMailFolder getFolder(int uid) {
+		IMailFolder root = (IMailFolder) getRoot();
 
-            if (item == null) {
-                continue;
-            }
+		for (Enumeration e = root.breadthFirstEnumeration(); e
+				.hasMoreElements();) {
+			IMailFolder node = (IMailFolder) e.nextElement();
+			int id = node.getUid();
 
-            //if (item.get("type").equals("IMAPRootFolder")) {
-            if (node instanceof IMAPRootFolder) {
-                int account = item.getInteger("account_uid");
+			if (uid == id) {
+				return node;
+			}
+		}
 
-                if (account == accountUid) {
-                    int uid = item.getInteger("uid");
+		return null;
+	}
 
-                    return getFolder(uid);
-                }
-            }
-        }
+	public IMailFolder getTrashFolder() {
+		return getFolder(105);
+	}
 
-        return null;
-    }
+	public IMailFolder getImapFolder(int accountUid) {
+		IMailFolder root = (IMailFolder) getRoot();
 
-    public AbstractFolder getFolder(TreeNodeList list) {
-        AbstractFolder parentFolder = (AbstractFolder) getRoot();
+		for (Enumeration e = root.breadthFirstEnumeration(); e
+				.hasMoreElements();) {
+			IMailFolder node = (IMailFolder) e.nextElement();
+			IFolderItem item = node.getConfiguration();
 
-        if ((list == null) || (list.count() == 0)) {
-            return parentFolder;
-        }
+			if (item == null) {
+				continue;
+			}
 
-        AbstractFolder child = parentFolder;
+			// if (item.get("type").equals("IMAPRootFolder")) {
+			if (node instanceof IMAPRootFolder) {
+				int account = item.getInteger("account_uid");
 
-        for (int i = 0; i < list.count(); i++) {
-            String str = list.get(i);
-            child = findFolder(child, str);
-        }
+				if (account == accountUid) {
+					int uid = item.getInteger("uid");
 
-        return child;
-    }
+					return getFolder(uid);
+				}
+			}
+		}
 
-    public AbstractFolder findFolder(AbstractFolder parentFolder, String str) {
-        AbstractFolder child;
+		return null;
+	}
 
-        for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
-            child = (AbstractFolder) e.nextElement();
+	public IMailFolder getFolder(TreeNodeList list) {
+		IMailFolder parentFolder = (IMailFolder) getRoot();
 
-            if (child.getName().equals(str)) {
-                return child;
-            }
-        }
+		if ((list == null) || (list.count() == 0)) {
+			return parentFolder;
+		}
 
-        return null;
-    }
+		IMailFolder child = parentFolder;
 
+		for (int i = 0; i < list.count(); i++) {
+			String str = list.get(i);
+			child = findFolder(child, str);
+		}
 
-    public TempFolder getTempFolder() {
-        return tempFolder;
-    }
+		return child;
+	}
+
+	public IMailFolder findFolder(IMailFolder parentFolder, String str) {
+		IMailFolder child;
+
+		for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
+			child = (IMailFolder) e.nextElement();
+
+			if (child.getName().equals(str)) {
+				return child;
+			}
+		}
+
+		return null;
+	}
+
+	public TempFolder getTempFolder() {
+		return tempFolder;
+	}
 }

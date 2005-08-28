@@ -19,7 +19,6 @@ package org.columba.mail.facade;
 
 import java.util.Enumeration;
 
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -51,7 +50,7 @@ public class FolderFacade implements IFolderFacade {
 	 */
 	public IMailFolder getFolder(String name) {
 		return (IMailFolder) FolderTreeModel.getInstance().findFolder(
-				(AbstractFolder) FolderTreeModel.getInstance().getRoot(), name);
+				(IMailFolder) FolderTreeModel.getInstance().getRoot(), name);
 	}
 
 	/**
@@ -60,7 +59,7 @@ public class FolderFacade implements IFolderFacade {
 	 * @return	breadth-first enumeration of folders
 	 */
 	public Enumeration getBreadthFirstEnumeration() {
-		AbstractFolder root = (AbstractFolder) FolderTreeModel.getInstance()
+		IMailFolder root = (IMailFolder) FolderTreeModel.getInstance()
 				.getRoot();
 		return root.breadthFirstEnumeration();
 	}
@@ -71,7 +70,7 @@ public class FolderFacade implements IFolderFacade {
 	 * @return	depth-first enumeration of folders
 	 */
 	public Enumeration getDepthFirstEnumeration() {
-		AbstractFolder root = (AbstractFolder) FolderTreeModel.getInstance()
+		IMailFolder root = (IMailFolder) FolderTreeModel.getInstance()
 				.getRoot();
 		return root.depthFirstEnumeration();
 	}

@@ -45,7 +45,6 @@ import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
@@ -278,8 +277,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 			int uid = destFolder.getConfiguration().getInteger("property",
 					"source_uid");
 
-			AbstractMessageFolder f = (AbstractMessageFolder) FolderTreeModel
-					.getInstance().getFolder(uid);
+			IMailbox f = (IMailbox) FolderTreeModel.getInstance()
+					.getFolder(uid);
 
 			// If f==null because of deleted AbstractMessageFolder fallback to
 			// Inbox
@@ -287,8 +286,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 				uid = 101;
 				destFolder.getConfiguration().setInteger("property",
 						"source_uid", uid);
-				f = (AbstractMessageFolder) FolderTreeModel.getInstance()
-						.getFolder(uid);
+				f = (IMailbox) FolderTreeModel.getInstance().getFolder(uid);
 			}
 
 			selectButton.setText(f.getTreePath());
@@ -315,8 +313,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 			String path = selectButton.getText();
 			TreeNodeList list = new TreeNodeList(path);
-			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel
-					.getInstance().getFolder(list);
+			IMailbox folder = (IMailbox) FolderTreeModel.getInstance()
+					.getFolder(list);
 			int uid = folder.getUid();
 			destFolder.getConfiguration().setInteger("property", "source_uid",
 					uid);

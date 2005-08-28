@@ -26,7 +26,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.LocalRootFolder;
@@ -110,7 +109,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 		setFont(plainFont);
 		setToolTipText("");
 
-		AbstractFolder treeNode = (AbstractFolder) value;
+		IMailFolder treeNode = (IMailFolder) value;
 		setText(treeNode.getName());
 		setIcon(getFolderIcon(treeNode, expanded));
 

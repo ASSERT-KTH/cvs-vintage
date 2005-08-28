@@ -22,7 +22,6 @@ import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TreeViewOwner;
@@ -32,46 +31,47 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * Move selected folder up for one row.
  * <p>
- *
+ * 
  * @author fdietz
  * @author redsolo
  */
 public class MoveUpAction extends AbstractMoveFolderAction {
 
-    /**
-     * @param frameMediator the frame cpntroller.
-     */
-    public MoveUpAction(IFrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_moveup"));
-        setEnabled(false);
+	/**
+	 * @param frameMediator
+	 *            the frame cpntroller.
+	 */
+	public MoveUpAction(IFrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_folder_moveup"));
+		setEnabled(false);
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_UP, ActionEvent.ALT_MASK));
-    }
+		// shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_UP,
+				ActionEvent.ALT_MASK));
+	}
 
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-        MailFolderCommandReference r = (MailFolderCommandReference) ((MailFrameMediator) frameMediator).getTreeSelection();
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		MailFolderCommandReference r = (MailFolderCommandReference) ((MailFrameMediator) frameMediator)
+				.getTreeSelection();
 
-        IMailFolder folder = (IMailFolder) r.getSourceFolder();
+		IMailFolder folder = (IMailFolder) r.getSourceFolder();
 
-        int newIndex = folder.getParent().getIndex(folder);
-        newIndex = newIndex - 1;
-        ((AbstractFolder) folder.getParent()).insert(folder, newIndex);
+		int newIndex = folder.getParent().getIndex(folder);
+		newIndex = newIndex - 1;
+		((IMailFolder) folder.getParent()).insert(folder, newIndex);
 
-        FolderTreeModel.getInstance().nodeStructureChanged(folder.getParent());
-        
-        // select folder again after move operation
-        ((TreeViewOwner) frameMediator).getTreeController().setSelected(folder);
-    }
+		FolderTreeModel.getInstance().nodeStructureChanged(folder.getParent());
 
-    /** {@inheritDoc} */
-    protected boolean isActionEnabledByIndex(int folderIndex) {
-        return (folderIndex > 0);
-    }
+		// select folder again after move operation
+		((TreeViewOwner) frameMediator).getTreeController().setSelected(folder);
+	}
+
+	/** {@inheritDoc} */
+	protected boolean isActionEnabledByIndex(int folderIndex) {
+		return (folderIndex > 0);
+	}
 }

@@ -27,7 +27,6 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.RemoveFolderCommand;
@@ -99,8 +98,7 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-			AbstractFolder folder = ((TreeSelectionChangedEvent) e)
-					.getSelected()[0];
+			IMailFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
 			if ((folder != null) && folder instanceof IMailbox) {
 				IFolderItem item = folder.getConfiguration();

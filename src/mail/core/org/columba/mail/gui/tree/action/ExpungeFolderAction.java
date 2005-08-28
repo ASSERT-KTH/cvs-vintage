@@ -23,14 +23,13 @@ import javax.swing.KeyStroke;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
-import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -80,8 +79,7 @@ public class ExpungeFolderAction extends AbstractColumbaAction implements
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-			AbstractFolder folder = ((TreeSelectionChangedEvent) e)
-					.getSelected()[0];
+			IMailFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
 			if (folder != null) {
 				IFolderItem item = folder.getConfiguration();

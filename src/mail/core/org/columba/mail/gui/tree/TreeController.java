@@ -32,7 +32,6 @@ import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
@@ -171,7 +170,7 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 
 	/** {@inheritDoc} */
 	public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
-		AbstractFolder treeNode = (AbstractFolder) e.getPath()
+		IMailFolder treeNode = (IMailFolder) e.getPath()
 				.getLastPathComponent();
 
 		if (treeNode == null) {
@@ -184,7 +183,7 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 
 	/** {@inheritDoc} */
 	public void treeWillCollapse(TreeExpansionEvent e) {
-		AbstractFolder treeNode = (AbstractFolder) e.getPath()
+		IMailFolder treeNode = (IMailFolder) e.getPath()
 				.getLastPathComponent();
 
 		if (treeNode == null) {
@@ -203,7 +202,7 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 	 * @param path
 	 *            the tree path in the tree view.
 	 */
-	private void saveExpandedState(AbstractFolder folder, TreePath path) {
+	private void saveExpandedState(IMailFolder folder, TreePath path) {
 		IFolderItem item = folder.getConfiguration();
 
 		XmlElement property = item.getElement("property");

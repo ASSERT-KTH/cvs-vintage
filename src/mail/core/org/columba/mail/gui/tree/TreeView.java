@@ -31,11 +31,12 @@ import javax.swing.JTree;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.TransferHandler;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.comparator.FolderComparator;
 import org.frapuccino.swing.SortedJTree;
 
@@ -77,7 +78,7 @@ public class TreeView extends SortedJTree {
 		setRootVisible(false);
 
 		//setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
-		AbstractFolder root = (AbstractFolder) treeModel.getRoot();
+		IMailFolder root = (IMailFolder) treeModel.getRoot();
 
 		expand(root);
 
@@ -96,7 +97,7 @@ public class TreeView extends SortedJTree {
 	 * @param parent
 	 *            node to check if it should be expanded or not.
 	 */
-	public final void expand(AbstractFolder parent) {
+	public final void expand(IMailFolder parent) {
 		// get configuration from tree.xml file
 		IFolderItem item = parent.getConfiguration();
 
@@ -119,7 +120,7 @@ public class TreeView extends SortedJTree {
 
 		// recursivly expand all children
 		for (int i = 0; i < parent.getChildCount(); i++) {
-			AbstractFolder child = (AbstractFolder) parent.getChildAt(i);
+			IMailFolder child = (IMailFolder) parent.getChildAt(i);
 			expand(child);
 		}
 	}
@@ -132,14 +133,14 @@ public class TreeView extends SortedJTree {
 	 * @return the folder tree node that is targeted for the drop action; null
 	 *         otherwise.
 	 */
-	public AbstractFolder getDropTargetFolder() {
-		AbstractFolder node = null;
+	public IMailFolder getDropTargetFolder() {
+		IMailFolder node = null;
 
 		if (dropTargetPath != null) {
-			node = (AbstractFolder) dropTargetPath.getLastPathComponent();
+			node = (IMailFolder) dropTargetPath.getLastPathComponent();
 		} else {
 			if ( getSelectionPath() != null)
-				node = (AbstractFolder) getSelectionPath().getLastPathComponent();
+				node = (IMailFolder) getSelectionPath().getLastPathComponent();
 		}
 
 		return node;
@@ -161,11 +162,11 @@ public class TreeView extends SortedJTree {
 	 * @return the folder that is being dragged; null if it wasnt initiated in
 	 *         this component.
 	 */
-	public AbstractFolder getSelectedNodeBeforeDragAction() {
-		AbstractFolder node = null;
+	public DefaultMutableTreeNode getSelectedNodeBeforeDragAction() {
+		DefaultMutableTreeNode node = null;
 
 		if (selectedPathBeforeDrag != null) {
-			node = (AbstractFolder) selectedPathBeforeDrag
+			node = (DefaultMutableTreeNode) selectedPathBeforeDrag
 					.getLastPathComponent();
 		}
 

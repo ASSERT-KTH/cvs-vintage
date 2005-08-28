@@ -20,6 +20,7 @@ import java.awt.datatransfer.Transferable;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.columba.api.gui.frame.IFrameMediator;
@@ -27,8 +28,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveFolderCommand;
@@ -109,7 +109,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 			FolderTransfer transferable) {
 		boolean dataWasImported = false;
 
-		AbstractFolder destFolder = treeView.getDropTargetFolder();
+		IMailFolder destFolder = treeView.getDropTargetFolder();
 		IMailbox draggedFolder = transferable.getFolderReference();
 
 		if ((destFolder != null) && (draggedFolder != null)) {
@@ -191,8 +191,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 	private void exportFolder(TreeView treeView, IMailbox folder) {
 		MailFolderCommandReference commandRef = new MailFolderCommandReference(
 				folder);
-		AbstractFolder destFolder = (AbstractFolder) treeView
-				.getDropTargetFolder();
+		IMailFolder destFolder = (IMailFolder) treeView.getDropTargetFolder();
 
 		if (folder.equals(destFolder))
 			return;
@@ -222,12 +221,10 @@ public class TreeViewTransferHandler extends TransferHandler {
 			TreeView treeView = (TreeView) c;
 			TreePath path = treeView.getSelectionModel().getSelectionPath();
 
-			AbstractFolder folderNode = (AbstractFolder) path
-					.getLastPathComponent();
+			IMailFolder folderNode = (IMailFolder) path.getLastPathComponent();
 
 			if (folderNode.supportsMove()) {
-				exportObject = new FolderTransfer(
-						(AbstractMessageFolder) folderNode);
+				exportObject = new FolderTransfer((IMailbox) folderNode);
 			}
 		}
 
@@ -241,7 +238,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 		if (comp instanceof TreeView) {
 			TreeView treeView = (TreeView) comp;
 
-			AbstractFolder dropTarget = treeView.getDropTargetFolder();
+			IMailFolder dropTarget = treeView.getDropTargetFolder();
 
 			if (dropTarget != null) {
 				for (int k = 0; (k < transferFlavors.length)
@@ -271,14 +268,18 @@ public class TreeViewTransferHandler extends TransferHandler {
 	 * @return true if the dragged folder can be imported to the dropped folder.
 	 */
 	private boolean canHandleFolderImport(TreeView treeView,
-			AbstractFolder dropTarget) {
+			IMailFolder dropTarget) {
 		boolean canImport = false;
 
-		AbstractFolder dragTarget = treeView.getSelectedNodeBeforeDragAction();
+		DefaultMutableTreeNode dragTarget = treeView
+				.getSelectedNodeBeforeDragAction();
 
-		if ((dragTarget != null) && (!dragTarget.isNodeDescendant(dropTarget))
+		if ((dragTarget != null)
+				&& (!dragTarget
+						.isNodeDescendant((DefaultMutableTreeNode) dropTarget))
 				&& (dragTarget != dropTarget)) {
-			canImport = dropTarget.supportsAddFolder(dragTarget.getType());
+			canImport = dropTarget.supportsAddFolder(((IMailFolder) dragTarget)
+					.getType());
 		}
 
 		return canImport;
@@ -296,10 +297,11 @@ public class TreeViewTransferHandler extends TransferHandler {
 	 *         folder.
 	 */
 	private boolean canHandleMessageImport(TreeView treeView,
-			AbstractFolder dropTarget) {
+			IMailFolder dropTarget) {
 		boolean canImport = false;
 
-		AbstractFolder dragTarget = treeView.getSelectedNodeBeforeDragAction();
+		IMailFolder dragTarget = (IMailFolder) treeView
+				.getSelectedNodeBeforeDragAction();
 
 		if (dragTarget != dropTarget) {
 			canImport = dropTarget.supportsAddMessage();

@@ -24,7 +24,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
@@ -124,8 +124,7 @@ public class ViewHeaderListCommand extends Command implements
 		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// new selection
-		AbstractFolder[] folders = ((TreeSelectionChangedEvent) e)
-				.getSelected();
+		IMailFolder[] folders = ((TreeSelectionChangedEvent) e).getSelected();
 		// abort if nothing selected
 		if (folders.length == 0)
 			return;

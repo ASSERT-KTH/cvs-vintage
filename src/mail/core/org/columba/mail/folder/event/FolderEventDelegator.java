@@ -31,7 +31,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.tree.TreeNode;
 
 import org.columba.core.base.Mutex;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.gui.table.model.TableModelChangedListener;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -146,7 +146,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 			// First sort so that Events from one folder stick together
 			Collections.sort(messageAddedList[swap], FolderEventComparator
 					.getInstance());
-			AbstractFolder lastFolder = (AbstractFolder) ((FolderEvent) messageAddedList[swap]
+			IMailFolder lastFolder = (IMailFolder) ((FolderEvent) messageAddedList[swap]
 					.get(0)).getSource();
 
 			fireTableEvent(new TableModelChangedEvent(
@@ -156,7 +156,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 			for (int i = 1; i < messageAddedList[swap].size(); i++) {
 				FolderEvent next = (FolderEvent) messageAddedList[swap].get(i);
 				if (next.getSource() != lastFolder) {
-					lastFolder = (AbstractFolder) next.getSource();
+					lastFolder = (IMailFolder) next.getSource();
 					fireTableEvent(new TableModelChangedEvent(
 							TableModelChangedEvent.UPDATE, lastFolder));
 				}
@@ -168,7 +168,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 			Collections.sort(messageRemovedList[swap], FolderEventComparator
 					.getInstance());
 			FolderEvent event = (FolderEvent) messageRemovedList[swap].get(0);
-			AbstractFolder lastFolder = (AbstractFolder) event.getSource();
+			IMailFolder lastFolder = (IMailFolder) event.getSource();
 
 			// Collect the uids for one folder
 			List collectedUids = new ArrayList();
@@ -188,7 +188,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 					collectedUids.clear();
 					collectedUids.add(next.getChanges());
 
-					lastFolder = (AbstractFolder) next.getSource();
+					lastFolder = (IMailFolder) next.getSource();
 				} else {
 					collectedUids.add(next.getChanges());
 				}
@@ -206,7 +206,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 					FolderEventComparator.getInstance());
 			FolderEvent event = (FolderEvent) messageFlagChangedList[swap]
 					.get(0);
-			AbstractFolder lastFolder = (AbstractFolder) event.getSource();
+			IMailFolder lastFolder = (IMailFolder) event.getSource();
 
 			// Collect the uids for one folder
 			List collectedUids = new ArrayList();
@@ -226,7 +226,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 					collectedUids.clear();
 					collectedUids.add(next.getChanges());
 
-					lastFolder = (AbstractFolder) next.getSource();
+					lastFolder = (IMailFolder) next.getSource();
 				} else {
 					collectedUids.add(next.getChanges());
 				}
@@ -245,13 +245,13 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 	private void processTreeEvents() {
 
 		if (folderRemovedList[swap].size() > 0) {
-			AbstractFolder lastFolder = null;
+			IMailFolder lastFolder = null;
 
 			// Process the events
 			for (int i = 0; i < folderRemovedList[swap].size(); i++) {
 				FolderEvent next = (FolderEvent) folderRemovedList[swap].get(i);
 
-				lastFolder = (AbstractFolder) next.getSource();
+				lastFolder = (IMailFolder) next.getSource();
 				
 				TreeNode parent = lastFolder.getParent();
 				lastFolder.removeFromParent();
@@ -267,8 +267,8 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 
 			FolderEvent e = (FolderEvent) folderAddedList[swap].get(0);
 			
-			AbstractFolder lastFolder = (AbstractFolder) e.getSource();
-			AbstractFolder child = (AbstractFolder)e.getChanges();
+			IMailFolder lastFolder = (IMailFolder) e.getSource();
+			IMailFolder child = (IMailFolder)e.getChanges();
 			
 			// If there is still a parent -> remove it
 			if( child.getParent() != null ) {
@@ -286,7 +286,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 			for (int i = 1; i < folderAddedList[swap].size(); i++) {
 				FolderEvent next = (FolderEvent) folderAddedList[swap].get(i);
 				if (next.getSource() != lastFolder) {
-					lastFolder = (AbstractFolder) next.getSource();
+					lastFolder = (IMailFolder) next.getSource();
 					FolderTreeModel.getInstance().nodeStructureChanged(lastFolder);
 				}
 			}
@@ -298,7 +298,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 			Collections.sort(folderPropertyChangedList[swap],
 					FolderEventComparator.getInstance());
 
-			AbstractFolder lastFolder = (AbstractFolder) ((FolderEvent) folderPropertyChangedList[swap]
+			IMailFolder lastFolder = (IMailFolder) ((FolderEvent) folderPropertyChangedList[swap]
 					.get(0)).getSource();
 
 			FolderTreeModel.getInstance().nodeChanged(lastFolder);
@@ -308,7 +308,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 				FolderEvent next = (FolderEvent) folderPropertyChangedList[swap]
 						.get(i);
 				if (next.getSource() != lastFolder) {
-					lastFolder = (AbstractFolder) next.getSource();
+					lastFolder = (IMailFolder) next.getSource();
 					FolderTreeModel.getInstance().nodeChanged(lastFolder);
 				}
 			}

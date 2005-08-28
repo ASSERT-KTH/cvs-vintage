@@ -24,7 +24,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -70,15 +70,15 @@ class AccountCreator implements WizardModelListener {
             String path = MailConfig.getInstance().getConfigDirectory().getPath();
 
             IMAPRootFolder parentFolder = new IMAPRootFolder(account, path);
-            ((AbstractFolder) FolderTreeModel.getInstance().getRoot()).add(parentFolder);
-            ((AbstractFolder) FolderTreeModel.getInstance().getRoot())
+            ((IMailFolder) FolderTreeModel.getInstance().getRoot()).add(parentFolder);
+            ((IMailFolder) FolderTreeModel.getInstance().getRoot())
                     .getConfiguration().getRoot().addElement(
                             parentFolder.getConfiguration().getRoot());
 
             FolderTreeModel.getInstance().nodeStructureChanged(parentFolder.getParent());
 
             try {
-                AbstractFolder inbox = new IMAPFolder("INBOX", "IMAPFolder",
+            	IMailFolder inbox = new IMAPFolder("INBOX", "IMAPFolder",
                         path);
                 parentFolder.add(inbox);
                 parentFolder.getConfiguration().getRoot().addElement(

@@ -27,8 +27,7 @@ import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -102,8 +101,7 @@ public class ThreadedViewAction extends AbstractSelectableAction implements
 	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		AbstractFolder[] selection = ((TreeSelectionChangedEvent) e)
-				.getSelected();
+		IMailFolder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
 
 		if (!(selection[0] instanceof IMailbox)) {
 			return;
@@ -112,8 +110,7 @@ public class ThreadedViewAction extends AbstractSelectableAction implements
 		if (selection.length == 1) {
 			XmlElement threadedview = ((MailFrameMediator) getFrameMediator())
 					.getFolderOptionsController().getConfigNode(
-							(AbstractMessageFolder) selection[0],
-							"ThreadedViewOptions");
+							(IMailbox) selection[0], "ThreadedViewOptions");
 			if (threadedview != null) {
 				// *20040510, karlpeder* columns may be null (first time we
 				// visit a folder!?)

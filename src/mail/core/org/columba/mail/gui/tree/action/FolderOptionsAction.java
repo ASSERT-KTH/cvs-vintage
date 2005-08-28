@@ -24,7 +24,6 @@ import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
@@ -80,7 +79,7 @@ public class FolderOptionsAction extends AbstractColumbaAction implements
 	}
 
 	public void selectionChanged(SelectionChangedEvent e) {
-		AbstractFolder[] r = ((TreeSelectionChangedEvent) e).getSelected();
+		IMailFolder[] r = ((TreeSelectionChangedEvent) e).getSelected();
 
 		if ((r.length > 0) && r[0] instanceof IMailbox) {
 			setEnabled(true);

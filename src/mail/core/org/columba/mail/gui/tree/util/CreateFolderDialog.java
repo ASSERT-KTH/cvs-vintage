@@ -52,8 +52,8 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.base.ButtonWithMnemonic;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
@@ -65,14 +65,23 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class CreateFolderDialog extends JDialog implements ActionListener {
 	protected boolean bool = false;
+
 	protected JTextField textField;
+
 	protected JButton okButton;
+
 	protected JButton cancelButton;
+
 	protected JButton helpButton;
+
 	protected JComboBox typeBox;
+
 	protected JTree tree;
+
 	protected String name;
+
 	protected TreePath selected;
+
 	protected IFrameMediator mediator;
 
 	public CreateFolderDialog(IFrameMediator mediator, TreePath selected) {
@@ -112,7 +121,7 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 		builder.setDefaultDialogBorder();
 
 		// skip the first column
-		//builder.setLeadingColumnOffset(1);
+		// builder.setLeadingColumnOffset(1);
 		// Add components to the panel:
 		builder.append(new JLabel(MailResourceLoader.getString("dialog",
 				"folder", "name")));
@@ -159,9 +168,9 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 
 		typeBox = new JComboBox();
 
-		//  get global sorting state
+		// get global sorting state
 		TreeModel t = ((TreeViewOwner) mediator).getTreeController().getModel();
-				
+
 		if (t instanceof SortedTreeModelDecorator) {
 			// sorting is enabled
 			SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t;
@@ -184,13 +193,12 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 		tree.expandRow(0);
 		tree.expandRow(1);
 
-		tree.addTreeSelectionListener( new TreeSelectionListener() {
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent arg0) {
 				selectionChanged();
 			}
-		}
-		);
-		
+		});
+
 		// button panel
 		okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"global", "ok"));
@@ -204,32 +212,33 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 				"global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
-		
+
 	}
 
-	protected void selectionChanged()  {
-		AbstractFolder selected = getSelected();
-		if( selected != null) {
-			List childs = FolderFactory.getInstance().getPossibleChilds(selected);
+	protected void selectionChanged() {
+		IMailFolder selected = getSelected();
+		if (selected != null) {
+			List childs = FolderFactory.getInstance().getPossibleChilds(
+					selected);
 			Iterator it = childs.iterator();
-			while( it.hasNext() ) {
-				String type = (String)it.next();
-				if( ! selected.supportsAddFolder(type)) {
+			while (it.hasNext()) {
+				String type = (String) it.next();
+				if (!selected.supportsAddFolder(type)) {
 					it.remove();
 				}
-				
+
 				// We have a special Command for VFolders
-				if( type.equals("VirtualFolder") ) {
+				if (type.equals("VirtualFolder")) {
 					it.remove();
 				}
 			}
-			
-			if( childs.size() > 0) {
+
+			if (childs.size() > 0) {
 				typeBox.setModel(new DefaultComboBoxModel(childs.toArray()));
 
 				okButton.setEnabled(true);
-				typeBox.setEnabled(true);			
-			} else {			
+				typeBox.setEnabled(true);
+			} else {
 				okButton.setEnabled(false);
 				typeBox.setEnabled(false);
 			}
@@ -238,13 +247,13 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 			typeBox.setEnabled(false);
 		}
 	}
-	
+
 	public String getName() {
 		return name;
 	}
 
-	public AbstractFolder getSelected() {
-		return (AbstractFolder) tree.getSelectionPath().getLastPathComponent();
+	public IMailFolder getSelected() {
+		return (IMailFolder) tree.getSelectionPath().getLastPathComponent();
 	}
 
 	public boolean success() {
@@ -281,6 +290,6 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 	 * @return
 	 */
 	public String getType() {
-		return (String)typeBox.getSelectedItem();
+		return (String) typeBox.getSelectedItem();
 	}
 }

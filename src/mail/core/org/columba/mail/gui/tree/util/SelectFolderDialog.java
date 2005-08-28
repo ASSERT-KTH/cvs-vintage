@@ -44,7 +44,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.folder.IFolder;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.ISelectFolderDialog;
@@ -71,7 +71,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 
 	protected JButton newButton;
 
-	protected AbstractFolder selectedFolder;
+	protected IMailFolder selectedFolder;
 
 	private ButtonWithMnemonic cancelButton;
 
@@ -253,8 +253,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 	 * *******************************
 	 */
 	public void valueChanged(TreeSelectionEvent e) {
-		AbstractFolder node = (AbstractFolder) tree
-				.getLastSelectedPathComponent();
+		IMailFolder node = (IMailFolder) tree.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;

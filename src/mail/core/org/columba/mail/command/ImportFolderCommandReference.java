@@ -8,7 +8,7 @@ package org.columba.mail.command;
 
 import java.io.File;
 
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
 
@@ -24,16 +24,9 @@ public class ImportFolderCommandReference extends MailFolderCommandReference {
 
     /**
  * @param folder
- */
-    public ImportFolderCommandReference(AbstractFolder folder) {
-        super(folder);
-    }
-
-    /**
- * @param folder
  * @param message
  */
-    public ImportFolderCommandReference(AbstractFolder folder,
+    public ImportFolderCommandReference(IMailFolder folder,
         File[] sourceFiles, AbstractMailboxImporter importer) {
         super(folder);
         this.sourceFiles = sourceFiles;

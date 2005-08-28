@@ -20,40 +20,42 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
-
 
 /**
  * Launches a new SaveFolderConfigurationCommand for each folder in the
  * hierarchy.
- *
+ * 
  * @author freddy
  */
 public class SaveAllFoldersPlugin implements Runnable {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.shutdown");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.shutdown");
 
-    public void run() {
-        AbstractFolder rootFolder = (AbstractFolder) FolderTreeModel.getInstance().getRoot();
-        saveFolder(rootFolder);
-    }
+	public void run() {
+		IMailFolder rootFolder = (IMailFolder) FolderTreeModel.getInstance()
+				.getRoot();
+		saveFolder(rootFolder);
+	}
 
-    protected void saveFolder(AbstractFolder parentFolder) {
-        AbstractFolder child;
+	protected void saveFolder(IMailFolder parentFolder) {
+		IMailFolder child;
 
-        for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
-            child = (AbstractFolder) e.nextElement();
+		for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
+			child = (IMailFolder) e.nextElement();
 
-            MailFolderCommandReference r = new MailFolderCommandReference(child);
+			MailFolderCommandReference r = new MailFolderCommandReference(child);
 
-            LOG.info("Saving folder " + child.getName());
+			LOG.info("Saving folder " + child.getName());
 
-            CommandProcessor.getInstance().addOp(new SaveFolderConfigurationCommand(r));
+			CommandProcessor.getInstance().addOp(
+					new SaveFolderConfigurationCommand(r));
 
-            saveFolder(child);
-        }
-    }
+			saveFolder(child);
+		}
+	}
 }

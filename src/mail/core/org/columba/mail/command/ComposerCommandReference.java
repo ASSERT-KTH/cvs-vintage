@@ -15,10 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.command;
 
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.message.ColumbaMessage;
 
 /**
  * @author freddy
@@ -41,39 +39,6 @@ public class ComposerCommandReference extends MailFolderCommandReference {
 			IMailbox folder) {
 		super(folder);
 		this.composerController = composerController;
-	}
-
-	/**
-	 * Constructor for ComposerCommandReference.
-	 * 
-	 * @param folder
-	 * @param message
-	 */
-	public ComposerCommandReference(AbstractFolder folder,
-			ColumbaMessage message) {
-		super(folder, message);
-	}
-
-	/**
-	 * Constructor for ComposerCommandReference.
-	 * 
-	 * @param folder
-	 * @param uids
-	 */
-	public ComposerCommandReference(AbstractFolder folder, Object[] uids) {
-		super(folder, uids);
-	}
-
-	/**
-	 * Constructor for ComposerCommandReference.
-	 * 
-	 * @param folder
-	 * @param uids
-	 * @param address
-	 */
-	public ComposerCommandReference(AbstractFolder folder, Object[] uids,
-			Integer[] address) {
-		super(folder, uids, address);
 	}
 
 	/**

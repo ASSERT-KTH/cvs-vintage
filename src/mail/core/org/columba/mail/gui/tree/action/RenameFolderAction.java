@@ -26,7 +26,7 @@ import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -68,7 +68,7 @@ public class RenameFolderAction extends AbstractColumbaAction implements
 	public void selectionChanged(SelectionChangedEvent evt) {
 		if (((TreeSelectionChangedEvent) evt).getSelected().length > 0
 				&& ((TreeSelectionChangedEvent) evt).getSelected()[0] instanceof IMailbox) {
-			AbstractFolder folder = ((TreeSelectionChangedEvent) evt)
+			IMailFolder folder = ((TreeSelectionChangedEvent) evt)
 					.getSelected()[0];
 
 			if ((folder != null) && folder instanceof IMailbox) {

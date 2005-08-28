@@ -16,59 +16,60 @@
 package org.columba.mail.gui.config.subscribe;
 
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
-
+import org.columba.mail.folder.IMailFolder;
 
 public class SubscribeCommandReference extends MailFolderCommandReference {
-    private SubscribeDialog dialog;
-    private String mailbox;
+	private SubscribeDialog dialog;
 
-    /**
- * @param folder
- */
-    public SubscribeCommandReference(AbstractFolder folder,
-        SubscribeDialog dialog) {
-        super(folder);
+	private String mailbox;
 
-        this.dialog = dialog;
-    }
+	/**
+	 * @param folder
+	 */
+	public SubscribeCommandReference(IMailFolder folder, SubscribeDialog dialog) {
+		super(folder);
 
-    /**
- * @param folder
- */
-    public SubscribeCommandReference(AbstractFolder folder,
-        SubscribeDialog dialog, String mailbox) {
-        super(folder);
+		this.dialog = dialog;
+	}
 
-        this.dialog = dialog;
-        this.mailbox = mailbox;
-    }
+	/**
+	 * @param folder
+	 */
+	public SubscribeCommandReference(IMailFolder folder,
+			SubscribeDialog dialog, String mailbox) {
+		super(folder);
 
-    /**
- * @return Returns the dialog.
- */
-    public SubscribeDialog getDialog() {
-        return dialog;
-    }
+		this.dialog = dialog;
+		this.mailbox = mailbox;
+	}
 
-    /**
- * @param dialog The dialog to set.
- */
-    public void setDialog(SubscribeDialog dialog) {
-        this.dialog = dialog;
-    }
+	/**
+	 * @return Returns the dialog.
+	 */
+	public SubscribeDialog getDialog() {
+		return dialog;
+	}
 
-    /**
- * @return Returns the mailbox.
- */
-    public String getMailbox() {
-        return mailbox;
-    }
+	/**
+	 * @param dialog
+	 *            The dialog to set.
+	 */
+	public void setDialog(SubscribeDialog dialog) {
+		this.dialog = dialog;
+	}
 
-    /**
- * @param mailbox The mailbox to set.
- */
-    public void setMailbox(String mailbox) {
-        this.mailbox = mailbox;
-    }
+	/**
+	 * @return Returns the mailbox.
+	 */
+	public String getMailbox() {
+		return mailbox;
+	}
+
+	/**
+	 * @param mailbox
+	 *            The mailbox to set.
+	 */
+	public void setMailbox(String mailbox) {
+		this.mailbox = mailbox;
+	}
 }

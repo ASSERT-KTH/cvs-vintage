@@ -32,7 +32,6 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.IFolderEvent;
@@ -165,7 +164,7 @@ public class FolderInfoPanel extends ContainerInfoPanel implements
 		if (folder != null)
 			folder.removeFolderListener(this);
 
-		info = ((AbstractMessageFolder) newFolder).getMessageFolderInfo();
+		info = ((IMailbox) newFolder).getMessageFolderInfo();
 
 		if (info == null) {
 			return;
@@ -181,7 +180,7 @@ public class FolderInfoPanel extends ContainerInfoPanel implements
 	}
 
 	private void update() {
-		info = ((AbstractMessageFolder) folder).getMessageFolderInfo();
+		info = ((IMailbox) folder).getMessageFolderInfo();
 		int total = info.getExists();
 		int unread = info.getUnseen();
 		int recent = info.getRecent();

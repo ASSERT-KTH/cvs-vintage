@@ -26,7 +26,6 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.FilterCompoundCommand;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -136,7 +135,7 @@ public class AddPOP3MessageCommand extends Command {
 			} else {
 				// move message to user-configured folder (generally "Junk"
 				// folder)
-				AbstractFolder destFolder = FolderTreeModel
+				IMailbox destFolder = (IMailbox) FolderTreeModel
 						.getInstance()
 						.getFolder(item.getSpamItem().getIncomingCustomFolder());
 

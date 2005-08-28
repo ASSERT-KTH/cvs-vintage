@@ -28,7 +28,7 @@ import org.columba.api.plugin.IExtension;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.logging.Logging;
 import org.columba.mail.command.ImportFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.command.ImportMessageCommand;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.mail.plugin.ImportExtensionHandler;
@@ -61,7 +61,7 @@ class MailboxImporter implements WizardModelListener {
 		}
 
 		ImportFolderCommandReference r = new ImportFolderCommandReference(
-				(AbstractFolder) args[0], (File[]) args[1], importer);
+				(IMailFolder) args[0], (File[]) args[1], importer);
 		CommandProcessor.getInstance().addOp(new ImportMessageCommand(r));
 	}
 

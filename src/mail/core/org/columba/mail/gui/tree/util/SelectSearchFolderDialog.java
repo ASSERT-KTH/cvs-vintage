@@ -20,11 +20,11 @@ package org.columba.mail.gui.tree.util;
 import javax.swing.event.TreeSelectionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class SelectSearchFolderDialog extends SelectFolderDialog {
 
@@ -33,11 +33,10 @@ public class SelectSearchFolderDialog extends SelectFolderDialog {
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {
-		AbstractFolder node = (AbstractFolder) tree
-				.getLastSelectedPathComponent();
+		IMailFolder node = (IMailFolder) tree.getLastSelectedPathComponent();
 
 		selectedFolder = node;
-		
+
 		if (node == null)
 			okButton.setEnabled(false);
 		else

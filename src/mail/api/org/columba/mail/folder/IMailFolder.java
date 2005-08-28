@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import java.util.Enumeration;
+
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -129,4 +131,17 @@ public interface IMailFolder extends MutableTreeNode, IFolder, IExtensionInterfa
 
 	String getTreePath();
 	
+	Enumeration breadthFirstEnumeration();
+	
+	Enumeration depthFirstEnumeration();
+	
+	/**
+	 * Add treenode as child to this parent node.
+	 * 
+	 * @param treeNode	new treenode
+	 */
+	void add(IMailFolder treeNode);
+	
+	
+	public String getType();
 }

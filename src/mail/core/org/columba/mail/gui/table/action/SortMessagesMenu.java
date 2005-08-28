@@ -35,7 +35,7 @@ import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -203,8 +203,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		AbstractFolder[] selection = ((TreeSelectionChangedEvent) e)
-				.getSelected();
+		IMailFolder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
 
 		if (selection.length == 1) {
 			if (!(selection[0] instanceof IMailbox)) {

@@ -17,7 +17,7 @@ package org.columba.mail.gui.tree.comparator;
 
 import java.util.Comparator;
 
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.virtual.VirtualFolder;
 
@@ -48,7 +48,7 @@ public class FolderComparator implements Comparator {
 	public int compare(Object o1, Object o2) {
 		int compValue;
 
-		if ((o1 instanceof AbstractFolder) && (o2 instanceof AbstractFolder)) {
+		if ((o1 instanceof IMailFolder) && (o2 instanceof IMailFolder)) {
 			// If it isnt a message folder, then it must be a root, and those
 			// should not be sorted.
 			if (!(o1 instanceof IMailbox)) {

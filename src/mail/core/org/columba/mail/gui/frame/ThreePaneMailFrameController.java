@@ -44,8 +44,6 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.HeaderController;
@@ -386,7 +384,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 			// folder-based configuration
 
-			if (folder instanceof AbstractMessageFolder)
+			if (folder instanceof IMailbox)
 				getFolderOptionsController().save((IMailbox) folder);
 		}
 	}
@@ -421,7 +419,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		if (e instanceof TreeSelectionChangedEvent) {
 			TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;
 
-			AbstractFolder[] selectedFolders = event.getSelected();
+			IMailFolder[] selectedFolders = event.getSelected();
 			if (selectedFolders.length == 1 && selectedFolders[0] != null) {
 				getContainer().getFrame()
 						.setTitle(selectedFolders[0].getName());

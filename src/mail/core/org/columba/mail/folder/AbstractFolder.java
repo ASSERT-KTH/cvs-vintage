@@ -95,6 +95,16 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	}
 
 	/**
+	 * Overwritten DefaultMutableTreeNode.add(MutableTreeNode) in favor of
+	 * our interface
+	 * 
+	 * @see org.columba.mail.folder.IMailFolder#add(org.columba.mail.folder.IMailFolder)
+	 */
+	public void add(IMailFolder treeNode) {
+		super.add(treeNode);
+	}
+	
+	/**
 	 * Adds a listener.
 	 */
 	public void addFolderListener(IFolderListener l) {

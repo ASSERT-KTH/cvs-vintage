@@ -22,10 +22,10 @@ import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.subscribe.SubscribeDialog;
@@ -33,65 +33,68 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
-public class SubscribeFolderAction extends AbstractColumbaAction
-    implements ISelectionListener {
-    private IMAPRootFolder rootFolder;
+public class SubscribeFolderAction extends AbstractColumbaAction implements
+		ISelectionListener {
+	private IMAPRootFolder rootFolder;
 
-    public SubscribeFolderAction(IFrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_subscribe"));
+	public SubscribeFolderAction(IFrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_folder_subscribe"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_subscribe").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_folder_subscribe").replaceAll("&", ""));
 
-        // icons
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("remotehost.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("remotehost.png"));
+		// icons
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("remotehost.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("remotehost.png"));
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+		// shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+	}
 
-    /* (non-Javadoc)
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent evt) {
-        new SubscribeDialog( getFrameMediator().getView().getFrame(), rootFolder);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		new SubscribeDialog(getFrameMediator().getView().getFrame(), rootFolder);
+	}
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
- */
-    public void selectionChanged(SelectionChangedEvent e) {
-        if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-            AbstractFolder selected = ((TreeSelectionChangedEvent) e).getSelected()[0];
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+			IMailFolder selected = ((TreeSelectionChangedEvent) e)
+					.getSelected()[0];
 
-            if (selected instanceof IMAPFolder) {
-                rootFolder = (IMAPRootFolder) ((IMAPFolder) selected).getRootFolder();
-                setEnabled(true);
-            } else if (selected instanceof IMAPRootFolder) {
-                rootFolder = (IMAPRootFolder) selected;
-                setEnabled(true);
-            } else {
-                setEnabled(false);
-            }
-        } else {
-            setEnabled(false);
-        }
-    }
+			if (selected instanceof IMAPFolder) {
+				rootFolder = (IMAPRootFolder) ((IMAPFolder) selected)
+						.getRootFolder();
+				setEnabled(true);
+			} else if (selected instanceof IMAPRootFolder) {
+				rootFolder = (IMAPRootFolder) selected;
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
+		} else {
+			setEnabled(false);
+		}
+	}
 }

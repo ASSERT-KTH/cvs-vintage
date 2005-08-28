@@ -25,7 +25,6 @@ import javax.swing.tree.TreePath;
 import org.columba.api.command.ICommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.TreeView;
 
@@ -48,20 +47,20 @@ public class TreeSelectionHandler extends SelectionHandler implements
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.tree.selection");
 
-	private static final AbstractFolder[] FOLDER_ARRAY = { null };
+	private static final IMailFolder[] FOLDER_ARRAY = { null };
 
 	private TreeView view;
 
 	private LinkedList selectedFolders;
 
 	private boolean setSelection;
-	
+
 	public TreeSelectionHandler(TreeView view) {
 		super("mail.tree");
 		this.view = view;
 		view.addTreeSelectionListener(this);
 		selectedFolders = new LinkedList();
-		
+
 		setSelection = false;
 	}
 
@@ -71,10 +70,11 @@ public class TreeSelectionHandler extends SelectionHandler implements
 	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
 	 */
 	public ICommandReference getSelection() {
-		if ( selectedFolders.size() == 0) return null;
-		
+		if (selectedFolders.size() == 0)
+			return null;
+
 		MailFolderCommandReference reference = new MailFolderCommandReference(
-				(AbstractFolder) selectedFolders.get(0));
+				(IMailFolder) selectedFolders.get(0));
 
 		return reference;
 	}
@@ -95,14 +95,14 @@ public class TreeSelectionHandler extends SelectionHandler implements
 			return;
 		}
 
-		if( setSelection ) {
+		if (setSelection) {
 			selectedFolders.clear();
 			setSelection = false;
 		}
-		
+
 		for (int i = 0; i < e.getPaths().length; i++) {
-			if (e.getPaths()[i].getLastPathComponent() instanceof AbstractFolder) {
-				AbstractFolder folder = (AbstractFolder) e.getPaths()[i]
+			if (e.getPaths()[i].getLastPathComponent() instanceof IMailFolder) {
+				IMailFolder folder = (IMailFolder) e.getPaths()[i]
 						.getLastPathComponent();
 
 				if (e.isAddedPath(i)) {
@@ -117,29 +117,31 @@ public class TreeSelectionHandler extends SelectionHandler implements
 		}
 
 		fireSelectionChanged(new TreeSelectionChangedEvent(
-				(AbstractFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
-		
+				(IMailFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
+
 	}
 
 	public void setSelection(ICommandReference selection) {
-		
+
 		selectedFolders.clear();
-		
-		if ( selection == null || ((MailFolderCommandReference) selection).getSourceFolder()  == null ) {
+
+		if (selection == null
+				|| ((MailFolderCommandReference) selection).getSourceFolder() == null) {
 			view.clearSelection();
 		} else {
-		
-		TreePath path = ((IMailFolder) ((MailFolderCommandReference) selection).getSourceFolder())
-				.getSelectionTreePath();
-		view.setSelectionPath(path);
-		view.expandPath(path);
-		selectedFolders.add(((MailFolderCommandReference) selection).getSourceFolder());
+
+			TreePath path = ((IMailFolder) ((MailFolderCommandReference) selection)
+					.getSourceFolder()).getSelectionTreePath();
+			view.setSelectionPath(path);
+			view.expandPath(path);
+			selectedFolders.add(((MailFolderCommandReference) selection)
+					.getSourceFolder());
 		}
-		
+
 		setSelection = true;
-		
+
 		fireSelectionChanged(new TreeSelectionChangedEvent(
-				(AbstractFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
-	
+				(IMailFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
+
 	}
 }

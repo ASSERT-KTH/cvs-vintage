@@ -33,7 +33,7 @@ public class FolderChildrenIterator {
 	private List folderList;
 	Iterator folderIterator;
 	
-	public FolderChildrenIterator(AbstractFolder parent) {
+	public FolderChildrenIterator(IMailFolder parent) {
 		folderList = new ArrayList();
 		Enumeration childEnum = parent.children();
 		while( childEnum.hasMoreElements() ) {

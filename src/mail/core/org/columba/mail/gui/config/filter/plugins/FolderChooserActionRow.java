@@ -24,7 +24,6 @@ import javax.swing.JButton;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.filter.FilterAction;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.filter.ActionList;
@@ -62,13 +61,13 @@ public class FolderChooserActionRow extends DefaultActionRow implements
 		} else {
 			String treePath = treePathButton.getText();
 			TreeNodeList list = new TreeNodeList(treePath);
-			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel
+			IMailbox folder = (IMailbox) FolderTreeModel
 					.getInstance().getFolder(list);
 
 			if (folder == null) {
 				// user didn't select any folder
 				// -> make Inbox the default folder
-				folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+				folder = (IMailbox) FolderTreeModel.getInstance()
 						.getFolder(101);
 			}
 

@@ -54,7 +54,7 @@ import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
@@ -93,9 +93,9 @@ public class ExportDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	private void createChildNodes(CheckableTreeNode root, AbstractFolder parent) {
+	private void createChildNodes(CheckableTreeNode root, IMailFolder parent) {
 		for (int i = 0; i < parent.getChildCount(); i++) {
-			AbstractFolder child = (AbstractFolder) parent.getChildAt(i);
+			IMailFolder child = (IMailFolder) parent.getChildAt(i);
 
 			CheckableTreeNode c = new CheckableTreeNode(child.getName());
 			c.setIcon(FolderTreeCellRenderer.getFolderIcon(child, false));
@@ -121,7 +121,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 		selectAllButton.setActionCommand("SELECTALL");
 		selectAllButton.addActionListener(this);
 
-		AbstractFolder parent = (AbstractFolder) FolderTreeModel.getInstance()
+		IMailFolder parent = (IMailFolder) FolderTreeModel.getInstance()
 				.getRoot();
 		CheckableTreeNode root = new CheckableTreeNode(parent.getName());
 		root.setNode(parent);
@@ -289,13 +289,13 @@ public class ExportDialog extends JDialog implements ActionListener {
 			MailFolderCommandReference r = null;
 
 			for (int i = 0; i < v.size(); i++) {
-				AbstractFolder node = (AbstractFolder) ((CheckableTreeNode) v
-						.get(i)).getNode();
+				IMailFolder node = (IMailFolder) ((CheckableTreeNode) v.get(i))
+						.getNode();
 
 				r = new MailFolderCommandReference(node);
 				r.setDestFile(destFile);
 
-				//              execute the command
+				// execute the command
 				CommandProcessor.getInstance()
 						.addOp(new ExportFolderCommand(r));
 			}
@@ -316,7 +316,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 			int row = tree.getRowForLocation(x, y);
 			TreePath path = tree.getPathForRow(row);
 
-			//TreePath path = tree.getSelectionPath();
+			// TreePath path = tree.getSelectionPath();
 			if (path != null) {
 				CheckableItem node = (CheckableItem) path
 						.getLastPathComponent();

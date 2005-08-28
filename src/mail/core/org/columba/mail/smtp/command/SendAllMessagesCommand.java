@@ -30,7 +30,6 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
@@ -111,8 +110,8 @@ public class SendAllMessagesCommand extends Command {
 				}
 
 				// Sent folder
-				sentFolder = (AbstractMessageFolder) FolderTreeModel
-						.getInstance().getFolder(
+				sentFolder = (IMailbox) FolderTreeModel.getInstance()
+						.getFolder(
 								Integer.parseInt(accountItem
 										.getSpecialFoldersItem().get("sent")));
 

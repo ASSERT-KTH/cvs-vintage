@@ -34,7 +34,6 @@ import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.base.RadioButtonWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpamItem;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -216,7 +215,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 
 			markCheckBox.setSelected(spam.isMoveMessageWhenMarkingEnabled());
 
-			folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+			folder = (IMailbox) FolderTreeModel.getInstance()
 					.getFolder(spam.getMoveCustomFolder());
 			treePath = folder.getTreePath();
 			markChooseFolderButton.setText(treePath);
@@ -237,13 +236,13 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 
 			TreeNodeList list = new TreeNodeList(incomingChooseFolderButton
 					.getText());
-			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel
+			IMailbox folder = (IMailbox) FolderTreeModel
 					.getInstance().getFolder(list);
 
 			if (folder == null) {
 				// user didn't select any folder
 				// -> make Inbox the default folder
-				folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+				folder = (IMailbox) FolderTreeModel.getInstance()
 						.getFolder(101);
 			}
 
@@ -251,13 +250,13 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 			spam.setIncomingCustomFolder(uid);
 
 			list = new TreeNodeList(markChooseFolderButton.getText());
-			folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+			folder = (IMailbox) FolderTreeModel.getInstance()
 					.getFolder(list);
 
 			if (folder == null) {
 				// user didn't select any folder
 				// -> make Inbox the default folder
-				folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+				folder = (IMailbox) FolderTreeModel.getInstance()
 						.getFolder(101);
 			}
 
