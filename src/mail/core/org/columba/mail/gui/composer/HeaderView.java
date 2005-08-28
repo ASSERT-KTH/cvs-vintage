@@ -30,9 +30,7 @@ import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.action.AddressbookAction;
 import org.frapuccino.addresscombobox.CommaSeparatedAutoCompleter;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * 
@@ -60,16 +58,16 @@ public class HeaderView extends JPanel implements ActionListener {
 		this.controller = controller;
 
 		initComponents();
-		
-		layoutComponents();
+
+		// layoutComponents();
 	}
 
 	/**
 	 * Init address autocompletion
-	 *  
+	 * 
 	 */
 	public void initAutocompletion() {
-		
+
 		IAddressCollector addressCollector = null;
 		IContactFacade facade;
 		try {
@@ -78,41 +76,40 @@ public class HeaderView extends JPanel implements ActionListener {
 		} catch (ServiceNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (addressCollector != null) {
-		// pass contact data along to AddressComboBox
-		new CommaSeparatedAutoCompleter(toComboBox, Arrays.asList(addressCollector.getAddresses()), true);
-		new CommaSeparatedAutoCompleter(ccComboBox, Arrays.asList(addressCollector.getAddresses()), true);
-		new CommaSeparatedAutoCompleter(bccComboBox, Arrays.asList(addressCollector.getAddresses()), true);
-			
-		//toComboBox.setItemProvider(addressCollector);
-		//ccComboBox.setItemProvider(addressCollector);
-		//bccComboBox.setItemProvider(addressCollector);
+			// pass contact data along to AddressComboBox
+			new CommaSeparatedAutoCompleter(toComboBox, Arrays
+					.asList(addressCollector.getAddresses()), true);
+			new CommaSeparatedAutoCompleter(ccComboBox, Arrays
+					.asList(addressCollector.getAddresses()), true);
+			new CommaSeparatedAutoCompleter(bccComboBox, Arrays
+					.asList(addressCollector.getAddresses()), true);
+
+			// toComboBox.setItemProvider(addressCollector);
+			// ccComboBox.setItemProvider(addressCollector);
+			// bccComboBox.setItemProvider(addressCollector);
 		}
 	}
 
 	/**
-	 *  
+	 * 
 	 */
-	protected void layoutComponents() {
+	public void layoutComponents(JPanel panel) {
 
-		// Create a FormLayout instance.
-		FormLayout layout = new FormLayout(
-				"max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
-				"fill:default, 3dlu, fill:default, 3dlu, fill:default");
-
-		// 3 row
-		PanelBuilder builder = new PanelBuilder(this, layout);
 		CellConstraints cc = new CellConstraints();
 
-		builder.add(toButton, cc.xy(1, 1));
-		builder.add(toComboBox, cc.xy(3, 1));
+		panel.add(toButton, cc.xy(1, 3, CellConstraints.FILL,
+				CellConstraints.DEFAULT));
+		panel.add(toComboBox, cc.xywh(3, 3, 5, 1));
 
-		builder.add(ccButton, cc.xy(1, 3));
-		builder.add(ccComboBox, cc.xy(3, 3));
+		panel.add(ccButton, cc.xy(1, 5, CellConstraints.FILL,
+				CellConstraints.DEFAULT));
+		panel.add(ccComboBox, cc.xywh(3, 5, 5, 1));
 
-		builder.add(bccButton, cc.xy(1, 5));
-		builder.add(bccComboBox, cc.xy(3, 5));
+		panel.add(bccButton, cc.xy(1, 7, CellConstraints.FILL,
+				CellConstraints.DEFAULT));
+		panel.add(bccComboBox, cc.xywh(3, 7, 5, 1));
 
 	}
 

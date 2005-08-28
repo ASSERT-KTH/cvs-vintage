@@ -62,7 +62,6 @@ import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
@@ -73,10 +72,14 @@ import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.swing.MultipleTransferHandler;
 
-import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
+import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.Sizes;
 
 /**
  * 
@@ -356,59 +359,44 @@ public class ComposerController extends DefaultFrameController implements
 		centerPanel.removeAll();
 
 		topPanel = new JPanel();
-		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
+		topPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,0));
 
-		// Create a FormLayout instance.
-		FormLayout layout = new FormLayout(
-				"center:max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
-
-				// 2 columns
-				// "fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu,
-				// fill:default, 3dlu");
-				"fill:default");
-
-		// 3 row
-		PanelBuilder builder = new PanelBuilder(topPanel, layout);
-		CellConstraints cc = new CellConstraints();
-
+		FormLayout layout = new FormLayout(new ColumnSpec[] {
+				new ColumnSpec("center:max(pref;50dlu)"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				FormFactory.GROWING_BUTTON_COLSPEC,
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				FormFactory.GROWING_BUTTON_COLSPEC }, new RowSpec[] {
+				new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.NO_GROW),
+				FormFactory.LINE_GAP_ROWSPEC,
+				new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.NO_GROW),
+				FormFactory.LINE_GAP_ROWSPEC,
+				new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.NO_GROW),
+				FormFactory.LINE_GAP_ROWSPEC,
+				new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.NO_GROW),
+				FormFactory.LINE_GAP_ROWSPEC,
+				new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.NO_GROW) });
+		layout.setRowGroups(new int[][] { { 1, 3, 5, 7, 9 } });
 		layout.setColumnGroups(new int[][] { { 1 } });
 
-		// layout.setRowGroups(new int[][] { { 1, 5, 7 } });
-
-		builder.add(smtpLabel, cc.xy(1, 1));
-
-		builder.appendRow("3dlu");
-		builder.appendRow("fill:default");
-
-		JPanel smtpPanel = new JPanel();
-
-		FormLayout l = new FormLayout(
-				"fill:pref:grow, 6dlu, right:pref, 3dlu, right:pref",
-				"fill:pref");
-		PanelBuilder b = new PanelBuilder(smtpPanel, l);
+		topPanel.setLayout(layout);
 
 		CellConstraints c = new CellConstraints();
-		b.add(getAccountController().getView(), c.xy(1, 1));
-		b.add(priorityLabel, c.xy(3, 1));
-		b.add(getPriorityController().getView(), c.xy(5, 1));
 
-		builder.add(smtpPanel, cc.xy(3, 1));
-		builder.appendRow("3dlu");
-		builder.appendRow("fill:default:grow");
-		builder.add(getHeaderController().getView(), cc.xywh(1, 3, 4, 1));
-		builder.appendRow("3dlu");
-		builder.appendRow("fill:default:grow");
-		builder.add(subjectLabel, cc.xy(1, 5));
-		builder.appendRow("3dlu");
-		builder.appendRow("fill:default:grow");
-		builder.add(getSubjectController().getView(), cc.xy(3, 5));
+		topPanel.add(smtpLabel, c.xy(1, 1, CellConstraints.CENTER, CellConstraints.DEFAULT));
 
-		/*
-		 * builder.appendRow("6dlu"); builder.appendRow("fill:default:grow");
-		 * builder.add(htmlToolbar, cc.xywh(3, 7, 2, 1));
-		 */
+		topPanel.add(getAccountController().getView(), c.xy(3, 1));
+		topPanel.add(priorityLabel, c.xy(5, 1));
+		topPanel.add(getPriorityController().getView(), c.xy(7, 1));
 
-		// layout.setRowGroups(new int[][] { { 1, 5 } });
+		getHeaderController().getView().layoutComponents(topPanel);
+
+		topPanel.add(subjectLabel, c.xy(1, 9, CellConstraints.CENTER, CellConstraints.DEFAULT));
+
+		topPanel.add(getSubjectController().getView(), c.xywh(3, 9, 5, 1));
+
 		if (composerModel.isHtml()) {
 			// htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5,
 			// 0));
