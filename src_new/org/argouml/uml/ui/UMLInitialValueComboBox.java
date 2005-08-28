@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.46 2005/06/01 15:02:18 bobtarling Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.47 2005/08/28 17:13:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,13 +103,13 @@ public class UMLInitialValueComboBox extends JComboBox
 			Model.getDataTypesFactory()
 			    .createExpression("Java", item);
                     Model.getCoreHelper().setInitialValue(target, itemExpr);
-                    update();
+//                    update(); //see issue 3383
                 } else if (Model.getFacade().isAParameter(target)) {
                     Object itemExpr =
 			Model.getDataTypesFactory()
 			    .createExpression("Java", item);
                     Model.getCoreHelper().setDefaultValue(target, itemExpr);
-                    update();
+//                    update(); //see issue 3383
                 }
             }
         }); //...end of action listener...
@@ -170,30 +170,30 @@ public class UMLInitialValueComboBox extends JComboBox
      *
      * @author psager@tigris.org   Aug. 30, 2001
      */
-    private void update() {
-        Object target = theContainer.getTarget();
-        if (Model.getFacade().isAAttribute(target)) {
-            Object classifier = Model.getFacade().getOwner(target);
-            if (classifier == null) {
-                return;
-            }
-            Model.getCoreHelper().setFeatures(classifier,
-				    Model.getFacade().getFeatures(classifier));
-        } else if (Model.getFacade().isAParameter(target)) {
-            if (Model.getFacade().isACallEvent(target)) {
-                return;
-            }
-            Object feature = Model.getFacade().getBehavioralFeature(target);
-            if (feature != null) {
-                Object classifier = Model.getFacade().getOwner(feature);
-                if (classifier == null) {
-                    return;
-                }
-                Model.getCoreHelper().setFeatures(
-                        classifier,
-                        Model.getFacade().getFeatures(classifier));
-            }
-        }
-    }   // ...end of update() method...
+//    private void update() {
+//        Object target = theContainer.getTarget();
+//        if (Model.getFacade().isAAttribute(target)) {
+//            Object classifier = Model.getFacade().getOwner(target);
+//            if (classifier == null) {
+//                return;
+//            }
+//            Model.getCoreHelper().setFeatures(classifier,
+//				    Model.getFacade().getFeatures(classifier));
+//        } else if (Model.getFacade().isAParameter(target)) {
+//            if (Model.getFacade().isACallEvent(target)) {
+//                return;
+//            }
+//            Object feature = Model.getFacade().getBehavioralFeature(target);
+//            if (feature != null) {
+//                Object classifier = Model.getFacade().getOwner(feature);
+//                if (classifier == null) {
+//                    return;
+//                }
+//                Model.getCoreHelper().setFeatures(
+//                        classifier,
+//                        Model.getFacade().getFeatures(classifier));
+//            }
+//        }
+//    }   // ...end of update() method...
 
 } //...end of class...
