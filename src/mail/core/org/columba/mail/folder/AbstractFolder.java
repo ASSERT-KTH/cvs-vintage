@@ -160,7 +160,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).folderRemoved(e);
 				listenerList.remove(IFolderListener.class,
-						(FolderListener) listeners[i + 1]);
+						(IFolderListener) listeners[i + 1]);
 			}
 		}
 	}
