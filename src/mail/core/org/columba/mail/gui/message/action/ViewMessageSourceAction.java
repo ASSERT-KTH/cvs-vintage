@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.action;
+package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

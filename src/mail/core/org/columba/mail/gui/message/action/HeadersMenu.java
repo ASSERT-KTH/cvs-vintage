@@ -33,7 +33,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.action.ViewMessageAction;
 
 /**
  * Submenu containing three choices: Show default headers, show custom headers

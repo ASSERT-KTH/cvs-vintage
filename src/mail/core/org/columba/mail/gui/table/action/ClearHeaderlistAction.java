@@ -15,61 +15,43 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.tree.action;
+package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.table.ITableController;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 
-public class ViewHeaderListAction extends AbstractColumbaAction {
+public class ClearHeaderlistAction extends AbstractColumbaAction {
+	
 	/**
 	 * @param controller
 	 */
-	public ViewHeaderListAction(IFrameMediator controller) {
+	public ClearHeaderlistAction(IFrameMediator controller) {
 		super(controller, "ViewHeaderListAction");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MailFolderCommandReference references = (MailFolderCommandReference) getFrameMediator()
-				.getSelectionManager().getSelection("mail.tree");
 
-		if (references != null
-				&& (references.getSourceFolder() instanceof IMailbox)) {
-			// view message list
-			CommandProcessor.getInstance().addOp(
-					new ViewHeaderListCommand(getFrameMediator(), references));
-		} else {
-			// clear message list
-			ITableController c = ((TableViewOwner) getFrameMediator())
-					.getTableController();
+		// clear message list
+		ITableController c = ((TableViewOwner) getFrameMediator())
+				.getTableController();
+		c.clear();
 
-			c.clear();
+		// clear message-list selection
+		c.clearSelection();
 
-			// clear message-list selection
-			c.clearSelection();
+		// clear message-viewer
+		IMessageController m = ((MessageViewOwner) getFrameMediator())
+				.getMessageController();
+		m.clear();
 
-			// clear the folder info bar
-
-			// clear message-viewer
-			IMessageController m = ((MessageViewOwner) getFrameMediator())
-					.getMessageController();
-			m.clear();
-
-		}
 	}
-
 }

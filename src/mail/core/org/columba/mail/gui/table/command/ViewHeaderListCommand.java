@@ -27,7 +27,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.tree.action.ViewHeaderListAction;
+import org.columba.mail.gui.table.action.ViewHeaderListAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.message.IHeaderList;
 
