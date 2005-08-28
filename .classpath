@@ -16,7 +16,6 @@
 	<classpathentry kind="src" path="plugins/org.columba.example.HelloWorldAction/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.example.MBOXMailImportFilter/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.mail.EudoraMailImportFilter/src"/>
-	<classpathentry kind="src" path="plugins/org.columba.mail.MozillaMailImportFilter/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.mail.PlaySoundFilterAction/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.mail.ToOrCcFilter/src"/>
 	<classpathentry kind="src" path="src/mail/test"/>

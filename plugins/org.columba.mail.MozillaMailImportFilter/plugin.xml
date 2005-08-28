@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plugin name="Mozilla Mail Importfilter" description="Import complete Mozilla Mail Account" id="org.columba.mail.MozillaMailImportFilter" version="1.0" category="Mail Import" enabled="true">
-  <extension name="org.columba.mail.import">
-    <filter name="MozillaMailImportFilter" class="org.columba.mail.MozillaMailImportFilter"></filter>
-  </extension>
-  <runtime type="java"></runtime>
-</plugin>
