@@ -34,6 +34,7 @@ import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.folder.event.IFolderListener;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -158,7 +159,7 @@ public class FolderInfoPanel extends ContainerInfoPanel implements
 	}
 
 	public void setFolder(IMailFolder newFolder) {
-		if (!(newFolder instanceof AbstractMessageFolder))
+		if (!(newFolder instanceof IMailFolder))
 			return;
 
 		if (folder != null)
@@ -204,8 +205,8 @@ public class FolderInfoPanel extends ContainerInfoPanel implements
 		// FolderTreeNode
 		// -> casting here to Folder
 		if (treeEvent.getSelected()[0] != null
-				&& treeEvent.getSelected()[0] instanceof AbstractMessageFolder) {
-			setFolder((AbstractMessageFolder) treeEvent.getSelected()[0]);
+				&& treeEvent.getSelected()[0] instanceof IMailbox) {
+			setFolder((IMailbox) treeEvent.getSelected()[0]);
 		} else {
 			resetRenderer();
 		}

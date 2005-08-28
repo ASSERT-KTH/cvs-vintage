@@ -27,10 +27,10 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -82,7 +82,7 @@ public class ToggleMarkCommand extends Command {
 		 *  // get array of source references MailFolderCommandReference[] r =
 		 * adapter.getSourceFolderReferences();
 		 */
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();
@@ -212,7 +212,7 @@ public class ToggleMarkCommand extends Command {
 			System.out.println("learning uid=" + uids[j]);
 
 			// create reference
-			MailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,
+			IMailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,
 					new Object[] { uids[j] });
 
 			// create command
@@ -246,7 +246,7 @@ public class ToggleMarkCommand extends Command {
 
 			} else {
 				// move message to trash
-				AbstractMessageFolder trash = (AbstractMessageFolder) ((RootFolder) srcFolder
+				IMailbox trash = (IMailbox) ((RootFolder) srcFolder
 						.getRootFolder()).getTrashFolder();
 
 				// create reference

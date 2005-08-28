@@ -28,8 +28,6 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Attributes;
@@ -68,7 +66,7 @@ public class CopyMessageCommand extends Command {
 			String errorIgnoreMessage, String errorCopyMessage,
 			String errorTitle, String canceledMessage) throws Exception {
 		// get references
-		 r = (MailFolderCommandReference) getReference();
+		 r = (IMailFolderCommandReference) getReference();
 
 		// get destination foldedr
 		destFolder = (IMailbox) r.getDestinationFolder();
@@ -76,7 +74,7 @@ public class CopyMessageCommand extends Command {
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

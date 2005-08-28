@@ -21,7 +21,7 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.TableController;
@@ -276,7 +276,7 @@ public class FolderOptionsController implements IFolderOptionsController {
 	 *            selected folder
 	 * @return true, if any option is overridden. False, otherwise.
 	 */
-	private boolean isOverwritingDefaults(AbstractMessageFolder folder) {
+	private boolean isOverwritingDefaults(IMailFolder folder) {
 		IFolderItem item = folder.getConfiguration();
 		XmlElement parent = item.getElement("property");
 		boolean result = false;

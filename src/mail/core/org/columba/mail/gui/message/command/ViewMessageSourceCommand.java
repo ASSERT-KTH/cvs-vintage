@@ -30,8 +30,8 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.util.TempFileStore;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * @author freddy
@@ -65,12 +65,11 @@ public class ViewMessageSourceCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		Object[] uids = r.getUids();
 
-		AbstractMessageFolder folder = (AbstractMessageFolder) r
-				.getSourceFolder();
+		IMailbox folder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);

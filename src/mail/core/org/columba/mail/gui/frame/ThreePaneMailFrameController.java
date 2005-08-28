@@ -47,6 +47,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
@@ -132,7 +133,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		tableController.getView().addMouseListener(new TableMouseListener());
 
 		treeController.getView().addMouseListener(new TreeMouseListener());
-		
+
 		folderInfoPanel = new FolderInfoPanel(this);
 
 		// table registers interest in tree selection events
@@ -386,8 +387,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			// folder-based configuration
 
 			if (folder instanceof AbstractMessageFolder)
-				getFolderOptionsController().save(
-						(AbstractMessageFolder) folder);
+				getFolderOptionsController().save((IMailbox) folder);
 		}
 	}
 
@@ -431,9 +431,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 			if (isTreePopupEvent == false)
 				new ViewHeaderListAction(this).actionPerformed(null);
-			
+
 			isTreePopupEvent = false;
-			
+
 		} else if (e instanceof TableSelectionChangedEvent) {
 			// messagelist table selection event
 			TableSelectionChangedEvent event = (TableSelectionChangedEvent) e;

@@ -23,7 +23,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.IMessageController;
@@ -47,22 +47,22 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 		MailFolderCommandReference references = (MailFolderCommandReference) getFrameMediator()
 				.getSelectionManager().getSelection("mail.tree");
 
-		if (references != null && (references.getSourceFolder() instanceof AbstractMessageFolder)) {
+		if (references != null
+				&& (references.getSourceFolder() instanceof IMailbox)) {
 			// view message list
-			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
-					getFrameMediator(), references));
+			CommandProcessor.getInstance().addOp(
+					new ViewHeaderListCommand(getFrameMediator(), references));
 		} else {
 			// clear message list
 			ITableController c = ((TableViewOwner) getFrameMediator())
 					.getTableController();
 
 			c.clear();
-			
+
 			// clear message-list selection
 			c.clearSelection();
 
 			// clear the folder info bar
-			
 
 			// clear message-viewer
 			IMessageController m = ((MessageViewOwner) getFrameMediator())

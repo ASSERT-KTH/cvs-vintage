@@ -21,7 +21,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.message.IColumbaMessage;
 import org.columba.ristretto.io.SourceInputStream;
@@ -52,7 +52,7 @@ public class AddMessageCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get reference
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get source folder
 		folder = (IMailbox) r.getSourceFolder();

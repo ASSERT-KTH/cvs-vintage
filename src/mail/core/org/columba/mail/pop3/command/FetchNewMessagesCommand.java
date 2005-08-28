@@ -34,9 +34,10 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.Logging;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
@@ -51,9 +52,11 @@ public class FetchNewMessagesCommand extends Command {
 			.getLogger("org.columba.mail.pop3.command");
 
 	POP3Server server;
+
 	int totalMessageCount;
+
 	int newMessageCount;
-	
+
 	Action action;
 
 	/**
@@ -62,15 +65,16 @@ public class FetchNewMessagesCommand extends Command {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public FetchNewMessagesCommand(Action action, DefaultCommandReference reference) {
+	public FetchNewMessagesCommand(Action action,
+			DefaultCommandReference reference) {
 		super(reference);
 
 		POP3CommandReference r = (POP3CommandReference) getReference();
 
 		server = r.getServer();
-		
+
 		priority = Command.DAEMON_PRIORITY;
-		
+
 		this.action = action;
 	}
 
@@ -92,24 +96,27 @@ public class FetchNewMessagesCommand extends Command {
 			// login and get # of messages on server
 			totalMessageCount = server.getMessageCount();
 
-			if ( worker.cancelled() ) throw new CommandCancelledException();
-			
+			if (worker.cancelled())
+				throw new CommandCancelledException();
+
 			// synchronize local UID list with server UID list
 			List newMessagesUidList = synchronize();
 
-			if ( worker.cancelled() ) throw new CommandCancelledException();
-			
+			if (worker.cancelled())
+				throw new CommandCancelledException();
+
 			if (Logging.DEBUG) {
 				LOG.fine(newMessagesUidList.toString());
 			}
 
-			if ( worker.cancelled() ) throw new CommandCancelledException();
+			if (worker.cancelled())
+				throw new CommandCancelledException();
 			// only download new messages
 			downloadNewMessages(newMessagesUidList, worker);
 
 			// Delete old message from server if the feature is enabled
 			server.cleanUpServer();
-			
+
 			// logout cleanly
 			logout();
 
@@ -120,26 +127,24 @@ public class FetchNewMessagesCommand extends Command {
 			} else {
 				log(MessageFormat.format(MailResourceLoader.getString(
 						"statusbar", "message", "fetched_count"),
-						new Object[]{new Integer(newMessageCount)}));
+						new Object[] { new Integer(newMessageCount) }));
 			}
 		} catch (CommandCancelledException e) {
 			server.logout();
 
 			// clear statusbar message
 			server.getObservable().clearMessage();
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			// clear statusbar message
 			server.getObservable().clearMessage();
 			throw e;
 		}
 		/*
-		   * catch (IOException e) { String name = e.getClass().getName();
-		   * JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-		   * name.substring(name.lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
-		   *  // clear statusbar message server.getObservable().clearMessage(); }
-		   */
+		 * catch (IOException e) { String name = e.getClass().getName();
+		 * JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
+		 * name.substring(name.lastIndexOf(".")), JOptionPane.ERROR_MESSAGE); //
+		 * clear statusbar message server.getObservable().clearMessage(); }
+		 */
 		finally {
 			/*
 			 * // always enable the menuitem again
@@ -157,29 +162,31 @@ public class FetchNewMessagesCommand extends Command {
 			throws Exception {
 		// server message numbers start with 1
 		// whereas List numbers start with 0
-		//  -> always increase fetch number
+		// -> always increase fetch number
 		IWorkerStatusChangeListener listener = new IWorkerStatusChangeListener() {
 			public void workerStatusChanged(WorkerStatusChangedEvent e) {
-				if( e.getSource().cancelled() ) {
+				if (e.getSource().cancelled()) {
 					try {
 						server.dropConnection();
-					} catch (IOException e1) {							
+					} catch (IOException e1) {
 					}
 				}
-				
-			}				
+
+			}
 		};
-		
+
 		// important for cancel
 		worker.addWorkerStatusChangeListener(listener);
-		
+
 		// download message
 		ColumbaMessage message;
 		try {
 			message = server.getMessage(serverUID, worker);
 		} catch (SocketException e) {
-			if( !worker.cancelled()) throw e;
-			else throw new CommandCancelledException();
+			if (!worker.cancelled())
+				throw e;
+			else
+				throw new CommandCancelledException();
 		}
 		// not needed anymore
 		worker.removeWorkerStatusChangeListener(listener);
@@ -193,12 +200,13 @@ public class FetchNewMessagesCommand extends Command {
 
 		message.getHeader().getFlags().setSeen(false);
 
-		//get inbox-folder from pop3-server preferences
-		AbstractMessageFolder inboxFolder = server.getFolder();
+		// get inbox-folder from pop3-server preferences
+		IMailbox inboxFolder = server.getFolder();
 
 		// start command which adds message to folder
 		// and calls apply-filter on this specific message
-		MailFolderCommandReference r = new MailFolderCommandReference(inboxFolder, message);
+		IMailFolderCommandReference r = new MailFolderCommandReference(
+				inboxFolder, message);
 
 		CommandProcessor.getInstance().addOp(new AddPOP3MessageCommand(r));
 	}
@@ -227,17 +235,18 @@ public class FetchNewMessagesCommand extends Command {
 		newMessageCount = newMessagesUIDList.size();
 
 		for (int i = 0; i < newMessageCount; i++) {
-			
-			if ( worker.cancelled() ) throw new CommandCancelledException();
-			
+
+			if (worker.cancelled())
+				throw new CommandCancelledException();
+
 			// which UID should be downloaded next
 			Object serverUID = newMessagesUIDList.get(i);
 
 			LOG.fine("fetch message with UID=" + serverUID);
 
 			log(MessageFormat.format(MailResourceLoader.getString("statusbar",
-					"message", "fetch_messages"), new Object[]{
-					new Integer(i + 1), new Integer(newMessageCount)}));
+					"message", "fetch_messages"), new Object[] {
+					new Integer(i + 1), new Integer(newMessageCount) }));
 
 			int size = server.getMessageSize(serverUID);
 
@@ -273,7 +282,7 @@ public class FetchNewMessagesCommand extends Command {
 
 		LOG.fine("synchronize local UID-list with remote UID-list");
 
-		//synchronize local UID-list with server
+		// synchronize local UID-list with server
 		List newMessagesUIDList = server.synchronize();
 
 		return newMessagesUIDList;
@@ -291,11 +300,12 @@ public class FetchNewMessagesCommand extends Command {
 					"no_new_messages"));
 		}
 	}
+
 	/**
 	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		if( action != null ) {
+		if (action != null) {
 			action.setEnabled(true);
 		}
 	}

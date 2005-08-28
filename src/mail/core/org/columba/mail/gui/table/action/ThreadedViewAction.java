@@ -23,12 +23,13 @@ import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractSelectableAction;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -76,7 +77,7 @@ public class ThreadedViewAction extends AbstractSelectableAction implements
 		MailFolderCommandReference r = (MailFolderCommandReference) ((MailFrameMediator) frameMediator)
 				.getTreeSelection();
 
-		AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
+		IMailbox folder = (IMailbox) r.getSourceFolder();
 
 		boolean enableThreadedView = item.isSelected();
 
@@ -104,7 +105,7 @@ public class ThreadedViewAction extends AbstractSelectableAction implements
 		AbstractFolder[] selection = ((TreeSelectionChangedEvent) e)
 				.getSelected();
 
-		if (!(selection[0] instanceof AbstractMessageFolder)) {
+		if (!(selection[0] instanceof IMailbox)) {
 			return;
 		}
 

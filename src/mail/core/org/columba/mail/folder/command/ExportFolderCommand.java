@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -57,7 +57,7 @@ public class ExportFolderCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		OutputStream os = null;
 

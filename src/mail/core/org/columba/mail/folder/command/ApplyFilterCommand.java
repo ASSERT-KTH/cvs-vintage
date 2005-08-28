@@ -23,9 +23,9 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterList;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.filter.FilterCompoundCommand;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * 
@@ -50,10 +50,10 @@ public class ApplyFilterCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

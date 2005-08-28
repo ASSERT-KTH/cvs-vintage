@@ -39,8 +39,8 @@ import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -75,8 +75,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 	private IFrameMediator mediator;
 
-	public SpecialFoldersPanel(IFrameMediator mediator, AccountItem accountItem,
-			SpecialFoldersItem item) {
+	public SpecialFoldersPanel(IFrameMediator mediator,
+			AccountItem accountItem, SpecialFoldersItem item) {
 		super();
 
 		this.mediator = mediator;
@@ -91,8 +91,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 	protected String getPath(String uid) {
 		Integer u = new Integer(uid);
 
-		AbstractMessageFolder f = (AbstractMessageFolder) FolderTreeModel
-				.getInstance().getFolder(u.intValue());
+		IMailbox f = (IMailbox) FolderTreeModel.getInstance().getFolder(
+				u.intValue());
 
 		if (f == null) {
 			return ""; //$NON-NLS-1$
@@ -103,8 +103,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 	protected String getUid(String treePath) {
 		TreeNodeList list = new TreeNodeList(treePath);
-		AbstractMessageFolder f = (AbstractMessageFolder) FolderTreeModel
-				.getInstance().getFolder(list);
+		IMailbox f = (IMailbox) FolderTreeModel.getInstance().getFolder(list);
 
 		if (f == null) {
 			return ""; //$NON-NLS-1$
@@ -157,10 +156,10 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 			item.setString(SpecialFoldersItem.DRAFTS, getUid(draftsButton
 					.getText()));
-			item.setString(SpecialFoldersItem.TEMPLATES,
-					getUid(templatesButton.getText()));
-			item.setString(SpecialFoldersItem.SENT, getUid(sentButton
+			item.setString(SpecialFoldersItem.TEMPLATES, getUid(templatesButton
 					.getText()));
+			item.setString(SpecialFoldersItem.SENT,
+					getUid(sentButton.getText()));
 
 			if (isPopAccount()) {
 				item.setString(SpecialFoldersItem.INBOX, getUid(inboxButton
@@ -306,7 +305,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 		defaultAccountCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
 				.getString("dialog", "account", "use_default_account_settings"));
 
-		//defaultAccountCheckBox.setEnabled(false);
+		// defaultAccountCheckBox.setEnabled(false);
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
 
@@ -364,8 +363,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 				trashButton.setText(path);
 
-				//int uid = selectedFolder.getUid();
-				//item.setTrash( new Integer(uid).toString() );
+				// int uid = selectedFolder.getUid();
+				// item.setTrash( new Integer(uid).toString() );
 			}
 		} else if (action.equals("INBOX")) //$NON-NLS-1$
 		{
@@ -378,8 +377,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 				inboxButton.setText(path);
 
-				//int uid = selectedFolder.getUid();
-				//item.setInbox( new Integer(uid).toString() );
+				// int uid = selectedFolder.getUid();
+				// item.setInbox( new Integer(uid).toString() );
 			}
 		} else if (action.equals("DRAFTS")) //$NON-NLS-1$
 		{
@@ -392,8 +391,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 				draftsButton.setText(path);
 
-				//int uid = selectedFolder.getUid();
-				//item.setDrafts( new Integer(uid).toString() );
+				// int uid = selectedFolder.getUid();
+				// item.setDrafts( new Integer(uid).toString() );
 			}
 		} else if (action.equals("TEMPLATES")) //$NON-NLS-1$
 		{
@@ -406,8 +405,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 				templatesButton.setText(path);
 
-				//int uid = selectedFolder.getUid();
-				//item.setTemplates( new Integer(uid).toString() );
+				// int uid = selectedFolder.getUid();
+				// item.setTemplates( new Integer(uid).toString() );
 			}
 		} else if (action.equals("SENT")) //$NON-NLS-1$
 		{
@@ -420,8 +419,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 				sentButton.setText(path);
 
-				//int uid = selectedFolder.getUid();
-				//item.setSent( new Integer(uid).toString() );
+				// int uid = selectedFolder.getUid();
+				// item.setSent( new Integer(uid).toString() );
 			}
 		} else if (action.equals("DEFAULT_ACCOUNT")) {
 			removeAll();

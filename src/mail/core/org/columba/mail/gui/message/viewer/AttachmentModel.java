@@ -19,14 +19,14 @@ package org.columba.mail.gui.message.viewer;
 
 import java.util.List;
 
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
 
 public class AttachmentModel {
 
-	private AbstractMessageFolder folder;
+	private IMailbox folder;
 
 	private Object uid;
 
@@ -38,7 +38,7 @@ public class AttachmentModel {
 
 	}
 
-	public synchronized void setFolder(AbstractMessageFolder folder) {
+	public synchronized void setFolder(IMailbox folder) {
 		this.folder = folder;
 	}
 
@@ -46,7 +46,7 @@ public class AttachmentModel {
 		this.uid = uid;
 	}
 
-	public AbstractMessageFolder getFolder() {
+	public IMailbox getFolder() {
 		return folder;
 	}
 

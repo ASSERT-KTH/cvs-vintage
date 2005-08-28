@@ -27,8 +27,8 @@ import org.columba.core.command.Command;
 import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
 import org.columba.core.io.StreamUtils;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -38,7 +38,7 @@ import org.columba.ristretto.message.MimeHeader;
  * @author freddy
  */
 public abstract class SaveAttachmentCommand extends Command {
-    protected static File lastDir = null;
+	protected static File lastDir = null;
 
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.message.attachment.command");
@@ -57,9 +57,8 @@ public abstract class SaveAttachmentCommand extends Command {
 	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
-		AbstractMessageFolder folder = (AbstractMessageFolder) r
-				.getSourceFolder();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
+		IMailbox folder = (IMailbox) r.getSourceFolder();
 		Object[] uids = r.getUids();
 
 		Integer[] address = r.getAddress();
@@ -73,12 +72,12 @@ public abstract class SaveAttachmentCommand extends Command {
 		bodyStream = new ProgressObservedInputStream(bodyStream, worker);
 
 		File destFile = getDestinationFile(header);
-		
-		worker.setDisplayText("Saving "+destFile.getName());
-		
+
+		worker.setDisplayText("Saving " + destFile.getName());
+
 		// write to temporary file
-		File tempFile = new File(destFile.getAbsoluteFile()+".part");
-		
+		File tempFile = new File(destFile.getAbsoluteFile() + ".part");
+
 		if (tempFile == null)
 			return;
 
@@ -106,10 +105,10 @@ public abstract class SaveAttachmentCommand extends Command {
 
 		// rename "*.part" file to destination file
 		tempFile.renameTo(destFile);
-		
+
 		// reset progress bar
 		worker.setProgressBarValue(0);
-		
+
 		// We are done - clear the status message with a delay
 		worker.clearDisplayTextWithDelay();
 	}

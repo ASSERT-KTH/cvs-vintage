@@ -22,66 +22,66 @@ import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * Action used to popup a folder renaming dialog to the user.
- *
+ * 
  * @author Frederik
  */
-public class RenameFolderAction extends AbstractColumbaAction
-    implements ISelectionListener {
-    public RenameFolderAction(IFrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_renamefolder"));
+public class RenameFolderAction extends AbstractColumbaAction implements
+		ISelectionListener {
+	public RenameFolderAction(IFrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_folder_renamefolder"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_renamefolder").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_folder_renamefolder").replaceAll("&", ""));
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+		// shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+	}
 
-    public void actionPerformed(ActionEvent evt) {
-        MailFolderCommandReference r = (MailFolderCommandReference) ((AbstractMailFrameController) frameMediator).getTreeSelection();
+	public void actionPerformed(ActionEvent evt) {
+		MailFolderCommandReference r = (MailFolderCommandReference) ((AbstractMailFrameController) frameMediator)
+				.getTreeSelection();
 
-        new FolderOptionsDialog((AbstractMessageFolder) r.getSourceFolder(), true,
-            (AbstractMailFrameController) frameMediator);
-    }
+		new FolderOptionsDialog((IMailbox) r.getSourceFolder(), true,
+				(AbstractMailFrameController) frameMediator);
+	}
 
-    public void selectionChanged(SelectionChangedEvent evt) {
-        if (((TreeSelectionChangedEvent) evt).getSelected().length > 0 && ((TreeSelectionChangedEvent) evt).getSelected()[0] instanceof AbstractMessageFolder) {
-            AbstractFolder folder = ((TreeSelectionChangedEvent) evt).getSelected()[0];
+	public void selectionChanged(SelectionChangedEvent evt) {
+		if (((TreeSelectionChangedEvent) evt).getSelected().length > 0
+				&& ((TreeSelectionChangedEvent) evt).getSelected()[0] instanceof IMailbox) {
+			AbstractFolder folder = ((TreeSelectionChangedEvent) evt)
+					.getSelected()[0];
 
-            if ((folder != null) && folder instanceof AbstractMessageFolder) {
-            	IFolderItem item = folder.getConfiguration();
+			if ((folder != null) && folder instanceof IMailbox) {
+				IFolderItem item = folder.getConfiguration();
 
-                if (item.getString("property", "accessrights").equals("user")) {
-                    setEnabled(true);
-                } else {
-                    setEnabled(false);
-                }
-            }
-        } else {
-            setEnabled(false);
-        }
-    }
+				if (item.getString("property", "accessrights").equals("user")) {
+					setEnabled(true);
+				} else {
+					setEnabled(false);
+				}
+			}
+		} else {
+			setEnabled(false);
+		}
+	}
 }

@@ -25,11 +25,10 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.ristretto.imap.IMAPException;
 
 /**
  * Check for new messages in IMAPFolder.
@@ -54,7 +53,7 @@ public class CheckForNewMessagesCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		inboxFolder = (IMAPFolder) r.getSourceFolder();
 		

@@ -128,4 +128,5 @@ public interface IMailFolder extends MutableTreeNode, IFolder, IExtensionInterfa
 	TreeNode[] getPath();
 
 	String getTreePath();
+	
 }

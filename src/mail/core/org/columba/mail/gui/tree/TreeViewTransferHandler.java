@@ -29,6 +29,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveFolderCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
@@ -109,7 +110,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 		boolean dataWasImported = false;
 
 		AbstractFolder destFolder = treeView.getDropTargetFolder();
-		AbstractMessageFolder draggedFolder = transferable.getFolderReference();
+		IMailbox draggedFolder = transferable.getFolderReference();
 
 		if ((destFolder != null) && (draggedFolder != null)) {
 			// We're always doing a MOVE
@@ -135,12 +136,12 @@ public class TreeViewTransferHandler extends TransferHandler {
 			MessageReferencesTransfer transferable) {
 		boolean dataWasImported = false;
 
-		AbstractMessageFolder destFolder = null;
+		IMailbox destFolder = null;
 
 		if (transferable.isDragOperation())
-			destFolder = (AbstractMessageFolder) treeView.getDropTargetFolder();
-		else if ( transferable.isClipboardOperation())
-			destFolder = (AbstractMessageFolder) ((MailFrameMediator) frameMediator)
+			destFolder = (IMailbox) treeView.getDropTargetFolder();
+		else if (transferable.isClipboardOperation())
+			destFolder = (IMailbox) ((MailFrameMediator) frameMediator)
 					.getTableSelection().getSourceFolder();
 
 		IMailFolderCommandReference result = transferable.getFolderReferences();
@@ -171,7 +172,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 			TreeView treeView = (TreeView) source;
 
 			if (data instanceof FolderTransfer) {
-				AbstractMessageFolder draggedFolder = ((FolderTransfer) data)
+				IMailbox draggedFolder = ((FolderTransfer) data)
 						.getFolderReference();
 				exportFolder(treeView, draggedFolder);
 			}
@@ -187,7 +188,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 	 * @param folder
 	 *            the folder to move.
 	 */
-	private void exportFolder(TreeView treeView, AbstractMessageFolder folder) {
+	private void exportFolder(TreeView treeView, IMailbox folder) {
 		MailFolderCommandReference commandRef = new MailFolderCommandReference(
 				folder);
 		AbstractFolder destFolder = (AbstractFolder) treeView

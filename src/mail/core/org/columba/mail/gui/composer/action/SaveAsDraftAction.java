@@ -24,7 +24,7 @@ import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
@@ -70,7 +70,7 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
         SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
         String str = folderItem.get("drafts");
         int destUid = Integer.parseInt(str);
-        AbstractMessageFolder destFolder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(destUid);
+        IMailbox destFolder = (IMailbox) FolderTreeModel.getInstance().getFolder(destUid);
    
         // check if we are currently editing a draft message
         if ( model.getMessage().getHeader().getFlags().getDraft() ) {

@@ -37,7 +37,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -88,8 +88,8 @@ public class POP3Server {
 
 		int uid = accountItem.getUid();
 
-		file = new File(MailConfig.getInstance().getPOP3Directory(), (new Integer(
-				uid)).toString());
+		file = new File(MailConfig.getInstance().getPOP3Directory(),
+				(new Integer(uid)).toString());
 
 		PopItem item = accountItem.getPopItem();
 
@@ -109,7 +109,7 @@ public class POP3Server {
 		if (isCacheChanged()) {
 			try {
 				headerCache.save();
-				setCacheChanged( false );
+				setCacheChanged(false);
 			} finally {
 				releaseLock(Thread.currentThread());
 			}
@@ -126,14 +126,14 @@ public class POP3Server {
 		return accountItem;
 	}
 
-	public AbstractMessageFolder getFolder() {
+	public IMailbox getFolder() {
 		SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
 		String inboxStr = foldersItem.get("inbox");
 
 		int inboxInt = Integer.parseInt(inboxStr);
 
-		AbstractMessageFolder f = (AbstractMessageFolder) FolderTreeModel.getInstance()
-				.getFolder(inboxInt);
+		IMailbox f = (IMailbox) FolderTreeModel.getInstance().getFolder(
+				inboxInt);
 
 		return f;
 	}
@@ -147,10 +147,10 @@ public class POP3Server {
 		LinkedList headerUids = new LinkedList();
 		Enumeration keys = headerCache.getHeaderList().keys();
 
-		if( headerCache.getHeaderList().count() == 0 ){
+		if (headerCache.getHeaderList().count() == 0) {
 			LOG.severe(accountItem.getName() + " - POP3 Headerlist is empty!");
 		}
-		
+
 		while (keys.hasMoreElements()) {
 			headerUids.add(keys.nextElement());
 		}
@@ -227,13 +227,14 @@ public class POP3Server {
 			date -= days * DAY_IN_MS;
 
 			deleteMessagesOlderThan(new Date(date));
-		} else if( !item.getBooleanWithDefault("leave_messages_on_server", false)) {
+		} else if (!item.getBooleanWithDefault("leave_messages_on_server",
+				false)) {
 			removeAllDownloadedMessages();
 		}
 	}
 
-	
-	private void removeAllDownloadedMessages() throws IOException, CommandCancelledException, POP3Exception  {
+	private void removeAllDownloadedMessages() throws IOException,
+			CommandCancelledException, POP3Exception {
 		HeaderList headerList = headerCache.getHeaderList();
 		Enumeration uids = headerList.keys();
 		while (uids.hasMoreElements()) {
@@ -247,19 +248,18 @@ public class POP3Server {
 	}
 
 	public ColumbaMessage getMessage(Object uid, IWorkerStatusController worker)
-			throws IOException, POP3Exception, CommandCancelledException, ParserException {
+			throws IOException, POP3Exception, CommandCancelledException,
+			ParserException {
 		InputStream messageStream = new ProgressObservedInputStream(getStore()
 				.fetchMessage(store.getIndex(uid)), worker, true);
 
-		
 		// Store the complete stream in a source so that we can parse it
-		Source source = TempSourceFactory.createTempSource(messageStream,
-				-1);
+		Source source = TempSourceFactory.createTempSource(messageStream, -1);
 
 		// pipe through preprocessing filter
-		//if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
-		//	rawString = modifyMessage(rawString);
-		//TODO: UPDATE! @author fdietz
+		// if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
+		// rawString = modifyMessage(rawString);
+		// TODO: UPDATE! @author fdietz
 		// was:
 		// Activate PreProcessor again with Source instead of String
 		// new goal:
@@ -285,7 +285,9 @@ public class POP3Server {
 
 			headerCache.add(h);
 		} catch (ParserException e) {
-			LOG.severe("Skipped message: Error parsing message. Message source:\n " + source);
+			LOG
+					.severe("Skipped message: Error parsing message. Message source:\n "
+							+ source);
 			return null;
 		}
 

@@ -22,7 +22,7 @@ import java.io.InputStream;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
@@ -51,7 +51,7 @@ public class ReplyAsAttachmentCommand extends ReplyCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+		IMailbox folder = (IMailbox) ((MailFolderCommandReference) getReference())
 				.getSourceFolder();
 
 		// get first selected message

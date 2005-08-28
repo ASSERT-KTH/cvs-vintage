@@ -22,7 +22,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 
 /**
@@ -88,7 +88,7 @@ public class MarkMessageCommand extends Command {
 		 * getReferences()); // get array of source references
 		 * MailFolderCommandReference[] r = adapter.getSourceFolderReferences();
 		 */
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();

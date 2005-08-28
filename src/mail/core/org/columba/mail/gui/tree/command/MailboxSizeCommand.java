@@ -22,7 +22,7 @@ import java.util.Enumeration;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
@@ -44,7 +44,7 @@ public class MailboxSizeCommand extends Command {
 
 	public void execute(IWorkerStatusController worker) throws Exception {
 
-		IMailFolder folder = (IMailFolder) ((MailFolderCommandReference) getReference())
+		IMailFolder folder = (IMailFolder) ((IMailFolderCommandReference) getReference())
 				.getSourceFolder();
 
 		total = 0;

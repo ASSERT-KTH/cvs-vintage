@@ -20,61 +20,64 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-import org.columba.mail.folder.AbstractMessageFolder;
-
+import org.columba.mail.folder.IMailbox;
 
 /**
  * A Transferable for moving one folder.
+ * 
  * @author redsolo
  */
 public class FolderTransfer implements Transferable {
-    /** The only <code>DataFlavor</code> that this transfer allows. */
-    public static DataFlavor FLAVOR;
+	/** The only <code>DataFlavor</code> that this transfer allows. */
+	public static DataFlavor FLAVOR;
 
-    static {
-        try {
-            FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +
-                    "-" + FolderTransfer.class.getName());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+	static {
+		try {
+			FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "-"
+					+ FolderTransfer.class.getName());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-    private AbstractMessageFolder folderReference;
+	private IMailbox folderReference;
 
-    /**
- * Creates a transferable for transfering folders.
- * @param folder the folder that is being transfered.
- */
-    public FolderTransfer(AbstractMessageFolder folder) {
-        folderReference = folder;
-    }
+	/**
+	 * Creates a transferable for transfering folders.
+	 * 
+	 * @param folder
+	 *            the folder that is being transfered.
+	 */
+	public FolderTransfer(IMailbox folder) {
+		folderReference = folder;
+	}
 
-    /**
- * Returns the folder reference for this transfer.
- * @return a Folder
- */
-    public AbstractMessageFolder getFolderReference() {
-        return folderReference;
-    }
+	/**
+	 * Returns the folder reference for this transfer.
+	 * 
+	 * @return a Folder
+	 */
+	public IMailbox getFolderReference() {
+		return folderReference;
+	}
 
-    /** {@inheritDoc} */
-    public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[] { FLAVOR };
-    }
+	/** {@inheritDoc} */
+	public DataFlavor[] getTransferDataFlavors() {
+		return new DataFlavor[] { FLAVOR };
+	}
 
-    /** {@inheritDoc} */
-    public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return FLAVOR.equals(flavor);
-    }
+	/** {@inheritDoc} */
+	public boolean isDataFlavorSupported(DataFlavor flavor) {
+		return FLAVOR.equals(flavor);
+	}
 
-    /** {@inheritDoc} */
-    public Object getTransferData(DataFlavor flavor)
-        throws UnsupportedFlavorException, IOException {
-        if (!isDataFlavorSupported(flavor)) {
-            throw new UnsupportedFlavorException(flavor);
-        }
+	/** {@inheritDoc} */
+	public Object getTransferData(DataFlavor flavor)
+			throws UnsupportedFlavorException, IOException {
+		if (!isDataFlavorSupported(flavor)) {
+			throw new UnsupportedFlavorException(flavor);
+		}
 
-        return this;
-    }
+		return this;
+	}
 }

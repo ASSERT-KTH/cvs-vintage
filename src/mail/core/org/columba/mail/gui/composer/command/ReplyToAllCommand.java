@@ -26,7 +26,7 @@ import org.columba.api.command.ICommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
@@ -53,7 +53,7 @@ public class ReplyToAllCommand extends ReplyCommand {
         super(reference);
     }
 
-    protected void initHeader(AbstractMessageFolder folder, Object[] uids)
+    protected void initHeader(IMailbox folder, Object[] uids)
         throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);

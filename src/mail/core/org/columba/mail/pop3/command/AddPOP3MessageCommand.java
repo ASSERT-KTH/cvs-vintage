@@ -22,11 +22,12 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterList;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.FilterCompoundCommand;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
@@ -48,7 +49,7 @@ import org.columba.ristretto.io.SourceInputStream;
  */
 public class AddPOP3MessageCommand extends Command {
 
-	private AbstractMessageFolder inboxFolder;
+	private IMailbox inboxFolder;
 
 	/**
 	 * @param references
@@ -60,9 +61,9 @@ public class AddPOP3MessageCommand extends Command {
 
 	/** {@inheritDoc} */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
-		inboxFolder = (AbstractMessageFolder) r.getSourceFolder();
+		inboxFolder = (IMailbox) r.getSourceFolder();
 
 		IColumbaMessage message = (IColumbaMessage) r.getMessage();
 
@@ -72,12 +73,12 @@ public class AddPOP3MessageCommand extends Command {
 		Object uid = inboxFolder.addMessage(messageStream, message.getHeader()
 				.getAttributes(), message.getHeader().getFlags());
 		messageStream.close();
-		
+
 		// mark message as recent
 		r.setSourceFolder(inboxFolder);
-		r.setUids(new Object[]{uid});
+		r.setUids(new Object[] { uid });
 		r.setMarkVariant(MarkMessageCommand.MARK_AS_RECENT);
-		new MarkMessageCommand( r).execute(worker);
+		new MarkMessageCommand(r).execute(worker);
 
 		// apply spam filter
 		boolean messageWasMoved = applySpamFilter(uid, worker);
@@ -108,8 +109,8 @@ public class AddPOP3MessageCommand extends Command {
 		}
 
 		// create reference
-		MailFolderCommandReference r = new MailFolderCommandReference(inboxFolder,
-				new Object[] { uid });
+		IMailFolderCommandReference r = new MailFolderCommandReference(
+				inboxFolder, new Object[] { uid });
 
 		// score message and mark as "spam" or "not spam"
 		new ScoreMessageCommand(r).execute(worker);
@@ -123,25 +124,28 @@ public class AddPOP3MessageCommand extends Command {
 		if (item.getSpamItem().isMoveIncomingJunkMessagesEnabled()) {
 			if (item.getSpamItem().isIncomingTrashSelected()) {
 				// move message to trash
-				AbstractMessageFolder trash = (AbstractMessageFolder) ((RootFolder) inboxFolder
+				IMailbox trash = (IMailbox) ((RootFolder) inboxFolder
 						.getRootFolder()).getTrashFolder();
 
 				// create reference
 				MailFolderCommandReference ref2 = new MailFolderCommandReference(
 						inboxFolder, trash, new Object[] { uid });
 
-				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
+				CommandProcessor.getInstance().addOp(
+						new MoveMessageCommand(ref2));
 			} else {
 				// move message to user-configured folder (generally "Junk"
 				// folder)
-				AbstractFolder destFolder = FolderTreeModel.getInstance()
+				AbstractFolder destFolder = FolderTreeModel
+						.getInstance()
 						.getFolder(item.getSpamItem().getIncomingCustomFolder());
 
 				// create reference
 				MailFolderCommandReference ref2 = new MailFolderCommandReference(
 						inboxFolder, destFolder, new Object[] { uid });
 
-				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
+				CommandProcessor.getInstance().addOp(
+						new MoveMessageCommand(ref2));
 
 			}
 
@@ -167,7 +171,8 @@ public class AddPOP3MessageCommand extends Command {
 					new Object[] { uid });
 
 			if (result.length != 0) {
-				CompoundCommand command = new FilterCompoundCommand(filter, inboxFolder, result);
+				CompoundCommand command = new FilterCompoundCommand(filter,
+						inboxFolder, result);
 
 				CommandProcessor.getInstance().addOp(command);
 			}

@@ -28,7 +28,7 @@ import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.template.ChooseTemplateDialog;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -57,7 +57,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+		IMailbox folder = (IMailbox) ((MailFolderCommandReference) getReference())
 				.getSourceFolder();
 
 		// get first selected message
@@ -110,7 +110,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 	private String getTemplateBody() throws Exception,
 			CommandCancelledException, IOException {
 		// template folder has uid=107
-		AbstractMessageFolder templateFolder = (AbstractMessageFolder) FolderTreeModel
+		IMailbox templateFolder = (IMailbox) FolderTreeModel
 				.getInstance().getFolder(107);
 
 		// retrieve headerlist of tempate folder

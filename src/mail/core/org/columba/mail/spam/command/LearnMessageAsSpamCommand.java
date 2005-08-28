@@ -16,16 +16,13 @@
 
 package org.columba.mail.spam.command;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.logging.Logging;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.spam.SpamController;
 
 /**
@@ -48,14 +45,13 @@ public class LearnMessageAsSpamCommand extends Command {
 	public void execute(IWorkerStatusController worker) throws Exception {
 
 		// get array of source references
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r
-				.getSourceFolder();
+		IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

@@ -19,7 +19,7 @@ import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 
@@ -48,7 +48,7 @@ public class SaveFolderConfigurationCommand extends Command {
 			return;
 		}
 
-		AbstractFolder folderTreeNode = (AbstractFolder) ((MailFolderCommandReference) getReference())
+		AbstractFolder folderTreeNode = (AbstractFolder) ((IMailFolderCommandReference) getReference())
 				.getSourceFolder();
 
 		// if folder is message folder

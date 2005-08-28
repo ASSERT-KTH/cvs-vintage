@@ -27,8 +27,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
@@ -114,8 +114,8 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 		setText(treeNode.getName());
 		setIcon(getFolderIcon(treeNode, expanded));
 
-		if (value instanceof AbstractMessageFolder) {
-			AbstractMessageFolder folder = (AbstractMessageFolder) value;
+		if (value instanceof IMailbox) {
+			IMailbox folder = (IMailbox) value;
 
 			// getting folder info
 			MailboxInfo info = folder.getMessageFolderInfo();
@@ -128,7 +128,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 
 			// set tooltip text
 			setToolTipText(createTooltipText(info));
-			
+
 			// set label text
 			setText(createLabelText(info, item));
 
@@ -139,15 +139,17 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	/**
 	 * Create HTML label text
 	 * 
-	 * @param info			mailbox info (total/unread/recent count)
-	 * @param item			folderitem containing xml-configuration
-	 * @return				label
+	 * @param info
+	 *            mailbox info (total/unread/recent count)
+	 * @param item
+	 *            folderitem containing xml-configuration
+	 * @return label
 	 */
 	private String createLabelText(MailboxInfo info, IFolderItem item) {
 
 		// name of folder
 		String name = item.getString("property", "name");
-		//	IMAP folder specific
+		// IMAP folder specific
 		// - Is this folder selectable (does it contain messages?)
 		boolean selectable = item.getBooleanWithDefault("selectable", true) == false;
 
@@ -155,7 +157,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 		// set label text
 		buf = new StringBuffer("<html><body>");
 
-		//	if IMAP selectable folder
+		// if IMAP selectable folder
 		// -> lightgray font color and italic
 		if (selectable)
 			buf.append("<i><font color='#333333'>");
@@ -165,7 +167,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			// -> using bold font
 			buf.append("<b>");
 
-			//  append unseen count to folder name
+			// append unseen count to folder name
 			name = name + " (" + info.getUnseen() + ")";
 			buf.append(name);
 
@@ -173,7 +175,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 		} else
 			buf.append(name);
 
-		//	if IMAP selectable folder
+		// if IMAP selectable folder
 		if (selectable)
 			buf.append("</i>");
 
@@ -184,17 +186,18 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			buf.append(info.getRecent());
 			buf.append(")");
 		}
-		
+
 		buf.append("</body></html>");
-		
+
 		return buf.toString();
 	}
 
 	/**
 	 * Create HTML tooltip text.
 	 * 
-	 * @param info		mailboxinfo (total/unread/recent count)
-	 * @return			tooltip text
+	 * @param info
+	 *            mailboxinfo (total/unread/recent count)
+	 * @return tooltip text
 	 */
 	private String createTooltipText(MailboxInfo info) {
 		StringBuffer buf = new StringBuffer();
@@ -215,8 +218,8 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			return imapRootFolderIcon;
 		} else if (node instanceof VirtualFolder) {
 			return virtualFolderIcon;
-		} else if (node instanceof AbstractMessageFolder) {
-			AbstractMessageFolder folder = (AbstractMessageFolder) node;
+		} else if (node instanceof IMailbox) {
+			IMailbox folder = (IMailbox) node;
 			if (folder.isInboxFolder()) {
 				return inboxIcon;
 			} else if (folder.getUid() == 103) {

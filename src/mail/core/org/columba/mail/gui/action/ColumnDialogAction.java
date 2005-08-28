@@ -22,8 +22,8 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.columns.ColumnConfigDialog;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
@@ -52,7 +52,7 @@ public class ColumnDialogAction extends AbstractColumbaAction {
             // check if we should use the folder-based configuration
             // or the global table configuration
             XmlElement columns = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
-                                  .getConfigNode((AbstractMessageFolder) folder,
+                                  .getConfigNode((IMailbox) folder,
                     "ColumnOptions");
 
             new ColumnConfigDialog((MailFrameMediator) getFrameMediator(),

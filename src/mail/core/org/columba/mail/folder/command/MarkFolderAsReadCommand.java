@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.util.MailResourceLoader;
@@ -58,7 +59,7 @@ public class MarkFolderAsReadCommand extends Command {
     /** {@inheritDoc} */
     public void execute(IWorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
-        folderToBeRead = (IMailbox) ((MailFolderCommandReference) getReference()).getSourceFolder();
+        folderToBeRead = (IMailbox) ((IMailFolderCommandReference) getReference()).getSourceFolder();
 
         worker.setDisplayText(MessageFormat.format(
                 MailResourceLoader.getString("statusbar", "message",
@@ -66,7 +67,7 @@ public class MarkFolderAsReadCommand extends Command {
 
         worker.clearDisplayTextWithDelay();
 
-        MailFolderCommandReference markCommandRefs = new MailFolderCommandReference(folderToBeRead);
+        IMailFolderCommandReference markCommandRefs = new MailFolderCommandReference(folderToBeRead);
         Object[] uids = folderToBeRead.getUids();
         if ((uids != null) && (uids.length > 0)) {
             markCommandRefs.setUids(uids);

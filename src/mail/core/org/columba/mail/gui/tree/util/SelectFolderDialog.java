@@ -45,7 +45,6 @@ import org.columba.core.folder.IFolder;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.ISelectFolderDialog;
@@ -211,14 +210,14 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 	}
 
 	public IFolder getSelectedFolder() {
-		return  selectedFolder;
+		return selectedFolder;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
 		if (action.equals("OK")) {
-			//name = textField.getText();
+			// name = textField.getText();
 			bool = true;
 
 			dispose();
@@ -240,8 +239,8 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 				return;
 			}
 
-			MailFolderCommandReference r = new MailFolderCommandReference(dialog
-					.getSelected());
+			MailFolderCommandReference r = new MailFolderCommandReference(
+					dialog.getSelected());
 			r.setFolderName(name);
 
 			CommandProcessor.getInstance().addOp(
@@ -259,10 +258,6 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 
 		if (node == null) {
 			return;
-		}
-
-		if (node instanceof AbstractMessageFolder) {
-			selectedFolder = (AbstractMessageFolder) node;
 		}
 
 		if (node.supportsAddMessage()) {

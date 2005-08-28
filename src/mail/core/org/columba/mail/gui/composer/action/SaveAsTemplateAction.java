@@ -24,7 +24,7 @@ import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
@@ -65,7 +65,7 @@ public class SaveAsTemplateAction extends AbstractColumbaAction {
 		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
 		String str = folderItem.get("templates");
 		int destUid = Integer.parseInt(str);
-		AbstractMessageFolder destFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+		IMailbox destFolder = (IMailbox) FolderTreeModel.getInstance()
 				.getFolder(destUid);
 
 		ComposerCommandReference r =new ComposerCommandReference(composerController, destFolder);

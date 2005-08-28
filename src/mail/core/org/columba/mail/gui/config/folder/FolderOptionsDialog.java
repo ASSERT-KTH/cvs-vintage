@@ -51,8 +51,8 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.AbstractLocalFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
@@ -73,8 +73,8 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * Folder Options Dialog. Shows status information about selected folder.
  * <p>
- * Note, that this dialog is not modal. A background thread is used to 
- * calculate the total mailbox size.
+ * Note, that this dialog is not modal. A background thread is used to calculate
+ * the total mailbox size.
  * 
  * @author fdietz
  */
@@ -87,7 +87,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 	private JPanel advPanel;
 
-	private AbstractMessageFolder folder;
+	private IMailbox folder;
 
 	private JLabel nameLabel;
 
@@ -144,8 +144,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	 * @param renameFolder
 	 *            this is a "rename folder" operation
 	 */
-	public FolderOptionsDialog(AbstractMessageFolder folder,
-			boolean renameFolder, MailFrameMediator mediator) {
+	public FolderOptionsDialog(IMailbox folder, boolean renameFolder,
+			MailFrameMediator mediator) {
 		super(mediator.getView().getFrame(), MailResourceLoader.getString(
 				"dialog", "folderoptions", "dialog_title"), false);
 
@@ -175,8 +175,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	 * @param folder
 	 *            selected folder
 	 */
-	public FolderOptionsDialog(AbstractMessageFolder folder,
-			MailFrameMediator mediator) {
+	public FolderOptionsDialog(IMailbox folder, MailFrameMediator mediator) {
 		super(mediator.getView().getFrame(), MailResourceLoader.getString(
 				"dialog", "folderoptions", "dialog_title"), true);
 

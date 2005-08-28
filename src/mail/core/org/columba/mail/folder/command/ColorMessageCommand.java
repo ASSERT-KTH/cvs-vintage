@@ -25,7 +25,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.base.ColorFactory;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 
 /**
@@ -55,7 +55,7 @@ public class ColorMessageCommand extends Command {
 	public void execute(IWorkerStatusController worker) throws Exception {
 
 		// get array of source references
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();

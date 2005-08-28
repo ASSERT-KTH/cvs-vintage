@@ -32,7 +32,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
@@ -66,7 +65,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	private MessageController mediator;
 
 	/**
-	 *  
+	 * 
 	 */
 	public Rfc822MessageViewer(MessageController mediator) {
 		super();
@@ -99,12 +98,12 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
 			throws Exception {
 
-		//		 if necessary decrypt/verify message
+		// if necessary decrypt/verify message
 		IMailFolderCommandReference newRefs = filterMessage(folder, uid);
 
 		// map to new reference
 		if (newRefs != null) {
-			folder = (AbstractMessageFolder) newRefs.getSourceFolder();
+			folder = (IMailbox) newRefs.getSourceFolder();
 			uid = newRefs.getUids()[0];
 		}
 
@@ -116,7 +115,8 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 			MimeTree mimePartTree = folder.getMimePartTree(uid);
 			MimePart mp = chooseBodyPart(mimePartTree);
 			if (mp != null)
-				getBodytextViewer().view(folder, uid, mp.getAddress(), mediator);
+				getBodytextViewer()
+						.view(folder, uid, mp.getAddress(), mediator);
 
 			attachmentsViewer.view(folder, uid, mediator);
 		}
@@ -130,7 +130,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	 */
 	public void updateGUI() throws Exception {
 		layoutComponents();
-		
+
 		getHeaderController().updateGUI();
 
 		if (showAttachmentsInlineEnabled()) {
@@ -139,7 +139,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 			getBodytextViewer().updateGUI();
 			attachmentsViewer.updateGUI();
 		}
-			
+
 		getSpamStatusViewer().updateGUI();
 		getSecurityInformationViewer().updateGUI();
 	}
@@ -248,7 +248,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 			top.add(headerController.getView(), BorderLayout.CENTER);
 
 		add(top, BorderLayout.NORTH);
-			
+
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 
@@ -332,8 +332,8 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
 
-		//ensure that there is an HTML part in the email, otherwise JTextPanel
-		//throws a RuntimeException
+		// ensure that there is an HTML part in the email, otherwise JTextPanel
+		// throws a RuntimeException
 
 		// Which Bodypart shall be shown? (html/plain)
 		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
@@ -350,8 +350,8 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	private boolean hasHtmlPart(MimePart mimeTypes) {
 
 		if (mimeTypes.getHeader().getMimeType().equals(
-				new MimeType("text","plain")))
-			return true; //exit immediately
+				new MimeType("text", "plain")))
+			return true; // exit immediately
 
 		java.util.List children = mimeTypes.getChilds();
 

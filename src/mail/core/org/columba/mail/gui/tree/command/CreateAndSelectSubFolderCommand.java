@@ -27,7 +27,7 @@ import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.Worker;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.IMailFolder;
 
@@ -74,10 +74,10 @@ public class CreateAndSelectSubFolderCommand extends Command {
      * @see org.columba.api.command.Command#execute(Worker)
      */
     public void execute(IWorkerStatusController worker) throws Exception {
-        parentFolder = (IMailFolder) ((MailFolderCommandReference) getReference())
+        parentFolder = (IMailFolder) ((IMailFolderCommandReference) getReference())
                 .getSourceFolder();
 
-        String name = ((MailFolderCommandReference) getReference())
+        String name = ((IMailFolderCommandReference) getReference())
                 .getFolderName();
 
         try {

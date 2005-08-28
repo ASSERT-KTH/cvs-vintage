@@ -30,12 +30,10 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.ComposerCommandReference;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.composer.MessageBuilderHelper;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
@@ -46,7 +44,6 @@ import org.columba.mail.gui.util.SendMessageDialog;
 import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Flags;
 import org.waffel.jscf.JSCFException;
 
@@ -94,41 +91,41 @@ public class SendMessageCommand extends Command {
 	/*
 	 * validate command parameters. At the moment only checks if there are any
 	 * invalid email addresses
-	 *  
+	 * 
 	 */
 	private boolean validArguments(ComposerCommandReference reference) {
 
 		String invalidRecipient = null;
 
-		//VALIDATION DISABLE ! Sebastian Witt 25.07.04,
-		//"NAME" <email@somewhat.de> isnt true, which should :(
-		//root@localhost is valid, but not with this check. :(
-		//root is also valid (with local mailserver), but not with this check
+		// VALIDATION DISABLE ! Sebastian Witt 25.07.04,
+		// "NAME" <email@somewhat.de> isnt true, which should :(
+		// root@localhost is valid, but not with this check. :(
+		// root is also valid (with local mailserver), but not with this check
 		// :(
 
-		//TODO: get the validation working CORRECTLY !
+		// TODO: get the validation working CORRECTLY !
 
-		//		for(int i=0;i<references.length;i++)
-		//		{
+		// for(int i=0;i<references.length;i++)
+		// {
 		//		  
-		//			invalidRecipient = references[i].getComposerController().getModel()
-		//														.getInvalidRecipients();
+		// invalidRecipient = references[i].getComposerController().getModel()
+		// .getInvalidRecipients();
 		//			
-		//		  if (invalidRecipient != null)
-		//			{
+		// if (invalidRecipient != null)
+		// {
 		//
-		//		    //it would be really nice to highlight the invalid recipient
-		//				showInvalidRecipientMessage(invalidRecipient);
-		//				//AFAIK, there's no need to set showComposer to true because
-		//				//composer window is already displayed
-		//				// open composer view
-		//				//showComposer = true;
+		// //it would be really nice to highlight the invalid recipient
+		// showInvalidRecipientMessage(invalidRecipient);
+		// //AFAIK, there's no need to set showComposer to true because
+		// //composer window is already displayed
+		// // open composer view
+		// //showComposer = true;
 		//				
-		//				return false;
+		// return false;
 		//
-		//			}
+		// }
 		//			
-		//		}
+		// }
 		//		
 		return true;
 
@@ -144,7 +141,7 @@ public class SendMessageCommand extends Command {
 		if (!validArguments(r))
 			return;
 
-		//	display status message
+		// display status message
 		worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "send_message_compose"));
 
@@ -164,7 +161,7 @@ public class SendMessageCommand extends Command {
 		AccountItem item = model.getAccountItem();
 
 		// sent folder
-		AbstractMessageFolder sentFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+		IMailbox sentFolder = (IMailbox) FolderTreeModel.getInstance()
 				.getFolder(item.getSpecialFoldersItem().getInteger("sent"));
 
 		// get the SendableMessage object
@@ -172,7 +169,8 @@ public class SendMessageCommand extends Command {
 
 		try {
 			// compose the message suitable for sending
-			message = new MessageComposer(model).compose(worker, r.isAppendSignature());
+			message = new MessageComposer(model).compose(worker, r
+					.isAppendSignature());
 
 		} catch (JSCFException e1) {
 			if (e1 instanceof CancelledException) {
@@ -184,7 +182,7 @@ public class SendMessageCommand extends Command {
 			} else {
 				JOptionPane.showMessageDialog(null, e1.getMessage());
 
-				//	open composer view
+				// open composer view
 				showComposer = true;
 
 				return;
@@ -198,7 +196,6 @@ public class SendMessageCommand extends Command {
 		// open connection
 		final SMTPServer server = new SMTPServer(item);
 
-
 		// successfully connected and autenthenticated to SMTP server
 		try {
 			// display status message
@@ -207,30 +204,30 @@ public class SendMessageCommand extends Command {
 
 			IWorkerStatusChangeListener listener = new IWorkerStatusChangeListener() {
 				public void workerStatusChanged(WorkerStatusChangedEvent e) {
-					if( e.getSource().cancelled() ) {
+					if (e.getSource().cancelled()) {
 						try {
 							server.dropConnection();
-						} catch (IOException e1) {							
+						} catch (IOException e1) {
 						}
 					}
-					
-				}				
+
+				}
 			};
-			
+
 			// important for cancel
 			worker.addWorkerStatusChangeListener(listener);
-			
+
 			// send message
 			server.sendMessage(message, worker);
-			
+
 			// not needed anymore
 			worker.removeWorkerStatusChangeListener(listener);
-			
-			if( worker.cancelled() ) {
+
+			if (worker.cancelled()) {
 				showComposer = true;
 				return;
 			}
-			
+
 			// mark as read
 			Flags flags = new Flags();
 			flags.setSeen(true);
@@ -248,15 +245,17 @@ public class SendMessageCommand extends Command {
 			// -> get source reference of message
 			// when replying this is the original sender's message
 			// you selected and replied to
-			MailFolderCommandReference ref2 = model.getSourceReference();
-			if (ref2 != null && ((IMailbox)ref2.getSourceFolder()).exists(ref2.getUids()[0])) {
+			IMailFolderCommandReference ref2 = model.getSourceReference();
+			if (ref2 != null
+					&& ((IMailbox) ref2.getSourceFolder()).exists(ref2
+							.getUids()[0])) {
 				// mark message as answered
 				ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
 				MarkMessageCommand c1 = new MarkMessageCommand(ref2);
 				CommandProcessor.getInstance().addOp(c1);
 			}
 
-			//	display status message
+			// display status message
 			worker.setDisplayText(MailResourceLoader.getString("statusbar",
 					"message", "send_message_closing"));
 
@@ -267,11 +266,12 @@ public class SendMessageCommand extends Command {
 			worker.setDisplayText(MailResourceLoader.getString("statusbar",
 					"message", "send_message_success"));
 		} /*
-		   * catch (SMTPException e) { JOptionPane.showMessageDialog(null,
-		   * e.getMessage(), "Error while sending", JOptionPane.ERROR_MESSAGE); //
-		   * open composer view showComposer = true; }
-		   */catch (Exception e) {
-			//e.printStackTrace();
+			 * catch (SMTPException e) { JOptionPane.showMessageDialog(null,
+			 * e.getMessage(), "Error while sending",
+			 * JOptionPane.ERROR_MESSAGE); // open composer view showComposer =
+			 * true; }
+			 */catch (Exception e) {
+			// e.printStackTrace();
 
 			// open composer view
 			showComposer = true;
@@ -282,7 +282,7 @@ public class SendMessageCommand extends Command {
 
 	public void updateGUI() throws Exception {
 
-		//can no longer assume that sendMessageDialog has been displayed
+		// can no longer assume that sendMessageDialog has been displayed
 		if (sendMessageDialog != null) {
 			// close send message dialog
 			sendMessageDialog.setVisible(false);

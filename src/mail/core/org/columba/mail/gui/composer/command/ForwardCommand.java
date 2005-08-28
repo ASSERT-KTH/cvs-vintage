@@ -26,7 +26,7 @@ import org.columba.core.command.Command;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.message.BasicHeader;
@@ -70,7 +70,7 @@ public class ForwardCommand extends Command {
 
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+		IMailbox folder = (IMailbox) ((MailFolderCommandReference) getReference())
 				.getSourceFolder();
 
 		// get first selected message

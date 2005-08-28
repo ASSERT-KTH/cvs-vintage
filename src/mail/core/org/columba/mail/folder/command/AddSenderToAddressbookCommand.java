@@ -25,7 +25,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
@@ -54,7 +54,7 @@ public class AddSenderToAddressbookCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get reference
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();

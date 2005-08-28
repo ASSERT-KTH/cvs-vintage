@@ -21,19 +21,18 @@ import java.io.FileInputStream;
 
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.io.SteerableInputStream;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.mbox.MboxMessage;
 import org.columba.mail.folder.mbox.MboxParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.FileSource;
-import org.columba.ristretto.io.SourceInputStream;
 
 public class MBOXImporter extends AbstractMailboxImporter {
     public MBOXImporter() {
         super();
     }
 
-    public MBOXImporter(AbstractMessageFolder destinationFolder, File[] sourceFiles) {
+    public MBOXImporter(IMailbox destinationFolder, File[] sourceFiles) {
         super(destinationFolder, sourceFiles);
     }
 
@@ -42,7 +41,7 @@ public class MBOXImporter extends AbstractMailboxImporter {
     }
 
     public void importMailboxFile(File file, IWorkerStatusController worker,
-        AbstractMessageFolder destFolder) throws Exception {
+    		IMailbox destFolder) throws Exception {
     	FileSource mboxSource = new FileSource(file);
     	MboxMessage[] messages = MboxParser.parseMbox(mboxSource);
     	mboxSource.close();

@@ -22,7 +22,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 
 /**
@@ -51,7 +51,7 @@ public class ExpungeFolderCommand extends Command {
 	public void execute(IWorkerStatusController worker) throws Exception {
 
 		// get source references
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 

@@ -26,6 +26,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.filter.FilterAction;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
@@ -46,7 +47,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements
 
 		if (b) {
 			int uid = filterAction.getUid();
-			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+			IMailbox folder = (IMailbox) FolderTreeModel.getInstance()
 					.getFolder(uid);
 			if (folder == null) {
 				// couldn't find folder associated with this uid
@@ -61,13 +62,14 @@ public class FolderChooserActionRow extends DefaultActionRow implements
 		} else {
 			String treePath = treePathButton.getText();
 			TreeNodeList list = new TreeNodeList(treePath);
-			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
-					.getFolder(list);
+			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel
+					.getInstance().getFolder(list);
 
 			if (folder == null) {
 				// user didn't select any folder
 				// -> make Inbox the default folder
-				folder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(101);
+				folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
+						.getFolder(101);
 			}
 
 			int uid = folder.getUid();
@@ -80,7 +82,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements
 
 		treePathButton = new JButton();
 
-		//treePathButton.setMargin(new Insets(0,0,0,0));
+		// treePathButton.setMargin(new Insets(0,0,0,0));
 		treePathButton.addActionListener(this);
 		treePathButton.setActionCommand("TREEPATH");
 

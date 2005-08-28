@@ -28,13 +28,10 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.TreeViewOwner;
-import org.columba.mail.gui.tree.TreeController;
-import org.columba.mail.gui.tree.TreeView;
 
 /**
  * A transfer handler for the TableView control.
@@ -206,7 +203,7 @@ public class TableViewTransferHandler extends TransferHandler {
 
 		TreeView treeView = treeController.getView();
 		*/
-		AbstractMessageFolder destFolder = (AbstractMessageFolder)((MailFrameMediator)frameController).getTableSelection().getSourceFolder();
+		IMailbox destFolder = (IMailbox)((MailFrameMediator)frameController).getTableSelection().getSourceFolder();
 		/*
 		AbstractMessageFolder destFolder = (AbstractMessageFolder) treeView
 				.getDropTargetFolder();

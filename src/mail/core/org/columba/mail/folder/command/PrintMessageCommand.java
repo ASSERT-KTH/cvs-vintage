@@ -51,7 +51,7 @@ import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
 import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.message.viewer.AttachmentModel;
@@ -182,7 +182,7 @@ public class PrintMessageCommand extends Command {
                  * *20030604, karlpeder* Fixed minor flaws to be able to print text
                  * messages. Further more added support for html messages.
                  */
-        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+    	IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
         Object[] uids = r.getUids(); // uid for messages to print
 

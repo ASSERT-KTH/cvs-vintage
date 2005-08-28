@@ -44,7 +44,7 @@ import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folderoptions.ColumnOptionsPlugin;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -142,7 +142,6 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 	}
 
 	public void initComponents() {
-		
 
 		showButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"dialog", "columns", "show"));
@@ -156,7 +155,6 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 		hideButton.setEnabled(false);
 		hideButton.addActionListener(this);
 
-		
 		getContentPane().add(createPanel(), BorderLayout.CENTER);
 
 		getContentPane().add(createBottomPanel(), BorderLayout.SOUTH);
@@ -167,7 +165,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 						.getString("dialog", "columns", "header_description")),
 				BorderLayout.NORTH);
 	}
-	
+
 	private JPanel createPanel() {
 		JPanel jpanel1 = new JPanel();
 		FormLayout formlayout1 = new FormLayout(
@@ -193,8 +191,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 
 	private JPanel createPanel1() {
 		JPanel jpanel1 = new JPanel();
-		FormLayout formlayout1 = new FormLayout(
-				"FILL:DEFAULT:NONE",
+		FormLayout formlayout1 = new FormLayout("FILL:DEFAULT:NONE",
 				"CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE");
 		CellConstraints cc = new CellConstraints();
 		jpanel1.setLayout(formlayout1);
@@ -216,7 +213,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 		JPanel buttonPanel = createButtonPanel();
 
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		
+
 		return bottomPanel;
 	}
 
@@ -313,8 +310,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 
 			// make sure this configuration is also visually working immediately
 			IMailFolderCommandReference r = mediator.getTreeSelection();
-			plugin.loadOptionsFromXml((AbstractMessageFolder) r
-					.getSourceFolder());
+			plugin.loadOptionsFromXml((IMailbox) r.getSourceFolder());
 		} else if (action.equals("CANCEL")) {
 			setVisible(false);
 		} else if (action.equals("SHOW")) {
@@ -323,7 +319,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 				((CheckableItemListTableModel) list.getModel())
 						.updateRow(selection);
 
-				//list.repaint();
+				// list.repaint();
 				updateButtonState();
 			}
 		} else if (action.equals("HIDE")) {
@@ -333,7 +329,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 				((CheckableItemListTableModel) list.getModel())
 						.updateRow(selection);
 
-				//list.repaint();
+				// list.repaint();
 				updateButtonState();
 			}
 		}

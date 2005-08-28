@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.columba.api.command.IWorkerStatusController;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -36,7 +36,7 @@ public class PegasusMailImporter extends AbstractMailboxImporter {
         super();
     }
 
-    public PegasusMailImporter(AbstractMessageFolder destinationFolder, File[] sourceFiles) {
+    public PegasusMailImporter(IMailbox destinationFolder, File[] sourceFiles) {
         super(destinationFolder, sourceFiles);
     }
 
@@ -45,7 +45,7 @@ public class PegasusMailImporter extends AbstractMailboxImporter {
     }
 
     public void importMailboxFile(File file, IWorkerStatusController worker,
-        AbstractMessageFolder destFolder) throws Exception {
+    		IMailbox destFolder) throws Exception {
         int count = 0;
         boolean sucess = false;
 

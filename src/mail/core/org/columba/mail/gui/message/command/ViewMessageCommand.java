@@ -27,7 +27,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
@@ -107,7 +107,7 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 			return;
 
 		// get command reference
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get selected folder
 		srcFolder = (IMailbox) r.getSourceFolder();
@@ -160,7 +160,7 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 			if (mediator instanceof ThreePaneMailFrameController)
 				((TableViewOwner) mediator).getTableController()
 						.restartMarkAsReadTimer(
-								(MailFolderCommandReference) getReference());
+								(IMailFolderCommandReference) getReference());
 		}
 	}
 
@@ -170,7 +170,7 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		// old command-specific selection
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get selected folder
 		IMailbox folder = (IMailbox) r.getSourceFolder();

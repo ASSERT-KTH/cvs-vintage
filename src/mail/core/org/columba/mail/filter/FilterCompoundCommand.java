@@ -26,7 +26,7 @@ import org.columba.core.filter.FilterAction;
 import org.columba.core.filter.FilterActionList;
 import org.columba.core.folder.IFolder;
 import org.columba.core.plugin.PluginManager;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.plugin.FilterActionExtensionHandler;
 
 /**
@@ -69,7 +69,7 @@ public class FilterCompoundCommand extends CompoundCommand {
 
 			// retrieve Command of filter action
 			ICommand command = instance.getCommand(action,
-					(AbstractMessageFolder) sourceFolder, uids);
+					(IMailbox) sourceFolder, uids);
 
 			// add command to CompoundCommand
 			if (command != null) {

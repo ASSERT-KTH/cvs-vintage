@@ -8,9 +8,9 @@ package org.columba.mail.gui.messageframe;
 
 import org.columba.api.command.ICommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -48,7 +48,7 @@ public class FixedTableSelectionHandler extends SelectionHandler {
 		this.tableReference = (MailFolderCommandReference) selection;
 
 		fireSelectionChanged(new TableSelectionChangedEvent(
-				(AbstractMessageFolder) tableReference.getSourceFolder(), tableReference
+				(IMailbox) tableReference.getSourceFolder(), tableReference
 						.getUids()));
 	}
 }

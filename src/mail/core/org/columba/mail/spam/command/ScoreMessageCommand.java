@@ -25,10 +25,11 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.logging.Logging;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.plugins.AddressbookFilter;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.spam.SpamController;
 
@@ -42,7 +43,7 @@ public class ScoreMessageCommand extends Command {
 
 	private Object[] uids;
 
-	private AbstractMessageFolder srcFolder;
+	private IMailbox srcFolder;
 
 	private MarkMessageCommand markAsSpamCommand;
 
@@ -70,13 +71,13 @@ public class ScoreMessageCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get source reference
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		uids = r.getUids();
 
 		// get source folder
-		srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

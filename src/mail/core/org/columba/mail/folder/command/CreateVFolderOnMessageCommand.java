@@ -24,10 +24,10 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.filter.FilterRule;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.filter.MailFilterCriteria;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -59,7 +59,7 @@ public class CreateVFolderOnMessageCommand extends Command {
     private String vfolderType;
 
     /** Parent for the virtual folder */
-    private AbstractMessageFolder parentFolder = null;
+    private IMailbox parentFolder = null;
 
     /** Virtual folder created created */
     private VirtualFolder vfolder = null;
@@ -109,7 +109,7 @@ public class CreateVFolderOnMessageCommand extends Command {
     public void execute(IWorkerStatusController worker)
         throws Exception {
         // get references to selected folder and message
-        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+    	IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
 
         if (uids.length == 0) {
@@ -120,7 +120,7 @@ public class CreateVFolderOnMessageCommand extends Command {
         }
 
         Object uid = uids[0];
-        parentFolder = (AbstractMessageFolder) r.getSourceFolder();
+        parentFolder = (IMailbox) r.getSourceFolder();
 
         //register for status events
         ((StatusObservableImpl) parentFolder.getObservable()).setWorker(worker);
@@ -158,7 +158,7 @@ public class CreateVFolderOnMessageCommand extends Command {
      * @return The filter created
      */
     public VirtualFolder createVirtualFolder(String folderName,
-        String headerField, String pattern, AbstractMessageFolder parent) {
+        String headerField, String pattern, IMailbox parent) {
         // create virtual folder
         VirtualFolder vfolder;
 

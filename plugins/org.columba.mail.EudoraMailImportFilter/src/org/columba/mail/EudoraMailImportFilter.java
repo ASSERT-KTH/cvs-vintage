@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import org.columba.api.command.IWorkerStatusController;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.ristretto.coder.EncodedWord;
 
@@ -44,18 +44,19 @@ import org.columba.ristretto.coder.EncodedWord;
  */
 public class EudoraMailImportFilter extends AbstractMailboxImporter {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger.getLogger("org.columba.mail");
 
 	/** Time zone, e.g. "+0100", used for new Date headers (= host default) */
-	private static final String TIME_ZONE =
-		(new SimpleDateFormat("Z")).format(new Date());
+	private static final String TIME_ZONE = (new SimpleDateFormat("Z"))
+			.format(new Date());
+
 	/**
 	 * Charset, e.g. "iso-8859-1", when nothing else is specified (= host
 	 * default)
 	 */
-	private static final String DEFAULT_CHARSET =
-		System.getProperty("file.encoding");
+	private static final String DEFAULT_CHARSET = System
+			.getProperty("file.encoding");
 
 	public EudoraMailImportFilter() {
 		super();
@@ -69,9 +70,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 * @param sourceFiles
 	 *            Mailboxes to import
 	 */
-	public EudoraMailImportFilter(
-			AbstractMessageFolder destinationFolder,
-		File[] sourceFiles) {
+	public EudoraMailImportFilter(IMailbox destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}
 
@@ -90,8 +89,8 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 
 	/**
 	 * Imports a single mailbox file. This one is called from importMailbox
-	 * (defined in DefaultMailboxImporter), which iterates over the source
-	 * files to be imported - and calls this method for each file.
+	 * (defined in DefaultMailboxImporter), which iterates over the source files
+	 * to be imported - and calls this method for each file.
 	 * 
 	 * @param file
 	 *            Mailbox file to import
@@ -100,13 +99,10 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 * @param destFolder
 	 *            Which mail folder inside Columba to import into
 	 */
-	public void importMailboxFile(
-		File file,
-		IWorkerStatusController worker,
-		AbstractMessageFolder destFolder)
-		throws Exception {
-		LOG.fine(
-			"Starting to import Eudora mbox file: " + file.getAbsolutePath());
+	public void importMailboxFile(File file, IWorkerStatusController worker,
+			IMailbox destFolder) throws Exception {
+		LOG.fine("Starting to import Eudora mbox file: "
+				+ file.getAbsolutePath());
 
 		StringBuffer strbuf = new StringBuffer();
 		BufferedReader in = new BufferedReader(new FileReader(file));
@@ -127,13 +123,11 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			if (!str.startsWith("From ???@???") || (str.length() == 0)) {
 				strbuf.append(str + "\n");
 			} else // we reached "From ..." (start of new message)
-				{
-				//  If a msg has been read, import it into Columba
+			{
+				// If a msg has been read, import it into Columba
 				if (strbuf.length() != 0) {
 					if (convertAndSaveMessage(strbuf.toString(),
-						replacementDate,
-						worker,
-						destFolder)) {
+							replacementDate, worker, destFolder)) {
 						msgCounter++;
 					}
 				}
@@ -151,17 +145,13 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 
 		// save last message (while loop terminated before last msg was saved)
 		if (strbuf.length() > 0) {
-			if (convertAndSaveMessage(strbuf.toString(),
-				replacementDate,
-				worker,
-				destFolder)) {
+			if (convertAndSaveMessage(strbuf.toString(), replacementDate,
+					worker, destFolder)) {
 				msgCounter++;
 			}
 		}
 
-		LOG.fine(
-			"Import of Eudora mbox file completed. "
-				+ msgCounter
+		LOG.fine("Import of Eudora mbox file completed. " + msgCounter
 				+ " messages imported");
 		in.close();
 
@@ -199,25 +189,24 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			return dateHeader.toString();
 		} catch (java.util.NoSuchElementException e) {
 			// invalid date format - not enough tokens in it!!
-			
-			//Logging.log.severe(
-			//	"Not enough tokens in \""
-			//		+ dateStr
-			//		+ "\" to create Date: header. Returning null",
-			//	e);
-			LOG.severe("Not enough tokens in \""
-					+ dateStr + "\" to create Date: header. Returning null");
+
+			// Logging.log.severe(
+			// "Not enough tokens in \""
+			// + dateStr
+			// + "\" to create Date: header. Returning null",
+			// e);
+			LOG.severe("Not enough tokens in \"" + dateStr
+					+ "\" to create Date: header. Returning null");
 			return null;
 		}
 	} // ** End of method getDateHeader
 
 	/**
-	 * Handles a single message, i.e.: 1) Creates a new date header if
-	 * necessary (from replacement date) 2) Modifies the Content-Type: header
-	 * if necessary 3) Create attachment lists as a "multipart" in the msg,
-	 * either from lines stating "Attachment Converted:" or from
-	 * "X-Attachments" header ... and then saves the msg to the specified
-	 * folder
+	 * Handles a single message, i.e.: 1) Creates a new date header if necessary
+	 * (from replacement date) 2) Modifies the Content-Type: header if necessary
+	 * 3) Create attachment lists as a "multipart" in the msg, either from lines
+	 * stating "Attachment Converted:" or from "X-Attachments" header ... and
+	 * then saves the msg to the specified folder
 	 * 
 	 * @param msg
 	 *            Message incl. both headers and body
@@ -229,16 +218,12 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 *            Which mail folder inside Columba to import into
 	 * @return True on success, false on error
 	 */
-	private boolean convertAndSaveMessage(
-		String msg,
-		String replacementDate,
-		IWorkerStatusController worker,
-		AbstractMessageFolder destFolder) {
+	private boolean convertAndSaveMessage(String msg, String replacementDate,
+			IWorkerStatusController worker, IMailbox destFolder) {
 		// divide message into headers and body
 		String[] divided = divideMessage(msg);
 		if (divided == null) {
-			LOG.severe(
-				"Error splitting message into headers and body");
+			LOG.severe("Error splitting message into headers and body");
 			return false;
 		}
 		String headers = divided[0];
@@ -255,13 +240,9 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			if (line.indexOf(':') != -1) {
 				// a header
 				String key = line.substring(0, line.indexOf(':'));
-				String header =
-					decoder
-						.decode(
-							(CharSequence) line
-								.substring(line.indexOf(':') + 1)
-								.trim())
-						.toString();
+				String header = decoder.decode(
+						(CharSequence) line.substring(line.indexOf(':') + 1)
+								.trim()).toString();
 
 				// handle header
 				if (key.equalsIgnoreCase("Date")) {
@@ -274,53 +255,46 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 					/*
 					 * For multipart Content-Types we need to take action (if
 					 * boundary is nonexistent): Eudora stores content type =
-					 * multipart even though the message is not really
-					 * multipart - e.g. because an attachment already has has
-					 * been decoded by Eudora)
+					 * multipart even though the message is not really multipart -
+					 * e.g. because an attachment already has has been decoded
+					 * by Eudora)
 					 */
 					ContentType conType = new ContentType(header); // parse
 					// Content-Type
 					if ((conType.getType().equalsIgnoreCase("multipart"))
-						&& (body.indexOf("--" + conType.getBoundary()) == -1)) {
+							&& (body.indexOf("--" + conType.getBoundary()) == -1)) {
 						// boundary not found - Content-Type must be changed
-						if (conType
-							.getSubType()
-							.equalsIgnoreCase("alternative")) {
+						if (conType.getSubType()
+								.equalsIgnoreCase("alternative")) {
 							// just convert it to text/plain or text/html
 							header = guessBodyContentType(body);
-							LOG.fine(
-								"Content-Type: multipart/alternative replaced with "
-									+ header);
+							LOG
+									.fine("Content-Type: multipart/alternative replaced with "
+											+ header);
 						} else {
 							/*
-							 * mixed or unknown multipart type (to be treated
-							 * as mixed). This is typically a message with
+							 * mixed or unknown multipart type (to be treated as
+							 * mixed). This is typically a message with
 							 * attachments. Eudora just stores links to them -
-							 * therefore we create a new multipart/mixed
-							 * message with 2nd part = html page with links to
+							 * therefore we create a new multipart/mixed message
+							 * with 2nd part = html page with links to
 							 * attachments
 							 */
-							String[] split =
-								createAttachmentListFromAttachmentConverted(body);
+							String[] split = createAttachmentListFromAttachmentConverted(body);
 							if ((split == null) || (split.length == 1)) {
 								// no attachments found - just convert it to
 								// text/plain or text/html
 								header = guessBodyContentType(body);
-								LOG.fine(
-									"Content-Type: multipart/"
+								LOG.fine("Content-Type: multipart/"
 										+ conType.getSubType()
-										+ " replaced by "
-										+ header);
+										+ " replaced by " + header);
 							} else {
-								header =
-									"multipart/mixed;\n\tboundary="
+								header = "multipart/mixed;\n\tboundary="
 										+ conType.getBoundary();
-								body =
-									createBodyFromParts(
-										split,
-										conType.getBoundary());
-								LOG.fine(
-									"Content-Type: multipart/mixed. Boundaries added to msg body");
+								body = createBodyFromParts(split, conType
+										.getBoundary());
+								LOG
+										.fine("Content-Type: multipart/mixed. Boundaries added to msg body");
 							}
 						}
 					}
@@ -328,14 +302,14 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 					/*
 					 * Such a header is used by Eudora to indicate attachments
 					 * for outgoing messages. Outgoing messages have no
-					 * Content-Type specified. Therefore the Content-Type
-					 * header can be safely set here without risk of conflicts
-					 * with the modifications made above
+					 * Content-Type specified. Therefore the Content-Type header
+					 * can be safely set here without risk of conflicts with the
+					 * modifications made above
 					 */
 					if (header.length() > 0) {
 						// attachments found
-						String[] split =
-							createAttachmentListFromHeader(body, header);
+						String[] split = createAttachmentListFromHeader(body,
+								header);
 
 						if ((split == null) || (split.length == 1)) {
 							// no attachments found - just insert a
@@ -347,9 +321,9 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 							// replaced
 							header = guessBodyContentType(body);
 							contentTypeFound = true;
-							LOG.fine(
-								"X-Attachments header replaced by Content-Type: "
-									+ header);
+							LOG
+									.fine("X-Attachments header replaced by Content-Type: "
+											+ header);
 						} else {
 							// get unique boundary (not checked against att.
 							// list part - but guess its ok)
@@ -363,8 +337,8 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 							contentTypeFound = true; // we have now added
 							// such a header
 							body = createBodyFromParts(split, unique);
-							LOG.fine(
-								"X-Attachments header replaced by Content-Type: multipart/mixed");
+							LOG
+									.fine("X-Attachments header replaced by Content-Type: multipart/mixed");
 						}
 					}
 				}
@@ -381,8 +355,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 		 * (this is the case for outgoing messages from Eudora)
 		 */
 		if (!dateFound) {
-			LOG.fine(
-				"Date header missing - constructing new one");
+			LOG.fine("Date header missing - constructing new one");
 			String dateHeader = getNewDateHeader(replacementDate, TIME_ZONE);
 			if (dateHeader != null)
 				headerBuf.append(dateHeader + "\n"); // append the new Date
@@ -395,8 +368,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 		 * html msg is not shown correctly).
 		 */
 		if (!contentTypeFound) {
-			LOG.fine(
-				"Content-Type header missing - constructing new one");
+			LOG.fine("Content-Type header missing - constructing new one");
 			String contHeader = "Content-Type: " + guessBodyContentType(body);
 			headerBuf.append("MIME-Version: 1.0\n");
 			headerBuf.append(contHeader + "\n");
@@ -412,8 +384,8 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 * convertAndSaveMessage.
 	 * 
 	 * @param headers
-	 *            Header part of message, without the last "\n" separator (it
-	 *            is added here)
+	 *            Header part of message, without the last "\n" separator (it is
+	 *            added here)
 	 * @param body
 	 *            Body part of message
 	 * @param worker
@@ -421,11 +393,8 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 *            Folder in Columba to save message in
 	 * @return True on success, false on error
 	 */
-	private boolean saveMessage(
-		String headers,
-		String body,
-		IWorkerStatusController worker,
-		AbstractMessageFolder destFolder) {
+	private boolean saveMessage(String headers, String body,
+			IWorkerStatusController worker, IMailbox destFolder) {
 		StringBuffer buf = new StringBuffer();
 		// create full msg from headers and body
 		buf.append(headers);
@@ -439,17 +408,16 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			saveMessage(buf.toString(), worker, destFolder);
 			return true;
 		} catch (Exception e) {
-			//Logging.log.severe("Error saving converted message", e);
-			LOG.severe("Error saving converted message: " 
-					+ e.getMessage());
+			// Logging.log.severe("Error saving converted message", e);
+			LOG.severe("Error saving converted message: " + e.getMessage());
 			return false;
 		}
 	} // ** End of method saveMessage
 
 	/**
-	 * Creates a multipart body from different body parts separated by the
-	 * given boundary. The different part must have Content-Type etc.
-	 * specified, since this is not done here.
+	 * Creates a multipart body from different body parts separated by the given
+	 * boundary. The different part must have Content-Type etc. specified, since
+	 * this is not done here.
 	 * 
 	 * @param parts
 	 *            The different body parts (MUST have at least one element
@@ -469,9 +437,9 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	}
 
 	/**
-	 * Generates a boundary, which is unique in relation to the message body.
-	 * It is guaranteed that the string ("--" + boundary) is not found in the
-	 * msg body
+	 * Generates a boundary, which is unique in relation to the message body. It
+	 * is guaranteed that the string ("--" + boundary) is not found in the msg
+	 * body
 	 * 
 	 * @param body
 	 *            The message body
@@ -540,15 +508,12 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	private String guessBodyContentType(String body) {
 		// is it HTML or plain text
 		boolean isHTML = false;
-		if (((body.indexOf("<x-html>") != -1)
-			|| (body.indexOf("<X-HTML>") != -1))
-			&& ((body.indexOf("</x-html>") != -1)
-				|| (body.indexOf("</X-HTML>") != -1)))
+		if (((body.indexOf("<x-html>") != -1) || (body.indexOf("<X-HTML>") != -1))
+				&& ((body.indexOf("</x-html>") != -1) || (body
+						.indexOf("</X-HTML>") != -1)))
 			isHTML = true;
-		else if (
-			((body.indexOf("<HTML>") != -1) || (body.indexOf("<html>") != -1))
-				&& ((body.indexOf("</HTML>") != -1)
-					|| (body.indexOf("</html>") != -1)))
+		else if (((body.indexOf("<HTML>") != -1) || (body.indexOf("<html>") != -1))
+				&& ((body.indexOf("</HTML>") != -1) || (body.indexOf("</html>") != -1)))
 			isHTML = true;
 
 		if (!isHTML) {
@@ -560,30 +525,29 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			/*
 			 * It is HTML, try to find out which charset from meta tag: NB: The
 			 * seach for charset below is very simple. It assumes that the meta
-			 * tag to find is on ITS OWN LINE, i.e. " <meta" can be found at
-			 * the beginning of the line, and all the content of the tag is
-			 * found on the same line! Could be better, but this is first
-			 * shot...
+			 * tag to find is on ITS OWN LINE, i.e. " <meta" can be found at the
+			 * beginning of the line, and all the content of the tag is found on
+			 * the same line! Could be better, but this is first shot...
 			 */
 			BufferedReader reader = new BufferedReader(new StringReader(body));
 			String line = null;
 			try {
 				line = reader.readLine();
 			} catch (IOException e) {
-				//Logging.log.severe("Error while looking for charset", e);
-				LOG.severe("Error while looking for charset: "
-						+ e.getMessage());
+				// Logging.log.severe("Error while looking for charset", e);
+				LOG
+						.severe("Error while looking for charset: "
+								+ e.getMessage());
 			}
 			String charset = null;
 			while (line != null) {
 				line = line.trim();
 				if ((line.length() > 5)
-					&& (line.substring(0, 5).equalsIgnoreCase("<meta"))) {
+						&& (line.substring(0, 5).equalsIgnoreCase("<meta"))) {
 					String lcLine = line.toLowerCase(); // for easier search /
 					// matching
 					if ((lcLine.indexOf("http-equiv=content-type") != -1)
-						|| (lcLine.indexOf("http-equiv=\"content-type\"")
-							!= -1)) {
+							|| (lcLine.indexOf("http-equiv=\"content-type\"") != -1)) {
 						// meta tag with content definition found
 						int pos = lcLine.indexOf("charset");
 						if (pos != -1) {
@@ -617,9 +581,9 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 				try {
 					line = reader.readLine();
 				} catch (IOException e) {
-					//Logging.log.severe(
-					//	"Error while looking for charset",
-					//	e);
+					// Logging.log.severe(
+					// "Error while looking for charset",
+					// e);
 					LOG.severe("Error while looking for charset: "
 							+ e.getMessage());
 					line = null; // this will terminate the loop
@@ -629,8 +593,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			if ((charset != null) && (charset.length() > 0))
 				return "text/html; charset=" + charset;
 			else {
-				if ((DEFAULT_CHARSET != null)
-					&& (DEFAULT_CHARSET.length() > 0))
+				if ((DEFAULT_CHARSET != null) && (DEFAULT_CHARSET.length() > 0))
 					return "text/html; charset=" + DEFAULT_CHARSET;
 				else
 					return "text/html";
@@ -649,19 +612,18 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 *            The message body
 	 * @param xAttachments
 	 *            Header with attachment file names (X-Attachments header)
-	 * @return Body in first array entry, attachment list (if present) in
-	 *         second array entry (null on error)
+	 * @return Body in first array entry, attachment list (if present) in second
+	 *         array entry (null on error)
 	 */
-	private String[] createAttachmentListFromHeader(
-		String body,
-		String xAttachments) {
+	private String[] createAttachmentListFromHeader(String body,
+			String xAttachments) {
 		StringTokenizer tok = new StringTokenizer(xAttachments, ";");
 		StringBuffer attachBuf = new StringBuffer();
 		while (tok.hasMoreTokens()) {
 			// handle attachment (by creating a link)
 			String name = tok.nextToken().trim();
-			attachBuf.append(
-				"<a href=\"file://" + name + "\">" + name + "</a><br>\n");
+			attachBuf.append("<a href=\"file://" + name + "\">" + name
+					+ "</a><br>\n");
 		}
 
 		if (attachBuf.length() == 0) {
@@ -673,9 +635,9 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 		} else {
 			// attachments found...
 			// insert start and end for html
-			attachBuf.insert(
-				0,
-				"<html><head><title>Attachment list</title></head><body><p>\n");
+			attachBuf
+					.insert(0,
+							"<html><head><title>Attachment list</title></head><body><p>\n");
 			attachBuf.append("</p></body></html>\n");
 			// insert header for attachment list
 			String charset;
@@ -683,15 +645,12 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 				charset = "; charset=" + DEFAULT_CHARSET;
 			else
 				charset = "";
-			attachBuf.insert(
-				0,
-				"Content-Type: text/html"
-					+ charset
+			attachBuf.insert(0, "Content-Type: text/html" + charset
 					+ "; name=\"attachmentlist.html\"\n\n");
 			// build new body part
 			StringBuffer bodyBuf = new StringBuffer();
-			String header =
-				"Content-Type: " + guessBodyContentType(bodyBuf.toString());
+			String header = "Content-Type: "
+					+ guessBodyContentType(bodyBuf.toString());
 			bodyBuf.append(header + "\n\n");
 			bodyBuf.append(body);
 			// return parts
@@ -709,8 +668,8 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 * 
 	 * @param body
 	 *            The message body
-	 * @return Body in first array entry, attachment list (if present) in
-	 *         second array entry (null on error)
+	 * @return Body in first array entry, attachment list (if present) in second
+	 *         array entry (null on error)
 	 */
 	private String[] createAttachmentListFromAttachmentConverted(String body) {
 		StringBuffer bodyBuf = new StringBuffer();
@@ -724,11 +683,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 					String name = line.substring(line.indexOf(':') + 1).trim();
 					if (name.startsWith("\""))
 						name = name.substring(1, name.length() - 1);
-					attachBuf.append(
-						"<a href=\"file://"
-							+ name
-							+ "\">"
-							+ name
+					attachBuf.append("<a href=\"file://" + name + "\">" + name
 							+ "</a><br>\n");
 				} else {
 					// part of body
@@ -741,26 +696,22 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 				// attachments found
 
 				// insert start and end for html
-				attachBuf.insert(
-					0,
-					"<html><head><title>Attachment list</title></head><body><p>\n");
+				attachBuf
+						.insert(0,
+								"<html><head><title>Attachment list</title></head><body><p>\n");
 				attachBuf.append("</p></body></html>\n");
 				// insert header for attachment list
 				String charset;
-				if ((DEFAULT_CHARSET != null)
-					&& (DEFAULT_CHARSET.length() > 0))
+				if ((DEFAULT_CHARSET != null) && (DEFAULT_CHARSET.length() > 0))
 					charset = "; charset=" + DEFAULT_CHARSET;
 				else
 					charset = "";
-				attachBuf.insert(
-					0,
-					"Content-Type: text/html"
-						+ charset
+				attachBuf.insert(0, "Content-Type: text/html" + charset
 						+ "; name=\"attachmentlist.html\"\n\n");
 
 				// build new body part
-				String header =
-					"Content-Type: " + guessBodyContentType(bodyBuf.toString());
+				String header = "Content-Type: "
+						+ guessBodyContentType(bodyBuf.toString());
 				bodyBuf.insert(0, header + "\n\n");
 
 				String[] retVal = new String[2];
@@ -774,9 +725,8 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 				return retVal;
 			}
 		} catch (IOException e) {
-			//Logging.log.severe("Error parsing body for attachments", e);
-			LOG.severe("Error parsing body for attachments: "
-					+ e.getMessage());
+			// Logging.log.severe("Error parsing body for attachments", e);
+			LOG.severe("Error parsing body for attachments: " + e.getMessage());
 			return null;
 		}
 	} // ** End of method createAttachmentListFromAttachmentConverted

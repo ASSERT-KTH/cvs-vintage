@@ -15,36 +15,45 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.comparator;
 
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.MailboxInfo;
 
-
 /**
- * Folder comparator that sorts the folders based on the number of unread messages.
+ * Folder comparator that sorts the folders based on the number of unread
+ * messages.
+ * 
  * @author redsolo
  */
 public class UnreadFolderComparator extends FolderComparator {
 
-    /**
-     * @param ascending if the sorting is ascending or not.
-     */
-    public UnreadFolderComparator(boolean ascending) {
-        super(ascending);
-    }
+	/**
+	 * @param ascending
+	 *            if the sorting is ascending or not.
+	 */
+	public UnreadFolderComparator(boolean ascending) {
+		super(ascending);
+	}
 
-    /** {@inheritDoc} */
-    protected int compareFolders(AbstractMessageFolder folder1, AbstractMessageFolder folder2) {
-        int compValue;
+	/** {@inheritDoc} */
+	protected int compareFolders(IMailbox folder1, IMailbox folder2) {
+		int compValue = 0;
 
-        MailboxInfo info1 = ((AbstractMessageFolder) folder1).getMessageFolderInfo();
-        MailboxInfo info2 = ((AbstractMessageFolder) folder2).getMessageFolderInfo();
+		MailboxInfo info1;
+		MailboxInfo info2;
+		try {
+			info1 = ((IMailbox) folder1).getMessageFolderInfo();
+			info2 = ((IMailbox) folder2).getMessageFolderInfo();
+			if (info1.getUnseen() != info2.getUnseen()) {
+				compValue = info2.getUnseen() - info1.getUnseen();
+			} else {
+				compValue = super.compareFolders(folder1, folder2);
+			}
 
-        if (info1.getUnseen() != info2.getUnseen()) {
-            compValue = info2.getUnseen() - info1.getUnseen();
-        } else {
-            compValue = super.compareFolders(folder1, folder2);
-        }
+		} catch (Exception e) {
 
-        return compValue;
-    }
+			e.printStackTrace();
+		}
+
+		return compValue;
+	}
 }

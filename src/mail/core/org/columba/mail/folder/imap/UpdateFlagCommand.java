@@ -19,7 +19,7 @@ package org.columba.mail.folder.imap;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.ristretto.imap.IMAPFlags;
 
 public class UpdateFlagCommand extends Command {
@@ -40,7 +40,7 @@ public class UpdateFlagCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// get IMAP rootfolder
 		IMAPFolder srcFolder = (IMAPFolder) r.getSourceFolder();

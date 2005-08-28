@@ -46,11 +46,10 @@ import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectSearchFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -89,8 +88,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 	private IFrameMediator frameController;
 
-	public SearchFrame(IFrameMediator frameController,
-			AbstractMessageFolder searchFolder) {
+	public SearchFrame(IFrameMediator frameController, IMailbox searchFolder) {
 		super(frameController.getView().getFrame(), true);
 
 		this.frameController = frameController;
@@ -106,9 +104,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	public SearchFrame(IFrameMediator frameController,
-			AbstractMessageFolder searchFolder,
-			AbstractMessageFolder sourceFolder) {
+	public SearchFrame(IFrameMediator frameController, IMailbox searchFolder,
+			IMailbox sourceFolder) {
 		super(frameController.getView().getFrame(), true);
 
 		this.frameController = frameController;
@@ -215,10 +212,12 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		getContentPane().add(createBottomPanel(), BorderLayout.SOUTH);
 
-		getContentPane().add(new DialogHeaderPanel(MailResourceLoader.getString("dialog",
-				"filter", "header_title"), MailResourceLoader.getString(
-				"dialog", "filter", "header_description"), ImageLoader
-				.getSmallImageIcon("system-search-32.png")), BorderLayout.NORTH);
+		getContentPane().add(
+				new DialogHeaderPanel(MailResourceLoader.getString("dialog",
+						"filter", "header_title"), MailResourceLoader
+						.getString("dialog", "filter", "header_description"),
+						ImageLoader.getSmallImageIcon("system-search-32.png")),
+				BorderLayout.NORTH);
 	}
 
 	/**
@@ -326,7 +325,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 		}
 	}
 
-	public void setSourceFolder(AbstractMessageFolder f) {
+	public void setSourceFolder(IMailbox f) {
 		selectButton.setText(f.getTreePath());
 	}
 

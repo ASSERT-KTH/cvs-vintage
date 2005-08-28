@@ -16,70 +16,74 @@
 package org.columba.mail.command;
 
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.message.ColumbaMessage;
 
-
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class ComposerCommandReference extends MailFolderCommandReference {
-    protected ComposerController composerController;
+	protected ComposerController composerController;
 
-    protected boolean appendSignature = true;
-    
-    /**
- * Constructor for ComposerCommandReference.
- * @param folder
- */
-    public ComposerCommandReference(ComposerController composerController,
-        AbstractFolder folder) {
-        super(folder);
-        this.composerController = composerController;
-    }
+	protected boolean appendSignature = true;
 
-    /**
- * Constructor for ComposerCommandReference.
- * @param folder
- * @param message
- */
-    public ComposerCommandReference(AbstractFolder folder,
-        ColumbaMessage message) {
-        super(folder, message);
-    }
+	/**
+	 * Constructor for ComposerCommandReference.
+	 * 
+	 * @param folder
+	 */
+	public ComposerCommandReference(ComposerController composerController,
+			IMailbox folder) {
+		super(folder);
+		this.composerController = composerController;
+	}
 
-    /**
- * Constructor for ComposerCommandReference.
- * @param folder
- * @param uids
- */
-    public ComposerCommandReference(AbstractFolder folder, Object[] uids) {
-        super(folder, uids);
-    }
+	/**
+	 * Constructor for ComposerCommandReference.
+	 * 
+	 * @param folder
+	 * @param message
+	 */
+	public ComposerCommandReference(AbstractFolder folder,
+			ColumbaMessage message) {
+		super(folder, message);
+	}
 
-    /**
- * Constructor for ComposerCommandReference.
- * @param folder
- * @param uids
- * @param address
- */
-    public ComposerCommandReference(AbstractFolder folder, Object[] uids,
-        Integer[] address) {
-        super(folder, uids, address);
-    }
+	/**
+	 * Constructor for ComposerCommandReference.
+	 * 
+	 * @param folder
+	 * @param uids
+	 */
+	public ComposerCommandReference(AbstractFolder folder, Object[] uids) {
+		super(folder, uids);
+	}
 
-    /**
- * Returns the composerController.
- * @return ComposerController
- */
-    public ComposerController getComposerController() {
-        return composerController;
-    }
+	/**
+	 * Constructor for ComposerCommandReference.
+	 * 
+	 * @param folder
+	 * @param uids
+	 * @param address
+	 */
+	public ComposerCommandReference(AbstractFolder folder, Object[] uids,
+			Integer[] address) {
+		super(folder, uids, address);
+	}
+
+	/**
+	 * Returns the composerController.
+	 * 
+	 * @return ComposerController
+	 */
+	public ComposerController getComposerController() {
+		return composerController;
+	}
 
 	/**
 	 * @return Returns the appendSignature.
@@ -89,7 +93,8 @@ public class ComposerCommandReference extends MailFolderCommandReference {
 	}
 
 	/**
-	 * @param appendSignature The appendSignature to set.
+	 * @param appendSignature
+	 *            The appendSignature to set.
 	 */
 	public void setAppendSignature(boolean appendSignature) {
 		this.appendSignature = appendSignature;

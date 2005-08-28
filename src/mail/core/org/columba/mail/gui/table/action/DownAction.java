@@ -23,9 +23,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
@@ -33,96 +33,102 @@ import org.columba.mail.gui.table.IMessageNode;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.model.MessageNode;
 
-
 /**
  * @author waffel
- *
+ * 
  * The downAction is the action when you pressing the down key (not on NUM-PAD).
  * If you do so, the nextMessage down your key is selected and shown in the
  * message-view. If no more message down your key, then nothing changed.
  */
 public class DownAction extends AbstractColumbaAction {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.table.action");
 
-    ITableController tableController;
-    IFrameMediator frameController;
+	ITableController tableController;
 
-    public DownAction(IFrameMediator frameController) {
-        super(frameController, "DownAction");
-        this.tableController = ((TableViewOwner) frameController).getTableController();
-        this.frameController = frameController;
-    }
+	IFrameMediator frameController;
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-        LOG.info("action down performed");
+	public DownAction(IFrameMediator frameController) {
+		super(frameController, "DownAction");
+		this.tableController = ((TableViewOwner) frameController)
+				.getTableController();
+		this.frameController = frameController;
+	}
 
-        // getting last selection
-        IMailFolderCommandReference r = ((MailFrameMediator)frameController).getTableSelection();
-       
-        // getting current uid
-        Object[] uids = r.getUids();
-        LOG.info("curr uids: " + uids);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		LOG.info("action down performed");
 
-        // getting current node (under the selection)
-        DefaultMutableTreeNode currNode = (DefaultMutableTreeNode) tableController
-                                                         .getMessageNode(uids[0]);
-        LOG.info("currNode: " + currNode);
+		// getting last selection
+		IMailFolderCommandReference r = ((MailFrameMediator) frameController)
+				.getTableSelection();
 
-        // getting next node
-        DefaultMutableTreeNode nextNode = currNode.getNextNode();
+		// getting current uid
+		Object[] uids = r.getUids();
+		LOG.info("curr uids: " + uids);
 
-        // if next node is null (the end of the list) return
-        if (nextNode == null) {
-            return;
-        }
+		// getting current node (under the selection)
+		DefaultMutableTreeNode currNode = (DefaultMutableTreeNode) tableController
+				.getMessageNode(uids[0]);
+		LOG.info("currNode: " + currNode);
 
-        LOG.info("nextNode: " + nextNode);
+		// getting next node
+		DefaultMutableTreeNode nextNode = currNode.getNextNode();
 
-        // getting from the next node the uid
-        Object[] nextUids = new Object[1];
-        nextUids[0] = ((MessageNode) nextNode).getUid();
-        LOG.info("prevUids: " + nextUids);
+		// if next node is null (the end of the list) return
+		if (nextNode == null) {
+			return;
+		}
 
-        // and set this to the actual ref
-        r.setUids(nextUids);
+		LOG.info("nextNode: " + nextNode);
 
-        // check if the node is not null
-        IMessageNode[] nodes = new MessageNode[nextUids.length];
+		// getting from the next node the uid
+		Object[] nextUids = new Object[1];
+		nextUids[0] = ((MessageNode) nextNode).getUid();
+		LOG.info("prevUids: " + nextUids);
 
-        for (int i = 0; i < nextUids.length; i++) {
-            nodes[i] = tableController.getMessageNode(nextUids[i]);
-        }
+		// and set this to the actual ref
+		r.setUids(nextUids);
 
-        boolean node_ok = true;
+		// check if the node is not null
+		IMessageNode[] nodes = new MessageNode[nextUids.length];
 
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i] == null) {
-                node_ok = false;
+		for (int i = 0; i < nextUids.length; i++) {
+			nodes[i] = tableController.getMessageNode(nextUids[i]);
+		}
 
-                break;
-            }
-        }
+		boolean node_ok = true;
 
-        // if the node is not null
-        if (node_ok) {
-            // select it
-            tableController.setSelected(nextUids);
+		for (int i = 0; i < nodes.length; i++) {
+			if (nodes[i] == null) {
+				node_ok = false;
 
-            // saving the last selection for the current folder
-            ((AbstractMessageFolder) r.getSourceFolder()).setLastSelection(nextUids[0]);
+				break;
+			}
+		}
 
-            tableController.makeSelectedRowVisible();
-            
-            MailFolderCommandReference refNew = new MailFolderCommandReference(r.getSourceFolder(), nextUids);
+		// if the node is not null
+		if (node_ok) {
+			// select it
+			tableController.setSelected(nextUids);
 
-            // view the message under the new node
-            CommandProcessor.getInstance().addOp(new ViewMessageCommand(
-                    frameController, refNew));
-        }
-    }
+			// saving the last selection for the current folder
+			((IMailbox) r.getSourceFolder()).setLastSelection(nextUids[0]);
+
+			tableController.makeSelectedRowVisible();
+
+			MailFolderCommandReference refNew = new MailFolderCommandReference(
+					r.getSourceFolder(), nextUids);
+
+			// view the message under the new node
+			CommandProcessor.getInstance().addOp(
+					new ViewMessageCommand(frameController, refNew));
+		}
+	}
 }

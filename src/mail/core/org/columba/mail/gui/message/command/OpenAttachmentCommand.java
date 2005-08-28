@@ -36,8 +36,9 @@ import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.util.TempFileStore;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -84,25 +85,26 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 		if (header.getMimeType().getType().toLowerCase().indexOf("message") != -1) {
 			MessageFrameController c = new MessageFrameController();
 			new DefaultContainer(c);
-			
+
 			Object[] uidList = new Object[1];
 			uidList[0] = tempMessageUid;
 
-			MailFolderCommandReference r = new MailFolderCommandReference(tempFolder,
-					uidList);
+			IMailFolderCommandReference r = new MailFolderCommandReference(
+					tempFolder, uidList);
 
 			c.setTreeSelection(r);
 			c.setTableSelection(r);
 
 			CommandProcessor.getInstance().addOp(new ViewMessageCommand(c, r));
 
-			//inline = true;
-			//openInlineMessage(part, tempFile);
+			// inline = true;
+			// openInlineMessage(part, tempFile);
 		} else {
-			if( !ColumbaDesktop.getInstance().open(tempFile) ) {
+			if (!ColumbaDesktop.getInstance().open(tempFile)) {
 				File saveToFile = getDestinationFile(header);
 
-				if( saveToFile.exists() ) saveToFile.delete();
+				if (saveToFile.exists())
+					saveToFile.delete();
 				tempFile.renameTo(saveToFile);
 			}
 		}
@@ -112,16 +114,16 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
-		AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
+		IMailbox folder = (IMailbox) r.getSourceFolder();
 		Object[] uids = r.getUids();
 
 		Integer[] address = r.getAddress();
 
 		header = folder.getMimePartTree(uids[0]).getFromAddress(address)
 				.getHeader();
-		
-		worker.setDisplayText("Opening "+header.getFileName());
+
+		worker.setDisplayText("Opening " + header.getFileName());
 
 		InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 		// wrap with observable stream for progress bar updates
@@ -172,46 +174,46 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 		}
 	}
 
-    protected File getDestinationFile(MimeHeader header) {
-        cFileChooser fileChooser;
+	protected File getDestinationFile(MimeHeader header) {
+		cFileChooser fileChooser;
 
-        if (lastDir == null) {
-            fileChooser = new cFileChooser();
-        } else {
-            fileChooser = new cFileChooser(lastDir);
-        }
+		if (lastDir == null) {
+			fileChooser = new cFileChooser();
+		} else {
+			fileChooser = new cFileChooser(lastDir);
+		}
 
-        cFileFilter fileFilter = new cFileFilter();
-        fileFilter.acceptFilesWithProperty(cFileFilter.FILEPROPERTY_FILE);
+		cFileFilter fileFilter = new cFileFilter();
+		fileFilter.acceptFilesWithProperty(cFileFilter.FILEPROPERTY_FILE);
 
-        fileChooser.setDialogTitle("Save Attachment as ...");
+		fileChooser.setDialogTitle("Save Attachment as ...");
 
-        String fileName = getFilename(header);
-        if (fileName != null) {
-            fileChooser.forceSelectedFile(new File(fileName));
-        }
+		String fileName = getFilename(header);
+		if (fileName != null) {
+			fileChooser.forceSelectedFile(new File(fileName));
+		}
 
-        fileChooser.setSelectFilter(fileFilter);
-        File tempFile = null;
+		fileChooser.setSelectFilter(fileFilter);
+		File tempFile = null;
 
-        while (true) {
-            if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
-                return null;
-            }
+		while (true) {
+			if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+				return null;
+			}
 
-            tempFile = fileChooser.getSelectedFile();
-            lastDir = tempFile.getParentFile();
+			tempFile = fileChooser.getSelectedFile();
+			lastDir = tempFile.getParentFile();
 
-            if (tempFile.exists()) {
-                if (JOptionPane.showConfirmDialog(null, "Overwrite File?",
-                            "Warning", JOptionPane.YES_NO_OPTION,
-                            JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-        return tempFile;
-    }
+			if (tempFile.exists()) {
+				if (JOptionPane.showConfirmDialog(null, "Overwrite File?",
+						"Warning", JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+					break;
+				}
+			} else {
+				break;
+			}
+		}
+		return tempFile;
+	}
 }

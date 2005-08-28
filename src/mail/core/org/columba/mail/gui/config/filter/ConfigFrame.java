@@ -63,7 +63,7 @@ import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -71,10 +71,8 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author Erik Mattsson
  */
-public class ConfigFrame extends JDialog
-		implements
-			ListSelectionListener,
-			ActionListener {
+public class ConfigFrame extends JDialog implements ListSelectionListener,
+		ActionListener {
 	/*
 	 * private JTextField textField; private JPanel leftPanel; private
 	 * JTabbedPane rightPanel; private JButton addButton; private JButton
@@ -85,36 +83,44 @@ public class ConfigFrame extends JDialog
 	 */
 	private FilterListTable listView;
 
-	//private AdapterNode actNode;
+	// private AdapterNode actNode;
 	private FilterList filterList;
 
-	//private Filter filter;
-	//private JDialog dialog;
+	// private Filter filter;
+	// private JDialog dialog;
 	private JTextField nameTextField = new JTextField();
+
 	private JButton addButton;
+
 	private JButton removeButton;
+
 	private JButton editButton;
 
 	/*
 	 * private JButton enableButton; private JButton disableButton;
 	 */
 	private JButton moveupButton;
+
 	private JButton movedownButton;
+
 	private JButton importButton;
+
 	private JButton exportButton;
-	private AbstractMessageFolder folder;
+
+	private IMailbox folder;
 
 	private IFrameMediator mediator;
+
 	/**
 	 * Constructs a ConfigFrame for the specified folder.
 	 * 
 	 * @param messageFolder
 	 *            folder to set filter actions for.
 	 */
-	public ConfigFrame(IFrameMediator mediator, AbstractMessageFolder messageFolder) {
+	public ConfigFrame(IFrameMediator mediator, IMailbox messageFolder) {
 		super(mediator.getView().getFrame(), true);
 		this.mediator = mediator;
-		
+
 		folder = messageFolder;
 
 		setTitle(MailResourceLoader.getString("dialog", "filter",
@@ -216,15 +222,15 @@ public class ConfigFrame extends JDialog
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
-		//topPanel.setLayout( );
+		// topPanel.setLayout( );
 		JPanel topBorderPanel = new JPanel();
 		topBorderPanel.setLayout(new BorderLayout());
 
-		//topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5,
+		// topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5,
 		// 0));
 		topBorderPanel.add(topPanel);
 
-		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
+		// mainPanel.add( topBorderPanel, BorderLayout.NORTH );
 		JLabel nameLabel = new JLabel("name");
 		nameLabel.setEnabled(false);
 		topPanel.add(nameLabel);
@@ -240,7 +246,7 @@ public class ConfigFrame extends JDialog
 		c.anchor = GridBagConstraints.EAST;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 
-		//c.fill = GridBagConstraints.HORIZONTAL;
+		// c.fill = GridBagConstraints.HORIZONTAL;
 		gridBagLayout.setConstraints(glue, c);
 
 		gridBagLayout = new GridBagLayout();
@@ -421,7 +427,7 @@ public class ConfigFrame extends JDialog
 		String action = e.getActionCommand();
 
 		if (action.equals("CLOSE")) {
-			
+
 			setVisible(false);
 		} else if (action.equals("ADD")) {
 			Filter filter = FilterList.createEmptyFilter();

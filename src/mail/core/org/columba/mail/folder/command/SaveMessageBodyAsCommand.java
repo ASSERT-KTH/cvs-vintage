@@ -40,9 +40,9 @@ import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.gui.message.viewer.AttachmentModel;
 import org.columba.mail.parser.text.HtmlParser;
@@ -109,9 +109,9 @@ public class SaveMessageBodyAsCommand extends Command {
      */
     public void execute(IWorkerStatusController worker)
         throws Exception {
-        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+    	IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
-        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+        IMailbox srcFolder = (IMailbox) r.getSourceFolder();
 
         //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
@@ -323,7 +323,7 @@ public class SaveMessageBodyAsCommand extends Command {
      * @param worker
      * @return body part of message
      */
-    private void setupMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
+    private void setupMessageBodyPart(Object uid, IMailbox srcFolder,
         IWorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
         XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()

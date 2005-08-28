@@ -31,12 +31,12 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.menu.IMenu;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.SortingStateObservable;
@@ -55,11 +55,11 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 
 	private Observable observable;
 
-	private AbstractMessageFolder selectedFolder;
+	private IMailbox selectedFolder;
 
 	public SortMessagesMenu(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
-				"menu_view_sort"),"menu_view_sort");
+				"menu_view_sort"), "menu_view_sort");
 
 		setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
 
@@ -70,7 +70,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 		observable = table.getTableController().getSortingStateObservable();
 		observable.addObserver(this);
 
-		//createSubMenu();
+		// createSubMenu();
 	}
 
 	protected void createSubMenu() {
@@ -132,7 +132,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 		orderGroup.add(descendingMenuItem);
 		add(descendingMenuItem);
 
-		//update(observable, null);
+		// update(observable, null);
 	}
 
 	/*
@@ -159,7 +159,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 		table.getTableController().getSortingStateObservable()
 				.notifyObservers();
 
-		//update(observable, null);
+		// update(observable, null);
 	}
 
 	/*
@@ -207,11 +207,11 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 				.getSelected();
 
 		if (selection.length == 1) {
-			if (!(selection[0] instanceof AbstractMessageFolder)) {
+			if (!(selection[0] instanceof IMailbox)) {
 				return;
 			}
 
-			selectedFolder = (AbstractMessageFolder) selection[0];
+			selectedFolder = (IMailbox) selection[0];
 
 			createSubMenu();
 
@@ -224,8 +224,8 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 				// visit a folder!?)
 				IDefaultItem item = new DefaultItem(xmlElement);
 
-				//String column = xmlElement.getAttribute("column");
-				//String s = threadedview.getAttribute("order");
+				// String column = xmlElement.getAttribute("column");
+				// String s = threadedview.getAttribute("order");
 				boolean order = item.getBoolean("order");
 			}
 		}

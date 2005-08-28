@@ -25,11 +25,13 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.Worker;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
@@ -52,7 +54,7 @@ public class SendAllMessagesCommand extends Command {
 
 	public SendAllMessagesCommand(Action action, ICommandReference reference) {
 		super(reference);
-		
+
 		this.action = action;
 	}
 
@@ -60,7 +62,7 @@ public class SendAllMessagesCommand extends Command {
 	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
 		// display status message
 		worker.setDisplayText(MailResourceLoader.getString("statusbar",
@@ -85,7 +87,7 @@ public class SendAllMessagesCommand extends Command {
 		List sentList = new Vector();
 
 		SMTPServer smtpServer = null;
-		AbstractMessageFolder sentFolder = null;
+		IMailbox sentFolder = null;
 
 		// send all messages
 		while (sendListManager.hasMoreMessages()) {
@@ -144,8 +146,8 @@ public class SendAllMessagesCommand extends Command {
 	 * @param sentFolder
 	 *            Sent folder
 	 */
-	protected void moveToSentFolder(List v, AbstractMessageFolder sentFolder) {
-		MailFolderCommandReference r = new MailFolderCommandReference(
+	protected void moveToSentFolder(List v, IMailbox sentFolder) {
+		IMailFolderCommandReference r = new MailFolderCommandReference(
 				outboxFolder, sentFolder, v.toArray());
 
 		// start move command

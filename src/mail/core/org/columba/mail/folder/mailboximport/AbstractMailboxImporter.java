@@ -24,7 +24,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
 
@@ -35,11 +35,11 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
     public static final int TYPE_FILE = 0;
     public static final int TYPE_DIRECTORY = 1;
 
-    protected AbstractMessageFolder destinationFolder;
+    protected IMailbox destinationFolder;
     protected File[] sourceFiles;
     protected int counter = 0;
 
-    public AbstractMailboxImporter(AbstractMessageFolder destinationFolder, File[] sourceFiles) {
+    public AbstractMailboxImporter(IMailbox destinationFolder, File[] sourceFiles) {
         this();
         setDestinationFolder(destinationFolder);
         setSourceFiles(sourceFiles);
@@ -63,7 +63,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
      * should be read and passed to the folder using saveMessage.
      */
     public abstract void importMailboxFile(File file,
-        IWorkerStatusController worker, AbstractMessageFolder destFolder)
+        IWorkerStatusController worker, IMailbox destFolder)
         throws Exception;
 
     /**
@@ -82,7 +82,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
     /**
      * Set the destination folder.
      */
-    public void setDestinationFolder(AbstractMessageFolder folder) {
+    public void setDestinationFolder(IMailbox folder) {
         destinationFolder = folder;
     }
 
@@ -159,7 +159,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
      * Use this method to save a message in the specified destination folder.
      */
     protected void saveMessage(String rawString, IWorkerStatusController worker,
-        AbstractMessageFolder destFolder) throws Exception {
+    		IMailbox destFolder) throws Exception {
         /*
          * *20031231, karlpeder* Using InputStream instead of rawString
          * directly. Ensures size is set correctly by addMessage (bug #843657)
@@ -179,7 +179,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
     /**
      * Returns the folder new messages will be added to.
      */
-    public AbstractMessageFolder getDestinationFolder() {
+    public IMailbox getDestinationFolder() {
         return destinationFolder;
     }
 

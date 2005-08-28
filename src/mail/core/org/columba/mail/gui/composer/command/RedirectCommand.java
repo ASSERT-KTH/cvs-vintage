@@ -30,7 +30,7 @@ import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.util.AddressListRenderer;
 import org.columba.mail.parser.text.HtmlParser;
@@ -72,7 +72,7 @@ public class RedirectCommand extends ForwardCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+		IMailbox folder = (IMailbox) ((MailFolderCommandReference) getReference())
 				.getSourceFolder();
 
 		// get first selected message
@@ -156,7 +156,7 @@ public class RedirectCommand extends ForwardCommand {
 		}
 	}
 
-	private void initHeader(AbstractMessageFolder folder, Object[] uids)
+	private void initHeader(IMailbox folder, Object[] uids)
 			throws Exception {
 		// get headerfields
 		Header header = folder.getHeaderFields(uids[0],
@@ -173,7 +173,7 @@ public class RedirectCommand extends ForwardCommand {
 		   rfcHeader.get("To") + ")");
 	}
 
-	protected String createQuotedBody(AbstractMessageFolder folder, Object[] uids,
+	protected String createQuotedBody(IMailbox folder, Object[] uids,
 			Integer[] address) throws IOException, Exception {
 		InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 

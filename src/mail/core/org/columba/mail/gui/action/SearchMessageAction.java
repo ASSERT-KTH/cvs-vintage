@@ -23,7 +23,7 @@ import javax.swing.KeyStroke;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -56,7 +56,7 @@ public class SearchMessageAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        AbstractMessageFolder searchFolder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(106);
+    	IMailbox searchFolder = (IMailbox) FolderTreeModel.getInstance().getFolder(106);
 
         SearchFrame frame = new SearchFrame((AbstractMailFrameController) getFrameMediator(),
                 searchFolder);

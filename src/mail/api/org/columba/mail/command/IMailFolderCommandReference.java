@@ -84,4 +84,6 @@ public interface IMailFolderCommandReference  extends ICommandReference, IFolder
 	 * @param colorValue The colorValue to set.
 	 */
 	void setColorValue(int colorValue);
+	
+	public String getFolderType();
 }

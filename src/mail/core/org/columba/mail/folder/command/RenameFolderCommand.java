@@ -21,8 +21,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.Worker;
 import org.columba.core.folder.IFolderCommandReference;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 
 /**
@@ -59,9 +58,9 @@ public class RenameFolderCommand extends Command {
 		selectedFolder = (IMailFolder) ((IFolderCommandReference) getReference()).getSourceFolder();
 
 		// get name of folder
-		String name = ((MailFolderCommandReference) getReference()).getFolderName();
+		String name = ((IMailFolderCommandReference) getReference()).getFolderName();
 
 		// rename folder
-		((AbstractMessageFolder) selectedFolder).setName(name);
+		((IMailFolder) selectedFolder).setName(name);
 	}
 }

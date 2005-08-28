@@ -25,8 +25,8 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.filter.Filter;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.filter.FilterDialog;
 import org.columba.ristretto.message.Header;
 
@@ -61,7 +61,7 @@ public class CreateFilterOnMessageCommand extends Command {
 	private IFrameMediator mediator;
 
 	/** The source folder where the filter should be added to. */
-	private AbstractMessageFolder srcFolder;
+	private IMailbox srcFolder;
 
 	/**
 	 * Constructor for CreateFilterOnMessageCommand. Calls super constructor and
@@ -106,7 +106,7 @@ public class CreateFilterOnMessageCommand extends Command {
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
 		// get references to selected folder and message
-		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 		Object[] uids = r.getUids(); // uid for messages to save
 
 		if (uids.length == 0) {
@@ -116,7 +116,7 @@ public class CreateFilterOnMessageCommand extends Command {
 		}
 
 		Object uid = uids[0];
-		srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

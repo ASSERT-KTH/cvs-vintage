@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.columba.api.command.IWorkerStatusController;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
 public class MBOXMailImportFilter extends AbstractMailboxImporter {
@@ -30,7 +30,7 @@ public class MBOXMailImportFilter extends AbstractMailboxImporter {
 		super();
 	}
 
-	public MBOXMailImportFilter(AbstractMessageFolder destinationFolder, File[] sourceFiles) {
+	public MBOXMailImportFilter(IMailbox destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}
 
@@ -38,11 +38,8 @@ public class MBOXMailImportFilter extends AbstractMailboxImporter {
 		return TYPE_FILE;
 	}
 
-	public void importMailboxFile(
-		File file,
-		IWorkerStatusController worker,
-		AbstractMessageFolder destFolder)
-		throws Exception {
+	public void importMailboxFile(File file, IWorkerStatusController worker,
+			IMailbox destFolder) throws Exception {
 
 		boolean success = false;
 
@@ -58,20 +55,18 @@ public class MBOXMailImportFilter extends AbstractMailboxImporter {
 				return;
 
 			// if line doesn't start with "From" or line length is 0
-			//  -> save everything in StringBuffer
+			// -> save everything in StringBuffer
 			if (!str.startsWith("From ") || (str.length() == 0)) {
 				strbuf.append(str + "\n");
 			} else {
 
-				//  -> import message in Columba
+				// -> import message in Columba
 
 				if (strbuf.length() != 0) {
 					// found new message
 
-					saveMessage(
-						strbuf.toString(),
-						worker,
-						getDestinationFolder());
+					saveMessage(strbuf.toString(), worker,
+							getDestinationFolder());
 
 					success = true;
 
@@ -90,7 +85,7 @@ public class MBOXMailImportFilter extends AbstractMailboxImporter {
 
 		in.close();
 	}
-        
+
 	/*
 	 * (non-Javadoc)
 	 * 
