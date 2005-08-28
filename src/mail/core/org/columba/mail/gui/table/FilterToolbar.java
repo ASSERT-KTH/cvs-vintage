@@ -99,11 +99,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		initComponents();
 		layoutComponents();
 
-		headerTableViewer.getFrameController().getSelectionManager()
-				.registerSelectionListener("mail.tree", this);
-
-		// textField.getDocument().addDocumentListener(new
-		// MyDocumentListener());
+		((MailFrameMediator) tableController.getFrameController()).registerTreeSelectionListener(this);
 	}
 
 	private ComboMenu createComboMenu() {

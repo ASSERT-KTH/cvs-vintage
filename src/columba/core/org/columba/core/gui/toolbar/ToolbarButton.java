@@ -88,4 +88,13 @@ public class ToolbarButton extends CButton {
     public boolean isFocusTraversable() {
         return isRequestFocusEnabled();
     }
+
+	/**
+	 * @see javax.swing.JButton#updateUI()
+	 */
+	public void updateUI() {
+		super.updateUI();
+		
+		setRolloverEnabled(true);
+	}
 }

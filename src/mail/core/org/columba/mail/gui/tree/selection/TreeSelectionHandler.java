@@ -43,6 +43,8 @@ import org.columba.mail.gui.tree.TreeView;
 public class TreeSelectionHandler extends SelectionHandler implements
 		TreeSelectionListener {
 
+	public static final String HANDLER_ID = "mail.tree";
+
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.tree.selection");
@@ -56,7 +58,7 @@ public class TreeSelectionHandler extends SelectionHandler implements
 	private boolean setSelection;
 
 	public TreeSelectionHandler(TreeView view) {
-		super("mail.tree");
+		super(TreeSelectionHandler.HANDLER_ID);
 		this.view = view;
 		view.addTreeSelectionListener(this);
 		selectedFolders = new LinkedList();

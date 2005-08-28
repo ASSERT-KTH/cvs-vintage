@@ -415,20 +415,27 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		// tree selection event
+
 		if (e instanceof TreeSelectionChangedEvent) {
+			// tree selection event
 			TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;
 
 			IMailFolder[] selectedFolders = event.getSelected();
-			if (selectedFolders.length == 1 && selectedFolders[0] != null) {
-				getContainer().getFrame()
-						.setTitle(selectedFolders[0].getName());
-			} else {
-				getContainer().getFrame().setTitle("");
-			}
 
-			if (isTreePopupEvent == false)
+			if (isTreePopupEvent == false) {
+				// view headerlist in message list viewer
 				new ViewHeaderListAction(this).actionPerformed(null);
+
+				getFolderInfoPanel().selectionChanged(e);
+
+				// update frame title
+				if (selectedFolders.length == 1 && selectedFolders[0] != null) {
+					getContainer().getFrame().setTitle(
+							selectedFolders[0].getName());
+				} else {
+					getContainer().getFrame().setTitle("");
+				}
+			}
 
 			isTreePopupEvent = false;
 
@@ -437,7 +444,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			TableSelectionChangedEvent event = (TableSelectionChangedEvent) e;
 
 			if (isTablePopupEvent == false)
-				// show message
+				// show message content
 				new ViewMessageAction(this).actionPerformed(null);
 
 			isTablePopupEvent = false;

@@ -26,7 +26,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
@@ -40,9 +40,8 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-public class CreateSubFolderAction extends AbstractColumbaAction
-		implements
-			ISelectionListener {
+public class CreateSubFolderAction extends AbstractColumbaAction implements
+		ISelectionListener {
 	public CreateSubFolderAction(IFrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_folder_newfolder"));
@@ -70,11 +69,12 @@ public class CreateSubFolderAction extends AbstractColumbaAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MailFolderCommandReference selection = (MailFolderCommandReference) getFrameMediator()
-				.getSelectionManager().getSelection("mail.tree");
+		IMailFolderCommandReference selection = ((MailFrameMediator) getFrameMediator())
+				.getTreeSelection();
 
 		CreateFolderDialog dialog = new CreateFolderDialog(getFrameMediator(),
-				((IMailFolder)selection.getSourceFolder()).getSelectionTreePath());
+				((IMailFolder) selection.getSourceFolder())
+						.getSelectionTreePath());
 
 		String name;
 
@@ -84,8 +84,8 @@ public class CreateSubFolderAction extends AbstractColumbaAction
 			selection.setFolderName(dialog.getName());
 			selection.setFolderType(dialog.getType());
 
-			CommandProcessor.getInstance()
-					.addOp(new CreateSubFolderCommand(selection));
+			CommandProcessor.getInstance().addOp(
+					new CreateSubFolderCommand(selection));
 		}
 	}
 

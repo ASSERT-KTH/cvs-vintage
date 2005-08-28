@@ -23,7 +23,7 @@
  <!-- view menu -->
  <extension id="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
  <extension id="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
- <extension id="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
+ <extension id="ViewMessageSource" class="org.columba.mail.gui.message.action.ViewMessageSourceAction"/>
  <extension id="CharacterEncodingMenu" class="org.columba.mail.gui.charset.CharacterEncodingSubMenu"/>
  <extension id="ColumnDialog" class="org.columba.mail.gui.action.ColumnDialogAction"/>
  <extension id="HeadersMenu" class="org.columba.mail.gui.message.action.HeadersMenu"/>

@@ -54,19 +54,6 @@ public class SelectionFacade implements ISelectionFacade {
 	}
 
 	/**
-	 * Get currently selected attachments in AttachmentViewer.
-	 * 
-	 * @param mediator
-	 *            top-level frame mediator
-	 * @return selected attachments
-	 */
-	public IMailFolderCommandReference getAttachmentSelection(
-			MailFrameMediator mediator) {
-		return ((MessageController) ((MessageViewOwner) mediator)
-				.getMessageController()).getAttachmentSelectionReference();
-	}
-
-	/**
 	 * Get currently selected text in MessageViewer.
 	 * 
 	 * @param mediator

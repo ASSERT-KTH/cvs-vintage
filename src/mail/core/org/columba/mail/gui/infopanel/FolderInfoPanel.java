@@ -65,8 +65,6 @@ public class FolderInfoPanel extends ContainerInfoPanel implements
 	public FolderInfoPanel(IFrameMediator controller) {
 		super();
 
-		controller.getSelectionManager().getHandler("mail.tree")
-				.addSelectionListener(this);
 	}
 
 	public void initComponents() {

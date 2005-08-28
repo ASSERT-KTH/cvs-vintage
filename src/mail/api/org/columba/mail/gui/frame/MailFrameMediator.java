@@ -38,5 +38,9 @@ public interface MailFrameMediator extends IFrameMediator {
 
 	public void registerTreeSelectionListener(ISelectionListener l);
 
+	public void removeTableSelectionListener(ISelectionListener l);
+
+	public void removeTreeSelectionListener(ISelectionListener l);
+
 	public IFolderOptionsController getFolderOptionsController();
 }

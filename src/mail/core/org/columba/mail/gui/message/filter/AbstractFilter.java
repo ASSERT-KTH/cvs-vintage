@@ -66,7 +66,7 @@ public abstract class AbstractFilter implements Filter {
         // on the
         // the encrypted message
         TableSelectionHandler h1 = ((TableSelectionHandler) mediator
-                .getSelectionManager().getHandler("mail.table"));
+                .getSelectionManager().getHandler(TableSelectionHandler.HANDLER_ID));
 
         h1.setLocalReference(local);
 

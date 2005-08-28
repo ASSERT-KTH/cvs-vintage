@@ -74,6 +74,19 @@ public class SelectionManager {
 
 		h.addSelectionListener(l);
 	}
+	
+	/**
+	 * Remove selection listener.
+	 * 
+	 * @param id	id of selection handler
+	 * @param l		listener
+	 */
+	public void removeSelectionListener(String id, ISelectionListener l) {
+		SelectionHandler h = ((SelectionHandler) selectionHandler.get(id));
+
+		h.removeSelectionListener(l);
+	}
+	
 
 	/**
 	 * Set current selection.

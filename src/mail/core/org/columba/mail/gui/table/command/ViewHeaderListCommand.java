@@ -26,8 +26,9 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.action.ViewHeaderListAction;
+import org.columba.mail.gui.table.action.ClearHeaderlistAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.message.IHeaderList;
 
@@ -59,8 +60,8 @@ public class ViewHeaderListCommand extends Command implements
 		// Register as listener to the SelectionManger
 		// to check for selection changes
 		updateGui = true;
-		mediator.getSelectionManager().getHandler("mail.tree")
-				.addSelectionListener(this);
+
+		((MailFrameMediator) mediator).registerTreeSelectionListener(this);
 
 		priority = Command.REALTIME_PRIORITY;
 	}
@@ -69,8 +70,7 @@ public class ViewHeaderListCommand extends Command implements
 	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		mediator.getSelectionManager().getHandler("mail.tree")
-				.removeSelectionListener(this);
+		((MailFrameMediator) mediator).removeTreeSelectionListener(this);
 
 		// Update only if the selection did not change
 		if (updateGui) {
@@ -103,11 +103,8 @@ public class ViewHeaderListCommand extends Command implements
 			updateGui = false;
 
 			// Reset the selection
-			mediator.getSelectionManager().getHandler("mail.tree")
-					.setSelection(null);
-			new ViewHeaderListAction(mediator).actionPerformed(null);
-
-			// ((TableViewOwner) frameMediator).getTableController().clear();
+			((MailFrameMediator) mediator).setTreeSelection(null);
+			new ClearHeaderlistAction(mediator).actionPerformed(null);
 
 			throw e;
 		}

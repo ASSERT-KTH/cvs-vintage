@@ -22,38 +22,33 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 
 /**
  * @author fdietz
- *
+ * 
  */
 public interface ISelectionFacade {
 	/**
 	 * Get currently selected folder in JTree.
 	 * 
-	 * @param mediator		top-level frame mediator		
-	 * @return				selected folder
+	 * @param mediator
+	 *            top-level frame mediator
+	 * @return selected folder
 	 */
 	IMailFolderCommandReference getTreeSelection(MailFrameMediator mediator);
 
 	/**
 	 * Get currently selected messages in JTable.
 	 * 
-	 * @param mediator		top-level frame mediator
-	 * @return				selected messages
+	 * @param mediator
+	 *            top-level frame mediator
+	 * @return selected messages
 	 */
 	IMailFolderCommandReference getTableSelection(MailFrameMediator mediator);
 
 	/**
-	 * Get currently selected attachments in AttachmentViewer.
-	 * 
-	 * @param mediator		top-level frame mediator
-	 * @return				selected attachments
-	 */
-	IMailFolderCommandReference getAttachmentSelection(MailFrameMediator mediator);
-
-	/**
 	 * Get currently selected text in MessageViewer.
 	 * 
-	 * @param mediator		top-level frame mediator
-	 * @return				selected text
+	 * @param mediator
+	 *            top-level frame mediator
+	 * @return selected text
 	 */
 	String getTextSelection(MailFrameMediator mediator);
 }

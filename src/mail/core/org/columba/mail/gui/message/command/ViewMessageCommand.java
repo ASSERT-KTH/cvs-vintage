@@ -71,22 +71,19 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 		commandType = Command.NORMAL_OPERATION;
 
 		updateGui = true;
-		
+
 		// Register as listener to the SelectionManger
 		// to check for selection changes
 
-		((MailFrameMediator) mediator).getSelectionManager().getHandler(
-				"mail.table").addSelectionListener(this);
+		((MailFrameMediator) mediator).registerTableSelectionListener(this);
 
-		
 	}
 
 	/**
 	 * @see org.columba.api.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		mediator.getSelectionManager().getHandler("mail.table")
-				.removeSelectionListener(this);
+		((MailFrameMediator) mediator).removeTableSelectionListener(this);
 
 		// Update only if the selection did not change
 		if (updateGui) {
@@ -194,7 +191,7 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 		if (folder.getUid() != newFolder.getUid())
 			updateGui = false;
 
-		if (uid[0].equals(newUid[0])==false)
+		if (uid[0].equals(newUid[0]) == false)
 			updateGui = false;
 
 	}

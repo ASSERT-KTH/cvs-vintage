@@ -56,6 +56,8 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
  */
 public class TableSelectionHandler extends SelectionHandler implements
 		ListSelectionListener, ISelectionListener {
+	public static final String HANDLER_ID = "mail.table";
+
 	private final static MessageNode[] messageNodeArray = { null };
 
 	private TableController tableController;
@@ -76,7 +78,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 	 * @param id
 	 */
 	public TableSelectionHandler(TableController tableController) {
-		super("mail.table");
+		super(TableSelectionHandler.HANDLER_ID);
 
 		this.tableController = tableController;
 

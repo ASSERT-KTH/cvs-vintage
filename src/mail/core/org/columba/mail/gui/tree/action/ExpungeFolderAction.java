@@ -25,7 +25,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.RootFolder;
@@ -65,8 +65,8 @@ public class ExpungeFolderAction extends AbstractColumbaAction implements
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MailFolderCommandReference r = (MailFolderCommandReference) frameMediator
-				.getSelectionManager().getSelection("mail.tree");
+		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+				.getTreeSelection();
 		ExpungeFolderCommand c = new ExpungeFolderCommand(r);
 
 		CommandProcessor.getInstance().addOp(c);

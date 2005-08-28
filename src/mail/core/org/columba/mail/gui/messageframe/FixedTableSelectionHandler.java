@@ -12,6 +12,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.table.selection.TableSelectionHandler;
 
 /**
  * @author frd
@@ -26,7 +27,7 @@ public class FixedTableSelectionHandler extends SelectionHandler {
 	 * @param id
 	 */
 	public FixedTableSelectionHandler(IMailFolderCommandReference tableReference) {
-		super("mail.table");
+		super(TableSelectionHandler.HANDLER_ID);
 		this.tableReference = tableReference;
 	}
 

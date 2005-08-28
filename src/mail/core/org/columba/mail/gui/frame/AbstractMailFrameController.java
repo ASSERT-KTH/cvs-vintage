@@ -33,10 +33,12 @@ import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.folderoptions.IFolderOptionsController;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.table.selection.TableSelectionHandler;
+import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class AbstractMailFrameController extends DefaultFrameController
 		implements MailFrameMediator, MessageViewOwner, CharsetOwnerInterface {
@@ -53,14 +55,13 @@ public class AbstractMailFrameController extends DefaultFrameController
 
 	public AbstractMailFrameController(String id) {
 		super(id);
-		
+
 		messageController = new MessageController(this);
 
 		folderOptionsController = new FolderOptionsController(this);
 
-		
 	}
-	
+
 	/**
 	 * @param id
 	 * @param viewItem
@@ -88,47 +89,50 @@ public class AbstractMailFrameController extends DefaultFrameController
 
 	public IMailFolderCommandReference getTableSelection() {
 		MailFolderCommandReference r = (MailFolderCommandReference) getSelectionManager()
-				.getSelection("mail.table");
+				.getSelection(TableSelectionHandler.HANDLER_ID);
 
 		return r;
 	}
 
 	public void setTableSelection(IMailFolderCommandReference r) {
-		getSelectionManager().setSelection("mail.table", r);
+		getSelectionManager().setSelection(TableSelectionHandler.HANDLER_ID, r);
 	}
 
 	public IMailFolderCommandReference getTreeSelection() {
 		MailFolderCommandReference r = (MailFolderCommandReference) getSelectionManager()
-				.getSelection("mail.tree");
+				.getSelection(TreeSelectionHandler.HANDLER_ID);
 
 		return r;
 	}
 
 	public void setTreeSelection(IMailFolderCommandReference r) {
-		getSelectionManager().setSelection("mail.tree", r);
-	}
-
-	public IMailFolderCommandReference getAttachmentSelection() {
-		MailFolderCommandReference r = (MailFolderCommandReference) getSelectionManager()
-				.getSelection("mail.attachment");
-
-		return r;
-	}
-
-	public void setAttachmentSelection(IMailFolderCommandReference r) {
-		getSelectionManager().setSelection("mail.attachment", r);
+		getSelectionManager().setSelection(TreeSelectionHandler.HANDLER_ID, r);
 	}
 
 	public void registerTableSelectionListener(ISelectionListener l) {
-		getSelectionManager().registerSelectionListener("mail.table", l);
+		getSelectionManager().registerSelectionListener(
+				TableSelectionHandler.HANDLER_ID, l);
 	}
 
 	public void registerTreeSelectionListener(ISelectionListener l) {
-		getSelectionManager().registerSelectionListener("mail.tree", l);
+		getSelectionManager().registerSelectionListener(
+				TreeSelectionHandler.HANDLER_ID, l);
 	}
 
-	public void registerAttachmentSelectionListener(ISelectionListener l) {
-		getSelectionManager().registerSelectionListener("mail.attachment", l);
+	/**
+	 * @see org.columba.mail.gui.frame.MailFrameMediator#removeTableSelectionListener(org.columba.core.gui.selection.ISelectionListener)
+	 */
+	public void removeTableSelectionListener(ISelectionListener l) {
+		getSelectionManager().removeSelectionListener(
+				TableSelectionHandler.HANDLER_ID, l);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.frame.MailFrameMediator#removeTreeSelectionListener(org.columba.core.gui.selection.ISelectionListener)
+	 */
+	public void removeTreeSelectionListener(ISelectionListener l) {
+		getSelectionManager().removeSelectionListener(
+				TreeSelectionHandler.HANDLER_ID, l);
 	}
 
 	/**

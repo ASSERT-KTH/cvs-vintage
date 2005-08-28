@@ -74,7 +74,7 @@ public class ColumbaToolBar extends JToolBar {
 
 		setRollover(true);
 
-		setFloatable(false);
+		setFloatable(true);
 	}
 
 	public ColumbaToolBar(XmlElement rootElement, IFrameMediator controller) {
@@ -87,7 +87,7 @@ public class ColumbaToolBar extends JToolBar {
 
 		setRollover(true);
 
-		setFloatable(false);
+		setFloatable(true);
 	}
 
 	public void extendToolbar(XmlElement rootElement, IFrameMediator mediator) {
