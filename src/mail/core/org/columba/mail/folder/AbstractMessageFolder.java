@@ -121,8 +121,6 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	// implement your own search-engine here
 	protected DefaultSearchEngine searchEngine;
 
-	protected IHeaderListStorage headerListStorage;
-
 	/**
 	 * Standard constructor.
 	 * 
@@ -212,7 +210,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		}
 
 		try {
-			getHeaderListStorage().removeMessage(uid);
+			getHeaderList().remove(uid);
 		} catch (Exception e) {
 		}
 		setChanged(true);
@@ -699,7 +697,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		fireMessageRemoved(uid, getFlags(uid));
 
 		// remove from header-list
-		getHeaderListStorage().removeMessage(uid);
+		getHeaderList().remove(uid);
 	}
 
 	/** ****************************** IAttributeStorage *********************** */
@@ -707,27 +705,20 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	/**
 	 * @return Returns the attributeStorage.
 	 */
-	public abstract IHeaderListStorage getHeaderListStorage();
+	//public abstract IHeaderListStorage getHeaderListStorage();
 
 	/**
 	 * @see org.columba.mail.folder.IMailbox#exists(java.lang.Object)
 	 */
 	public boolean exists(Object uid) throws Exception {
-		return getHeaderListStorage().exists(uid);
-	}
-
-	/**
-	 * @see org.columba.mail.folder.IMailbox#getHeaderList()
-	 */
-	public IHeaderList getHeaderList() throws Exception {
-		return getHeaderListStorage().getHeaderList();
+		return getHeaderList().exists(uid);
 	}
 
 	/**
 	 * @see org.columba.mail.folder.IMailbox#getUids()
 	 */
 	public Object[] getUids() throws Exception {
-		return getHeaderListStorage().getUids();
+		return getHeaderList().getUids();
 	}
 
 	/**
@@ -736,7 +727,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 */
 	public void setAttribute(Object uid, String key, Object value)
 			throws Exception {
-		getHeaderListStorage().setAttribute(uid, key, value);
+		getHeaderList().setAttribute(uid, key, value);
 		//  set folder changed flag
 		// -> if not, the header cache wouldn't notice that something
 		// -> has changed. And wouldn't save the changes.
@@ -747,14 +738,14 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * @see org.columba.mail.folder.IMailbox#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
-		return getHeaderListStorage().getFlags(uid);
+		return getHeaderList().getFlags(uid);
 	}
 
 	/**
 	 * @see org.columba.mail.folder.IMailbox#getAttributes(java.lang.Object)
 	 */
 	public Attributes getAttributes(Object uid) throws Exception {
-		return getHeaderListStorage().getAttributes(uid);
+		return getHeaderList().getAttributes(uid);
 	}
 
 	/**
@@ -762,7 +753,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
-		return getHeaderListStorage().getAttribute(uid, key);
+		return getHeaderList().getAttribute(uid, key);
 	}
 
 	/**
@@ -850,5 +841,11 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	public boolean isReadOnly() {
 		return false;
 	}
+
+
+	/**
+	 * @return Returns the headerList.
+	 */
+	public abstract IHeaderList getHeaderList() throws Exception;
 
 }

@@ -21,8 +21,10 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.columba.mail.folder.headercache.HeaderList;
+import org.columba.mail.folder.headercache.PersistantHeaderList;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.frapuccino.treetable.Tree;
 import org.frapuccino.treetable.TreeTable;
 
@@ -34,8 +36,8 @@ public class HeaderTableModelTest extends TestCase {
 
     public static String[] columns = { "Subject", "From", "columba.date"};
 
-    protected HeaderList createHeaderList() {
-        HeaderList list = new HeaderList();
+    protected IHeaderList createHeaderList() {
+        IHeaderList list = new HeaderList();
         ColumbaHeader h = new ColumbaHeader();
         h.set("columba.uid", new Integer(0));
         h.set("Subject", "Test1");
@@ -72,7 +74,7 @@ public class HeaderTableModelTest extends TestCase {
         model.setTree((Tree) treetable.getTree());
 
         // create sample headerlist
-        HeaderList list = createHeaderList();
+        IHeaderList list = createHeaderList();
 
         model.set(list);
 
@@ -95,7 +97,7 @@ public class HeaderTableModelTest extends TestCase {
         Tree tree = new Tree();
         model.setTree(tree);
 
-        HeaderList list = createHeaderList();
+        IHeaderList list = createHeaderList();
 
         model.set(list);
 
@@ -119,7 +121,7 @@ public class HeaderTableModelTest extends TestCase {
         Tree tree = new Tree();
         model.setTree(tree);
 
-        HeaderList list = createHeaderList();
+        IHeaderList list = createHeaderList();
 
         model.set(list);
     }

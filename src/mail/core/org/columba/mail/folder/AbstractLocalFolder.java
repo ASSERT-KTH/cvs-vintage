@@ -39,7 +39,6 @@ import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.MessageParser;
@@ -270,9 +269,6 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 	public Object addMessage(InputStream in, Attributes attributes, Flags flags)
 			throws Exception {
-		// before adding message, load header list
-		getHeaderListStorage().getHeaderList();
-
 		// generate UID for new message
 		Object newUid = generateNextMessageUid();
 
@@ -287,18 +283,17 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		int messageSize = source.length();		
 		
 		Header header = HeaderParser.parse(source);
-
+		ColumbaHeader h;
 		if ((attributes != null) && (flags != null)) {
 			// save header and attributes
-			getHeaderListStorage()
-					.addMessage(newUid, header, attributes, flags);
+			h = new ColumbaHeader( header, attributes, flags);
 		} else {
-			ColumbaHeader h = new ColumbaHeader(header);
+			h = new ColumbaHeader(header);
 			h.set("columba.size",new Integer(messageSize / 1024));
-			getHeaderListStorage().addMessage(newUid, header,
-					h.getAttributes(), h.getFlags());
 		}
 		source.close();
+		h.set("columba.uid", newUid);
+		getHeaderList().add(h,newUid);
 
 		fireMessageAdded(newUid);
 		return newUid;
@@ -384,8 +379,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 		//We use the attributes and flags from the cache
 		//but the parsed header from the parsed message
-		ColumbaHeader header = (ColumbaHeader) getHeaderListStorage()
-				.getHeaderList().get(uid);
+		IColumbaHeader header = getHeaderList().get(uid);
 		header.setHeader(message.getHeader().getHeader());
 		message.setHeader(header);
 
@@ -408,8 +402,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 			int size = message.getHeader().count();
 
 			// get header from cache
-			ColumbaHeader h = (ColumbaHeader) getHeaderListStorage()
-					.getHeaderList().get(uid);
+			IColumbaHeader h = getHeaderList().get(uid);
 
 			// message doesn't exist (this shouldn't happen here)
 			if (h == null) {
@@ -428,13 +421,12 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		} else {
 			// message isn't cached
 			// -> just return header from cache
-			return (ColumbaHeader) getHeaderListStorage().getHeaderList().get(
-					uid);
+			return getHeaderList().get(uid);
 		}
 	}
 
 	/**
-	 * @see org.columba.mail.folder.IMailbox#removeMessage(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#remove(java.lang.Object)
 	 */
 	public void removeMessage(Object uid) throws Exception {
 		// remove message from disk
@@ -443,20 +435,6 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		//fireMessageRemoved(uid, getFlags(uid));
 		super.removeMessage(uid);
 
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#save()
-	 */
-	public void save() throws Exception {
-		// only save header-cache if folder data changed
-		if (hasChanged()) {
-			getHeaderListStorage().save();
-			setChanged(false);
-		}
-
-		// call Folder.save() to be sure that messagefolderinfo is saved
-		super.save();
 	}
 
 	/**
@@ -472,8 +450,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 * @throws Exception
 	 */
 	protected void setFlags(Object uid, Flags flags) throws Exception {
-		ColumbaHeader h = (ColumbaHeader) getHeaderListStorage()
-				.getHeaderList().get(uid);
+		IColumbaHeader h = getHeaderList().get(uid);
 
 		Flags oldFlags = h.getFlags();
 		h.setFlags(flags);
@@ -514,7 +491,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		ListTools.substract(keyList, cachedList);
 
 		if (keyList.size() == 0) {
-			return getHeaderListStorage().getHeaderFields(uid, keys);
+			return getHeaderList().getHeaderFields(uid, keys);
 		} else {
 			// We need to parse
 			// get message with UID

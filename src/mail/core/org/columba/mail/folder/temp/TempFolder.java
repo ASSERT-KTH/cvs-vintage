@@ -26,13 +26,12 @@ import org.columba.core.filter.Filter;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.headercache.HeaderList;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IColumbaMessage;
 import org.columba.mail.message.IHeaderList;
@@ -54,7 +53,7 @@ public class TempFolder extends AbstractMessageFolder {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.temp");
 
-    protected HeaderList headerList;
+    protected IHeaderList headerList;
     protected Hashtable messageList;
     protected int nextUid = 0;
     protected IColumbaMessage aktMessage;
@@ -112,7 +111,7 @@ public class TempFolder extends AbstractMessageFolder {
 
 
     /**
-     * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
+     * @see org.columba.modules.mail.folder.Folder#remove(Object)
      */
     public void removeMessage(Object uid) throws Exception {
         
@@ -253,7 +252,7 @@ public class TempFolder extends AbstractMessageFolder {
     }
 
     public Attributes getAttributes(Object uid) throws Exception {
-        if (getHeaderList().containsKey(uid)) {
+        if (getHeaderList().exists(uid)) {
             return getHeaderList().get(uid).getAttributes();
         } else {
             return null;
@@ -359,13 +358,6 @@ public class TempFolder extends AbstractMessageFolder {
         return newUid;
     }
     
-    /**
-     * @see org.columba.mail.folder.Folder#getHeaderListStorage()
-     */
-    public IHeaderListStorage getHeaderListStorage() {
-        
-        return null;
-    }
 	/**
 	 * @see org.columba.mail.folder.AbstractFolder#removeFolder()
 	 */

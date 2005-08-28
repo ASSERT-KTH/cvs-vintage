@@ -27,7 +27,7 @@ import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IGroupItem;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.folder.headercache.HeaderList;
 import org.columba.mail.message.IHeaderList;
 
 /**

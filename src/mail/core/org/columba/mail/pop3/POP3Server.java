@@ -38,11 +38,12 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.headercache.PersistantHeaderList;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.Header;
@@ -69,11 +70,9 @@ public class POP3Server {
 
 	private File file;
 
-	private boolean alreadyLoaded;
-
 	private POP3Store store;
 
-	protected POP3HeaderCache headerCache;
+	protected PersistantHeaderList headerList;
 
 	private Lock lock;
 
@@ -95,7 +94,7 @@ public class POP3Server {
 
 		store = new POP3Store(item);
 
-		headerCache = new POP3HeaderCache(this);
+		headerList = new PersistantHeaderList(new POP3HeaderCache(this));
 
 		lock = new Lock();
 
@@ -103,19 +102,7 @@ public class POP3Server {
 	}
 
 	public void save() throws Exception {
-		lock.getLock(Thread.currentThread());
-		// only save headercache if something changed and nothings
-		// happening at the moment
-		if (isCacheChanged()) {
-			try {
-				headerCache.save();
-				setCacheChanged(false);
-			} finally {
-				releaseLock(Thread.currentThread());
-			}
-		} else {
-			releaseLock(Thread.currentThread());
-		}
+		headerList.persist();
 	}
 
 	public File getConfigFile() {
@@ -145,9 +132,9 @@ public class POP3Server {
 	public List synchronize() throws Exception {
 		// Get the uids from the headercache
 		LinkedList headerUids = new LinkedList();
-		Enumeration keys = headerCache.getHeaderList().keys();
+		Enumeration keys = getHeaderList().keys();
 
-		if (headerCache.getHeaderList().count() == 0) {
+		if (getHeaderList().count() == 0) {
 			LOG.severe(accountItem.getName() + " - POP3 Headerlist is empty!");
 		}
 
@@ -172,7 +159,7 @@ public class POP3Server {
 
 		// update the cache
 		while (it.hasNext()) {
-			headerCache.getHeaderList().remove(it.next());
+			getHeaderList().remove(it.next());
 			cacheChanged = true;
 		}
 
@@ -185,7 +172,7 @@ public class POP3Server {
 		try {
 			store.deleteMessage(uid);
 
-			headerCache.remove(uid);
+			getHeaderList().remove(uid);
 
 			// set dirty flag
 			setCacheChanged(true);
@@ -193,7 +180,7 @@ public class POP3Server {
 			if ((e instanceof MessageNotOnServerException)
 					|| (e.getResponse() != null && e.getResponse().isERR())) {
 				// Message already deleted from server
-				headerCache.remove(uid);
+				getHeaderList().remove(uid);
 				setCacheChanged(true);
 			} else
 				throw e;
@@ -204,7 +191,7 @@ public class POP3Server {
 	public void deleteMessagesOlderThan(Date date) throws IOException,
 			POP3Exception, CommandCancelledException {
 		LOG.info("Removing message older than " + date);
-		HeaderList headerList = headerCache.getHeaderList();
+		IHeaderList headerList = getHeaderList();
 		Enumeration uids = headerList.keys();
 		while (uids.hasMoreElements()) {
 			Object uid = uids.nextElement();
@@ -235,12 +222,22 @@ public class POP3Server {
 
 	private void removeAllDownloadedMessages() throws IOException,
 			CommandCancelledException, POP3Exception {
-		HeaderList headerList = headerCache.getHeaderList();
+		IHeaderList headerList = getHeaderList();
 		Enumeration uids = headerList.keys();
 		while (uids.hasMoreElements()) {
 			Object uid = uids.nextElement();
 			deleteMessage(uid);
 		}
+	}
+
+	private IHeaderList getHeaderList() {
+		try {
+			headerList.restore();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return headerList;
 	}
 
 	public int getMessageCount() throws Exception {
@@ -283,7 +280,7 @@ public class POP3Server {
 			h.getAttributes().put("columba.accountuid",
 					new Integer(accountItem.getInteger("uid")));
 
-			headerCache.add(h);
+			getHeaderList().add(h, uid);
 		} catch (ParserException e) {
 			LOG
 					.severe("Skipped message: Error parsing message. Message source:\n "

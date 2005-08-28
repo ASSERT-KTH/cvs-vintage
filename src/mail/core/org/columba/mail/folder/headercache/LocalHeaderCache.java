@@ -28,8 +28,8 @@ import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Flags;
@@ -50,69 +50,23 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.folder.headercache");
 
-	private static final int WEEK = 1000 * 60 * 60 * 24 * 7;
 
-	private boolean configurationChanged;
-
-	public LocalHeaderCache(AbstractLocalFolder folder) {
+	public LocalHeaderCache(AbstractMessageFolder folder) {
 		super(new File(folder.getDirectoryFile(), ".header"));
 
 		this.folder = folder;
-
-		configurationChanged = false;
 	}
 
 	public IStatusObservable getObservable() {
 		return folder.getObservable();
 	}
-
-	public HeaderList getHeaderList() throws IOException {
-		boolean needToRelease = false;
-
-		// if there exists a ".header" cache-file
-		//  try to load the cache
-		if (!isHeaderCacheLoaded()) {
-			if (headerFile.exists()) {
-				try {
-					load();
-
-					if (needToSync(headerList.count())) {
-						sync();
-					}
-				} catch (Exception e) {
-					sync();
-				}
-			} else {
-				sync();
-			}
-
-			setHeaderCacheLoaded(true);
-		}
-
-		return headerList;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#needToSync(int)
-	 */
-	public boolean needToSync(int capacity) {
-		int mcount = ((AbstractLocalFolder) folder).getDataStorageInstance()
-				.getMessageCount();
-
-		if (capacity != mcount) {
-			return true;
-		}
-
-		return false;
-	}
+	
 
 	/**
 	 * @param worker
 	 * @throws Exception
 	 */
-	public void load() throws Exception {
+	public void load(IHeaderList headerList) throws Exception {
 		LOG.fine("loading header-cache=" + headerFile);
 
 		try {
@@ -120,10 +74,6 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 			int capacity = ((Integer) reader.readObject()).intValue();
 			LOG.fine("capacity=" + capacity);
-
-			boolean needToRelease = false;
-
-			headerList = new HeaderList(capacity);
 
 			//System.out.println("Number of Messages : " + capacity);
 			if (getObservable() != null) {
@@ -199,7 +149,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 	 * @param worker
 	 * @throws Exception
 	 */
-	public void save() throws Exception {
+	public void persistHeaderList(IHeaderList headerList) throws IOException {
 		// we didn't load any header to save
 		if (!isHeaderCacheLoaded()) {
 			return;
@@ -237,137 +187,18 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		writer.close();
 	}
 
-	/**
-	 * @param worker
-	 * @throws Exception
-	 */
-	private void sync() throws IOException {
-		if (getObservable() != null) {
-			getObservable().setMessage(
-					folder.getName() + ": Syncing headercache...");
-		}
-
-		IDataStorage ds = ((AbstractLocalFolder) folder)
-				.getDataStorageInstance();
-
-		Object[] uids = ds.getMessageUids();
-
-		HeaderList oldHeaderList = headerList;
-
-		headerList = new HeaderList(uids.length);
-
-		Date today = Calendar.getInstance().getTime();
-
-		// parse all message files to recreate the header cache
-		IColumbaHeader header = null;
-		MailboxInfo messageFolderInfo = folder.getMessageFolderInfo();
-		messageFolderInfo.setExists(0);
-		messageFolderInfo.setRecent(0);
-		messageFolderInfo.setUnseen(0);
-
-		folder.setChanged(true);
-
-		if (getObservable() != null) {
-			getObservable().setMax(uids.length);
-			getObservable().resetCurrent();
-		}
-
-		for (int i = 0; i < uids.length; i++) {
-			if ((getObservable() != null) && ((i % 100) == 0)) {
-				getObservable().setCurrent(i);
-			}
-
-			if ((oldHeaderList != null) && oldHeaderList.containsKey(uids[i])) {
-				header = oldHeaderList.get(uids[i]);
-				headerList.add(header, uids[i]);
-			} else {
-				try {
-					Source source = ds.getMessageSource(uids[i]);
-
-					if (source.length() == 0) {
-						ds.removeMessage(uids[i]);
-
-						continue;
-					}
-
-					header = new ColumbaHeader(HeaderParser.parse(source));
-
-					// make sure that we have a Message-ID
-					String messageID = (String) header.get("Message-Id");
-					if (messageID != null)
-						header.set("Message-ID", header.get("Message-Id"));
-
-					header = CachedHeaderfields.stripHeaders(header);
-
-					if (isOlderThanOneWeek(today, ((Date) header
-							.getAttributes().get("columba.date")))) {
-						header.getFlags().set(Flags.SEEN);
-					}
-
-					// message size should be at least 1 KB
-					int size = Math.max(source.length() / 1024, 1);
-					header.getAttributes().put("columba.size",
-							new Integer(size));
-
-					// set the attachment flag
-					String contentType = (String) header.get("Content-Type");
-
-					header.getAttributes().put("columba.attachment",
-							header.hasAttachments());
-
-					header.getAttributes().put("columba.uid", uids[i]);
-
-					headerList.add(header, uids[i]);
-					source.close();
-					source = null;
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					LOG.severe("Error syncing HeaderCache :"
-							+ ex.getLocalizedMessage());
-				}
-			}
-
-			if (header.getFlags().getRecent()) {
-				messageFolderInfo.incRecent();
-			}
-
-			if (!header.getFlags().getSeen()) {
-				messageFolderInfo.incUnseen();
-			}
-
-			header = null;
-
-			messageFolderInfo.incExists();
-
-			((AbstractLocalFolder) folder)
-					.setNextMessageUid(((Integer) uids[uids.length - 1])
-							.intValue() + 1);
-
-			if ((getObservable() != null) && ((i % 100) == 0)) {
-				getObservable().setCurrent(i);
-			}
-		}
-
-		// we are done
-		if (getObservable() != null) {
-			getObservable().resetCurrent();
-		}
-	}
-
-	protected void loadHeader(ColumbaHeader h) throws Exception {
+	
+	protected void loadHeader(ColumbaHeader h) throws IOException {
 		h.getAttributes().put("columba.uid", new Integer(reader.readInt()));
 
 		super.loadHeader(h);
 	}
 
-	protected void saveHeader(ColumbaHeader h) throws Exception {
+	protected void saveHeader(ColumbaHeader h) throws IOException {
 		writer.writeInt(((Integer) h.getAttributes().get("columba.uid"))
 				.intValue());
 
 		super.saveHeader(h);
 	}
 
-	private boolean isOlderThanOneWeek(Date arg0, Date arg1) {
-		return (arg0.getTime() - WEEK) > arg1.getTime();
-	}
 }

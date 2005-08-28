@@ -16,6 +16,7 @@
 package org.columba.mail.folder.headercache;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ import org.columba.api.command.IStatusObservable;
 import org.columba.core.logging.Logging;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -39,8 +40,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.folder.headercache");
 
-	private boolean configurationChanged;
-
 	/**
 	 * Constructor for RemoteHeaderCache.
 	 * 
@@ -50,17 +49,14 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		super(new File(folder.getDirectoryFile(), ".header"));
 
 		this.folder = folder;
-
-		configurationChanged = false;
 	}
 
 	public IStatusObservable getObservable() {
 		return folder.getObservable();
 	}
 
-	public void load() throws Exception {
+	public void load(IHeaderList headerList) throws IOException {
 		LOG.fine("loading header-cache=" + headerFile);
-		headerList = new HeaderList();
 
 		try {
 			reader = new ObjectReader(headerFile);
@@ -71,8 +67,13 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 			}
 		}
 
-		int capacity = ((Integer) reader.readObject()).intValue();
-
+		int capacity = 0;
+		
+		try {
+			capacity = ((Integer) reader.readObject()).intValue();
+		} catch (ClassNotFoundException e) {
+		}
+		
 		LOG.fine("capacity=" + capacity);
 
 		if (getObservable() != null) {
@@ -98,12 +99,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		// close stream
 		reader.close();
 
-		if (configurationChanged) {
-			// headerfield cache configuration changed
-			// -> try to properly fill the cache again
-			//reorganizeCache();
-		}
-
 		// we are done
 		if (getObservable() != null) {
 			getObservable().clearMessageWithDelay();
@@ -111,7 +106,7 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		}
 	}
 
-	public void save() throws Exception {
+	public void persistHeaderList(IHeaderList headerList) throws IOException {
 		// we didn't load any header to save
 		if (!isHeaderCacheLoaded()) {
 			return;
@@ -149,13 +144,13 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		writer.close();
 	}
 
-	protected void loadHeader(ColumbaHeader h) throws Exception {
+	protected void loadHeader(ColumbaHeader h) throws IOException {
 		h.getAttributes().put("columba.uid", new Integer(reader.readInt()));
 
 		super.loadHeader(h);
 	}
 
-	protected void saveHeader(ColumbaHeader h) throws Exception {
+	protected void saveHeader(ColumbaHeader h) throws IOException {
 		writer.writeInt( ((Integer)h.getAttributes().get("columba.uid")).intValue());
 
 		super.saveHeader(h);

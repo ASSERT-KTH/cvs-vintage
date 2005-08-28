@@ -17,15 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.AbstractHeaderListStorage;
 import org.columba.mail.folder.AbstractLocalFolder;
-import org.columba.mail.folder.IHeaderListStorage;
-import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaHeader;
@@ -46,18 +44,14 @@ public class OutboxFolder extends CachedMHFolder {
 
 	private SendListManager[] sendListManager = new SendListManager[2];
 
-	private int actSender;
-
-	private boolean isSending;
 
 	public OutboxFolder(FolderItem item, String path) {
 		super(item, path);
 
+		headerList.setStore(new OutboxHeaderCache(this));
+		
 		sendListManager[0] = new SendListManager();
 		sendListManager[1] = new SendListManager();
-		actSender = 0;
-
-		isSending = false;
 	}
 
 	public SendableMessage getSendableMessage(Object uid) throws Exception {
@@ -112,43 +106,6 @@ public class OutboxFolder extends CachedMHFolder {
 		return uid;
 	}
 
-	/**
-	 * @see org.columba.mail.folder.AbstractMessageFolder#getHeaderListStorage()
-	 */
-	public IHeaderListStorage getHeaderListStorage() {
-		if (headerListStorage == null) {
-			headerListStorage = new OutboxHeaderListStorage(this);
-		}
-
-		return headerListStorage;
-	}
-
-	class OutboxHeaderListStorage extends AbstractHeaderListStorage {
-
-		protected AbstractHeaderCache headerCache;
-
-		protected AbstractLocalFolder folder;
-
-		/**
-		 *  
-		 */
-		public OutboxHeaderListStorage(AbstractLocalFolder folder) {
-			super();
-
-			this.folder = folder;
-		}
-
-		/**
-		 * @see org.columba.mail.folder.AbstractHeaderListStorage#getHeaderCacheInstance()
-		 */
-		public AbstractHeaderCache getHeaderCacheInstance() {
-			if (headerCache == null) {
-				headerCache = new OutboxHeaderCache(folder);
-			}
-
-			return headerCache;
-		}
-	}
 
 	class OutboxHeaderCache extends LocalHeaderCache {
 
@@ -160,18 +117,22 @@ public class OutboxFolder extends CachedMHFolder {
 			return new SendableHeader();
 		}
 
-		protected void loadHeader(ColumbaHeader h) throws Exception {
+		protected void loadHeader(ColumbaHeader h) throws IOException {
 			super.loadHeader(h);
 
-			Integer accountUid = (Integer) reader.readObject();
-			h.getAttributes().put("columba.accountuid", accountUid);
+			try {
+				Integer accountUid = (Integer) reader.readObject();
+				h.getAttributes().put("columba.accountuid", accountUid);
 
-			List recipients = (List) reader.readObject();
-			h.getAttributes().put("columba.recipients", recipients);
-			;
+				List recipients = (List) reader.readObject();
+				h.getAttributes().put("columba.recipients", recipients);
+				;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 
-		protected void saveHeader(ColumbaHeader h) throws Exception {
+		protected void saveHeader(ColumbaHeader h) throws IOException {
 			super.saveHeader(h);
 
 			writer.writeObject(h.getAttributes().get("columba.accountuid"));

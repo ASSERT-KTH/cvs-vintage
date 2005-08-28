@@ -101,7 +101,7 @@ public class ObjectWriter {
 	}
 	*/
 	
-	public void close() throws Exception {
+	public void close() throws IOException {
 
 		try {
 			// close all file streams

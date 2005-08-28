@@ -19,15 +19,13 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.columba.core.base.BooleanCompressor;
 import org.columba.core.gui.base.ColorFactory;
-import org.columba.core.main.Main;
+import org.columba.mail.folder.IHeaderListStore;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.AddressParser;
 import org.columba.ristretto.parser.ParserException;
@@ -43,25 +41,19 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz
  */
-public abstract class AbstractHeaderCache {
+public abstract class AbstractHeaderCache implements IHeaderListStore {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.folder.headercache");
 
-	protected HeaderList headerList;
-
 	protected File headerFile;
 
 	private boolean headerCacheLoaded;
 
-	protected String[] columnNames;
-
 	protected ObjectWriter writer;
 
 	protected ObjectReader reader;
-
-	protected List additionalHeaderfields;
 
 	/**
 	 * @param folder
@@ -69,13 +61,7 @@ public abstract class AbstractHeaderCache {
 	public AbstractHeaderCache(File headerFile) {
 		this.headerFile = headerFile;
 
-		headerList = new HeaderList();
-
 		headerCacheLoaded = false;
-
-		columnNames = null;
-
-		additionalHeaderfields = new Vector();
 	}
 
 	/**
@@ -93,57 +79,18 @@ public abstract class AbstractHeaderCache {
 	}
 
 	/**
-	 * @param uid
-	 * @return @throws
-	 *         Exception
-	 */
-	public boolean exists(Object uid) throws Exception {
-		return headerList.containsKey(uid);
-	}
-
-	/**
-	 * @return
-	 */
-	public int count() {
-		return headerList.count();
-	}
-
-	/**
-	 * @param uid
-	 * @throws Exception
-	 */
-	public void remove(Object uid) {
-		LOG.info("trying to remove message UID=" + uid);
-
-		if (headerList.containsKey(uid)) {
-			LOG.info("remove UID=" + uid);
-
-			headerList.remove(uid);
-		}
-	}
-
-	/**
-	 * @param header
-	 */
-	public void add(ColumbaHeader header)  {
-		headerList.add(header, header.get("columba.uid"));
-	}
-
-	/**
 	 * Get or (re)create the header cache file.
 	 * 
 	 * @return the HeaderList
 	 * @throws Exception
 	 */
-	public HeaderList getHeaderList() throws IOException {
-		boolean needToRelease = false;
-
+	public void restoreHeaderList(IHeaderList headerList) throws IOException {
 		// if there exists a ".header" cache-file
 		//  try to load the cache
 		if (!headerCacheLoaded) {
 			if (headerFile.exists()) {
 				try {
-					load();
+					load(headerList);
 				} catch (Exception e) {
 					LOG.severe(e.getMessage());
 					LOG.severe("Could not open headercache file: " + headerFile.toString());
@@ -157,13 +104,10 @@ public abstract class AbstractHeaderCache {
 					if( !headerFile.exists() ) {
 						LOG.severe("No Cache found.");
 						headerCacheLoaded = true;
-						headerList = new HeaderList();
-						
-						return headerList;
 					}
 					
 					try {
-						load();
+						load(headerList);
 					} catch (Exception e2) {
 						LOG.severe(e2.getMessage());
 
@@ -174,32 +118,28 @@ public abstract class AbstractHeaderCache {
 						headerFile = oldFile;
 
 						headerCacheLoaded = true;
-						headerList = new HeaderList();
 					}
-
-					return headerList;
 				}
 			}
 
 			headerCacheLoaded = true;
 		}
-
-		return headerList;
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public abstract void load() throws Exception;
+	public abstract void load(IHeaderList headerList) throws Exception;
 
-	/**
-	 * @throws Exception
-	 */
-	public abstract void save() throws Exception;
 
-	protected void loadHeader(ColumbaHeader h) throws Exception {
+	protected void loadHeader(ColumbaHeader h) throws IOException {
 		// load boolean headerfields, which are compressed in one int value
-		int compressedFlags = ((Integer) reader.readObject()).intValue();
+		int compressedFlags = 0;
+		
+		try {
+			compressedFlags = ((Integer) reader.readObject()).intValue();
+		} catch (ClassNotFoundException e1) {
+		}
 
 		for (int i = 0; i < CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS.length; i++) {
 			h.set(CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS[i],
@@ -249,7 +189,7 @@ public abstract class AbstractHeaderCache {
 
 	}
 
-	protected void saveHeader(ColumbaHeader h) throws Exception {
+	protected void saveHeader(ColumbaHeader h) throws IOException {
 		// save boolean headerfields, compressing them to one int value
 		Boolean[] b = new Boolean[CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS.length];
 
@@ -308,11 +248,4 @@ public abstract class AbstractHeaderCache {
 		headerCacheLoaded = b;
 	}
 
-	/**
-	 * Resets the headercache by removing all entries.
-	 *  
-	 */
-	public void reset() {
-		headerList = new HeaderList();
-	}
 }

@@ -41,19 +41,18 @@ import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderChildrenIterator;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.folder.headercache.HeaderList;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
@@ -79,7 +78,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 
 	protected int nextUid;
 
-	protected HeaderList headerList;
+	protected IHeaderList headerList;
 
 	private boolean active;
 	
@@ -183,7 +182,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	}
 
 	public boolean exists(Object uid) throws Exception {
-		return headerList.containsKey(uid);
+		return headerList.exists(uid);
 	}
 
 	public IHeaderList getHeaderList() throws Exception {
@@ -490,7 +489,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
+	 * @see org.columba.modules.mail.folder.Folder#remove(Object)
 	 */
 	public void removeMessage(Object uid) throws Exception {
 		// notify listeners
@@ -987,15 +986,6 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		return null;
 	}
 
-	/**
-	 * @see org.columba.mail.folder.Folder#getHeaderListStorage()
-	 */
-	public IHeaderListStorage getHeaderListStorage() {
-
-		// not necessary
-
-		return null;
-	}
 
 	/**
 	 * @see org.columba.mail.folder.AbstractFolder#supportsMove()

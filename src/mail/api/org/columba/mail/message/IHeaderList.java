@@ -19,6 +19,10 @@ package org.columba.mail.message;
 
 import java.util.Enumeration;
 
+import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
+
 /**
  * @author fdietz
  *
@@ -28,16 +32,28 @@ public interface IHeaderList {
 
 	int count();
 
-	boolean containsKey(Object uid);
+	boolean exists(Object uid);
 
 	boolean containsValue(Object value);
 
 	IColumbaHeader get(Object uid);
 
-	Object remove(Object uid);
+	IColumbaHeader remove(Object uid);
 
 	Enumeration keys();
 
+	Object[] getUids();
+	
+	public void setAttribute(Object uid, String key, Object value);
+	
+	public Object getAttribute(Object uid, String key);
+	
+	public Flags getFlags(Object uid);
+	
+	public Attributes getAttributes(Object uid);
+	
+	public Header getHeaderFields(Object uid, String[] keys);
+	
 	Enumeration elements();
 	
 	void clear();

@@ -18,7 +18,6 @@
 package org.columba.mail.folder.headercache;
 
 import java.awt.Color;
-import java.util.Arrays;
 import java.util.Date;
 
 import org.columba.mail.message.ColumbaHeader;

@@ -105,7 +105,7 @@ public class ObjectReader {
     }
     */
 
-    public void close() throws Exception {
+    public void close() throws IOException {
         ois.close();
         istream.close();
     }

@@ -26,6 +26,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.FilterCompoundCommand;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -69,8 +70,7 @@ public class AddPOP3MessageCommand extends Command {
 		// add message to folder
 		SourceInputStream messageStream = new SourceInputStream(message
 				.getSource());
-		Object uid = inboxFolder.addMessage(messageStream, message.getHeader()
-				.getAttributes(), message.getHeader().getFlags());
+		Object uid = inboxFolder.addMessage(messageStream);
 		messageStream.close();
 
 		// mark message as recent

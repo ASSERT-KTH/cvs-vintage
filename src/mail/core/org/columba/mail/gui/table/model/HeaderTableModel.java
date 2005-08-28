@@ -26,9 +26,9 @@ import java.util.Vector;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import org.columba.mail.folder.headercache.PersistantHeaderList;
 import org.columba.mail.gui.table.IHeaderTableModel;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.frapuccino.treetable.AbstractTreeTableModel;
@@ -202,7 +202,7 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		return headerList;
 	}
 
-	public void setHeaderList(HeaderList list) {
+	public void setHeaderList(PersistantHeaderList list) {
 		headerList = list;
 		
 		update();
