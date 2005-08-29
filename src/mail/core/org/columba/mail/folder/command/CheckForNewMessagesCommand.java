@@ -38,7 +38,7 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
  */
 public class CheckForNewMessagesCommand extends Command {
 
-	IMAPFolder inboxFolder;
+	IMAPFolder imapFolder;
 
 	private Action action;
 
@@ -55,59 +55,34 @@ public class CheckForNewMessagesCommand extends Command {
 		// get references
 		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
 
-		inboxFolder = (IMAPFolder) r.getSourceFolder();
+		imapFolder = (IMAPFolder) r.getSourceFolder();
 		
 		// register for status events
-		((StatusObservableImpl) inboxFolder.getObservable()).setWorker(worker);
+		((StatusObservableImpl) imapFolder.getObservable()).setWorker(worker);
 
 
 		// Find old numbers
-		int total = inboxFolder.getMessageFolderInfo().getExists();
-		int recent = inboxFolder.getMessageFolderInfo().getRecent();
-		int unseen = inboxFolder.getMessageFolderInfo().getUnseen();
+		int total = imapFolder.getMessageFolderInfo().getExists();
 
 		// check for new headers
 		try {
-			inboxFolder.synchronizeHeaderlist();
+			imapFolder.ensureFolderIsSynced();
 		} catch (IOException e) {
 			worker.cancel();
 			throw new CommandCancelledException(e);
 		} 
 
 		// Get the new numbers
-		int newTotal = inboxFolder.getMessageFolderInfo().getExists();
-		int newRecent = inboxFolder.getMessageFolderInfo().getRecent();
-		int newUnseen = inboxFolder.getMessageFolderInfo().getUnseen();
-
-		// ALP 04/29/03
-		// Call updageGUI() if anything has changed
-		if ((newRecent != recent) || (newTotal != total)
-				|| (newUnseen != unseen)) {
-
-			// TODO :(tstich) Renable sound
-			/*
-			if ((newTotal != total) && (item.getBoolean("enable_sound"))) {
-				// the number of "recent" messages has changed, so play a sound
-				// of told to for new messages on server
-				//	re-enable this feature later, make it a general option
-				// not a per-account based one
-				// -> playing wav-files should be only optional
-				// just play a system beep
-				// -> this works better for most people
-				// -> java doesn't support sound servers like
-				// -> alsa or esound anyway
+		int newTotal = imapFolder.getMessageFolderInfo().getExists();
+		
+		//TODO: make Beep with a nice Action instead
+		if ((newTotal != total) ) {
+			if( ((IMAPRootFolder)imapFolder.getRootFolder()).getAccountItem().getImapItem().getBoolean("enable_sound")) {
 				Toolkit kit = Toolkit.getDefaultToolkit();
 				kit.beep(); //system beep
-
-			}*/
-
-			//  END if((newRecent != recent) && (item.getBoolean...
+			}
 		}
-
-		//  END if (newRecent != recent || newTotal != total ...
 	}
-
-	//  END public void execute(Worker worker) throws Exception
 
 	/**
 	 * @see org.columba.api.command.Command#updateGUI()
