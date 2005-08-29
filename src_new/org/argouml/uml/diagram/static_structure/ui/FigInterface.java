@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.111 2005/07/26 11:01:10 bobtarling Exp $
+// $Id: FigInterface.java,v 1.112 2005/08/29 18:33:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,6 @@ import org.argouml.uml.diagram.ui.ActionEdgesDisplay;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigOperationsCompartment;
-import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.base.Editor;
@@ -778,8 +777,8 @@ public class FigInterface extends FigClassifierBox {
             currentY += STEREOHEIGHT;
         }
 
-        getNameFig().setBounds(x, currentY, newW + 1, height);
-        getStereotypeFig().setBounds(x, y, newW + 1, STEREOHEIGHT + 1);
+        getNameFig().setBounds(x, currentY, newW, height);
+        getStereotypeFig().setBounds(x, y, newW, STEREOHEIGHT + 1);
         stereoLineBlinder.setBounds(x + 1, y + STEREOHEIGHT, newW - 2, 2);
 
         // Advance currentY to where the start of the attribute box is,
@@ -791,8 +790,8 @@ public class FigInterface extends FigClassifierBox {
 
         // Finally update the bounds of the operations box
 
-        aSize =
-                updateFigGroupSize(operationsFig, x, currentY,
+        /*aSize =*/
+        updateFigGroupSize(operationsFig, x, currentY,
                         newW, newH + y - currentY);
 
         // set bounds of big box
