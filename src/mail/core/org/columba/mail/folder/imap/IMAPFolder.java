@@ -40,7 +40,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractRemoteFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
@@ -68,7 +67,6 @@ import org.columba.ristretto.imap.SequenceSet;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimeTree;
 
 public class IMAPFolder extends AbstractRemoteFolder {
@@ -91,6 +89,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 	private PersistantHeaderList headerList;
 
+	private boolean lazyFlagSync = false;
+	
 	/**
 	 * @see org.columba.mail.folder.IMailbox#isReadOnly()
 	 */
@@ -191,25 +191,33 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @throws CommandCancelledException
 	 * @throws Exception
 	 */
-	private synchronized void ensureFolderIsSynced() throws IOException,
+	public synchronized void ensureFolderIsSynced() throws IOException,
 			IMAPException, CommandCancelledException, Exception {
 		if( !headerList.isRestored() ) {
 			try {
 				headerList.restore();
 			} catch (IOException e) {
-				// Will be fixed in the upcoming synchroniyation process
+				// Will be fixed in the upcoming synchronization process
 			}
 			synchronizeHeaderlist();
 
 			// Only do a flag sync if this folder is selected
-			// -> Big speedup
-			if( getServer().isSelected(this) ) synchronizeFlags();
+			// -> this prevents an explicit select to this folder
+			// when only check for new messages
+			if( getServer().isSelected(this) ) {
+				synchronizeFlags();
+			} else {
+				// but we have to ensure that it happens later
+				lazyFlagSync = true;				
+			}
 		} else if (!getServer().isSelected(this)) {
 			synchronizeHeaderlist();
 
-			// Only do a flag sync if this folder is selected
-			// -> Big speedup
-			if( getServer().isSelected(this) ) synchronizeFlags();
+			if( lazyFlagSync && getServer().isSelected(this) ) {
+				// One flag sync should be enough for one session
+				synchronizeFlags();
+				lazyFlagSync = false;
+			}
 		}
 	}
 
@@ -242,7 +250,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @throws CommandCancelledException
 	 * @throws IMAPException
 	 */
-	public void synchronizeHeaderlist() throws Exception, IOException,
+	private void synchronizeHeaderlist() throws Exception, IOException,
 			CommandCancelledException, IMAPException {
 		// Check if the mailbox has changed
 		MailboxStatus status = getServer().getStatus(this);
@@ -533,7 +541,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		}
 	}
 
-	public void synchronizeFlags() throws Exception, IOException,
+	private void synchronizeFlags() throws Exception, IOException,
 			CommandCancelledException, IMAPException {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"sync_flags"));
@@ -557,18 +565,17 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		// update the local flags and ensure that the MailboxInfo is correct
 		Enumeration uids = headerList.keys();
-		MailboxInfo testInfo = new MailboxInfo();
+		
+		int unseen = 0;
 		while (uids.hasMoreElements()) {
 			Object uid = uids.nextElement();
 			IColumbaHeader header = headerList.get(uid);
 			Flags flag = header.getFlags();
 			Flags oldFlag = (Flags) flag.clone();
 
-			testInfo.incExists();
-
 			flag.setSeen(Collections.binarySearch(remoteUnseenUids, uid) < 0);
 			if (!flag.getSeen()) {
-				testInfo.incUnseen();
+				unseen++;
 			}
 
 			flag
@@ -589,10 +596,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		}
 
 		// Ensure that the messageFolderInfo is up to date.
-		if (!messageFolderInfo.equals(testInfo)) {
-			messageFolderInfo.setExists(testInfo.getExists());
-			messageFolderInfo.setUnseen(testInfo.getUnseen());
-			messageFolderInfo.setRecent(testInfo.getRecent());
+		if (messageFolderInfo.getExists() != unseen) {
+			messageFolderInfo.setUnseen(unseen);
 
 			fireFolderPropertyChanged();
 		}
@@ -852,6 +857,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		Integer uid = getServer()
 				.append(withHeaderInputStream, imapFlags, this);
 
+		
 		// Since JUNK is a non-system Flag we have to set it with
 		// an addtitional STORE command
 		if (((Boolean) attributes.get("columba.spam")).booleanValue()) {
@@ -863,13 +869,14 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		// Parser the header
 		Header header = withHeaderInputStream.getHeader();
 
-		fireMessageAdded(uid);
 
 		// update the HeaderList
 		IColumbaHeader cHeader = new ColumbaHeader(header, attributes, imapFlags);
 		header.set("columba.uid", uid);
 		getHeaderList().add(cHeader, uid);
 
+		fireMessageAdded(uid);		
+		
 		return uid;
 	}
 
@@ -980,13 +987,13 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		Integer uid = getServer().append(withHeaderInputStream, this);
 
-		fireMessageAdded(uid);
-
 		// update the HeaderList
 		Header header = withHeaderInputStream.getHeader();
 		ColumbaHeader h = new ColumbaHeader(header);
 		getHeaderList().add(h,uid );
 
+		fireMessageAdded(uid);
+		
 		return uid;
 	}
 
@@ -1107,4 +1114,5 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		
 		headerList.persist();
 	}
+
 }

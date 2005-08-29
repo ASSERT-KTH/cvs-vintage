@@ -1838,8 +1838,13 @@ public class IMAPServer implements IMAPListener, Observer {
 	 *      int)
 	 */
 	public void existsChanged(String arg0, int arg1) {
+		//int newMessages = arg1 - selectedStatus.getMessages();
 		selectedStatus.setMessages(arg1);
-
+		/*
+		if( newMessages > 0 ) {
+			selectedStatus.setRecent(selectedStatus.getRecent() + newMessages);
+		}*/
+		
 		if (updatesEnabled) {
 			if( existsChangedAction != null) {
 				existsChangedAction.actionPerformed(selectedFolder);
