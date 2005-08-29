@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.UTFDataFormatException;
 
 import org.columba.core.logging.Logging;
 
@@ -58,7 +59,11 @@ public class ObjectWriter {
 	}
 
 	public void writeString(String str) throws IOException {
-		oos.writeUTF(str);
+		try {
+			oos.writeUTF(str);
+		} catch (UTFDataFormatException e) {
+			oos.writeUTF("error");
+		}
 	}
 	
 	public void writeInt(int in) throws IOException {
