@@ -56,6 +56,8 @@ import org.columba.mail.gui.message.command.OpenAttachmentCommand;
 import org.columba.mail.gui.message.command.SaveAttachmentAsCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.plugin.ViewerExtensionHandler;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -173,8 +175,9 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		MimeHeader parentHeader = child.getHeader();
 
-		if( htmlMessage && parentHeader.getContentID() != null ) return;		
-		
+		if (htmlMessage && parentHeader.getContentID() != null)
+			return;
+
 		if (parentHeader.getMimeType().equals(
 				new MimeType("multipart", "alternative"))) {
 			traverseAlternativePart(child, ref);
@@ -205,11 +208,11 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 					panel = createPanel(ref);
 					attachmentPanels.add(panel);
 					break;
-				} else if(alternativePart.getHeader().getMimeType().getType().equals("multipart") ) {
-					traverseChildren(alternativePart,ref);
+				} else if (alternativePart.getHeader().getMimeType().getType()
+						.equals("multipart")) {
+					traverseChildren(alternativePart, ref);
 				}
-				
-				
+
 			}
 		} else {
 			// search for text mimepart
@@ -221,8 +224,9 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 					panel = createPanel(ref);
 					attachmentPanels.add(panel);
 					break;
-				} else if(alternativePart.getHeader().getMimeType().getType().equals("multipart") ) {
-					traverseChildren(alternativePart,ref);
+				} else if (alternativePart.getHeader().getMimeType().getType()
+						.equals("multipart")) {
+					traverseChildren(alternativePart, ref);
 				}
 			}
 		}
@@ -301,8 +305,9 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
 						address, mediator.getFrameController());
 				viewers.add(viewer);
-				
-				if( firstText ) htmlMessage = ((TextViewer)viewer).isHtmlMessage();
+
+				if (firstText)
+					htmlMessage = ((TextViewer) viewer).isHtmlMessage();
 				firstText = false;
 			} else if (type.equalsIgnoreCase("image")) {
 
@@ -320,7 +325,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		}
 
 		counter++;
-		
+
 		return panel;
 	}
 
@@ -380,12 +385,29 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	private MailFolderCommandReference createNewReference(MimeHeader h,
 			MimePart mp, IMailbox folder, Object uid) throws Exception {
 
-		InputStream is = folder.getMimePartBodyStream(uid, mp.getAddress());
+		InputStream bodyStream = folder.getMimePartBodyStream(uid, mp
+				.getAddress());
+
+		int encoding = h.getContentTransferEncoding();
+
+		switch (encoding) {
+		case MimeHeader.QUOTED_PRINTABLE: {
+			bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+
+			break;
+		}
+
+		case MimeHeader.BASE64: {
+			bodyStream = new Base64DecoderInputStream(bodyStream);
+
+			break;
+		}
+		}
 
 		TempFolder tempFolder = FolderTreeModel.getInstance().getTempFolder();
 		Object tempMessageUid = null;
 		try {
-			tempMessageUid = tempFolder.addMessage(is);
+			tempMessageUid = tempFolder.addMessage(bodyStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
