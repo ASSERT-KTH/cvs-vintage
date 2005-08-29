@@ -52,23 +52,21 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
             "UTF-8", "UTF-16", "US-ASCII",
 
             // West Europe # 4
-            "windows-1252", "ISO-8859-1", "ISO-8859-15", "IBM850", "MacRoman",
-            "ISO-8859-7", "MacGreek", "windows-1253", "MacIceland",
-            "ISO-8859-3",
+            "windows-1252", "ISO-8859-1", "ISO-8859-15", 
+            "ISO-8859-7",  "windows-1253", "ISO-8859-3",
 
-            // East Europe # 14
-            "ISO-8859-4", "ISO-8859-13", "windows-1257", "IBM852",
-            "ISO-8859-2", "MacCentralEurope", "MacCroatian", "IBM855",
-            "ISO-8859-5", "KOI8-R", "MacCyrillic", "windows-1251", "IBM866",
-            "MacUkraine", "MacRomania",
+            // East Europe # 10
+            "ISO-8859-4", "ISO-8859-13", "windows-1257", 
+            "ISO-8859-2",  
+            "ISO-8859-5", "KOI8-R",  "windows-1251",
 
-            // East Asian # 29
+            // East Asian # 17
             "GB2312", "GBK", "GB18030", "Big5", "Big5-HKSCS", "EUC-TW",
             "EUC-JP", "Shift_JIS", "ISO-2022-JP", "MS932", "EUC-KR", "JOHAB",
             "ISO-2022-KR",
 
-            // West Asian # 42
-            "TIS620", "IBM857", "ISO-8859-9", "MacTurkish", "windows-1254",
+            // West Asian # 30
+            "TIS620", "ISO-8859-9",  "windows-1254",
             "windows-1258"};
 
     private static final Charset[] CHARSETS = createCharsetArray();
@@ -76,7 +74,7 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
     private static final String[] groups = { "global", "westeurope",
             "easteurope", "eastasian", "seswasian"};
 
-    private static final int[] groupOffset = { 0, 3, 13, 28, 41, 47};
+    private static final int[] groupOffset = { 0, 3, 9, 16, 29, 33};
 
     private ButtonGroup group;
 
@@ -134,7 +132,12 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
     private static Charset[] createCharsetArray() {
     	Charset[] result = new Charset[CHARSET_STRINGS.length];
     	for( int i=0; i<CHARSET_STRINGS.length; i++) {
-    		result[i] = Charset.forName(CHARSET_STRINGS[i]);
+    		try {
+				result[i] = Charset.forName(CHARSET_STRINGS[i]);
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+				result[i] = Charset.forName("UTF-8");
+			}
     	}
 		return result;
 	}
