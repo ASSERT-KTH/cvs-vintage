@@ -24,7 +24,6 @@ import java.io.InputStream;
 import org.columba.api.command.IStatusObservable;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterList;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
