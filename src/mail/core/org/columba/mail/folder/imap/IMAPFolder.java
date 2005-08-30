@@ -180,18 +180,19 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.api.command.IWorkerStatusController)
 	 */
 	public IHeaderList getHeaderList() throws Exception{
-		ensureFolderIsSynced();
+		ensureFolderIsSynced(true);
 
 		return headerList;
 	}
 
 	/**
+	 * @param lazy TODO
 	 * @throws IOException
 	 * @throws IMAPException
 	 * @throws CommandCancelledException
 	 * @throws Exception
 	 */
-	public synchronized void ensureFolderIsSynced() throws IOException,
+	public synchronized void ensureFolderIsSynced(boolean lazy) throws IOException,
 			IMAPException, CommandCancelledException, Exception {
 		if( !headerList.isRestored() ) {
 			try {
@@ -210,7 +211,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 				// but we have to ensure that it happens later
 				lazyFlagSync = true;				
 			}
-		} else if (!getServer().isSelected(this)) {
+		} else if (!lazy || !getServer().isSelected(this) ) {
 			synchronizeHeaderlist();
 
 			if( lazyFlagSync && getServer().isSelected(this) ) {
@@ -257,6 +258,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		if( status.getMessages() == 0 ) {
 			headerList.clear();
+			syncMailboxInfo(status);
+			
 			return;
 		}
 		
@@ -273,6 +276,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		if( localUids.size() == status.getMessages() && largestRemoteUid == largestLocalUid) {
 			// Seems to be no change!
+			syncMailboxInfo(status);
 			return;
 		}
 		
@@ -503,9 +507,30 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		}
 
 		// inform listeners if MessageFolderInfo has changed
-		if (deletedMessages > 0 || newMessages > 0) {
+		syncMailboxInfo(status);
+	}
+
+	private void syncMailboxInfo(MailboxStatus status) {
+		boolean updated  = false;
+		if( status.getMessages() != -1 && messageFolderInfo.getExists() != status.getMessages() ) {
+			messageFolderInfo.setExists(status.getMessages());
+			updated = true;
+		}
+		
+		if( status.getRecent() != -1 && messageFolderInfo.getRecent() != status.getRecent()) {
+			messageFolderInfo.setRecent(status.getRecent());
+			updated = true;
+		}
+		
+		if( status.getUnseen() != -1 && messageFolderInfo.getUnseen() != status.getUnseen() ){
+			messageFolderInfo.setUnseen(status.getUnseen());
+			updated = true;
+		}
+		
+		if( updated ) {
 			fireFolderPropertyChanged();
 		}
+			
 	}
 
 	/**
@@ -534,7 +559,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
-		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+		for (int i = listeners.length - 2; i >= 0; i -= 2) { 
 			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).messageAdded(e);
 			}
@@ -873,7 +898,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		// update the HeaderList
 		IColumbaHeader cHeader = new ColumbaHeader(header, attributes, imapFlags);
 		header.set("columba.uid", uid);
-		getHeaderList().add(cHeader, uid);
+		
+		headerList.add(cHeader, uid);
 
 		fireMessageAdded(uid);		
 		
@@ -990,7 +1016,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		// update the HeaderList
 		Header header = withHeaderInputStream.getHeader();
 		ColumbaHeader h = new ColumbaHeader(header);
-		getHeaderList().add(h,uid );
+		headerList.add(h,uid );
 
 		fireMessageAdded(uid);
 		
@@ -1092,7 +1118,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 			throws Exception {
-		ensureFolderIsSynced();
+		ensureFolderIsSynced(true);
 		return super.searchMessages(filter, uids);
 	}
 
@@ -1102,7 +1128,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.AbstractMessageFolder#searchMessages(org.columba.core.filter.Filter)
 	 */
 	public Object[] searchMessages(Filter filter) throws Exception {
-		ensureFolderIsSynced();
+		ensureFolderIsSynced(true);
 		return super.searchMessages(filter);
 	}
 
