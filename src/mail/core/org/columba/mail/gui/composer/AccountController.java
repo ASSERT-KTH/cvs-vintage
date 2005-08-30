@@ -49,7 +49,7 @@ public class AccountController implements ItemListener {
 			AccountItem accountItem = config.get(i);
 			view.addItem(accountItem);
 
-			if (i == 0) {
+			if ( accountItem.isDefault() ) {
 				view.setSelectedItem(accountItem);
 				controller.getModel().setAccountItem(accountItem);
 			}
