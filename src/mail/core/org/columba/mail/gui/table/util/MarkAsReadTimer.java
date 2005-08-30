@@ -79,13 +79,12 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
 
         // get interval value
         String delay = markasread.getAttribute("delay", "2");
-        this.maxValue = Integer.parseInt(delay);
 
         // enable timer
         String enable = markasread.getAttribute("enabled", "true");
 
         if (enable.equals("true")) {
-            timer = new Timer(ONE_SECOND * maxValue, this);
+        	setMaxValue(Integer.parseInt(delay));
         }
     }
 
@@ -98,8 +97,6 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
         maxValue = i;
 
         timer = new Timer(ONE_SECOND * maxValue, this);
-
-        timer.restart();
     }
 
     /**
@@ -108,7 +105,7 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
     public synchronized void stopTimer() {
         value = 0;
 
-        LOG.info("MarkAsRead-timer stopped");
+        //LOG.info("MarkAsRead-timer stopped");
 
         if (timer != null) {
             timer.stop();
@@ -121,7 +118,7 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
     * message is shown
     */
     public synchronized void restart(IMailFolderCommandReference reference) {
-        LOG.info("MarkAsRead-timer started");
+        //LOG.info("MarkAsRead-timer started");
 
         message =  reference;
         value = 0;
@@ -182,6 +179,8 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
         if (enable.equals("true")) {
             // restart Timer with new value
             setMaxValue(Integer.parseInt(delay));
+        } else {
+        	timer = null;
         }
     }
 }

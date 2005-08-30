@@ -73,7 +73,7 @@ public class OptionsItem extends DefaultItem {
 	
 	public final static String MARKASREAD = "markasread";
 	
-	public final static String DELAY_INT = "DELAY";
+	public final static String DELAY_INT = "delay";
 	
 	public final static String HEADERVIEWER = "headerviewer";
 	
