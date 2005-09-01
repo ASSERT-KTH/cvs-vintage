@@ -259,6 +259,8 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 			return;
 		}
 
+		selectedFolder = node;
+		
 		if (node.supportsAddMessage()) {
 			okButton.setEnabled(true);
 		} else {
