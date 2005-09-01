@@ -46,6 +46,7 @@ import org.columba.core.desktop.JDICDesktop;
 import org.columba.core.desktop.MacDesktop;
 import org.columba.core.gui.base.DebugRepaintManager;
 import org.columba.core.gui.frame.FrameManager;
+import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.profiles.Profile;
 import org.columba.core.gui.profiles.ProfileManager;
 import org.columba.core.gui.themes.ThemeSwitcher;
@@ -58,6 +59,7 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
+import org.columba.core.util.StackProfiler;
 import org.columba.core.versioninfo.VersionInfo;
 
 import sun.misc.URLClassPath;
@@ -200,6 +202,8 @@ public class Main {
 	}
 
 	public void run(String args[]) {
+		
+		
 		Logging.createDefaultHandler();
 		registerCommandLineArguments();
 
@@ -208,9 +212,14 @@ public class Main {
 			System.exit(0);
 		}
 
+		StackProfiler profiler = new StackProfiler();
+		profiler.push("main");
+		profiler.push("config");
+		profiler.push("profile");
 		// prompt user for profile
 		Profile profile = ProfileManager.getInstance().getProfile(path);
-
+		profiler.pop("profile");
+		
 		// register shutdown manager in service registry
 		ServiceRegistry.getInstance().register(IShutdownManager.class,
 				ShutdownManager.getInstance());
@@ -221,7 +230,10 @@ public class Main {
 
 		// initialize configuration with selected profile
 		new Config(profile.getLocation());
-
+		profiler.pop("config");
+		
+		
+		
 		// register Config in service registry
 		ServiceRegistry.getInstance().register(IConfig.class,
 				Config.getInstance());
@@ -256,23 +268,29 @@ public class Main {
 				"org.columba.core.url|"
 						+ System.getProperty("java.protocol.handler.pkgs", ""));
 
+		profiler.push("i18n");
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
-
+		profiler.pop("i18n");
+		
 		SaveConfig task = new SaveConfig();
 		BackgroundTaskManager.getInstance().register(task);
 		ShutdownManager.getInstance().register(task);
 
+		profiler.push("plugin");
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();
-
+		profiler.pop("plugin");
+		
 		ServiceRegistry.getInstance().register(IPluginManager.class,
 				PluginManager.getInstance());
 
+		profiler.push("components");
 		// init all components
 		ComponentManager.getInstance().init();
 		ComponentManager.getInstance().registerCommandLineArguments();
-
+		profiler.pop("components");
+		
 		// set Look & Feel
 		ThemeSwitcher.setTheme();
 
@@ -289,16 +307,27 @@ public class Main {
 		ComponentManager.getInstance().handleCommandLineParameters(
 				ColumbaCmdLineParser.getInstance().getParsedCommandLine());
 
-		// restore frames of last session
-		if (restoreLastSession) {
-			FrameManager.getInstance().openStoredViews();
-		}
-
-		// hide splash screen
+//		 hide splash screen
 		if (frame != null) {
 			frame.setVisible(false);
 		}
+		
+		profiler.push("frames");
+		
+		// restore frames of last session
+		IFrameMediator[] frameMediator = null;
+		if (restoreLastSession) {
+			frameMediator = FrameManager.getInstance().openStoredViews();
+		}
+		
+		profiler.pop("frames");
+		
+		
 
+//		for ( int i=0; i<frameMediator.length; i++) {
+//			frameMediator[i].getContainer().getFrame().setVisible(true);
+//		}
+		
 		// Add the tray icon to the System tray
 //		ColumbaTrayIcon.getInstance().addToSystemTray(
 //				FrameManager.getInstance().getActiveFrameMediator()
@@ -308,6 +337,7 @@ public class Main {
 		// e.g. check for default mailclient
 		ComponentManager.getInstance().postStartup();
 
+		profiler.pop("main");
 	}
 
 	/**
