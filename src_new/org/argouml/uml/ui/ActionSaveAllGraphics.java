@@ -1,4 +1,4 @@
-// $Id: ActionSaveAllGraphics.java,v 1.5 2005/08/13 09:29:00 mvw Exp $
+// $Id: ActionSaveAllGraphics.java,v 1.6 2005/09/01 18:39:49 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -196,6 +196,8 @@ public class ActionSaveAllGraphics extends UMLAction {
 	try {
 	    fo = new FileOutputStream( theFile );
 	    cmd.setStream(fo);
+	    cmd.setScale(Configuration.getInteger(
+	            SaveGraphicsManager.KEY_GRAPHICS_RESOLUTION, 1));
 	    cmd.doIt();
 	} finally {
 	    if (fo != null) {

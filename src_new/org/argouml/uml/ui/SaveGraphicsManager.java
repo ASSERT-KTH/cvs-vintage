@@ -1,4 +1,4 @@
-// $Id: SaveGraphicsManager.java,v 1.3 2005/07/30 09:33:37 mvw Exp $
+// $Id: SaveGraphicsManager.java,v 1.4 2005/09/01 18:39:49 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,6 +82,12 @@ public class SaveGraphicsManager {
      */
     public static final ConfigurationKey KEY_SAVEALL_GRAPHICS_PATH =
         Configuration.makeKey("graphics", "save-all", "path");
+    
+    /**
+     * The configuration key for the export graphics resolution.
+     */
+    public static final ConfigurationKey KEY_GRAPHICS_RESOLUTION =
+        Configuration.makeKey("graphics", "export", "resolution");
     
     /**
      * the default file format

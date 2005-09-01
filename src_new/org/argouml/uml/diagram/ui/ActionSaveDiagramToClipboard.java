@@ -1,4 +1,4 @@
-// $Id: ActionSaveDiagramToClipboard.java,v 1.6 2005/07/17 08:10:52 mvw Exp $
+// $Id: ActionSaveDiagramToClipboard.java,v 1.7 2005/09/01 18:39:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -38,8 +39,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import org.argouml.application.api.Configuration;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
+import org.argouml.uml.ui.SaveGraphicsManager;
 import org.tigris.gef.base.CmdSaveGIF;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -87,6 +90,9 @@ public class ActionSaveDiagramToClipboard
     /** get image from gef */
     private Image getImage() {
 
+        int scale = Configuration.getInteger(
+                SaveGraphicsManager.KEY_GRAPHICS_RESOLUTION, 1);
+        
         Editor ce = Globals.curEditor();
         Rectangle drawingArea =
 	    ce.getLayerManager().getActiveLayer().calcDrawingArea();
@@ -102,12 +108,16 @@ public class ActionSaveDiagramToClipboard
         boolean isGridHidden = ce.getGridHidden();
         ce.setGridHidden(true); // hide grid, otherwise can't see anything
         Image diagramGifImage =
-	    ce.createImage(drawingArea.width, drawingArea.height);
+	    ce.createImage(drawingArea.width * scale, 
+                    drawingArea.height * scale);
         Graphics g = diagramGifImage.getGraphics();
-
+        if (g instanceof Graphics2D) {
+            ((Graphics2D) g).scale(scale, scale);
+        }
+        
 	// background color.
         g.setColor(new Color(CmdSaveGIF.TRANSPARENT_BG_COLOR));
-        g.fillRect(0, 0, drawingArea.width, drawingArea.height);
+        g.fillRect(0, 0, drawingArea.width * scale, drawingArea.height * scale);
         g.translate(-drawingArea.x, -drawingArea.y);
         ce.print(g);
         ce.setGridHidden(isGridHidden);

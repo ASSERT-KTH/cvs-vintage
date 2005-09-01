@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.37 2005/08/01 17:31:20 mvw Exp $
+// $Id: ActionSaveGraphics.java,v 1.38 2005/09/01 18:39:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -195,6 +195,8 @@ public class ActionSaveGraphics
 	}
 	FileOutputStream fo = new FileOutputStream(theFile);
 	cmd.setStream(fo);
+        cmd.setScale(Configuration.getInteger(
+                SaveGraphicsManager.KEY_GRAPHICS_RESOLUTION, 1));
 	cmd.doIt();
 	fo.close();
         if (useUI) {
