@@ -46,7 +46,6 @@ import org.columba.core.desktop.JDICDesktop;
 import org.columba.core.desktop.MacDesktop;
 import org.columba.core.gui.base.DebugRepaintManager;
 import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.frame.IFrameMediator;
 import org.columba.core.gui.profiles.Profile;
 import org.columba.core.gui.profiles.ProfileManager;
 import org.columba.core.gui.themes.ThemeSwitcher;
@@ -315,9 +314,8 @@ public class Main {
 		profiler.push("frames");
 		
 		// restore frames of last session
-		IFrameMediator[] frameMediator = null;
 		if (restoreLastSession) {
-			frameMediator = FrameManager.getInstance().openStoredViews();
+			FrameManager.getInstance().openStoredViews();
 		}
 		
 		profiler.pop("frames");
