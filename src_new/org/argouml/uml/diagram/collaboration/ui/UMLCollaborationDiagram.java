@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.79 2005/08/13 08:49:17 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.80 2005/09/02 14:46:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -180,7 +180,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 	    {getActionAggregation(), getActionUniAggregation() },
 	    {getActionComposition(), getActionUniComposition() },
         };
-
+        manageDefault(actions, "diagram.collaboration.association");
         return actions;
     }
 

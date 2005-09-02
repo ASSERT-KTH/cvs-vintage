@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.57 2005/08/13 10:53:23 mvw Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.58 2005/09/02 14:46:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -238,7 +238,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
 	    {getActionAggregation(), getActionUniAggregation() },
 	    {getActionComposition(), getActionUniComposition() },
         };
-
+        manageDefault(actions, "diagram.usecase.association");
         return actions;
     }
 

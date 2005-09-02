@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.74 2005/07/22 13:13:49 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.75 2005/09/02 14:46:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -171,6 +171,7 @@ public class UMLClassDiagram extends UMLDiagram {
                 getActionModel(),
                 getActionSubsystem(),
         };
+        manageDefault(actions, "diagram.class.package");
         return actions;
     }
 
@@ -184,6 +185,7 @@ public class UMLClassDiagram extends UMLDiagram {
             getActionPermission(),
             getActionUsage()
         };
+        manageDefault(actions, "diagram.class.dependency");
         return actions;
     }
     
@@ -201,6 +203,7 @@ public class UMLClassDiagram extends UMLDiagram {
             getActionAssociation(),
             getActionUniAssociation()
          };
+        manageDefault(actions, "diagram.class.association");
         return actions;
     }
     
@@ -209,6 +212,7 @@ public class UMLClassDiagram extends UMLDiagram {
             getActionAggregation(),
             getActionUniAggregation()
         };
+        manageDefault(actions, "diagram.class.aggregation");
         return actions;
     }
     
@@ -217,6 +221,7 @@ public class UMLClassDiagram extends UMLDiagram {
             getActionComposition(),
             getActionUniComposition()
         };
+        manageDefault(actions, "diagram.class.composition");
         return actions;
     }
 
