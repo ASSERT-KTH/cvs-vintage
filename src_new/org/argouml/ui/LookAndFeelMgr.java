@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.21 2005/08/17 21:01:03 mvw Exp $
+// $Id: LookAndFeelMgr.java,v 1.22 2005/09/02 21:13:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,9 +30,11 @@
 
 package org.argouml.ui;
 
+import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.LookAndFeel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.metal.DefaultMetalTheme;
@@ -299,10 +301,12 @@ public class LookAndFeelMgr {
         if (lafClass == null && currentLookAndFeel == null) {
             return;
         }
-//        if (!(lafClass != null && lafClass.equals(currentLookAndFeel))) {
-//            setLookAndFeel(lafClass); 
-//            Disabled until UI supports dynamic switching
-//        }
+        if (!(lafClass != null && !lafClass.equals(currentLookAndFeel))) {
+            setLookAndFeel(lafClass); 
+            Component tree = ProjectBrowser.getInstance();
+            SwingUtilities.updateComponentTreeUI(
+                    SwingUtilities.getRootPane(tree));
+        }
 
         if (lafClass == null) {
             lafClass = DEFAULT_KEY;
@@ -365,7 +369,10 @@ public class LookAndFeelMgr {
             return;
         }
 
-        //setTheme(theme); Disabled until UI supports dynamic switching
+        setTheme(theme); 
+        
+        Component tree = ProjectBrowser.getInstance();
+        SwingUtilities.updateComponentTreeUI(SwingUtilities.getRootPane(tree));
 
         String themeValue = themeClass;
         if (themeValue == null) {

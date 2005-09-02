@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.8 2005/08/17 21:01:03 mvw Exp $
+// $Id: SettingsTabAppearance.java,v 1.9 2005/09/02 21:13:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
@@ -170,6 +171,8 @@ public class SettingsTabAppearance
         LookAndFeelMgr.getInstance().setCurrentLAFAndThemeByName(
                 (String) lookAndFeel.getSelectedItem(),
                 (String) metalTheme.getSelectedItem());
+        // Make the result inmediately visible in case of apply:
+        SwingUtilities.updateComponentTreeUI(SwingUtilities.getRootPane(this));
 
         Configuration.setBoolean(Argo.KEY_SMOOTH_EDGES,
             smoothEdges.isSelected());
