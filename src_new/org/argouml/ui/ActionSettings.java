@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.27 2005/04/23 16:30:44 linus Exp $
+// $Id: ActionSettings.java,v 1.28 2005/09/03 18:20:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,7 +139,7 @@ public class ActionSettings extends UMLAction
 
                 // Increase width to accommodate all tabs on one row.
                 // (temporary solution until tabs are replaced with tree)
-                final int minimumWidth = 465;
+                final int minimumWidth = 480;
                 tabs.setPreferredSize(
                         new Dimension(Math.max(tabs.getPreferredSize().width,
                                 	       minimumWidth),
