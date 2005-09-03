@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.10 2005/09/03 18:19:44 mvw Exp $
+// $Id: SettingsTabAppearance.java,v 1.11 2005/09/03 18:27:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;

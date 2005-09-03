@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.23 2005/09/03 18:19:44 mvw Exp $
+// $Id: LookAndFeelMgr.java,v 1.24 2005/09/03 18:27:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,11 +30,9 @@
 
 package org.argouml.ui;
 
-import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.metal.DefaultMetalTheme;
