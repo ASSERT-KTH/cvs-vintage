@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.9 2005/09/02 21:13:07 mvw Exp $
+// $Id: SettingsTabAppearance.java,v 1.10 2005/09/03 18:19:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,8 +172,11 @@ public class SettingsTabAppearance
                 (String) lookAndFeel.getSelectedItem(),
                 (String) metalTheme.getSelectedItem());
         // Make the result inmediately visible in case of apply:
+        /* Disabled since it gives various problems: e.g. the toolbar icons
+         * get too wide. Also the default does not give the new java 5.0 looks.
         SwingUtilities.updateComponentTreeUI(SwingUtilities.getRootPane(this));
-
+        */
+        
         Configuration.setBoolean(Argo.KEY_SMOOTH_EDGES,
             smoothEdges.isSelected());
 

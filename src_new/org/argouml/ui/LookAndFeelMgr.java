@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.22 2005/09/02 21:13:07 mvw Exp $
+// $Id: LookAndFeelMgr.java,v 1.23 2005/09/03 18:19:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -301,12 +301,15 @@ public class LookAndFeelMgr {
         if (lafClass == null && currentLookAndFeel == null) {
             return;
         }
+        /* Disabled since it gives various problems: e.g. the toolbar icons
+         * get too wide. Also the default does not give the new java 5.0 looks.
         if (!(lafClass != null && !lafClass.equals(currentLookAndFeel))) {
             setLookAndFeel(lafClass); 
             Component tree = ProjectBrowser.getInstance();
             SwingUtilities.updateComponentTreeUI(
                     SwingUtilities.getRootPane(tree));
         }
+        */
 
         if (lafClass == null) {
             lafClass = DEFAULT_KEY;
@@ -371,8 +374,11 @@ public class LookAndFeelMgr {
 
         setTheme(theme); 
         
+        /* Disabled since it gives various problems: e.g. the toolbar icons
+         * get too wide. Also the default does not give the new java 5.0 looks.
         Component tree = ProjectBrowser.getInstance();
         SwingUtilities.updateComponentTreeUI(SwingUtilities.getRootPane(tree));
+        */
 
         String themeValue = themeClass;
         if (themeValue == null) {
