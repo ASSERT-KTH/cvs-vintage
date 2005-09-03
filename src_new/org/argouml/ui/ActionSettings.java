@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.28 2005/09/03 18:20:55 mvw Exp $
+// $Id: ActionSettings.java,v 1.29 2005/09/03 18:52:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.util.ListIterator;
 
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
@@ -145,6 +146,7 @@ public class ActionSettings extends UMLAction
                                 	       minimumWidth),
                                       tabs.getPreferredSize().height));
 
+                tabs.setTabPlacement(SwingConstants.LEFT);
                 dialog.setContent(tabs);
             } catch (Exception exception) {
                 LOG.error("got an Exception in ActionSettings", exception);
