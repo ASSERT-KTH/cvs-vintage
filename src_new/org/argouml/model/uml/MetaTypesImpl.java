@@ -1,4 +1,4 @@
-// $Id: MetaTypesImpl.java,v 1.9 2005/08/20 09:29:13 linus Exp $
+// $Id: MetaTypesImpl.java,v 1.10 2005/09/04 19:25:02 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,6 +58,7 @@ import ru.novosoft.uml.behavior.state_machines.MEvent;
 import ru.novosoft.uml.behavior.state_machines.MFinalState;
 import ru.novosoft.uml.behavior.state_machines.MGuard;
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
+import ru.novosoft.uml.behavior.state_machines.MSimpleState;
 import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
@@ -580,6 +581,13 @@ public final class MetaTypesImpl implements MetaTypes {
      */
     public Object getSignal() {
         return MSignal.class;
+    }
+
+    /**
+     * @return Returns the SimpleState.
+     */
+    public Object getSimpleState() {
+        return MSimpleState.class;
     }
 
     /**

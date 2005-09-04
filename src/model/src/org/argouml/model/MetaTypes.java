@@ -1,4 +1,4 @@
-// $Id: MetaTypes.java,v 1.6 2005/08/20 09:29:13 linus Exp $
+// $Id: MetaTypes.java,v 1.7 2005/09/04 19:25:02 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -351,6 +351,11 @@ public interface MetaTypes {
     Object getSignal();
 
     /**
+     * @return Returns the SimpleState.
+     */
+    Object getSimpleState();
+
+    /**
      * @return Returns the State.
      */
     Object getState();
@@ -405,7 +410,7 @@ public interface MetaTypes {
      * @return Returns the TagDefinition, or null in UML 1.3
      */
     Object getTagDefinition();
-    
+
     /**
      * @return Returns the TerminateAction.
      */
@@ -430,10 +435,10 @@ public interface MetaTypes {
      * @return Returns the VisibilityKind.
      */
     Object getVisibilityKind();
-    
+
     /**
      * @return Returns the Interaction
      */
     Object getInteraction();
-    
+
 }

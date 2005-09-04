@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.21 2005/08/25 20:07:16 mkl Exp $
+// $Id: NSUMLModelFacade.java,v 1.22 2005/09/04 19:25:02 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,6 +83,7 @@ import ru.novosoft.uml.behavior.state_machines.MFinalState;
 import ru.novosoft.uml.behavior.state_machines.MGuard;
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
 import ru.novosoft.uml.behavior.state_machines.MSignalEvent;
+import ru.novosoft.uml.behavior.state_machines.MSimpleState;
 import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
@@ -1154,6 +1155,16 @@ public class NSUMLModelFacade implements Facade {
      */
     public boolean isASignalEvent(Object handle) {
         return handle instanceof MSignalEvent;
+    }
+
+    /**
+     * Recognizer for SimpleState.
+     *
+     * @param handle candidate
+     * @return true if handle is a SimpleState
+     */
+    public boolean isASimpleState(Object handle) {
+        return handle instanceof MSimpleState;
     }
 
     /**
