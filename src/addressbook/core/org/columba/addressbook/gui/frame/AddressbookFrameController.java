@@ -20,6 +20,8 @@ package org.columba.addressbook.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -43,6 +45,7 @@ import org.columba.core.gui.base.UIFSplitPane;
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.io.DiskIO;
+import org.columba.mail.config.MailConfig;
 
 /**
  * 
@@ -50,7 +53,8 @@ import org.columba.core.io.DiskIO;
  * @author fdietz
  */
 public class AddressbookFrameController extends DefaultFrameController
-		implements IContentPane, AddressbookFrameMediator, TreeSelectionListener {
+		implements IContentPane, AddressbookFrameMediator,
+		TreeSelectionListener {
 
 	protected TreeController tree;
 
@@ -129,22 +133,16 @@ public class AddressbookFrameController extends DefaultFrameController
 			InputStream is = DiskIO
 					.getResourceStream("org/columba/addressbook/action/menu.xml");
 			getContainer().extendMenu(this, is);
+
+			File configDirectory = AddressbookConfig.getInstance()
+					.getConfigDirectory();
+			InputStream is2 = new FileInputStream(new File(configDirectory,
+					"main_toolbar.xml"));
+			getContainer().extendToolbar(this, is2);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		// try {
-		// ((MenuPluginHandler) PluginManager.getInstance()
-		// .getHandler("org.columba.addressbook.menu"))
-		// .insertPlugins(getContainer().getMenuBar());
-		// } catch (PluginHandlerNotFoundException ex) {
-		// throw new RuntimeException(ex);
-		// }
-
-		getContainer().extendToolbar(
-				this,
-				AddressbookConfig.getInstance().get("main_toolbar").getElement(
-						"toolbar"));
 
 		getContainer().setInfoPanel(new ContainerInfoPanel());
 

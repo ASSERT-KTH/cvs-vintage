@@ -27,6 +27,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -359,7 +361,7 @@ public class ComposerController extends DefaultFrameController implements
 		centerPanel.removeAll();
 
 		topPanel = new JPanel();
-		topPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,0));
+		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 0));
 
 		FormLayout layout = new FormLayout(new ColumnSpec[] {
 				new ColumnSpec("center:max(pref;50dlu)"),
@@ -385,7 +387,8 @@ public class ComposerController extends DefaultFrameController implements
 
 		CellConstraints c = new CellConstraints();
 
-		topPanel.add(smtpLabel, c.xy(1, 1, CellConstraints.CENTER, CellConstraints.DEFAULT));
+		topPanel.add(smtpLabel, c.xy(1, 1, CellConstraints.CENTER,
+				CellConstraints.DEFAULT));
 
 		topPanel.add(getAccountController().getView(), c.xy(3, 1));
 		topPanel.add(priorityLabel, c.xy(5, 1));
@@ -393,7 +396,8 @@ public class ComposerController extends DefaultFrameController implements
 
 		getHeaderController().getView().layoutComponents(topPanel);
 
-		topPanel.add(subjectLabel, c.xy(1, 9, CellConstraints.CENTER, CellConstraints.DEFAULT));
+		topPanel.add(subjectLabel, c.xy(1, 9, CellConstraints.CENTER,
+				CellConstraints.DEFAULT));
 
 		topPanel.add(getSubjectController().getView(), c.xywh(3, 9, 5, 1));
 
@@ -954,16 +958,17 @@ public class ComposerController extends DefaultFrameController implements
 		try {
 			InputStream is = DiskIO
 					.getResourceStream("org/columba/mail/action/composer_menu.xml");
-
 			getContainer().extendMenu(this, is);
+
+			File configDirectory = MailConfig.getInstance()
+					.getConfigDirectory();
+			InputStream is2 = new FileInputStream(new File(configDirectory,
+					"composer_toolbar.xml"));
+			getContainer().extendToolbar(this, is2);
+
 		} catch (IOException e) {
 			LOG.severe(e.getMessage());
 		}
-
-		getContainer().extendToolbar(
-				this,
-				MailConfig.getInstance().get("composer_toolbar").getElement(
-						"toolbar"));
 
 		// @author: fdietz
 		// disabled identity infopanel because it contains

@@ -18,6 +18,8 @@
 package org.columba.chat.frame;
 
 import java.awt.BorderLayout;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.swing.JComponent;
@@ -36,6 +38,7 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
+import org.columba.mail.config.MailConfig;
 
 /**
  * @author fdietz
@@ -89,12 +92,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 
 		InputStream is2 = this.getClass().getResourceAsStream(
 				"/org/columba/chat/action/toolbar.xml");
-		XmlIO xmlFile = new XmlIO();
-		xmlFile.load(is2);
-
-		XmlElement toolbar = xmlFile.getRoot().getElement("/toolbar");
-
-		getContainer().extendToolbar(this, toolbar);
+		getContainer().extendToolbar(this, is2);
 
 		return splitPane;
 	}

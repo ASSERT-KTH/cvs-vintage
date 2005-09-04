@@ -27,8 +27,7 @@ import javax.swing.JMenuBar;
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.toolbar.ColumbaToolBar;
-import org.columba.core.xml.XmlElement;
+import org.columba.core.gui.toolbar.ExtendableToolBar;
 
 /**
  * A container is actually a JFrame, which encapsulates a component called
@@ -124,12 +123,12 @@ public interface IContainer {
 	 * @param toolbar
 	 *            new toolbar
 	 */
-	void setToolBar(ColumbaToolBar toolbar);
+	void setToolBar(ExtendableToolBar toolbar);
 
 	/**
 	 * @return
 	 */
-	ColumbaToolBar getToolBar();
+	ExtendableToolBar getToolBar();
 
 	/**
 	 * Check if infopanel is visible.
@@ -231,10 +230,10 @@ public interface IContainer {
 	 * 
 	 * @param mediator
 	 *            current framemediator
-	 * @param element
+	 * @param is
 	 *            xml element
 	 */
-	void extendToolbar(IFrameMediator mediator, XmlElement element);
+	void extendToolbar(IFrameMediator mediator, InputStream is);
 
 	/**
 	 * Sets the window name which is displayed in the title.

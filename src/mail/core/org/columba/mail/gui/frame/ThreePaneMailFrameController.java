@@ -23,6 +23,8 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -316,28 +318,19 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						.getIntegerWithDefault("splitpanes", "header", 100));
 		}
 
-		// TODO implement
-		// try {
-		// ((MenuPluginHandler) PluginManager.getInstance().getHandler(
-		// MenuPluginHandler.NAME)).insertPlugins(getContainer()
-		// .getMenu());
-		// } catch (PluginHandlerNotFoundException ex) {
-		// throw new RuntimeException(ex);
-		// }
-
 		try {
 			InputStream is = DiskIO
 					.getResourceStream("org/columba/mail/action/menu.xml");
-
 			getContainer().extendMenu(this, is);
+
+			File configDirectory = MailConfig.getInstance()
+					.getConfigDirectory();
+			InputStream is2 = new FileInputStream(new File(configDirectory, "main_toolbar.xml"));
+			getContainer().extendToolbar(this, is2);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		getContainer().extendToolbar(
-				this,
-				MailConfig.getInstance().get("main_toolbar").getElement(
-						"toolbar"));
 
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();

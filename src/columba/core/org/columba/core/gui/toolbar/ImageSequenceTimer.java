@@ -16,12 +16,12 @@
 
 package org.columba.core.gui.toolbar;
 
-import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.Timer;
 
 import org.columba.core.command.TaskManager;
@@ -34,135 +34,136 @@ import org.columba.core.resourceloader.ImageLoader;
  * <p>
  * Can be found in the toolbar in the right topmost corner of Columba.
  * <p>
- * ImageSequenceTimer actually only listens for {@link TaskManagerEvent}
- * and starts/stops as appropriate.
- *
+ * ImageSequenceTimer actually only listens for {@link TaskManagerEvent} and
+ * starts/stops as appropriate.
+ * 
  * @author fdietz
  */
-public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
-    TaskManagerListener {
-    
-    private static int DELAY = 100;
-    private TaskManager taskManager;
-    private Timer timer;
-    private ImageIcon[] images;
-    private ImageIcon restImage;
-    private int frameNumber;
-    private int frameCount;
-    private Dimension scale;
-    private int imageWidth;
-    private int imageHeight;
+public class ImageSequenceTimer extends JButton implements ActionListener,
+		TaskManagerListener {
 
-    public ImageSequenceTimer(TaskManager taskManager) {
-        super();
+	private static int DELAY = 100;
 
-        timer = new Timer(DELAY, this);
-        timer.setInitialDelay(0);
-        timer.setCoalesce(true);
-        setMargin(new Insets(0, 0, 0, 0));
-        setRolloverEnabled(true);
-        setBorder(null);
-        setContentAreaFilled(false);
+	private TaskManager taskManager;
 
-        setRequestFocusEnabled(false);
-   
-        initDefault();
-        
-        // register interested on changes in the running worker list
-        this.taskManager = taskManager;
-        taskManager.addTaskManagerListener(this);
-    }
+	private Timer timer;
 
-    /**
-     * Its an element of the toolbar, and therefor can't
-     * have the focus.
-     */
-    public boolean isFocusTraversable() {
-        return isRequestFocusEnabled();
-    }
+	private ImageIcon[] images;
 
-    /**
-     * Initialize the image array, using single frame images.
-     *
-     */
-    protected void initDefault() {
-        frameCount = 60;
-        frameNumber = 1;
+	private ImageIcon restImage;
 
-        imageWidth = 36;
-        imageHeight = 36;
+	private int frameNumber;
 
-        images = new ImageIcon[frameCount];
+	private int frameCount;
 
-        for (int i = 0; i < frameCount; i++) {
-            StringBuffer buf = new StringBuffer();
+	public ImageSequenceTimer() {
+		super();
 
-            if (i < 10) {
-                buf.append("00");
-            }
+		taskManager = TaskManager.getInstance();
 
-            if ((i >= 10) && (i < 100)) {
-                buf.append("0");
-            }
+		timer = new Timer(DELAY, this);
+		timer.setInitialDelay(0);
+		timer.setCoalesce(true);
+		setMargin(new Insets(0, 0, 0, 0));
+		setRolloverEnabled(true);
+		setBorder(null);
+		setContentAreaFilled(false);
 
-            buf.append(Integer.toString(i));
+		setRequestFocusEnabled(false);
 
-            buf.append(".png");
+		initDefault();
 
-            images[i] = ImageLoader.getImageIcon(buf.toString());
-        }
+		// register interested on changes in the running worker list
+		this.taskManager = taskManager;
+		taskManager.addTaskManagerListener(this);
+	}
 
-        restImage = ImageLoader.getImageIcon("rest.png");
+	/**
+	 * Its an element of the toolbar, and therefor can't have the focus.
+	 */
+	public boolean isFocusTraversable() {
+		return isRequestFocusEnabled();
+	}
 
-        setIcon(restImage);
-    }
+	/**
+	 * Initialize the image array, using single frame images.
+	 * 
+	 */
+	protected void initDefault() {
+		frameCount = 60;
+		frameNumber = 1;
 
-    public void start() {
-        if (!timer.isRunning()) {
-            timer.start();
-        }
-    }
+		images = new ImageIcon[frameCount];
 
-    public void stop() {
-        if (timer.isRunning()) {
-            timer.stop();
-        }
+		for (int i = 0; i < frameCount; i++) {
+			StringBuffer buf = new StringBuffer();
 
-        frameNumber = 0;
+			if (i < 10) {
+				buf.append("00");
+			}
 
-        setIcon(restImage);
-    }
+			if ((i >= 10) && (i < 100)) {
+				buf.append("0");
+			}
 
-    /**
-     * Listen for timer actionevents and update the image
-     */
-    public void actionPerformed(ActionEvent ev) {
-        String action = ev.getActionCommand();
+			buf.append(Integer.toString(i));
 
-        frameNumber++;
+			buf.append(".png");
 
-        if (timer.isRunning()) {
-            setIcon(new ImageIcon(images[frameNumber % frameCount].getImage()));
-        } else {
-            setIcon(restImage);
-        }
-    }
+			images[i] = ImageLoader.getImageIcon(buf.toString());
+		}
 
-    public void workerAdded(TaskManagerEvent e) {
-        updateTimer();
-    }
-    
-    public void workerRemoved(TaskManagerEvent e) {
-        updateTimer();
-    }
-    
-    protected void updateTimer() {
-        // just the animation, if there are more than zero
-        // workers running
-        if (taskManager.count() > 0) {
-            start();
-        } else {
-            stop();
-        }
-    }
+		restImage = ImageLoader.getImageIcon("rest.png");
+
+		setIcon(restImage);
+	}
+
+	public void start() {
+		if (!timer.isRunning()) {
+			timer.start();
+		}
+	}
+
+	public void stop() {
+		if (timer.isRunning()) {
+			timer.stop();
+		}
+
+		frameNumber = 0;
+
+		setIcon(restImage);
+	}
+
+	/**
+	 * Listen for timer actionevents and update the image
+	 */
+	public void actionPerformed(ActionEvent ev) {
+		String action = ev.getActionCommand();
+
+		frameNumber++;
+
+		if (timer.isRunning()) {
+			setIcon(new ImageIcon(images[frameNumber % frameCount].getImage()));
+		} else {
+			setIcon(restImage);
+		}
+	}
+
+	public void workerAdded(TaskManagerEvent e) {
+		updateTimer();
+	}
+
+	public void workerRemoved(TaskManagerEvent e) {
+		updateTimer();
+	}
+
+	protected void updateTimer() {
+		// just the animation, if there are more than zero
+		// workers running
+		if (taskManager.count() > 0) {
+			start();
+		} else {
+			stop();
+		}
+	}
 }

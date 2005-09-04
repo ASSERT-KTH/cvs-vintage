@@ -19,6 +19,8 @@
 package org.columba.mail.gui.messageframe;
 
 import java.awt.BorderLayout;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -66,7 +68,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	FixedTableSelectionHandler tableSelectionHandler;
 
 	private ThreePaneMailFrameController parentController;
-	
+
 	/**
 	 * @param viewItem
 	 */
@@ -121,20 +123,16 @@ public class MessageFrameController extends AbstractMailFrameController
 		// TODO: re-enable feature, the following code violates our
 		// design, accessing folders is only allowed in Command.execute()
 		/*
-		try {
-
-			// Get the subject from the cached Header
-			AbstractMessageFolder folder = (AbstractMessageFolder) references
-					.getSourceFolder();
-			IColumbaHeader header = folder.getHeaderList().get(
-					references.getUids()[0]);
-			String subject = (String) header.get("columba.subject");
-
-			getContainer().getFrame().setTitle(subject);
-		} catch (Exception e) {
-			LOG.warning(e.toString());
-		}
-		*/
+		 * try {
+		 *  // Get the subject from the cached Header AbstractMessageFolder
+		 * folder = (AbstractMessageFolder) references .getSourceFolder();
+		 * IColumbaHeader header = folder.getHeaderList().get(
+		 * references.getUids()[0]); String subject = (String)
+		 * header.get("columba.subject");
+		 * 
+		 * getContainer().getFrame().setTitle(subject); } catch (Exception e) {
+		 * LOG.warning(e.toString()); }
+		 */
 
 		tableSelectionHandler.setSelection(tableReference);
 	}
@@ -162,23 +160,20 @@ public class MessageFrameController extends AbstractMailFrameController
 		ViewItem viewItem = getViewItem();
 
 		try {
-			InputStream is = DiskIO.getResourceStream("org/columba/mail/action/messageframe_menu.xml");
-			
-			getContainer().extendMenu(this,
-					is);
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/mail/action/messageframe_menu.xml");
+
+			getContainer().extendMenu(this, is);
+
+			File configDirectory = MailConfig.getInstance()
+					.getConfigDirectory();
+			InputStream is2 = new FileInputStream(new File(configDirectory,
+					"messageframe_toolbar.xml"));
+			getContainer().extendToolbar(this, is2);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		getContainer().extendToolbar(
-				this,
-				MailConfig.getInstance().get("messageframe_toolbar")
-						.getElement("toolbar"));
-
-		/*
-		 * if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {
-		 * addToolBar(folderInfoPanel); }
-		 */
 
 		return panel;
 	}

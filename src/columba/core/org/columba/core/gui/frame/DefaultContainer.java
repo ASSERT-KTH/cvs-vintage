@@ -51,13 +51,13 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.menu.ExtendableMenuBar;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.toolbar.ColumbaToolBar;
+import org.columba.core.gui.toolbar.ExtendableToolBar;
+import org.columba.core.gui.toolbar.ToolBarXMLDecoder;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author fdietz
@@ -95,7 +95,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	protected ExtendableMenuBar menubar;
 
-	protected ColumbaToolBar toolbar;
+	protected ExtendableToolBar toolbar;
 
 	/**
 	 * in order to support multiple toolbars we use a panel as parent container
@@ -206,7 +206,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		}
 
 		// create toolbar
-		toolbar = new ColumbaToolBar(TaskManager.getInstance(), mediator);
+		toolbar = new ExtendableToolBar();
 		setToolBar(toolbar);
 
 		setInfoPanel(new ContainerInfoPanel());
@@ -284,8 +284,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 			LOG.severe(e.getMessage());
 		}
 		// default toolbar
-		toolbar = new ColumbaToolBar(TaskManager.getInstance(), mediator);
+		toolbar = new ExtendableToolBar();
 		setToolBar(toolbar);
+		
 		// default infopanel
 		setInfoPanel(new ContainerInfoPanel());
 
@@ -472,7 +473,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	/**
 	 * @see org.columba.api.gui.frame.View#getToolBar()
 	 */
-	public ColumbaToolBar getToolBar() {
+	public ExtendableToolBar getToolBar() {
 
 		return toolbar;
 	}
@@ -564,10 +565,10 @@ public class DefaultContainer extends JFrame implements IContainer,
 	/**
 	 * @see org.columba.api.gui.frame.View#extendToolbar(org.columba.core.xml.XmlElement)
 	 */
-	public void extendToolbar(IFrameMediator mediator, XmlElement element) {
+	public void extendToolbar(IFrameMediator mediator, InputStream is) {
 
-		getToolBar().extendToolbar(element, mediator);
-
+		new ToolBarXMLDecoder(mediator).extendToolBar(getToolBar(), is);
+		
 	}
 
 	/**
@@ -643,7 +644,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	/**
 	 * @see org.columba.api.gui.frame.IContainer#setToolBar(org.columba.core.gui.toolbar.ToolBar)
 	 */
-	public void setToolBar(ColumbaToolBar toolbar) {
+	public void setToolBar(ExtendableToolBar toolbar) {
 		this.toolbar = toolbar;
 
 		toolbarPane.removeAll();
