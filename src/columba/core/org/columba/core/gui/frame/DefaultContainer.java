@@ -121,7 +121,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	public DefaultContainer(DefaultFrameController mediator) {
 		super();
-
+		
+		if ( mediator == null ) throw new IllegalArgumentException("mediator == null");
+		
 		this.viewItem = mediator.getViewItem();
 		this.mediator = mediator;
 

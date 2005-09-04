@@ -229,7 +229,11 @@ public class ExtensionXMLParser {
 
 			String extensionpointId = extensionListXmlElement
 					.getAttribute(XML_ATTRIBUTE_ID);
-
+			if ( extensionpointId == null) {
+				LOG.severe("missing extension point id attribute");
+				continue;
+			}
+			
 			Vector vector = new Vector();
 
 			for (int k = 0; k < extensionListXmlElement.count(); k++) {

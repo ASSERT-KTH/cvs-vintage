@@ -123,8 +123,10 @@ public class Extension implements IExtension {
 					if (className.endsWith(".groovy")) {
 						// use Groovy classloader, wrapped in external URL
 						// classloader
-						// TODO: still needs to be wrapped in external URL classloader,
-						// nevertheless, it seems to work this way - but don't know why?!
+						// TODO: still needs to be wrapped in external URL
+						// classloader,
+						// nevertheless, it seems to work this way - but don't
+						// know why?!
 						plugin = instanciateGroovyClass(arguments,
 								pluginDirectory, className);
 					} else {
@@ -134,15 +136,16 @@ public class Extension implements IExtension {
 					}
 
 				}
+
+				// remember instance
+				if (metadata.isSingleton())
+					cachedInstance = plugin;
+
 			} catch (Exception e) {
 				handleException(e);
 			} catch (Error e) {
 				handleException(e);
 			}
-
-			// remember instance
-			if (metadata.isSingleton())
-				cachedInstance = plugin;
 
 		}
 		return plugin;
