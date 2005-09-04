@@ -25,9 +25,10 @@ import javax.swing.JPanel;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IContentPane;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.selection.ISelectionManager;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.selection.SelectionManager;
 
 /**
  * @author fdietz
@@ -47,7 +48,7 @@ public class DefaultFrameController implements IFrameMediator {
 	/**
 	 * Selection handler
 	 */
-	protected SelectionManager selectionManager;
+	protected ISelectionManager selectionManager;
 
 	/**
 	 * ID of controller
@@ -97,7 +98,7 @@ public class DefaultFrameController implements IFrameMediator {
 	/**
 	 * @return SelectionManager
 	 */
-	public SelectionManager getSelectionManager() {
+	public ISelectionManager getSelectionManager() {
 		return selectionManager;
 	}
 
@@ -107,7 +108,7 @@ public class DefaultFrameController implements IFrameMediator {
 	 * @param selectionManager
 	 *            The selectionManager to set
 	 */
-	public void setSelectionManager(SelectionManager selectionManager) {
+	public void setSelectionManager(ISelectionManager selectionManager) {
 		this.selectionManager = selectionManager;
 	}
 

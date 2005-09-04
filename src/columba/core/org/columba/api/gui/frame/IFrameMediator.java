@@ -18,8 +18,8 @@
 package org.columba.api.gui.frame;
 
 import org.columba.api.plugin.IExtensionInterface;
+import org.columba.api.selection.ISelectionManager;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.selection.SelectionManager;
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -45,7 +45,7 @@ import org.columba.core.gui.selection.SelectionManager;
  */
 public interface IFrameMediator extends IExtensionInterface{
 
-	public SelectionManager getSelectionManager();
+	public ISelectionManager getSelectionManager();
 
 	public IContainer getContainer();
 

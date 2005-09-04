@@ -23,7 +23,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
 import org.columba.api.command.ICommandReference;
-import org.columba.core.gui.selection.SelectionHandler;
+import org.columba.core.selection.SelectionHandler;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.TreeView;

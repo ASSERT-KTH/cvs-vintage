@@ -7,7 +7,7 @@
 package org.columba.mail.gui.messageframe;
 
 import org.columba.api.command.ICommandReference;
-import org.columba.core.gui.selection.SelectionHandler;
+import org.columba.core.selection.SelectionHandler;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;

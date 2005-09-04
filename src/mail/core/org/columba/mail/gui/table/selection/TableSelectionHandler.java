@@ -24,9 +24,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 
 import org.columba.api.command.ICommandReference;
-import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionHandler;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
+import org.columba.core.selection.SelectionHandler;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.table.TableController;

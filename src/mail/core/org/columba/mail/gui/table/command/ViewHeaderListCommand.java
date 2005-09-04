@@ -18,11 +18,11 @@ package org.columba.mail.gui.table.command;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
@@ -113,7 +113,7 @@ public class ViewHeaderListCommand extends Command implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 * @see org.columba.api.selection.ISelectionListener#selectionChanged(org.columba.api.selection.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 

@@ -28,11 +28,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.menu.IMenu;
-import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.IMailFolder;

@@ -312,7 +312,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 				// 3 columns
 				"");
-
+		
+		
 		// create a form builder
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
@@ -357,6 +358,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		builder.append(textFontButton, 3);
 		builder.nextLine();
 
+		
+		
 		contentPane.add(builder.getPanel(), BorderLayout.CENTER);
 
 		// init bottom panel with OK, Cancel buttons

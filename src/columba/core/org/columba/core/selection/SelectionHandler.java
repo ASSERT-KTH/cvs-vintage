@@ -13,12 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.selection;
+package org.columba.core.selection;
 
 import java.util.List;
 import java.util.Vector;
 
 import org.columba.api.command.ICommandReference;
+import org.columba.api.selection.ISelectionHandler;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
 
 /**
  * Handles the selection of a component identified with an id.
@@ -30,7 +33,7 @@ import org.columba.api.command.ICommandReference;
  * 
  * @author fdietz, tstich
  */
-public abstract class SelectionHandler {
+public abstract class SelectionHandler implements ISelectionHandler {
 	/**
 	 * id of component for later identification
 	 */
@@ -87,17 +90,12 @@ public abstract class SelectionHandler {
 	}
 
 	/**
-	 * Get current selection.
-	 * 
-	 * @return current selection
+	 * @see org.columba.api.selection.ISelectionHandler#getSelection()
 	 */
 	public abstract ICommandReference getSelection();
 
 	/**
-	 * Set new selection.
-	 * 
-	 * @param selection
-	 *            new selection
+	 * @see org.columba.api.selection.ISelectionHandler#setSelection(org.columba.api.command.ICommandReference)
 	 */
 	public abstract void setSelection(ICommandReference selection);
 

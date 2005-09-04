@@ -19,10 +19,10 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageSourceAsCommand;

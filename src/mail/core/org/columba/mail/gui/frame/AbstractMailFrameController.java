@@ -21,12 +21,12 @@ import java.nio.charset.Charset;
 
 import javax.swing.event.EventListenerList;
 
+import org.columba.api.selection.ISelectionListener;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.DefaultFrameController;
-import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
@@ -120,7 +120,7 @@ public class AbstractMailFrameController extends DefaultFrameController
 	}
 
 	/**
-	 * @see org.columba.mail.gui.frame.MailFrameMediator#removeTableSelectionListener(org.columba.core.gui.selection.ISelectionListener)
+	 * @see org.columba.mail.gui.frame.MailFrameMediator#removeTableSelectionListener(org.columba.api.selection.ISelectionListener)
 	 */
 	public void removeTableSelectionListener(ISelectionListener l) {
 		getSelectionManager().removeSelectionListener(
@@ -128,7 +128,7 @@ public class AbstractMailFrameController extends DefaultFrameController
 	}
 
 	/**
-	 * @see org.columba.mail.gui.frame.MailFrameMediator#removeTreeSelectionListener(org.columba.core.gui.selection.ISelectionListener)
+	 * @see org.columba.mail.gui.frame.MailFrameMediator#removeTreeSelectionListener(org.columba.api.selection.ISelectionListener)
 	 */
 	public void removeTreeSelectionListener(ISelectionListener l) {
 		getSelectionManager().removeSelectionListener(

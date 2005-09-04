@@ -16,7 +16,7 @@
 package org.columba.mail.gui.frame;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.api.selection.ISelectionListener;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folderoptions.IFolderOptionsController;
 

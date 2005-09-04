@@ -15,32 +15,32 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.selection;
+package org.columba.api.selection;
 
-import org.columba.api.selection.SelectionChangedEvent;
-import org.columba.mail.folder.IMailFolder;
+import org.columba.api.command.ICommandReference;
 
-public class TableSelectionChangedEvent extends SelectionChangedEvent {
-	private IMailFolder folder;
-
-	private Object[] uids;
-
-	public TableSelectionChangedEvent(IMailFolder folder, Object[] uids) {
-		this.folder = folder;
-		this.uids = uids;
-	}
+public interface ISelectionHandler {
 
 	/**
-	 * @return Folder
+	 * Get id of component.
+	 * 
+	 * @return String id of component
 	 */
-	public IMailFolder getFolder() {
-		return folder;
-	}
+	public abstract String getId();
+	
+	/**
+	 * Get current selection.
+	 * 
+	 * @return current selection
+	 */
+	public abstract ICommandReference getSelection();
 
 	/**
-	 * @return Object[]
+	 * Set new selection.
+	 * 
+	 * @param selection
+	 *            new selection
 	 */
-	public Object[] getUids() {
-		return uids;
-	}
+	public abstract void setSelection(ICommandReference selection);
+
 }

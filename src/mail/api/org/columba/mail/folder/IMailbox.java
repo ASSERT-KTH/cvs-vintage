@@ -77,7 +77,7 @@ public interface IMailbox extends IMailFolder {
 	/**
 	 * Mark messages as read/flagged/expunged/etc.
 	 * 
-	 * See {@link MarkMessageCommand} for more information especially concerning
+	 * See <code>MarkMessageCommand</code> for more information especially concerning
 	 * the variant value.
 	 * 
 	 * @param uid
@@ -290,10 +290,10 @@ public interface IMailbox extends IMailFolder {
 	void setLastSelection(Object lastSel);
 
 	FilterList getFilterList();
-	
+
 	public File getDirectoryFile();
-	
+
 	public boolean isInboxFolder();
-	
+
 	public boolean isTrashFolder();
 }

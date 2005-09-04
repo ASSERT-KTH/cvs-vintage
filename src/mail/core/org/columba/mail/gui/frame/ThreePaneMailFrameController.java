@@ -39,10 +39,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 import org.columba.api.gui.frame.IContentPane;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.base.UIFSplitPane;
-import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -405,7 +405,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 * @see org.columba.api.selection.ISelectionListener#selectionChanged(org.columba.api.selection.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 

@@ -33,13 +33,13 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.folder.IFolder;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.ComboMenu;
-import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.CTextField;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;

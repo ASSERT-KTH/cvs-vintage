@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.selection;
 
-import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.mail.folder.IMailFolder;
 
 public class TreeSelectionChangedEvent extends SelectionChangedEvent {

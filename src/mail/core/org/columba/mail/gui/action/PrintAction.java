@@ -22,11 +22,11 @@ import java.nio.charset.Charset;
 import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;

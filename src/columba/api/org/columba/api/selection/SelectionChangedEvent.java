@@ -13,19 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.selection;
+package org.columba.api.selection;
 
 
 /**
- * General listener for events.
+ * Selection changed events implementations should add
+ * their selection component specific attributes here.
+ * <p>
+ * For example: TreePath for a JTree
  *
  * @author fdietz, tstich
  */
-public interface ISelectionListener {
-    /**
- * Called when the selection has changed.
- *
- * @param e        changed event
- */
-    public void selectionChanged(SelectionChangedEvent e);
+public class SelectionChangedEvent {
 }

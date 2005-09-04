@@ -13,11 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.selection;
+package org.columba.core.selection;
 
 import java.util.Hashtable;
 
 import org.columba.api.command.ICommandReference;
+import org.columba.api.selection.ISelectionHandler;
+import org.columba.api.selection.ISelectionListener;
+import org.columba.api.selection.ISelectionManager;
 
 /**
  * Manages selection handling of a complete frame which can have many different
@@ -32,12 +35,12 @@ import org.columba.api.command.ICommandReference;
  * SelectionHandler has an id <code>String</code> as attribute. This makes it
  * easy to indentify the SelectionHandler.
  * 
- * @see org.columba.core.gui.selection.SelectionHandler
+ * @see org.columba.core.selection.SelectionHandler
  * @see org.columba.api.gui.frame.IFrameMediator
  * 
  * @author fdietz, tstich
  */
-public class SelectionManager {
+public class SelectionManager implements ISelectionManager {
 	/**
 	 * Map for storing all selection handlers
 	 *  
@@ -57,17 +60,12 @@ public class SelectionManager {
 	 * 
 	 * @param handler
 	 */
-	public void addSelectionHandler(SelectionHandler handler) {
+	public void addSelectionHandler(ISelectionHandler handler) {
 		selectionHandler.put(handler.getId(), handler);
 	}
 
 	/**
-	 * Register selection listener at selecton handler with id.
-	 * 
-	 * @param id
-	 *            ID of selection handler
-	 * @param l
-	 *            listener interested in selection changes
+	 * @see org.columba.api.selection.ISelectionManager#registerSelectionListener(java.lang.String, org.columba.api.selection.ISelectionListener)
 	 */
 	public void registerSelectionListener(String id, ISelectionListener l) {
 		SelectionHandler h = ((SelectionHandler) selectionHandler.get(id));
@@ -76,10 +74,7 @@ public class SelectionManager {
 	}
 	
 	/**
-	 * Remove selection listener.
-	 * 
-	 * @param id	id of selection handler
-	 * @param l		listener
+	 * @see org.columba.api.selection.ISelectionManager#removeSelectionListener(java.lang.String, org.columba.api.selection.ISelectionListener)
 	 */
 	public void removeSelectionListener(String id, ISelectionListener l) {
 		SelectionHandler h = ((SelectionHandler) selectionHandler.get(id));
@@ -89,36 +84,23 @@ public class SelectionManager {
 	
 
 	/**
-	 * Set current selection.
-	 * 
-	 * @param id
-	 *            ID of selection handler
-	 * @param selection
-	 *            new selection for this handler
+	 * @see org.columba.api.selection.ISelectionManager#setSelection(java.lang.String, org.columba.api.command.ICommandReference)
 	 */
 	public void setSelection(String id, ICommandReference selection) {
-		((SelectionHandler) selectionHandler.get(id)).setSelection(selection);
+		((ISelectionHandler) selectionHandler.get(id)).setSelection(selection);
 	}
 
 	/**
-	 * Get current selection of specific selection handler.
-	 * 
-	 * @param id
-	 *            ID of selection handler
-	 * @return reference of current selection of this handler
+	 * @see org.columba.api.selection.ISelectionManager#getSelection(java.lang.String)
 	 */
 	public ICommandReference getSelection(String id) {
-		return ((SelectionHandler) selectionHandler.get(id)).getSelection();
+		return ((ISelectionHandler) selectionHandler.get(id)).getSelection();
 	}
 
 	/**
-	 * Get selection handler.
-	 * 
-	 * @param id
-	 *            ID of selection handler
-	 * @return SelectionHandler
+	 * @see org.columba.api.selection.ISelectionManager#getHandler(java.lang.String)
 	 */
-	public SelectionHandler getHandler(String id) {
-		return (SelectionHandler) selectionHandler.get(id);
+	public ISelectionHandler getHandler(String id) {
+		return (ISelectionHandler) selectionHandler.get(id);
 	}
 }
