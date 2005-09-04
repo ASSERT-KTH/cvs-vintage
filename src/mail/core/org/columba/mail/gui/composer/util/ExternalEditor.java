@@ -22,8 +22,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.util.FontProperties;
@@ -42,17 +44,10 @@ public class ExternalEditor {
 	public ExternalEditor(String EditorCommand) {
 	}
 
-	// END public ExternalEditor(String EditorCommand)
-	public boolean startExternalEditor(AbstractEditorController EditCtrl) throws IOException {
-		/*
-		 * *20030906, karlpeder* Method signature changed to take an
-		 * AbstractEditorController (instead of an TextEditorView) as parameter
-		 * since the view is no longer directly available
-		 */
+	private File writeToFile(final AbstractEditorController editController) {
 		MimeHeader myHeader = new MimeHeader("text", "plain");
-		File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
+		File tmpFile = TempFileStore.createTempFileWithSuffix("txt");
 		FileWriter FO;
-		FileReader FI;
 
 		try {
 			FO = new FileWriter(tmpFile);
@@ -60,87 +55,89 @@ public class ExternalEditor {
 			JOptionPane.showMessageDialog(null,
 					"Error: Cannot write to temp file needed "
 							+ "for external editor.");
-
-			return false;
+			return null;
 		}
 
 		try {
-			//String M = EditView.getText();
-			String M = EditCtrl.getViewText();
 
-			if (M != null) {
+			String M = editController.getViewText();
+			if (M != null)
 				FO.write(M);
-			}
 
 			FO.close();
 		} catch (java.io.IOException ex) {
 			JOptionPane.showMessageDialog(null,
 					"Error: Cannot write to temp file needed "
 							+ "for external editor:\n" + ex.getMessage());
-
-			return false;
+			return null;
 		}
 
-		//Font OldFont = EditView.getFont();
-		Font OldFont = EditCtrl.getViewFont();
+		return tmpFile;
 
-		/*
-		 * // Why doesn't this work??? EditView.setFont( new
-		 * Font(Config.getOptionsConfig().getThemeItem().getTextFontName(),
-		 * Font.BOLD, 30));
-		 */
-		Font font = FontProperties.getTextFont();
-		font = font.deriveFont(30);
+	}
 
-		//EditView.setFont(font);
-		EditCtrl.setViewFont(font);
-
-		//EditView.setText(
-		EditCtrl.setViewText(MailResourceLoader.getString("menu", "composer",
-				"extern_editor_using_msg"));
-
-		// execute application, enabling blocking
-		ColumbaDesktop.getInstance().openAndWait(tmpFile);
-		
-		//EditView.setFont(OldFont);
-		EditCtrl.setViewFont(OldFont);
-
+	private String readFromFile(File tmpFile) {
+		FileReader FI;
 		try {
 			FI = new FileReader(tmpFile);
 		} catch (java.io.FileNotFoundException ex) {
 			JOptionPane.showMessageDialog(null,
 					"Error: Cannot read from temp file used "
 							+ "by external editor.");
-
-			return false;
+			return "";
 		}
 
-		//      int i = FI.available();
 		char[] buf = new char[1000];
 		int i;
 		String message = "";
 
 		try {
-			while ((i = FI.read(buf)) >= 0) {
-				//System.out.println( "*>"+String.copyValueOf(buf)+"<*");
+			while ((i = FI.read(buf)) >= 0)
 				message += new String(buf, 0, i);
-
-				//System.out.println( "-->"+Message+"<--");
-			}
 
 			FI.close();
 		} catch (java.io.IOException ex) {
 			JOptionPane.showMessageDialog(null,
 					"Error: Cannot read from temp file used "
 							+ "by external editor.");
-
-			return false;
+			return "";
 		}
 
-		//System.out.println( "++>"+Message+"<++");
-		//System.out.println( Message.length());
-		//EditView.setText(message);
-		EditCtrl.setViewText(message);
+		return message;
+	} // END public ExternalEditor(String EditorCommand)
+
+	public boolean startExternalEditor(
+			final AbstractEditorController editController) throws IOException {
+		/*
+		 * *20030906, karlpeder* Method signature changed to take an
+		 * AbstractEditorController (instead of an TextEditorView) as parameter
+		 * since the view is no longer directly available
+		 */
+
+		// write text to file
+		File tmpFile = writeToFile(editController);
+
+		// remember old font properties
+		final Font OldFont = editController.getViewFont();
+
+		// create big size font to display in the composer textfield
+		Font font = FontProperties.getTextFont();
+		font = font.deriveFont(30);
+		editController.setViewFont(font);
+		editController.setViewText(MailResourceLoader.getString("menu",
+				"composer", "extern_editor_using_msg"));
+
+		// execute application, enabling blocking
+		ColumbaDesktop.getInstance().openAndWait(tmpFile);
+
+		// rafter the user saved the file and closed the
+		// external text editor, we read the new text from the file
+		final String message = readFromFile(tmpFile);
+
+		// set old font properties
+		editController.setViewFont(OldFont);
+		// set new text
+		editController.setViewText(message);
 
 		return true;
 	}

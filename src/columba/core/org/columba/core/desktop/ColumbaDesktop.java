@@ -60,7 +60,7 @@ public class ColumbaDesktop implements IDesktop {
 	}
 
 	public boolean openAndWait(File file) {
-		return activeDesktop.open(file);
+		return activeDesktop.openAndWait(file);
 	}
 
 	public boolean supportsBrowse() {

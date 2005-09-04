@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -31,6 +32,10 @@ import org.jdesktop.jdic.filetypes.Association;
 import org.jdesktop.jdic.filetypes.AssociationService;
 
 public class JDICDesktop implements IDesktop {
+	
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.desktop");
 
 	private AssociationService associationService;
 
@@ -93,6 +98,8 @@ public class JDICDesktop implements IDesktop {
 		if( command.indexOf(file.getPath()) == -1) {
 			command = command + " " + file.getPath();
 		}
+		
+		LOG.info("executing command: "+command);
 		
 		Process child;
 		try {

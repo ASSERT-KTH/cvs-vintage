@@ -26,65 +26,59 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
- * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Edit message body text in external application.
+ * 
+ * @author fdietz
  */
 public class ExternalEditorAction extends AbstractColumbaAction {
-    public ExternalEditorAction(IFrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "composer",
-                "menu_edit_extern_edit"));
+	public ExternalEditorAction(IFrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "composer",
+				"menu_edit_extern_edit"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "composer",
-                "menu_edit_extern_edit").replaceAll("&", ""));
-        
-        setEnabled(ColumbaDesktop.getInstance().supportsOpen());
-    }
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"composer", "menu_edit_extern_edit").replaceAll("&", ""));
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        final ComposerController composerController = (ComposerController) getFrameMediator();
+		setEnabled(ColumbaDesktop.getInstance().supportsOpen());
+	}
 
-        final SwingWorker worker = new SwingWorker() {
-                public Object construct() {
-                    //composerInterface.composerFrame.setCursor(Cursor.WAIT_CURSOR);
-                    composerController.getView().getFrame().setEnabled(false);
+	/**
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		final ComposerController composerController = (ComposerController) getFrameMediator();
 
-                    //composerController.getEditorController().getView().setEnabled(false);
-                    composerController.getEditorController().setViewEnabled(false);
+		composerController.getView().getFrame().setEnabled(false);
 
-                    ExternalEditor Ed = new ExternalEditor();
+		composerController.getEditorController().setViewEnabled(false);
 
-                    try {
-						//Ed.startExternalEditor(
-						//	composerController.getEditorController().getView());
-						Ed.startExternalEditor(composerController.getEditorController());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+		final SwingWorker worker = new SwingWorker() {
+			public Object construct() {
 
-                    return Ed;
-                }
+				ExternalEditor Ed = new ExternalEditor();
 
-                //Runs on the event-dispatching thread.
-                public void finished() {
-                    composerController.getView().getFrame().setEnabled(true);
+				try {
 
-                    //composerController.getEditorController().getView().setEnabled(true);
-                    composerController.getEditorController().setViewEnabled(true);
+					Ed.startExternalEditor(composerController
+							.getEditorController());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
-                    //composerInterface.composerFrame.setCursor(Cursor.DEFAULT_CURSOR);
-                }
-            };
+				return Ed;
+			}
 
-        worker.start(); //required for SwingWorker 3
-    }
+			// Runs on the event-dispatching thread.
+			public void finished() {
+				composerController.getView().getFrame().setEnabled(true);
+
+				composerController.getEditorController().setViewEnabled(true);
+
+			}
+		};
+
+		worker.start(); // required for SwingWorker 3
+	}
 }
