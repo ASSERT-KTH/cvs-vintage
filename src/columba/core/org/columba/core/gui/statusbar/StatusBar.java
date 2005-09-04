@@ -37,6 +37,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.statusbar.IStatusBar;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
@@ -74,7 +76,7 @@ import org.columba.core.resourceloader.ImageLoader;
  * statusbar after a delay of 2000 ms.
  */
 public class StatusBar extends JComponent implements TaskManagerListener,
-		ActionListener, ChangeListener {
+		ActionListener, ChangeListener, IStatusBar {
 
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.gui.statusbar");
@@ -268,10 +270,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	}
 
 	/**
-	 * Display status message. Used when moving the mouse in the menuitem. Its
-	 * used for displaying menuitem tooltip messages.
-	 * 
-	 * @param message
+	 * @see org.columba.api.statusbar.IStatusBar#displayTooltipMessage(java.lang.String)
 	 */
 	public void displayTooltipMessage(String message) {
 		label.setText(message);
@@ -403,7 +402,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	/**
 	 * Returns the worker currently displayed.
 	 */
-	public Worker getDisplayedWorker() {
+	public IWorkerStatusController getDisplayedWorker() {
 		return displayedWorker;
 	}
 

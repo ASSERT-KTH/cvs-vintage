@@ -35,6 +35,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 import javax.swing.text.View;
 
@@ -45,6 +46,7 @@ import org.columba.api.gui.frame.IContentPane;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.statusbar.IStatusBar;
 import org.columba.core.command.TaskManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
@@ -111,7 +113,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	protected JPanel contentPane;
 
-	protected ContainerInfoPanel infoPanel;
+	protected JComponent infoPanel;
 
 	protected boolean switchedFrameMediator = false;
 
@@ -121,9 +123,10 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	public DefaultContainer(DefaultFrameController mediator) {
 		super();
-		
-		if ( mediator == null ) throw new IllegalArgumentException("mediator == null");
-		
+
+		if (mediator == null)
+			throw new IllegalArgumentException("mediator == null");
+
 		this.viewItem = mediator.getViewItem();
 		this.mediator = mediator;
 
@@ -220,7 +223,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 * 
 	 * @return statusbar
 	 */
-	public StatusBar getStatusBar() {
+	public IStatusBar getStatusBar() {
 		return statusBar;
 	}
 
@@ -286,7 +289,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// default toolbar
 		toolbar = new ExtendableToolBar();
 		setToolBar(toolbar);
-		
+
 		// default infopanel
 		setInfoPanel(new ContainerInfoPanel());
 
@@ -473,7 +476,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	/**
 	 * @see org.columba.api.gui.frame.View#getToolBar()
 	 */
-	public ExtendableToolBar getToolBar() {
+	public JToolBar getToolBar() {
 
 		return toolbar;
 	}
@@ -567,8 +570,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 */
 	public void extendToolbar(IFrameMediator mediator, InputStream is) {
 
-		new ToolBarXMLDecoder(mediator).extendToolBar(getToolBar(), is);
-		
+		new ToolBarXMLDecoder(mediator).extendToolBar(
+				(ExtendableToolBar) getToolBar(), is);
+
 	}
 
 	/**
@@ -624,14 +628,14 @@ public class DefaultContainer extends JFrame implements IContainer,
 	/**
 	 * @see org.columba.api.gui.frame.IContainer#getInfoPanel()
 	 */
-	public ContainerInfoPanel getInfoPanel() {
+	public JComponent getInfoPanel() {
 		return infoPanel;
 	}
 
 	/**
 	 * @see org.columba.api.gui.frame.IContainer#setInfoPanel(org.columba.core.gui.frame.ContainerInfoPanel)
 	 */
-	public void setInfoPanel(ContainerInfoPanel panel) {
+	public void setInfoPanel(JComponent panel) {
 		this.infoPanel = panel;
 
 		toolbarPane.removeAll();
@@ -644,8 +648,12 @@ public class DefaultContainer extends JFrame implements IContainer,
 	/**
 	 * @see org.columba.api.gui.frame.IContainer#setToolBar(org.columba.core.gui.toolbar.ToolBar)
 	 */
-	public void setToolBar(ExtendableToolBar toolbar) {
-		this.toolbar = toolbar;
+	public void setToolBar(JToolBar toolbar) {
+		if ( (toolbar instanceof ExtendableToolBar) == false )
+			throw new IllegalArgumentException(
+					"only instance of ExtendableToolBar allowed");
+
+		this.toolbar = (ExtendableToolBar) toolbar;
 
 		toolbarPane.removeAll();
 		toolbarPane.add(toolbar);

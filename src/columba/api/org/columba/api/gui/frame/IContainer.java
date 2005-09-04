@@ -23,11 +23,9 @@ import java.io.InputStream;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JToolBar;
 
-import org.columba.core.gui.frame.ContainerInfoPanel;
-import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.toolbar.ExtendableToolBar;
+import org.columba.api.statusbar.IStatusBar;
 
 /**
  * A container is actually a JFrame, which encapsulates a component called
@@ -87,7 +85,7 @@ public interface IContainer {
 	 * 
 	 * @return current statusbar
 	 */
-	public StatusBar getStatusBar();
+	public IStatusBar getStatusBar();
 
 	/**
 	 * Show/Hide toolbar.
@@ -123,12 +121,12 @@ public interface IContainer {
 	 * @param toolbar
 	 *            new toolbar
 	 */
-	void setToolBar(ExtendableToolBar toolbar);
+	void setToolBar(JToolBar toolbar);
 
 	/**
 	 * @return
 	 */
-	ExtendableToolBar getToolBar();
+	JToolBar getToolBar();
 
 	/**
 	 * Check if infopanel is visible.
@@ -151,7 +149,7 @@ public interface IContainer {
 	 * 
 	 * @return current infopanel
 	 */
-	ContainerInfoPanel getInfoPanel();
+	JComponent getInfoPanel();
 
 	/**
 	 * Set infopanel of this container. This is the darkgray panel right below
@@ -160,7 +158,7 @@ public interface IContainer {
 	 * @param panel
 	 *            new infopanel
 	 */
-	void setInfoPanel(ContainerInfoPanel panel);
+	void setInfoPanel(JComponent panel);
 
 	/**
 	 * Save window properties and close the window. This includes telling the
@@ -206,10 +204,8 @@ public interface IContainer {
 	JMenuBar getJMenuBar();
 
 	/**
-	 * Set the menubar of this container. The {@link DefaultContainer}is based
-	 * on JFrame, so we get this method for free.
+	 * Set the menubar of this container.
 	 * 
-	 * @see DefaultContainer
 	 * @param menuBar
 	 *            new menubar
 	 */

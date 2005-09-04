@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 
-import org.columba.core.gui.statusbar.StatusBar;
+import org.columba.api.statusbar.IStatusBar;
 
 
 /**
@@ -29,12 +29,12 @@ import org.columba.core.gui.statusbar.StatusBar;
  *
  */
 public class TooltipMouseHandler extends MouseAdapter {
-    private StatusBar statusBar;
+    private IStatusBar statusBar;
 
     /**
      * Constructor for MouseHandler.
      */
-    public TooltipMouseHandler(StatusBar statusBar) {
+    public TooltipMouseHandler(IStatusBar statusBar) {
         super();
         this.statusBar = statusBar;
     }

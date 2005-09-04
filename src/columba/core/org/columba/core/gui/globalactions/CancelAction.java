@@ -29,48 +29,48 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
-public class CancelAction extends AbstractColumbaAction
-    implements TaskManagerListener {
-    
-    protected TaskManager taskManager;
-    
-    public CancelAction(IFrameMediator controller) {
-        super(controller,
-            GlobalResourceLoader.getString(null, null, "menu_file_cancel"));
+public class CancelAction extends AbstractColumbaAction implements
+		TaskManagerListener {
 
-        // small icon for JMenuItem
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_stop-16.png"));
+	public CancelAction(IFrameMediator controller) {
+		super(controller, GlobalResourceLoader.getString(null, null,
+				"menu_file_cancel"));
 
-        // big icon for JToolBar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_stop.png"));
+		// small icon for JMenuItem
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_stop-16.png"));
 
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
+		// big icon for JToolBar
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_stop.png"));
 
-        // set JavaHelp topic ID
-        //setTopicID("cancel");
-        
-        taskManager = getFrameMediator().getContainer().getStatusBar().getTaskManager();
-        setEnabled(taskManager.count() > 0);
-        taskManager.addTaskManagerListener(this);
-    }
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        getFrameMediator().getContainer().getStatusBar().getDisplayedWorker().cancel();
-    }
+		// set JavaHelp topic ID
+		// setTopicID("cancel");
 
-    public void workerAdded(TaskManagerEvent e) {
-    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		setEnabled(TaskManager.getInstance().count() > 0);
+		TaskManager.getInstance().addTaskManagerListener(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		getFrameMediator().getContainer().getStatusBar().getDisplayedWorker()
+				.cancel();
+	}
+
+	public void workerAdded(TaskManagerEvent e) {
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				setEnabled(taskManager.count() > 0);
+				setEnabled(TaskManager.getInstance().count() > 0);
 			}
 		});
-        
-    }
-    
-    public void workerRemoved(TaskManagerEvent e) {
-        setEnabled(taskManager.count() > 0);
-    }
+
+	}
+
+	public void workerRemoved(TaskManagerEvent e) {
+		setEnabled(TaskManager.getInstance().count() > 0);
+	}
 }

@@ -26,12 +26,11 @@ import javax.swing.event.EventListenerList;
 
 import org.columba.core.base.Mutex;
 import org.columba.core.base.SwingWorker.ThreadVar;
-import org.columba.core.gui.statusbar.StatusBar;
 
 /**
  * TaskManager keeps a list of currently running {@link Worker} objects.
  * <p>
- * The {@link StatusBar} listens for {@link TaskManagerEvent} to
+ * The <code> StatusBar</code> listens for {@link TaskManagerEvent} to
  * provide visual feedback. This includes a status message text and
  * the progress bar.
  * <p>

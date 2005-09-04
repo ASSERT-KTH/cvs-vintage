@@ -18,8 +18,6 @@
 package org.columba.chat.frame;
 
 import java.awt.BorderLayout;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.swing.JComponent;
@@ -36,9 +34,6 @@ import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.DefaultFrameController;
-import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
-import org.columba.mail.config.MailConfig;
 
 /**
  * @author fdietz
