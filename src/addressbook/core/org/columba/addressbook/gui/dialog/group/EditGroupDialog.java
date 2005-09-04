@@ -197,7 +197,8 @@ public class EditGroupDialog extends JDialog implements ActionListener,
                     "dialog", "editgroupdialog", "description_2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         descriptionTextField = new JTextField();
 
-        addComboBox = new DefaultAddressComboBox(false);
+        
+        addComboBox = new DefaultAddressComboBox(parentFolder.getUid(), false);
         ((JTextComponent) addComboBox.getEditor().getEditorComponent()).addKeyListener(this);
 
         members = new AddressbookListModel();

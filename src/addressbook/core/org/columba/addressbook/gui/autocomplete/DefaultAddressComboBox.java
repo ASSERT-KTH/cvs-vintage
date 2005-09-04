@@ -23,11 +23,12 @@ package org.columba.addressbook.gui.autocomplete;
  * @author fdietz
  */
 public class DefaultAddressComboBox extends BasicAddressAutocompleteComboBox {
-	
+
 	/**
 	 * Default constructor
 	 * 
-	 * @param includeGroup		include group items, if true. Don't, otherwise.
+	 * @param includeGroup
+	 *            include group items, if true. Don't, otherwise.
 	 */
 	public DefaultAddressComboBox(boolean includeGroup) {
 		super();
@@ -39,14 +40,33 @@ public class DefaultAddressComboBox extends BasicAddressAutocompleteComboBox {
 	}
 
 	/**
+	 * Constructor
+	 * 
+	 * @param folderUid
+	 *            uid of folder
+	 * @param includeGroup
+	 *            include group items, if true. Don't, otherwise.
+	 */
+	public DefaultAddressComboBox(int folderUid, boolean includeGroup) {
+		super();
+
+		AddressCollector.getInstance().clear();
+
+		AddressCollector.getInstance().addAllContacts(folderUid, includeGroup);
+
+		// initialize completer
+		addCompleter();
+	}
+
+	/**
 	 * Add data from the Personal Addressbook and Collected Addresses
-	 *  
+	 * 
 	 */
 	private void initData(boolean includeGroup) {
 		AddressCollector.getInstance().clear();
 
 		AddressCollector.getInstance().addAllContacts(101, includeGroup);
 		AddressCollector.getInstance().addAllContacts(102, includeGroup);
-	
+
 	}
 }
