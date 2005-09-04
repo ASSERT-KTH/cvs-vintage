@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactoryImpl.java,v 1.8 2005/04/14 18:29:45 mvw Exp $
+// $Id: ModelManagementFactoryImpl.java,v 1.9 2005/09/04 21:38:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -226,7 +226,8 @@ public class ModelManagementFactoryImpl
      * @param target The target package.
      */
     private void doCopyPackage(MPackage source, MPackage target) {
-	nsmodel.getCoreFactory().doCopyNamespace(source, target);
+	((CoreFactoryImpl) nsmodel.getCoreFactory())
+		.doCopyNamespace(source, target);
     }
 }
 

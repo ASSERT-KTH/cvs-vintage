@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.10 2005/04/28 20:32:22 mvw Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.11 2005/09/04 21:38:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,7 +260,8 @@ public class ExtensionMechanismsFactoryImpl
      * @param target The object becoming a copy.
      */
     private void doCopyStereotype(MStereotype source, MStereotype target) {
-	nsmodel.getCoreFactory().doCopyGeneralizableElement(source, target);
+	((CoreFactoryImpl) nsmodel.getCoreFactory())
+		.doCopyGeneralizableElement(source, target);
 	target.setBaseClass(source.getBaseClass());
 	target.setIcon(source.getIcon());
 	// TODO: constraints

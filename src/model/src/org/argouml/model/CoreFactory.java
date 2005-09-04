@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.3 2005/08/20 09:29:13 linus Exp $
+// $Id: CoreFactory.java,v 1.4 2005/09/04 21:38:34 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -534,68 +534,6 @@ public interface CoreFactory {
      */
     Object copyInterface(Object source, Object ns);
 
-    /**
-     * Used by the copy functions. Do not call this function directly.
-     *
-     * @param source the source class
-     * @param target the target class
-     */
-    void doCopyClass(Object source, Object target);
-
-    /**
-     * Used by the copy functions. Do not call this function directly.
-     * TODO: actions? instances? collaborations etc?
-     *
-     * @param source the source classifier
-     * @param target the target classifier
-     */
-    void doCopyClassifier(Object source, Object target);
-
-    /**
-     * Used by the copy functions. Do not call this function directly.
-     *
-     * @param source the source datatype
-     * @param target the target datatype
-     */
-    void doCopyDataType(Object source, Object target);
-
-    /**
-     * Used by the copy functions. Do not call this function directly.
-     * TODO: generalizations, specializations?
-     *
-     * @param source the source generalizable element
-     * @param target the target generalizable element
-     */
-    void doCopyGeneralizableElement(Object source, Object target);
-
-    /**
-     * Used by the copy functions. Do not call this function directly.
-     *
-     * @param source the source interface
-     * @param target the target interface
-     */
-    void doCopyInterface(Object source, Object target);
-
-    /**
-     * Used by the copy functions. Do not call this function directly.
-     * TODO: template parameters, default type
-     * TODO: constraining elements
-     * TODO: flows, dependencies, comments, bindings, contexts ???
-     * TODO: contents, residences ???
-     *
-     * @param source the source me
-     * @param target the target me
-     */
-    void doCopyModelElement(Object source, Object target);
-
-    /**
-     * Used by the copy functions. Do not call this function directly.
-     *
-     * @param source the source namespace
-     * @param target the target namespace
-     */
-    void doCopyNamespace(Object source, Object target);
-    
     //additional support for generalization
     
     Object createGeneralization();
