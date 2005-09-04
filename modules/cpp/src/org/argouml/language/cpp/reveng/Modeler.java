@@ -1,4 +1,4 @@
-// $Id: Modeler.java,v 1.4 2005/07/19 00:16:17 euluis Exp $
+// $Id: Modeler.java,v 1.5 2005/09/04 01:05:17 euluis Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -225,4 +225,56 @@ public interface Modeler {
      * may be removed.
      */
     void ptrToMember(String scopedItem, String star);
+
+    /**
+     * Signals the start of a class's base specification.
+     */
+    void beginBaseSpecifier();
+
+    /**
+     * Signals the end of a class's base specification.
+     */
+    void endBaseSpecifier();
+
+    /**
+     * The base specification.
+     * 
+     * @param identifier The name of the base class.
+     * @param isVirtual Is the inheritance virtual.
+     */
+    void baseSpecifier(String identifier, boolean isVirtual);
+
+    /**
+     * Signals the start of a constructor definition.
+     */
+    void beginCtorDefinition();
+
+    /**
+     * Signals the end of a constructor definition.
+     */
+    void endCtorDefinition();
+
+    /**
+     * The qualified constructor identifier.
+     * 
+     * @param identifier of the ctor
+     */
+    void qualifiedCtorId(String identifier);
+
+    /**
+     * Signals the start of a destructor head statement.
+     */
+    void beginDtorHead();
+
+    /**
+     * Signals the end of a destructor head statement.
+     */
+    void endDtorHead();
+
+    /**
+     * The destructor declarator.
+     * 
+     * @param identifier the destructor identifier
+     */
+    void dtorDeclarator(String identifier);
 }
