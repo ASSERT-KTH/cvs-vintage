@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.26 2005/08/14 08:48:37 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.27 2005/09/04 19:44:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -431,6 +431,8 @@ public class GenericArgoMenuBar extends JMenuBar
         setMnemonic(revertToSavedItem, "Revert To Saved");
         file.addSeparator();
 
+        file.add(new ActionImportXMI());
+        file.add(new ActionExportXMI());
         //_import = new JMenu(menuLocalize("action.import"));
         //JMenuItem importProjectAsItem =
         //_import.add(ActionImportFromSources.SINGLETON);
@@ -754,10 +756,7 @@ public class GenericArgoMenuBar extends JMenuBar
     private void initMenuTools() {
         tools = new JMenu(menuLocalize("Tools"));
         setMnemonic(tools, "Tools");
-        
-        tools.add(new ActionExportXMI());
-        tools.add(new ActionImportXMI());
-        
+
         appendPluggableMenus(tools, PluggableMenu.KEY_TOOLS);
         add(tools);
     }
