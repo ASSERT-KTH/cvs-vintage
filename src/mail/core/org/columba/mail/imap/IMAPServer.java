@@ -155,8 +155,8 @@ public class IMAPServer implements IMAPListener, Observer {
 
 	private long lastCommunication;
 
-	// minimal unchecked time is 1 Minutes
-	private int MIN_IDLE = 1000 * 60 * 1;
+	// minimal unchecked time is 30 Seconds
+	private int MIN_IDLE = 30 * 1000; // in ms
 
 	// Used to control the state in which
 	// the automatic updated mechanism is
@@ -635,17 +635,12 @@ public class IMAPServer implements IMAPListener, Observer {
 		ensureLoginState();
 
 		if (selectedFolder != null && selectedFolder.equals(folder)) {
-			try {
-				// This noop is necessary to check
-				// if the mailbox has changed
-				protocol.noop();
-
-				return selectedStatus;
-			} catch (IMAPDisconnectedException e1) {
-				// Do nothing special here
-			} catch (ConnectionDroppedException e1) {
-				// Do nothing special here
-			}
+			// We don't need to issue a additional NOOP
+			// here since the ensureLogin() call above
+			// ensures also the correct Status in a 
+			// MIN_IDLE interval timeframe.
+			
+			return selectedStatus;
 		}
 		
 		if( selectedFolder == null || protocol.getState() < IMAPProtocol.SELECTED) {
@@ -1179,14 +1174,16 @@ public class IMAPServer implements IMAPListener, Observer {
 			} catch (IMAPDisconnectedException e) {
 
 			}
-			// update this point of time as last communication
-			lastCommunication = System.currentTimeMillis();
 		}
 
 		if (protocol.getState() < IMAPProtocol.NON_AUTHENTICATED) {
 			openConnection();
 		}
 
+		// update this point of time as last communication
+		// since every functio calls this before communicating with
+		// the server
+		lastCommunication = System.currentTimeMillis();
 	}
 
 	/**

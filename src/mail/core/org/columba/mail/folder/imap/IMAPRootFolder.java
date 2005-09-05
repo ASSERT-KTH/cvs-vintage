@@ -340,7 +340,11 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	}
 
 	public void updateConfiguration() {
-		
+		try {
+			server.logout();
+		} catch (Exception e1) {
+			// don't care
+		}
 		server = new IMAPServer(accountItem.getImapItem());
 		server.setFirstLoginAction( new IFirstLoginAction() {
 			public void actionPerformed() {
