@@ -15,6 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.mailchecking;
 
+import java.util.Enumeration;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -51,10 +55,22 @@ public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
 		setEnabled(false);
 		IMAPRootFolder imapRootFolder = (IMAPRootFolder) FolderTreeModel.getInstance()
 				.getImapFolder(accountUid);
-		IMAPFolder inboxFolder = (IMAPFolder) imapRootFolder.findChildWithName("Inbox", false);
+		
+		Enumeration children = imapRootFolder.breadthFirstEnumeration();
+		
+		while( children.hasMoreElements()) {
+			DefaultMutableTreeNode child = (DefaultMutableTreeNode)children.nextElement();
+			if( child instanceof IMAPFolder ) {
+				IMAPFolder folder = (IMAPFolder) child;
+				
+				if( folder.getName().equalsIgnoreCase("INBOX") || folder.getConfiguration().getBooleanWithDefault("activeSync", false)) {
+					MailFolderCommandReference r = new MailFolderCommandReference(folder);
+					CommandProcessor.getInstance().addOp(new CheckForNewMessagesCommand(this, r));					
+				}
+			}
+			
+		}
 
-		MailFolderCommandReference r = new MailFolderCommandReference(inboxFolder);
-		CommandProcessor.getInstance().addOp(new CheckForNewMessagesCommand(this, r));
 	}
 
 	/**
