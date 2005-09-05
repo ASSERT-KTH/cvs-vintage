@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -468,24 +469,47 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 *      IMAPFolder)
 	 */
 	public void markMessage(Object[] uids, int variant) throws Exception {
-		for (int i = 0; i < uids.length; i++) {
-			// get source folder reference
-			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-			if( h == null ) continue;
+		List list = new ArrayList(Arrays.asList(uids));
+
+		Collections.sort(list, new Comparator() {
+
+			public int compare(Object o1, Object o2) {
+				VirtualHeader h = (VirtualHeader) headerList.get(o1);
+				int oV1 = h.getSrcFolder().getUid();
+				
+				h = (VirtualHeader) headerList.get(o2);
+				int oV2 = h.getSrcFolder().getUid();
+				
+				if( oV1 < oV2) {
+					return -1;
+				} else {
+					return oV1 == oV2 ? 0 : 1;
+				}
+			}});
+		
+		List folderUids = new ArrayList(uids.length);
+		Iterator it = list.iterator();
+
+		VirtualHeader h = (VirtualHeader)headerList.get(it.next());;
+		folderUids.add(h.getSrcUid());
+		IMailbox srcFolder = h.getSrcFolder();  
+		
+		while( it.hasNext() ){			
+			h = (VirtualHeader)headerList.get(it.next());
 			
-			AbstractMessageFolder sourceFolder = h.getSrcFolder();
-			Object sourceUid = h.getSrcUid();
-
-			/*
-			// virtual folder: update mailfolderinfo -> fire treenode change
-			updateMailFolderInfo(getFlags(uids[i]), variant);
-			// virtual folder: fire message flag changed
-			fireMessageFlagChanged(uids[i], variant);*/
-
-			// mark message in source folder
-			sourceFolder.markMessage(new Object[] { sourceUid }, variant);
-
+			if( h.getSrcFolder() == srcFolder) {
+				folderUids.add(h.getSrcUid());
+			} else {			
+				srcFolder.markMessage(folderUids.toArray(), variant);
+				
+				// change to new folder
+				srcFolder = h.getSrcFolder();
+				folderUids.clear();
+				folderUids.add(h.getSrcUid());
+			}
 		}
+		
+		srcFolder.markMessage(folderUids.toArray(), variant);
 	}
 
 	/**
@@ -931,16 +955,48 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	}
 
 	public void innerCopy(IMailbox destFolder, Object[] uids) throws Exception {
-		for( int i=0; i<uids.length; i ++) {
-			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-			if( h != null ) {
-				AbstractMessageFolder sourceFolder = h.getSrcFolder();
-				Object sourceUid = h.getSrcUid();
+		List list = new ArrayList(Arrays.asList(uids));
+
+		Collections.sort(list, new Comparator() {
+
+			public int compare(Object o1, Object o2) {
+				VirtualHeader h = (VirtualHeader) headerList.get(o1);
+				int oV1 = h.getSrcFolder().getUid();
+				
+				h = (VirtualHeader) headerList.get(o2);
+				int oV2 = h.getSrcFolder().getUid();
+				
+				if( oV1 < oV2) {
+					return -1;
+				} else {
+					return oV1 == oV2 ? 0 : 1;
+				}
+			}});
+		
+		List folderUids = new ArrayList(uids.length);
+		Iterator it = list.iterator();
+
+		VirtualHeader h = (VirtualHeader)headerList.get(it.next());;
+		folderUids.add(h.getSrcUid());
+		IMailbox srcFolder = h.getSrcFolder();  
+		
+		while( it.hasNext() ){			
+			h = (VirtualHeader)headerList.get(it.next());
 			
-				sourceFolder.innerCopy(destFolder, new Object[] {sourceUid});
+			if( h.getSrcFolder() == srcFolder) {
+				folderUids.add(h.getSrcUid());
+			} else {			
+				srcFolder.innerCopy(destFolder, folderUids.toArray());
+				
+				// change to new folder
+				srcFolder = h.getSrcFolder();
+				folderUids.clear();
+				folderUids.add(h.getSrcUid());
 			}
 		}
 		
+		// Copy the rest
+		srcFolder.innerCopy(destFolder, folderUids.toArray());
 	}
 
 	public void setAttribute(Object uid, String key, Object value)
