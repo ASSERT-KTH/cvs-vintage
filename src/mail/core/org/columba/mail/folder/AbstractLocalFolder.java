@@ -243,8 +243,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 			}
 
 			InputStream messageSourceStream = getMessageSourceStream(uids[i]);
-			Object destuid = destFolder.addMessage(messageSourceStream,
-					getAttributes(uids[i]), getFlags(uids[i]));
+			destFolder.addMessage(messageSourceStream,getAttributes(uids[i]), getFlags(uids[i]));
 			messageSourceStream.close();
 
 			/*
@@ -285,8 +284,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		Header header = HeaderParser.parse(source);
 		ColumbaHeader h;
 		if ((attributes != null) && (flags != null)) {
-			// save header and attributes
-			h = new ColumbaHeader( header, attributes, flags);
+			// save header and attributes. Copy the flags!
+			h = new ColumbaHeader( header, (Attributes)attributes.clone(), new Flags(flags.getFlags()));
 		} else {
 			h = new ColumbaHeader(header);
 			h.set("columba.size",new Integer(messageSize / 1024));

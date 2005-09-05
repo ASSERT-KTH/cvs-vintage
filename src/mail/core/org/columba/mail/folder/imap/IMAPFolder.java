@@ -899,7 +899,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 
 		// update the HeaderList
-		IColumbaHeader cHeader = new ColumbaHeader(header, attributes, imapFlags);
+		IColumbaHeader cHeader = new ColumbaHeader(header, (Attributes)attributes.clone(), imapFlags);
 		header.set("columba.uid", uid);
 		
 		headerList.add(cHeader, uid);
