@@ -68,6 +68,8 @@ public class CachedMboxFolder extends AbstractLocalFolder {
         IFolderItem item = getConfiguration();
         item.setString("property", "accessrights", "user");
         item.setString("property", "subfolder", "true");
+
+        headerList = new PersistantHeaderList(new LocalHeaderCache(this));
 	}
 
 	/**

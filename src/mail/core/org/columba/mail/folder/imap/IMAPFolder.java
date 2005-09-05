@@ -122,6 +122,9 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		IFolderItem item = getConfiguration();
 		item.setString("property", "accessrights", "user");
 		item.setString("property", "subfolder", "true");
+
+		headerList = new PersistantHeaderList(new RemoteHeaderCache(this));
+	
 	}
 
 	/**
