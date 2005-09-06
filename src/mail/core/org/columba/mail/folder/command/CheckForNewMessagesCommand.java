@@ -66,7 +66,7 @@ public class CheckForNewMessagesCommand extends Command {
 
 		// check for new headers
 		try {
-			imapFolder.ensureFolderIsSynced(false);
+			imapFolder.ensureFolderIsSynced(false, false);
 		} catch (IOException e) {
 			worker.cancel();
 			throw new CommandCancelledException(e);
