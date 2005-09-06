@@ -183,20 +183,25 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.api.command.IWorkerStatusController)
 	 */
 	public IHeaderList getHeaderList() throws Exception{
-		ensureFolderIsSynced(true);
+		ensureFolderIsSynced(true, false);
 
 		return headerList;
 	}
 
 	/**
 	 * @param lazy TODO
+	 * @param forceSelect TODO
 	 * @throws IOException
 	 * @throws IMAPException
 	 * @throws CommandCancelledException
 	 * @throws Exception
 	 */
-	public synchronized void ensureFolderIsSynced(boolean lazy) throws IOException,
+	public synchronized void ensureFolderIsSynced(boolean lazy, boolean forceSelect) throws IOException,
 			IMAPException, CommandCancelledException, Exception {
+		if( forceSelect ) {
+			getServer().ensureSelectedState(this);
+		}
+		
 		if( !headerList.isRestored() ) {
 			try {
 				headerList.restore();
@@ -1121,7 +1126,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 			throws Exception {
-		ensureFolderIsSynced(true);
+		ensureFolderIsSynced(true, true);
 		return super.searchMessages(filter, uids);
 	}
 
@@ -1131,7 +1136,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.AbstractMessageFolder#searchMessages(org.columba.core.filter.Filter)
 	 */
 	public Object[] searchMessages(Filter filter) throws Exception {
-		ensureFolderIsSynced(true);
+		ensureFolderIsSynced(true, true);		
 		return super.searchMessages(filter);
 	}
 

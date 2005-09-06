@@ -599,7 +599,7 @@ public class IMAPServer implements IMAPListener, Observer {
 	 *            mailbox path
 	 * @throws Exception
 	 */
-	protected void ensureSelectedState(IMAPFolder folder) throws IOException,
+	public void ensureSelectedState(IMAPFolder folder) throws IOException,
 			IMAPException, CommandCancelledException {
 		// ensure that we are logged in already
 		ensureLoginState();
