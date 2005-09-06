@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.15 2005/08/12 19:30:26 mvw Exp $
+// $Id: NSUMLModelImplementation.java,v 1.16 2005/09/06 15:01:35 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.argouml.model.CommonBehaviorFactory;
 import org.argouml.model.CommonBehaviorHelper;
 import org.argouml.model.ConcurrencyKind;
 import org.argouml.model.ContainerDispatcher;
+import org.argouml.model.CopyHelper;
 import org.argouml.model.CoreFactory;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.DataTypesFactory;
@@ -86,7 +87,7 @@ public class NSUMLModelImplementation implements ModelImplementation {
         new CommonBehaviorFactoryImpl(this);
     private CommonBehaviorHelper theCommonBehaviorHelper =
         new CommonBehaviorHelperImpl(this);
-    private CopyHelper theCopyHelper = new CopyHelper(this);
+    private CopyHelper theCopyHelper = new CopyHelperImpl(this);
     private CoreFactory theCoreFactory = new CoreFactoryImpl(this);
     private CoreHelper theCoreHelper = new CoreHelperImpl(this);
     private DataTypesFactory theDataTypesFactory =
@@ -184,7 +185,7 @@ public class NSUMLModelImplementation implements ModelImplementation {
     /**
      * @return The Copy helper.
      */
-    public org.argouml.model.CopyHelper getCopyHelper() {
+    public CopyHelper getCopyHelper() {
         return theCopyHelper;
     }
 
@@ -401,8 +402,7 @@ public class NSUMLModelImplementation implements ModelImplementation {
     }
 
     /**
-     * @see org.argouml.model.ModelImplementation#getMementoCreationObserver(
-     *         org.argouml.model.MementoCreationObserver)
+     * @see org.argouml.model.ModelImplementation#getMementoCreationObserver()
      */
     public MementoCreationObserver getMementoCreationObserver() {
         return mementoCreationObserver;
