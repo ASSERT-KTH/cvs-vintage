@@ -279,7 +279,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		
 		int largestLocalUid =  localUids.size() > 0 ? ((Integer)localUids.get(localUids.size()-1)).intValue() : -1;
 		int largestLocalUidIndex = -1;
-
+		int removedLocalUids = 0;
+		
 		int largestRemoteUid = (int)status.getUidNext() - 1;
 
 		if( localUids.size() == status.getMessages() && largestRemoteUid == largestLocalUid) {
@@ -316,6 +317,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 							(Integer) localUids.get(position--), this);
 				}
 
+				 
+				
 				// Still not found -> do a binary search
 				if (largestLocalUidIndex == -1) {
 					int a, b, c;
@@ -334,6 +337,11 @@ public class IMAPFolder extends AbstractRemoteFolder {
 							largestLocalUidIndex = index;
 						}
 					}
+					
+					removedLocalUids = localUids.size() - 1 - position;
+				} else {
+					// -2 because of the decrement in line 317
+					removedLocalUids = localUids.size() - 2 - position;
 				}
 
 				// Check if all local uids have been deleted
@@ -360,7 +368,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 			// Somehow there are new messages that
 			// have a lower index -> out of sync
-			if (localUids.size() - status.getMessages() + newMessages < 0) {
+			if (localUids.size() - status.getMessages() - removedLocalUids + newMessages < 0) {
 
 				LOG.severe("Folder " + getName()
 						+ " is out of sync -> recreating the cache!");
