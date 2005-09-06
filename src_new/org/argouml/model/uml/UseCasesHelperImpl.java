@@ -1,4 +1,4 @@
-// $Id: UseCasesHelperImpl.java,v 1.4 2005/01/20 23:20:36 linus Exp $
+// $Id: UseCasesHelperImpl.java,v 1.5 2005/09/06 15:15:00 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -501,9 +501,9 @@ class UseCasesHelperImpl implements UseCasesHelper {
     }
 
     /**
-     * Sets the extension points of some use cases.
+     * Sets the extension points of some use cases or extend relationships.
      *
-     * @param handle the use case
+     * @param handle the use case or extend relationship
      * @param extensionPoints is the extension points
      */
     public void setExtensionPoints(
@@ -511,6 +511,10 @@ class UseCasesHelperImpl implements UseCasesHelper {
             Collection extensionPoints) {
         if (handle instanceof MUseCase && extensionPoints instanceof List) {
             ((MUseCase) handle).setExtensionPoints(extensionPoints);
+            return;
+        }
+        if (handle instanceof MExtend && extensionPoints instanceof List) {
+            ((MExtend) handle).setExtensionPoints((List)extensionPoints);
             return;
         }
         throw new IllegalArgumentException("handle: " + handle
