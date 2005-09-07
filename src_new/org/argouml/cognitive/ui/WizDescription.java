@@ -1,4 +1,4 @@
-// $Id: WizDescription.java,v 1.22 2005/02/19 23:22:43 mvw Exp $
+// $Id: WizDescription.java,v 1.23 2005/09/07 11:55:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,7 @@ public class WizDescription extends WizStep {
 	    message = MessageFormat.
                 format(Translator.localize("message.item.branch-model"),
                        new Object [] {
-			   target.toString(),
+			   Model.getFacade().toString(target),
 		       });
 	    description.setEditable(false);
 	    description.setText(message);
@@ -125,7 +125,7 @@ public class WizDescription extends WizStep {
 	    message = MessageFormat.
                 format(Translator.localize("message.item.branch-decision"),
                        new Object [] {
-			   target.toString(),
+               Model.getFacade().toString(target),
 		       });
 	    description.setText(message);
 
@@ -134,7 +134,7 @@ public class WizDescription extends WizStep {
 	    message = MessageFormat.
                 format(Translator.localize("message.item.branch-goal"),
                        new Object [] {
-			   target.toString(),
+               Model.getFacade().toString(target),
 		       });
 	    description.setText(message);
 
@@ -143,7 +143,7 @@ public class WizDescription extends WizStep {
 	    message = MessageFormat.
                 format(Translator.localize("message.item.branch-knowledge"),
                        new Object [] {
-			   target.toString(),
+               Model.getFacade().toString(target),
 		       });
 	    description.setText(message);
 
