@@ -1,4 +1,4 @@
-// $Id: TestModelFacade3.java,v 1.10 2005/07/22 07:51:16 mkl Exp $
+// $Id: TestModelFacade3.java,v 1.11 2005/09/07 10:33:05 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,8 @@ public class TestModelFacade3 extends TestCase {
                 return methodToTest.getName().equals("getClassNull")
                                 || methodToTest.getName().startsWith("isA")
                                 || methodToTest.getName().equals("create")
-                                || methodToTest.getName().equals("getTipString");
+                                || methodToTest.getName().equals("getTipString")
+                                || methodToTest.getName().equals("toString");
         }
 
         /**
