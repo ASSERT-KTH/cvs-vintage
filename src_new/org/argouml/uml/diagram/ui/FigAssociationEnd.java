@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.9 2005/06/16 10:41:15 bobtarling Exp $
+// $Id: FigAssociationEnd.java,v 1.10 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         srcMult.setTextFilled(false);
         srcMult.setFilled(false);
         srcMult.setLineWidth(0);
-        srcMult.setMultiLine(false);
+        srcMult.setReturnAction(FigText.END_EDITING);
         srcMult.setJustification(FigText.JUSTIFY_CENTER);
 
         srcOrdering = new FigText(10, 10, 90, 20);
@@ -75,7 +75,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         srcOrdering.setTextFilled(false);
         srcOrdering.setFilled(false);
         srcOrdering.setLineWidth(0);
-        srcOrdering.setMultiLine(false);
+        srcOrdering.setReturnAction(FigText.END_EDITING);
         srcOrdering.setJustification(FigText.JUSTIFY_CENTER);
 
         srcRole = new FigText(10, 10, 90, 20);
@@ -84,7 +84,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         srcRole.setTextFilled(false);
         srcRole.setFilled(false);
         srcRole.setLineWidth(0);
-        srcRole.setMultiLine(false);
+        srcRole.setReturnAction(FigText.END_EDITING);
         srcRole.setJustification(FigText.JUSTIFY_CENTER);
 
         srcGroup.addFig(srcRole);

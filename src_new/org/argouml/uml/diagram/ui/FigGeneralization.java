@@ -1,4 +1,4 @@
-// $Id: FigGeneralization.java,v 1.21 2005/01/30 20:47:50 linus Exp $
+// $Id: FigGeneralization.java,v 1.22 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,8 +65,8 @@ public class FigGeneralization extends FigEdgeModelElement {
 	discriminator.setFilled(false);
 	discriminator.setLineWidth(0);
 	discriminator.setExpandOnly(false);
-	discriminator.setMultiLine(false);
-	discriminator.setAllowsTab(false);
+	discriminator.setReturnAction(FigText.END_EDITING);
+	discriminator.setTabAction(FigText.END_EDITING);
 	addPathItem(discriminator, new PathConvPercent(this, 40, -10));
 	endArrow.setFillColor(Color.white);
 	setDestArrowHead(endArrow);

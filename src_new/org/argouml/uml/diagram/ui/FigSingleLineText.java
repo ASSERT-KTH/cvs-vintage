@@ -1,4 +1,4 @@
-// $Id: FigSingleLineText.java,v 1.2 2005/07/25 13:49:04 bobtarling Exp $
+// $Id: FigSingleLineText.java,v 1.3 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,12 +43,12 @@ public class FigSingleLineText extends FigText {
      */
     public FigSingleLineText(int x, int y, int w, int h, boolean expandOnly) {
         super(x, y, w, h, expandOnly);
-        
+
         setFont(FigNodeModelElement.getLabelFont());
         setTextColor(Color.black);
         setFilled(false);
-        setAllowsTab(false);
-        setMultiLine(false);
+        setTabAction(FigText.END_EDITING);
+        setReturnAction(FigText.END_EDITING);
         setLineWidth(0);
 //        name.setReturnAction(FigText.END_EDITING);
 //        name.setTabAction(FigText.END_EDITING);

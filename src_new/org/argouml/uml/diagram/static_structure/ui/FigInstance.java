@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.15 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigInstance.java,v 1.16 2005/09/07 21:03:53 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class FigInstance extends FigNodeModelElement {
 	attr.setFont(getLabelFont());
 	attr.setExpandOnly(true);
 	attr.setTextColor(Color.black);
-	attr.setAllowsTab(false);
+	attr.setTabAction(FigText.END_EDITING);
 
 	//_attr.setExpandOnly(true);
 	attr.setJustification(FigText.JUSTIFY_LEFT);

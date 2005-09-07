@@ -1,4 +1,4 @@
-// $Id: FigPartition.java,v 1.7 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigPartition.java,v 1.8 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class FigPartition extends FigNodeModelElement {
         getNameFig().setLineWidth(0);
         getNameFig().setBounds(10 + PADDING, 10, 50 - PADDING * 2, 25);
         getNameFig().setFilled(false);
-        getNameFig().setMultiLine(true);
+        getNameFig().setReturnAction(FigText.INSERT);
 
         addFig(getBigPort());
         addFig(rightLine);
@@ -74,7 +74,7 @@ public class FigPartition extends FigNodeModelElement {
     }
 
     /**
-     * Constructor which hooks the Fig into an existing UML element
+     * Constructor which hooks the Fig into an existing UML element.
      *
      * @param gm ignored
      * @param node the UML element
@@ -196,10 +196,12 @@ public class FigPartition extends FigNodeModelElement {
 
     /**
      *
-     * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
+     * @see org.tigris.gef.presentation.Fig#setBoundsImpl(int, int, int, int)
      */
     protected void setBoundsImpl(int x, int y, int w, int h) {
-        if (getNameFig() == null) return;
+        if (getNameFig() == null) {
+            return;
+        }
         Rectangle oldBounds = getBounds();
 
         Rectangle nameBounds = getNameFig().getBounds();

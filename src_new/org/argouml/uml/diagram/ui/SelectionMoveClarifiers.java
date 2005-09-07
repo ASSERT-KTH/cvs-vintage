@@ -1,4 +1,4 @@
-// $Id: SelectionMoveClarifiers.java,v 1.7 2005/01/09 14:58:57 linus Exp $
+// $Id: SelectionMoveClarifiers.java,v 1.8 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SelectionMoveClarifiers.java,v 1.7 2005/01/09 14:58:57 linus Exp $
+// $Id: SelectionMoveClarifiers.java,v 1.8 2005/09/07 21:03:52 linus Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Graphics;
@@ -56,7 +56,7 @@ public class SelectionMoveClarifiers extends SelectionMove {
      * @see org.tigris.gef.base.Selection#paint(java.awt.Graphics)
      */
     public void paint(Graphics g) {
-        ((FigNodeModelElement) _content).paintClarifiers(g);
+        ((FigNodeModelElement) getContent()).paintClarifiers(g);
         super.paint(g);
     }
 

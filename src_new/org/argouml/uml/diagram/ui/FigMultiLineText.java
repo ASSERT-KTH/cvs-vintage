@@ -1,4 +1,4 @@
-// $Id: FigMultiLineText.java,v 1.4 2005/07/25 13:49:04 bobtarling Exp $
+// $Id: FigMultiLineText.java,v 1.5 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,10 +48,9 @@ public class FigMultiLineText extends FigText {
         super(x, y, w, h, expandOnly);
         setFont(FigNodeModelElement.getLabelFont());
         setTextColor(Color.black);
-        setMultiLine(true);
-//        setReturnAction(FigText.INSERT);
+        setReturnAction(FigText.INSERT);
         setLineSeparator("\n");
-        setAllowsTab(false);
+        setTabAction(FigText.END_EDITING);
         setJustification(FigText.JUSTIFY_LEFT);
         setFilled(false);
         setLineWidth(0);

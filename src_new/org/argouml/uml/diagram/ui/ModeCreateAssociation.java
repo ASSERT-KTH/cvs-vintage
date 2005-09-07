@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.13 2005/06/22 13:40:21 bobtarling Exp $
+// $Id: ModeCreateAssociation.java,v 1.14 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,7 +200,7 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                     p.setSelfLoop(true);
                 }
                 editor.damageAll();
-                p._isComplete = true;
+                p.setComplete(true);
 
                 Object edgeType = getArg("edgeClass");
                 if (edgeType.equals(Model.getMetaTypes().getAssociation())

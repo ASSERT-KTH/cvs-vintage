@@ -1,4 +1,4 @@
-// $Id: FigExtend.java,v 1.18 2005/01/30 20:48:35 linus Exp $
+// $Id: FigExtend.java,v 1.19 2005/09/07 21:03:53 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,8 +92,8 @@ public class FigExtend extends FigEdgeModelElement {
         label.setFilled(false);
         label.setLineWidth(0);
         label.setExpandOnly(false);
-        label.setMultiLine(false);
-        label.setAllowsTab(false);
+        label.setReturnAction(FigText.END_EDITING);
+        label.setTabAction(FigText.END_EDITING);
         label.setText("<<extend>>");
 
 
@@ -113,8 +113,8 @@ public class FigExtend extends FigEdgeModelElement {
         condition.setFilled(false);
         condition.setLineWidth(0);
         condition.setExpandOnly(false);
-        condition.setMultiLine(false);
-        condition.setAllowsTab(false);
+        condition.setReturnAction(FigText.END_EDITING);
+        condition.setTabAction(FigText.END_EDITING);
 
         // Join the two into a group
 

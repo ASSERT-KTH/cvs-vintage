@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.11 2005/05/02 14:51:53 bobtarling Exp $
+// $Id: FigFeature.java,v 1.12 2005/09/07 21:03:53 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.Color;
@@ -39,7 +38,8 @@ import org.tigris.gef.presentation.FigText;
 import org.tigris.gef.presentation.Handle;
 
 /**
- * Fig to show features in class or interface like attributes or operations
+ * Fig to show features in class or interface like attributes or operations.
+ *
  * @since Dec 1, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -86,7 +86,7 @@ public class FigFeature extends CompartmentFigText {
                     Object[] figs = group.getFigs().toArray();
                     for (int i = 1; i < figs.length; i++) {
 			// the first element is no attr or oper
-                        if (figs[i].equals(_content)) {
+                        if (figs[i].equals(getContent())) {
                             if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                                 if (i < figs.length - 1) {
                                     TargetManager.getInstance().setTarget(
@@ -123,7 +123,7 @@ public class FigFeature extends CompartmentFigText {
         setFont(FigNodeModelElement.getLabelFont());
         setTextColor(Color.black);
         setJustification(FigText.JUSTIFY_LEFT);
-        setMultiLine(false);
+        setReturnAction(FigText.END_EDITING);
     }
 
     /**
@@ -135,5 +135,4 @@ public class FigFeature extends CompartmentFigText {
         return new SelectionFeature(this);
     }
 
-    
 }

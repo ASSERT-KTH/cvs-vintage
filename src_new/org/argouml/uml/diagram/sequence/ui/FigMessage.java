@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.4 2005/08/13 08:49:16 mvw Exp $
+// $Id: FigMessage.java,v 1.5 2005/09/07 21:03:53 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,8 +138,8 @@ public abstract class FigMessage
         Fig sourceFig = getSourcePortFig();
         Fig destFig = getDestPortFig();
         if (sourceFig != null && destFig != null) {
-            Point startPoint = sourceFig.connectionPoint(destFig.center());
-            Point endPoint = destFig.connectionPoint(sourceFig.center());
+            Point startPoint = sourceFig.connectionPoint(destFig.getCenter());
+            Point endPoint = destFig.connectionPoint(sourceFig.getCenter());
             if (sourceFig instanceof FigMessagePort
 		&& destFig instanceof FigMessagePort) {
                 FigMessagePort srcMP = (FigMessagePort) sourceFig;
@@ -147,7 +147,7 @@ public abstract class FigMessage
                 // If it is a self-message
                 if (srcMP.getNode().getFigClassifierRole()
 		    == destMP.getNode().getFigClassifierRole()) {
-                    if (startPoint.x < sourceFig.center().x) {
+                    if (startPoint.x < sourceFig.getCenter().x) {
                         startPoint.x += sourceFig.getWidth();
 		    }
                     endPoint.x = startPoint.x;

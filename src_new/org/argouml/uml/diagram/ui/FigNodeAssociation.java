@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.8 2005/06/30 23:57:46 bobtarling Exp $
+// $Id: FigNodeAssociation.java,v 1.9 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,8 +77,8 @@ public class FigNodeAssociation extends FigNodeModelElement {
         getNameFig().setLineWidth(0);
         getNameFig().setFont(getLabelFont());
         getNameFig().setTextColor(Color.black);
-        getNameFig().setMultiLine(false);
-        getNameFig().setAllowsTab(false);
+        getNameFig().setReturnAction(FigText.END_EDITING);
+        getNameFig().setTabAction(FigText.END_EDITING);
         getNameFig().setJustificationByName("center");
 
         setStereotypeFig(new FigText(X + 10, Y + 22, 0, 21, true));

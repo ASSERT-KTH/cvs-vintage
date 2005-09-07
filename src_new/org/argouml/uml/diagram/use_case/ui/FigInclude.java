@@ -1,4 +1,4 @@
-// $Id: FigInclude.java,v 1.12 2005/01/09 14:58:58 linus Exp $
+// $Id: FigInclude.java,v 1.13 2005/09/07 21:03:53 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,8 +70,8 @@ public class FigInclude extends FigEdgeModelElement {
         label.setFilled(false);
         label.setLineWidth(0);
         label.setExpandOnly(false);
-        label.setMultiLine(false);
-        label.setAllowsTab(false);
+        label.setReturnAction(FigText.END_EDITING);
+        label.setTabAction(FigText.END_EDITING);
         label.setText("<<include>>");
 
         addPathItem(label, new PathConvPercent(this, 50, 10));

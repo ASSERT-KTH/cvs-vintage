@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.184 2005/08/13 09:34:33 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.185 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1263,9 +1263,9 @@ public abstract class FigNodeModelElement
         return super.classNameAndBounds()
                 + "pathVisible=" + isPathVisible()
                 + ";";
-    }   
-    
-/**
+    }
+
+    /**
      * Implementations of this method should register/unregister the fig for all
      * (model)events. For FigNodeModelElement only the fig itself is registred
      * as listening to events fired by the owner itself. But for, for example,

@@ -1,4 +1,4 @@
-// $Id: SelectionNodeClarifiers.java,v 1.9 2005/06/21 07:37:15 bobtarling Exp $
+// $Id: SelectionNodeClarifiers.java,v 1.10 2005/09/07 21:03:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SelectionNodeClarifiers.java,v 1.9 2005/06/21 07:37:15 bobtarling Exp $
+// $Id: SelectionNodeClarifiers.java,v 1.10 2005/09/07 21:03:52 linus Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Graphics;
@@ -56,7 +56,7 @@ public class SelectionNodeClarifiers extends SelectionButtons {
      * @see org.tigris.gef.base.Selection#paint(java.awt.Graphics)
      */
     public void paint(Graphics g) {
-        ((FigNodeModelElement) _content).paintClarifiers(g);
+        ((FigNodeModelElement) getContent()).paintClarifiers(g);
         super.paint(g);
     }
 
