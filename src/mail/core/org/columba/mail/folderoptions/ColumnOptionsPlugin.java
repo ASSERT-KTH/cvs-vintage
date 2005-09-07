@@ -138,8 +138,11 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 		tableController.getHeaderTableModel().clearColumns();
 
 		// remove all columns for column model
+		view.getColumnModel().removeColumnModelListener(tableController.getHeaderTableModel());
 		view.setColumnModel(new DefaultTableColumnModel());
+		view.getColumnModel().addColumnModelListener(tableController.getHeaderTableModel());
 
+		
 		// add columns
 		for (int i = 0; i < columns.count(); i++) {
 			XmlElement column = columns.getElement(i);

@@ -17,13 +17,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import javax.swing.event.TableColumnModelListener;
+
 import org.columba.mail.message.IHeaderList;
 
 /**
  * @author fdietz
  *
  */
-public interface IHeaderTableModel {
+public interface IHeaderTableModel extends TableColumnModelListener {
 	/**
 	 * ***************************** implements TableModelModifier
 	 * ******************

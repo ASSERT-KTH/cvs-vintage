@@ -144,7 +144,7 @@ public class TableController implements ListSelectionListener,
 
 		// init view
 		view = new TableView(headerTableModel, tableModelSorter);
-
+		
 		// pass tree to model, used by the threaded-view
 		headerTableModel.setTree((Tree) view.getTree());
 
@@ -157,6 +157,7 @@ public class TableController implements ListSelectionListener,
 
 		// MouseListener sorts table when clicking on a column header
 		new TableHeaderMouseListener(this, getTableModelSorter());
+		view.getColumnModel().addColumnModelListener(headerTableModel);
 
 		// we need this for the focus manager
 		getView().getSelectionModel().addListSelectionListener(this);

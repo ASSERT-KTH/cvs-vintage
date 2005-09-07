@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -342,6 +345,24 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 	 */
 	public MessageNode getMessageNodeAtRow(int index) {
 		return (MessageNode) getValueAt(index,0);
+	}
+
+	public void columnMarginChanged(ChangeEvent e) {
+	}
+
+	public void columnSelectionChanged(ListSelectionEvent e) {
+	}
+
+	public void columnAdded(TableColumnModelEvent e) {
+	}
+
+	public void columnMoved(TableColumnModelEvent e) {
+		if( e.getFromIndex() != e.getToIndex()) {
+			columns.add(e.getToIndex(),columns.remove(e.getFromIndex()));
+		}
+	}
+
+	public void columnRemoved(TableColumnModelEvent e) {
 	}
 
 }
