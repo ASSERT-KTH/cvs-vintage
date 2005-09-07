@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.22 2005/09/04 19:25:02 linus Exp $
+// $Id: NSUMLModelFacade.java,v 1.23 2005/09/07 01:39:33 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4693,6 +4693,14 @@ public class NSUMLModelFacade implements Facade {
      * @see org.argouml.model.Facade#getTipString(java.lang.Object)
      */
     public String getTipString(Object modelElement) {
+        return modelElement.toString();
+    }
+
+
+    /**
+     * @see org.argouml.model.Facade#toString(java.lang.Object)
+     */
+    public String toString(Object modelElement) {
         return modelElement.toString();
     }
 

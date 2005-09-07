@@ -1,4 +1,4 @@
-// $Id: TestParserDisplay.java,v 1.18 2005/08/13 07:30:10 mvw Exp $
+// $Id: TestParserDisplay.java,v 1.19 2005/09/07 01:39:33 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1055,7 +1055,7 @@ public class TestParserDisplay extends TestCase {
                     + " gave wrong multiplicity: "
                     + (Model.getFacade().getMultiplicity(attr) == null
                        ? "(null)"
-                       : Model.getFacade().getMultiplicity(attr).toString()),
+                       : Model.getFacade().toString(Model.getFacade().getMultiplicity(attr))),
                     Model.getFacade().getMultiplicity(attr) == null);
         } else {
             assertTrue(
@@ -1063,7 +1063,7 @@ public class TestParserDisplay extends TestCase {
                     + " gave wrong multiplicity: "
                     + (Model.getFacade().getMultiplicity(attr) == null
                        ? "(null)"
-                       : Model.getFacade().getMultiplicity(attr).toString()),
+                       : Model.getFacade().toString(Model.getFacade().getMultiplicity(attr))),
                     mult.equals(Model.getFacade().getMultiplicity(attr)));
         }
     }
