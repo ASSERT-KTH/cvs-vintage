@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.55 2005/07/23 17:13:17 mvw Exp $
+// $Id: PropPanelExtend.java,v 1.56 2005/09/08 11:29:08 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,12 +114,9 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         // Add the toolbar buttons:
         addButton(new PropPanelButton2(new ActionNavigateNamespace()));
-        addButton(new PropPanelButton2(new ActionNewExtensionPoint(),
-                lookupIcon("ExtensionPoint")));
-        addButton(new PropPanelButton2(new ActionNewStereotype(),
-                lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
-                lookupIcon("Delete")));
+        addButton(new PropPanelButton2(new ActionNewExtensionPoint()));
+        addButton(new PropPanelButton2(new ActionNewStereotype()));
+        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement()));
     }
 
     /**
