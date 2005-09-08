@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.26 2005/08/20 09:29:13 linus Exp $
+// $Id: CoreFactoryImpl.java,v 1.27 2005/09/08 21:27:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -894,8 +894,6 @@ public class CoreFactoryImpl
         attr.setVisibility(MVisibilityKind.PUBLIC);
         attr.setOwnerScope(MScopeKind.INSTANCE);
         attr.setChangeability(MChangeableKind.CHANGEABLE);
-        attr.setTaggedValue("transient", "false");
-        attr.setTaggedValue("volatile", "false");
         attr.setTargetScope(MScopeKind.INSTANCE);
 
         return attr;
