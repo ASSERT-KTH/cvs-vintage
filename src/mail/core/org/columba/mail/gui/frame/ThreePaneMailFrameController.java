@@ -520,6 +520,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 				public void run() {
 					tableController.getPopupMenu().show(event.getComponent(),
 							event.getX(), event.getY());
+					isTablePopupEvent = false;
 				}
 			});
 		}
@@ -570,6 +571,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 				public void run() {
 					treeController.getPopupMenu().show(event.getComponent(),
 							event.getX(), event.getY());
+					isTreePopupEvent = false;
 				}
 			});
 		}
