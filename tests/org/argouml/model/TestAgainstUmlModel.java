@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// $Id: TestAgainstUmlModel.java,v 1.2 2005/09/08 19:22:06 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -340,6 +340,8 @@ public class TestAgainstUmlModel extends TestCase {
 
     /**
      * Returns the refs.
+     *
+     * TODO: Is this method used? Can it be removed? /Linus September 2005
      *
      * @return Hashtable
      */
