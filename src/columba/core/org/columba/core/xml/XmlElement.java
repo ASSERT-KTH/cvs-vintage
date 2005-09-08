@@ -61,7 +61,7 @@ import java.util.Vector;
  * http://www.javaworld.com/javaworld/jw-10-1996/jw-10-howto.html
  * 
  * @see org.columba.mail.gui.config.general.MailOptionsDialog#initObservables()
- * @see org.columba.mail.gui.table.util.MarkAsReadTimer
+ * @see org.columba.mail.gui.message.viewer.MarkAsReadTimer
  * 
  * @author Tony Parent, fdietz
  */

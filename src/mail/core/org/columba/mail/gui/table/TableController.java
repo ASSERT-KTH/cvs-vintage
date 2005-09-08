@@ -35,7 +35,6 @@ import org.columba.core.folder.IFolderCommandReference;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
-import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.FolderEventDelegator;
@@ -47,7 +46,6 @@ import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.gui.table.model.TableModelChangedListener;
 import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.model.TableModelThreadedView;
-import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;
@@ -84,11 +82,6 @@ public class TableController implements ListSelectionListener,
 	 * reference to mail framemediator
 	 */
 	protected IFrameMediator frameController;
-
-	/**
-	 * timer which marks a message as read after a certain amount of time.
-	 */
-	protected MarkAsReadTimer markAsReadTimer;
 
 	/**
 	 * table view context menu
@@ -147,9 +140,6 @@ public class TableController implements ListSelectionListener,
 		
 		// pass tree to model, used by the threaded-view
 		headerTableModel.setTree((Tree) view.getTree());
-
-		// create a new markAsReadTimer
-		markAsReadTimer = new MarkAsReadTimer(this);
 
 		getView().setTransferHandler(
 				new TableViewTransferHandler(getFrameController()));
@@ -394,15 +384,6 @@ public class TableController implements ListSelectionListener,
 	}
 
 	/**
-	 * Returns the markAsReadTimer.
-	 * 
-	 * @return MarkAsReadTimer
-	 */
-	public MarkAsReadTimer getMarkAsReadTimer() {
-		return markAsReadTimer;
-	}
-
-	/**
 	 * Show the headerlist of currently selected folder.
 	 * <p>
 	 * Additionally, implements folderoptions plugin entrypoint.
@@ -604,13 +585,6 @@ public class TableController implements ListSelectionListener,
 	public void setSortingColumn(String column) {
 		getTableModelSorter().setSortingColumn(column);
 		// getHeaderTableModel().update();
-	}
-
-	/**
-	 * @see org.columba.mail.gui.table.ITableController#restartMarkAsReadTimer(org.columba.mail.command.IFolderCommandReference)
-	 */
-	public void restartMarkAsReadTimer(IMailFolderCommandReference reference) {
-		getMarkAsReadTimer().restart(reference);
 	}
 
 	/**

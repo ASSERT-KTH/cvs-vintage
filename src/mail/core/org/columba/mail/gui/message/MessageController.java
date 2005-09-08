@@ -79,6 +79,9 @@ public class MessageController extends JScrollPane implements
 
 	private URLMouseListener mouseListener;
 
+	private IMailbox folder;
+	private Object uid;
+
 	public MessageController(MailFrameMediator frameMediator) {
 		this.frameController = frameMediator;
 
@@ -142,7 +145,9 @@ public class MessageController extends JScrollPane implements
 	 * @throws Exception
 	 */
 	public void showMessage(IMailbox folder, Object uid) throws Exception {
-
+		this.folder = folder;
+		this.uid = uid;
+		
 		messageViewer.view(folder, uid, (MailFrameMediator) frameController);
 
 	}
@@ -336,5 +341,13 @@ public class MessageController extends JScrollPane implements
 	 */
 	public void addMouseListener(JComponent c) {
 		c.addMouseListener(mouseListener);
+	}
+
+	public IMailbox getShownFolder() {
+		return folder;
+	}
+
+	public Object getShownUid() {
+		return uid;
 	}
 }

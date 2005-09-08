@@ -191,11 +191,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		tableController.getView().getInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "DEL");
 
-		// register the markasread timer as selection listener
-		((MailFrameMediator) tableController.getFrameController())
-				.registerTableSelectionListener(tableController
-						.getMarkAsReadTimer());
-
 	}
 
 	public void enableMessagePreview(boolean enable) {

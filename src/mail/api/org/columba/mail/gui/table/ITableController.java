@@ -74,7 +74,5 @@ public interface ITableController {
 	String getSortingColumn();
 	boolean getSortingOrder();
 	
-	void restartMarkAsReadTimer(IMailFolderCommandReference reference);
-	
 	void clear();
 }

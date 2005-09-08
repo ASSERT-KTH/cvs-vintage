@@ -21,6 +21,7 @@ import java.util.Observer;
 
 import javax.swing.JComponent;
 
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 
 /**
@@ -42,6 +43,10 @@ public interface IMessageController {
 	 */
 	void showMessage(IMailbox folder, Object uid) throws Exception;
 
+	IMailbox getShownFolder();	
+	
+	Object getShownUid();
+	
 	/**
 	 * Revalidate message viewer components. 
 	 * <p>

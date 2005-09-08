@@ -33,9 +33,8 @@ import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.IMessageController;
+import org.columba.mail.gui.message.viewer.MarkAsReadTimer;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -142,22 +141,16 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 
 		messageController.showMessage(srcFolder, uid);
 
-		restartMarkAsReadTimer(flags);
+		restartMarkAsReadTimer(flags, messageController, r);
 	}
 
-	private void restartMarkAsReadTimer(Flags flags) throws Exception {
+	private void restartMarkAsReadTimer(Flags flags, IMessageController messageController, IMailFolderCommandReference r) throws Exception {
 
 		if (flags == null)
 			return;
-
 		// if the message it not yet seen
 		if (!flags.getSeen() && !srcFolder.isReadOnly()) {
-			// restart timer which marks the message as read
-			// after a user configurable time interval
-			if (mediator instanceof ThreePaneMailFrameController)
-				((TableViewOwner) mediator).getTableController()
-						.restartMarkAsReadTimer(
-								(IMailFolderCommandReference) getReference());
+			MarkAsReadTimer.getInstance().start(messageController, r);
 		}
 	}
 
