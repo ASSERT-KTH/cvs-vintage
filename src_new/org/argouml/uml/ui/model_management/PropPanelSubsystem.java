@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.27 2005/01/30 20:48:32 linus Exp $
+// $Id: PropPanelSubsystem.java,v 1.28 2005/09/08 18:27:15 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.UMLClassifierFeatureListModel;
 import org.argouml.util.ConfigLoader;
@@ -63,8 +62,7 @@ public class PropPanelSubsystem extends PropPanelPackage {
         addField(Translator.localize("label.available-features"),
                 getFeatureScroll());
 
-        addButton(new PropPanelButton2(new ActionNewOperation(),
-                lookupIcon("NewOperation")));
+        addAction(new ActionNewOperation());
     }
 
     /**

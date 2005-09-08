@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.56 2005/09/08 11:29:08 mkl Exp $
+// $Id: PropPanelExtend.java,v 1.57 2005/09/08 18:24:47 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLConditionExpressionModel;
 import org.argouml.uml.ui.UMLExpressionBodyField;
@@ -113,10 +112,10 @@ public class PropPanelExtend extends PropPanelModelElement {
         addField("Condition:", conditionScroll);
 
         // Add the toolbar buttons:
-        addButton(new PropPanelButton2(new ActionNavigateNamespace()));
-        addButton(new PropPanelButton2(new ActionNewExtensionPoint()));
-        addButton(new PropPanelButton2(new ActionNewStereotype()));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement()));
+        addAction(new ActionNavigateNamespace());
+        addAction(new ActionNewExtensionPoint());
+        addAction(new ActionNewStereotype());
+        addAction(new ActionDeleteSingleModelElement());
     }
 
     /**

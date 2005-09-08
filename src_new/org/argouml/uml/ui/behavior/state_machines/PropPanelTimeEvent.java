@@ -1,4 +1,4 @@
-// $Id: PropPanelTimeEvent.java,v 1.14 2005/07/31 21:30:04 mkl Exp $
+// $Id: PropPanelTimeEvent.java,v 1.15 2005/09/08 18:23:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
 import org.argouml.uml.ui.UMLExpressionModel2;
@@ -71,9 +70,7 @@ public class PropPanelTimeEvent extends PropPanelEvent {
                 false));
 
         add(whenPanel);
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
-                lookupIcon("Delete")));
-        ;
+        addAction(new ActionDeleteSingleModelElement());
     }
 
 }

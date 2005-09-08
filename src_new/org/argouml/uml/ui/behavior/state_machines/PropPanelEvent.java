@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.42 2005/07/31 21:27:37 mkl Exp $
+// $Id: PropPanelEvent.java,v 1.43 2005/09/08 18:23:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.ActionNewParameter;
@@ -87,9 +86,8 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
 
         addSeperator();
 
-        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(new ActionNewStereotype(),
-                lookupIcon("Stereotype")));
+        addAction(new ActionNavigateContainerElement());
+        addAction(new ActionNewStereotype());
     }
 
 

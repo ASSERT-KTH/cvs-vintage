@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.54 2005/07/23 17:13:17 mvw Exp $
+// $Id: PropPanelActor.java,v 1.55 2005/09/08 18:24:46 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.use_cases;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
@@ -76,15 +75,11 @@ public class PropPanelActor extends PropPanelClassifier {
             getAssociationEndScroll());
 
         // The toolbar buttons that go at the top:
-        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(new ActionNewActor(),
-                lookupIcon("Actor")));
-        addButton(new PropPanelButton2(getActionNewReception(),
-                lookupIcon("Reception")));
-        addButton(new PropPanelButton2(new ActionNewStereotype(),
-                lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
-                lookupIcon("Delete")));
+        addAction(new ActionNavigateContainerElement());
+        addAction(new ActionNewActor());
+        addAction(getActionNewReception());
+        addAction(new ActionNewStereotype());
+        addAction(new ActionDeleteSingleModelElement());
     }
 
 } /* end class PropActor */

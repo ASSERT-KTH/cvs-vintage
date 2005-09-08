@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.33 2005/07/23 16:47:57 mvw Exp $
+// $Id: PropPanelDiagram.java,v 1.34 2005/09/08 18:19:28 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNavigate;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.PropPanel;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkMouseListener;
 import org.argouml.uml.ui.UMLLinkedListCellRenderer;
 import org.argouml.util.ConfigLoader;
@@ -70,8 +69,8 @@ public class PropPanelDiagram extends PropPanel {
         JList lst = new OneRowLinkedList(new UMLDiagramHomeModelListModel());
         addField(Translator.localize("label.home-model"), new JScrollPane(lst));
 
-        addButton(new PropPanelButton2(new ActionNavigateUpFromDiagram()));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement()));
+        addAction(new ActionNavigateUpFromDiagram());
+        addAction(new ActionDeleteSingleModelElement());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelCreateAction.java,v 1.7 2005/07/22 07:23:44 mkl Exp $
+// $Id: PropPanelCreateAction.java,v 1.8 2005/09/08 18:23:30 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,7 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
 import org.argouml.i18n.Translator;
-import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 

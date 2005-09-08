@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.68 2005/09/08 11:17:38 mkl Exp $
+// $Id: PropPanelUseCase.java,v 1.69 2005/09/08 18:24:47 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
@@ -101,12 +100,12 @@ public class PropPanelUseCase extends PropPanelClassifier {
         addField(Translator.localize("label.association-ends"),
             getAssociationEndScroll());
 
-        addButton(new PropPanelButton2(new ActionNavigateNamespace()));
-        addButton(new PropPanelButton2(new ActionNewUseCase()));
-        addButton(new PropPanelButton2(new ActionNewExtensionPoint()));
-        addButton(new PropPanelButton2(getActionNewReception()));
-        addButton(new PropPanelButton2(new ActionNewStereotype()));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement()));
+        addAction(new ActionNavigateNamespace());
+        addAction(new ActionNewUseCase());
+        addAction(new ActionNewExtensionPoint());
+        addAction(getActionNewReception());
+        addAction(new ActionNewStereotype());
+        addAction(new ActionDeleteSingleModelElement());
     }
 
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelSignalEvent.java,v 1.14 2005/07/31 21:30:04 mkl Exp $
+// $Id: PropPanelSignalEvent.java,v 1.15 2005/09/08 18:23:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.foundation.core.ActionNewParameter;
 import org.argouml.util.ConfigLoader;
 
@@ -62,10 +61,8 @@ public class PropPanelSignalEvent extends PropPanelEvent {
         addField(Translator.localize("label.signal"),
                 new JScrollPane(signalList));
 
-        addButton(new PropPanelButton2(new ActionNewParameter(),
-                lookupIcon("Parameter")));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
-                lookupIcon("Delete")));
+        addAction(new ActionNewParameter());
+        addAction(new ActionDeleteSingleModelElement());
     }
 
 }

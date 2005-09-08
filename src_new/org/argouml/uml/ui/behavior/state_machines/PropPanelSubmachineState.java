@@ -1,4 +1,4 @@
-// $Id: PropPanelSubmachineState.java,v 1.19 2005/04/12 23:34:18 bobtarling Exp $
+// $Id: PropPanelSubmachineState.java,v 1.20 2005/09/08 18:23:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,15 +29,14 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-
-import org.tigris.swidgets.Orientation;
+import org.argouml.model.Model;
+import org.argouml.ui.targetmanager.TargetEvent;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.util.ConfigLoader;
-import org.argouml.ui.targetmanager.TargetEvent;
-import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.model.Model;
+import org.tigris.swidgets.Orientation;
 
 /**
  * @since Dec 15, 2002
