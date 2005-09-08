@@ -1,4 +1,4 @@
-// $Id: PropPanelRelationship.java,v 1.8 2005/07/23 17:13:17 mvw Exp $
+// $Id: PropPanelRelationship.java,v 1.9 2005/09/08 18:55:14 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ package org.argouml.uml.ui.foundation.core;
 
 import javax.swing.ImageIcon;
 
-import org.tigris.swidgets.Orientation;
 import org.argouml.util.ConfigLoader;
+import org.tigris.swidgets.Orientation;
 
 /**
  * Added this class to give as much information to the user as possible

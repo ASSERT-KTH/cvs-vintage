@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.67 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.68 2005/09/08 18:55:14 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,8 +39,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.ActionDeleteModelElements;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.CollectionUtil;
@@ -96,17 +94,12 @@ public class PropPanelDataType extends PropPanelClassifier {
         addField(Translator.localize("label.literals"),
                 getAttributeScroll());
 
-        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(new ActionAddDataType(),
-                lookupIcon("DataType")));
-        addButton(new PropPanelButton2(new ActionAddAttributeToDataType(),
-                lookupIcon("NewAttribute")));
-        addButton(new PropPanelButton2(new ActionAddQueryOperation(),
-                lookupIcon("NewOperation")));
-        addButton(new PropPanelButton2(new ActionNewStereotype(),
-                lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
-                lookupIcon("Delete")));
+        addAction(new ActionNavigateContainerElement());
+        addAction(new ActionAddDataType());
+        addAction(new ActionAddAttributeToDataType());
+        addAction(new ActionAddQueryOperation());
+        addAction(new ActionNewStereotype());
+        addAction(new ActionDeleteSingleModelElement());
     }
 
     private class ActionAddQueryOperation

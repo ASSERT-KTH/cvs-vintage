@@ -1,4 +1,4 @@
-// $Id: PropPanelStructuralFeature.java,v 1.14 2005/01/09 14:59:09 linus Exp $
+// $Id: PropPanelStructuralFeature.java,v 1.15 2005/09/08 18:55:14 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,11 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
-import org.tigris.swidgets.Orientation;
 import org.argouml.uml.ui.UMLCheckBox2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLMultiplicityComboBox2;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
+import org.tigris.swidgets.Orientation;
 
 /**
  * @since Nov 6, 2002

@@ -1,4 +1,4 @@
-// $Id: PropPanelMethod.java,v 1.1 2005/09/03 17:27:16 thn Exp $
+// $Id: PropPanelMethod.java,v 1.2 2005/09/08 18:55:14 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateOwner;
-import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 import org.argouml.uml.ui.UMLTextArea2;
 import org.argouml.uml.ui.UMLTextField2;
@@ -75,9 +74,8 @@ public class PropPanelMethod extends PropPanelFeature {
         JScrollPane pane = new JScrollPane(bodyArea);
         addField(Translator.localize("label.body"), pane);
 
-        addButton(new PropPanelButton2(new ActionNavigateOwner()));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
-                lookupIcon("Delete")));
+        addAction(new ActionNavigateOwner());
+        addAction(new ActionDeleteSingleModelElement());
     }
 
     /**
