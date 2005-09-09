@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.23 2005/09/07 01:39:33 bobtarling Exp $
+// $Id: NSUMLModelFacade.java,v 1.24 2005/09/09 13:19:41 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3261,6 +3261,36 @@ public class NSUMLModelFacade implements Facade {
 
         // ...
 	return illegalArgumentCollection(handle);
+    }
+    
+    /**
+     * Get the list of Link Ends connected to this link end.
+     *
+     * @param handle link end to start from
+     * @return Iterator with all connected link ends.
+     */
+    public Collection getOtherLinkEnds(Object handle) {
+        if (handle instanceof MLinkEnd) {
+            MLink link = ((MLinkEnd) handle).getLink();
+
+            if (link == null) {
+                return emptyCollection();
+            }
+
+            Collection allEnds = link.getConnections();
+            if (allEnds == null) {
+                return emptyCollection();
+            }
+
+            // TODO: An Iterator filter would be nice here instead of the
+            // mucking around with the Collection.
+            allEnds = new ArrayList(allEnds);
+            allEnds.remove(handle);
+            return allEnds;
+        }
+
+        // ...
+    return illegalArgumentCollection(handle);
     }
 
     /**
