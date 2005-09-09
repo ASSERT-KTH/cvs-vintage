@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.28 2005/07/24 23:54:42 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.29 2005/09/09 14:25:47 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.28 2005/07/24 23:54:42 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.29 2005/09/09 14:25:47 mkl Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -134,6 +134,19 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
      */
     public String makeText(Object value) {
         String name = null;
+        if (Model.getFacade().isAParameter(value)) {
+            Object type = Model.getFacade().getType(value);
+            name = Model.getFacade().getName(value);
+            if (name == null || name.equals("")) {
+                name = "(anon " + makeTypeName(value) + ")";
+            }
+            String typeName = null;
+            if (type != null) typeName=Model.getFacade().getName(type);
+            if (typeName != null || "".equals(typeName)) {
+                name = name + ":" + typeName;
+            }
+            return name;
+        }
         if (Model.getFacade().isAModelElement(value)) {
             Object/* MModelElement */elem = value;
             name = Model.getFacade().getName(elem);
