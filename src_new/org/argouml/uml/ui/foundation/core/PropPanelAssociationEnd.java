@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.68 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.69 2005/09/09 08:46:01 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -266,34 +266,4 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         }
         return multiplicityComboBox;
     }
-
-    /**
-     * Action behind pressing the button go to other. TODO: as soon as we don't
-     * support JDK 1.2 any more, drop this method and replace it with an action.
-     */
-    public void gotoOther() {
-        Object target = getTarget();
-        if (Model.getFacade().isAAssociationEnd(target)) {
-            Object end = /* (MAssociationEnd) */target;
-            TargetManager.getInstance().setTarget(
-                    Model.getFacade().getOppositeEnd(end));
-        }
-    }
-
-    /**
-     * Checks if the delete button of the associationend panel should be
-     * enabled. It should be disabled if there are two or less association ends.
-     *
-     * @return boolean
-     */
-    public boolean isDeleteEnabled() {
-        if (Model.getFacade().isAAssociationEnd(getTarget())) {
-            return Model.getFacade().getOtherAssociationEnds(getTarget()).size()
-            	> 1;
-        }
-        return false;
-    }
-
-   
-
 } /* end class PropPanelAssociationEnd */
