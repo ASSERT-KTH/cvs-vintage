@@ -1,4 +1,4 @@
-// $Id: UseCasesHelperImpl.java,v 1.5 2005/09/06 15:15:00 mkl Exp $
+// $Id: UseCasesHelperImpl.java,v 1.6 2005/09/09 08:49:01 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -513,12 +513,12 @@ class UseCasesHelperImpl implements UseCasesHelper {
             ((MUseCase) handle).setExtensionPoints(extensionPoints);
             return;
         }
-        if (handle instanceof MExtend && extensionPoints instanceof List) {
-            ((MExtend) handle).setExtensionPoints((List)extensionPoints);
+        if (handle instanceof MExtend && extensionPoints instanceof Collection) {
+            ((MExtend) handle).setExtensionPoints(new ArrayList(extensionPoints));
             return;
         }
         throw new IllegalArgumentException("handle: " + handle
-                + " or extensionPoints: " + extensionPoints);
+                + " or extensionPoints: " + extensionPoints.getClass());
     }
 
     /**
