@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.68 2005/09/08 18:22:54 mkl Exp $
+// $Id: PropPanelMessage.java,v 1.69 2005/09/09 13:33:36 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,11 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -121,6 +123,8 @@ public class PropPanelMessage extends PropPanelModelElement {
         public ActionToolNewAction() {
             super("button.new-action");
             putValue(Action.NAME, Translator.localize("button.new-action"));
+            Icon icon = ResourceLoaderWrapper.lookupIcon("CallAction");
+            putValue(Action.SMALL_ICON, icon);         
         }
 
         /**
