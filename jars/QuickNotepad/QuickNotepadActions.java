@@ -18,15 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepadActions.java,v 1.2 2001/11/09 20:26:17 jgellene Exp $
+ * $Id: QuickNotepadActions.java,v 1.3 2005/09/10 19:40:17 ezust Exp $
  */
 
-interface QuickNotepadActions
-{
+interface QuickNotepadActions {
 	void chooseFile();
+
 	void saveFile();
+
 	void copyToBuffer();
 }
-
-
-

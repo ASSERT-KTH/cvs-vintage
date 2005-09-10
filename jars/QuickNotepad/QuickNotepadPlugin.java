@@ -18,18 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepadPlugin.java,v 1.7 2003/04/30 05:28:54 spestov Exp $
+ * $Id: QuickNotepadPlugin.java,v 1.8 2005/09/10 19:40:17 ezust Exp $
  */
 
 import org.gjt.sp.jedit.EditPlugin;
 
 /**
  * The QuickNotepad plugin
- *
+ * 
  * @author John Gellene
  */
-public class QuickNotepadPlugin extends EditPlugin
-{
+public class QuickNotepadPlugin extends EditPlugin {
 	public static final String NAME = "quicknotepad";
 	public static final String OPTION_PREFIX = "options.quicknotepad.";
 }
