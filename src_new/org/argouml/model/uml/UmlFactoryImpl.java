@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.33 2005/08/20 09:29:13 linus Exp $
+// $Id: UmlFactoryImpl.java,v 1.34 2005/09/10 21:37:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -479,6 +479,8 @@ class UmlFactoryImpl
             return getStateMachines().createSynchState();
         } else if (elementType == nsmodel.getMetaTypes().getState()) {
             throw new RuntimeException("Attempt to instantiate abstract type");
+        } else if (elementType == nsmodel.getMetaTypes().getSimpleState()) {
+            return getStateMachines().createSimpleState();
         } else if (elementType == nsmodel.getMetaTypes().getClassifierRole()) {
             return getCollaborations().createClassifierRole();
         } else if (elementType == nsmodel.getMetaTypes().getComponent()) {

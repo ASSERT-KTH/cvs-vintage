@@ -1,4 +1,4 @@
-// $Id: SelectionState.java,v 1.31 2005/09/07 21:03:52 linus Exp $
+// $Id: SelectionState.java,v 1.32 2005/09/10 21:37:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,7 +158,7 @@ public class SelectionState extends SelectionNodeClarifiers {
 	int cx = getContent().getX(), cy = getContent().getY();
 	int cw = getContent().getWidth(), ch = getContent().getHeight();
 	Object edgeType = null;
-	Object nodeType = Model.getMetaTypes().getState();
+	Object nodeType = Model.getMetaTypes().getSimpleState();
 
 	Editor ce = Globals.curEditor();
 	GraphModel gm = ce.getGraphModel();
@@ -193,6 +193,12 @@ public class SelectionState extends SelectionNodeClarifiers {
 	}
     }
 
+    /**
+     * @see org.tigris.gef.base.SelectionButtons#getNewNode(int)
+     */
+    protected Object getNewNode(int buttonCode) {
+	return Model.getStateMachinesFactory().createSimpleState();
+    }
 
     /**
      * @see org.tigris.gef.base.SelectionButtons#createEdgeAbove(

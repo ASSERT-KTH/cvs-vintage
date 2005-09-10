@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.80 2005/08/13 09:18:12 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.81 2005/09/10 21:37:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -394,7 +394,7 @@ public class UMLStateDiagram extends UMLDiagram {
         if (actionState == null) {
             actionState =
                 new RadioAction(
-                        new CmdCreateNode(Model.getMetaTypes().getState(),
+                        new CmdCreateNode(Model.getMetaTypes().getSimpleState(),
                                 	  "button.new-state"));
         }
         return actionState;

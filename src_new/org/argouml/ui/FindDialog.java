@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.35 2005/07/10 07:17:23 linus Exp $
+// $Id: FindDialog.java,v 1.36 2005/09/10 21:37:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -366,7 +366,8 @@ public class FindDialog extends ArgoDialog
                 Model.getMetaTypes().getOperation()));
         type.addItem(PredicateMType.create(
                 Model.getMetaTypes().getPseudostate()));
-        type.addItem(PredicateMType.create(Model.getMetaTypes().getState()));
+        type.addItem(PredicateMType.create(
+                Model.getMetaTypes().getSimpleState()));
         type.addItem(PredicateMType.create(
                 Model.getMetaTypes().getStateVertex()));
         type.addItem(PredicateMType.create(
