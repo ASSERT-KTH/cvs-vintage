@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.112 2005/08/29 18:33:14 mvw Exp $
+// $Id: FigInterface.java,v 1.113 2005/09/10 21:41:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -550,7 +550,17 @@ public class FigInterface extends FigClassifierBox {
             return;
         }
     }
-
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        super.textEditStarted(ft);
+        if (getOperationsFig().getFigs().contains(ft)) {
+            showHelp("parsing.help.operation");
+        }
+    }
+    
     /**
      * @param ft the figtext holding the feature
      * @param i the index (?)

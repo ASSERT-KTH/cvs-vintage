@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.71 2005/08/13 10:53:23 mvw Exp $
+// $Id: FigUseCase.java,v 1.72 2005/09/10 21:41:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import javax.swing.Action;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
-import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
@@ -1081,11 +1080,9 @@ public class FigUseCase extends FigNodeModelElement
      */
     protected void textEditStarted(FigText ft) {
         if (ft == getNameFig()) {
-            ProjectBrowser.getInstance().getStatusBar().showStatus(
-                Translator.localize("parsing.help.fig-usecase"));
+            showHelp("parsing.help.fig-usecase");
         } else if (epVec.getFigs().contains(ft)) {
-            ProjectBrowser.getInstance().getStatusBar().showStatus(
-                Translator.localize("parsing.help.fig-extensionpoint"));
+            showHelp("parsing.help.fig-extensionpoint");
         }
     }
 

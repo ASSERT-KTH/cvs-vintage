@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.76 2005/07/22 13:13:49 bobtarling Exp $
+// $Id: FigPackage.java,v 1.77 2005/09/10 21:41:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -816,6 +816,10 @@ public class FigPackage extends FigNodeModelElement
         
 //        String s = GeneratorDisplay.getInstance().generate(getOwner());
 //        ft.setText(s);
+
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-package");
+        }
     }
 
     /**

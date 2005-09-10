@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.50 2005/08/10 20:45:46 mvw Exp $
+// $Id: FigComment.java,v 1.51 2005/09/10 21:41:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -410,7 +410,14 @@ public class FigComment
             storeNote(ft.getText());
         }
     }
-
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        showHelp("parsing.help.comment");
+    }
+    
     /**
      * @see org.tigris.gef.presentation.Fig#setEnclosingFig(org.tigris.gef.presentation.Fig)
      */
