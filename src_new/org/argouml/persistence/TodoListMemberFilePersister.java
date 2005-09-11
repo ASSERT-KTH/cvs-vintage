@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.9 2005/05/15 09:56:46 bobtarling Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.10 2005/09/11 12:11:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.persistence;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;

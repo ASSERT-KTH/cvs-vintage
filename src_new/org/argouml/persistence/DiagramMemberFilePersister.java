@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.16 2005/07/21 19:13:06 bobtarling Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.17 2005/09/11 12:11:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.persistence;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +33,6 @@ import java.io.Writer;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
-import org.argouml.model.Model;
 import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.ocl.ExpansionException;
