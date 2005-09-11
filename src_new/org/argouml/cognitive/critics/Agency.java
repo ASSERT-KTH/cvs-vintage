@@ -1,4 +1,4 @@
-// $Id: Agency.java,v 1.19 2005/07/10 07:16:56 linus Exp $
+// $Id: Agency.java,v 1.20 2005/09/11 12:06:08 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,7 +80,6 @@ public class Agency extends Observable { //implements java.io.Serialization
      * be active.
      */
     private ControlMech controlMech;
-    private static int numCriticsApplied = 0;
     private static Hashtable singletonCritics = new Hashtable(40);
 
     ////////////////////////////////////////////////////////////////
