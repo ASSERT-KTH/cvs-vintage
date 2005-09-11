@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.28 2005/07/15 20:21:55 mvw Exp $
+// $Id: FigStateVertex.java,v 1.29 2005/09/11 19:31:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
+import org.tigris.gef.presentation.FigText;
 
 /**
  * Abstract class to with common behavior for nestable nodes in UML Statechart
@@ -135,6 +136,15 @@ public abstract class FigStateVertex extends FigNodeModelElement {
             return new SelectionState(this);
         }
         return null;
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-statename");
+        }
     }
 
 } /* end class FigStateVertex */

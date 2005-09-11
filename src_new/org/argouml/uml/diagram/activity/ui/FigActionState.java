@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.28 2005/09/07 21:03:52 linus Exp $
+// $Id: FigActionState.java,v 1.29 2005/09/11 19:31:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -253,4 +253,14 @@ public class FigActionState extends FigStateVertex {
             super.textEdited(ft);
         }
     }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-actionstate");
+        }
+    }
+    
 } /* end class FigActionState */

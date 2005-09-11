@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.28 2005/09/07 21:03:52 linus Exp $
+// $Id: FigState.java,v 1.29 2005/09/11 19:31:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -240,6 +240,16 @@ public abstract class FigState extends FigStateVertex {
      */
     protected FigText getInternal() {
         return internal;
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        super.textEditStarted(ft);
+        if (ft == internal) {
+            showHelp("parsing.help.fig-statebody");
+        }
     }
 
 }
