@@ -1,4 +1,4 @@
-// $Id: ModeChangeHeight.java,v 1.3 2005/08/13 08:49:16 mvw Exp $
+// $Id: ModeChangeHeight.java,v 1.4 2005/09/11 19:11:26 thn Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,7 +136,7 @@ public class ModeChangeHeight extends FigModifyingModeImpl {
 
     private boolean isContract() {
         if (!contractSet) {
-            contract = getArg("name").equals("SequenceContract");
+            contract = getArg("name").equals("button.sequence-contract");
             contractSet = true;
         }
         return contract;
