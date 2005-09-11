@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.25 2005/08/13 08:49:16 mvw Exp $
+// $Id: SequenceDiagramLayout.java,v 1.26 2005/09/11 19:05:52 thn Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -165,7 +165,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
     /**
      * Return the node index at a certain y point.
      */
-    int getNodeIndex(int y) {
+    static public int getNodeIndex(int y) {
         y -= DIAGRAM_TOP_MARGE + FigClassifierRole.DEFAULT_HEIGHT;
         if (y < 0) {
             y = 0;
