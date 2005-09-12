@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.33 2005/09/08 18:23:30 mkl Exp $
+// $Id: PropPanelReception.java,v 1.34 2005/09/12 11:23:10 mkl Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
@@ -43,6 +44,8 @@ import org.tigris.swidgets.GridLayout2;
  * PropertyPanel for a Reception.
  */
 public class PropPanelReception extends PropPanelModelElement {
+    
+    private JPanel modifiersPanel;
 
     /**
      * The constructor.
@@ -58,18 +61,21 @@ public class PropPanelReception extends PropPanelModelElement {
                 getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
+        
+        modifiersPanel =
+            new JPanel(new GridLayout2());
+        modifiersPanel.setBorder(
+            new TitledBorder(Translator.localize(
+                    "label.modifiers")));
 
-        JPanel modifiersPanel =
-            new JPanel(new GridLayout2(0, 2, GridLayout2.ROWCOLPREFERRED));
+        modifiersPanel.add(
+                            new UMLGeneralizableElementAbstractCheckBox());
+        modifiersPanel.add(
+                            new UMLGeneralizableElementLeafCheckBox());
+        modifiersPanel.add(
+                            new UMLGeneralizableElementRootCheckBox());
 
-        modifiersPanel.add(new UMLGeneralizableElementAbstractCheckBox());
-        modifiersPanel.add(new UMLGeneralizableElementLeafCheckBox());
-        modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());
-        // Reception are by definition never queries! see WFRs.
-        // therefore do not provide the according checkbox!
-
-        addField(Translator.localize("label.modifiers"),
-                modifiersPanel);
+        add(modifiersPanel);
 
         addSeperator();
 
