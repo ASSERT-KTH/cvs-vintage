@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.36 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigObject.java,v 1.37 2005/09/12 18:52:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -213,6 +213,14 @@ public class FigObject extends FigNodeModelElement {
         }
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-object");
+        }
+    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#setEnclosingFig(org.tigris.gef.presentation.Fig)

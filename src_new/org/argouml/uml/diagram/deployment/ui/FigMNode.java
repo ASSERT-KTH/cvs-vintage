@@ -1,4 +1,4 @@
-// $Id: FigMNode.java,v 1.36 2005/07/25 12:51:57 bobtarling Exp $
+// $Id: FigMNode.java,v 1.37 2005/09/12 18:52:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -273,6 +273,15 @@ public class FigMNode extends FigNodeModelElement {
             setStereotype("");
         } else {
             setStereotype(Notation.generateStereotype(this, stereo));
+        }
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-node");
         }
     }
 

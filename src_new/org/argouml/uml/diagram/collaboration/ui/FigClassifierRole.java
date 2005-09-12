@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.44 2005/09/07 21:03:52 linus Exp $
+// $Id: FigClassifierRole.java,v 1.45 2005/09/12 18:52:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -471,6 +471,15 @@ public class FigClassifierRole extends FigNodeModelElement {
                 ProjectBrowser.getInstance().getStatusBar().showStatus(
                         Translator.messageFormat(msg, args));
 	    }
+        }
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-classifierrole");
         }
     }
 

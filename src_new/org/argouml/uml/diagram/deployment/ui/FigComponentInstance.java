@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.40 2005/07/14 18:19:35 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.41 2005/09/12 18:52:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -325,6 +325,15 @@ public class FigComponentInstance extends FigNodeModelElement {
         }
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-componentinstance");
+        }
+    }
+    
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
      */
