@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.68 2005/09/08 18:27:15 mkl Exp $
+// $Id: PropPanelPackage.java,v 1.69 2005/09/12 11:24:15 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,11 +50,11 @@ import org.tigris.swidgets.Orientation;
 
 
 /**
- * PropPanelPackage defines the Property Panel for MPackage elements.
+ * PropPanelPackage defines the Property Panel for Package elements.
  */
 public class PropPanelPackage extends PropPanelNamespace  {
 
-    private JPanel modifiersPanel = new JPanel();
+    private JPanel modifiersPanel;
     private JScrollPane generalizationScroll;
     private JScrollPane specializationScroll;
 
