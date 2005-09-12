@@ -4,7 +4,7 @@ jonathan.tag	JONATHAN_CORE_4_1
 kilim.tag       KILIM_1_1_3
 
 # required for irmi protocol
-irmi.tag                IRMI_1_0_0
+irmi.tag                IRMI_1_0_1
 jakarta collections     3.1
 
 # others :
