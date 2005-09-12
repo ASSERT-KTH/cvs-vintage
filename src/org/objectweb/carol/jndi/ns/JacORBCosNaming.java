@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.12 2005/04/11 13:39:40 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.13 2005/09/12 19:26:16 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -230,9 +230,8 @@ public class JacORBCosNaming extends AbsRegistry implements NameService {
     private boolean isRemoteNameServiceStarted() {
 
         Properties prop = new Properties();
-        prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory");
-        prop.put(Context.PROVIDER_URL, "corbaloc:iiop:localhost:" + Integer.toString(getPort())
-                + "/StandardNS/NameServer-POA/_root");
+        prop.put(Context.INITIAL_CONTEXT_FACTORY, "org.objectweb.carol.jndi.spi.URLInitialContextFactory");
+        prop.put(Context.PROVIDER_URL, "iiop://localhost:" + getPort());
 
         if (orb == null) {
             initORB();
@@ -242,12 +241,10 @@ public class JacORBCosNaming extends AbsRegistry implements NameService {
 
         try {
             new InitialContext(prop);
-        } catch (javax.naming.CommunicationException jcm) {
+        } catch (javax.naming.NamingException ne) {
             return false;
         } catch (org.omg.CORBA.TRANSIENT ct) {
             return false;
-        } catch (Exception e) {
-            return true;
         }
         return true;
     }
