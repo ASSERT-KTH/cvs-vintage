@@ -19,11 +19,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
 import org.columba.api.desktop.IDesktop;
+import org.columba.core.base.OSInfo;
+import org.columba.core.base.TextUtil;
+import org.columba.core.logging.Logging;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.jdesktop.jdic.desktop.Desktop;
 import org.jdesktop.jdic.desktop.DesktopException;
@@ -32,39 +34,36 @@ import org.jdesktop.jdic.filetypes.Association;
 import org.jdesktop.jdic.filetypes.AssociationService;
 
 public class JDICDesktop implements IDesktop {
-	
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.desktop");
 
 	private AssociationService associationService;
 
 	public JDICDesktop() {
-		 associationService = new AssociationService();
+		associationService = new AssociationService();
 	}
 
 	public String getMimeType(File file) {
 		String mimetype = "application/octet-stream";
-		
+
 		try {
-			Association a = associationService.getAssociationByContent( file.toURL());
-			if( a != null) {
+			Association a = associationService.getAssociationByContent(file
+					.toURL());
+			if (a != null) {
 				return a.getMimeType();
 			}
 		} catch (MalformedURLException e) {
 		}
-		
+
 		return mimetype;
 	}
 
 	public String getMimeType(String ext) {
 		String mimetype = "application/octet-stream";
-		
-		Association a = associationService.getFileExtensionAssociation( ext);
-		if( a != null) {
+
+		Association a = associationService.getFileExtensionAssociation(ext);
+		if (a != null) {
 			return a.getMimeType();
 		}
-		
+
 		return mimetype;
 	}
 
@@ -76,35 +75,44 @@ public class JDICDesktop implements IDesktop {
 		try {
 			Desktop.open(file);
 		} catch (DesktopException e) {
-			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("org.columba.core.i18n.dialog", "error", "no_viewer"), "Error",
-					JOptionPane.ERROR_MESSAGE);
-			
+			JOptionPane.showMessageDialog(null, GlobalResourceLoader.getString(
+					"org.columba.core.i18n.dialog", "error", "no_viewer"),
+					"Error", JOptionPane.ERROR_MESSAGE);
+
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	public boolean openAndWait(File file) {
-		Association association = new AssociationService().getMimeTypeAssociation("text/plain");
+		Association association = new AssociationService()
+				.getMimeTypeAssociation("text/plain");
 		Action action = association.getActionByVerb("open");
-		
+
 		String command = action.getCommand();
 
-		// Add the file either as parameter %1 or append to the end
-		command = command.replaceAll("%1", file.getPath());
-		
-		if( command.indexOf(file.getPath()) == -1) {
+		// replace "%1" parameter with file argument ...
+		command = TextUtil.replaceAll(command, "%1", file.getPath());
+
+		// ... or, add the file in case there was no "%1" used
+		if (command.indexOf(file.getPath()) == -1) {
 			command = command + " " + file.getPath();
 		}
-		
-		LOG.info("executing command: "+command);
-		
+
+		// if win32 platform, prepend cmd.exe
+		// necessary for system environment variables usage
+		if ( OSInfo.isWin32Platform() ) {
+			command = "cmd.exe /C "+command;
+		}
+
 		Process child;
 		try {
 			child = Runtime.getRuntime().exec(command);
 		} catch (IOException e) {
+			if (Logging.DEBUG)
+				e.printStackTrace();
+
 			return false;
 		}
 
@@ -119,10 +127,10 @@ public class JDICDesktop implements IDesktop {
 		} catch (InterruptedException ex) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public boolean supportsBrowse() {
 		return true;
 	}
@@ -131,9 +139,9 @@ public class JDICDesktop implements IDesktop {
 		try {
 			Desktop.browse(url);
 		} catch (DesktopException e) {
-			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("org.columba.core.i18n.dialog", "error", "no_browser"), "Error",
-					JOptionPane.ERROR_MESSAGE);			
+			JOptionPane.showMessageDialog(null, GlobalResourceLoader.getString(
+					"org.columba.core.i18n.dialog", "error", "no_browser"),
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
