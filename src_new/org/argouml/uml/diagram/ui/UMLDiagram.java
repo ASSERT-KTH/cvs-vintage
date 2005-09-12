@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.78 2005/09/02 14:46:01 mvw Exp $
+// $Id: UMLDiagram.java,v 1.79 2005/09/12 20:13:58 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
+import org.argouml.ui.explorer.Relocatable;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
@@ -97,7 +98,7 @@ import org.tigris.toolbar.toolbutton.ToolButton;
  */
 public abstract class UMLDiagram
     extends ArgoDiagram
-    implements PropertyChangeListener {
+    implements PropertyChangeListener, Relocatable {
     /**
      * Logger.
      */
@@ -690,25 +691,13 @@ public abstract class UMLDiagram
         return null;
     }
     
-    /**
-     * This function should return true if it is allowed to relocate 
-     * this type of diagram to the given modelelement.
-     * 
-     * @param base the given modelelement
-     * @return true if adding a diagram here is allowed
+    /* (non-Javadoc)
+     * @see org.argouml.uml.diagram.ui.Relocatable#isRelocationAllowed(java.lang.Object)
      */
     public abstract boolean isRelocationAllowed(Object base);
 
-    /**
-     * Relocate this diagram, 
-     * e.g. for a class diagram assign it a new namespace, 
-     * e.g. for a statechart move it together with the 
-     * statemachine to a new operation/classifier. <p>
-     * 
-     * Precondition: isRelocationAllowed(base) is true. 
-     * 
-     * @param base the new location, i.e. base modelelement
-     * @return true if successful
+    /* (non-Javadoc)
+     * @see org.argouml.uml.diagram.ui.Relocatable#relocate(java.lang.Object)
      */
     public abstract boolean relocate(Object base);
     
