@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.47 2005/07/25 14:46:12 mvw Exp $
+// $Id: TargetManager.java,v 1.48 2005/09/13 18:32:23 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -689,6 +689,23 @@ public final class TargetManager {
         return t;
     }
 
+    /**
+     * If there is only one model target, then it is returned. 
+     * Otherwise null.
+     * 
+     * @return the single model target 
+     */
+    public synchronized Object getSingleModelTarget() {
+        int i = 0;
+        Iterator iter = getTargets().iterator();
+        while (iter.hasNext()) {
+            if(determineModelTarget(iter.next()) != null) i++;
+            if (i > 1) break;
+        }
+        if (i == 1) return modelTarget;
+        return null;
+    }
+    
     /**
      * Adds a listener.
      * @param listener the listener to add
