@@ -1,4 +1,4 @@
-// $Id: SelectionClass.java,v 1.28 2005/09/07 21:03:53 linus Exp $
+// $Id: SelectionClass.java,v 1.29 2005/09/14 12:46:22 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,7 +260,7 @@ public class SelectionClass extends SelectionNodeClarifiers {
      * @see org.tigris.gef.base.SelectionButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
-        return Model.getCoreFactory().createClass();
+        return Model.getCoreFactory().buildClass();
     }
 
     /**
