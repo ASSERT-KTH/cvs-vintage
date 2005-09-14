@@ -1,7 +1,7 @@
 Columba v1.0 
 
 Bug fixes:
-- TreeSelection after Popup fixed. Problem was that the boolean flags to check 
+- TreeSelection after Popup fixed. The problem was that the boolean flags to check
   if this event is popup-event must be reset to false after the menu is shown.
 - Refactored MarkAsReadTimer. It is now independant of the TableController which 
   makes more sense. It works with the util Timer to avoid execting an add to 
@@ -12,11 +12,11 @@ Bug fixes:
 - Small bug in synchronization of HeaderLists: Deleted local uids were not 
   counted in the message balance. This resulted in a complete sync which is 
   not necessary.
-- Minor IMAP tweaks to get more preformance/nicer connection handling.
+- Minor IMAP tweaks to get more performance/nicer connection handling.
 - Flags and Attributes need to be cloned when used as parameters in the 
   addMessage method.
 - Headerlist was not instantiated when new subfolders were created.
-- Virtual Folder does now also binning on innerCopy and MarkMessage. Huge 
+- Virtual Folder now also does binning on innerCopy and MarkMessage. Huge
   speedup for large copy/move/delete commands on VirtualFolders.
 - All IMAPFolders can now be synced by the checkmail action.
 - #1281648, edit in external editor doesn't work
@@ -30,11 +30,11 @@ Bug fixes:
 - Charset Menu fixes. There are not as many charsets available as 
   previously assumed.
 - Do decoding of message body streams
-- Handle too long String when writing headercache.
+- Handle too long Strings when writing headercache.
 - Refactoring of the HeaderCacheFramework. Now HeaderList and its persistance 
-  are transparently handeled. Now we can even start into looking to use 
-  BerkelyDB in the future. Unplanned but not unwelcome this refactoring 
-  also includes some IMAP speedus :-)
+  are transparently handled. Now we can even start looking into using
+  BerkelyDB in the future. Unplanned (but not unwelcome), this refactoring
+  also includes some IMAP speedups :-)
 - make sure that message list and message viewer are cleared, if no 
   folder or message selected
 - fixed composer layout, component height should be the same in every row
@@ -70,7 +70,9 @@ Bug fixes:
 - Handle multiparts in the alternative part. Ignore charset of HMTLDocument.
 - refactored plugin system, refactored menu extension system
 - Refactoring and clean-up for platfrom independence. From this commit 
-  on all not natively supported platforms are again supported. I have created default fallbacks for the mime association and the trayicon features. Maybe it is now also easier to integrate the mac features with their native jars.
+  on, all not natively supported platforms are again supported.
+  I have created default fallbacks for the mime association and the trayicon
+  features. It is now also easier to integrate the mac features with their native jars.
 - Html to Text was not charset aware.
 - Image Viewer speedup: Use the FAST scaling method instead of smooth.
 - Added a new edit Signature action. This opens the external text editor 
@@ -81,12 +83,10 @@ Bug fixes:
 - selection handling changed. If you open the context-menu, the selection 
   changes will not trigger the message viewer. This works for the tree and 
   the message list.
-- #958067,cut/copy/paste messages throws exception
-- #958067, cut/copy/paste messages throws exception, This is not finished yet.
-  See, the notes in the bug-tracker.
-- Added more information on the messageFlagedChanged event. With this 
+- #958067,cut/copy/paste messages throws exception fixed
+- Added more information on the messageFlagedChanged event. With this
   additional information it is now possible to update the VFolders 
-  correctly if the flags change. Further a new search is triggered if the 
+  correctly if the flags change. Further, a new search is triggered if the 
   flags change so that the VFolders get these changes. There is still a good 
   way missing for removing messages after a Flag change.
 	
