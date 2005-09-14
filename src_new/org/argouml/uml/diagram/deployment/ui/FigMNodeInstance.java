@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.36 2005/09/12 18:52:15 mvw Exp $
+// $Id: FigMNodeInstance.java,v 1.37 2005/09/14 08:18:46 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -305,6 +306,17 @@ public class FigMNodeInstance extends FigNodeModelElement {
     }
 
     static final long serialVersionUID = 8822005566372687713L;
+    
+    protected void modelChanged(PropertyChangeEvent mee) {
+        super.modelChanged(mee);
+        Object nodeInst =  getOwner();
+        if (nodeInst == null) return;
+        if ("classifier".equals(mee.getPropertyName())
+                && mee.getSource() == nodeInst) {
+            updateNameText();
+            damage();
+        }
+    }
 
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateNameText()

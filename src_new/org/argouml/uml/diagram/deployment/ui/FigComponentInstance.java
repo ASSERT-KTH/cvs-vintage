@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.41 2005/09/12 18:52:15 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.42 2005/09/14 08:18:46 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.util.*;
 
@@ -356,6 +357,17 @@ public class FigComponentInstance extends FigNodeModelElement {
         }
     }
 
+    protected void modelChanged(PropertyChangeEvent mee) {
+        super.modelChanged(mee);
+        Object compInst =  getOwner();
+        if (compInst == null) return;
+        if ("classifier".equals(mee.getPropertyName())
+                && mee.getSource() == compInst) {
+            updateNameText();
+            damage();
+        }
+    }
+    
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateNameText()
      */
