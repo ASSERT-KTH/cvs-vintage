@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromDiagram.java,v 1.1 2005/07/11 23:58:11 bobtarling Exp $
+// $Id: ActionRemoveFromDiagram.java,v 1.2 2005/09/15 17:29:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,17 +24,12 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
-import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
@@ -49,12 +44,6 @@ import org.tigris.gef.presentation.Fig;
  * Removes an modelelement from the diagram, but not from the model.
  */
 public class ActionRemoveFromDiagram extends AbstractAction {
-
-    /**
-     * logger
-     */
-    private static final Logger LOG =
-        Logger.getLogger(ActionRemoveFromDiagram.class);
 
     public ActionRemoveFromDiagram(String name) {
         super(name, ResourceLoaderWrapper.lookupIcon("RemoveFromDiagram"));
