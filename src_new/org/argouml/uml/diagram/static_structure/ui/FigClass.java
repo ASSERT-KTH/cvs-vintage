@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.165 2005/09/15 17:09:32 mvw Exp $
+// $Id: FigClass.java,v 1.166 2005/09/15 20:12:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1186,7 +1186,6 @@ public class FigClass extends FigClassifierBox
         // ouch ugly but that's for a next refactoring
         // TODO: make setBounds, calcBounds and updateBounds consistent
         setBounds(rect.x, rect.y, rect.width, rect.height);
-        damage();
     }
 
 //    /**
@@ -1288,7 +1287,6 @@ public class FigClass extends FigClassifierBox
         // ouch ugly but that's for a next refactoring
         // TODO: make setBounds, calcBounds and updateBounds consistent
         setBounds(rect.x, rect.y, rect.width, rect.height);
-        damage();
     }
 
     /**
