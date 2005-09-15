@@ -56,6 +56,7 @@ public class AccountWizardLauncher {
         Wizard wizard = new Wizard(model,
                 MailResourceLoader.getString("dialog", "accountwizard", "title"),
                 ImageLoader.getSmallImageIcon("stock_preferences.png"));
+        wizard.setStepListRenderer(null);
         CSH.setHelpIDString(wizard, "getting_started_1");
         JavaHelpSupport.enableHelp(wizard,
             HelpManager.getInstance().getHelpBroker());

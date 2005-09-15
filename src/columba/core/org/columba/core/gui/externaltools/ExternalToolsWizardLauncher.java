@@ -95,7 +95,7 @@ public class ExternalToolsWizardLauncher {
 		// TODO (@author fdietz): i18n
 		Wizard wizard = new Wizard(model, "External Tools Configuration",
 				ImageLoader.getSmallImageIcon("stock_preferences.png"));
-
+		wizard.setStepListRenderer(null);
 		CSH.setHelpIDString(wizard, "extending_columba_2");
 		JavaHelpSupport.enableHelp(wizard, HelpManager.getInstance()
 				.getHelpBroker());

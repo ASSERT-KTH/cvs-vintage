@@ -56,6 +56,9 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
         Options.setPopupDropShadowEnabled(true);
         Options.setUseSystemFonts(true);
       
+        UIManager.put("WizardContentPaneUI",
+        		"org.columba.core.gui.themes.plugin.PlasticWizardContentPaneUI");
+
         /*
         ClearLookManager.setMode(ClearLookMode.ON);
         ClearLookManager.setPolicy(

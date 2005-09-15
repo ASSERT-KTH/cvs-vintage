@@ -63,6 +63,7 @@ public class ImportWizardLauncher {
                 AddressbookResourceLoader.getString("dialog",
                     "addressbookimport", "title"),
                 ImageLoader.getSmallImageIcon("stock_convert.png"));
+        wizard.setStepListRenderer(null);
         wizard.pack();
         wizard.setLocationRelativeTo(null);
         wizard.setVisible(true);

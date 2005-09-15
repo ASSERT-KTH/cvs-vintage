@@ -70,6 +70,7 @@ public class ImportWizardLauncher {
         Wizard wizard = new Wizard(model,
                 MailResourceLoader.getString("dialog", "mailboximport", "title"),
                 ImageLoader.getSmallImageIcon("stock_convert.png"));
+        wizard.setStepListRenderer(null);
         CSH.setHelpIDString(wizard, "organising_and_managing_your_email_1");
         JavaHelpSupport.enableHelp(wizard,
             HelpManager.getInstance().getHelpBroker());
