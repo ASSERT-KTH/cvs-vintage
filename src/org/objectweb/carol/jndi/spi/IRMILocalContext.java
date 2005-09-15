@@ -1,7 +1,7 @@
 /**
- * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2005 Bull S.A.
- * Contact: jonas-team@objectweb.org
+ * Copyright (C) 2005 - Bull S.A.
+ *
+ * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPLocalContext.java,v 1.11 2005/09/15 13:04:16 benoitf Exp $
+ * $Id: IRMILocalContext.java,v 1.1 2005/09/15 13:04:16 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -30,7 +30,7 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
-import org.objectweb.carol.jndi.registry.JRMPRegistryWrapperContext;
+import org.objectweb.carol.jndi.registry.IRMIRegistryWrapperContext;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.RemoteReference;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
@@ -46,15 +46,15 @@ import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
  * </ul>
  * @author Florent Benoit
  */
-public class JRMPLocalContext extends JRMPContext implements Context {
+public class IRMILocalContext extends IRMIContext implements Context {
 
     /**
-     * Constructs an JRMP local Wrapper context
-     * @param jrmpLocalContext the inital Local JRMP context
+     * Constructs an IRMI local Wrapper context
+     * @param irmiLocalContext the inital Local IRMI context
      * @throws NamingException if the registry wrapper cannot be build
      */
-    public JRMPLocalContext(Context jrmpLocalContext) throws NamingException {
-        super(new JRMPRegistryWrapperContext(jrmpLocalContext.getEnvironment()));
+    public IRMILocalContext(Context irmiLocalContext) throws NamingException {
+        super(new IRMIRegistryWrapperContext(irmiLocalContext.getEnvironment()));
     }
 
     /**

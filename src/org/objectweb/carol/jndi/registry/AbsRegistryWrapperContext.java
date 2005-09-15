@@ -1,10 +1,7 @@
 /**
- * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
+ * Copyright (C) 2005 - Bull S.A.
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
- *
- * This library is developed inside the ObjectWeb Consortium,
- * http://www.objectweb.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,10 +19,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryWrapperContext.java,v 1.2 2005/03/10 12:22:02 benoitf Exp $
+ * $Id: AbsRegistryWrapperContext.java,v 1.1 2005/09/15 13:04:16 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
+
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
@@ -33,11 +31,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.Hashtable;
-import java.util.Properties;
 
-import javax.naming.Binding;
 import javax.naming.CompositeName;
-import javax.naming.CompoundName;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameAlreadyBoundException;
@@ -46,15 +41,15 @@ import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import org.objectweb.carol.jndi.ns.JRMPRegistry;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
+import org.objectweb.carol.util.naming.LocalEnumeration;
+import org.objectweb.carol.util.naming.SimpleNameParser;
 
 /**
  * Wrapper on a Registry object and implementing Context
- * @author Guillaume Riviere
  * @author Florent Benoit (Refactoring)
  */
-public class RegistryWrapperContext implements Context {
+public abstract class AbsRegistryWrapperContext implements Context {
 
     /**
      * LocalRegistry for bindings and lookup
@@ -66,19 +61,23 @@ public class RegistryWrapperContext implements Context {
      */
     private static Hashtable environment = null;
 
+
     /**
      * Simple name parser
      */
     private static final NameParser NAME_PARSER = new SimpleNameParser();
 
+
     /**
      * Create a local context for the registry
      * @param env hashtable used
+     * @param registry the registry to wrap
+     * @param initialContextFactory the name of the initialContext factory to use
      */
-    public RegistryWrapperContext(Hashtable env) {
-        registry = JRMPRegistry.getRegistry();
+    public AbsRegistryWrapperContext(Hashtable env, Registry registry, String initialContextFactory) {
+        this.registry = registry;
         environment = env;
-        environment.put(Context.INITIAL_CONTEXT_FACTORY, "org.objectweb.carol.jndi.spi.JRMPContextWrapperFactory");
+        environment.put(Context.INITIAL_CONTEXT_FACTORY, initialContextFactory);
     }
 
     /**
@@ -476,111 +475,6 @@ public class RegistryWrapperContext implements Context {
      */
     public String getNameInNamespace() {
         return "";
-    }
-
-}
-
-/**
- * A very simple Compound Name parser
- */
-
-class SimpleNameParser implements NameParser {
-
-    /**
-     * Default syntax
-     */
-    private static final Properties SYNTAX = new Properties();
-
-    /**
-     * Parses a name into its components.
-     * @param name The non-null string name to parse.
-     * @return A non-null parsed form of the name using the naming convention of
-     *         this parser.
-     * @exception NamingException If a naming exception was encountered.
-     */
-    public Name parse(String name) throws NamingException {
-        return (new CompoundName(name, SYNTAX));
-    }
-}
-
-/**
- * Local enumeration for local context
- */
-
-class LocalEnumeration implements NamingEnumeration {
-
-    /**
-     * Initial context
-     */
-    private Context localContext;
-
-    /**
-     * List of names
-     */
-    private final String[] names;
-
-    /**
-     * Index of names
-     */
-    private int nextName;
-
-    /**
-     * Default constructor
-     * @param ctx given context
-     * @param names names to enumerate
-     */
-    public LocalEnumeration(Context ctx, String[] names) {
-        this.localContext = ctx;
-        this.names = names;
-        nextName = 0;
-    }
-
-    /**
-     * Enumeration is finished ?
-     * @return true is this is finished
-     */
-    public boolean hasMore() {
-        return (nextName < names.length);
-    }
-
-    /**
-     * @return Next object of the enumeration
-     * @throws NamingException if compositeName object cannot be built
-     */
-    public Object next() throws NamingException {
-        if (!hasMore()) {
-            throw (new java.util.NoSuchElementException());
-        }
-        String name = names[nextName++];
-        Name cname = (new CompositeName()).add(name);
-
-        Object obj = localContext.lookup(cname);
-        return (new Binding(cname.toString(), obj));
-    }
-
-    /**
-     * Enumeration is finished ?
-     * @return true is this is finished
-     */
-    public boolean hasMoreElements() {
-        return hasMore();
-    }
-
-    /**
-     * @return Next object of the enumeration
-     */
-    public Object nextElement() {
-        try {
-            return next();
-        } catch (NamingException e) {
-            throw new java.util.NoSuchElementException(e.toString());
-        }
-    }
-
-    /**
-     * Close the enumeration
-     */
-    public void close() {
     }
 
 }
