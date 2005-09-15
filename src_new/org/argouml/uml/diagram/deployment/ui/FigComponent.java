@@ -1,4 +1,4 @@
-// $Id: FigComponent.java,v 1.42 2005/09/12 18:52:15 mvw Exp $
+// $Id: FigComponent.java,v 1.43 2005/09/15 17:09:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,7 +136,7 @@ public class FigComponent extends FigNodeModelElement {
         // Modifiers ...
         popUpActions.insertElementAt(
                 buildModifierPopUp(ABSTRACT | LEAF | ROOT),
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
         return popUpActions;
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.77 2005/09/10 21:41:14 mvw Exp $
+// $Id: FigPackage.java,v 1.78 2005/09/15 17:09:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -608,15 +608,15 @@ public class FigPackage extends FigNodeModelElement
         });
         
         popUpActions.insertElementAt(showMenu,
-            popUpActions.size() - popupAddOffset);
+            popUpActions.size() - getPopupAddOffset());
 
         // Modifier ...
         popUpActions.insertElementAt(buildModifierPopUp(ABSTRACT | LEAF | ROOT),
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
 
         // Visibility ...
         popUpActions.insertElementAt(buildVisibilityPopUp(),
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
 
         return popUpActions;
     }

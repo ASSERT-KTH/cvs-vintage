@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.111 2005/09/07 21:03:52 linus Exp $
+// $Id: FigEdgeModelElement.java,v 1.112 2005/09/15 17:09:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,6 +72,7 @@ import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
+import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
@@ -123,7 +124,7 @@ public abstract class FigEdgeModelElement
      * Offset from the end of the set of popup actions at which new items
      * should be inserted by concrete figures.
     **/
-    protected static int popupAddOffset;
+    private static int popupAddOffset;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -248,6 +249,8 @@ public abstract class FigEdgeModelElement
         if (removeFromDiagram) {
             popUpActions.addElement(
                     ProjectBrowser.getInstance().getRemoveFromDiagramAction());
+            popupAddOffset++;
+            popUpActions.addElement(new ActionDeleteModelElements());
             popupAddOffset++;
         }
         
@@ -976,6 +979,13 @@ public abstract class FigEdgeModelElement
     
     public DiElement getDiElement() {
         return diElement;
+    }
+
+    /**
+     * @return Returns the popupAddOffset.
+     */
+    protected static int getPopupAddOffset() {
+        return popupAddOffset;
     }
     
 } /* end class FigEdgeModelElement */

@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.72 2005/09/10 21:41:15 mvw Exp $
+// $Id: FigUseCase.java,v 1.73 2005/09/15 17:09:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -390,7 +390,7 @@ public class FigUseCase extends FigNodeModelElement
         addMenu.add(new ActionAddNote());
 
         popUpActions.insertElementAt(addMenu,
-            popUpActions.size() - popupAddOffset);
+            popUpActions.size() - getPopupAddOffset());
 
         // Show menu to display/hide the extension point compartment. 
         ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");
@@ -399,13 +399,13 @@ public class FigUseCase extends FigNodeModelElement
             showMenu.add((Action) i.next());
         }
         popUpActions.insertElementAt(showMenu,
-            popUpActions.size() - popupAddOffset);
+            popUpActions.size() - getPopupAddOffset());
 
         // Modifier menu. Placed one before last, so the "Properties" entry is
         // always last.
         popUpActions.insertElementAt(
                 buildModifierPopUp(LEAF | ROOT),
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
 
         return popUpActions;
     }

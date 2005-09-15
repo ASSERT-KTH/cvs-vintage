@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.113 2005/09/10 21:41:14 mvw Exp $
+// $Id: FigInterface.java,v 1.114 2005/09/15 17:09:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -239,7 +239,7 @@ public class FigInterface extends FigClassifierBox {
         addMenu.add(ActionEdgesDisplay.getShowEdges());
         addMenu.add(ActionEdgesDisplay.getHideEdges());
         popUpActions.insertElementAt(addMenu,
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
 
         // Show ...
         ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");
@@ -248,15 +248,15 @@ public class FigInterface extends FigClassifierBox {
             showMenu.add((Action) i.next());
         }
         popUpActions.insertElementAt(showMenu,
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
 
         // Modifier ...
         popUpActions.insertElementAt(buildModifierPopUp(ABSTRACT | LEAF | ROOT),
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
 
         // Visibility ...
         popUpActions.insertElementAt(buildVisibilityPopUp(),
-                popUpActions.size() - popupAddOffset);
+                popUpActions.size() - getPopupAddOffset());
 
         return popUpActions;
     }

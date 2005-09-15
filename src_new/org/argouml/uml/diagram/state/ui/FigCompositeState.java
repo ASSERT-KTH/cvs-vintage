@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.33 2005/08/13 08:49:16 mvw Exp $
+// $Id: FigCompositeState.java,v 1.34 2005/09/15 17:09:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,7 +275,7 @@ public class FigCompositeState extends FigState {
             popUpActions.insertElementAt(
                 ActionAddConcurrentRegion.getSingleton(),
                                          (popUpActions.size()
-                                          - popupAddOffset));
+                                          - getPopupAddOffset()));
         }
         return popUpActions;
     }
