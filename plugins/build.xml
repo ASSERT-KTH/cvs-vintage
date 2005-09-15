@@ -16,9 +16,6 @@
 			<property name="plugin_dir" value="org.columba.mail.ToOrCcFilter" />
 		</ant>
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-			<property name="plugin_dir" value="org.columba.mail.MozillaMailImportFilter" />
-		</ant>
-		<ant target="release" inheritall="false" antfile="build_plugin.xml">
 			<property name="plugin_dir" value="org.columba.mail.PlaySoundFilterAction" />
 		</ant>
 	</target>
