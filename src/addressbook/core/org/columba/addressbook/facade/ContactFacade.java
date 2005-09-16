@@ -34,6 +34,9 @@ import org.columba.ristretto.parser.ParserException;
  * @author fdietz
  */
 public final class ContactFacade implements IContactFacade {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.addressbook.facade"); //$NON-NLS-1$
 
 	/**
 	 * @see org.columba.addressbook.facade.IContactFacade#addContact(int, java.lang.String)
@@ -55,7 +58,7 @@ public final class ContactFacade implements IContactFacade {
 			return;
 		}
 
-		System.out.println("address:" + address);
+		LOG.info("address:" + address); //$NON-NLS-1$
 
 		AbstractFolder selectedFolder = (AbstractFolder) AddressbookTreeModel
 				.getInstance().getFolder(uid);

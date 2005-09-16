@@ -29,6 +29,10 @@ import org.columba.mail.composer.SendableMessage;
  * @author fdietz
  */
 public class SendListManager {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.folder.outbox"); //$NON-NLS-1$
+	
     private List sendAccounts;
     private int counter;
     private boolean mutex;
@@ -62,7 +66,7 @@ public class SendListManager {
         SendList actList;
         counter++;
 
-        System.out.println("SMTP_SEND::Adding message in sendlistManager");
+        LOG.info("SMTP_SEND::Adding message in sendlistManager"); //$NON-NLS-1$
 
         for (Iterator it = sendAccounts.iterator(); it.hasNext();) {
             actList = (SendList) it.next();
@@ -96,7 +100,7 @@ public class SendListManager {
     public int count() {
         int output;
 
-        System.out.println("DEBUG");
+        LOG.info("DEBUG"); //$NON-NLS-1$
 
         getMutex();
 

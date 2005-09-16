@@ -32,6 +32,10 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
  * @author
  */
 public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.addressbook.folder.importfilter"); //$NON-NLS-1$
+	
     public MozillaCSVAddressbookImporter() {
         super();
     }
@@ -42,7 +46,7 @@ public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
     }
 
     public void importAddressbook(File file) throws Exception {
-        System.out.println("importing addressbook::::");
+        LOG.info("importing addressbook::::"); //$NON-NLS-1$
 
         BufferedReader in = new BufferedReader(new FileReader(file));
         String str;

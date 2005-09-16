@@ -52,6 +52,9 @@ import org.columba.ristretto.message.Flags;
  * @author fdietz
  */
 public class ToggleMarkCommand extends Command {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.folder.command"); //$NON-NLS-1$
 
 	private IWorkerStatusController worker;
 
@@ -209,7 +212,7 @@ public class ToggleMarkCommand extends Command {
 			if (item.getSpamItem().isEnabled() == false)
 				continue;
 
-			System.out.println("learning uid=" + uids[j]);
+			LOG.info("learning uid=" + uids[j]); //$NON-NLS-1$
 
 			// create reference
 			IMailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,

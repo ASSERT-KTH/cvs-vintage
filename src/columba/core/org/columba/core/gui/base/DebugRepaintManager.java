@@ -33,6 +33,9 @@ import javax.swing.SwingUtilities;
  */
 public class DebugRepaintManager extends RepaintManager {
 	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.core.gui.base"); //$NON-NLS-1$
+	
 	private int tabCount = 0;
     private boolean checkIsShowing = true;
     
@@ -52,10 +55,10 @@ public class DebugRepaintManager extends RepaintManager {
 
     private void checkThread(JComponent c) {
         if (!SwingUtilities.isEventDispatchThread() && checkIsShowing(c)) {
-            System.out.println("----------Wrong Thread START");
-            System.out.println(getStracktraceAsString(new Exception()));
+            LOG.info("----------Wrong Thread START"); //$NON-NLS-1$
+            LOG.info(getStracktraceAsString(new Exception()));
             dumpComponentTree(c);
-            System.out.println("----------Wrong Thread END");
+            LOG.info("----------Wrong Thread END"); //$NON-NLS-1$
         }
     }
 
@@ -81,13 +84,13 @@ public class DebugRepaintManager extends RepaintManager {
     }
 
    private void dumpComponentTree(Component c) {
-        System.out.println("----------Component Tree");
+        LOG.info("----------Component Tree"); //$NON-NLS-1$
         resetTabCount();
         for (; c != null; c = c.getParent()) {
             printTabIndent();
-            System.out.println(c);
+            LOG.info(c.toString());
             printTabIndent();
-            System.out.println("Showing:" + c.isShowing() + " Visible: " + c.isVisible());
+            LOG.info("Showing:" + c.isShowing() + " Visible: " + c.isVisible()); //$NON-NLS-2$
             incrementTabCount();
         }
     }

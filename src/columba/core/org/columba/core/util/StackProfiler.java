@@ -8,6 +8,9 @@ import org.columba.core.logging.Logging;
 
 public class StackProfiler {
 
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.core.util"); //$NON-NLS-1$
+	
 	/**
 	 * keeps a list of profile point ids
 	 */
@@ -75,7 +78,7 @@ public class StackProfiler {
 		if (firstItem.equals(id)) {
 			// print all collected profile data
 
-			System.out.println("profiler info:");
+			LOG.info("profiler info:"); //$NON-NLS-1$
 			Iterator it = vector.listIterator();
 
 			while (it.hasNext()) {
@@ -108,7 +111,7 @@ public class StackProfiler {
 			System.out.print("  ");
 
 		long duration = bean.endTime - bean.startTime;
-		System.out.println("[" + duration + "ms] - " + id);
+		LOG.info("[" + duration + "ms] - " + id); //$NON-NLS-2$
 	}
 
 	/**

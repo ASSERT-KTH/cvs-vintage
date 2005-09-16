@@ -31,6 +31,9 @@ import org.columba.mail.spam.SpamController;
  * @author fdietz
  */
 public class LearnMessageAsHamCommand extends Command {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.spam.command"); //$NON-NLS-1$
 
 	/**
 	 * @param references
@@ -88,7 +91,7 @@ public class LearnMessageAsHamCommand extends Command {
 
 		long endTime = System.currentTimeMillis();
 
-		System.out.println("took me=" + (endTime - startTime) + "ms");
+		LOG.info("took me=" + (endTime - startTime) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 }

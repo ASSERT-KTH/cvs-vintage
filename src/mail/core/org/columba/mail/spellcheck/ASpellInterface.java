@@ -26,6 +26,10 @@ import org.columba.mail.spellcheck.cswilly.SpellException;
 
 
 public class ASpellInterface {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.spellcheck"); //$NON-NLS-1$
+	
     private static FileSpellChecker fileSpellChecker = null;
     private static String aspellExeFilename;
 
@@ -53,12 +57,12 @@ public class ASpellInterface {
         } catch (SpellException e) {
             String msg = "Cannot check selection.\nError (Aspell) is: " +
                 e.getMessage();
-            System.out.println(msg);
+            LOG.info(msg);
             checkedBuffer = null;
         } catch (IOException e) {
             String msg = "Cannot check selection.\nError (Interface) is: " +
                 e.getMessage();
-            System.out.println(msg);
+            LOG.info(msg);
             checkedBuffer = null;
         }
 

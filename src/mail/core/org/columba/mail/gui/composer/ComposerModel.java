@@ -52,7 +52,7 @@ public class ComposerModel {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.composer");
+			.getLogger("org.columba.mail.gui.composer"); //$NON-NLS-1$
 
 	private ColumbaMessage message;
 
@@ -498,7 +498,7 @@ public class ComposerModel {
 			String adr = (String) toList.get(i);
 			// remove leading/trailing whitespaces
 			adr = adr.trim();
-			System.out.println("adr=" + adr);
+			LOG.info("adr=" + adr); //$NON-NLS-1$
 			if (!emailPattern.matcher(adr).matches())
 				return adr;
 

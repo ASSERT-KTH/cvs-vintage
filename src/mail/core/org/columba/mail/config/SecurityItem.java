@@ -18,45 +18,85 @@ package org.columba.mail.config;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
-
+/**
+ * @author waffel / Aug 5, 2005 2:29:21 PM
+ * 
+ * Security item to holding data related to security aspects like passphrase and
+ * digest algorithm.
+ */
 public class SecurityItem extends DefaultItem {
-    private String passphrase = "";
-    private String digestAlgorithm;
+	private String passphrase = "";
+
+	private String digestAlgorithm;
+
 	public static final String ALWAYS_ENCRYPT = "always_encrypt";
+
 	public static final String ALWAYS_SIGN = "always_sign";
+
 	public static final String ENABLED = "enabled";
+
 	public static final String PATH = "path";
+
 	public static final String ID = "id";
 
-    public SecurityItem(XmlElement e) {
-        super(e);
+	/**
+	 * Creates a new SecurityItem instance and sets the passphrase empty.
+	 * 
+	 * @param e
+	 *            XML element to be used for this item.
+	 */
+	public SecurityItem(XmlElement e) {
+		super(e);
 
-        passphrase = "";
-    }
+		this.passphrase = "";
+	}
 
-    public String getPassphrase() {
-        return passphrase;
-    }
+	/**
+	 * Returns the passphrase of the scurity item. If the passphrase was not
+	 * set, an empty string is returned.
+	 * 
+	 * @return the passphrase of this item.
+	 */
+	public String getPassphrase() {
+		return this.passphrase;
+	}
 
-    public void clearPassphrase() {
-        passphrase = "";
-    }
+	/**
+	 * Sets the passphase of this item to an empty string.
+	 */
+	public void clearPassphrase() {
+		this.passphrase = "";
+	}
 
-    public void setPassphrase(String s) {
-        passphrase = s;
-    }
+	/**
+	 * Sets the passphrase to the given string. The passphrase is not scrambled
+	 * or encrypted in this method. Only plain passphrase are supported.
+	 * 
+	 * @param s
+	 *            string which should assigned to the passphrase.
+	 */
+	public void setPassphrase(String s) {
+		this.passphrase = s;
+	}
 
-    /**
- * @return
- */
-    public String getDigestAlgorithm() {
-        return digestAlgorithm;
-    }
+	/**
+	 * Sets the digest algorithm to be used in an security operation like
+	 * encrypting or decrypting. If the digest algorithm was not set, the method
+	 * returns an empty string.
+	 * 
+	 * @return returns the digest algorithm of this security item.
+	 */
+	public String getDigestAlgorithm() {
+		return this.digestAlgorithm;
+	}
 
-    /**
- * @param digestAlgorithm
- */
-    public void setDigestAlgorithm(String digestAlgorithm) {
-        this.digestAlgorithm = digestAlgorithm;
-    }
+	/**
+	 * Sets the digest algorithm for this security item.
+	 * 
+	 * @param _digestAlgorithm
+	 *            algorithm to be set.
+	 */
+	public void setDigestAlgorithm(String _digestAlgorithm) {
+		this.digestAlgorithm = _digestAlgorithm;
+	}
 }

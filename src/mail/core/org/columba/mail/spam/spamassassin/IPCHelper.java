@@ -22,6 +22,10 @@ import java.io.OutputStream;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class IPCHelper {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.spam.spamassassin"); //$NON-NLS-1$
+	
     protected StreamThread outputStream = null;
     protected StreamThread errorStream = null;
     protected OutputStream inputStream = null;
@@ -120,7 +124,7 @@ public class IPCHelper {
                 String line = null;
 
                 while ((line = br.readLine()) != null) {
-                    System.out.println(">" + line);
+                    LOG.info(">" + line); //$NON-NLS-1$
                     buf.append(line + "\n");
                 }
             } catch (IOException ioe) {

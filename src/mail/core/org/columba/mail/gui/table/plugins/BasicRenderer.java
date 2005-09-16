@@ -23,6 +23,10 @@ import org.columba.mail.gui.table.model.MessageNode;
 
 
 public class BasicRenderer extends DefaultLabelRenderer {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.gui.table.plugins"); //$NON-NLS-1$
+	
     private String key;
 
     public BasicRenderer(String key) {
@@ -48,7 +52,7 @@ public class BasicRenderer extends DefaultLabelRenderer {
         try {
             str = (String) ((MessageNode) value).getHeader().get(key);
         } catch (ClassCastException ex) {
-            System.out.println("headertablecommonrenderer: " + ex.getMessage());
+            LOG.info("headertablecommonrenderer: " + ex.getMessage()); //$NON-NLS-1$
             str = "";
         }
 

@@ -40,7 +40,7 @@ public class SignMessageAction extends AbstractSelectableAction implements
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger
-            .getLogger("org.columba.mail.gui.composer.action");
+            .getLogger("org.columba.mail.gui.composer.action"); //$NON-NLS-1$
 
     private ComposerController composerController;
 
@@ -62,7 +62,7 @@ public class SignMessageAction extends AbstractSelectableAction implements
         SecurityItem item = this.composerController.getModel().getAccountItem()
                 .getPGPItem();
         setState(item.getBooleanWithDefault("always_sign", false));
-        System.out.println("always_sign=" + item.get("always_sign"));
+        LOG.info("always_sign=" + item.get("always_sign")); //$NON-NLS-1$ //$NON-NLS-2$
 
         composerController.getModel().setSignMessage(getState());
 

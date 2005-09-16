@@ -41,6 +41,10 @@ import org.columba.ristretto.message.Flags;
  */
 public class DefaultLabelRenderer extends DefaultTableCellRenderer implements
 		IExtensionInterface {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.gui.table.plugins"); //$NON-NLS-1$
+	
 	// private Border unselectedBorder = null;
 	//
 	// private Border selectedBorder = null;
@@ -91,7 +95,7 @@ public class DefaultLabelRenderer extends DefaultTableCellRenderer implements
 		IColumbaHeader header = messageNode.getHeader();
 
 		if (header == null) {
-			System.out.println("header is null");
+			LOG.info("header is null"); //$NON-NLS-1$
 
 			return this;
 		}

@@ -37,6 +37,10 @@ import javax.swing.ImageIcon;
 import org.columba.core.io.DiskIO;
 
 public class ImageLoader {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.core.resourceloader");
+	
 	static boolean ICON_SET = false;
 
 	private static ResourceBundle bundle;
@@ -178,11 +182,11 @@ public class ImageLoader {
 				}
 			}
 		} catch (ZipException e) {
-			System.out.println(e);
+			LOG.severe(e.getMessage());
 
 			return null;
 		} catch (IOException e) {
-			System.out.println(e);
+			LOG.severe(e.getMessage());
 
 			return null;
 		}

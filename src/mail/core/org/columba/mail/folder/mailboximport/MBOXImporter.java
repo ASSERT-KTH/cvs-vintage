@@ -28,6 +28,10 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.FileSource;
 
 public class MBOXImporter extends AbstractMailboxImporter {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.folder.mailboximport"); //$NON-NLS-1$
+	
     public MBOXImporter() {
         super();
     }
@@ -46,7 +50,7 @@ public class MBOXImporter extends AbstractMailboxImporter {
     	MboxMessage[] messages = MboxParser.parseMbox(mboxSource);
     	mboxSource.close();
     	
-    	System.out.println("Found " + messages.length + " messages in MBOX file");
+    	LOG.info("Found " + messages.length + " messages in MBOX file"); //$NON-NLS-1$ //$NON-NLS-2$
     	
     	SteerableInputStream in = new SteerableInputStream(new FileInputStream(file));
     	

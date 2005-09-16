@@ -58,6 +58,8 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class SelectAddressDialog extends JDialog implements ActionListener, ISelectAddressDialog {
   
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.addressbook.gui"); //$NON-NLS-1$
 	// recipient lists
 	private AddressbookDNDListView toList;
 
@@ -378,7 +380,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener, ISel
 				Object[] array = dialogAddressbookListModel[i].toArray();
 				headerItemList[i].clear();
 
-				System.out.println("array-size=" + array.length); //$NON-NLS-1$
+				LOG.info("array-size=" + array.length); //$NON-NLS-1$
 
 				for (int j = 0; j < array.length; j++) {
 					HeaderItem item = (HeaderItem) array[j];

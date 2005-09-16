@@ -67,9 +67,9 @@ import sun.misc.URLClassPath;
  * Columba's main class used to start the application.
  */
 public class Main {
-	private static final Logger LOG = Logger.getLogger("org.columba.core.main");
+	private static final Logger LOG = Logger.getLogger("org.columba.core.main"); //$NON-NLS-1$
 
-	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
+	private static final String RESOURCE_PATH = "org.columba.core.i18n.global"; //$NON-NLS-1$
 
 	private static Main instance;
 
@@ -397,8 +397,8 @@ public class Main {
 		}
 
 		if (commandLine.hasOption("version")) {
-			System.out.println(MessageFormat.format(GlobalResourceLoader
-					.getString(RESOURCE_PATH, "global", "info_version"),
+			LOG.info(MessageFormat.format(GlobalResourceLoader
+					.getString(RESOURCE_PATH, "global", "info_version"), //$NON-NLS-2$
 					new Object[] { VersionInfo.getVersion(),
 							VersionInfo.getBuildDate() }));
 

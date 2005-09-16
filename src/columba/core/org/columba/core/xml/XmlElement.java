@@ -66,6 +66,10 @@ import java.util.Vector;
  * @author Tony Parent, fdietz
  */
 public class XmlElement extends Observable implements Cloneable {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.core.xml"); //$NON-NLS-1$
+	
 	String name;
 
 	String data;
@@ -543,9 +547,9 @@ public class XmlElement extends Observable implements Cloneable {
 		String data = node.getData();
 
 		if ((data == null) || data.equals("")) {
-			System.out.println(indent + node.getName());
+			LOG.info(indent + node.getName());
 		} else {
-			System.out.println(indent + node.getName() + " = '" + data + "'");
+			LOG.info(indent + node.getName() + " = '" + data + "'"); //$NON-NLS-1$
 		}
 
 		// print attributes
@@ -553,7 +557,7 @@ public class XmlElement extends Observable implements Cloneable {
 				.hasMoreElements();) {
 			String key = (String) enumeration.nextElement();
 			String value = node.getAttribute(key);
-			System.out.println(indent + key + ":" + value);
+			LOG.info(indent + key + ":" + value); //$NON-NLS-1$
 		}
 
 		List subs = node.getElements();

@@ -30,7 +30,7 @@ import org.columba.core.logging.Logging;
 public class MenuModel {
 
 	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.gui.menu");
+			.getLogger("org.columba.core.gui.menu"); //$NON-NLS-1$
 
 	private IMenuElement rootElement;
 
@@ -133,7 +133,7 @@ public class MenuModel {
 	private void printDebugPlaceholders() {
 		Enumeration e = placeholders.elements();
 		while (e.hasMoreElements()) {
-			System.out.println(((IMenuElement) e.nextElement()).toString());
+			LOG.info(((IMenuElement) e.nextElement()).toString());
 		}
 	}
 

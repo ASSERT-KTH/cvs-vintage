@@ -28,6 +28,10 @@ import org.columba.core.resourceloader.ImageLoader;
 
 
 public class StringAccountRenderer extends JLabel implements TableCellRenderer {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.gui.config.accountlist"); //$NON-NLS-1$
+	
     private Border unselectedBorder = null;
     private Border selectedBorder = null;
     private boolean isBordered = true;
@@ -82,7 +86,7 @@ public class StringAccountRenderer extends JLabel implements TableCellRenderer {
         try {
             str = (String) value;
         } catch (ClassCastException ex) {
-            System.out.println(" filter renderer: " + ex.getMessage());
+            LOG.info(" filter renderer: " + ex.getMessage()); //$NON-NLS-1$
             str = "";
         }
 

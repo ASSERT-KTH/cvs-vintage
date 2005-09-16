@@ -75,7 +75,7 @@ import org.columba.ristretto.message.MimeTree;
 public class VirtualFolder extends AbstractMessageFolder implements FolderListener {
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.folder.virtual");
+			.getLogger("org.columba.mail.folder.virtual"); //$NON-NLS-1$
 
 	protected int nextUid;
 
@@ -307,7 +307,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		StringBuffer buf = new StringBuffer();
 
 		if (newc.getTypeString().equalsIgnoreCase("flags")) {
-			System.out.println("flags found");
+			LOG.info("flags found"); //$NON-NLS-1$
 
 			buf.append(newc.getTypeString());
 			buf.append(" (");

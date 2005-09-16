@@ -27,6 +27,10 @@ import org.columba.core.plugin.PluginManager;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PluginNode extends DefaultMutableTreeNode {
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.core.gui.plugin"); //$NON-NLS-1$
+	
     String id;
     String version;
     String tooltip;
@@ -134,11 +138,11 @@ public class PluginNode extends DefaultMutableTreeNode {
     }
 
     public void debug() {
-        System.out.println("id=" + id);
-        System.out.println("version=" + version);
-        System.out.println("enabled=" + enabled);
-        System.out.println("isCategory=" + category);
-        System.out.println("description=" + tooltip);
-        System.out.println("hasInfo=" + hasInfo());
+        LOG.info("id=" + id); //$NON-NLS-1$
+        LOG.info("version=" + version); //$NON-NLS-1$
+        LOG.info("enabled=" + enabled); //$NON-NLS-1$
+        LOG.info("isCategory=" + category); //$NON-NLS-1$
+        LOG.info("description=" + tooltip); //$NON-NLS-1$
+        LOG.info("hasInfo=" + hasInfo()); //$NON-NLS-1$
     }
 }

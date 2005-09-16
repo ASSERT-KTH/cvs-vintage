@@ -51,6 +51,10 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class FilterDialog extends JDialog implements ActionListener {
+	
+	
+	private static final java.util.logging.Logger LOG = 
+        java.util.logging.Logger.getLogger("org.columba.mail.gui.config.filter"); //$NON-NLS-1$
 
 	private JTextField nameTextField;
 

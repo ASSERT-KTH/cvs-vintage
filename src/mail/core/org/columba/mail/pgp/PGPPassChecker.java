@@ -24,96 +24,105 @@ import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFException;
 import org.waffel.jscf.JSCFStatement;
 
-
 /**
- * Checks via a dialog if a passphrase (given from the user over the dialog) can be used to sign a testmessage. The dialog-test is
- * a while loop, which breaks only if the user cancels the dialog or the passphrase is correct.
+ * Checks via a dialog if a passphrase (given from the user over the dialog) can
+ * be used to sign a testmessage. The dialog-test is a while loop, which breaks
+ * only if the user cancels the dialog or the passphrase is correct.
+ * 
  * @author waffel
- *
+ * 
  */
 public class PGPPassChecker {
-    private static PGPPassChecker myInstance = null;
-    private Map passwordMap = new Hashtable();
+	private static PGPPassChecker myInstance = null;
 
-    /**
- * Returns the instance of the class. If no instance is created, a new instance are created.
- * @return a instance of this class.
- */
-    public static PGPPassChecker getInstance() {
-        if (myInstance == null) {
-            myInstance = new PGPPassChecker();
-        }
+	private Map passwordMap = new Hashtable();
 
-        //System.out.println("return Instance");
-        return myInstance;
-    }
+	/**
+	 * Returns the instance of the class. If no instance is created, a new
+	 * instance are created.
+	 * 
+	 * @return a instance of this class.
+	 */
+	public static PGPPassChecker getInstance() {
+		if (myInstance == null) {
+			myInstance = new PGPPassChecker();
+		}
 
-    /**
- * Checks with a test string if the test String can be signed. The user is ask for his passphrase until the passphrase is ok or
- * the user cancels the dialog. If the user cancels the dialog the method returns false.
- * This method returned normal only if the user give the right passphrase-
- * @param con JSCFConnection used to check a passphrase given by a dialog 
- * @return Returns true if the given passphrase (via a dialog) is correct and the user can sign a teststring with the passphrase from
- * the dialog. Returns false if the user cancels the dialog. 
- * @exception JSCFException if the concrete JSCF implementation has real probelms (for example a extern tool cannot be found)     
- */
-    public boolean checkPassphrase(JSCFConnection con)
-        throws JSCFException {
-        boolean stmtCheck = false;
-        JSCFStatement stmt = con.createStatement();
+		return myInstance;
+	}
 
-        // loop until signing was sucessful or the user cancels the passphrase dialog
-        Properties props = con.getProperties();
+	/**
+	 * Checks with a test string if the test String can be signed. The user is
+	 * ask for his passphrase until the passphrase is ok or the user cancels the
+	 * dialog. If the user cancels the dialog the method returns false. This
+	 * method return normal only if the user give the right passphrase.
+	 * 
+	 * @param con
+	 *            JSCFConnection used to check a passphrase given by a dialog
+	 * @return Returns true if the given passphrase (via a dialog) is correct
+	 *         and the user can sign a teststring with the passphrase from the
+	 *         dialog. Returns false if the user cancels the dialog.
+	 * @exception JSCFException
+	 *                if the concrete JSCF implementation has real probelms (for
+	 *                example a extern tool cannot be found)
+	 */
+	public boolean checkPassphrase(JSCFConnection con) throws JSCFException {
+		boolean stmtCheck = false;
+		JSCFStatement stmt = con.createStatement();
 
-        while (!stmtCheck && (this.checkPassphraseDialog(con) == true)) {
-            stmtCheck = stmt.checkPassphrase();
+		// loop until signing was sucessful or the user cancels the passphrase
+		// dialog
+		Properties props = con.getProperties();
 
-            if (!stmtCheck) {
-                passwordMap.remove(props.get("USERID"));
-            }
-        }
+		while (!stmtCheck && (this.checkPassphraseDialog(con) == true)) {
+			stmtCheck = stmt.checkPassphrase();
 
-        return stmtCheck;
-    }
+			if (!stmtCheck) {
+				this.passwordMap.remove(props.get("USERID"));
+			}
+		}
 
-    private boolean checkPassphraseDialog(JSCFConnection con) {
-        String passphrase = "";
-        Properties props = con.getProperties();
+		return stmtCheck;
+	}
 
-        if (passwordMap.containsKey(props.get("USERID"))) {
-            passphrase = (String) passwordMap.get(props.get("USERID"));
-        }
+	private boolean checkPassphraseDialog(JSCFConnection con) {
+		String passphrase = "";
+		Properties props = con.getProperties();
 
-        props.put("PASSWORD", passphrase);
+		if (this.passwordMap.containsKey(props.get("USERID"))) {
+			passphrase = (String) this.passwordMap.get(props.get("USERID"));
+		}
 
-        boolean ret = true;
+		props.put("PASSWORD", passphrase);
 
-        PGPPassphraseDialog dialog = new PGPPassphraseDialog();
+		boolean ret = true;
 
-        if (passphrase.length() == 0) {
-            dialog.showDialog((String) props.get("USERID"),
-                (String) props.get("PASSWORD"), false);
+		PGPPassphraseDialog dialog = new PGPPassphraseDialog();
 
-            if (dialog.success()) {
-                passphrase = new String(dialog.getPassword(), 0,
-                        dialog.getPassword().length);
-                props.put("PASSWORD", passphrase);
+		if (passphrase.length() == 0) {
+			dialog.showDialog((String) props.get("USERID"), (String) props
+					.get("PASSWORD"), false);
 
-                boolean save = dialog.getSave();
+			if (dialog.success()) {
+				passphrase = new String(dialog.getPassword(), 0, dialog
+						.getPassword().length);
+				props.put("PASSWORD", passphrase);
 
-                // save passphrase in hash map
-                if (save) {
-                    passwordMap.put(props.get("USERID"), passphrase);
-                }
+				boolean save = dialog.getSave();
 
-                ret = true;
-            } else {
-                ret = false;
-            }
-        }
+				// save passphrase in hash map
+				if (save) {
+					this.passwordMap.put(props.get("USERID"), passphrase);
+				}
 
-        con.setProperties(props);
+				ret = true;
+			} else {
+				ret = false;
+			}
+		}
 
-        return ret;
-    }
+		con.setProperties(props);
+
+		return ret;
+	}
 }
