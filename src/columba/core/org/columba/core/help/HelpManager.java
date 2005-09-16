@@ -26,6 +26,7 @@ import java.util.Locale;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.help.JHelp;
+import javax.help.SwingHelpUtilities;
 import javax.help.TextHelpModel;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -36,143 +37,145 @@ import javax.swing.UIManager;
 
 /**
  * @author fdietz
- *
- * This class manages all JavaHelp relevant helpsets, its also
- * encapsulates the broker which is used for context sensitiv help.
- * This class is a singleton.
+ * 
+ * This class manages all JavaHelp relevant helpsets, its also encapsulates the
+ * broker which is used for context sensitiv help. This class is a singleton.
  */
 public class HelpManager {
-    private static HelpManager instance;
+	private static HelpManager instance;
 
-    // name of helpset resource
-    final static String helpsetName = "jhelpset";
-    private JHelp jh = null;
-    private HelpSet hs = null;
-    private HelpBroker hb = null;
-    private String hsName = null; // name for the HelpSet 
-    private String hsPath = null; // URL spec to the HelpSet
-    private JFrame frame;
+	// name of helpset resource
+	final static String helpsetName = "jhelpset";
 
-    /**
- * Creates a new instance. This method is private because it should
- * only get called from the static getHelpManager() method.
- */
-    private HelpManager() {
-        ClassLoader loader = getClass().getClassLoader();
-        URL url = HelpSet.findHelpSet(loader, helpsetName, "",
-                Locale.getDefault());
+	private JHelp jh = null;
 
-        if (url == null) {
-            url = HelpSet.findHelpSet(loader, helpsetName, ".hs",
-                    Locale.getDefault());
+	private HelpSet hs = null;
 
-            if (url == null) {
-                // could not find it!
-                JOptionPane.showMessageDialog(null, "HelpSet not found",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+	private HelpBroker hb = null;
 
-                return;
-            }
-        }
+	private String hsName = null; // name for the HelpSet
 
-        try {
-            hs = new HelpSet(loader, url);
-        } catch (Exception ee) {
-            JOptionPane.showMessageDialog(null, "HelpSet not found", "Error",
-                JOptionPane.ERROR_MESSAGE);
+	private String hsPath = null; // URL spec to the HelpSet
 
-            return;
-        }
+	private JFrame frame;
 
-        // The JavaHelp can't be added to a BorderLayout because it
-        // isnt' a component. For this demo we'll use the embeded method
-        // since we don't want a Frame to be created.
-        hb = hs.createHelpBroker();
+	/**
+	 * Creates a new instance. This method is private because it should only get
+	 * called from the static getHelpManager() method.
+	 */
+	private HelpManager() {
+		ClassLoader loader = getClass().getClassLoader();
+		URL url = HelpSet.findHelpSet(loader, helpsetName, "", Locale
+				.getDefault());
 
-        // TODO (@author fdietz): fix the font settings for the content viewer
-        // setting the fonts like this doesn't seem to work
-        Font font = (Font) UIManager.get("Label.font");
-        hb.setFont(font);
+		if (url == null) {
+			url = HelpSet.findHelpSet(loader, helpsetName, ".hs", Locale
+					.getDefault());
 
-        jh = new JHelp(hs);
+			if (url == null) {
+				// could not find it!
+				JOptionPane.showMessageDialog(null, "HelpSet not found",
+						"Error", JOptionPane.ERROR_MESSAGE);
 
-        // set main font
-        jh.setFont(font);
+				return;
+			}
+		}
 
-        jh.getContentViewer().setFont(font);
-        jh.getCurrentNavigator().setFont(font);
-    }
+		try {
+			hs = new HelpSet(loader, url);
+		} catch (Exception ee) {
+			JOptionPane.showMessageDialog(null, "HelpSet not found", "Error",
+					JOptionPane.ERROR_MESSAGE);
 
-    /**
-     * Opens the help frame.
-     */
-    public void openHelpFrame() {
-        if (frame == null) {
-            TextHelpModel m = jh.getModel();
-            HelpSet hs = m.getHelpSet();
-            String title = hs.getTitle();
+			return;
+		}
 
-            if (title == null || title.equals("")) {
-                title = "Unnamed HelpSet"; // maybe based on HS?
-            }
+		// use JDIC native browser
+		SwingHelpUtilities.setContentViewerUI("BasicNativeContentViewerUI");
 
-            frame = new JFrame(title);
-            frame.getContentPane().add(jh);
-            JMenuBar menuBar = new JMenuBar();
-            JMenuItem mi;
-            JMenu file = (JMenu) menuBar.add(new JMenu("File"));
-            file.setMnemonic('F');
+		// The JavaHelp can't be added to a BorderLayout because it
+		// isnt' a component. For this demo we'll use the embeded method
+		// since we don't want a Frame to be created.
+		hb = hs.createHelpBroker();
 
-            mi = (JMenuItem) file.add(new JMenuItem("Exit"));
-            mi.setMnemonic('x');
-            mi.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        frame.setVisible(false);
-                    }
-                });
-            //JMenu options = (JMenu) menuBar.add(new JMenu("Options"));
-            //options.setMnemonic('O');
-            frame.setJMenuBar(menuBar);
-            frame.pack();
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        }
-        frame.setVisible(true);
-    }
+	}
 
-    /**
- * @return
- */
-    public HelpBroker getHelpBroker() {
-        return hb;
-    }
+	/**
+	 * Opens the help frame.
+	 */
+	public void openHelpFrame() {
 
-    /**
- * Associate button with topic ID.
- *
- * Topic ID's are listed in jhelpmap.jhm in package lib/usermanual.jar
- *
- * @param c                        component
- * @param helpID        helpID
- */
-    public void enableHelpOnButton(Component c, String helpID) {
-        getHelpBroker().enableHelpOnButton(c, helpID, hs);
-    }
+		jh = new JHelp(hs);
 
-    /**
- * Enables the F1 help key on components.
- */
-    public void enableHelpKey(Component c, String helpID) {
-        getHelpBroker().enableHelpKey(c, helpID, hs);
-    }
+		TextHelpModel m = jh.getModel();
+		HelpSet hs = m.getHelpSet();
+		String title = hs.getTitle();
 
-    /**
- * Returns the singleton help manager instance.
- */
-    public static HelpManager getInstance() {
-        if (instance == null) {
-            instance = new HelpManager();
-        }
+		if (title == null || title.equals("")) {
+			title = "Unnamed HelpSet"; // maybe based on HS?
+		}
 
-        return instance;
-    }
+		frame = new JFrame(title);
+		frame.getContentPane().add(jh);
+		JMenuBar menuBar = new JMenuBar();
+		JMenuItem mi;
+		JMenu file = (JMenu) menuBar.add(new JMenu("File"));
+		file.setMnemonic('F');
+
+		mi = (JMenuItem) file.add(new JMenuItem("Exit"));
+		mi.setMnemonic('x');
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+			}
+		});
+		
+		
+		// JMenu options = (JMenu) menuBar.add(new JMenu("Options"));
+		// options.setMnemonic('O');
+		frame.setJMenuBar(menuBar);
+		frame.pack();
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		frame.setVisible(true);
+	}
+
+	/**
+	 * @return
+	 */
+	public HelpBroker getHelpBroker() {
+		return hb;
+	}
+
+	/**
+	 * Associate button with topic ID.
+	 * 
+	 * Topic ID's are listed in jhelpmap.jhm in package lib/usermanual.jar
+	 * 
+	 * @param c
+	 *            component
+	 * @param helpID
+	 *            helpID
+	 */
+	public void enableHelpOnButton(Component c, String helpID) {
+		getHelpBroker().enableHelpOnButton(c, helpID, hs);
+	}
+
+	/**
+	 * Enables the F1 help key on components.
+	 */
+	public void enableHelpKey(Component c, String helpID) {
+		getHelpBroker().enableHelpKey(c, helpID, hs);
+	}
+
+	/**
+	 * Returns the singleton help manager instance.
+	 */
+	public static HelpManager getInstance() {
+		if (instance == null) {
+			instance = new HelpManager();
+		}
+
+		return instance;
+	}
 }
