@@ -17,7 +17,7 @@
 package org.columba.core.facade;
 
 import org.columba.core.gui.dialog.ErrorDialog;
-import org.columba.core.help.HelpManager;
+import org.columba.core.gui.globalactions.ShowHelpAction;
 
 /**
  * Dialog factory.
@@ -50,6 +50,6 @@ public class DialogFacade {
      * Show help frame.
      */
     public static void showHelpFrame() {
-    	HelpManager.getInstance().openHelpFrame();
+    	new ShowHelpAction(null).actionPerformed(null);
     }
 }

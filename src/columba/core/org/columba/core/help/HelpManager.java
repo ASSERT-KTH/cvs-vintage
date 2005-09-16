@@ -90,9 +90,6 @@ public class HelpManager {
 			return;
 		}
 
-		// use JDIC native browser
-		SwingHelpUtilities.setContentViewerUI("BasicNativeContentViewerUI");
-
 		// The JavaHelp can't be added to a BorderLayout because it
 		// isnt' a component. For this demo we'll use the embeded method
 		// since we don't want a Frame to be created.
