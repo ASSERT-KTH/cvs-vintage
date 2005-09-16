@@ -55,7 +55,6 @@
 			<checkboxmenuitem id="ViewFolderInfoPanel" />	
 			<placeholder id="show_hide"/>
 		</menu>
-		<separator/>
 		<placeholder id="top"/>
 		<placeholder id="bottom"/>
 	</menu>

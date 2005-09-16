@@ -9,8 +9,9 @@
 	<button action="Reply"/>
 	<button action="Forward"/>
 	<separator/>
+	<button action="CopyMessage"/>
+	<button action="MoveMessage"/>
 	<button action="DeleteMessage"/>
-	<button action="ToggleSpamFlag"/>
 	<separator/>
 	<button action="OpenNewAddressbookWindow"/>
 	<separator/>

@@ -3,6 +3,7 @@
 	<menubar>
 	
 	<menu id="menu_file_new" placeholderid="open">
+	    <separator />
 		<menuitem id="NewMessage"/>
 	</menu>
 	

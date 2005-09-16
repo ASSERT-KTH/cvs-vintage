@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <menubar>
-	<menu id="menu_file" placeholderid="open">
+
+	<menu id="menu_file_new" placeholderid="open">
+	    <separator />
 		<menuitem id="AddContactCard"/>	
 		<menuitem id="AddGroupCard"/>	
 	</menu>
@@ -9,10 +11,10 @@
 	<menu id="menu_file" placeholderid="top">
 		<menuitem id="RemoveCard" />
         <menuitem id="EditProperties" />
-		<separator/>
 	</menu>
 	
 	<menu id="menu_utilities" placeholderid="bottom">
+	    <separator />
         <menuitem id="AddVCard"/>
         <menuitem id="ExportVCard" />
 	 	<menuitem id="AddressbookImport"/>
