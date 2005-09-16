@@ -30,90 +30,90 @@ import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticTheme;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 
-
 /**
  * @author frd
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
-    /**
-     *
-     */
-    public PlasticLookAndFeelPlugin() {
-        super();
-    }
+	/**
+	 * 
+	 */
+	public PlasticLookAndFeelPlugin() {
+		super();
+	}
 
-    /* (non-Javadoc)
-     * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
-     */
-    public void setLookAndFeel() throws Exception {
-        UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
-        
-        Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
-        Options.setDefaultIconSize(new Dimension(16, 16));
-        Options.setPopupDropShadowEnabled(true);
-        Options.setUseSystemFonts(true);
-      
-        UIManager.put("WizardContentPaneUI",
-        		"org.columba.core.gui.themes.plugin.PlasticWizardContentPaneUI");
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
+	 */
+	public void setLookAndFeel() throws Exception {
+		UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
 
-        /*
-        ClearLookManager.setMode(ClearLookMode.ON);
-        ClearLookManager.setPolicy(
-            "com.jgoodies.clearlook.DefaultClearLookPolicy");
-        */
-        
-        // use this when using the cross-platform version of 
-        // jGoodies, which contains also a windows-xp like theme
+		Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
+		Options.setDefaultIconSize(new Dimension(16, 16));
+		Options.setPopupDropShadowEnabled(true);
+		Options.setUseSystemFonts(true);
 
-        /*
-        String lafName =
-                LookUtils.isWindowsXP()
-                        ? Options.getCrossPlatformLookAndFeelClassName()
-                        : Options.getSystemLookAndFeelClassName();
-        ;
-        */
-        XmlElement options = Config.getInstance().get("options").getElement("/options");
-        XmlElement gui = options.getElement("gui");
-        XmlElement themeElement = gui.getElement("theme");
+//		UIManager
+//				.put("WizardContentPaneUI",
+//						"org.columba.core.gui.themes.plugin.PlasticWizardContentPaneUI");
 
-        try {
-            //UIManager.setLookAndFeel(lafName);
-            String theme = themeElement.getAttribute("theme");
+		/*
+		 * ClearLookManager.setMode(ClearLookMode.ON);
+		 * ClearLookManager.setPolicy(
+		 * "com.jgoodies.clearlook.DefaultClearLookPolicy");
+		 */
 
-            if (theme != null) {
-                PlasticTheme t = getTheme(theme);
-                LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
-            } else {
-                PlasticTheme t = PlasticLookAndFeel.createMyDefaultTheme();
-                LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
-            }
-        } catch (Exception e) {
-            System.err.println("Can't set look & feel:" + e);
-        }
+		// use this when using the cross-platform version of
+		// jGoodies, which contains also a windows-xp like theme
+		/*
+		 * String lafName = LookUtils.isWindowsXP() ?
+		 * Options.getCrossPlatformLookAndFeelClassName() :
+		 * Options.getSystemLookAndFeelClassName(); ;
+		 */
+		XmlElement options = Config.getInstance().get("options").getElement(
+				"/options");
+		XmlElement gui = options.getElement("gui");
+		XmlElement themeElement = gui.getElement("theme");
 
-        ;
-    }
+		try {
+			// UIManager.setLookAndFeel(lafName);
+			String theme = themeElement.getAttribute("theme");
 
-    protected PlasticTheme[] computeThemes() {
-        List themes = PlasticLookAndFeel.getInstalledThemes();
+			if (theme != null) {
+				PlasticTheme t = getTheme(theme);
+				LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
+			} else {
+				PlasticTheme t = PlasticLookAndFeel.createMyDefaultTheme();
+				LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
+			}
+		} catch (Exception e) {
+			System.err.println("Can't set look & feel:" + e);
+		}
 
-        return (PlasticTheme[]) themes.toArray(new PlasticTheme[themes.size()]);
-    }
+		;
+	}
 
-    protected PlasticTheme getTheme(String name) {
-        PlasticTheme[] themes = computeThemes();
+	protected PlasticTheme[] computeThemes() {
+		List themes = PlasticLookAndFeel.getInstalledThemes();
 
-        for (int i = 0; i < themes.length; i++) {
-            String str = themes[i].getName();
+		return (PlasticTheme[]) themes.toArray(new PlasticTheme[themes.size()]);
+	}
 
-            if (name.equals(str)) {
-                return themes[i];
-            }
-        }
+	protected PlasticTheme getTheme(String name) {
+		PlasticTheme[] themes = computeThemes();
 
-        return null;
-    }
+		for (int i = 0; i < themes.length; i++) {
+			String str = themes[i].getName();
+
+			if (name.equals(str)) {
+				return themes[i];
+			}
+		}
+
+		return null;
+	}
 }
