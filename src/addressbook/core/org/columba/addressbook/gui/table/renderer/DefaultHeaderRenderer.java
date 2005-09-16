@@ -20,12 +20,11 @@ package org.columba.addressbook.gui.table.renderer;
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 import org.columba.addressbook.gui.table.model.SortDecorator;
 import org.columba.core.gui.base.AscendingIcon;
@@ -34,12 +33,7 @@ import org.columba.core.gui.base.DescendingIcon;
 /**
  * @author fdietz
  */
-public class DefaultHeaderRenderer extends JButton implements TableCellRenderer {
-	private Border unselectedBorder = null;
-
-	private Border selectedBorder = null;
-
-	private boolean isBordered = true;
+public class DefaultHeaderRenderer extends DefaultTableCellRenderer {
 
 	private String name;
 
@@ -58,13 +52,7 @@ public class DefaultHeaderRenderer extends JButton implements TableCellRenderer 
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setHorizontalTextPosition(SwingConstants.LEFT);
 
-		setOpaque(true); //MUST do this for background to show up.
-
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-	}
-
-	public void updateUI() {
-		super.updateUI();
+		setOpaque(true); // MUST do this for background to show up.
 
 		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 	}
@@ -72,7 +60,18 @@ public class DefaultHeaderRenderer extends JButton implements TableCellRenderer 
 	public Component getTableCellRendererComponent(JTable table, Object str,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
-		if (sorter.getColumnName(sorter.getSelectedColumn()).equals((String)str)) {
+		if (table != null) {
+			JTableHeader header = table.getTableHeader();
+
+			if (header != null) {
+				setForeground(header.getForeground());
+				setBackground(header.getBackground());
+				setFont(header.getFont());
+			}
+		}
+
+		if (sorter.getColumnName(sorter.getSelectedColumn()).equals(
+				(String) str)) {
 			if (sorter.isSortOrder()) {
 				setIcon(descending);
 			} else {
