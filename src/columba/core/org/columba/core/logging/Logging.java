@@ -88,7 +88,7 @@ public final class Logging {
 			consoleHandler = new ConsoleHandler();
 
 			consoleHandler.setFormatter(new OneLineFormatter());
-			consoleHandler.setLevel(Level.ALL);
+			consoleHandler.setLevel(Level.SEVERE);
 
 			LOG.addHandler(consoleHandler);
 		}
