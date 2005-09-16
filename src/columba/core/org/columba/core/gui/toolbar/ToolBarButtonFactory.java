@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import java.awt.Insets;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -44,25 +42,13 @@ public class ToolBarButtonFactory {
 
 	public static JButton createAnimatedIconButton() {
 		ImageSequenceTimer button = new ImageSequenceTimer();
-		
-		button.setRolloverEnabled(true);
 
-		button.setRequestFocusEnabled(false);
-		
-		button.setMargin(new Insets(1, 1, 1, 1));
-		
 		return button;
 	}
 
 	public static JButton createButton(AbstractColumbaAction action) {
-		JButton button = new JButton(action);
+		JButton button = new ToolBarButton(action);
 
-		button.setRolloverEnabled(true);
-
-		button.setRequestFocusEnabled(false);
-		
-		button.setMargin(new Insets(1, 1, 1, 1));
-		
 		// JavaHelp support
 		String topicID = (String) action
 				.getValue(AbstractColumbaAction.TOPIC_ID);
@@ -82,7 +68,7 @@ public class ToolBarButtonFactory {
 			// toolbar buttons always need an icon
 			button.setIcon(ImageLoader.getImageIcon("brokenimage.png"));
 		}
-		
+
 		if (icon != null) {
 			button.setIcon(icon);
 

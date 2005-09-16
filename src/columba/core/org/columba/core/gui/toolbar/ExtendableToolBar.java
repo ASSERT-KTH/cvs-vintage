@@ -39,7 +39,7 @@ public class ExtendableToolBar extends JToolBar {
 		super();
 
 		setRollover(true);
-		setFloatable(true);
+		//setFloatable(true);
 
 	}
 
@@ -74,6 +74,14 @@ public class ExtendableToolBar extends JToolBar {
 		add(s, insertPosition);
 
 		insertPosition++;
+	}
+
+	/**
+	 * @see javax.swing.JToolBar#updateUI()
+	 */
+	public void updateUI() {
+		super.updateUI();
+		setRollover(true);
 	}
 
 }

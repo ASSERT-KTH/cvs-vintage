@@ -39,7 +39,7 @@ import org.columba.core.resourceloader.ImageLoader;
  * 
  * @author fdietz
  */
-public class ImageSequenceTimer extends JButton implements ActionListener,
+public class ImageSequenceTimer extends ToolBarButton implements ActionListener,
 		TaskManagerListener {
 
 	private static int DELAY = 100;
