@@ -25,6 +25,7 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.Hashtable;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.api.gui.frame.IFrameMediator;
@@ -33,6 +34,7 @@ import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.base.CMenu;
 import org.columba.core.gui.menu.IMenu;
+import org.columba.core.logging.Logging;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -41,142 +43,139 @@ import org.columba.mail.util.MailResourceLoader;
  * user can choose.
  */
 public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
-        CharsetListener {
+		CharsetListener {
 
-    // String definitions for the charsetnames
-    // NOTE: these are also used to look up the
-    // menuentries from the resourceloader
-    private static final String[] CHARSET_STRINGS = {
+	// String definitions for the charsetnames
+	// NOTE: these are also used to look up the
+	// menuentries from the resourceloader
+	private static final String[] CHARSET_STRINGS = {
 
-    // Global # 1
-            "UTF-8", "UTF-16", "US-ASCII",
+	// Global # 1
+			"UTF-8", "UTF-16", "US-ASCII",
 
-            // West Europe # 4
-            "windows-1252", "ISO-8859-1", "ISO-8859-15", 
-            "ISO-8859-7",  "windows-1253", "ISO-8859-3",
+			// West Europe # 4
+			"windows-1252", "ISO-8859-1", "ISO-8859-15", "ISO-8859-7",
+			"windows-1253", "ISO-8859-3",
 
-            // East Europe # 10
-            "ISO-8859-4", "ISO-8859-13", "windows-1257", 
-            "ISO-8859-2",  
-            "ISO-8859-5", "KOI8-R",  "windows-1251",
+			// East Europe # 10
+			"ISO-8859-4", "ISO-8859-13", "windows-1257", "ISO-8859-2",
+			"ISO-8859-5", "KOI8-R", "windows-1251",
 
-            // East Asian # 17
-            "GB2312", "GBK", "GB18030", "Big5", "Big5-HKSCS", "EUC-TW",
-            "EUC-JP", "Shift_JIS", "ISO-2022-JP", "MS932", "EUC-KR", "JOHAB",
-            "ISO-2022-KR",
+			// East Asian # 17
+			"GB2312", "GBK", "GB18030", "Big5", "Big5-HKSCS", "EUC-TW",
+			"EUC-JP", "Shift_JIS", "ISO-2022-JP", "MS932", "EUC-KR", "JOHAB",
+			"ISO-2022-KR",
 
-            // West Asian # 30
-            "TIS620", "ISO-8859-9",  "windows-1254",
-            "windows-1258"};
+			// West Asian # 30
+			"TIS620", "ISO-8859-9", "windows-1254", "windows-1258" };
 
-    private static final Charset[] CHARSETS = createCharsetArray();
-    
-    private static final String[] groups = { "global", "westeurope",
-            "easteurope", "eastasian", "seswasian"};
+	private static final Charset[] CHARSETS = createCharsetArray();
 
-    private static final int[] groupOffset = { 0, 3, 9, 16, 29, 33};
+	private static final String[] groups = { "global", "westeurope",
+			"easteurope", "eastasian", "seswasian" };
 
-    private ButtonGroup group;
+	private static final int[] groupOffset = { 0, 3, 9, 16, 29, 33 };
 
-    private Hashtable hashtable;
+	private ButtonGroup group;
 
-    
-    /**
-     * The menu item showing the currently selected charset.
-     */
-    //protected CharsetMenuItem selectedMenuItem = new CharsetMenuItem(null);
-    /**
-     * Creates a new menu for choosing charsets. The passed IFrameMediator
-     * instance needs to implement CharsetOwnerInterface.
-     */
-    public CharacterEncodingSubMenu(IFrameMediator mediator) {
-        super(mediator, MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_charset"),"menu_view_charset");
+	private Hashtable hashtable;
 
-        setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
+	/**
+	 * The menu item showing the currently selected charset.
+	 */
+	// protected CharsetMenuItem selectedMenuItem = new CharsetMenuItem(null);
+	/**
+	 * Creates a new menu for choosing charsets. The passed IFrameMediator
+	 * instance needs to implement CharsetOwnerInterface.
+	 */
+	public CharacterEncodingSubMenu(IFrameMediator mediator) {
+		super(mediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_view_charset"), "menu_view_charset");
 
-        group = new ButtonGroup();
+		setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
 
-        hashtable = new Hashtable();
+		group = new ButtonGroup();
 
-        add(createMenuItem(null));
+		hashtable = new Hashtable();
 
-        // Automatic Generation of Groups
-        CMenu subsubMenu;
+		add(createMenuItem(null));
 
-        for (int i = 0; i < groups.length; i++) {
-            subsubMenu = new CMenu(MailResourceLoader.getString("menu",
-                    "mainframe", "menu_view_charset_" + groups[i]),
-                    "menu_view_charset_" + groups[i]);
-            add(subsubMenu);
+		// Automatic Generation of Groups
+		CMenu subsubMenu;
 
-            for (int j = groupOffset[i]; j < groupOffset[i + 1]; j++) {
-                try {
-                    subsubMenu
-                            .add(createMenuItem(CHARSETS[j]));
-                } catch (UnsupportedCharsetException ex) {
-                    //ignore this
-                }
-            }
-        }
-        
-        ((CharsetOwnerInterface) controller).addCharsetListener(this);
+		for (int i = 0; i < groups.length; i++) {
+			subsubMenu = new CMenu(MailResourceLoader.getString("menu",
+					"mainframe", "menu_view_charset_" + groups[i]),
+					"menu_view_charset_" + groups[i]);
+			add(subsubMenu);
 
-        //simulate charset changed to initialize selectedMenuItem
-        charsetChanged(new CharsetEvent(this,
-                ((CharsetOwnerInterface) controller).getCharset()));        
-        
-
-    }
-
-    private static Charset[] createCharsetArray() {
-    	Charset[] result = new Charset[CHARSET_STRINGS.length];
-    	for( int i=0; i<CHARSET_STRINGS.length; i++) {
-    		try {
-				result[i] = Charset.forName(CHARSET_STRINGS[i]);
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-				result[i] = Charset.forName("UTF-8");
+			for (int j = groupOffset[i]; j < groupOffset[i + 1]; j++) {
+				if (CHARSETS[j] != null) {
+					JMenuItem item = createMenuItem(CHARSETS[j]);
+					subsubMenu.add(item);
+				}
 			}
-    	}
+		}
+
+		((CharsetOwnerInterface) controller).addCharsetListener(this);
+
+		// simulate charset changed to initialize selectedMenuItem
+		charsetChanged(new CharsetEvent(this,
+				((CharsetOwnerInterface) controller).getCharset()));
+
+	}
+
+	private static Charset[] createCharsetArray() {
+		Charset[] result = new Charset[CHARSET_STRINGS.length];
+		for (int i = 0; i < CHARSET_STRINGS.length; i++) {
+			try {
+				result[i] = Charset.forName(CHARSET_STRINGS[i]);
+			} catch (UnsupportedCharsetException e) {
+				if (Logging.DEBUG)
+					e.printStackTrace();
+
+				result[i] = null;
+			}
+		}
 		return result;
 	}
 
 	/**
-     * Creates a menu item and registers action and mouse listeners.
-     */
-    protected CharsetMenuItem createMenuItem(Charset charset) {
-        CharsetMenuItem menuItem = new CharsetMenuItem(charset);
-        group.add(menuItem);
-        menuItem.addActionListener(this);
-        if (charset != null) hashtable.put(charset, menuItem);
+	 * Creates a menu item and registers action and mouse listeners.
+	 */
+	protected CharsetMenuItem createMenuItem(Charset charset) {
+		CharsetMenuItem menuItem = new CharsetMenuItem(charset);
+		group.add(menuItem);
+		menuItem.addActionListener(this);
+		if (charset != null)
+			hashtable.put(charset, menuItem);
 
-        return menuItem;
-    }
+		return menuItem;
+	}
 
-    /**
-     * Called when a charset is chosen from the menu.
-     */
-    public void actionPerformed(ActionEvent e) {
-        ((CharsetOwnerInterface) controller).setCharset(((CharsetMenuItem) e
-                .getSource()).getCharset());
-    }
+	/**
+	 * Called when a charset is chosen from the menu.
+	 */
+	public void actionPerformed(ActionEvent e) {
+		((CharsetOwnerInterface) controller).setCharset(((CharsetMenuItem) e
+				.getSource()).getCharset());
+	}
 
-    /**
-     * Updates the selectedMenuItem according to the chosen charset.
-     */
-    public void charsetChanged(CharsetEvent e) {
-        //selectedMenuItem.setCharset(e.getCharset());
-        if (e.getCharset() == null) {
-            JRadioButtonMenuItem item = (JRadioButtonMenuItem) getMenuComponent(0);
-            item.setSelected(true);
-            
-        } else {
-            if (hashtable.containsKey(e.getCharset())) {
-                CharsetMenuItem menuItem = (CharsetMenuItem) hashtable.get(e
-                        .getCharset());
-                menuItem.setSelected(true);
-            }
-        }
-    }
+	/**
+	 * Updates the selectedMenuItem according to the chosen charset.
+	 */
+	public void charsetChanged(CharsetEvent e) {
+		// selectedMenuItem.setCharset(e.getCharset());
+		if (e.getCharset() == null) {
+			JRadioButtonMenuItem item = (JRadioButtonMenuItem) getMenuComponent(0);
+			item.setSelected(true);
+
+		} else {
+			if (hashtable.containsKey(e.getCharset())) {
+				CharsetMenuItem menuItem = (CharsetMenuItem) hashtable.get(e
+						.getCharset());
+				menuItem.setSelected(true);
+			}
+		}
+	}
 }
