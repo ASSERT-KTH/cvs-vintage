@@ -247,7 +247,7 @@ public class ProfileManager implements IProfileManager {
 	public boolean isAlwaysAsk() {
 		String s = profiles.getAttribute("dont_ask");
 		if (s == null)
-			s = "false";
+			s = "true";
 
 		if (s.equals("true"))
 			return false;
