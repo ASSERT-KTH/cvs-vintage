@@ -24,9 +24,9 @@ LicenseFile=LICENSE
 AlwaysShowComponentsList=false
 InfoAfterFile=CHANGES
 #ifdef BUNDLE_JRE
-OutputBaseFilename=ColumbaSetupwithJRE
+OutputBaseFilename=ColumbaSetupwithJRE_{#VERSION}
 #else
-OutputBaseFilename=ColumbaSetup
+OutputBaseFilename=ColumbaSetup_{#VERSION}
 #endif
 Compression=bzip
 ; we are in dest/win32/
