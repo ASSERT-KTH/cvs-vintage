@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <extensionlist>
- <extension id="aspell" class="org.columba.core.externaltools.ASpellPlugin" />
- <extension id="gpg" class="org.columba.core.externaltools.GPGPlugin" />
+ <extension id="aspell" class="org.columba.core.gui.externaltools.ASpellPlugin" />
+ <extension id="gpg" class="org.columba.core.gui.externaltools.GPGPlugin" />
  <extension id="spamc" class="org.columba.mail.spam.spamassassin.SpamcExternalToolPlugin" />
  <extension id="spamassassin" class="org.columba.mail.spam.spamassassin.SpamAssassinExternalToolPlugin" />
  <extension id="sa-learn" class="org.columba.mail.spam.spamassassin.SALearnExternalToolPlugin" />
