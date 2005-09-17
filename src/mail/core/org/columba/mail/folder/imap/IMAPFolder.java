@@ -521,17 +521,14 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			}
 
 		}
+		
+		syncMailboxInfo(status);
 	}
 
 	private void syncMailboxInfo(MailboxStatus status) {
 		boolean updated  = false;
 		if( status.getMessages() != -1 && messageFolderInfo.getExists() != status.getMessages() ) {
 			messageFolderInfo.setExists(status.getMessages());
-			updated = true;
-		}
-		
-		if( status.getRecent() != -1 && messageFolderInfo.getRecent() != status.getRecent()) {
-			messageFolderInfo.setRecent(status.getRecent());
 			updated = true;
 		}
 		
