@@ -14,6 +14,9 @@
 //
 // All Rights Reserved.
 //$Log: Filter.java,v $
+//Revision 1.3  2005/09/17 12:18:18  fdietz
+//[bug] filter helper didn't work (Utilities-> create filter on message)
+//
 //Revision 1.2  2005/01/16 22:52:43  fdietz
 //[intern]configurationn cleanup, removed obsolete classes, replaced usage of XmlElement with Item wrapper classes, added constants instead of direct string usage
 //
@@ -35,28 +38,31 @@ import org.columba.core.xml.XmlElement;
 // example configuration (tree.xml):
 //
 // <filter description="gnome" enabled="true">
-//  <rules condition="matchany">
-//   <criteria criteria="contains" headerfield="To or Cc" pattern="gnome" type="To
+// <rules condition="matchany">
+// <criteria criteria="contains" headerfield="To or Cc" pattern="gnome" type="To
 // or Cc"></criteria>
-//  </rules>
-//  <actionlist>
-//   <action uid="120" type="Move Message"></action>
-//  </actionlist>
+// </rules>
+// <actionlist>
+// <action uid="120" type="Move Message"></action>
+// </actionlist>
 // </filter>
 //
 public class Filter extends DefaultItem {
-	
+
 	private static final String DESCRIPTION = "description";
+
 	private static final String ENABLED = "enabled";
+
 	private static final String RULES = "rules";
+
 	private static final String ACTIONLIST = "actionlist";
+
 	private static final String FILTER = "filter";
-	
-	
-	public Filter() {
+
+	private Filter() {
 		super(new XmlElement(Filter.FILTER));
 	}
-	
+
 	/**
 	 * 
 	 * Constructor for Filter
@@ -74,7 +80,10 @@ public class Filter extends DefaultItem {
 	 * @return FilterActionList this is also a simple wrapper
 	 */
 	public FilterActionList getFilterActionList() {
-		return new FilterActionList(getRoot().getElement(Filter.ACTIONLIST));
+		XmlElement element = getRoot().getElement(Filter.ACTIONLIST);
+		
+		return new FilterActionList(element);
+
 	}
 
 	/**
@@ -83,7 +92,10 @@ public class Filter extends DefaultItem {
 	 * @return FilterRule this is also a simple wrapper
 	 */
 	public FilterRule getFilterRule() {
-		return new FilterRule(getRoot().getElement(Filter.RULES));
+		XmlElement element = getRoot().getElement(Filter.RULES);
+		
+
+		return new FilterRule(element);
 	}
 
 	/**

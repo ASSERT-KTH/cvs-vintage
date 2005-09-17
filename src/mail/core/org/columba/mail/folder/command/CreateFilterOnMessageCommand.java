@@ -24,8 +24,9 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.filter.Filter;
-import org.columba.core.xml.XmlElement;
+import org.columba.core.filter.FilterFactory;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.filter.FilterDialog;
 import org.columba.ristretto.message.Header;
@@ -152,31 +153,24 @@ public class CreateFilterOnMessageCommand extends Command {
 	 */
 	public Filter createFilter(String filterDescr, String headerField,
 			String pattern) {
-		// create filter element
-		XmlElement filter = new XmlElement("filter");
-		filter.addAttribute("description", filterDescr);
-		filter.addAttribute("enabled", "true");
 
-		XmlElement rules = new XmlElement("rules");
-		rules.addAttribute("condition", "matchall");
+		Filter filter = FilterFactory.createEmptyFilter();
+		filter.setName(filterDescr);
 
-		// create criteria list
-		XmlElement criteria = new XmlElement("criteria");
-		criteria.addAttribute("type", headerField);
-		criteria.addAttribute("headerfield", headerField);
-		criteria.addAttribute("criteria", "contains");
-		criteria.addAttribute("pattern", pattern);
-		rules.addElement(criteria);
-		filter.addElement(rules);
+		if (headerField.equals(FILTER_ON_SUBJECT)) {
+			filter.getFilterRule().add(
+					MailFilterFactory.createSubjectContains(pattern));
+		} else if (headerField.equals(FILTER_ON_FROM)) {
+			filter.getFilterRule().add(
+					MailFilterFactory.createFromContains(pattern));
+		} else if (headerField.equals(FILTER_ON_TO)) {
+			filter.getFilterRule().add(
+					MailFilterFactory.createToContains(pattern));
+		} else
+			throw new IllegalArgumentException("unsupported operation");
 
-		// create action list
-		XmlElement actionList = new XmlElement("actionlist");
-		XmlElement action = new XmlElement("action");
-		action.addAttribute("type", "Mark as Read");
-		actionList.addElement(action);
-		filter.addElement(actionList);
+		filter.getFilterActionList().addEmptyAction();
 
-		// return filter based on the XmlElement just created
-		return new Filter(filter);
+		return filter;
 	}
 }

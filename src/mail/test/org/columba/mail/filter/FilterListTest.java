@@ -59,7 +59,7 @@ public class FilterListTest extends TestCase {
 	public void testCount() {
 		FilterList filterList = new FilterList(new XmlElement());
 		assertEquals("Expected an empty filter list", 0, filterList.count());
-		filterList.add(FilterList.createEmptyFilter());
+		filterList.add(FilterList.createDefaultFilter());
 		assertEquals("Expected a filter list with one filter", 1, filterList
 				.count());
 		filterList.remove(0);
@@ -199,7 +199,7 @@ public class FilterListTest extends TestCase {
 	 * @return a <code>Filter</code> with the specified name.
 	 */
 	private Filter createNamedFilter(String name) {
-		Filter filter = FilterList.createEmptyFilter();
+		Filter filter = FilterList.createDefaultFilter();
 		filter.setName(name);
 
 		return filter;

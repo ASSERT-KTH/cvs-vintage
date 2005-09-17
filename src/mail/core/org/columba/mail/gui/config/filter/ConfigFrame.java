@@ -430,7 +430,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
 			setVisible(false);
 		} else if (action.equals("ADD")) {
-			Filter filter = FilterList.createEmptyFilter();
+			Filter filter = FilterList.createDefaultFilter();
 
 			if (showFilterDialog(filter)) {
 				filterList.add(filter);
