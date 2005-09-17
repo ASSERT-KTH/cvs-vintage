@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.40 2005/07/22 14:11:56 mkl Exp $
+// $Id: FigTransition.java,v 1.41 2005/09/17 13:24:58 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,6 +145,15 @@ public class FigTransition extends FigEdgeModelElement {
             };
             ProjectBrowser.getInstance().getStatusBar().showStatus(
                     Translator.messageFormat(msg, args));
+        }
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-transition");
         }
     }
 

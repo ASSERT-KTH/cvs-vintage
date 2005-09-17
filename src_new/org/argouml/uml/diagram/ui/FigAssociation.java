@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.95 2005/09/15 17:09:33 mvw Exp $
+// $Id: FigAssociation.java,v 1.96 2005/09/17 13:24:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -282,6 +282,23 @@ public class FigAssociation extends FigEdgeModelElement {
                     Model.getFacade().getMultiplicity(destAE).toString());
 	    }
 	}
+    }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp("parsing.help.fig-association-name");
+        } else if (ft == srcRole) {
+            showHelp("parsing.help.fig-association-source-role");
+        } else if (ft == destRole) {
+            showHelp("parsing.help.fig-association-destination-role");
+        } else if (ft == srcMult) {
+            showHelp("parsing.help.fig-association-source-multiplicity");
+        } else if (ft == destMult) {
+            showHelp("parsing.help.fig-association-destination-multiplicity");
+        }
     }
 
     private void updateEnd(FigText multiToUpdate, FigText roleToUpdate,
