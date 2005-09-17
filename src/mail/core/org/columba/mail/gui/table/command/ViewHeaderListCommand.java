@@ -26,6 +26,7 @@ import org.columba.core.command.Worker;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.action.ClearHeaderlistAction;
@@ -98,6 +99,7 @@ public class ViewHeaderListCommand extends Command implements
 
 		// fetch the headerlist
 		try {
+			if( folder instanceof IMAPFolder ) ((IMAPFolder)folder).ensureFolderIsSynced(false, true);
 			headerList = (folder).getHeaderList();
 		} catch (Exception e) {
 			updateGui = false;
