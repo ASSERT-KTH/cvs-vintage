@@ -16,6 +16,7 @@
 
 package org.columba.mail.folder;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -28,11 +29,15 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.folder.headercache.LocalHeaderCache;
+import org.columba.mail.folder.headercache.PersistantHeaderList;
+import org.columba.mail.folder.headercache.SyncHeaderList;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IColumbaMessage;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.SourceInputStream;
 import org.columba.ristretto.message.Attributes;
@@ -88,6 +93,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 	protected IDataStorage dataStorage;
 
+	protected PersistantHeaderList headerList;
+
 	/**
 	 * @param item
 	 *            <class>FolderItem </class> contains xml configuration of this
@@ -108,6 +115,10 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		}
 
 		filterList = new FilterList(filterListElement);
+		
+        headerList = new PersistantHeaderList(new LocalHeaderCache(this));
+        
+        setSearchEngine(new DefaultSearchEngine(this));        
 	}
 
 	/**
@@ -130,6 +141,10 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		}
 
 		filterList = new FilterList(filterListElement);
+
+        headerList = new PersistantHeaderList(new LocalHeaderCache(this));	
+
+        setSearchEngine(new DefaultSearchEngine(this));        	
 	}
 
 	/**
@@ -538,5 +553,30 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		Header header = message.getHeader().getHeader();
 
 		return header;
+	}
+
+	public IHeaderList getHeaderList() throws Exception {
+		if( !headerList.isRestored()) {
+			try {
+				headerList.restore();
+			} catch (IOException e) {
+				SyncHeaderList.sync(this, headerList);
+			}
+	
+			if( headerList.count() != getDataStorageInstance().getMessageCount()) {
+				// 	Must be out of sync!
+				SyncHeaderList.sync(this, headerList);
+			}
+		}
+	
+		return headerList;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractMessageFolder#save()
+	 */
+	public void save() throws Exception {
+		super.save();
+		headerList.persist();
 	}
 }

@@ -16,25 +16,17 @@
 
 package org.columba.mail.folder.mbox;
 
-import java.io.IOException;
 
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.IDataStorage;
-import org.columba.mail.folder.headercache.LocalHeaderCache;
-import org.columba.mail.folder.headercache.PersistantHeaderList;
-import org.columba.mail.folder.headercache.SyncHeaderList;
-import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.LuceneQueryEngine;
-import org.columba.mail.message.IHeaderList;
 
 public class CachedMboxFolder extends AbstractLocalFolder {
 
 	
 	
-	private PersistantHeaderList headerList;
-
 	/**
 	 * Constructs the CachedMboxFolder.java.
 	 * 
@@ -44,15 +36,11 @@ public class CachedMboxFolder extends AbstractLocalFolder {
 	public CachedMboxFolder(FolderItem item, String path) {
         super(item, path);
 
-        DefaultSearchEngine engine = new DefaultSearchEngine(this);
         boolean enableLucene = getConfiguration().getBooleanWithDefault("property",
                 "enable_lucene", false);
         if (enableLucene) {
-            engine.setNonDefaultEngine(new LuceneQueryEngine(this));
-        }
-        setSearchEngine(engine);
-        
-        headerList = new PersistantHeaderList(new LocalHeaderCache(this));
+            getSearchEngine().setNonDefaultEngine(new LuceneQueryEngine(this));
+        }        
 	}
 
 	/**
@@ -69,9 +57,15 @@ public class CachedMboxFolder extends AbstractLocalFolder {
         item.setString("property", "accessrights", "user");
         item.setString("property", "subfolder", "true");
 
-        headerList = new PersistantHeaderList(new LocalHeaderCache(this));
+        boolean enableLucene = getConfiguration().getBooleanWithDefault("property",
+                "enable_lucene", false);
+        if (enableLucene) {
+            getSearchEngine().setNonDefaultEngine(new LuceneQueryEngine(this));
+        }        
 	}
 
+	
+	
 	/**
 	 * @see org.columba.mail.folder.AbstractLocalFolder#getDataStorageInstance()
 	 */
@@ -87,27 +81,6 @@ public class CachedMboxFolder extends AbstractLocalFolder {
 	 * @see org.columba.mail.folder.AbstractMessageFolder#save()
 	 */
 	public void save() throws Exception {
-		super.save();
-		
 		((MboxDataStorage)getDataStorageInstance()).save();
-		
-		headerList.persist();
-	}
-
-	public IHeaderList getHeaderList() throws Exception {
-		if( !headerList.isRestored()) {
-			try {
-				headerList.restore();
-			} catch (IOException e) {
-				SyncHeaderList.sync(this, headerList);
-			}
-
-			if( headerList.count() != getDataStorageInstance().getMessageCount()) {
-				// 	Must be out of sync!
-				SyncHeaderList.sync(this, headerList);
-			}
-		}
-
-		return headerList;
 	}
 }
