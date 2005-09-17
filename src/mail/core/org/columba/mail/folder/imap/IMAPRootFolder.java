@@ -341,11 +341,13 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 	public void updateConfiguration() {
 		try {
-			server.logout();
+			if( server != null ) server.logout();
 		} catch (Exception e1) {
 			// don't care
 		}
 		server = new IMAPServer(accountItem.getImapItem());
+		server.setObservable(observable);
+		
 		server.setFirstLoginAction( new IFirstLoginAction() {
 			public void actionPerformed() {
 			ICommand c = new FetchSubFolderListCommand(
@@ -358,6 +360,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 				e.printStackTrace();
 			}			
 		}
+			
 		});
 		
 		server.setExistsChangedAction(new IExistsChangedAction() {

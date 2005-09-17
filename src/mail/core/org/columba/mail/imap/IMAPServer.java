@@ -155,6 +155,8 @@ public class IMAPServer implements IMAPListener, Observer {
 
 	private long lastCommunication;
 
+	private IStatusObservable observable;
+	
 	// minimal unchecked time is 30 Seconds
 	private int MIN_IDLE = 30 * 1000; // in ms
 
@@ -188,11 +190,7 @@ public class IMAPServer implements IMAPListener, Observer {
 	 * @return
 	 */
 	protected IStatusObservable getObservable() {
-		if (selectedFolder != null) {
-			return selectedFolder.getObservable();
-		} else {
-			return null;
-		}
+		return observable;
 	}
 
 	/**
@@ -1177,6 +1175,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 
 		if (protocol.getState() < IMAPProtocol.NON_AUTHENTICATED) {
+			printStatusMessage(MailResourceLoader
+					.getString("statusbar", "message", "connecting"));
 			openConnection();
 		}
 
@@ -1196,6 +1196,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		ensureConnectedState();
 
 		if (protocol.getState() < IMAPProtocol.AUTHENTICATED) {
+			printStatusMessage(MailResourceLoader
+					.getString("statusbar", "message", "authenticating"));
 			login();
 		}
 	}
@@ -1913,5 +1915,12 @@ public class IMAPServer implements IMAPListener, Observer {
 	 */
 	public void setUpdateFlagAction(IUpdateFlagAction updateFlagAction) {
 		this.updateFlagAction = updateFlagAction;
+	}
+
+	/**
+	 * @param observable The observable to set.
+	 */
+	public void setObservable(IStatusObservable observable) {
+		this.observable = observable;
 	}
 }
