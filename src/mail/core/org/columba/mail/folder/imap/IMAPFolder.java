@@ -532,9 +532,16 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			updated = true;
 		}
 		
+		if( status.getMessages() == 0 ) {
+			messageFolderInfo.setRecent(0);
+			messageFolderInfo.setUnseen(0);
+			updated = true;
+		} else {
+		
 		if( status.getUnseen() != -1 && messageFolderInfo.getUnseen() != status.getUnseen() ){
 			messageFolderInfo.setUnseen(status.getUnseen());
 			updated = true;
+		}
 		}
 		
 		if( updated ) {
@@ -635,7 +642,9 @@ public class IMAPFolder extends AbstractRemoteFolder {
 									remoteJunkUids, uid) >= 0));
 
 			fireMessageFlagChanged(uid, oldFlag, 0);
-		}		
+		}
+		
+		syncMailboxInfo(getServer().getStatus(this));
 	}
 
 	/**
