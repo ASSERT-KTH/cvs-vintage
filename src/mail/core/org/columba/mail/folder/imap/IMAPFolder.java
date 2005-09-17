@@ -521,9 +521,6 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			}
 
 		}
-
-		// inform listeners if MessageFolderInfo has changed
-		syncMailboxInfo(status);
 	}
 
 	private void syncMailboxInfo(MailboxStatus status) {
@@ -601,6 +598,11 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		List remoteDeletedUids = Arrays.asList(getServer().search(deletedKey,
 				this));
 
+		SearchKey recentKey = new SearchKey(SearchKey.RECENT);
+		List remoteRecentUids = Arrays.asList(getServer().search(recentKey,
+				this));
+		
+		
 		SearchKey junkKey = new SearchKey(SearchKey.KEYWORD, "JUNK");
 		List remoteJunkUids = Arrays.asList(getServer().search(junkKey, this));
 
@@ -627,6 +629,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 					.setFlagged(Collections
 							.binarySearch(remoteFlaggedUids, uid) >= 0);
 
+			flag.setRecent(Collections.binarySearch(remoteRecentUids, uid) >= 0);
+			
 			header.getAttributes()
 					.put(
 							"columba.spam",
@@ -634,15 +638,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 									remoteJunkUids, uid) >= 0));
 
 			fireMessageFlagChanged(uid, oldFlag, 0);
-		}
-
-		// Ensure that the messageFolderInfo is up to date.
-		if (messageFolderInfo.getExists() != unseen) {
-			messageFolderInfo.setUnseen(unseen);
-
-			fireFolderPropertyChanged();
-		}
-
+		}		
 	}
 
 	/**
