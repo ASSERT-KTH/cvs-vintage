@@ -380,8 +380,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		LOG.info(body);
-
 		viewerPlugin.view(body);
 	}
 
