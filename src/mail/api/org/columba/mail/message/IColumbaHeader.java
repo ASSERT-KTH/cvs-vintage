@@ -73,4 +73,6 @@ public interface IColumbaHeader {
 	void setHeader(Header header);
 
 	Boolean hasAttachments();
+	
+	public Object clone();
 }

@@ -750,7 +750,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		// -> this is necessary to reflect the changes visually
 		int j = 0;
 		for (int i = 0; i < uids.length; i++) {
-			IColumbaHeader destHeader = new ColumbaHeader(srcHeaderList.get(uids[i]));
+			IColumbaHeader destHeader = (IColumbaHeader) srcHeaderList.get(uids[i]).clone();
 			// Was this message actually copied?
 
 			destHeader.set("columba.uid", destUids[j]);

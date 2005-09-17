@@ -62,8 +62,8 @@ public class ColumbaHeader implements IColumbaHeader {
 
 	public ColumbaHeader(IColumbaHeader header) {
         this.header = header.getHeader();
-        this.attributes = (Attributes)header.getAttributes().clone();
-        this.flags = (Flags)header.getFlags().clone();
+        this.attributes = header.getAttributes();
+        this.flags = header.getFlags();
     }
 
     public ColumbaHeader() {
@@ -129,18 +129,18 @@ public class ColumbaHeader implements IColumbaHeader {
         // use default account 
         attributes.put("columba.accountuid", new Integer(0));
     }
-
+    
+    /**
+     * Pay attention when using this method.
+     * Only the Attributes and the flags get copied.
+     * The Header stays the same!
+     * 
+     */
     public Object clone() {
-        ColumbaHeader clone;
-        try {
-            clone = (ColumbaHeader) super.clone();
-            clone.attributes = (Attributes) this.attributes.clone();
-            clone.flags = (Flags) this.flags.clone();
-            clone.header = (Header) this.header.clone();
-        } catch (CloneNotSupportedException e) {
-            LOG.warning("Internal error when cloning object: " + e);
-            throw new RuntimeException("Unknown error when cloning ColumbaHeader.", e);
-        }
+        ColumbaHeader clone = new ColumbaHeader();
+        clone.header = this.header;
+        clone.attributes = (Attributes) this.attributes.clone();
+        clone.flags = (Flags) this.flags.clone();
         return clone;
     }
 
