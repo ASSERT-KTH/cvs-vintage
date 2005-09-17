@@ -35,7 +35,7 @@ public class VersionInfo {
 	
 	public static String getVersion() {
 		try {
-			Method getVersionMethod = Class.forName("org.columba.core.main.ColumbaVersionInfo").getMethod("getVersion", new Class[0]);
+			Method getVersionMethod = Class.forName("org.columba.core.versioninfo.ColumbaVersionInfo").getMethod("getVersion", new Class[0]);
 			
 			return (String) getVersionMethod.invoke(null,new Object[0]);
 		} catch (Exception e) {
@@ -46,7 +46,7 @@ public class VersionInfo {
 
 	public static Date getBuildDate() {
 		try {
-			Method getBuildDateMethod = Class.forName("org.columba.core.main.ColumbaVersionInfo").getMethod("getBuildDate", new Class[0]);
+			Method getBuildDateMethod = Class.forName("org.columba.core.versioninfo.ColumbaVersionInfo").getMethod("getBuildDate", new Class[0]);
 			
 			return (Date) getBuildDateMethod.invoke(null,new Object[0]);
 		} catch (Exception e) {
