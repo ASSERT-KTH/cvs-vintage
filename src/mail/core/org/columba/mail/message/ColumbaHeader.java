@@ -62,8 +62,8 @@ public class ColumbaHeader implements IColumbaHeader {
 
 	public ColumbaHeader(IColumbaHeader header) {
         this.header = header.getHeader();
-        this.attributes = header.getAttributes();
-        this.flags = header.getFlags();
+        this.attributes = (Attributes)header.getAttributes().clone();
+        this.flags = (Flags)header.getFlags().clone();
     }
 
     public ColumbaHeader() {
