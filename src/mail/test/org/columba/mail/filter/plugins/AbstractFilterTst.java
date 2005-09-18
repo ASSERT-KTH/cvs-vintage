@@ -96,7 +96,7 @@ public class AbstractFilterTst extends TestCase {
 		new AddressbookMain().init();
 
 		// now load all available plugins
-		PluginManager.getInstance().initPlugins();
+		PluginManager.getInstance().initCorePlugins();
 
 		sourceFolder = factory.createFolder(1);
 

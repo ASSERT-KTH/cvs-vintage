@@ -57,6 +57,10 @@ public class PluginManager implements IPluginManager {
 
 	private static PluginManager instance = new PluginManager();
 
+	private File[] pluginFolders;
+
+	private boolean initCorePluginsOnly = true;
+
 	/**
 	 * 
 	 */
@@ -161,8 +165,8 @@ public class PluginManager implements IPluginManager {
 		Hashtable hashtable = new Hashtable();
 
 		// parse "/plugin.xml" file
-		PluginMetadata pluginMetadata = new ExtensionXMLParser().parsePlugin(xmlFile,
-				hashtable);
+		PluginMetadata pluginMetadata = new ExtensionXMLParser().parsePlugin(
+				xmlFile, hashtable);
 		pluginMetadata.setDirectory(folder);
 
 		String id = pluginMetadata.getId();
@@ -174,6 +178,17 @@ public class PluginManager implements IPluginManager {
 		Enumeration e = hashtable.keys();
 		while (e.hasMoreElements()) {
 			String extensionpointId = (String) e.nextElement();
+
+			// if we only initialize the core plugins, skip all unknown plugins
+			// (this is because the extension handlers still need to be
+			// registered)
+			if ((initCorePluginsOnly)
+					&& (extensionpointId.startsWith("org.columba.core") == false)) {
+
+				LOG.info("skipping all non-core extensions");
+				continue;
+			}
+
 			Vector extensionVector = (Vector) hashtable.get(extensionpointId);
 
 			IExtensionHandler handler = null;
@@ -185,10 +200,13 @@ public class PluginManager implements IPluginManager {
 				while (e2.hasMoreElements()) {
 					ExtensionMetadata extensionMetadata = (ExtensionMetadata) e2
 							.nextElement();
-					Extension pluginExtension = new Extension(pluginMetadata, extensionMetadata);
-					
-					handler.addExtension(pluginExtension.getMetadata().getId(),
-							pluginExtension);
+					Extension pluginExtension = new Extension(pluginMetadata,
+							extensionMetadata);
+
+					String extensionId = pluginExtension.getMetadata().getId();
+					// if extension wasn't already registered
+					if (handler.exists(extensionId) == false)
+						handler.addExtension(extensionId, pluginExtension);
 				}
 			} catch (PluginHandlerNotFoundException e2) {
 				LOG.severe("No suitable extension handler with name "
@@ -201,11 +219,14 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.api.plugin.IPluginManager#initPlugins()
+	 * @see org.columba.api.plugin.IPluginManager#initCorePlugins()
 	 */
-	public void initPlugins() {
+	public void initCorePlugins() {
+
+		initCorePluginsOnly = true;
+
 		// find all possible plugin directories
-		File[] pluginFolders = PluginFinder.searchPlugins();
+		pluginFolders = PluginFinder.searchPlugins();
 
 		// if no plugin directory exists -> return
 		if (pluginFolders == null) {
@@ -217,9 +238,28 @@ public class PluginManager implements IPluginManager {
 			File folder = pluginFolders[i];
 			addPlugin(folder);
 		}
+
 	}
 
-	
+	public void initExternalPlugins() {
+		initCorePluginsOnly = false;
+
+		// find all possible plugin directories
+		pluginFolders = PluginFinder.searchPlugins();
+
+		// if no plugin directory exists -> return
+		if (pluginFolders == null) {
+			return;
+		}
+
+		// try to load all plugins
+		for (int i = 0; i < pluginFolders.length; i++) {
+			File folder = pluginFolders[i];
+			addPlugin(folder);
+		}
+
+	}
+
 	/**
 	 * @see org.columba.api.plugin.IPluginManager#getPluginConfigFile(java.lang.String)
 	 */

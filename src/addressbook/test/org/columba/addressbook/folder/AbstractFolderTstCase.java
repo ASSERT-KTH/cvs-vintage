@@ -71,7 +71,7 @@ public class AbstractFolderTstCase extends TestCase {
 		new AddressbookMain();
 
 		// now load all available plugins
-		PluginManager.getInstance().initPlugins();
+		PluginManager.getInstance().initCorePlugins();
 
 		folders = new HashSet();
 		sourceFolder = FolderTstFactory.createFolder(folderId++);

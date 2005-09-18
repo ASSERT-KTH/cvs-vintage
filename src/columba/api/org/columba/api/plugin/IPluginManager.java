@@ -96,9 +96,15 @@ public interface IPluginManager {
 	public Enumeration getPluginMetadataEnumeration();
 	
 	/**
-	 * initialize plugins in "/plugin" folder. 
+	 * initialize all core plugins in "/plugin" folder. 
 	 */
-	public void initPlugins();
+	public void initCorePlugins();
+	
+	/**
+	 * initialize all other plugins in "/plugin" folder.
+	 *
+	 */
+	public void initExternalPlugins();
 	
 	/**
 	 * Add handlers from xml resource.

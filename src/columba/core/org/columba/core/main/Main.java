@@ -276,6 +276,9 @@ public class Main {
 		BackgroundTaskManager.getInstance().register(task);
 		ShutdownManager.getInstance().register(task);
 
+		profiler.push("plugins core");
+		PluginManager.getInstance().initCorePlugins();
+		profiler.pop("plugins core");
 		
 		ServiceRegistry.getInstance().register(IPluginManager.class,
 				PluginManager.getInstance());
@@ -303,10 +306,10 @@ public class Main {
 		ComponentManager.getInstance().handleCommandLineParameters(
 				ColumbaCmdLineParser.getInstance().getParsedCommandLine());
 
-		profiler.push("plugin");
+		profiler.push("plugins external");
 		// now load all available plugins
-		PluginManager.getInstance().initPlugins();
-		profiler.pop("plugin");
+		PluginManager.getInstance().initExternalPlugins();
+		profiler.pop("plugins external");
 		
 		
 		

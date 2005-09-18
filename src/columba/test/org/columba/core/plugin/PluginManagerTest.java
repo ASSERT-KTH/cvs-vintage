@@ -55,7 +55,7 @@ public class PluginManagerTest extends TestCase {
 
 	public void test() {
 		IPluginManager manager = PluginManager.getInstance();
-		manager.initPlugins();
+		manager.initCorePlugins();
 	}
 
 }
