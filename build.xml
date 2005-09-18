@@ -387,66 +387,60 @@
 		<delete file="${basedir}/Columbaw.lap"/>
 	</target>
 
+
+	<target name="bin-cross" depends="jar, linefeeds-win32"
+	description="Creates packaged cross-platform Columba release">
+		<zip zipfile="${release.base}/columba-${version}-bin.zip">
+			<zipfileset dir="${basedir}" prefix="columba-${version}-bin">
+				<include name="README"/>
+				<include name="AUTHORS"/>
+				<include name="LICENSE"/>
+				<include name="CHANGES"/>
+				<include name="columba.jar"/>
+				<include name="${manual.jar}"/>
+				<include name="${lib.forms}"/>
+				<include name="${lib.jscf}"/>
+				<include name="${lib.jargs}"/>
+				<include name="${lib.jwizz}"/>
+				<include name="${lib.jhall}"/>
+				<include name="${lib.ristretto}"/>
+				<include name="${lib.macchiato}"/>
+				<include name="${lib.frapuccino}"/>
+				<include name="${lib.lucene}"/>			
+				<include name="${lib.plastic}"/>			
+				<include name="${lib.jdom}"/>			
+				<include name="${lib.jpim}"/>			
+				<include name="${lib.je}"/>
+				<include name="${lib.groovy}"/>		
+			</zipfileset>
+		</zip>
+	</target>
+	
 	<!-- create a source zip file for linux and unix flavors containing all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a source release -->
-	<target name="source-unix" depends="init,linefeeds-unix"
-	description="Creates packaged *nix Columba source release">
+	<target name="source" depends="init,linefeeds-win32"
+	description="Creates packaged Columba source release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
-		<tar tarfile="${release.base}/columba-unix-${version}-src.tar.bz2" compression="bzip2">
-			<tarfileset dir="." prefix="columba-unix-${version}-src">
-				<include name="**/*.java"/>
-				<include name="**/*.jar"/>
-				<include name="**/*.xml"/>
-				<include name="**/*.dtd"/>
-				<include name="**/*.gif"/>
-				<include name="**/*.jpeg"/>
-				<include name="**/*.png"/>
-				<include name="**/*.wav"/>
-				<include name="**/*.properties"/>
+		<zip zipfile="${release.base}/columba-${version}-src.zip" update="true">
+			<zipfileset dir="." prefix="columba-${version}-src">
+				<include name="src/**"/>
+				<include name="res/**"/>
+				<include name="plugins/**"/>
+				<include name="native/**"/>
+				<include name="lib/**"/>
 				<include name="README"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="AUTHORS"/>
-				<include name="run_source.sh"/>
-				<include name="plugins/**/*.py"/>
-				<include name="plugins/**/*.java"/>
-				<include name="plugins/**/*.xml"/>
-			</tarfileset>
-		</tar>
-	</target>
-
-	<!-- create a source zip file for windows flavors, containing all sources and README, LICENSE, CHANGES, AUTHORS -->
-	<!-- this task is for a source release -->
-	<target name="source-win32" depends="init,linefeeds-win32"
-	description="Creates packaged win32 Columba source release">
-		<echo message="the zipfile is going to columba-${version}-src.zip "/>
-		<zip zipfile="${release.base}/columba-win32-${version}-src.zip" update="true">
-			<zipfileset dir="." prefix="columba-win32-${version}-src">
-				<include name="**/*.java"/>
-				<include name="**/*.jar"/>
-				<include name="**/*.xml"/>
-				<include name="**/*.dtd"/>
-				<include name="**/*.gif"/>
-				<include name="**/*.jpeg"/>
-				<include name="**/*.png"/>
-				<include name="**/*.wav"/>
-				<include name="**/*.properties"/>
-				<include name="README"/>
-				<include name="LICENSE"/>
-				<include name="CHANGES"/>
-				<include name="AUTHORS"/>
-				<include name="run_source.bat"/>
-				<include name="plugins/**/*.py"/>
-				<include name="plugins/**/*.java"/>
-				<include name="plugins/**/*.xml"/>
-				<include name="**/*.dll"/>
+				<include name="*.xml" />
+				<include name="*.properties" />
 			</zipfileset>
 		</zip>
 	</target>
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
 	<!-- this is also the release target ;-0 -->
-	<target name="release" depends="bin-unix,bin-win32,source-unix,source-win32, rpm, winsetup, winsetup-bundlejre, webstart"
+	<target name="release" depends="bin-unix,bin-win32,bin-cross,source, rpm, winsetup, winsetup-bundlejre, webstart"
 	description="Builds a complete set of Columba release archives"/>
 
 	<target name="webstart" depends="init-webstart, jar" description="Signs all jars for use with Java Webstart">
