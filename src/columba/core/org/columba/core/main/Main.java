@@ -276,10 +276,6 @@ public class Main {
 		BackgroundTaskManager.getInstance().register(task);
 		ShutdownManager.getInstance().register(task);
 
-		profiler.push("plugin");
-		// now load all available plugins
-		PluginManager.getInstance().initPlugins();
-		profiler.pop("plugin");
 		
 		ServiceRegistry.getInstance().register(IPluginManager.class,
 				PluginManager.getInstance());
@@ -289,6 +285,7 @@ public class Main {
 		ComponentManager.getInstance().init();
 		ComponentManager.getInstance().registerCommandLineArguments();
 		profiler.pop("components");
+
 		
 		// set Look & Feel
 		ThemeSwitcher.setTheme();
@@ -306,6 +303,13 @@ public class Main {
 		ComponentManager.getInstance().handleCommandLineParameters(
 				ColumbaCmdLineParser.getInstance().getParsedCommandLine());
 
+		profiler.push("plugin");
+		// now load all available plugins
+		PluginManager.getInstance().initPlugins();
+		profiler.pop("plugin");
+		
+		
+		
 //		 hide splash screen
 		if (frame != null) {
 			frame.setVisible(false);
