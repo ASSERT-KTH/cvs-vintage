@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="This is an example plugin.xml" 
+        description="Some human readable description goes here!" 
+        id="org.columba.example.ExampleClass" 
+        version="1.0" 
+        category="Examples" 
+        enabled="true">
+
+	<!-- Register all your extensions here -->
+	<!-- See the extension definitions on the Columba homepage for possible extension points -->
+  <extensionlist id="org.columba.core.action">
+    <extension id="HelloWorld" class="com.mycom.HelloWorldAction">
+     <properties menuid="menu_utilities" placeholderid="bottom"/>
+    </extension>
+  </extensionlist>
+</plugin>

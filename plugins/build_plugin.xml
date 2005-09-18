@@ -9,7 +9,7 @@
  This includes only:
   - "plugin_id", unique id of plugin (also the name of the zip-package)
     (for example: plugin_id=org.columba.example.HelloWorld)
-  - "plugin_src", directory containing the source files
+  - "plugin_dir", directory containing the source files
   - "plugin_resources", directory containing resource files (optional)
   - "plugin_classpath", plugin classpath (add all libraries here) (optional)
     (for example: plugin_classpath=lib/junit.jar:lib/xml.jar)
@@ -42,10 +42,49 @@
 
 	<!-- create build/ directory -->
 	<target name="init" depends="clean" description="Initialises the build system">
-		<echo message="you are running java version ${ant.java.version}" />
+		<fail message="This ant-build must not be run directly! Run 'ant -Dplugin_dir=your_plugin plugin' in the main columba directory to build your plugin.">
+	     <condition>
+	       <not>
+	         <isset property="columba_classpath"/>					       	 	
+	       </not>
+	     </condition>
+	   </fail>
+
+		<fail message="No plugin_dir set! Run with 'ant -Dplugin_dir=your_plugin plugin'.">
+	     <condition>
+	       <not>
+	         <isset property="plugin_dir"/>					       	 	
+	       </not>
+	     </condition>
+	   </fail>
+
+		
+	<echo message="Building ${plugin_dir}" />
+	   <echo message="you are running java version ${ant.java.version}" />
 		<mkdir dir="${build}" />
+
+    	<antcall target="check"></antcall>
+
 	</target>
 
+	<target name="check">
+		<xmlproperty prefix="plugin_xml" file="${plugin_dir}/plugin.xml"/>
+		<fail message="plugin id in build.properties and plugin.xml must be ${plugin_dir}!" >
+			<condition>
+				<not>
+					<equals arg1="${plugin_dir}" arg2="${plugin_xml.plugin(id)}"/>
+				</not>
+			</condition>
+		</fail>
+		<fail message="plugin version in build.properties and plugin.xml must be the same!" >
+			<condition>
+				<not>
+					<equals arg1="${plugin_version}" arg2="${plugin_xml.plugin(version)}"/>
+				</not>
+			</condition>
+		</fail>
+	</target>
+	
 	<!-- copy all resources to build/ directory if the variable plugin_resources is set in the build.properties file -->
 	<target name="copy-resources" if="plugin_resources" depends="init" description="Copies all resources to the ${build} folder">
 		<echo message="copy ressources now" />

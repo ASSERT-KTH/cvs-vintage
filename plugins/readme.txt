@@ -1,30 +1,37 @@
-************** Plugin Build System **************
+************** Plugin System **************
 
- example build-files which can be placed in a plugin directory
+ example plugin-files which must be placed in a plugin directory
 ---------------------------------------------------------------
 
 - build_example_properties (build properties)
-- build_example.xml (ant build script)
+- plugin_example.xml (plugin registration)
 
 To make this work you have to edit at least the "plugin_id" property in
-build_example_properties. Then rename to build.properties. Additionally,
-rename build_example.xml to build.xml. Simply enter "ant" to build the
-plugin.
+build_example_properties. Then rename to build.properties. 
+Also copy the plugin_example.xml to your plugin directory. Edit it
+to register the implemented extensions and supply some more information
+about your plugin.
+
+See also the Columba homepage for more information on the plugin development
+process.
 
 
 
- ant script to build a single plugin
+ ant command to build a single plugin
 ---------------------------------------
 
-- build_plugin.xml
+!You must run the build process from within the main columba directory!
 
-plugin_src property must be set to the name of the plugin
+The plugin_dir property must be set to the name of the plugin.
 
-Example: "ant -f build_plugin.xml -Dplugin_src=org.columba.example.HelloWorldAction release"
+Example: "ant -Dplugin_dir=org.columba.example.HelloWorldAction plugin"
 
 
- ant script to build all plugins 
+ ant command to build all plugins 
 ----------------------------------
+!You must run the build process from within the main columba directory!
 
-- build.xml
+Note: This includes only the plugins that are listed in the plugins/build.xml script.
+
+"ant plugins"
 

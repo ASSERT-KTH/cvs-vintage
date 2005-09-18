@@ -737,9 +737,15 @@
 	</target>
 	
 	<target name="plugins" depends="compile" description="Builds all plugins">
-		<ant target="all" inheritall="false" inheritrefs="false" dir="plugins" antfile="build.xml" >
+		<ant target="all" inheritall="false" inheritrefs="false" dir="plugins" antfile="plugin_list.xml" >
 		 <property name="columba_classpath" refid="compile.classpath" />
 		</ant>
 	</target>
 		
+	<target name="plugin" depends="compile" description="Builds a plugin">
+		<ant target="release" inheritall="false" inheritrefs="false" dir="plugins" antfile="build_plugin.xml" >
+		 <property name="columba_classpath" refid="compile.classpath" />
+		</ant>
+	</target>
+
 </project>

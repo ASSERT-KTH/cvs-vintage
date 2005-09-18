@@ -18,6 +18,9 @@
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
 			<property name="plugin_dir" value="org.columba.mail.PlaySoundFilterAction" />
 		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+			<property name="plugin_dir" value="org.columba.mail.ZippedMHFolder" />
+		</ant>
 	</target>
 
 	<target name="core" description="Builds all core plugins">
