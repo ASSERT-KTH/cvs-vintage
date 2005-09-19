@@ -29,7 +29,7 @@ We are not liable for any damage caused by the use of this program.
 2. Requirements
 ---------------
 Columba requires a Java 1.4 or later compatible virtual machine for
-your operating system (Java 1.4.2 is recommended)
+your operating system (Java 1.5 is recommended)
 
 The most recent version of Java can be obtained from 
 http://java.sun.com/j2se/.
@@ -55,7 +55,8 @@ o Building Columba:
   bash# ant
   
   Running Columba
-  bash# ant run
+  bash# ant run  
+  OR double-click the columba.jar 
 
 To get more information on all defined ant tasks:
   bash# ant -p
