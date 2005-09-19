@@ -19,21 +19,23 @@ import java.io.File;
 import java.net.URL;
 
 import org.columba.api.desktop.IDesktop;
+import org.columba.core.base.OSInfo;
 import org.columba.core.io.DefaultMimeTypeTable;
+import org.columba.core.logging.Logging;
 
 public class ColumbaDesktop implements IDesktop {
 
 	private static ColumbaDesktop instance = new ColumbaDesktop();
-	
+
 	IDesktop activeDesktop;
-	
+
 	protected ColumbaDesktop() {
 		activeDesktop = new DefaultDesktop();
 	}
 
 	public String getMimeType(File file) {
 		String mimeType = activeDesktop.getMimeType(file);
-		if( mimeType.equals("application/octet-stream")) {
+		if (mimeType.equals("application/octet-stream")) {
 			// Try the built-in mime table
 			return DefaultMimeTypeTable.lookup(file);
 		} else {
@@ -43,7 +45,7 @@ public class ColumbaDesktop implements IDesktop {
 
 	public String getMimeType(String ext) {
 		String mimeType = activeDesktop.getMimeType(ext);
-		if( mimeType.equals("application/octet-stream")) {
+		if (mimeType.equals("application/octet-stream")) {
 			// Try the built-in mime table
 			return DefaultMimeTypeTable.lookup(ext);
 		} else {
@@ -79,10 +81,29 @@ public class ColumbaDesktop implements IDesktop {
 	}
 
 	/**
-	 * @param activeDesktop The activeDesktop to set.
+	 * @param activeDesktop
+	 *            The activeDesktop to set.
 	 */
-	public void setActiveDesktop(IDesktop activeDesktop) {
-		this.activeDesktop = activeDesktop;
+	public void initActiveDesktop() {
+		try {
+			if (OSInfo.isLinux()) {
+				activeDesktop = new JDICDesktop();
+			} else if (OSInfo.isWin32Platform()) {
+				activeDesktop = new JDICDesktop();
+			} else if (OSInfo.isMac()) {
+				activeDesktop = new MacDesktop();
+			}
+		} catch (Exception e) {
+			if (Logging.DEBUG)
+				e.printStackTrace();
+			
+			activeDesktop = new ColumbaDesktop();
+		} catch (Error e) {
+			if (Logging.DEBUG)
+				e.printStackTrace();
+			
+			activeDesktop = new ColumbaDesktop();
+		}
 	}
 
 	/**

@@ -42,15 +42,12 @@ import org.columba.core.config.Config;
 import org.columba.core.config.IConfig;
 import org.columba.core.config.SaveConfig;
 import org.columba.core.desktop.ColumbaDesktop;
-import org.columba.core.desktop.JDICDesktop;
-import org.columba.core.desktop.MacDesktop;
 import org.columba.core.gui.base.DebugRepaintManager;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.profiles.Profile;
 import org.columba.core.gui.profiles.ProfileManager;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.trayicon.ColumbaTrayIcon;
-import org.columba.core.gui.trayicon.JDICTrayIcon;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.Logging;
@@ -191,14 +188,7 @@ public class Main {
 
 		// Initilise system dependant stuff
 		ColumbaDesktop.getInstance().initActiveDesktop();
-
-		if (OSInfo.isLinux()) {
-			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
-		} else if (OSInfo.isWin32Platform()) {
-			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
-		} else if (OSInfo.isMac()) {
-			// tray icon not supported on Mac
-		}
+		ColumbaTrayIcon.getInstance().initActiveIcon();
 	}
 
 	public void run(String args[]) {

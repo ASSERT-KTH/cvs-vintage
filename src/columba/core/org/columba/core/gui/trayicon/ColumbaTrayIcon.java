@@ -24,9 +24,11 @@ import javax.swing.Icon;
 import javax.swing.JPopupMenu;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.base.OSInfo;
 import org.columba.core.gui.base.SelfClosingPopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
+import org.columba.core.logging.Logging;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.shutdown.ShutdownManager;
 
@@ -57,7 +59,6 @@ public class ColumbaTrayIcon {
 	protected ColumbaTrayIcon() {
 		activeIcon = new DefaultTrayIcon();
 
-		
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class ColumbaTrayIcon {
 	public void addToSystemTray(IFrameMediator frameMediator) {
 
 		initPopupMenu();
-		
+
 		this.frameMediator = frameMediator;
 		activeIcon.addToTray(DEFAULT_ICON, "Columba");
 		activeIcon.setPopupMenu(menu);
@@ -151,8 +152,26 @@ public class ColumbaTrayIcon {
 	 * @param activeIcon
 	 *            The activeIcon to set.
 	 */
-	public void setActiveIcon(TrayIconInterface activeIcon) {
-		this.activeIcon = activeIcon;
+	public void initActiveIcon() {
+		try {
+			if (OSInfo.isLinux()) {
+				activeIcon = new JDICTrayIcon();
+			} else if (OSInfo.isWin32Platform()) {
+				activeIcon = new JDICTrayIcon();
+			} else if (OSInfo.isMac()) {
+				// tray icon not supported on Mac
+			}
+		} catch (Exception e) {
+			if (Logging.DEBUG)
+				e.printStackTrace();
+
+			activeIcon = new DefaultTrayIcon();
+		} catch (Error e) {
+			if (Logging.DEBUG)
+				e.printStackTrace();
+
+			activeIcon = new DefaultTrayIcon();
+		}
 	}
 
 }
