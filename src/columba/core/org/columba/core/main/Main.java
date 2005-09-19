@@ -188,21 +188,21 @@ public class Main {
 	 * 
 	 */
 	private static void initPlatformServices() {
+
 		// Initilise system dependant stuff
+		ColumbaDesktop.getInstance().initActiveDesktop();
+
 		if (OSInfo.isLinux()) {
-			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
 			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
 		} else if (OSInfo.isWin32Platform()) {
-			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
 			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
 		} else if (OSInfo.isMac()) {
-			ColumbaDesktop.getInstance().setActiveDesktop(new MacDesktop());
+			// tray icon not supported on Mac
 		}
 	}
 
 	public void run(String args[]) {
-		
-		
+
 		Logging.createDefaultHandler();
 		registerCommandLineArguments();
 
@@ -218,7 +218,7 @@ public class Main {
 		// prompt user for profile
 		Profile profile = ProfileManager.getInstance().getProfile(path);
 		profiler.pop("profile");
-		
+
 		// register shutdown manager in service registry
 		ServiceRegistry.getInstance().register(IShutdownManager.class,
 				ShutdownManager.getInstance());
@@ -230,9 +230,7 @@ public class Main {
 		// initialize configuration with selected profile
 		new Config(profile.getLocation());
 		profiler.pop("config");
-		
-		
-		
+
 		// register Config in service registry
 		ServiceRegistry.getInstance().register(IConfig.class,
 				Config.getInstance());
@@ -271,7 +269,7 @@ public class Main {
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
 		profiler.pop("i18n");
-		
+
 		SaveConfig task = new SaveConfig();
 		BackgroundTaskManager.getInstance().register(task);
 		ShutdownManager.getInstance().register(task);
@@ -279,7 +277,7 @@ public class Main {
 		profiler.push("plugins core");
 		PluginManager.getInstance().initCorePlugins();
 		profiler.pop("plugins core");
-		
+
 		ServiceRegistry.getInstance().register(IPluginManager.class,
 				PluginManager.getInstance());
 
@@ -289,7 +287,6 @@ public class Main {
 		ComponentManager.getInstance().registerCommandLineArguments();
 		profiler.pop("components");
 
-		
 		// set Look & Feel
 		ThemeSwitcher.setTheme();
 
@@ -310,33 +307,29 @@ public class Main {
 		// now load all available plugins
 		PluginManager.getInstance().initExternalPlugins();
 		profiler.pop("plugins external");
-		
-		
-		
-//		 hide splash screen
+
+		// hide splash screen
 		if (frame != null) {
 			frame.setVisible(false);
 		}
-		
+
 		profiler.push("frames");
-		
+
 		// restore frames of last session
 		if (restoreLastSession) {
 			FrameManager.getInstance().openStoredViews();
 		}
-		
-		profiler.pop("frames");
-		
-		
 
-//		for ( int i=0; i<frameMediator.length; i++) {
-//			frameMediator[i].getContainer().getFrame().setVisible(true);
-//		}
-		
+		profiler.pop("frames");
+
+		// for ( int i=0; i<frameMediator.length; i++) {
+		// frameMediator[i].getContainer().getFrame().setVisible(true);
+		// }
+
 		// Add the tray icon to the System tray
-//		ColumbaTrayIcon.getInstance().addToSystemTray(
-//				FrameManager.getInstance().getActiveFrameMediator()
-//						.getFrameMediator());
+		// ColumbaTrayIcon.getInstance().addToSystemTray(
+		// FrameManager.getInstance().getActiveFrameMediator()
+		// .getFrameMediator());
 
 		// call the postStartups of the modules
 		// e.g. check for default mailclient
@@ -404,8 +397,8 @@ public class Main {
 		}
 
 		if (commandLine.hasOption("version")) {
-			LOG.info(MessageFormat.format(GlobalResourceLoader
-					.getString(RESOURCE_PATH, "global", "info_version"), //$NON-NLS-2$
+			LOG.info(MessageFormat.format(GlobalResourceLoader.getString(
+					RESOURCE_PATH, "global", "info_version"), //$NON-NLS-2$
 					new Object[] { VersionInfo.getVersion(),
 							VersionInfo.getBuildDate() }));
 
