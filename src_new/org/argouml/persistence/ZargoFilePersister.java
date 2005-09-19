@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.24 2005/02/20 21:55:17 linus Exp $
+// $Id: ZargoFilePersister.java,v 1.25 2005/09/19 16:44:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -263,12 +263,13 @@ public class ZargoFilePersister extends UmlFilePersister {
             reader = new BufferedReader(new InputStreamReader(zis, encoding));
             // Keep reading till we hit the <argo> tag
             String rootLine;
-            while (!(rootLine = reader.readLine()).startsWith("<argo")) {
+            do {
+                rootLine = reader.readLine();
                 if (rootLine == null) {
                     throw new OpenException(
                             "Can't find an <argo> tag in the argo file");
                 }
-            }
+            } while(!rootLine.startsWith("<argo"));
             // Get the version from the tag.
             String version = getVersion(rootLine);
             writer.println("<uml version=\"" + version + "\">");
