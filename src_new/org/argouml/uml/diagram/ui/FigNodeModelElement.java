@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.188 2005/09/15 17:29:19 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.189 2005/09/19 17:15:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -436,10 +436,10 @@ public abstract class FigNodeModelElement
             popUpActions.addElement(
                     ProjectBrowser.getInstance().getRemoveFromDiagramAction());
             popupAddOffset++;
-            popUpActions.addElement(new ActionDeleteModelElements());
-            popupAddOffset++;
         }
-
+        popUpActions.addElement(new ActionDeleteModelElements());
+        popupAddOffset++;
+        
         /* Check if multiple items are selected: */
         boolean ms = TargetManager.getInstance().getTargets().size() > 1;
         if (!ms) {
