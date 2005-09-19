@@ -274,7 +274,7 @@ public class IMAPServer implements IMAPListener, Observer {
 		// shall we switch to SSL?
 		if (!usingSSL && sslEnabled && sslType == IncomingItem.TLS) {
 			// if CAPA was not support just give it a try...
-			if (isSupported("STLS") || (capabilities.length == 0)) {
+			if (isSupported("STLS") || isSupported("STARTTLS") || (capabilities.length == 0)) {
 				try {
 					protocol.startTLS();
 
