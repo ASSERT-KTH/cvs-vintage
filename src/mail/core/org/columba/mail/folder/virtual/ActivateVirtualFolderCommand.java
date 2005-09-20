@@ -55,7 +55,7 @@ public class ActivateVirtualFolderCommand extends Command {
 
 		while (it.hasMoreChildren()) {
 			IMailFolder f = it.nextChild();
-			if (f instanceof VirtualFolder) {
+			if (f instanceof VirtualFolder && f.getUid() != 106 && ((IMailFolder)f.getParent()).getUid() != 106) {
 				CommandProcessor.getInstance().addOp(
 						new ActivateVirtualFolderCommand(
 								new MailFolderCommandReference(f)));
