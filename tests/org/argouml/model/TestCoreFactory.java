@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.8 2005/08/20 09:31:08 linus Exp $
+// $Id: TestCoreFactory.java,v 1.9 2005/09/20 17:15:41 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -235,13 +235,13 @@ public class TestCoreFactory extends TestCase {
         Object dep = Model.getCoreFactory().buildDependency(class1, class2);
         Object class3 = Model.getCoreFactory().buildClass(model);
         Model.getCoreHelper().addSupplier(dep, class3);
-        WeakReference class1wr = new WeakReference(class1);
+        WeakReference class2wr = new WeakReference(class2);
         WeakReference depwr = new WeakReference(dep);
-        Model.getUmlFactory().delete(class1);
-        class1 = null;
+        Model.getUmlFactory().delete(class2);
+        class2 = null;
         dep = null;
         System.gc();
-        assertNull("class not removed", class1wr.get());
+        assertNull("class not removed", class2wr.get());
         assertNotNull("dependency removed", depwr.get());
     }
 
