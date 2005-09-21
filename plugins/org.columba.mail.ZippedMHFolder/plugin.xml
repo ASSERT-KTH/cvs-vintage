@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Zipped MH Folder" 
+        description="Derivative of the MH Folder format that zips every message." 
+        id="org.columba.mail.ZippedMHFolder" 
+        version="1.0" 
+        category="Folder" 
+        enabled="true">
+  <extensionlist id="org.columba.mail.folder">
+    <extension id="ZippedMH" class="org.columba.mail.folder.zippedmh.ZippedMHFolder">
+	<properties group="local" possible_parents="local"/>
+    </extension>
+  </extensionlist>
+</plugin>
