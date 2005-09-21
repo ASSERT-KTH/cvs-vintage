@@ -68,6 +68,7 @@
 	 <menuitem id="OpenProfileManagerDialog" />
 	 <menuitem id="PluginManagerDialog" />
 	 <menuitem id="OpenExternalToolsDialog" />
+	 <menuitem id="Macro" />
 	 <menuitem id="ViewLog" />
 	 <placeholder id="bottom"/>
 	</menu>

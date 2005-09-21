@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<extensionlist>
+    <extension id="BeanshellService" singleton="true" class="org.columba.core.scripting.BeanshellService" />
+</extensionlist>

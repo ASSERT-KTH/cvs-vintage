@@ -10,4 +10,5 @@
  <handler id="org.columba.core.externaltools" class="org.columba.core.pluginhandler.ExternalToolsExtensionHandler"/>
  <handler id="org.columba.core.component" class="org.columba.core.pluginhandler.ComponentExtensionHandler"/>
  <handler id="org.columba.core.htmlviewer" class="org.columba.core.pluginhandler.HTMLViewerExtensionHandler"/>
+    <handler id="org.columba.core.service" class="org.columba.core.pluginhandler.ServiceExtensionHandler"/>
 </handlerlist>

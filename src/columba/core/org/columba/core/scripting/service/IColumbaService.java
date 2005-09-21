@@ -1,0 +1,53 @@
+/*
+
+ The contents of this file are subject to the Mozilla Public License Version 1.1 
+ (the "License") you may not use this file except in compliance with the License. 
+
+ You may obtain a copy of the License at http://www.mozilla.org/MPL/
+
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the License.
+
+ The Original Code is "BshInterpreter plugin for The Columba Project"
+
+ The Initial Developer of the Original Code is Celso Pinto
+ Portions created by Celso Pinto are Copyright (C) 2005.
+ Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+
+ All Rights Reserved.
+
+ */
+package org.columba.core.scripting.service;
+
+import org.columba.api.plugin.IExtensionInterface;
+
+/**
+ * IColumbaService is the interface that all services should implement
+ * 
+ * @author Celso Pinto (cpinto@yimports.com)
+ */
+public interface IColumbaService extends IExtensionInterface {
+
+	/**
+	 * Initializes the service
+	 * 
+	 * @return true if service is initialized correctly, false otherwise
+	 */
+	public boolean initService();
+
+	/**
+	 * Perform necessary tasks to start the service
+	 */
+	public void startService();
+
+	/**
+	 * Perform necessary tasks to stop the service
+	 */
+	public void stopService();
+
+	/**
+	 * Allows the service to dispose of any acquired resources
+	 */
+	public void disposeService();
+}
