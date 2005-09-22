@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.189 2005/09/19 17:15:21 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.190 2005/09/22 21:23:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,6 +86,7 @@ import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Globals;
+import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
@@ -1645,6 +1646,19 @@ public abstract class FigNodeModelElement
      */
     protected void setSuppressCalcBounds(boolean scb) {
         this.suppressCalcBounds = scb;
+    }
+
+    /**
+     * @see org.tigris.gef.presentation.Fig#setLayer(org.tigris.gef.base.Layer)
+     */
+    public void setLayer(Layer lay) {
+        if (lay == null) {
+            throw new IllegalArgumentException(
+                    "Attempted to set the layer to null for "
+                    + Model.getFacade().getTipString(getOwner()));
+        }
+        LOG.info("Setting " + this + " to layer " + lay);
+        super.setLayer(lay);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.114 2005/09/19 17:15:21 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.115 2005/09/22 21:23:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,6 +76,7 @@ import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Globals;
+import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdgePoly;
@@ -695,6 +696,20 @@ public abstract class FigEdgeModelElement
         modelChanged(null);
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#setLayer(org.tigris.gef.base.Layer)
+     */
+    public void setLayer(Layer lay) {
+        if (lay == null) {
+            throw new IllegalArgumentException(
+                    "Attempted to set the layer to null for "
+                    + Model.getFacade().getTipString(getOwner()));
+        }
+        LOG.info("Setting " + this + " to layer " + lay);
+        super.setLayer(lay);
+        getFig().setLayer(lay);
+    }
+    
     /**
      * @see org.tigris.gef.presentation.Fig#deleteFromModel()
      */
