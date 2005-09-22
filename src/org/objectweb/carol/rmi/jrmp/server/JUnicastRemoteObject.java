@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JUnicastRemoteObject.java,v 1.8 2005/04/19 16:47:04 benoitf Exp $
+ * $Id: JUnicastRemoteObject.java,v 1.9 2005/09/22 17:46:43 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.server;
@@ -54,8 +54,6 @@ public class JUnicastRemoteObject extends RemoteServer {
     protected RMIClientSocketFactory csf = null;
 
     protected RMIServerSocketFactory ssf = null;
-
-    private static JUnicastThreadFactory defaultThreadFactory = null;
 
     //static boolean for local call optimization
     private static boolean localO;
@@ -154,21 +152,6 @@ public class JUnicastRemoteObject extends RemoteServer {
         } catch (RemoteException e) {
             throw new ServerCloneException("Clone failed", e);
         }
-    }
-
-    /**
-     * set the default thread factory to to used when dispatching the call. No
-     * new thread is created when the factory is <code>null</code>
-     */
-    public static void setDefaultThreadFactory(JUnicastThreadFactory factory) {
-        defaultThreadFactory = factory;
-    }
-
-    /**
-     * get the current default thread factory
-     */
-    public static JUnicastThreadFactory getDefaultThreadFactory() {
-        return defaultThreadFactory;
     }
 }
 

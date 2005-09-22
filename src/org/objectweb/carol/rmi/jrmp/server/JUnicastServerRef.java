@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JUnicastServerRef.java,v 1.7 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JUnicastServerRef.java,v 1.8 2005/09/22 17:46:43 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.server;
@@ -140,73 +140,6 @@ public class JUnicastServerRef extends UnicastServerRef {
      * @param call the remote call on this object
      */
     public void dispatch(Remote obj, RemoteCall call) throws IOException {
-        JUnicastThreadFactory factory = JUnicastRemoteObject.getDefaultThreadFactory();
-        if (factory == null) {
-            runDispatch(obj, call);
-        } else {
-            DispatchRunnable dr = new DispatchRunnable(obj, call);
-            factory.getThread(dr).run(); // run the target
-            if (dr.getIOException() != null) throw dr.getIOException();
-        }
-    }
-
-    /**
-     * method used to invoke <code>super.dispatch</code> and wrap the call to
-     * ensure invocation of context propagators.
-     * @param obj the remote object
-     * @param call the remote call on this object
-     */
-    private void runDispatch(Remote obj, RemoteCall call) throws IOException {
         super.dispatch(obj, new JRemoteServerCall(call, sis));
-    }
-
-    /**
-     * Class used to run dispatch in a separated thread
-     */
-    private class DispatchRunnable implements Runnable {
-
-        /**
-         * the remote object
-         */
-        Remote obj;
-
-        /**
-         * the remote call
-         */
-        RemoteCall call;
-
-        /**
-         * the exception (IOException)
-         */
-        IOException e = null;
-
-        /**
-         * method used to invoke <code>super.dispatch</code> and wrap the call
-         * to ensure invocation of context propagators.
-         * @param obj the remote object
-         * @param call the remote call on this object
-         */
-        public DispatchRunnable(Remote obj, RemoteCall call) {
-            this.obj = obj;
-            this.call = call;
-        }
-
-        /**
-         * thread run method
-         */
-        public void run() {
-            try {
-                runDispatch(obj, call);
-            } catch (IOException e) {
-                this.e = e;
-            }
-        }
-
-        /**
-         * Exception builder
-         */
-        public IOException getIOException() {
-            return e;
-        }
     }
 }
