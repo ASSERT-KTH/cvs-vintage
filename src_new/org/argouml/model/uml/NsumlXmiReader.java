@@ -1,4 +1,4 @@
-// $Id: NsumlXmiReader.java,v 1.5 2005/04/14 18:29:45 mvw Exp $
+// $Id: NsumlXmiReader.java,v 1.6 2005/09/22 22:45:27 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -166,16 +166,26 @@ class NsumlXmiReader extends ru.novosoft.uml.xmi.XMIReader {
 //                                                          parameterXMIUUID);
 //                        Object methodName =  fields[1].get(link);
 //                        if (methodName.equals("type")
-//                              && sourceObject instanceof
-//                              ru.novosoft.uml.foundation.core.MAssociationEnd
-//                              && !(objectParameter instanceof
-//                              ru.novosoft.uml.foundation.core.MModelElement))
-//                        {
-//                            System.out.println("Link data from XMI "
-//                                  + sourceObject + " " + methodName + " "
-//                                  + parameterXMIID + " " + parameterXMIUUID
-//                                  + " " + objectParameter);
-//                            //i.remove();
+//                            && !(objectParameter instanceof
+//                            ru.novosoft.uml.foundation.core.MModelElement)) {
+//                            if (sourceObject instanceof
+//                                ru.novosoft.uml.foundation.core.MAssociationEnd)
+//                            {
+//                                System.out.println("Link data from XMI "
+//                                    + sourceObject + " " + methodName + " "
+//                                    + parameterXMIID + " " + parameterXMIUUID
+//                                    + " " + objectParameter);
+//                                //i.remove();
+//                            }
+//                            if (sourceObject instanceof
+//                                ru.novosoft.uml.foundation.core.MStructuralFeature)
+//                            {
+//                                System.out.println("Link data from XMI "
+//                                    + sourceObject + " " + methodName + " "
+//                                    + parameterXMIID + " " + parameterXMIUUID
+//                                    + " " + objectParameter);
+//                                //i.remove();
+//                            }
 //                        }
 //                    } else {
 //                        String parameterXMIID =  (String)fields[3].get(link);
