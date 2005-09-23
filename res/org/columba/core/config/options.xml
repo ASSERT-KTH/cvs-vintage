@@ -3,8 +3,6 @@
 
 <options version="1.0">
  <gui>
-  <theme name="Plastic" theme="Experience Blue"> 
-  </theme> 
   <fonts overwrite="false">
    <text name="Default" size="12"></text>
    <main name="Default" size="12"></main>

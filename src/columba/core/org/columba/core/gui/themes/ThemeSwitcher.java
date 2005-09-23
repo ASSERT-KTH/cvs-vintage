@@ -24,6 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.columba.api.plugin.IExtension;
+import org.columba.core.base.OSInfo;
 import org.columba.core.config.Config;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
 import org.columba.core.logging.Logging;
@@ -49,6 +50,13 @@ public class ThemeSwitcher {
 		XmlElement themeConfig = Config.getInstance().get("options")
 				.getElement("/options/gui/theme");
 
+		if( themeConfig == null) {
+			XmlElement themeParent = Config.getInstance().get("options")
+			.getElement("/options/gui");
+			themeConfig = new XmlElement("theme");
+			themeParent.addElement(themeConfig);
+		}
+		
 		String pluginName = null;
 		try {
 			// get plugin-handler
@@ -56,7 +64,7 @@ public class ThemeSwitcher {
 					.getInstance().getHandler(ThemeExtensionHandler.NAME);
 
 			// if no theme available -> set "Plastic" as default
-			pluginName = themeConfig.getAttribute("name", "Plastic");
+			pluginName = themeConfig.getAttribute("name", ThemeSwitcher.getPlatformDefaultTheme());
 
 			AbstractThemePlugin theme = null;
 
@@ -83,6 +91,20 @@ public class ThemeSwitcher {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	/*
+	 * Gets the platform specific default theme. This is in
+	 * all cases but MacOS X the Plastic theme. On MacOs X
+	 * we use the System L&F.
+	 * 
+	 */
+	public static String getPlatformDefaultTheme() {
+		if( OSInfo.isMac()) {
+			return UIManager.getSystemLookAndFeelClassName();
+		} else {
+			return "Plastic";
 		}
 	}
 
