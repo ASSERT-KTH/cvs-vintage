@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.126 2005/03/27 20:28:10 spestov Exp $
+ * @version $Id: View.java,v 1.127 2005/09/23 05:54:11 ezust Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -260,6 +260,8 @@ public class View extends JFrame implements EBComponent
 	 */
 	public void removeToolBar(Component toolBar)
 	{
+		if (toolBarManager == null) return;
+		if (toolBar == null) return;
 		toolBarManager.removeToolBar(toolBar);
 		getRootPane().revalidate();
 	} //}}}
