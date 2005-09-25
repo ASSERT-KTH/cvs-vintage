@@ -92,6 +92,7 @@
 			<pathelement path="${lib.jpim}"/>			
 			<pathelement path="${lib.je}"/>	
 			<pathelement path="${lib.groovy}"/>
+			<pathelement path="${lib.bsh}"/>
 			<pathelement path="${native.base}/${lib.jdic}"/>
 			<pathelement path="${lib.mac_mock}"/>
 		</path>
@@ -153,6 +154,7 @@
 			<include name="${lib.jpim}"/>			
 			<include name="${lib.je}"/>
 			<include name="${lib.groovy}"/>
+			<include name="${lib.bsh}"/>
 			<include name="${native.linux}${lib.jdic}" />
 			<include name="${native.linux}${lib.native}"/>
 			<include name="${native.win32}${lib.jdic}" />
@@ -327,6 +329,7 @@
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>		
 				<include name="${lib.groovy}"/>		
+				<include name="${lib.bsh}"/>
 				<include name="${manual.jar}"/>
 				<include name="${native.linux}/lib/*.jar" />
 				<include name="${native.linux}/lib/*.so"/>
@@ -371,7 +374,8 @@
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>
-				<include name="${lib.groovy}"/>		
+				<include name="${lib.groovy}"/>	
+				<include name="${lib.bsh}"/>
 				<include name="${native.win32}/lib/*.jar"/>
 				<include name="${native.win32}/lib/*.dll"/>
 				<include name="Columba.lap" />
@@ -411,7 +415,8 @@
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>
-				<include name="${lib.groovy}"/>		
+				<include name="${lib.groovy}"/>
+				<include name="${lib.bsh}"/>
 			</zipfileset>
 		</zip>
 	</target>
@@ -462,6 +467,7 @@
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>	
 				<include name="${lib.groovy}"/>
+				<include name="${lib.bsh}"/>
 			</fileset>
 			<fileset dir="${dist.webstart}" >
 				<include name="columba.jnlp" />
@@ -523,6 +529,7 @@
 			<replacefilter token="@winpack@" value="${lib.winpack}"/>							
 			<replacefilter token="@jdic@" value="${lib.jdic}"/>			
 			<replacefilter token="@groovy@" value="${lib.groovy}"/>
+			<replacefilter token="@bsh@" value="${lib.bsh}"/>
 			<replacefilter token="@native@" value="${lib.native}"/>			
 		</replace>
 	</target>
@@ -592,6 +599,7 @@
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>
 				<include name="${lib.groovy}"/>
+				<include name="${lib.bsh}"/>
 				<include name="${manual.jar}"/>
 			</fileset>
 		</copy>
@@ -643,6 +651,7 @@
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
 			<arg value="/dGROOVY=${lib.groovy}" />
+			<arg value="/dBSH=${lib.bsh}" />
 			<arg value="/dJDIC=${lib.jdic}" />
 		</exec>		
 
@@ -668,6 +677,7 @@
 			<arg value="/dJPIM=${lib.jpim}" />
 			<arg value="/dJDIC=${lib.jdic}" />
 			<arg value="/dGROOVY=${lib.groovy}" />
+			<arg value="/dBSH=${lib.bsh}" />
 		</exec>		
 	</target>
 		
@@ -702,6 +712,7 @@
 			<arg value="/dJPIM=${lib.jpim}" />
 			<arg value="/dJDIC=${lib.jdic}" />		
 			<arg value="/dGROOVY=${lib.groovy}" />
+			<arg value="/dBSH=${lib.bsh}" />
 		</exec>		
 
 		<exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -727,6 +738,7 @@
 			<arg value="/dJPIM=${lib.jpim}" />
 			<arg value="/dJDIC=${lib.jdic}" />
 			<arg value="/dGROOVY=${lib.groovy}" />
+			<arg value="/dBSH=${lib.bsh}" />
 		</exec>		
 	</target>
 	
