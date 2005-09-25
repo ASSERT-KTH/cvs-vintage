@@ -37,7 +37,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 
 /**
- * Format selected text as underline "&lt;u&gt;"
+ * Format selected text as "&lt;underline&gt;"
  *
  * @author fdietz
  */
