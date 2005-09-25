@@ -1,4 +1,4 @@
-// $Id: AbstractUmlHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
+// $Id: AbstractUmlHelperDecorator.java,v 1.2 2005/09/25 21:01:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,77 +51,6 @@ public abstract class AbstractUmlHelperDecorator implements UmlHelper {
      */
     public void addListenersToModel(Object model) {
         impl.addListenersToModel(model);
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getExtensionMechanisms()
-     */
-    public ExtensionMechanismsHelper getExtensionMechanisms() {
-        return impl.getExtensionMechanisms();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getDataTypes()
-     */
-    public DataTypesHelper getDataTypes() {
-        return impl.getDataTypes();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getCore()
-     */
-    public CoreHelper getCore() {
-        return impl.getCore();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getCommonBehavior()
-     */
-    public CommonBehaviorHelper getCommonBehavior() {
-        return impl.getCommonBehavior();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getUseCases()
-     */
-    public UseCasesHelper getUseCases() {
-        return impl.getUseCases();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getStateMachines()
-     */
-    public StateMachinesHelper getStateMachines() {
-        return impl.getStateMachines();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getCollaborations()
-     */
-    public CollaborationsHelper getCollaborations() {
-        return impl.getCollaborations();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getActivityGraphs()
-     */
-    public ActivityGraphsHelper getActivityGraphs() {
-        return impl.getActivityGraphs();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getModelManagement()
-     */
-    public ModelManagementHelper getModelManagement() {
-        return impl.getModelManagement();
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getHelper(java.lang.Object)
-     */
-    public Object getHelper(Object base) {
-        throw new UnsupportedOperationException(
-                "getHelper is not implemented and deprecated");
     }
 
     /**
