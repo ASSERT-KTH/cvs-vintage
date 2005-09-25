@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.20 2005/09/23 00:52:33 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.21 2005/09/25 16:52:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.Main;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.Model;
@@ -42,7 +41,6 @@ import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
-import org.tigris.gef.presentation.FigPoly;
 
 
 /**
@@ -163,16 +161,17 @@ public class FigEdgeNote
      * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
      */
     public void setOwner(Object newOwner) {
-        // hack to avoid loading problems since we cannot store
-        // the whole model yet in XMI
         if (newOwner == null) {
-            newOwner = new CommentEdge(getSourceFigNode(), getDestFigNode());
+            // hack to avoid loading problems since we cannot store
+            // the whole model yet in XMI
+            Object sourceModelElement = getSourceFigNode().getOwner();
+            Object destModelElement = getDestFigNode().getOwner();
+            newOwner = new CommentEdge(sourceModelElement, destModelElement);
         }
         owner = newOwner;
         if (UUIDHelper.getUUID(newOwner) == null) {
-            Model.getCoreHelper().setUUID(newOwner,
-				UUIDHelper.getNewUUID());
-	}
+            Model.getCoreHelper().setUUID(newOwner, UUIDHelper.getNewUUID());
+        }
     }
 
     /**
