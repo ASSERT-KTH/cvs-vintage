@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: pack-release.sh,v 1.3 2005/06/21 19:28:15 linus Exp $
+# $Id: pack-release.sh,v 1.4 2005/09/25 20:42:01 linus Exp $
 
 BUILD=PACKRELEASE:
 
@@ -35,8 +35,8 @@ echo "$BUILD Create the zip and tar files."
 mkdir DIST
 (
   cd argouml/build;
-  $JAVA_HOME/bin/jar cvf ../../DIST/ArgoUML-$releasename.zip *.jar README.txt
-  tar cvf ../../DIST/ArgoUML-$releasename.tar *.jar README.txt
+  $JAVA_HOME/bin/jar cvf ../../DIST/ArgoUML-$releasename.zip *.jar README.txt *.sh *.bat
+  tar cvf ../../DIST/ArgoUML-$releasename.tar *.jar README.txt *.sh *.bat
 )
 (
   cd argouml/lib;
