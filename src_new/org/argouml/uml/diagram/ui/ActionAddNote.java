@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.19 2005/09/23 00:50:38 bobtarling Exp $
+// $Id: ActionAddNote.java,v 1.20 2005/09/25 11:14:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,13 +39,10 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Diagram;
-import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
-import org.tigris.gef.base.LayerManager;
 import org.tigris.gef.graph.MutableGraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
-import org.tigris.gef.presentation.FigEdgePoly;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
 
@@ -152,14 +149,6 @@ public class ActionAddNote extends UMLAction {
                         }
                     }
                 }
-//          } else if (elemFig instanceof FigEdge) {
-                /* We cannot attach a Comment to an Edge yet since we have to
-                 * modify all our edges probably */
-                /*
-                 Point startPoint = new Point(elemFig.getX(), elemFig.getY());
-                 Point endPoint = new Point(elemFig.getX() + elemFig.getWidth(),
-                 elemFig.getY() + elemFig.getHeight());
-                 */
             }
         }
         
