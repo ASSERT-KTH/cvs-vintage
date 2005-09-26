@@ -1,4 +1,4 @@
-// $Id: TestPropertyPanels.java,v 1.1 2005/07/28 08:17:05 linus Exp $
+// $Id: TestPropertyPanels.java,v 1.2 2005/09/26 21:24:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -280,7 +280,7 @@ class ChildGenModelElements implements ChildGenerator {
         }
 
         if (o instanceof Diagram) {
-            Collection figs = ((Diagram) o).getLayer().getContents(null);
+            Collection figs = ((Diagram) o).getLayer().getContents();
             if (figs != null) {
                 return new Vector(figs).elements();
             }

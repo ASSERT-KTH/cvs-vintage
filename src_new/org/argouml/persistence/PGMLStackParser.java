@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.8 2005/05/26 21:35:14 mvw Exp $
+// $Id: PGMLStackParser.java,v 1.9 2005/09/26 21:24:50 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,6 +99,7 @@ public class PGMLStackParser extends org.tigris.gef.persistence.pgml.PGMLStackPa
         if (f instanceof FigGroup) {
             FigGroup group = (FigGroup) f;
             String clsNameBounds = attrList.getValue("description");
+            System.out.println(clsNameBounds);
             if (clsNameBounds != null) {
                 StringTokenizer st =
                     new StringTokenizer(clsNameBounds, ",;[] ");

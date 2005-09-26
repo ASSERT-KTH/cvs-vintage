@@ -1,4 +1,4 @@
-// $Id: FigMNode.java,v 1.38 2005/09/15 17:09:32 mvw Exp $
+// $Id: FigMNode.java,v 1.39 2005/09/26 21:24:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -240,7 +240,7 @@ public class FigMNode extends FigNodeModelElement {
 
         if (getLayer() != null) {
             // elementOrdering(figures);
-            Collection contents = getLayer().getContents(null);
+            Collection contents = getLayer().getContents();
             Collection bringToFrontList = new ArrayList();
             Iterator it = contents.iterator();
             while (it.hasNext()) {

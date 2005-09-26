@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.7 2005/09/11 19:05:52 thn Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.8 2005/09/26 21:24:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -441,7 +441,7 @@ public class RESequenceDiagramDialog extends ArgoDialog implements ActionListene
     private FigClassifierRole getClassifierRole(Object classifier, String objName) {
         FigClassifierRole crFig = null;
         // first check if the fig of the classifier role already exists
-        Collection coll = _diagram.getLayer().getContents(null);
+        Collection coll = _diagram.getLayer().getContents();
         Iterator iter = coll != null ? coll.iterator() : null;
         while (iter != null && iter.hasNext()) {
             Object fig = iter.next();

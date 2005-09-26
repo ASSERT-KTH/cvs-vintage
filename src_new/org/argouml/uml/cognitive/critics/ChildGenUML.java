@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.21 2005/01/30 20:47:41 linus Exp $
+// $Id: ChildGenUML.java,v 1.22 2005/09/26 21:24:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,7 @@ public class ChildGenUML implements ChildGenerator {
 	}
 
 	if (o instanceof Diagram) {
-	    Collection figs = ((Diagram) o).getLayer().getContents(null);
+	    Collection figs = ((Diagram) o).getLayer().getContents();
 	    if (figs != null) {
 	        return new Vector(figs).elements();
 	    }

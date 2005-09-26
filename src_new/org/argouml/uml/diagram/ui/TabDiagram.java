@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.59 2005/08/13 10:53:24 mvw Exp $
+// $Id: TabDiagram.java,v 1.60 2005/09/26 21:24:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -380,7 +380,8 @@ public class TabDiagram
             if (targets[i] != null) {
                 Object theTarget = null;
                 if (targets[i] instanceof Fig
-		        && manager.getContents(null).contains(targets[i])) {
+		        && manager.getActiveLayer().getContents().contains(
+                        targets[i])) {
 		    theTarget = targets[i];
                 } else {
 		    theTarget = manager.presentationFor(targets[i]);

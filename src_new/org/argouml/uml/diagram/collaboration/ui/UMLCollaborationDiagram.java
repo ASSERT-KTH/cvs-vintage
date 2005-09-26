@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.80 2005/09/02 14:46:01 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.81 2005/09/26 21:24:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,7 +109,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
      */
     public int getNumMessages() {
         Layer lay = getLayer();
-        Collection figs = lay.getContents(null);
+        Collection figs = lay.getContents();
         int res = 0;
         Iterator it = figs.iterator();
         while (it.hasNext()) {

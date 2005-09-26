@@ -1,4 +1,4 @@
-// $Id: CrCompInstanceWithoutNode.java,v 1.18 2005/03/11 09:43:03 mkl Exp $
+// $Id: CrCompInstanceWithoutNode.java,v 1.19 2005/09/26 21:24:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,7 +100,7 @@ public class CrCompInstanceWithoutNode extends CrUML {
      */
     public ListSet computeOffenders(UMLDeploymentDiagram deploymentDiagram) {
 
-	Collection figs = deploymentDiagram.getLayer().getContents(null);
+	Collection figs = deploymentDiagram.getLayer().getContents();
 	ListSet offs = null;
 	boolean isNode = false;
         Iterator it = figs.iterator();

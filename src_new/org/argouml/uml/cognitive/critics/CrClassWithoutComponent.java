@@ -1,4 +1,4 @@
-// $Id: CrClassWithoutComponent.java,v 1.20 2005/03/11 09:43:03 mkl Exp $
+// $Id: CrClassWithoutComponent.java,v 1.21 2005/09/26 21:24:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrClassWithoutComponent.java,v 1.20 2005/03/11 09:43:03 mkl Exp $
+// $Id: CrClassWithoutComponent.java,v 1.21 2005/09/26 21:24:51 bobtarling Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ListSet;
@@ -99,7 +100,7 @@ public class CrClassWithoutComponent extends CrUML {
      * @return the set of effenders
      */
     public ListSet computeOffenders(UMLDeploymentDiagram dd) {
-	Collection figs = dd.getLayer().getContents(null);
+	List figs = dd.getLayer().getContents();
 	ListSet offs = null;
 	Iterator figIter = figs.iterator();
 	while (figIter.hasNext()) {

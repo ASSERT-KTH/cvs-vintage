@@ -1,4 +1,4 @@
-// $Id: CrNodesOverlap.java,v 1.6 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrNodesOverlap.java,v 1.7 2005/09/26 21:24:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +113,7 @@ public class CrNodesOverlap extends CrUML {
      */
     public ListSet computeOffenders(Diagram d) {
 	//TODO: algorithm is n^2 in number of nodes
-	Vector figs = new Vector(d.getLayer().getContents(null));
+	Vector figs = new Vector(d.getLayer().getContents());
 	int numFigs = figs.size();
 	int numRects = 0;
 	ListSet offs = null;

@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceWithoutClassifier.java,v 1.18 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrNodeInstanceWithoutClassifier.java,v 1.19 2005/09/26 21:24:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
      * @return the set of offenders
      */
     public ListSet computeOffenders(UMLDeploymentDiagram dd) {
-	Collection figs = dd.getLayer().getContents(null);
+	Collection figs = dd.getLayer().getContents();
         Iterator figIter = figs.iterator();
 	ListSet offs = null;
 	while (figIter.hasNext()) {

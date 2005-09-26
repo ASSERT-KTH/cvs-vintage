@@ -1,4 +1,4 @@
-// $Id: ClassdiagramLayouter.java,v 1.30 2005/04/23 16:30:46 linus Exp $
+// $Id: ClassdiagramLayouter.java,v 1.31 2005/09/26 21:24:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -320,7 +320,7 @@ public class ClassdiagramLayouter implements Layouter {
      */
     public ClassdiagramLayouter(UMLDiagram theDiagram) {
         diagram = theDiagram;
-        Iterator nodeIter = diagram.getLayer().getContents(null).iterator();
+        Iterator nodeIter = diagram.getLayer().getContents().iterator();
         while (nodeIter.hasNext()) {
             Fig fig = (Fig) nodeIter.next();
             if (fig.getEnclosingFig() == null) {

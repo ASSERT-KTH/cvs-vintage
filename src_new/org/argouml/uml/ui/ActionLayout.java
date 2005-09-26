@@ -1,4 +1,4 @@
-// $Id: ActionLayout.java,v 1.13 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionLayout.java,v 1.14 2005/09/26 21:24:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class ActionLayout extends UMLAction {
         Collection nodes =
             ((UMLClassDiagram) ProjectManager.getManager().getCurrentProject()
 	             .getActiveDiagram())
-	        .getLayer().getContents(null);
+	        .getLayer().getContents();
         Iterator it = nodes.iterator();
         while (it.hasNext()) {
             sm.select((Fig) (it.next()));

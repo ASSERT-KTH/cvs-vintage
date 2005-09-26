@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.26 2005/09/11 19:05:52 thn Exp $
+// $Id: SequenceDiagramLayout.java,v 1.27 2005/09/26 21:24:50 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -293,7 +293,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
      * @return the list with {@link FigMessage}s.
      */
     public List getFigMessages(int y) {
-        if (getContents(null).isEmpty()
+        if (getContents().isEmpty()
 	    || getContentsEdgesOnly().isEmpty()) {
             return Collections.EMPTY_LIST;
         }
