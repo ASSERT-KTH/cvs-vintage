@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IRMIContextWrapperFactory.java,v 1.3 2005/09/15 13:04:16 benoitf Exp $
+ * $Id: IRMIContextWrapperFactory.java,v 1.4 2005/09/26 12:42:42 coqp Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -43,10 +43,10 @@ public class IRMIContextWrapperFactory extends AbsInitialContextFactory implemen
      * @return class of the wrapper (to be instantiated + pool).
      */
     protected Class getWrapperClass() {
+
         // use registry object when property is set to on and registry is in the same JVM.
-        // TODO: Change the property name used by both JRMP and IRMI or always use this when registry is in the same JVM.
-        boolean localO = new Boolean(System.getProperty(CarolDefaultValues.LOCAL_JRMP_PROPERTY, "false")).booleanValue();
-        if (localO && IRMIRegistry.isLocal()) {
+        boolean localreg = new Boolean(System.getProperty(CarolDefaultValues.LOCALREG_JRMP_PROPERTY, "true")).booleanValue();
+        if ((localreg) && IRMIRegistry.isLocal()) {
             return IRMILocalContext.class;
         } else {
             return IRMIContext.class;
