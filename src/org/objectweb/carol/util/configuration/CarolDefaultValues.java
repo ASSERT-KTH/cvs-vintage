@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.20 2005/05/14 00:03:58 rhs Exp $
+ * $Id: CarolDefaultValues.java,v 1.21 2005/09/26 12:41:59 coqp Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -122,6 +122,10 @@ public class CarolDefaultValues {
      */
     public static final String LOCAL_JRMP_PROPERTY = "rmi.local.call";
 
+    /**
+     * carol jrmp registry local flag
+     */
+    public static final String LOCALREG_JRMP_PROPERTY = "rmi.local.registry";
     /**
      * carol factory Prefix
      */
