@@ -1,4 +1,4 @@
-// $Id: FigAssociationClass.java,v 1.11 2005/08/27 15:37:22 bobtarling Exp $
+// $Id: FigAssociationClass.java,v 1.12 2005/09/26 10:46:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,7 @@ public class FigAssociationClass
     public FigAssociationClass() {
         super();
         setBetweenNearestPoints(true);
-        ((FigPoly) _fig).setRectilinear(false);
+        ((FigPoly) getFig()).setRectilinear(false);
         setDashed(false);
 
         SwingUtilities.invokeLater(new RunFigAssociation(this));
@@ -228,7 +228,7 @@ public class FigAssociationClass
      */
     public void setFig(Fig f) {
         super.setFig(f);
-        _fig.setDashed(false);
+        getFig().setDashed(false);
     }
 
     /**

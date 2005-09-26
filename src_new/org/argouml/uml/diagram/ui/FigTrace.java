@@ -1,4 +1,4 @@
-// $Id: FigTrace.java,v 1.6 2005/01/09 14:58:56 linus Exp $
+// $Id: FigTrace.java,v 1.7 2005/09/26 10:46:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class FigTrace extends FigEdgeLine {
      * The constructor.
      */
     public FigTrace() {
-	_fig.setLineColor(Color.red);
+	getFig().setLineColor(Color.red);
 	ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
 	endArrow.setFillColor(Color.red);
 	setDestArrowHead(endArrow);

@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.42 2005/09/19 17:14:06 mvw Exp $
+// $Id: FigTransition.java,v 1.43 2005/09/26 10:46:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,7 @@ public class FigTransition extends FigEdgeModelElement {
     public FigTransition() {
         super();
         addPathItem(getNameFig(), new PathConvPercent2(this, getNameFig(), 50, 10));
-        _fig.setLineColor(Color.black);
+        getFig().setLineColor(Color.black);
         setDestArrowHead(endArrow);
         allowRemoveFromDiagram(false);
     }
@@ -120,7 +120,7 @@ public class FigTransition extends FigEdgeModelElement {
      */
     public void setFig(Fig f) {
         super.setFig(f);
-        _fig.setDashed(dashed);
+        getFig().setDashed(dashed);
     }
 
     /**
@@ -234,7 +234,7 @@ public class FigTransition extends FigEdgeModelElement {
             dashed =
                 Model.getFacade().isAObjectFlowState(getSource())
                 || Model.getFacade().isAObjectFlowState(getDestination());
-            _fig.setDashed(dashed);
+            getFig().setDashed(dashed);
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigLink.java,v 1.10 2005/01/02 10:08:23 linus Exp $
+// $Id: FigLink.java,v 1.11 2005/09/26 10:46:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class FigLink extends FigEdgeModelElement {
      * Constructor.
      */
     public FigLink() {
-	_fig.setLineColor(Color.black);
+	getFig().setLineColor(Color.black);
 	setBetweenNearestPoints(true);
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigRealization.java,v 1.9 2005/01/09 14:58:56 linus Exp $
+// $Id: FigRealization.java,v 1.10 2005/09/26 10:46:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigRealization.java,v 1.9 2005/01/09 14:58:56 linus Exp $
+// $Id: FigRealization.java,v 1.10 2005/09/26 10:46:52 bobtarling Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
@@ -78,7 +78,7 @@ public class FigRealization extends FigEdgeModelElement {
      */
     public void setFig(Fig f) {
         super.setFig(f);
-        _fig.setDashed(true);
+        getFig().setDashed(true);
     }
 
     /**

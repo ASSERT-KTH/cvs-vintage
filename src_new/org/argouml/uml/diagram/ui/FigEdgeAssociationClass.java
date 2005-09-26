@@ -1,4 +1,4 @@
-// $Id: FigEdgeAssociationClass.java,v 1.5 2005/05/21 20:24:09 bobtarling Exp $
+// $Id: FigEdgeAssociationClass.java,v 1.6 2005/09/26 10:46:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class FigEdgeAssociationClass
      */
     public FigEdgeAssociationClass() {
         setBetweenNearestPoints(true);
-        ((FigPoly) _fig).setRectilinear(false);
+        ((FigPoly) getFig()).setRectilinear(false);
         setDashed(true);
     }
 
@@ -99,7 +99,7 @@ public class FigEdgeAssociationClass
      */
     public void setFig(Fig f) {
         super.setFig(f);
-        _fig.setDashed(true);
+        getFig().setDashed(true);
     }
 
     /**

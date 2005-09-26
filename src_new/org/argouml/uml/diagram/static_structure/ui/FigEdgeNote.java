@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.21 2005/09/25 16:52:44 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.22 2005/09/26 10:46:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,7 +136,7 @@ public class FigEdgeNote
     public void setFig(Fig f) {
         LOG.info("Setting the internal fig to " + f);
         super.setFig(f);
-        _fig.setDashed(true);
+        getFig().setDashed(true);
         //throw new IllegalArgumentException();
     }
 

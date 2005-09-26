@@ -1,4 +1,4 @@
-// $Id: FigDependency.java,v 1.18 2005/03/05 10:37:20 mvw Exp $
+// $Id: FigDependency.java,v 1.19 2005/09/26 10:46:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,7 +130,7 @@ public class FigDependency extends FigEdgeModelElement {
      */
     public void setFig(Fig f) {
         super.setFig(f);
-        _fig.setDashed(true);
+        getFig().setDashed(true);
         // computeRoute();
         // this recomputes the route if you reload the diagram.
     }
