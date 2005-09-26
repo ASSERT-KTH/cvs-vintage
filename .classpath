@@ -47,7 +47,6 @@
 	<classpathentry kind="lib" path="lib/groovy-all-1.0-jsr-02.jar"/>
 	<classpathentry kind="lib" path="lib/mac_mock.jar"/>
 	<classpathentry kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
-	<classpathentry kind="lib" path="lib/ristretto-1.0_RC3.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.chat.altura/lib/smack.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.chat.altura/lib/smackx.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.HippoLookAndFeel/lib/hippolf.jar"/>
@@ -56,5 +55,6 @@
 	<classpathentry kind="lib" path="plugins/org.columba.core.MetouiaLookAndFeel/lib/metouia.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.WinLAFLookAndFeel/lib/winlaf-0.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/bsh-2.0b2.jar"/>
+	<classpathentry kind="lib" path="lib/ristretto-1.0-all.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
