@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.11 2005/09/22 20:35:05 bobtarling Exp $
+// $Id: CommentEdge.java,v 1.12 2005/09/26 17:13:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,10 @@ public class CommentEdge {
 
     private static final Logger LOG =
         Logger.getLogger(UseCaseDiagramRenderer.class);
+
+    CommentEdge() {
+        uuid = UUIDManager.getInstance().getNewUUID();
+    }
     
     /**
      * Constructor.
@@ -62,7 +66,8 @@ public class CommentEdge {
         }
         if (!(Model.getFacade().isAModelElement(dest))) {
             throw new IllegalArgumentException(
-                    "The destination of the CommentEdge must be a model element");
+                    "The destination of the CommentEdge " +
+                    "must be a model element");
         }
         this.source = source;
         this.dest = dest;

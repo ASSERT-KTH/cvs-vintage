@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.22 2005/09/26 10:46:52 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.23 2005/09/26 17:13:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -164,9 +164,7 @@ public class FigEdgeNote
         if (newOwner == null) {
             // hack to avoid loading problems since we cannot store
             // the whole model yet in XMI
-            Object sourceModelElement = getSourceFigNode().getOwner();
-            Object destModelElement = getDestFigNode().getOwner();
-            newOwner = new CommentEdge(sourceModelElement, destModelElement);
+            newOwner = new CommentEdge();
         }
         owner = newOwner;
         if (UUIDHelper.getUUID(newOwner) == null) {
