@@ -37,7 +37,7 @@ import org.columba.mail.gui.table.TableView;
  */
 public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 	public final static String[] COLUMNS = { "Status", "Attachment", "Flagged",
-			"Priority", "Subject", "From", "Date", "Size", "Spam", "To", "Cc" };
+			"Priority", "Subject", "From", "Date", "Size", "Spam", "To", "Cc", "MultiLine" };
 
 	/**
 	 * Constructor
@@ -100,7 +100,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 		
 		// remove all child nodes
 		columns.removeAllElements();
-
+		
 		while (enumeration.hasMoreElements()) {
 			TableColumn tc = (TableColumn) enumeration.nextElement();
 			String name = (String) tc.getHeaderValue();
@@ -136,7 +136,11 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 
 		// remove all columns from table model
 		tableController.getHeaderTableModel().clearColumns();
-
+		
+		// reset row height 
+		view.resetRowHeight();
+		view.setShowHorizontalLines(false);
+		
 		// remove all columns for column model
 		view.getColumnModel().removeColumnModelListener(tableController.getHeaderTableModel());
 		view.setColumnModel(new DefaultTableColumnModel());

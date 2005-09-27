@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.awt.Dimension;
+
 import javax.swing.JOptionPane;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -33,7 +35,6 @@ import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.plugins.BasicHeaderRenderer;
 import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
-import org.columba.mail.gui.table.plugins.DefaultLabelRenderer;
 import org.columba.mail.plugin.TableRendererExtensionHandler;
 import org.frapuccino.treetable.CustomTreeTableCellRenderer;
 import org.frapuccino.treetable.TreeTable;
@@ -53,12 +54,16 @@ public class TableView extends TreeTable {
 
 	private TableModelSorter sorter;
 
+	private int defaultRowHeight;
+	
 	public TableView(HeaderTableModel headerTableModel, TableModelSorter sorter) {
 		super();
 
 		this.sorter = sorter;
 		this.headerTableModel = headerTableModel;
 
+		defaultRowHeight = getRowHeight();
+		
 		setModel(headerTableModel);
 
 		// load plugin handler used for the columns
@@ -70,8 +75,14 @@ public class TableView extends TreeTable {
 		}
 
 		getTree().setCellRenderer(new SubjectTreeRenderer(this));
+		
+		
 	}
 
+	public void resetRowHeight() {
+		setRowHeight(defaultRowHeight);
+	}
+	
 	/**
 	 * Enable/Disable tree renderer for the subject column.
 	 * <p>
@@ -128,13 +139,13 @@ public class TableView extends TreeTable {
 		c.setHeaderValue(name);
 		c.setIdentifier(name);
 
-		DefaultLabelRenderer r = null;
+		TableCellRenderer r = null;
 
 		if (handler.exists(name)) {
 			// load plugin
 			try {
 				IExtension extension = handler.getExtension(name);
-				r = (DefaultLabelRenderer) extension.instanciateExtension(null);
+				r = (TableCellRenderer) extension.instanciateExtension(null);
 			} catch (Exception e) {
 				if (Logging.DEBUG) {
 					e.printStackTrace();
@@ -196,12 +207,17 @@ public class TableView extends TreeTable {
 	 *            is this a fixed size column?
 	 */
 	protected void registerRenderer(TableColumn tc, String name,
-			DefaultLabelRenderer cell, TableCellRenderer header, int size,
+			TableCellRenderer cell, TableCellRenderer header, int size,
 			boolean lockSize) {
 		if (tc == null) {
 			return;
 		}
 
+		// this is a hack for the multiline column
+		if ( name.equals("MultiLine")) {
+			setRowHeight(getRowHeight()*2);
+		} 
+		
 		if (cell != null) {
 			tc.setCellRenderer(cell);
 		}

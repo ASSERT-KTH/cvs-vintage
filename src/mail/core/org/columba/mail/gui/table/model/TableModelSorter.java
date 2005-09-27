@@ -226,7 +226,7 @@ public class TableModelSorter implements ModelVisitor {
 				} else {
 					result = -1;
 				}
-			} else if (columnName.equals("Date")) {
+			} else if ( (columnName.equals("Date")) || (columnName.equals("MultiLine")) ) {
 				Date d1 = (Date) header1.get("columba.date");
 				Date d2 = (Date) header2.get("columba.date");
 
