@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.75 2005/09/13 18:32:23 mvw Exp $
+// $Id: TabProps.java,v 1.76 2005/09/27 23:57:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,7 @@ import org.argouml.uml.ui.behavior.collaborations.PropPanelClassifierRole;
 import org.argouml.uml.ui.behavior.collaborations.PropPanelCollaboration;
 import org.argouml.uml.ui.behavior.collaborations.PropPanelInteraction;
 import org.argouml.uml.ui.behavior.collaborations.PropPanelMessage;
+import org.argouml.uml.ui.behavior.common_behavior.PropPanelArgument;
 import org.argouml.uml.ui.behavior.common_behavior.PropPanelCallAction;
 import org.argouml.uml.ui.behavior.common_behavior.PropPanelComponentInstance;
 import org.argouml.uml.ui.behavior.common_behavior.PropPanelCreateAction;
@@ -426,6 +427,9 @@ public class TabProps
         }
         if (Model.getFacade().isAActor(modelElement)) { 
             return new PropPanelActor(); 
+        }
+        if (Model.getFacade().isAArgument(modelElement)) { 
+            return new PropPanelArgument(); 
         }
         if (Model.getFacade().isAAssociationClass(modelElement)) { 
             return new PropPanelAssociationClass(); 
