@@ -401,7 +401,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// }
 
-		mediator.loadPositions(viewItem);
+		//mediator.loadPositions(viewItem);
 	}
 
 	/**
@@ -409,7 +409,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 * Save current window position, size and maximization state
 	 * 
 	 */
-	public void savePositions(ViewItem viewItem) {
+	private void savePositions() {
 
 		java.awt.Dimension d = getSize();
 		java.awt.Point loc = getLocation();
@@ -427,7 +427,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 			item.setInteger(ViewItem.WINDOW, ViewItem.HEIGHT_INT, d.height);
 		}
 
-		mediator.savePositions(viewItem);
+		//mediator.savePositions(viewItem);
 	}
 
 	/**
@@ -596,7 +596,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	public void close() {
 
 		// save window position
-		savePositions(getViewItem());
+		savePositions();
 
 		getFrameMediator().close();
 

@@ -19,13 +19,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.base.CRadioButtonMenuItem;
-import org.columba.core.gui.menu.IMenu;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.TreeViewOwner;
@@ -38,7 +38,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Menu items for sorting the folder tree.
  * @author redsolo
  */
-public class SortFoldersMenu extends IMenu implements ActionListener {
+public class SortFoldersMenu extends JPopupMenu implements ActionListener {
 
     private static final String UNSORTED_ACTION = "UNSORTED";
     private static final String ALPHABETIC_ACTION = "ALPHABETIC";
@@ -58,12 +58,15 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
 
     private String activeComparator;
 
+    private IFrameMediator frameMediator;
+    
     /**
      * Creates the sort folders submenu.
      * @param controller the controller.
      */
     public SortFoldersMenu(IFrameMediator controller) {
-        super(controller, MailResourceLoader.getString("menu", "mainframe", "menu_view_sort_tree"),"menu_view_sort_tree");
+    	this.frameMediator = controller;
+        //super(controller, MailResourceLoader.getString("menu", "mainframe", "menu_view_sort_tree"),"menu_view_sort_tree");
 
         createSubMenu();
         loadConfig();
@@ -125,7 +128,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
         }
 
         if (comparator != null) {
-            TreeViewOwner mediator = (TreeViewOwner) getFrameMediator();
+            TreeViewOwner mediator = (TreeViewOwner) frameMediator;
             ((TreeController)mediator.getTreeController()).getView().setFolderComparator(comparator);
             ((TreeController)mediator.getTreeController()).getView().setSortingEnabled(true);
         }
@@ -176,7 +179,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
-        TreeViewOwner mediator = (TreeViewOwner) getFrameMediator();
+        TreeViewOwner mediator = (TreeViewOwner) frameMediator;
 
         if (action.equals(UNSORTED_ACTION)) {
 

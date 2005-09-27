@@ -302,14 +302,12 @@ public class ComposerController extends DefaultFrameController implements
 			// add splitpane to the center
 			centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
-			// set splitpane position based on configuration settings
-
-			ViewItem viewItem = getViewItem();
+			
+			//ViewItem viewItem = getViewItem();
 
 			// default value is 200 pixel
-			int pos = viewItem.getIntegerWithDefault("splitpanes",
-					"attachment", 200);
-			attachmentSplitPane.setDividerLocation(pos);
+			//int pos = viewItem.getIntegerWithDefault("splitpanes","attachment", 200);
+			attachmentSplitPane.setDividerLocation(200);
 
 			attachmentPanelShown = true;
 		} else {
@@ -788,17 +786,17 @@ public class ComposerController extends DefaultFrameController implements
 		
 	}
 
-	public void savePositions(ViewItem viewItem) {
-		super.savePositions(viewItem);
-
-		viewItem = getViewItem();
-
-		// splitpanes
-		if (attachmentSplitPane != null)
-			viewItem.setInteger("splitpanes", "attachment", attachmentSplitPane
-					.getDividerLocation());
-
-	}
+//	public void savePositions(ViewItem viewItem) {
+//		super.savePositions(viewItem);
+//
+//		viewItem = getViewItem();
+//
+//		// splitpanes
+//		if (attachmentSplitPane != null)
+//			viewItem.setInteger("splitpanes", "attachment", attachmentSplitPane
+//					.getDividerLocation());
+//
+//	}
 
 	/*
 	 * (non-Javadoc)

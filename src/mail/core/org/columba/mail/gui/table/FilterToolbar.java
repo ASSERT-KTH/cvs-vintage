@@ -161,7 +161,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 	}
 
 	public void layoutComponents() {
-		setBorder(BorderFactory.createEmptyBorder(1, 0, 1, 0));
+		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
 		FormLayout l = new FormLayout(
 				"default, 3dlu, fill:default:grow, 3dlu, default, 3dlu, default",

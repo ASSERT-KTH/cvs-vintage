@@ -122,16 +122,16 @@ public class DefaultFrameController implements IFrameMediator {
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#loadPositions(org.columba.core.config.ViewItem)
 	 */
-	public void loadPositions(ViewItem viewItem) {
-
-	}
+//	public void loadPositions(ViewItem viewItem) {
+//
+//	}
 
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#savePositions(org.columba.core.config.ViewItem)
 	 */
-	public void savePositions(ViewItem viewItem) {
-
-	}
+//	public void savePositions(ViewItem viewItem) {
+//
+//	}
 
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#setContainer(org.columba.api.gui.frame.IContainer)

@@ -40,15 +40,15 @@
 	</menu>
 	
 	<menu id="menu_view" placeholderid="top">
-	    <menuitem id="ColumnDialog"/>
+	    <!--<menuitem id="ColumnDialog"/>-->
 		<separator/>	    
-		<imenu id="SortMessagesMenu"/>	
-		<imenu id="SortFoldersMenu"/>		
-		<separator/>
-		<imenu id="HeadersMenu"/>
-		<separator/>
-		<checkboxmenuitem id="ThreadedView"/>
-		<separator/>
+		<!--<imenu id="SortMessagesMenu"/>-->	
+		<!--<imenu id="SortFoldersMenu"/>-->		
+		<!--<separator/>-->
+		<!--<imenu id="HeadersMenu"/>
+		<separator/>-->
+		<!--<checkboxmenuitem id="ThreadedView"/>
+		<separator/>-->
 		
 		
 		<menu id="menu_view_next">
@@ -59,9 +59,8 @@
 			<menuitem id="PreviousMessage" />
 			<menuitem id="PreviousUnreadMessage" />
 		</menu>
-		<separator/>
-		
-		<imenu id="CharacterEncodingMenu" />
+		<!--<separator/>-->
+		<!--<imenu id="CharacterEncodingMenu" />-->
 		<separator/>
 		<menuitem id="ViewMessageSource"/>
 	</menu>
