@@ -17,12 +17,12 @@ package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
 import java.util.Observable;
-import java.util.Observer;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractSelectableAction;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -34,8 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz, Karl Peder Olesen
  */
-public class EnableHtmlAction extends AbstractSelectableAction
-    implements Observer {
+public class EnableHtmlAction extends AbstractSelectableAction {
     /**
      * @param frameMediator
      * @param name
@@ -57,24 +56,6 @@ public class EnableHtmlAction extends AbstractSelectableAction
 
         String enableHtml = htmlElement.getAttribute("enable", "false");
         setState(Boolean.valueOf(enableHtml).booleanValue());
-
-        // let the menu item listen for changes btw. html and text
-        htmlElement.addObserver(this);
-    }
-
-    /**
-     * Update checked state of menu item if change btw. html and text
-     * has been made somewhere.
-     *
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void update(Observable o, Object arg) {
-        XmlElement e = (XmlElement) o;
-
-        if (e.getName().equals("html")) {
-            String enableHtml = e.getAttribute("enable", "false");
-            setState(Boolean.valueOf(enableHtml).booleanValue());
-        }
     }
 
     /* (non-Javadoc)
@@ -92,6 +73,8 @@ public class EnableHtmlAction extends AbstractSelectableAction
 
         // change configuration based on menuitem selection	 
         htmlElement.addAttribute("enable", Boolean.toString(getState()));
-        htmlElement.notifyObservers(); // notify everyone listening to this option
+        
+        //Update the composer
+        ((ComposerController)getFrameMediator()).toggleHtmlMode();
     }
 }

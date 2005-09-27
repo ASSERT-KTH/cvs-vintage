@@ -90,7 +90,7 @@ import com.jgoodies.forms.layout.Sizes;
  * @author frd
  */
 public class ComposerController extends DefaultFrameController implements
-		CharsetOwnerInterface, Observer, IContentPane, DocumentListener,
+		CharsetOwnerInterface, IContentPane, DocumentListener,
 		ItemListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -191,9 +191,6 @@ public class ComposerController extends DefaultFrameController implements
 		} else {
 			getModel().setHtml(false);
 		}
-
-		// Add the composer controller as observer
-		htmlElement.addObserver(this);
 
 		// init controller for the editor depending on message type
 		if (getModel().isHtml()) {
@@ -743,12 +740,14 @@ public class ComposerController extends DefaultFrameController implements
 	 * 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void update(Observable o, Object arg) {
-		XmlElement e = (XmlElement) o;
+	public void toggleHtmlMode() {
+        XmlElement optionsElement = MailConfig.getInstance().get("composer_options")
+        .getElement("/options");
+        
+        XmlElement htmlElement = optionsElement.getElement("html");
 
-		if (e.getName().equals("html")) {
-			// switch btw. html and text if necessary
-			String enableHtml = e.getAttribute("enable", "false");
+        // switch btw. html and text if necessary
+			String enableHtml = htmlElement.getAttribute("enable", "false");
 			boolean html = Boolean.valueOf(enableHtml).booleanValue();
 			boolean wasHtml = composerModel.isHtml();
 
@@ -786,7 +785,7 @@ public class ComposerController extends DefaultFrameController implements
 			}
 
 			editorPanel.validate();
-		}
+		
 	}
 
 	public void savePositions(ViewItem viewItem) {
