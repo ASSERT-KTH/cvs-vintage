@@ -18,6 +18,7 @@ package org.columba.mail.parser.text;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -138,9 +139,9 @@ prot + "://  protocol and ://
 			"\u00f8","\u00f9","\u00fa","\u00fb","\u00fc","\u00fd","\u00fe","\u00ff"
 			};
 
-    private static final Pattern SPECIAL_PATTERN = Pattern.compile("&#(\\d)+;");    
+    private static final Pattern SPECIAL_PATTERN = Pattern.compile("&#(\\d+);");    
 
-	private static final Pattern CHARSET_PATTERN=Pattern.compile("\\bcharset=[^\\w-_\\d]+\\b");
+	private static final Pattern CHARSET_PATTERN=Pattern.compile("\\bcharset=([\\w-_\\d]+)\\b");
 	
     
     
@@ -249,7 +250,7 @@ prot + "://  protocol and ://
 
     	//First replace all special entities
     	for( int i=0; i<SPECIAL_ENTITIES.length; i++) {
-    		s.replaceAll(SPECIAL_ENTITIES[i],ENTITY_STRINGS[i]);
+    		s = s.replaceAll(SPECIAL_ENTITIES[i],ENTITY_STRINGS[i]);
     	}
 
     	StringBuffer result = new StringBuffer(s.length());
@@ -269,7 +270,7 @@ prot + "://  protocol and ://
     	Matcher matcher = CHARSET_PATTERN.matcher(htmlSource);
     	if( matcher.find() ) {
     		try {
-				return Charset.forName(matcher.group());
+				return Charset.forName(matcher.group(1));
 			} catch (RuntimeException e) {
 			}
     	}
@@ -322,7 +323,7 @@ prot + "://  protocol and ://
      * @return        Text converted to html
      * @author        Karl Peder Olesen (karlpeder), 20030916
      */
-    public static String textToHtml(String text, String title, String css) {
+    public static String textToHtml(String text, String title, String css, String charset) {
         // convert special characters
         String html = HtmlParser.substituteSpecialCharacters(text);
 
@@ -333,7 +334,8 @@ prot + "://  protocol and ://
         // insert surrounding html tags
         StringBuffer buf = new StringBuffer();
         buf.append("<html><head>");
-
+        buf.append("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=" + charset +"\">");
+        
         if (title != null) {
             buf.append("<title>");
             buf.append(title);
@@ -398,14 +400,6 @@ prot + "://  protocol and ://
 
                         break;
 
-                    /* *20031004, karlpeder* the special entity
- * apos is not handled correctly when displaying
- * html - let it stay as-is
-case '\'':
-        sb.append("&apos;");
-        i++;
-        break;
-*/
                     case ' ':
 
                         //sb.append("&nbsp;");
@@ -438,7 +432,7 @@ case '\'':
                         break;
 
                     default:
-                        sb.append(ss.charAt(i));
+                   		sb.append(ss.charAt(i));
                         i++;
 
                         break;
