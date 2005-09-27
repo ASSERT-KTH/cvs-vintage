@@ -126,7 +126,6 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
         fonts.addObserver(this);
 
         addKeyListener(this);
-        setPreferredSize(new Dimension(300, 200));
 
         // initialize formatting actions
         actionFontBold = new StyledEditorKit.BoldAction();
