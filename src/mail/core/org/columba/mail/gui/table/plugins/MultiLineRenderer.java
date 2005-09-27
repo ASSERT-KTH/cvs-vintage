@@ -127,6 +127,8 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 							: table.getBackground());
 		}
 
+		
+		
 		setFont(table.getFont());
 
 		if (hasFocus) {
@@ -197,7 +199,7 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 			}
 		}
 
-		String subject = (String) header.get("Subject");
+		String subject = (String) header.get("columba.subject");
 		if (isSelected)
 			subjectLabel.setForeground(UIManager
 					.getColor("Table.selectionForeground"));
