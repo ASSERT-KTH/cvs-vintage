@@ -761,7 +761,7 @@ public class ComposerController extends DefaultFrameController implements
 
 				if (html) {
 					LOG.fine("Converting body text to html");
-					newBody = HtmlParser.textToHtml(oldBody, "", null);
+					newBody = HtmlParser.textToHtml(oldBody, "", null, getCharset().toString());
 				} else {
 					LOG.fine("Converting body text to text");
 					newBody = HtmlParser.htmlToText(oldBody);
