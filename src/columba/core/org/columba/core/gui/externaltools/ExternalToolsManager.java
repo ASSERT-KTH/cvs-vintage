@@ -74,7 +74,7 @@ public class ExternalToolsManager {
 			IExtension extension = getHandler().getExtension(toolID);
 
 			plugin = (AbstractExternalToolsPlugin) extension
-					.instanciateExtension(new Object[] { null });
+					.instanciateExtension(null);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 
