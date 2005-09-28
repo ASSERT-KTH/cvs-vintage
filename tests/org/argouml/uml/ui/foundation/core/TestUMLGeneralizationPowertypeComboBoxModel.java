@@ -1,4 +1,4 @@
-// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.17 2005/08/20 09:31:09 linus Exp $
+// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.18 2005/09/28 14:53:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,11 @@ package org.argouml.uml.ui.foundation.core;
 
 import junit.framework.TestCase;
 
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetEvent;
+import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
  * @since Nov 3, 2002
@@ -42,6 +44,9 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
     private Object child;
     private Object parent;
     private Object namespace;
+
+    private static final Logger LOG =
+        Logger.getLogger(TestUMLGeneralizationPowertypeComboBoxModel.class);
 
     /**
      * Constructor for TestUMLGeneralizationPowertypeComboBoxModel.
@@ -107,8 +112,10 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
      * Test setPowertype().
      */
     public void testSetPowertype() {
+        LOG.info("Setting powertype");
         Model.getCoreHelper().setPowertype(elem, types[0]);
         assertTrue(model.getSelectedItem() == types[0]);
+        LOG.info("Powertype set");
     }
 
     /**

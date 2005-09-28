@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.55 2005/07/29 19:39:07 mvw Exp $
+// $Id: UMLComboBoxModel2.java,v 1.56 2005/09/28 14:53:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,15 +140,18 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
+        
+        LOG.info("The event type is " + evt.getClass().getName());
+        
         if (evt instanceof AttributeChangeEvent) {
             if (evt.getPropertyName().equals(propertySetName)
                     && evt.getSource() == getTarget()
                 && (isClearable || getChangedElement(evt) != null)) {
                 Object elem = getChangedElement(evt);
                 if (!contains(elem)) {
-		    addElement(elem);
-		}
-		setSelectedItem(elem);
+                    addElement(elem);
+                }
+                setSelectedItem(elem);
             }
         } else if (evt instanceof DeleteInstanceEvent) {
             if (contains(getChangedElement(evt))) {
