@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.167 2005/09/28 01:11:28 bobtarling Exp $
+// $Id: FigClass.java,v 1.168 2005/09/28 01:12:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -762,8 +762,6 @@ public class FigClass extends FigClassifierBox
         if (getOwner() == null) {
             return;
         }
-        
-        System.out.println("FigClass got an event " + mee);
         Object source = null;
         if (mee != null) {
             source = mee.getSource();
