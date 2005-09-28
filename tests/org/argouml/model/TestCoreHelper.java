@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// $Id: TestCoreHelper.java,v 1.2 2005/09/28 22:25:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,9 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 
@@ -111,4 +114,23 @@ public class TestCoreHelper extends TestCase {
 
 	assertTrue(Model.getCoreHelper().getChildren(ge).size() == 3);
     }
+    
+    /**
+     * Test if adding a client to a binary dependency
+     * actually increases the client count.
+     */
+    public void testAddClient() {
+        Object model = Model.getModelManagementFactory().createModel();
+        Object class1 = Model.getCoreFactory().buildClass(model);
+        Object class2 = Model.getCoreFactory().buildClass(model);
+        Object dep = Model.getCoreFactory().buildDependency(class1, class2);
+        Object class3 = Model.getCoreFactory().buildClass(model);
+        Model.getCoreHelper().addClient(dep, class3);
+        Collection clients = Model.getFacade().getClients(dep);
+        assertEquals(2, Model.getFacade().getClients(dep).size());
+        Iterator it = clients.iterator();
+        assertEquals(class1, it.next());
+        assertEquals(class3, it.next());
+    }
+
 }
