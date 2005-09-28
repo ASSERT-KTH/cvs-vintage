@@ -312,7 +312,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 				// Find the index of the largest local Uid
 				int position = localUids.size() - 1;
 				while (largestLocalUidIndex == -1
-						&& position >= localUids.size() - 10 && position > 0) {
+						&& position >= localUids.size() - 10 && position >= 0) {
 					largestLocalUidIndex = getServer().getIndex(
 							(Integer) localUids.get(position--), this);
 				}
