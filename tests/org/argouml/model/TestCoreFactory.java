@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.9 2005/09/20 17:15:41 mvw Exp $
+// $Id: TestCoreFactory.java,v 1.10 2005/09/28 22:26:46 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -206,7 +206,8 @@ public class TestCoreFactory extends TestCase {
     }
 
     /**
-     * Test if deleting a class also deletes its dependency.
+     * Test if deleting a client class on a 2(client) to
+     * 1(supplier) dependency leaves the dependency in place.
      */
     public void testDeleteModelelementDependencyClient() {
         Object model = Model.getModelManagementFactory().createModel();
