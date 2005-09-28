@@ -31,6 +31,7 @@ import javax.swing.tree.TreeNode;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.base.ListTools;
 import org.columba.core.command.Command;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.ristretto.imap.ListInfo;
@@ -148,11 +149,11 @@ public class SynchronizeFolderListCommand extends Command {
 		// Now we have the subscribed folders in subscribedFolders
 		// and the unsubscribed folders in unsubscribedFolders
 		// Next step: Create a treestructure
-		DefaultMutableTreeNode root = new CheckableItemImpl();
-
+		CheckableItemImpl rootNode = new CheckableItemImpl(root.getName());
+		
 		// Initialize the Pattern
-		String pattern = "([^\\Q" + store.getDelimiter() + "]+)\\E"
-				+ store.getDelimiter() + "?";
+		String pattern = "([^\\Q" + store.getDelimiter() + "\\E]+)\\Q"
+				+ store.getDelimiter() + "\\E?";
 		delimiterPattern = Pattern.compile(pattern);
 		delimiter = store.getDelimiter();
 
@@ -160,17 +161,17 @@ public class SynchronizeFolderListCommand extends Command {
 		Iterator it = unsubscribedFolders.iterator();
 
 		while (it.hasNext()) {
-			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
+			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), rootNode);
 			node.setSelected(false);
 		}
 
 		it = subscribedFolders.iterator();
 
 		while (it.hasNext()) {
-			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
+			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), rootNode);
 			node.setSelected(true);
 		}
-		return root;
+		return rootNode;
 	}
 
 	private ListInfoTreeNode insertTreeNode(ListInfo listInfo,
