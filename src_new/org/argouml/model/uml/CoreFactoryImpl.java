@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.28 2005/09/20 17:15:41 mvw Exp $
+// $Id: CoreFactoryImpl.java,v 1.29 2005/09/28 22:28:37 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1727,7 +1727,7 @@ public class CoreFactoryImpl
         if (!(elem instanceof MFeature)) {
             throw new IllegalArgumentException();
         }
-        LOG.warn("deleteOperation called but it is not implemented");
+        LOG.warn("deleteFeature called but it is not implemented");
     }
 
     /**
