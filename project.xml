@@ -4,10 +4,10 @@
   <pomVersion>1</pomVersion>
   <id>columba</id>
   <name>columba</name>
-  <currentVersion>1.0RC3-cvs</currentVersion>
+  <currentVersion>1.0-cvs</currentVersion>
   <groupId>columba</groupId>
   <url>http://columba.sf.net</url>
-  <siteAddress>www.ancoso-development.de</siteAddress>
+  <siteAddress>columba.hora-obscura.de</siteAddress>
   <siteDirectory>/home/webmaster/webroot/ancoso-dev/opensource/columba</siteDirectory>
   <logo>http://columba.sourceforge.net/img/logo3.gif</logo>
   
@@ -328,6 +328,36 @@
         <version>1.0_RC3</version>
         <type>jar</type>
         <jar>lib/ristretto-1.0_RC3.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
+      </dependency>
+      <dependency>
+        <groupId>bsh</groupId>
+        <artifactId>bsh</artifactId>
+        <version>2.0b2</version>
+        <type>jar</type>
+        <jar>lib/bsh-2.0b2.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
+      </dependency>
+      <dependency>
+        <groupId>mac</groupId>
+        <artifactId>mac</artifactId>
+        <version>0.1</version>
+        <type>jar</type>
+        <jar>lib/mac_mock.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
+      </dependency>
+      <dependency>
+        <groupId>flexdoc</groupId>
+        <artifactId>flexdoc</artifactId>
+        <version>0.3.7</version>
+        <type>jar</type>
+        <jar>lib/flexdock-0.3.7.jar</jar>
         <properties>
           <jar.manifest.classpath>true</jar.manifest.classpath>
         </properties>

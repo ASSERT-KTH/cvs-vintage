@@ -14,6 +14,12 @@
     </fileset>
    </copy>
    
+   <copy  todir="${basedir}/maven/java/">
+    <fileset dir="${basedir}/src/columba/api/">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+   
    <copy todir="${basedir}/maven/java/">
     <fileset dir="${basedir}/src/addressbook/core">
      <exclude name="**/*build.xml*"/>

@@ -33,6 +33,7 @@
    <jar href="@jpim@"/>
    <jar href="@macchiato@"/>
    <jar href="@je@"/>
+   <jar href="@flexdoc@"/>
 
    <!-- JavaHelp is signed by SUN already -->
    <!-- it therefor can't be in the same jnlp file -->

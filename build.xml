@@ -95,6 +95,7 @@
 			<pathelement path="${lib.bsh}"/>
 			<pathelement path="${native.base}/${lib.jdic}"/>
 			<pathelement path="${lib.mac_mock}"/>
+      <pathelement path="${lib.flexdoc}"/>
 		</path>
 		<path id="run.classpath" >
 			<path refid="compile.classpath" />
@@ -155,6 +156,7 @@
 			<include name="${lib.je}"/>
 			<include name="${lib.groovy}"/>
 			<include name="${lib.bsh}"/>
+      <include name="${lib.flexdoc}"/>   
 			<include name="${native.linux}${lib.jdic}" />
 			<include name="${native.linux}${lib.native}"/>
 			<include name="${native.win32}${lib.jdic}" />
@@ -266,7 +268,7 @@
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main" />
-				<attribute name="Class-Path" value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je}"/>
+				<attribute name="Class-Path" value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc}"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -331,6 +333,7 @@
 				<include name="${lib.groovy}"/>		
 				<include name="${lib.bsh}"/>
 				<include name="${manual.jar}"/>
+        <include name="${lib.flexdoc}"/>    
 				<include name="${native.linux}/lib/*.jar" />
 				<include name="${native.linux}/lib/*.so"/>
 			</tarfileset>
@@ -376,6 +379,7 @@
 				<include name="${lib.je}"/>
 				<include name="${lib.groovy}"/>	
 				<include name="${lib.bsh}"/>
+        <include name="${lib.flexdoc}"/>    
 				<include name="${native.win32}/lib/*.jar"/>
 				<include name="${native.win32}/lib/*.dll"/>
 				<include name="Columba.lap" />
@@ -417,6 +421,7 @@
 				<include name="${lib.je}"/>
 				<include name="${lib.groovy}"/>
 				<include name="${lib.bsh}"/>
+        <include name="${lib.flexdoc}"/>    
 			</zipfileset>
 		</zip>
 	</target>
@@ -468,6 +473,7 @@
 				<include name="${lib.je}"/>	
 				<include name="${lib.groovy}"/>
 				<include name="${lib.bsh}"/>
+        <include name="${lib.flexdoc}"/>    
 			</fileset>
 			<fileset dir="${dist.webstart}" >
 				<include name="columba.jnlp" />
@@ -530,7 +536,8 @@
 			<replacefilter token="@jdic@" value="${lib.jdic}"/>			
 			<replacefilter token="@groovy@" value="${lib.groovy}"/>
 			<replacefilter token="@bsh@" value="${lib.bsh}"/>
-			<replacefilter token="@native@" value="${lib.native}"/>			
+			<replacefilter token="@native@" value="${lib.native}"/>		
+      <replacefilter tiken="@flexdoc@" value="${lib.flexdoc}"/>   
 		</replace>
 	</target>
 
@@ -600,6 +607,7 @@
 				<include name="${lib.je}"/>
 				<include name="${lib.groovy}"/>
 				<include name="${lib.bsh}"/>
+        <include name="${lib.flexdoc}"/>
 				<include name="${manual.jar}"/>
 			</fileset>
 		</copy>
@@ -653,6 +661,7 @@
 			<arg value="/dGROOVY=${lib.groovy}" />
 			<arg value="/dBSH=${lib.bsh}" />
 			<arg value="/dJDIC=${lib.jdic}" />
+      <arg value="/dFLEXDOC=${lib.flexdoc}" />   
 		</exec>		
 
 		<exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -678,6 +687,7 @@
 			<arg value="/dJDIC=${lib.jdic}" />
 			<arg value="/dGROOVY=${lib.groovy}" />
 			<arg value="/dBSH=${lib.bsh}" />
+      <arg value="/dFLEXDOC=${lib.flexdoc}" />   
 		</exec>		
 	</target>
 		
@@ -713,6 +723,7 @@
 			<arg value="/dJDIC=${lib.jdic}" />		
 			<arg value="/dGROOVY=${lib.groovy}" />
 			<arg value="/dBSH=${lib.bsh}" />
+      <arg value="/dFLEXDOC=${lib.flexdoc} "/>   
 		</exec>		
 
 		<exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -739,6 +750,7 @@
 			<arg value="/dJDIC=${lib.jdic}" />
 			<arg value="/dGROOVY=${lib.groovy}" />
 			<arg value="/dBSH=${lib.bsh}" />
+      <arg value="/sFLEXDOC=${lib.flexdoc} "/>
 		</exec>		
 	</target>
 	
