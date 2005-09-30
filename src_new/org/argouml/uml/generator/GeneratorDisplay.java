@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.93 2005/08/25 18:55:21 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.94 2005/09/30 00:33:19 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ public class GeneratorDisplay extends Generator2 {
         super(
             Notation.makeNotation(
                 "UML",
-                "1.3",
+                "1.4",
                 Argo.lookupIconResource("UmlNotation")));
     }
 

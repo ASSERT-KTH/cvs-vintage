@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.64 2005/08/13 09:34:33 mvw Exp $
+// $Id: Notation.java,v 1.65 2005/09/30 00:33:19 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,7 +202,7 @@ public final class Notation implements PropertyChangeListener {
         // This is needed for the case when the default notation is
         // not loaded at this point.
         if (n == null) {
-            n = NotationNameImpl.findNotation("UML 1.3");
+            n = NotationNameImpl.findNotation("UML 1.4");
 	}
         LOG.debug("default notation is " + n.getConfigurationValue());
         return n;
