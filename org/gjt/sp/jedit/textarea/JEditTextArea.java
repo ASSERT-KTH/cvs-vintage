@@ -58,7 +58,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.359 2005/09/30 16:55:15 ezust Exp $
+ * @version $Id: JEditTextArea.java,v 1.360 2005/09/30 17:11:43 ezust Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -764,12 +764,6 @@ public class JEditTextArea extends JComponent
 				+ ",firstPhysicalLine=" + getFirstPhysicalLine()
 				+ ",lastPhysicalLine=" + getLastPhysicalLine());
 		}
-		if (screenLine < 0) 
-		{
-			point = new Point(0,0);
-			screenLine = 0;
-		}
-
 		point.x += extraEndVirt;
 
 		if(point.x < 0)
