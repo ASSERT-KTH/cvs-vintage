@@ -1,4 +1,4 @@
-// $Id: ActionGenerateAll.java,v 1.27 2005/04/28 20:49:32 mvw Exp $
+// $Id: ActionGenerateAll.java,v 1.28 2005/10/01 06:48:50 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,13 @@ import org.argouml.uml.generator.ui.ClassGenerationDialog;
 
 /**
  * Action to trigger code generation for one or more classes.
+ * <p>
+ * In fact, only all named classes and interfaces 
+ * on the active diagram are generated. 
+ * Or, if this delivers an empty collection, all selected classes, interfaces 
+ * and the contents of selected packages are generated 
+ * (independent if they are named or not). <p>
+ * TODO: Implement a more logical behaviour.
  */
 public class ActionGenerateAll extends UMLAction {
 
