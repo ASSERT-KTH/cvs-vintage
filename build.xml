@@ -1,769 +1,775 @@
 <?xml version="1.0"?>
 
 <project name="columba" basedir="." default="build">
-	<description> 
-		This is the Columba build system. 
-		The buildfiles are separated into this file and a 
-		buildfile for each component's core and test.  
-		
-		Quickstart:
-		ant run	
+    <description>
+        This is the Columba build system.
+        The buildfiles are separated into this file and a
+        buildfile for each component's core and test.
 
-		Have fun ... your Columba Team!	
-	</description>	
+        Quickstart:
+        ant run
 
-	<!-- external definitions -->
-	<property file="lib.properties" />	
-	<property file="src.properties" />
+        Have fun ... your Columba Team!
+    </description>
 
-	<!-- definition of the checkstyle task (checkstyle.sf.net) -->
-	<taskdef resource="checkstyletask.properties" classpath="${lib.checkstyle}"/>
-	
-	
-	<!-- definition of the jreleasinfo task (jreleasinfo.sf.net) -->
-	<taskdef 
-	   name="jreleaseinfo" 
-	   classname="ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask" >
-	   <classpath>
-	      <pathelement location="${lib.jreleaseinfo}"/>
-	   </classpath>
-	</taskdef>	
-	
-	
-	<target name="checkstyle" description="Checks the source against our coding guidelines">
-		<checkstyle config="${basedir}/sun_checks.xml" >
-			<fileset dir="${src.base}" includes="**/*.java"/>
-		</checkstyle>
-	</target>
+    <!-- external definitions -->
+    <property file="lib.properties"/>
+    <property file="src.properties"/>
 
-	
-	<!-- validates the xml resources -->
-	<target name="validate-xml-resources" description="Validates the XML resources">
-		<xmlvalidate failonerror="no" warn="yes">
-			<fileset dir="${res.base}" includes="**/*.xml"/>
-		</xmlvalidate>
-	</target>
-	
-	<target name="init-native" description="Initialises platform dependent stuff" >
-		<condition property="native.base" value="${native.win32}" >
-			<os family="windows"/>			
-		</condition>
-
-		<condition property="native.base" value="${native.linux}" >
-			<os name="linux"/>			
-		</condition>
-		
-		<!-- Other platform maintainers must add their platform here !-->
-		
-		
-		<property name="native.library.path" value="${native.base}/lib/"/>
-	</target >
-	
-	<target name="init" depends="init-native" description="Initialises the build system">
-		
-		<echo message="you are running java version ${ant.java.version}"/>
-
-		<mkdir dir="${dest}"/>
-		<mkdir dir="${report.base}"/>
-		<mkdir dir="${doc.base}" />
-		<mkdir dir="${release.base}" />
-		
-		<property name="debugbuild" value="true" />
-			
-		<tstamp/>
-		<property name="version" value="${DSTAMP}" />
-		
-		<!-- Define the Classpaths -->
-		<path id="compile.classpath" >
-			<pathelement path="${dest}"/>
-			<pathelement path="${lib.forms}"/>
-			<pathelement path="${lib.jscf}"/>
-			<pathelement path="${lib.jargs}"/>
-			<pathelement path="${lib.jwizz}"/>
-			<pathelement path="${lib.jhall}"/>
-			<pathelement path="${lib.ristretto}"/>
-			<pathelement path="${lib.macchiato}"/>
-			<pathelement path="${lib.frapuccino}"/>
-			<pathelement path="${lib.lucene}"/>			
-			<pathelement path="${lib.plastic}"/>			
-			<pathelement path="${native.win32}/${lib.jniwrap}"/>
-			<pathelement path="${native.win32}/${lib.winpack}"/>			
-			<pathelement path="${lib.jdom}"/>			
-			<pathelement path="${lib.jpim}"/>			
-			<pathelement path="${lib.je}"/>	
-			<pathelement path="${lib.groovy}"/>
-			<pathelement path="${lib.bsh}"/>
-			<pathelement path="${native.base}/${lib.jdic}"/>
-			<pathelement path="${lib.mac_mock}"/>
-      <pathelement path="${lib.flexdoc}"/>
-		</path>
-		<path id="run.classpath" >
-			<path refid="compile.classpath" />
-			<pathelement path="${manual.jar}" />
-			<pathelement path="${dest}"/>
-		</path>			
-		
-		
-	</target>
-
-	<target name="init-test" depends="init" description="Initialises the build system for Unit testing">
-		<mkdir dir="${test.dest}"/>
-
-		<path id="compile.test.classpath" >
-			<path refid="compile.classpath"/>
-			<pathelement path="${dest}"/>
-			<pathelement path="${lib.junit}"/>
-		</path>
-		<path id="run.test.classpath" >
-			<path refid="compile.test.classpath" />
-			<pathelement path="${dest}"/>
-			<pathelement path="${test.dest}"/>
-		</path>			
-	</target>
-	
-	<target name="init-rpm" depends="init" description="Initialises the RPM directories">
-		<mkdir dir="${dist.rpm}/BUILD" />
-		<mkdir dir="${dist.rpm}/SRPMS" />
-		<mkdir dir="${dist.rpm}/RPMS" />
-		<mkdir dir="${dist.rpm}/SOURCES" />
-		<mkdir dir="${dist.rpm}/SPECS" />
-	</target>
-	
-	
-	<target name="init-webstart" depends="init" description="Initialises the build system for Webstart">
-		<!-- signing jar-files for Java WebStart -->
-		<!-- all libs and columba.jar need to be signed -->
-		<!-- you need to specify the alias and the passwords on the commandline -->
-		<property name="alias" value="TheColumbaProject" description="signing jar-files for Java WebStart"/>
-		<property name="storepass" value="columba"/>
-		<property name="keypass" value="columba"/>
-		<property name="webstart.codebase" value="http://columba.sourceforge.net/webstart" />
-		
-		<fileset dir="${release.base}/webstart" id="sign.jars" >
-			<include name="columba.jar"/>
-			<include name="${manual.jar}"/>
-			<include name="${lib.forms}"/>
-			<include name="${lib.jscf}"/>
-			<include name="${lib.jargs}"/>
-			<include name="${lib.jwizz}"/>
-			<include name="${lib.ristretto}"/>
-			<include name="${lib.macchiato}"/>
-			<include name="${lib.frapuccino}"/>
-			<include name="${lib.lucene}"/>			
-			<include name="${lib.plastic}"/>			
-			<include name="${lib.jdom}"/>			
-			<include name="${lib.jpim}"/>			
-			<include name="${lib.je}"/>
-			<include name="${lib.groovy}"/>
-			<include name="${lib.bsh}"/>
-      <include name="${lib.flexdoc}"/>   
-			<include name="${native.linux}${lib.jdic}" />
-			<include name="${native.linux}${lib.native}"/>
-			<include name="${native.win32}${lib.jdic}" />
-			<include name="${native.win32}${lib.native}"/>
-			<!-- never sign JavaHelp, its already signed by SUN -->
-			<!-- never sign jniwrapper, its already signed by jniwrapper.com -->
-		</fileset>			
-	</target>
-	
-	<target name="version" depends="init" description="Tags Columba with the version info">
-			
-		<jreleaseinfo
-		   className="ColumbaVersionInfo" 
-		   packageName="org.columba.core.versioninfo"
-		   targetDir="${src.columba.core}"
-		   version="${version}" >
-		</jreleaseinfo>
-		
-		<javac target="1.4" source="1.4" srcdir="${src.columba.core}/org/columba/core/versioninfo/" includes="ColumbaVersionInfo.java" destdir="${dest}" />
-		
-		<delete file="${src.columba.core}/org/columba/core/versioninfo/ColumbaVersionInfo.java"/>
-	</target>
-	
-	<target name="update" description="Updates the source when checked out via CVS">
-		<cvs command="update -d"/>
-		
-		<!-- Run clean to ensure that everything is built correctly after the update! (tstich) -->
-		<ant target="clean" />
-	</target>
-
-	<target name="doc" depends="init" description="Creates the JavaDocs of the Columba API in doc/">
-		<javadoc destdir="${doc.api}" doctitle="Columba ${version} API Documentation" windowtitle="Columba API Documentation" link="http://java.sun.com/j2se/1.4.2/docs/api">
-			<classpath refid="compile.classpath" />
-			<packageset dir="${src.columba.api}"/>
-			<packageset dir="${src.columba.core}"/>
-			<packageset dir="${src.mail.api}"/>
-			<packageset dir="${src.mail.core}"/>
-			<packageset dir="${src.addressbook.api}"/>
-			<packageset dir="${src.addressbook.core}"/>
-			<group title="Addressbook" packages="org.columba.addressbook*"/>
-			<group title="Core" packages="org.columba.core*"/>
-			<group title="Mail" packages="org.columba.mail*"/>
-		</javadoc>
-	</target>
-
-	
-	<target name="copy-resources" description="Copies all resources to the classes/ folder">
-		<copy todir="${dest}">
-			<fileset dir="${res.base}">
-				<include name="**"/>
-			</fileset>
-		</copy>
-	</target>
-
-	<!-- compile the classes -->
-	<target name="compile" depends="init, copy-resources, version"  description="Compiles the Columba core components">
-		<echo message="the classes are going to ${dest} "/>
-
-		<!-- compile columba APIs -->
-		<javac destdir="${dest}" target="1.4" source="1.4">
-			<src path="${src.columba.api}"/>
-			<classpath refid="compile.classpath" />
-		</javac>
-		
-		<!-- compile columba core -->
-		<ant dir="${src.columba.core}" target="compile" inheritrefs="true" />
-		
-		<!-- compile mail/addressbook APIs -->
-		<javac destdir="${dest}" target="1.4" source="1.4">
-			<src path="${src.columba.api}"/>
-			<src path="${src.mail.api}"/>
-			<src path="${src.addressbook.api}"/>
-			<classpath refid="compile.classpath" />
-		</javac>
-			
-		<ant dir="${src.mail.core}" target="compile" inheritrefs="true" />
-		<ant dir="${src.addressbook.core}" target="compile" inheritrefs="true" />
-	</target>
-
-	
-	<!-- compile the test classes -->
-	<target name="compile-test" depends="compile, init-test"  description="Compiles the Unit tests">
-		<echo message="the classes are going to ${test.dest} "/>
-		<ant dir="${src.columba.test}" target="compile" inheritrefs="true"/>
-		<ant dir="${src.mail.test}" target="compile" inheritrefs="true"/>
-		<ant dir="${src.addressbook.test}" target="compile" inheritrefs="true"/>
-	</target>
-
-	<!-- pack the files into one jar file with automatic manifest file -->
-	<target name="jar" depends="compile" description="Creates the Columba.jar file.">
-		<echo message="the jar file is going to be columba.jar " />
-		<jar basedir="${dest}" jarfile="columba.jar">
-			<include name="**"/>
-			<exclude name="columba.jar"/>
-			<exclude name="README"/>
-			<exclude name="CHANGES"/>
-			<exclude name="AUTHORS"/>
-			<include name="res/ACKNOWLEDGEMENT"/>
-			<include name="res/CONTRIBUTORS"/>
-			<include name="res/LICENSE"/>
-			<exclude name="run.bat"/>
-			<exclude name="run.sh"/>
-			<exclude name="run_source.bat"/>
-			<exclude name="run_source.sh"/>
-			<exclude name="**/*.zip"/>
-			<exclude name="docs/**"/>
-			<exclude name="plugins/**"/>
-			<exclude name="lib/**"/>
-			<exclude name="native/**"/>
-			<manifest>
-				<attribute name="Main-Class" value="org.columba.core.main.Main" />
-				<attribute name="Class-Path" value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc}"/>
-				<attribute name="Sealed" value="false"/>
-			</manifest>
-		</jar>
-	</target>
-
-	<!-- convert line-endings -->
-	<target name="linefeeds-win32" description="Converts the line-endings to win32 format">
-		<fixcrlf srcdir="${dest}"
-       eol="crlf"
-       includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.bat, run_source.bat"
-  	/>
-	</target>
-
-	<!-- convert line-endings -->
-	<target name="linefeeds-unix" description="Converts the line-endings to *nix format">
-		<fixcrlf srcdir="${dest}"
-       eol="lf"
-       includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.sh, run_source.sh"
-  	/>
-	</target>
-
-	<!-- run test for all defined testcases -->
-	<target name="test" depends="compile-test"  description="Runs all Unit tests. XML reports in report/">
-		<ant dir="${src.columba.test}" target="test" inheritrefs="true"/>		
-		<ant dir="${src.mail.test}" target="test" inheritrefs="true"/>		
-		<ant dir="${src.addressbook.test}" target="test" inheritrefs="true"/>		
-	</target>
-
-	<target name="test-report" depends="test" description="Runs all Unit tests. XML reports in report/ and Html-report in report/html/">
-		<junitreport todir="${report.base}">
-		  <fileset dir="${report.base}">
-		    <include name="TEST-*.xml"/>
-		  </fileset>
-		  <report format="frames" todir="${report.base}/html"/>
-		</junitreport>		
-	</target>	
-
-	<!-- create a release zip file for linux and unix flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
-	<!-- this task is for a binary release -->
-	<target name="bin-unix" depends="jar, linefeeds-unix"
-	description="Creates packaged *nix Columba release">
-		<tar tarfile="${release.base}/columba-unix-${version}-bin.tar.bz2" compression="bzip2">
-			<tarfileset dir="${basedir}" prefix="columba-unix-${version}-bin">
-				<include name="README"/>
-				<include name="AUTHORS"/>
-				<include name="LICENSE"/>
-				<include name="CHANGES"/>
-				<include name="columba.jar"/>
-				<include name="${lib.forms}"/>
-				<include name="${lib.jscf}"/>
-				<include name="${lib.jargs}"/>
-				<include name="${lib.jwizz}"/>
-				<include name="${lib.jhall}"/>
-				<include name="${lib.ristretto}"/>
-				<include name="${lib.macchiato}"/>
-				<include name="${lib.frapuccino}"/>
-				<include name="${lib.lucene}"/>			
-				<include name="${lib.plastic}"/>			
-				<include name="${lib.jdom}"/>			
-				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>		
-				<include name="${lib.groovy}"/>		
-				<include name="${lib.bsh}"/>
-				<include name="${manual.jar}"/>
-        <include name="${lib.flexdoc}"/>    
-				<include name="${native.linux}/lib/*.jar" />
-				<include name="${native.linux}/lib/*.so"/>
-			</tarfileset>
-			<tarfileset dir="${basedir}" mode="755" prefix="columba-unix-${version}-bin">
-				<include name="run.sh"/>				
-			</tarfileset>				
-		</tar>
-	</target>
-
-	<!-- create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
-	<!-- this task is for a binary release -->
-	<target name="bin-win32" depends="jar, linefeeds-win32"
-	description="Creates packaged win32 Columba release">
-		
-		<copy file="${native.win32}/Columba.lap" todir="${basedir}"/>
-		
-		<replace file="${basedir}/Columba.lap" >
-			<replacefilter token="{app}" value="."/>
-		</replace>
-
-		<copy file="${basedir}/Columba.lap" tofile="${basedir}\Columbaw.lap"/>
-		
-		<zip zipfile="${release.base}/columba-win32-${version}-bin.zip">
-			<zipfileset dir="${basedir}" prefix="columba-win32-${version}-bin">
-				<include name="README"/>
-				<include name="AUTHORS"/>
-				<include name="LICENSE"/>
-				<include name="CHANGES"/>
-				<include name="columba.jar"/>
-				<include name="${manual.jar}"/>
-				<include name="${lib.forms}"/>
-				<include name="${lib.jscf}"/>
-				<include name="${lib.jargs}"/>
-				<include name="${lib.jwizz}"/>
-				<include name="${lib.jhall}"/>
-				<include name="${lib.ristretto}"/>
-				<include name="${lib.macchiato}"/>
-				<include name="${lib.frapuccino}"/>
-				<include name="${lib.lucene}"/>			
-				<include name="${lib.plastic}"/>			
-				<include name="${lib.jdom}"/>			
-				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>
-				<include name="${lib.groovy}"/>	
-				<include name="${lib.bsh}"/>
-        <include name="${lib.flexdoc}"/>    
-				<include name="${native.win32}/lib/*.jar"/>
-				<include name="${native.win32}/lib/*.dll"/>
-				<include name="Columba.lap" />
-				<include name="Columbaw.lap" />
-			</zipfileset>
-			<zipfileset dir="${native.win32}" prefix="columba-win32-${version}-bin">
-				<include name="Columba.exe" />
-				<include name="Columbaw.exe" />
-			</zipfileset>
-		</zip>
-		
-		<delete file="${basedir}/Columba.lap"/>
-		<delete file="${basedir}/Columbaw.lap"/>
-	</target>
+    <!-- definition of the checkstyle task (checkstyle.sf.net) -->
+    <taskdef resource="checkstyletask.properties" classpath="${lib.checkstyle}"/>
 
 
-	<target name="bin-cross" depends="jar, linefeeds-win32"
-	description="Creates packaged cross-platform Columba release">
-		<zip zipfile="${release.base}/columba-${version}-bin.zip">
-			<zipfileset dir="${basedir}" prefix="columba-${version}-bin">
-				<include name="README"/>
-				<include name="AUTHORS"/>
-				<include name="LICENSE"/>
-				<include name="CHANGES"/>
-				<include name="columba.jar"/>
-				<include name="${manual.jar}"/>
-				<include name="${lib.forms}"/>
-				<include name="${lib.jscf}"/>
-				<include name="${lib.jargs}"/>
-				<include name="${lib.jwizz}"/>
-				<include name="${lib.jhall}"/>
-				<include name="${lib.ristretto}"/>
-				<include name="${lib.macchiato}"/>
-				<include name="${lib.frapuccino}"/>
-				<include name="${lib.lucene}"/>			
-				<include name="${lib.plastic}"/>			
-				<include name="${lib.jdom}"/>			
-				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>
-				<include name="${lib.groovy}"/>
-				<include name="${lib.bsh}"/>
-        <include name="${lib.flexdoc}"/>    
-			</zipfileset>
-		</zip>
-	</target>
-	
-	<!-- create a source zip file for linux and unix flavors containing all sources and README, LICENSE, CHANGES, AUTHORS -->
-	<!-- this task is for a source release -->
-	<target name="source" depends="init,linefeeds-win32"
-	description="Creates packaged Columba source release">
-		<echo message="the zipfile is going to columba-${version}-src.zip "/>
-		<zip zipfile="${release.base}/columba-${version}-src.zip" update="true">
-			<zipfileset dir="." prefix="columba-${version}-src">
-				<include name="src/**"/>
-				<include name="res/**"/>
-				<include name="plugins/**"/>
-				<include name="native/**"/>
-				<include name="lib/**"/>
-				<include name="README"/>
-				<include name="LICENSE"/>
-				<include name="CHANGES"/>
-				<include name="AUTHORS"/>
-				<include name="*.xml" />
-				<include name="*.properties" />
-			</zipfileset>
-		</zip>
-	</target>
+    <!-- definition of the jreleasinfo task (jreleasinfo.sf.net) -->
+    <taskdef
+            name="jreleaseinfo"
+            classname="ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask">
+        <classpath>
+            <pathelement location="${lib.jreleaseinfo}"/>
+        </classpath>
+    </taskdef>
 
-	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
-	<!-- this is also the release target ;-0 -->
-	<target name="release" depends="bin-unix,bin-win32,bin-cross,source, rpm, winsetup, winsetup-bundlejre, webstart"
-	description="Builds a complete set of Columba release archives"/>
 
-	<target name="webstart" depends="init-webstart, jar" description="Signs all jars for use with Java Webstart">
-		<copy toDir="${release.base}/webstart">
-			<fileset dir="${basedir}">
-				<include name="columba.jar"/>				
-				<include name="${manual.jar}"/>
-				<include name="${lib.forms}"/>
-				<include name="${lib.jscf}"/>
-				<include name="${lib.jargs}"/>
-				<include name="${lib.jwizz}"/>
-				<include name="${lib.jhall}"/>
-				<include name="${lib.ristretto}"/>
-				<include name="${lib.macchiato}"/>
-				<include name="${lib.frapuccino}"/>
-				<include name="${lib.lucene}"/>			
-				<include name="${lib.plastic}"/>			
-				<include name="${lib.jdom}"/>			
-				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>	
-				<include name="${lib.groovy}"/>
-				<include name="${lib.bsh}"/>
-        <include name="${lib.flexdoc}"/>    
-			</fileset>
-			<fileset dir="${dist.webstart}" >
-				<include name="columba.jnlp" />
-				<include name="javahelp.jnlp" />
-				<include name="jniwrapper.jnlp" />
-			</fileset>
-		</copy>
-		
-		<copy toDir="${release.base}/webstart/${native.win32}">
-			<fileset dir="${native.win32}" > 
-				<include name="${lib.jdic}" />
-				<include name="${lib.jniwrap}"/>
-				<include name="${lib.winpack}"/>			
-			</fileset>						
-		</copy>
-		
-		<jar destfile="${release.base}/webstart/${native.win32}/${lib.native}" basedir="${native.win32}/lib/" >
-			<include name="*.dll" />
-		</jar>
+    <target name="checkstyle" description="Checks the source against our coding guidelines">
+        <checkstyle config="${basedir}/sun_checks.xml">
+            <fileset dir="${src.base}" includes="**/*.java"/>
+        </checkstyle>
+    </target>
 
-		<copy toDir="${release.base}/webstart/${native.linux}">
-			<fileset dir="${native.linux}" > 
-				<include name="${lib.jdic}" />
-			</fileset>
-		</copy>
 
-		<jar destfile="${release.base}/webstart/${native.linux}/${lib.native}" basedir="${native.linux}/lib/">
-			<include name="*.so" />
-		</jar>
+    <!-- validates the xml resources -->
+    <target name="validate-xml-resources" description="Validates the XML resources">
+        <xmlvalidate failonerror="no" warn="yes">
+            <fileset dir="${res.base}" includes="**/*.xml"/>
+        </xmlvalidate>
+    </target>
 
-		<copy toDir="${release.base}/webstart/images">
-			<fileset dir="${res.base}/org/columba/core/images">
-				<include name="icon64.gif"/>
-			</fileset>
-		</copy>
-		
+    <target name="init-native" description="Initialises platform dependent stuff">
+        <condition property="native.base" value="${native.win32}">
+            <os family="windows"/>
+        </condition>
 
-		<signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
-			<fileset refid="sign.jars" />
-		</signjar>		
+        <condition property="native.base" value="${native.linux}">
+            <os name="linux"/>
+        </condition>
 
-		<replace dir="${release.base}/webstart" includes="*.jnlp" >
-			<replacefilter token="@codebase@" value="${webstart.codebase}"/>			
-			<replacefilter token="@ristretto@" value="${lib.ristretto}"/>			
-			<replacefilter token="@jargs@" value="${lib.jargs}"/>			
-			<replacefilter token="@plastic@" value="${lib.plastic}"/>			
-			<replacefilter token="@usermanual@" value="${manual.jar}"/>			
-			<replacefilter token="@forms@" value="${lib.forms}"/>			
-			<replacefilter token="@jscf@" value="${lib.jscf}"/>			
-			<replacefilter token="@jdom@" value="${lib.jdom}"/>			
-			<replacefilter token="@frapuccino@" value="${lib.frapuccino}"/>			
-			<replacefilter token="@lucene@" value="${lib.lucene}"/>			
-			<replacefilter token="@jpim@" value="${lib.jpim}"/>				
-			<replacefilter token="@macchiato@" value="${lib.macchiato}"/>			
-			<replacefilter token="@je@" value="${lib.je}"/>			
-			<replacefilter token="@jwizz@" value="${lib.jwizz}"/>			
-			<replacefilter token="@jhall@" value="${lib.jhall}"/>			
-			<replacefilter token="@jniwrap@" value="${lib.jniwrap}"/>			
-			<replacefilter token="@winpack@" value="${lib.winpack}"/>							
-			<replacefilter token="@jdic@" value="${lib.jdic}"/>			
-			<replacefilter token="@groovy@" value="${lib.groovy}"/>
-			<replacefilter token="@bsh@" value="${lib.bsh}"/>
-			<replacefilter token="@native@" value="${lib.native}"/>		
-      <replacefilter tiken="@flexdoc@" value="${lib.flexdoc}"/>   
-		</replace>
-	</target>
+        <!-- Other platform maintainers must add their platform here !-->
 
-	<!-- only for build the class-files -->
-	<target name="build" depends="compile" description="Compiles Columba"/>
 
-	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
-	<target name="run" depends="init-native,compile"  description="Starts Columba">
-		<java classname="org.columba.core.main.Main" fork="yes">
-			<classpath refid="run.classpath" />
-		</java>
-	</target>
+        <property name="native.library.path" value="${native.base}/lib/"/>
+    </target>
 
-	<target name="run-debug" depends="init-native,compile"  description="Starts Columba with the -debug option">
-		<java classname="org.columba.core.main.Main" fork="yes">
-			<arg value="-debug"/>
-			<classpath refid="run.classpath" />
-		</java>
-	</target>
+    <target name="init" depends="init-native" description="Initialises the build system">
 
-	<!-- to clean up the dest-directory -->
-	<target name="clean"  description="Cleans the build system">
-		<delete dir="${dest}"/>
-		<delete dir="${test.dest}"/>
-		<delete dir="${report.base}"/>
-		<delete dir="${doc.base}" />
-		<delete dir="${release.base}" />
-		<delete dir="${dist.rpm}/BUILD" />
-		<delete dir="${dist.rpm}/SRPMS" />
-		<delete dir="${dist.rpm}/RPMS" />
-		<delete dir="${dist.rpm}/SOURCES" />
-		<delete dir="${dist.rpm}/SPECS" />
-		<delete file="columba.jar"/>		
-	</target>
+        <echo message="you are running java version ${ant.java.version}"/>
 
-	<!-- create default package for translators -->
-	<target name="i18n"  description="Creates the default package for translations">
-		<zip zipfile="default_i18n.zip" basedir="${res.base}" update="true">
-			<include name="**/*.properties"/>
-		</zip>
-	</target>
-	
-	<target name="rpm" depends="init-rpm, jar" description="Creates the RPM package">
-		<copy toDir="${dist.rpm}/SPECS/" file="${dist.rpm}/columba.spec"/>
-		<replace file="${dist.rpm}/SPECS/columba.spec" token="@version@" value="${version}"/>
-		
-		<mkdir dir="${dist.rpm}/SOURCES/columba-${version}" />
-		<copy todir="${dist.rpm}/SOURCES/columba-${version}" >
-			<fileset dir="${basedir}" >
-				<include name="README"/>
-				<include name="AUTHORS"/>
-				<include name="LICENSE"/>
-				<include name="CHANGES"/>
-				<include name="columba.jar"/>
-				<include name="${lib.forms}"/>
-				<include name="${lib.jscf}"/>
-				<include name="${lib.jargs}"/>
-				<include name="${lib.jwizz}"/>
-				<include name="${lib.jhall}"/>
-				<include name="${lib.ristretto}"/>
-				<include name="${lib.macchiato}"/>
-				<include name="${lib.frapuccino}"/>
-				<include name="${lib.lucene}"/>			
-				<include name="${lib.plastic}"/>			
-				<include name="${lib.jdom}"/>			
-				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>
-				<include name="${lib.groovy}"/>
-				<include name="${lib.bsh}"/>
-        <include name="${lib.flexdoc}"/>
-				<include name="${manual.jar}"/>
-			</fileset>
-		</copy>
-		<copy todir="${dist.rpm}/SOURCES/columba-${version}/${native.linux}" >
-			<fileset dir="${basedir}/${native.linux}" >
-				<include name="${lib.jdic}" />
-				<include name="lib/*.so"/>				
-			</fileset>
-		</copy>
+        <mkdir dir="${dest}"/>
+        <mkdir dir="${report.base}"/>
+        <mkdir dir="${doc.base}"/>
+        <mkdir dir="${release.base}"/>
 
-		<copy toDir="${dist.rpm}/SOURCES/columba-${version}/" file="${dist.rpm}/run.sh"/>
-		<replace file="${dist.rpm}/SOURCES/columba-${version}/run.sh" token="@version@" value="${version}"/>
+        <property name="debugbuild" value="true"/>
 
-		<tar destfile="${dist.rpm}/SOURCES/columba-${version}.tar" >
-			<tarfileset dir="${dist.rpm}/SOURCES/columba-${version}" prefix="columba-${version}">
-				<include name="**" />
-			</tarfileset>
-		</tar>
-		
-		<rpm specFile="columba.spec" command="-bb --target noarch" topDir="${dist.rpm}" error="${dist.rpm}/error.txt" output="${dist.rpm}/output.txt" />
-		
-		<copy toDir="${release.base}" file="${dist.rpm}/RPMS/noarch/columba-${version}-0.noarch.rpm"/>		
-	</target>
-	
-	<target name="winsetup" depends="linefeeds-win32, jar" description="Creates a Setup.exe with InnoSetup" >		
-		<fixcrlf eol="crlf" srcdir="${dist.win32}" includes="columba_setup.iss" />
-		<echo message="NOTE: This task will only work if InnoSetup 4.2.7 or above is installed!" />
-		
-		<exec os="Linux, Solaris" executable="wine">
-			<arg value="C:\\Program Files\\Inno Setup 5\\iscc" />
-			<arg value="${dist.win32}/columba_setup.iss" />
-			<arg value="/dVERSION=${version}" />
-			<arg value="/dJRE_FILE=none" />
+        <tstamp/>
+        <property name="version" value="${DSTAMP}"/>
 
-			<arg value="/dRISTRETTO=${lib.ristretto}" />
-			<arg value="/dJHALL=${lib.jhall}" />
-			<arg value="/dUSERMANUAL=${manual.jar}" />
-			<arg value="/dFORMS=${lib.forms}" />
-			<arg value="/dMACCHIATO=${lib.macchiato}" />
-			<arg value="/dWINPACK=${lib.winpack}" />
-			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
-			<arg value="/dJSCF=${lib.jscf}" />
-			<arg value="/dJARGS=${lib.jargs}" />
-			<arg value="/dLUCENE=${lib.lucene}" />
-			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.plastic}" />
-			<arg value="/dJE=${lib.je}" />
-			<arg value="/dJDOM=${lib.jdom}" />
-			<arg value="/dJPIM=${lib.jpim}" />
-			<arg value="/dGROOVY=${lib.groovy}" />
-			<arg value="/dBSH=${lib.bsh}" />
-			<arg value="/dJDIC=${lib.jdic}" />
-      <arg value="/dFLEXDOC=${lib.flexdoc}" />   
-		</exec>		
+        <!-- Define the Classpaths -->
+        <path id="compile.classpath">
+            <pathelement path="${dest}"/>
+            <pathelement path="${lib.forms}"/>
+            <pathelement path="${lib.jscf}"/>
+            <pathelement path="${lib.jargs}"/>
+            <pathelement path="${lib.jwizz}"/>
+            <pathelement path="${lib.jhall}"/>
+            <pathelement path="${lib.ristretto}"/>
+            <pathelement path="${lib.macchiato}"/>
+            <pathelement path="${lib.frapuccino}"/>
+            <pathelement path="${lib.lucene}"/>
+            <pathelement path="${lib.plastic}"/>
+            <pathelement path="${native.win32}/${lib.jniwrap}"/>
+            <pathelement path="${native.win32}/${lib.winpack}"/>
+            <pathelement path="${lib.jdom}"/>
+            <pathelement path="${lib.jpim}"/>
+            <pathelement path="${lib.je}"/>
+            <pathelement path="${lib.groovy}"/>
+            <pathelement path="${lib.bsh}"/>
+            <pathelement path="${native.base}/${lib.jdic}"/>
+            <pathelement path="${lib.mac_mock}"/>
+            <pathelement path="${lib.flexdoc}"/>
+        </path>
+        <path id="run.classpath">
+            <path refid="compile.classpath"/>
+            <pathelement path="${manual.jar}"/>
+            <pathelement path="${dest}"/>
+        </path>
 
-		<exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
-			<arg value="${dist.win32}/columba_setup.iss" />
-			<arg value="/dVERSION=${version}" />
-			<arg value="/dJRE_FILE=none" />
-			<arg value="/dRISTRETTO=${lib.ristretto}" />
-			<arg value="/dJHALL=${lib.jhall}" />
-			<arg value="/dUSERMANUAL=${manual.jar}" />
-			<arg value="/dFORMS=${lib.forms}" />
-			<arg value="/dMACCHIATO=${lib.macchiato}" />
-			<arg value="/dWINPACK=${lib.winpack}" />
-			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
-			<arg value="/dJSCF=${lib.jscf}" />
-			<arg value="/dJARGS=${lib.jargs}" />
-			<arg value="/dLUCENE=${lib.lucene}" />
-			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.plastic}" />
-			<arg value="/dJE=${lib.je}" />
-			<arg value="/dJDOM=${lib.jdom}" />
-			<arg value="/dJPIM=${lib.jpim}" />
-			<arg value="/dJDIC=${lib.jdic}" />
-			<arg value="/dGROOVY=${lib.groovy}" />
-			<arg value="/dBSH=${lib.bsh}" />
-      <arg value="/dFLEXDOC=${lib.flexdoc}" />   
-		</exec>		
-	</target>
-		
-	<target name="winsetup-bundlejre" depends="linefeeds-win32, jar" description="Creates a Setup.exe with a bundled JRE" >		
-		<property file="jrebundle.properties" />	
-		
-		<fixcrlf eol="crlf" srcdir="${dist.win32}" includes="columba_setup.iss" />
-		<echo message="NOTE: This task will only work if InnoSetup 4.2.7 or above is installed!" />
-		<echo message="!!Specify the JRE in jrebundle.properties!!" />
-		<exec os="Linux, Solaris" executable="wine">
-			<arg value="C:\\Program Files\\Inno Setup 5\\iscc" />
-			<arg value="${dist.win32}/columba_setup.iss" />
-			<arg value="/dVERSION=${version}" />
-			<arg value="/dBUNDLE_JRE=1" />
-			<arg value="/dJRE_FILE=${jre.file}" />
-			<arg value="/dJRE_SRC_PATH=${jre.srcpath}" />
-			<arg value="/dRISTRETTO=${lib.ristretto}" />
-			<arg value="/dJHALL=${lib.jhall}" />
-			<arg value="/dUSERMANUAL=${manual.jar}" />
-			<arg value="/dFORMS=${lib.forms}" />
-			<arg value="/dMACCHIATO=${lib.macchiato}" />
-			<arg value="/dWINPACK=${lib.winpack}" />
-			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
-			<arg value="/dJSCF=${lib.jscf}" />
-			<arg value="/dJARGS=${lib.jargs}" />
-			<arg value="/dLUCENE=${lib.lucene}" />
-			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.plastic}" />
-			<arg value="/dJE=${lib.je}" />
-			<arg value="/dJDOM=${lib.jdom}" />
-			<arg value="/dJPIM=${lib.jpim}" />
-			<arg value="/dJDIC=${lib.jdic}" />		
-			<arg value="/dGROOVY=${lib.groovy}" />
-			<arg value="/dBSH=${lib.bsh}" />
-      <arg value="/dFLEXDOC=${lib.flexdoc} "/>   
-		</exec>		
 
-		<exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
-			<arg value="${dist.win32}/columba_setup.iss" />
-			<arg value="/dVERSION=${version}" />
-			<arg value="/dBUNDLE_JRE=1" />
-			<arg value="/dJRE_FILE=${jre.file}" />
-			<arg value="/dRISTRETTO=${lib.ristretto}" />
-			<arg value="/dJHALL=${lib.jhall}" />
-			<arg value="/dUSERMANUAL=${manual.jar}" />
-			<arg value="/dFORMS=${lib.forms}" />
-			<arg value="/dMACCHIATO=${lib.macchiato}" />
-			<arg value="/dWINPACK=${lib.winpack}" />
-			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
-			<arg value="/dJSCF=${lib.jscf}" />
-			<arg value="/dJARGS=${lib.jargs}" />
-			<arg value="/dLUCENE=${lib.lucene}" />
-			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.plastic}" />
-			<arg value="/dJE=${lib.je}" />
-			<arg value="/dJDOM=${lib.jdom}" />
-			<arg value="/dJPIM=${lib.jpim}" />
-			<arg value="/dJDIC=${lib.jdic}" />
-			<arg value="/dGROOVY=${lib.groovy}" />
-			<arg value="/dBSH=${lib.bsh}" />
-      <arg value="/sFLEXDOC=${lib.flexdoc} "/>
-		</exec>		
-	</target>
-	
-	<target name="plugins" depends="compile" description="Builds all plugins">
-		<ant target="all" inheritall="false" inheritrefs="false" dir="plugins" antfile="plugin_list.xml" >
-		 <property name="columba_classpath" refid="compile.classpath" />
-		</ant>
-	</target>
-		
-	<target name="plugin" depends="compile" description="Builds a plugin">
-		<ant target="release" inheritall="false" inheritrefs="false" dir="plugins" antfile="build_plugin.xml" >
-		 <property name="columba_classpath" refid="compile.classpath" />
-		</ant>
-	</target>
+    </target>
+
+    <target name="init-test" depends="init" description="Initialises the build system for Unit testing">
+        <mkdir dir="${test.dest}"/>
+
+        <path id="compile.test.classpath">
+            <path refid="compile.classpath"/>
+            <pathelement path="${dest}"/>
+            <pathelement path="${lib.junit}"/>
+        </path>
+        <path id="run.test.classpath">
+            <path refid="compile.test.classpath"/>
+            <pathelement path="${dest}"/>
+            <pathelement path="${test.dest}"/>
+        </path>
+    </target>
+
+    <target name="init-rpm" depends="init" description="Initialises the RPM directories">
+        <mkdir dir="${dist.rpm}/BUILD"/>
+        <mkdir dir="${dist.rpm}/SRPMS"/>
+        <mkdir dir="${dist.rpm}/RPMS"/>
+        <mkdir dir="${dist.rpm}/SOURCES"/>
+        <mkdir dir="${dist.rpm}/SPECS"/>
+    </target>
+
+
+    <target name="init-webstart" depends="init" description="Initialises the build system for Webstart">
+        <!-- signing jar-files for Java WebStart -->
+        <!-- all libs and columba.jar need to be signed -->
+        <!-- you need to specify the alias and the passwords on the commandline -->
+        <property name="alias" value="TheColumbaProject" description="signing jar-files for Java WebStart"/>
+        <property name="storepass" value="columba"/>
+        <property name="keypass" value="columba"/>
+        <property name="webstart.codebase" value="http://columba.sourceforge.net/webstart"/>
+
+        <fileset dir="${release.base}/webstart" id="sign.jars">
+            <include name="columba.jar"/>
+            <include name="${manual.jar}"/>
+            <include name="${lib.forms}"/>
+            <include name="${lib.jscf}"/>
+            <include name="${lib.jargs}"/>
+            <include name="${lib.jwizz}"/>
+            <include name="${lib.ristretto}"/>
+            <include name="${lib.macchiato}"/>
+            <include name="${lib.frapuccino}"/>
+            <include name="${lib.lucene}"/>
+            <include name="${lib.plastic}"/>
+            <include name="${lib.jdom}"/>
+            <include name="${lib.jpim}"/>
+            <include name="${lib.je}"/>
+            <include name="${lib.groovy}"/>
+            <include name="${lib.bsh}"/>
+            <include name="${lib.flexdoc}"/>
+            <include name="${native.linux}${lib.jdic}"/>
+            <include name="${native.linux}${lib.native}"/>
+            <include name="${native.win32}${lib.jdic}"/>
+            <include name="${native.win32}${lib.native}"/>
+            <!-- never sign JavaHelp, its already signed by SUN -->
+            <!-- never sign jniwrapper, its already signed by jniwrapper.com -->
+        </fileset>
+    </target>
+
+    <target name="version" depends="init" description="Tags Columba with the version info">
+
+        <jreleaseinfo
+                className="ColumbaVersionInfo"
+                packageName="org.columba.core.versioninfo"
+                targetDir="${src.columba.core}"
+                version="${version}">
+        </jreleaseinfo>
+
+        <javac target="1.4" source="1.4" srcdir="${src.columba.core}/org/columba/core/versioninfo/"
+               includes="ColumbaVersionInfo.java" destdir="${dest}"/>
+
+        <delete file="${src.columba.core}/org/columba/core/versioninfo/ColumbaVersionInfo.java"/>
+    </target>
+
+    <target name="update" description="Updates the source when checked out via CVS">
+        <cvs command="update -d"/>
+
+        <!-- Run clean to ensure that everything is built correctly after the update! (tstich) -->
+        <ant target="clean"/>
+    </target>
+
+    <target name="doc" depends="init" description="Creates the JavaDocs of the Columba API in doc/">
+        <javadoc destdir="${doc.api}" doctitle="Columba ${version} API Documentation"
+                 windowtitle="Columba API Documentation" link="http://java.sun.com/j2se/1.4.2/docs/api">
+            <classpath refid="compile.classpath"/>
+            <packageset dir="${src.columba.api}"/>
+            <packageset dir="${src.columba.core}"/>
+            <packageset dir="${src.mail.api}"/>
+            <packageset dir="${src.mail.core}"/>
+            <packageset dir="${src.addressbook.api}"/>
+            <packageset dir="${src.addressbook.core}"/>
+            <group title="Addressbook" packages="org.columba.addressbook*"/>
+            <group title="Core" packages="org.columba.core*"/>
+            <group title="Mail" packages="org.columba.mail*"/>
+        </javadoc>
+    </target>
+
+
+    <target name="copy-resources" description="Copies all resources to the classes/ folder">
+        <copy todir="${dest}">
+            <fileset dir="${res.base}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- compile the classes -->
+    <target name="compile" depends="init, copy-resources, version" description="Compiles the Columba core components">
+        <echo message="the classes are going to ${dest} "/>
+
+        <!-- compile columba APIs -->
+        <javac destdir="${dest}" target="1.4" source="1.4">
+            <src path="${src.columba.api}"/>
+            <classpath refid="compile.classpath"/>
+        </javac>
+
+        <!-- compile columba core -->
+        <ant dir="${src.columba.core}" target="compile" inheritrefs="true"/>
+
+        <!-- compile mail/addressbook APIs -->
+        <javac destdir="${dest}" target="1.4" source="1.4">
+            <src path="${src.columba.api}"/>
+            <src path="${src.mail.api}"/>
+            <src path="${src.addressbook.api}"/>
+            <classpath refid="compile.classpath"/>
+        </javac>
+
+        <ant dir="${src.mail.core}" target="compile" inheritrefs="true"/>
+        <ant dir="${src.addressbook.core}" target="compile" inheritrefs="true"/>
+    </target>
+
+
+    <!-- compile the test classes -->
+    <target name="compile-test" depends="compile, init-test" description="Compiles the Unit tests">
+        <echo message="the classes are going to ${test.dest} "/>
+        <ant dir="${src.columba.test}" target="compile" inheritrefs="true"/>
+        <ant dir="${src.mail.test}" target="compile" inheritrefs="true"/>
+        <ant dir="${src.addressbook.test}" target="compile" inheritrefs="true"/>
+    </target>
+
+    <!-- pack the files into one jar file with automatic manifest file -->
+    <target name="jar" depends="compile" description="Creates the Columba.jar file.">
+        <echo message="the jar file is going to be columba.jar "/>
+        <jar basedir="${dest}" jarfile="columba.jar">
+            <include name="**"/>
+            <exclude name="columba.jar"/>
+            <exclude name="README"/>
+            <exclude name="CHANGES"/>
+            <exclude name="AUTHORS"/>
+            <include name="res/ACKNOWLEDGEMENT"/>
+            <include name="res/CONTRIBUTORS"/>
+            <include name="res/LICENSE"/>
+            <exclude name="run.bat"/>
+            <exclude name="run.sh"/>
+            <exclude name="run_source.bat"/>
+            <exclude name="run_source.sh"/>
+            <exclude name="**/*.zip"/>
+            <exclude name="docs/**"/>
+            <exclude name="plugins/**"/>
+            <exclude name="lib/**"/>
+            <exclude name="native/**"/>
+            <manifest>
+                <attribute name="Main-Class" value="org.columba.core.main.Main"/>
+                <attribute name="Class-Path"
+                           value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc}"/>
+                <attribute name="Sealed" value="false"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- convert line-endings -->
+    <target name="linefeeds-win32" description="Converts the line-endings to win32 format">
+        <fixcrlf srcdir="${dest}"
+                 eol="crlf"
+                 includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.bat, run_source.bat"
+                />
+    </target>
+
+    <!-- convert line-endings -->
+    <target name="linefeeds-unix" description="Converts the line-endings to *nix format">
+        <fixcrlf srcdir="${dest}"
+                 eol="lf"
+                 includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.sh, run_source.sh"
+                />
+    </target>
+
+    <!-- run test for all defined testcases -->
+    <target name="test" depends="compile-test" description="Runs all Unit tests. XML reports in report/">
+        <ant dir="${src.columba.test}" target="test" inheritrefs="true"/>
+        <ant dir="${src.mail.test}" target="test" inheritrefs="true"/>
+        <ant dir="${src.addressbook.test}" target="test" inheritrefs="true"/>
+    </target>
+
+    <target name="test-report" depends="test"
+            description="Runs all Unit tests. XML reports in report/ and Html-report in report/html/">
+        <junitreport todir="${report.base}">
+            <fileset dir="${report.base}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${report.base}/html"/>
+        </junitreport>
+    </target>
+
+    <!-- create a release zip file for linux and unix flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
+    <!-- this task is for a binary release -->
+    <target name="bin-unix" depends="jar, linefeeds-unix"
+            description="Creates packaged *nix Columba release">
+        <tar tarfile="${release.base}/columba-unix-${version}-bin.tar.bz2" compression="bzip2">
+            <tarfileset dir="${basedir}" prefix="columba-unix-${version}-bin">
+                <include name="README"/>
+                <include name="AUTHORS"/>
+                <include name="LICENSE"/>
+                <include name="CHANGES"/>
+                <include name="columba.jar"/>
+                <include name="${lib.forms}"/>
+                <include name="${lib.jscf}"/>
+                <include name="${lib.jargs}"/>
+                <include name="${lib.jwizz}"/>
+                <include name="${lib.jhall}"/>
+                <include name="${lib.ristretto}"/>
+                <include name="${lib.macchiato}"/>
+                <include name="${lib.frapuccino}"/>
+                <include name="${lib.lucene}"/>
+                <include name="${lib.plastic}"/>
+                <include name="${lib.jdom}"/>
+                <include name="${lib.jpim}"/>
+                <include name="${lib.je}"/>
+                <include name="${lib.groovy}"/>
+                <include name="${lib.bsh}"/>
+                <include name="${manual.jar}"/>
+                <include name="${lib.flexdoc}"/>
+                <include name="${native.linux}/lib/*.jar"/>
+                <include name="${native.linux}/lib/*.so"/>
+            </tarfileset>
+            <tarfileset dir="${basedir}" mode="755" prefix="columba-unix-${version}-bin">
+                <include name="run.sh"/>
+            </tarfileset>
+        </tar>
+    </target>
+
+    <!-- create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
+    <!-- this task is for a binary release -->
+    <target name="bin-win32" depends="jar, linefeeds-win32"
+            description="Creates packaged win32 Columba release">
+
+        <copy file="${native.win32}/Columba.lap" todir="${basedir}"/>
+
+        <replace file="${basedir}/Columba.lap">
+            <replacefilter token="{app}" value="."/>
+        </replace>
+
+        <copy file="${basedir}/Columba.lap" tofile="${basedir}\Columbaw.lap"/>
+
+        <zip zipfile="${release.base}/columba-win32-${version}-bin.zip">
+            <zipfileset dir="${basedir}" prefix="columba-win32-${version}-bin">
+                <include name="README"/>
+                <include name="AUTHORS"/>
+                <include name="LICENSE"/>
+                <include name="CHANGES"/>
+                <include name="columba.jar"/>
+                <include name="${manual.jar}"/>
+                <include name="${lib.forms}"/>
+                <include name="${lib.jscf}"/>
+                <include name="${lib.jargs}"/>
+                <include name="${lib.jwizz}"/>
+                <include name="${lib.jhall}"/>
+                <include name="${lib.ristretto}"/>
+                <include name="${lib.macchiato}"/>
+                <include name="${lib.frapuccino}"/>
+                <include name="${lib.lucene}"/>
+                <include name="${lib.plastic}"/>
+                <include name="${lib.jdom}"/>
+                <include name="${lib.jpim}"/>
+                <include name="${lib.je}"/>
+                <include name="${lib.groovy}"/>
+                <include name="${lib.bsh}"/>
+                <include name="${lib.flexdoc}"/>
+                <include name="${native.win32}/lib/*.jar"/>
+                <include name="${native.win32}/lib/*.dll"/>
+                <include name="Columba.lap"/>
+                <include name="Columbaw.lap"/>
+            </zipfileset>
+            <zipfileset dir="${native.win32}" prefix="columba-win32-${version}-bin">
+                <include name="Columba.exe"/>
+                <include name="Columbaw.exe"/>
+            </zipfileset>
+        </zip>
+
+        <delete file="${basedir}/Columba.lap"/>
+        <delete file="${basedir}/Columbaw.lap"/>
+    </target>
+
+
+    <target name="bin-cross" depends="jar, linefeeds-win32"
+            description="Creates packaged cross-platform Columba release">
+        <zip zipfile="${release.base}/columba-${version}-bin.zip">
+            <zipfileset dir="${basedir}" prefix="columba-${version}-bin">
+                <include name="README"/>
+                <include name="AUTHORS"/>
+                <include name="LICENSE"/>
+                <include name="CHANGES"/>
+                <include name="columba.jar"/>
+                <include name="${manual.jar}"/>
+                <include name="${lib.forms}"/>
+                <include name="${lib.jscf}"/>
+                <include name="${lib.jargs}"/>
+                <include name="${lib.jwizz}"/>
+                <include name="${lib.jhall}"/>
+                <include name="${lib.ristretto}"/>
+                <include name="${lib.macchiato}"/>
+                <include name="${lib.frapuccino}"/>
+                <include name="${lib.lucene}"/>
+                <include name="${lib.plastic}"/>
+                <include name="${lib.jdom}"/>
+                <include name="${lib.jpim}"/>
+                <include name="${lib.je}"/>
+                <include name="${lib.groovy}"/>
+                <include name="${lib.bsh}"/>
+                <include name="${lib.flexdoc}"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <!-- create a source zip file for linux and unix flavors containing all sources and README, LICENSE, CHANGES, AUTHORS -->
+    <!-- this task is for a source release -->
+    <target name="source" depends="init,linefeeds-win32"
+            description="Creates packaged Columba source release">
+        <echo message="the zipfile is going to columba-${version}-src.zip "/>
+        <zip zipfile="${release.base}/columba-${version}-src.zip" update="true">
+            <zipfileset dir="." prefix="columba-${version}-src">
+                <include name="src/**"/>
+                <include name="res/**"/>
+                <include name="plugins/**"/>
+                <include name="native/**"/>
+                <include name="lib/**"/>
+                <include name="README"/>
+                <include name="LICENSE"/>
+                <include name="CHANGES"/>
+                <include name="AUTHORS"/>
+                <include name="*.xml"/>
+                <include name="*.properties"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <!-- this target creates two zip-files, one for binary release and one for the source stuff -->
+    <!-- this is also the release target ;-0 -->
+    <target name="release" depends="bin-unix,bin-win32,bin-cross,source, rpm, winsetup, winsetup-bundlejre, webstart"
+            description="Builds a complete set of Columba release archives"/>
+
+    <target name="webstart" depends="init-webstart, jar" description="Signs all jars for use with Java Webstart">
+        <copy toDir="${release.base}/webstart">
+            <fileset dir="${basedir}">
+                <include name="columba.jar"/>
+                <include name="${manual.jar}"/>
+                <include name="${lib.forms}"/>
+                <include name="${lib.jscf}"/>
+                <include name="${lib.jargs}"/>
+                <include name="${lib.jwizz}"/>
+                <include name="${lib.jhall}"/>
+                <include name="${lib.ristretto}"/>
+                <include name="${lib.macchiato}"/>
+                <include name="${lib.frapuccino}"/>
+                <include name="${lib.lucene}"/>
+                <include name="${lib.plastic}"/>
+                <include name="${lib.jdom}"/>
+                <include name="${lib.jpim}"/>
+                <include name="${lib.je}"/>
+                <include name="${lib.groovy}"/>
+                <include name="${lib.bsh}"/>
+                <include name="${lib.flexdoc}"/>
+            </fileset>
+            <fileset dir="${dist.webstart}">
+                <include name="columba.jnlp"/>
+                <include name="javahelp.jnlp"/>
+                <include name="jniwrapper.jnlp"/>
+            </fileset>
+        </copy>
+
+        <copy toDir="${release.base}/webstart/${native.win32}">
+            <fileset dir="${native.win32}">
+                <include name="${lib.jdic}"/>
+                <include name="${lib.jniwrap}"/>
+                <include name="${lib.winpack}"/>
+            </fileset>
+        </copy>
+
+        <jar destfile="${release.base}/webstart/${native.win32}/${lib.native}" basedir="${native.win32}/lib/">
+            <include name="*.dll"/>
+        </jar>
+
+        <copy toDir="${release.base}/webstart/${native.linux}">
+            <fileset dir="${native.linux}">
+                <include name="${lib.jdic}"/>
+            </fileset>
+        </copy>
+
+        <jar destfile="${release.base}/webstart/${native.linux}/${lib.native}" basedir="${native.linux}/lib/">
+            <include name="*.so"/>
+        </jar>
+
+        <copy toDir="${release.base}/webstart/images">
+            <fileset dir="${res.base}/org/columba/core/images">
+                <include name="icon64.gif"/>
+            </fileset>
+        </copy>
+
+
+        <signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
+            <fileset refid="sign.jars"/>
+        </signjar>
+
+        <replace dir="${release.base}/webstart" includes="*.jnlp">
+            <replacefilter token="@codebase@" value="${webstart.codebase}"/>
+            <replacefilter token="@ristretto@" value="${lib.ristretto}"/>
+            <replacefilter token="@jargs@" value="${lib.jargs}"/>
+            <replacefilter token="@plastic@" value="${lib.plastic}"/>
+            <replacefilter token="@usermanual@" value="${manual.jar}"/>
+            <replacefilter token="@forms@" value="${lib.forms}"/>
+            <replacefilter token="@jscf@" value="${lib.jscf}"/>
+            <replacefilter token="@jdom@" value="${lib.jdom}"/>
+            <replacefilter token="@frapuccino@" value="${lib.frapuccino}"/>
+            <replacefilter token="@lucene@" value="${lib.lucene}"/>
+            <replacefilter token="@jpim@" value="${lib.jpim}"/>
+            <replacefilter token="@macchiato@" value="${lib.macchiato}"/>
+            <replacefilter token="@je@" value="${lib.je}"/>
+            <replacefilter token="@jwizz@" value="${lib.jwizz}"/>
+            <replacefilter token="@jhall@" value="${lib.jhall}"/>
+            <replacefilter token="@jniwrap@" value="${lib.jniwrap}"/>
+            <replacefilter token="@winpack@" value="${lib.winpack}"/>
+            <replacefilter token="@jdic@" value="${lib.jdic}"/>
+            <replacefilter token="@groovy@" value="${lib.groovy}"/>
+            <replacefilter token="@bsh@" value="${lib.bsh}"/>
+            <replacefilter token="@native@" value="${lib.native}"/>
+            <replacefilter token="@flexdoc@" value="${lib.flexdoc}"/>
+        </replace>
+    </target>
+
+    <!-- only for build the class-files -->
+    <target name="build" depends="compile" description="Compiles Columba"/>
+
+    <!-- to run the application via ant, this is good for testing and coding in xemacs -->
+    <target name="run" depends="init-native,compile" description="Starts Columba">
+        <java classname="org.columba.core.main.Main" fork="yes">
+            <classpath refid="run.classpath"/>
+        </java>
+    </target>
+
+    <target name="run-debug" depends="init-native,compile" description="Starts Columba with the -debug option">
+        <java classname="org.columba.core.main.Main" fork="yes">
+            <arg value="-debug"/>
+            <classpath refid="run.classpath"/>
+        </java>
+    </target>
+
+    <!-- to clean up the dest-directory -->
+    <target name="clean" description="Cleans the build system">
+        <delete dir="${dest}"/>
+        <delete dir="${test.dest}"/>
+        <delete dir="${report.base}"/>
+        <delete dir="${doc.base}"/>
+        <delete dir="${release.base}"/>
+        <delete dir="${dist.rpm}/BUILD"/>
+        <delete dir="${dist.rpm}/SRPMS"/>
+        <delete dir="${dist.rpm}/RPMS"/>
+        <delete dir="${dist.rpm}/SOURCES"/>
+        <delete dir="${dist.rpm}/SPECS"/>
+        <delete file="columba.jar"/>
+    </target>
+
+    <!-- create default package for translators -->
+    <target name="i18n" description="Creates the default package for translations">
+        <zip zipfile="default_i18n.zip" basedir="${res.base}" update="true">
+            <include name="**/*.properties"/>
+        </zip>
+    </target>
+
+    <target name="rpm" depends="init-rpm, jar" description="Creates the RPM package">
+        <copy toDir="${dist.rpm}/SPECS/" file="${dist.rpm}/columba.spec"/>
+        <replace file="${dist.rpm}/SPECS/columba.spec" token="@version@" value="${version}"/>
+
+        <mkdir dir="${dist.rpm}/SOURCES/columba-${version}"/>
+        <copy todir="${dist.rpm}/SOURCES/columba-${version}">
+            <fileset dir="${basedir}">
+                <include name="README"/>
+                <include name="AUTHORS"/>
+                <include name="LICENSE"/>
+                <include name="CHANGES"/>
+                <include name="columba.jar"/>
+                <include name="${lib.forms}"/>
+                <include name="${lib.jscf}"/>
+                <include name="${lib.jargs}"/>
+                <include name="${lib.jwizz}"/>
+                <include name="${lib.jhall}"/>
+                <include name="${lib.ristretto}"/>
+                <include name="${lib.macchiato}"/>
+                <include name="${lib.frapuccino}"/>
+                <include name="${lib.lucene}"/>
+                <include name="${lib.plastic}"/>
+                <include name="${lib.jdom}"/>
+                <include name="${lib.jpim}"/>
+                <include name="${lib.je}"/>
+                <include name="${lib.groovy}"/>
+                <include name="${lib.bsh}"/>
+                <include name="${lib.flexdoc}"/>
+                <include name="${manual.jar}"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.rpm}/SOURCES/columba-${version}/${native.linux}">
+            <fileset dir="${basedir}/${native.linux}">
+                <include name="${lib.jdic}"/>
+                <include name="lib/*.so"/>
+            </fileset>
+        </copy>
+
+        <copy toDir="${dist.rpm}/SOURCES/columba-${version}/" file="${dist.rpm}/run.sh"/>
+        <replace file="${dist.rpm}/SOURCES/columba-${version}/run.sh" token="@version@" value="${version}"/>
+
+        <tar destfile="${dist.rpm}/SOURCES/columba-${version}.tar">
+            <tarfileset dir="${dist.rpm}/SOURCES/columba-${version}" prefix="columba-${version}">
+                <include name="**"/>
+            </tarfileset>
+        </tar>
+
+        <rpm specFile="columba.spec" command="-bb --target noarch" topDir="${dist.rpm}" error="${dist.rpm}/error.txt"
+             output="${dist.rpm}/output.txt"/>
+
+        <copy toDir="${release.base}" file="${dist.rpm}/RPMS/noarch/columba-${version}-0.noarch.rpm"/>
+    </target>
+
+    <target name="winsetup" depends="linefeeds-win32, jar" description="Creates a Setup.exe with InnoSetup">
+        <fixcrlf eol="crlf" srcdir="${dist.win32}" includes="columba_setup.iss"/>
+        <echo message="NOTE: This task will only work if InnoSetup 4.2.7 or above is installed!"/>
+
+        <exec os="Linux, Solaris" executable="wine">
+            <arg value="C:\\Program Files\\Inno Setup 5\\iscc"/>
+            <arg value="${dist.win32}/columba_setup.iss"/>
+            <arg value="/dVERSION=${version}"/>
+            <arg value="/dJRE_FILE=none"/>
+
+            <arg value="/dRISTRETTO=${lib.ristretto}"/>
+            <arg value="/dJHALL=${lib.jhall}"/>
+            <arg value="/dUSERMANUAL=${manual.jar}"/>
+            <arg value="/dFORMS=${lib.forms}"/>
+            <arg value="/dMACCHIATO=${lib.macchiato}"/>
+            <arg value="/dWINPACK=${lib.winpack}"/>
+            <arg value="/dJNIWRAP=${lib.jniwrap}"/>
+            <arg value="/dFRAPUCCINO=${lib.frapuccino}"/>
+            <arg value="/dJSCF=${lib.jscf}"/>
+            <arg value="/dJARGS=${lib.jargs}"/>
+            <arg value="/dLUCENE=${lib.lucene}"/>
+            <arg value="/dJWIZZ=${lib.jwizz}"/>
+            <arg value="/dPLASTIC=${lib.plastic}"/>
+            <arg value="/dJE=${lib.je}"/>
+            <arg value="/dJDOM=${lib.jdom}"/>
+            <arg value="/dJPIM=${lib.jpim}"/>
+            <arg value="/dGROOVY=${lib.groovy}"/>
+            <arg value="/dBSH=${lib.bsh}"/>
+            <arg value="/dJDIC=${lib.jdic}"/>
+            <arg value="/dFLEXDOC=${lib.flexdoc}"/>
+        </exec>
+
+        <exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
+            <arg value="${dist.win32}/columba_setup.iss"/>
+            <arg value="/dVERSION=${version}"/>
+            <arg value="/dJRE_FILE=none"/>
+            <arg value="/dRISTRETTO=${lib.ristretto}"/>
+            <arg value="/dJHALL=${lib.jhall}"/>
+            <arg value="/dUSERMANUAL=${manual.jar}"/>
+            <arg value="/dFORMS=${lib.forms}"/>
+            <arg value="/dMACCHIATO=${lib.macchiato}"/>
+            <arg value="/dWINPACK=${lib.winpack}"/>
+            <arg value="/dJNIWRAP=${lib.jniwrap}"/>
+            <arg value="/dFRAPUCCINO=${lib.frapuccino}"/>
+            <arg value="/dJSCF=${lib.jscf}"/>
+            <arg value="/dJARGS=${lib.jargs}"/>
+            <arg value="/dLUCENE=${lib.lucene}"/>
+            <arg value="/dJWIZZ=${lib.jwizz}"/>
+            <arg value="/dPLASTIC=${lib.plastic}"/>
+            <arg value="/dJE=${lib.je}"/>
+            <arg value="/dJDOM=${lib.jdom}"/>
+            <arg value="/dJPIM=${lib.jpim}"/>
+            <arg value="/dJDIC=${lib.jdic}"/>
+            <arg value="/dGROOVY=${lib.groovy}"/>
+            <arg value="/dBSH=${lib.bsh}"/>
+            <arg value="/dFLEXDOC=${lib.flexdoc}"/>
+        </exec>
+    </target>
+
+    <target name="winsetup-bundlejre" depends="linefeeds-win32, jar"
+            description="Creates a Setup.exe with a bundled JRE">
+        <property file="jrebundle.properties"/>
+
+        <fixcrlf eol="crlf" srcdir="${dist.win32}" includes="columba_setup.iss"/>
+        <echo message="NOTE: This task will only work if InnoSetup 4.2.7 or above is installed!"/>
+        <echo message="!!Specify the JRE in jrebundle.properties!!"/>
+        <exec os="Linux, Solaris" executable="wine">
+            <arg value="C:\\Program Files\\Inno Setup 5\\iscc"/>
+            <arg value="${dist.win32}/columba_setup.iss"/>
+            <arg value="/dVERSION=${version}"/>
+            <arg value="/dBUNDLE_JRE=1"/>
+            <arg value="/dJRE_FILE=${jre.file}"/>
+            <arg value="/dJRE_SRC_PATH=${jre.srcpath}"/>
+            <arg value="/dRISTRETTO=${lib.ristretto}"/>
+            <arg value="/dJHALL=${lib.jhall}"/>
+            <arg value="/dUSERMANUAL=${manual.jar}"/>
+            <arg value="/dFORMS=${lib.forms}"/>
+            <arg value="/dMACCHIATO=${lib.macchiato}"/>
+            <arg value="/dWINPACK=${lib.winpack}"/>
+            <arg value="/dJNIWRAP=${lib.jniwrap}"/>
+            <arg value="/dFRAPUCCINO=${lib.frapuccino}"/>
+            <arg value="/dJSCF=${lib.jscf}"/>
+            <arg value="/dJARGS=${lib.jargs}"/>
+            <arg value="/dLUCENE=${lib.lucene}"/>
+            <arg value="/dJWIZZ=${lib.jwizz}"/>
+            <arg value="/dPLASTIC=${lib.plastic}"/>
+            <arg value="/dJE=${lib.je}"/>
+            <arg value="/dJDOM=${lib.jdom}"/>
+            <arg value="/dJPIM=${lib.jpim}"/>
+            <arg value="/dJDIC=${lib.jdic}"/>
+            <arg value="/dGROOVY=${lib.groovy}"/>
+            <arg value="/dBSH=${lib.bsh}"/>
+            <arg value="/dFLEXDOC=${lib.flexdoc} "/>
+        </exec>
+
+        <exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
+            <arg value="${dist.win32}/columba_setup.iss"/>
+            <arg value="/dVERSION=${version}"/>
+            <arg value="/dBUNDLE_JRE=1"/>
+            <arg value="/dJRE_FILE=${jre.file}"/>
+            <arg value="/dRISTRETTO=${lib.ristretto}"/>
+            <arg value="/dJHALL=${lib.jhall}"/>
+            <arg value="/dUSERMANUAL=${manual.jar}"/>
+            <arg value="/dFORMS=${lib.forms}"/>
+            <arg value="/dMACCHIATO=${lib.macchiato}"/>
+            <arg value="/dWINPACK=${lib.winpack}"/>
+            <arg value="/dJNIWRAP=${lib.jniwrap}"/>
+            <arg value="/dFRAPUCCINO=${lib.frapuccino}"/>
+            <arg value="/dJSCF=${lib.jscf}"/>
+            <arg value="/dJARGS=${lib.jargs}"/>
+            <arg value="/dLUCENE=${lib.lucene}"/>
+            <arg value="/dJWIZZ=${lib.jwizz}"/>
+            <arg value="/dPLASTIC=${lib.plastic}"/>
+            <arg value="/dJE=${lib.je}"/>
+            <arg value="/dJDOM=${lib.jdom}"/>
+            <arg value="/dJPIM=${lib.jpim}"/>
+            <arg value="/dJDIC=${lib.jdic}"/>
+            <arg value="/dGROOVY=${lib.groovy}"/>
+            <arg value="/dBSH=${lib.bsh}"/>
+            <arg value="/sFLEXDOC=${lib.flexdoc} "/>
+        </exec>
+    </target>
+
+    <target name="plugins" depends="compile" description="Builds all plugins">
+        <ant target="all" inheritall="false" inheritrefs="false" dir="plugins" antfile="plugin_list.xml">
+            <property name="columba_classpath" refid="compile.classpath"/>
+        </ant>
+    </target>
+
+    <target name="plugin" depends="compile" description="Builds a plugin">
+        <ant target="release" inheritall="false" inheritrefs="false" dir="plugins" antfile="build_plugin.xml">
+            <property name="columba_classpath" refid="compile.classpath"/>
+        </ant>
+    </target>
 
 </project>
