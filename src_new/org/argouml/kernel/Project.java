@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.168 2005/08/13 08:49:18 mvw Exp $
+// $Id: Project.java,v 1.169 2005/10/02 09:06:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1136,6 +1136,8 @@ public class Project implements java.io.Serializable, TargetListener {
 
     /**
      * Returns the cgPrefs.
+     * 
+     * @deprecated use getGenerationPrefs() instead
      * @return GenerationPreferences
      */
     public GenerationPreferences getCgPrefs() {
@@ -1168,6 +1170,7 @@ public class Project implements java.io.Serializable, TargetListener {
 
     /**
      * Sets the cgPrefs.
+     * @deprecated use setGenerationPrefs() instead
      * @param theCgPrefs The cgPrefs to set
      */
     public void setCgPrefs(GenerationPreferences theCgPrefs) {
