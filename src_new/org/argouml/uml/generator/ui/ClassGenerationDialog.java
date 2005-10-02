@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.49 2005/08/13 09:18:11 mvw Exp $
+// $Id: ClassGenerationDialog.java,v 1.50 2005/10/02 09:08:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,11 +61,11 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoDialog;
-import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
 import org.tigris.gef.util.Converter;
+import org.tigris.swidgets.Dialog;
 
 /**
  * The dialog that starts the generation of classes.
@@ -119,7 +119,7 @@ public class ClassGenerationDialog
         super(
             ProjectBrowser.getInstance(),
             Translator.localize("dialog.title.generate-classes"),
-            ArgoDialog.OK_CANCEL_OPTION,
+            Dialog.OK_CANCEL_OPTION,
             true);
         isPathInModel = inModel;
 
