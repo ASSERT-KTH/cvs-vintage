@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.10 2005/09/07 21:03:52 linus Exp $
+// $Id: FigAssociationEnd.java,v 1.11 2005/10/02 15:30:14 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -213,7 +213,8 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         SwingUtilities.invokeLater(new Runnable() {
             public void run () {
                 Fig associationFig = layer.presentationFor(association);
-                if (Model.getFacade().getClassifier(owner) != null
+                if (!Model.getUmlFactory().isRemoved(owner) 
+                        && Model.getFacade().getClassifier(owner) != null
                         && associationFig instanceof FigNodeAssociation) {
                     ((FigNodeAssociation) associationFig).removeFromDiagram();
                 }
