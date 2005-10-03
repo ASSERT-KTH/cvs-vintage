@@ -1,4 +1,4 @@
-// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.17 2005/01/20 23:20:37 linus Exp $
+// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.18 2005/10/03 00:45:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,6 +103,7 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
      * Test setSignal() with null argument.
      */
     public void testSetSignalToNull() {
+        Model.getCommonBehaviorHelper().setSignal(elem, signals[0]);
         Model.getCommonBehaviorHelper().setSignal(elem, null);
         assertNull(model.getSelectedItem());
     }

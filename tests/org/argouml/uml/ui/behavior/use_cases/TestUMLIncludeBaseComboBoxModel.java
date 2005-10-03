@@ -1,4 +1,4 @@
-// $Id: TestUMLIncludeBaseComboBoxModel.java,v 1.17 2005/02/20 15:47:15 bobtarling Exp $
+// $Id: TestUMLIncludeBaseComboBoxModel.java,v 1.18 2005/10/03 00:45:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,6 +105,7 @@ public class TestUMLIncludeBaseComboBoxModel extends TestCase {
      * Test setBase() with null argument.
      */
     public void testSetBaseToNull() {
+        Model.getUseCasesHelper().setBase(elem, bases[0]);
         Model.getUseCasesHelper().setBase(elem, null);
         assertNull(model.getSelectedItem());
     }

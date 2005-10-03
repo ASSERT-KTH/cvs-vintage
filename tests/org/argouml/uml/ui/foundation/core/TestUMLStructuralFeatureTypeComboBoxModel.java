@@ -1,4 +1,4 @@
-// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.16 2005/08/20 09:31:09 linus Exp $
+// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.17 2005/10/03 00:45:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,6 +110,7 @@ public class TestUMLStructuralFeatureTypeComboBoxModel extends TestCase {
      * a not null value.
      */
     public void testSetTypeToNull() {
+        Model.getCoreHelper().setType(elem, types[0]);
         Model.getCoreHelper().setType(elem, null);
         assertNotNull(model.getSelectedItem());
     }

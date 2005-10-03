@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendExtensionComboBoxModel.java,v 1.16 2005/02/20 15:47:15 bobtarling Exp $
+// $Id: TestUMLExtendExtensionComboBoxModel.java,v 1.17 2005/10/03 00:45:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,6 +104,7 @@ public class TestUMLExtendExtensionComboBoxModel extends TestCase {
      * Test setExtension() with null argument.
      */
     public void testSetBaseToNull() {
+        Model.getUseCasesHelper().setExtension(elem, extensions[0]);
         Model.getUseCasesHelper().setExtension(elem, null);
         assertNull(model.getSelectedItem());
     }

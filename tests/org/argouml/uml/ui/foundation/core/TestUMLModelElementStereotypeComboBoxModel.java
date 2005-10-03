@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.22 2005/06/18 20:21:45 mvw Exp $
+// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.23 2005/10/03 00:45:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,6 +112,7 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
      * Test setStereotype() with null argument.
      */
     public void testSetBaseToNull() {
+        Model.getCoreHelper().setStereotype(elem, stereotypes[0]);
         Model.getCoreHelper().setStereotype(elem, null);
         assertNull(model.getSelectedItem());
     }
