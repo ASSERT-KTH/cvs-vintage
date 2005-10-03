@@ -1,4 +1,4 @@
-// $Id: CoreTestSuite.java,v 1.6 2005/05/31 21:22:39 bobtarling Exp $
+// $Id: CoreTestSuite.java,v 1.7 2005/10/03 19:06:29 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,9 +30,15 @@ import junit.framework.TestSuite;
 /**
  * @author Thierry Lach
  */
-public class CoreTestSuite {
+public final class CoreTestSuite {
+    /**
+     * Constructor.
+     */
+    private CoreTestSuite() {
+    }
 
-    /** Test suite for this package
+    /**
+     * Test suite for this package.
      *
      * @return the junit test suite
      */
@@ -50,7 +56,8 @@ public class CoreTestSuite {
 	suite.addTestSuite(TestUMLModelElementNameDocument.class);
 	suite.addTestSuite(TestUMLModelElementNamespaceListModel.class);
 	suite.addTestSuite(TestUMLModelElementSourceFlowListModel.class);
-	suite.addTestSuite(TestUMLModelElementStereotypeComboBoxModel.class);
+        // Issue 3538
+	// suite.addTestSuite(TestUMLModelElementStereotypeComboBoxModel.class);
 	suite.addTestSuite(TestUMLModelElementSupplierDependencyListModel
 	                                                            .class);
 	suite.addTestSuite(TestUMLModelElementTargetFlowListModel.class);
