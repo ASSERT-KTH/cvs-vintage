@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.20 2005/10/03 00:45:04 bobtarling Exp $
+// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.21 2005/10/04 18:36:22 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,12 +102,18 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
     }
 
     /**
-     * Test setBase() with null argument.
+     * Test to make sure we get an exception if trying to set
+     * to null.
      */
     public void testSetBaseToNull() {
         Model.getUseCasesHelper().setBase(elem, bases[0]);
-        Model.getUseCasesHelper().setBase(elem, null);
-        assertNull(model.getSelectedItem());
+        boolean exceptionCaught = false;
+        try {
+            Model.getUseCasesHelper().setBase(elem, null);
+        } catch (IllegalArgumentException e) {
+            exceptionCaught = true;
+        }
+        assertTrue(exceptionCaught);
     }
 
     /**
