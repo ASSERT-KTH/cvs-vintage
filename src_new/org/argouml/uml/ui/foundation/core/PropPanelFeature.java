@@ -1,4 +1,4 @@
-// $Id: PropPanelFeature.java,v 1.16 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelFeature.java,v 1.17 2005/10/04 21:35:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,8 +50,6 @@ public abstract class PropPanelFeature extends PropPanelModelElement {
 
     private static UMLFeatureOwnerListModel ownerListModel;
 
-    private static UMLFeatureOwnerComboBoxModel ownerComboBoxModel;
-
     private JPanel visibilityPanel;
 
     /**
@@ -73,22 +71,6 @@ public abstract class PropPanelFeature extends PropPanelModelElement {
      */
     protected PropPanelFeature(String name, Orientation orientation) {
         super(name, orientation);
-    }
-
-    /**
-     * Returns the ownerComboBox.
-     *
-     * @return UMLComboBox2
-     */
-    public UMLComboBox2 getOwnerComboBox() {
-        if (ownerComboBox == null) {
-            if (ownerComboBoxModel == null) {
-                ownerComboBoxModel = new UMLFeatureOwnerComboBoxModel();
-            }
-            ownerComboBox = new UMLComboBox2(ownerComboBoxModel,
-                    ActionSetFeatureOwner.getInstance());
-        }
-        return ownerComboBox;
     }
 
     /**
