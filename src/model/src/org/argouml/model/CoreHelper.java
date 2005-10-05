@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.7 2005/08/20 09:29:13 linus Exp $
+// $Id: CoreHelper.java,v 1.8 2005/10/05 17:03:51 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1143,11 +1143,28 @@ public interface CoreHelper {
      * eg ModelManagementHelper.getCorrespondingElement(...). Or if that had
      * been used here. This function could possibly assert that the caller had
      * got it right.
+     * TODO: MULTIPLESTEREOTYPES remove this method when NSUML dropped.
      *
      * @param handle model element
      * @param stereo stereotype
      */
     void setStereotype(Object handle, Object stereo);
+    
+    /**
+     * Adds a stereotype to some modelelement.
+     *
+     * @param modelElement model element
+     * @param stereo stereotype
+     */
+    void addStereotype(Object modelElement, Object stereo);
+    
+    /**
+     * Removes a stereotype from some modelelement.
+     *
+     * @param modelElement model element
+     * @param stereo stereotype
+     */
+    void removeStereotype(Object handle, Object stereo);
 
     /**
      * Sets a tagged value of some modelelement.

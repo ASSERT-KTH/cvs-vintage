@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.28 2005/08/20 09:29:13 linus Exp $
+// $Id: CoreHelperImpl.java,v 1.29 2005/10/05 17:03:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3458,4 +3458,17 @@ class CoreHelperImpl implements CoreHelper {
                 + " or residence: " + residence);        
 	}
 
+    /**
+     * @see org.argouml.model.CoreHelper#addStereotype(java.lang.Object, java.lang.Object)
+     */
+    public void addStereotype(Object modelElement, Object stereo) {
+        // This will never be implemented in NSUML
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#removeStereotype(java.lang.Object, java.lang.Object)
+     */
+    public void removeStereotype(Object handle, Object stereo) {
+        // This will never be implemented in NSUML
+    }
 }
