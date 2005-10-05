@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.251 2005/08/09 14:02:17 orutherfurd Exp $
+ * @version $Id: jEdit.java,v 1.252 2005/10/05 21:47:09 ezust Exp $
  */
 public class jEdit
 {
@@ -2175,7 +2175,7 @@ public class jEdit
 				// Don't show the welcome message if jEdit was started
 				// with the -nosettings switch
 				if(settingsDirectory != null && getBooleanProperty("firstTime"))
-					new HelpViewer();
+					HelpViewer.create();
 				else if(jEdit.getBooleanProperty("tip.show"))
 					new TipOfTheDay(newView);
 
