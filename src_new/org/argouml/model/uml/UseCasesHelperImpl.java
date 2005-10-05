@@ -1,4 +1,4 @@
-// $Id: UseCasesHelperImpl.java,v 1.6 2005/09/09 08:49:01 mkl Exp $
+// $Id: UseCasesHelperImpl.java,v 1.7 2005/10/05 00:44:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,9 +275,16 @@ class UseCasesHelperImpl implements UseCasesHelper {
      * @param base the base usecase
      */
     public void setBase(Object extend, Object base) {
-        if (base != null && !(base instanceof MUseCase)) {
-            throw new IllegalArgumentException("base");
+        if (base == null) {
+            throw new IllegalArgumentException(
+                    "The base cannot be null");
         }
+        
+        if (!(base instanceof MUseCase)) {
+            throw new IllegalArgumentException(
+                    "The base cannot be a " + base.getClass().getName());
+        }
+
 
         if (extend == null) {
             throw new IllegalArgumentException("extend");
@@ -442,16 +449,15 @@ class UseCasesHelperImpl implements UseCasesHelper {
      */
     public void setAddition(Object handle, Object useCase) {
         if ((handle instanceof MBase) && ((MBase) handle).isRemoved()) {
-            throw new IllegalStateException("Operation on a removed object ["
+            throw new IllegalArgumentException("Operation on a removed object ["
                     + handle + "]");
         }
         if ((useCase instanceof MBase) && ((MBase) useCase).isRemoved()) {
-            throw new IllegalStateException("Operation on a removed object ["
+            throw new IllegalArgumentException("Operation on a removed object ["
                     + useCase + "]");
         }
 
         if (handle instanceof MInclude) {
-            // See issue 2034
             ((MInclude) handle).setBase((MUseCase) useCase);
             return;
         }
@@ -478,26 +484,30 @@ class UseCasesHelperImpl implements UseCasesHelper {
     /**
      * Set the extension of a usecase.
      *
-     * @param handle Extend
-     * @param ext UseCase or null
+     * @param extend Extend
+     * @param useCase UseCase
      */
-    public void setExtension(Object handle, Object ext) {
-        if ((handle instanceof MBase) && ((MBase) handle).isRemoved()) {
-            throw new IllegalStateException("Operation on a removed object ["
-                    + handle + "]");
+    public void setExtension(Object extend, Object useCase) {
+        if (!(useCase instanceof MUseCase)) {
+            throw new IllegalArgumentException("A use case must be supplied");
         }
-        if ((ext instanceof MBase) && ((MBase) ext).isRemoved()) {
+        
+        if ((extend instanceof MBase) && ((MBase) extend).isRemoved()) {
             throw new IllegalStateException("Operation on a removed object ["
-                    + ext + "]");
+                    + extend + "]");
+        }
+        if ((useCase instanceof MBase) && ((MBase) useCase).isRemoved()) {
+            throw new IllegalStateException("Operation on a removed object ["
+                    + useCase + "]");
         }
 
-        if (handle instanceof MExtend
-                && (ext == null || ext instanceof MUseCase)) {
-            ((MExtend) handle).setExtension((MUseCase) ext);
+        if (extend instanceof MExtend
+                && (useCase instanceof MUseCase)) {
+            ((MExtend) extend).setExtension((MUseCase) useCase);
             return;
         }
-        throw new IllegalArgumentException("handle: " + handle
-                + " or ext: " + ext);
+        throw new IllegalArgumentException("handle: " + extend
+                + " or ext: " + useCase);
     }
 
     /**
