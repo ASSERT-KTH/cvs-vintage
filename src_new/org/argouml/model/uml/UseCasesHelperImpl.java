@@ -1,4 +1,4 @@
-// $Id: UseCasesHelperImpl.java,v 1.7 2005/10/05 00:44:17 bobtarling Exp $
+// $Id: UseCasesHelperImpl.java,v 1.8 2005/10/05 15:47:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -457,7 +457,7 @@ class UseCasesHelperImpl implements UseCasesHelper {
                     + useCase + "]");
         }
 
-        if (handle instanceof MInclude) {
+        if (handle instanceof MInclude && useCase instanceof MUseCase) {
             ((MInclude) handle).setBase((MUseCase) useCase);
             return;
         }
