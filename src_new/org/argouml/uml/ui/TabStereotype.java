@@ -1,4 +1,4 @@
-// $Id: TabStereotype.java,v 1.2 2005/10/06 00:22:59 bobtarling Exp $
+// $Id: TabStereotype.java,v 1.3 2005/10/06 10:38:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,15 +24,12 @@
 
 package org.argouml.uml.ui;
 
-import javax.swing.JScrollPane;
-
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.NsumlEnabler;
 import org.argouml.model.Model;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.swidgets.Horizontal;
-import org.tigris.swidgets.LabelledLayout;
 import org.tigris.swidgets.Vertical;
 
 /**
