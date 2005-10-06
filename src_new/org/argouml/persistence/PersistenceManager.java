@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.15 2005/08/14 08:48:37 mvw Exp $
+// $Id: PersistenceManager.java,v 1.16 2005/10/06 13:24:44 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,6 +71,7 @@ public class PersistenceManager {
     private List otherPersisters = new ArrayList();
     private UmlFilePersister quickViewDump;
     private XmiFilePersister xmiPersister;
+    private ZipFilePersister zipPersister;
 
     /**
      * The configuration key for the "save project" file location.
@@ -117,6 +118,7 @@ public class PersistenceManager {
         quickViewDump = new UmlFilePersister();
         otherPersisters.add(quickViewDump);
         xmiPersister = new XmiFilePersister();
+        zipPersister = new ZipFilePersister();
         /* Exclude the XMIPersister as an otherPersister, 
          * since it does not retain 
          * the complete project after a save/load cycle.
@@ -139,19 +141,20 @@ public class PersistenceManager {
      * @return the persister
      */
     public AbstractFilePersister getPersisterFromFileName(String name) {
-        if (name.toLowerCase()
-	    .endsWith("." + defaultPersister.getExtension())) {
+        if (defaultPersister.isFileExtensionApplicable(name)) {
             return defaultPersister;
-	}
-        if (name.toLowerCase()
-            .endsWith("." + xmiPersister.getExtension())) {
-                return xmiPersister;
+        }
+        if (xmiPersister.isFileExtensionApplicable(name)) {
+            return xmiPersister;
+        }
+        if (zipPersister.isFileExtensionApplicable(name)) {
+            return zipPersister;
         }
         Iterator iter = otherPersisters.iterator();
         while (iter.hasNext()) {
             AbstractFilePersister persister =
                 (AbstractFilePersister) iter.next();
-            if (name.toLowerCase().endsWith("." + persister.getExtension())) {
+            if (persister.isFileExtensionApplicable(name)) {
                 return persister;
             }
         }

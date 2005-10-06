@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.12 2005/02/20 21:55:17 linus Exp $
+// $Id: AbstractFilePersister.java,v 1.13 2005/10/06 13:24:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -165,6 +165,16 @@ public abstract class AbstractFilePersister extends FileFilter
             return filename.substring(i + 1).toLowerCase();
         }
         return null;
+    }
+    
+    /**
+     * Given the full filename this returns true if that filename contains the
+     * expected extension for the is persister.
+     * @param filename
+     * @return true if the filename is valid for this persister
+     */
+    public boolean isFileExtensionApplicable(String filename) {
+        return filename.toLowerCase().endsWith("." + getExtension());
     }
 
     /**

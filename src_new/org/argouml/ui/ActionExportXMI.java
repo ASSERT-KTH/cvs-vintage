@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.24 2005/08/14 08:48:37 mvw Exp $
+// $Id: ActionExportXMI.java,v 1.25 2005/10/06 13:24:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public final class ActionExportXMI extends AbstractAction
 				       "action.export-project-as-xmi"));
         chooser.setApproveButtonText(Translator.localize(
 					     "filechooser.export"));
-        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setAcceptAllFileFilterUsed(true);
         pm.setXmiFileChooserFilter(chooser);
 
         String fn = Configuration.getString(
