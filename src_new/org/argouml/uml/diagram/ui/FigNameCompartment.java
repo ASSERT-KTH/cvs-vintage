@@ -1,4 +1,4 @@
-// $Id: FigNameCompartment.java,v 1.5 2005/01/09 14:58:56 linus Exp $
+// $Id: FigNameCompartment.java,v 1.6 2005/10/06 23:05:22 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,20 +49,6 @@ public class FigNameCompartment extends FigCompartment {
         name = new FigName(x, y + h / 2, w, h / 2, expandOnly);
         addFig(stereotype);
         addFig(name);
-    }
-
-    /**
-     * @param s the stereotype name string
-     */
-    public void setStereotype(String s) {
-        this.stereotype.setText(s);
-    }
-
-    /**
-     * @return the stereotype name string
-     */
-    public String getStereotype() {
-        return stereotype.getText();
     }
 
     /**

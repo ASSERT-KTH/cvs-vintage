@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.37 2005/09/14 08:18:46 mkl Exp $
+// $Id: FigMNodeInstance.java,v 1.38 2005/10/06 23:05:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +120,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
         Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRect) it.next());
         figClone.cover = (FigCube) it.next();
-        figClone.setStereotypeFig((FigText) it.next());
+        it.next();
         figClone.setNameFig((FigText) it.next());
         return figClone;
     }

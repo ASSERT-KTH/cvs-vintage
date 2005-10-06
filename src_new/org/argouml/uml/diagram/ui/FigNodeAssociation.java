@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.9 2005/09/07 21:03:52 linus Exp $
+// $Id: FigNodeAssociation.java,v 1.10 2005/10/06 23:05:22 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
         getNameFig().setTabAction(FigText.END_EDITING);
         getNameFig().setJustificationByName("center");
 
-        setStereotypeFig(new FigText(X + 10, Y + 22, 0, 21, true));
+        getStereotypeFig().setBounds(X + 10, Y + 22, 0, 21);
         getStereotypeFig().setFilled(false);
         getStereotypeFig().setLineWidth(0);
 
@@ -117,7 +117,6 @@ public class FigNodeAssociation extends FigNodeModelElement {
         figClone.setBigPort((FigDiamond) it.next());
         figClone.head = (FigDiamond) it.next();
         figClone.setNameFig((FigText) it.next());
-        figClone.setStereotypeFig((FigText) it.next());
         return figClone;
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.45 2005/09/12 18:52:16 mvw Exp $
+// $Id: FigClassifierRole.java,v 1.46 2005/10/06 23:05:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,7 +122,6 @@ public class FigClassifierRole extends FigNodeModelElement {
 
         getStereotypeFig().setLineWidth(0);
         getStereotypeFig().setFilled(false);
-        getStereotypeFigText().setJustificationByName("Center");
         getStereotypeFig().setVisible(false);
 
         getStereotypeFig().setBounds(10, 10, 90, stereoMin.height);
@@ -200,7 +199,7 @@ public class FigClassifierRole extends FigNodeModelElement {
 
         figClone.setBigPort((FigRect) it.next());
         figClone.cover   = (FigRect) it.next();
-        figClone.setStereotypeFig((FigText) it.next());
+        it.next();
         figClone.setNameFig((FigText) it.next());
 
         return figClone;

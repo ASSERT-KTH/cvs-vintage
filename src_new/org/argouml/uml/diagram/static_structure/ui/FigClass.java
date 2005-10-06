@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.168 2005/09/28 01:12:59 bobtarling Exp $
+// $Id: FigClass.java,v 1.169 2005/10/06 23:05:22 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,10 +176,8 @@ public class FigClass extends FigClassifierBox
         // before, so it overlaps the name box, and the blanking takes out both
         // lines. Initially not set to be displayed, but this will be changed
         // when we try to render it, if we find we have a stereotype.
-        getStereotypeFigText().setExpandOnly(true);
         getStereotypeFig().setFilled(true);
         getStereotypeFig().setLineWidth(1);
-        getStereotypeFigText().setEditable(false);
         getStereotypeFig().setHeight(STEREOHEIGHT + 1);
         // +1 to have 1 pixel overlap with getNameFig()
         getStereotypeFig().setVisible(false);

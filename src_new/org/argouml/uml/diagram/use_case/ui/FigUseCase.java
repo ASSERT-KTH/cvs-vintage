@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.73 2005/09/15 17:09:33 mvw Exp $
+// $Id: FigUseCase.java,v 1.74 2005/10/06 23:05:22 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -352,7 +352,7 @@ public class FigUseCase extends FigNodeModelElement
         figClone.bigPort = (FigMyCircle) it.next();
         figClone.cover = (FigMyCircle) it.next();
         figClone.setNameFig((FigText) it.next());
-        figClone.setStereotypeFig((FigText) it.next());
+        it.next();
         figClone.epSep = (FigLine) it.next();
         figClone.epVec = (FigGroup) it.next();
 
@@ -1421,7 +1421,7 @@ public class FigUseCase extends FigNodeModelElement
      */
     protected void updateStereotypeText() {
         super.updateStereotypeText();
-        if (!(getStereotype() == null || getStereotype().equals(""))) {
+        if (!Model.getFacade().getStereotypes(getOwner()).isEmpty()) {
             getStereotypeFig().setBounds((bigPort.getX()
 					  + bigPort.getWidth() / 2
 					  - getStereotypeFig().getWidth() / 2),

@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.35 2005/09/15 17:09:33 mvw Exp $
+// $Id: FigActor.java,v 1.36 2005/10/06 23:05:22 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -329,7 +329,7 @@ public class FigActor extends FigNodeModelElement {
      */
     protected void updateStereotypeText() {
         super.updateStereotypeText();
-        if (!(getStereotype() == null || getStereotype().equals(""))) {
+        if (!Model.getFacade().getStereotypes(getOwner()).isEmpty()) {
             getStereotypeFig().setBounds(
                 (getBigPort().getCenter().x 
                                      - getStereotypeFig().getWidth() / 2),

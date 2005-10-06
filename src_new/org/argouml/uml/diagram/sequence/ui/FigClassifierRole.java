@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.13 2005/09/11 19:05:52 thn Exp $
+// $Id: FigClassifierRole.java,v 1.14 2005/10/06 23:05:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -150,17 +150,10 @@ public class FigClassifierRole extends FigNodeModelElement
         backgroundBox.setFilled(true);
         outerBox = new FigRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         outerBox.setFilled(false);
-        setStereotypeFig(new FigText(DEFAULT_WIDTH / 2,
+        getStereotypeFig().setBounds(DEFAULT_WIDTH / 2,
 				     ROWHEIGHT + ROWDISTANCE,
 				     0,
-				     0,
-				     Color.black,
-				     "Dialog",
-				     12,
-				     false));
-        getStereotypeFigText().setTabAction(FigText.END_EDITING);
-//        getStereotypeFigText().setTabAction(FigText.IGNORE);
-        getStereotypeFigText().setEditable(false);
+				     0);
         getStereotypeFig().setFilled(false);
         getStereotypeFig().setLineWidth(0);
         setNameFig(new FigText(DEFAULT_WIDTH / 2,
@@ -172,8 +165,6 @@ public class FigClassifierRole extends FigNodeModelElement
 			       12,
 			       false));
         getNameFig().setEditable(false);
-        getStereotypeFigText().setTabAction(FigText.END_EDITING);
-        //getNameFig().setTabAction(FigText.IGNORE);
         getNameFig().setFilled(false);
         getNameFig().setLineWidth(0);
         lifeLine =
@@ -231,14 +222,6 @@ public class FigClassifierRole extends FigNodeModelElement
         getNameFig().setText(nameText);
         center(getNameFig());
         damage();
-    }
-
-    /**
-     * @see FigNodeModelElement#updateStereotypeText()
-     */
-    protected void updateStereotypeText() {
-        super.updateStereotypeText();
-        center(getStereotypeFigText());
     }
 
     int getNodeCount() {

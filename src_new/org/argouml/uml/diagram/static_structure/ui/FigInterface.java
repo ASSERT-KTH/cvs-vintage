@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.114 2005/09/15 17:09:32 mvw Exp $
+// $Id: FigInterface.java,v 1.115 2005/10/06 23:05:22 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -142,10 +142,8 @@ public class FigInterface extends FigClassifierBox {
         // when we try to render it, if we find we have a stereotype.
         setStereotype(NotationHelper.getLeftGuillemot()
                 + "Interface" + NotationHelper.getRightGuillemot());
-        getStereotypeFigText().setExpandOnly(true);
         getStereotypeFig().setFilled(true);
         getStereotypeFig().setLineWidth(1);
-        getStereotypeFigText().setEditable(false);
         getStereotypeFig().setHeight(STEREOHEIGHT + 1);
         // +1 to have 1 pixel overlap with getNameFig()
         getStereotypeFig().setVisible(true);
@@ -205,7 +203,7 @@ public class FigInterface extends FigClassifierBox {
         FigInterface figClone = (FigInterface) super.clone();
         Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRect) it.next());
-        figClone.setStereotypeFig((FigText) it.next());
+        it.next();
         figClone.setNameFig((FigText) it.next());
         figClone.stereoLineBlinder = (FigRect) it.next();
         figClone.operationsFig = (FigOperationsCompartment) it.next();

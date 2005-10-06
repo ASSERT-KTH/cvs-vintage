@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.42 2005/09/14 08:18:46 mkl Exp $
+// $Id: FigComponentInstance.java,v 1.43 2005/10/06 23:05:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,7 @@ public class FigComponentInstance extends FigNodeModelElement {
         Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRect) it.next());
         figClone.cover = (FigRect) it.next();
-        figClone.setStereotypeFig((FigText) it.next());
+        it.next();
         figClone.setNameFig((FigText) it.next());
         figClone.upperRect = (FigRect) it.next();
         figClone.lowerRect = (FigRect) it.next();
