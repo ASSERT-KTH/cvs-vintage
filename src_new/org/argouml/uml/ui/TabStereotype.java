@@ -1,4 +1,4 @@
-// $Id: TabStereotype.java,v 1.1 2005/10/06 00:20:18 bobtarling Exp $
+// $Id: TabStereotype.java,v 1.2 2005/10/06 00:22:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.NsumlEnabler;
 import org.argouml.model.Model;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.swidgets.Horizontal;
@@ -60,6 +61,9 @@ public class TabStereotype extends PropPanel {
      * @return true if this tab should be enabled, otherwise false.
      */
     public boolean shouldBeEnabled() {
+        if (NsumlEnabler.isNsuml()) {
+            return false;
+        }
         Object target = getTarget();
         target = (target instanceof Fig) ? ((Fig) target).getOwner() : target;
         return Model.getFacade().isAModelElement(target);
