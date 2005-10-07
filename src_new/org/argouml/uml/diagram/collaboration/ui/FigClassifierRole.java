@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.46 2005/10/06 23:05:23 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.47 2005/10/07 00:12:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -261,7 +261,6 @@ public class FigClassifierRole extends FigNodeModelElement {
 
             // Set the text and recalculate its bounds
 
-            setStereotype(Notation.generateStereotype(this, stereo));
             getStereotypeFig().calcBounds();
 
             bounds.height += getStereotypeFig().getBounds().height - oldHeight;

@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.79 2005/10/06 23:05:22 bobtarling Exp $
+// $Id: FigPackage.java,v 1.80 2005/10/07 00:12:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -310,7 +310,7 @@ public class FigPackage extends FigNodeModelElement
             }
         } else {
             /* we got stereotype */
-            setStereotype(Notation.generateStereotype(this, stereo));
+            getStereotypeFig().setOwner(getOwner());
             if (!stereotypeVisible) {
                 stereoLineBlinder.setVisible(false);
                 getStereotypeFig().setVisible(false);

@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.53 2005/10/06 23:05:22 bobtarling Exp $
+// $Id: FigComment.java,v 1.54 2005/10/07 00:12:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -593,7 +593,7 @@ public class FigComment
                 calcBounds();
             }
         } else {
-            setStereotype(Notation.generateStereotype(this, stereo));
+            getStereotypeFig().setOwner(getOwner());
 
             if (!getStereotypeFig().isVisible()) {
                 getStereotypeFig().setVisible(true);

@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.38 2005/10/06 23:05:23 bobtarling Exp $
+// $Id: FigMNodeInstance.java,v 1.39 2005/10/07 00:12:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -206,18 +206,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
      */
     protected void updateStereotypeText() {
-        Object me = /*(MModelElement)*/ getOwner();
-        if (me == null)
-            return;
-        Object stereo = CollectionUtil.getFirstItemOrNull(
-                Model.getFacade().getStereotypes(me));
-        if (stereo == null
-                || Model.getFacade().getName(stereo) == null
-                || Model.getFacade().getName(stereo).length() == 0) {
-            setStereotype("");
-        } else {
-            setStereotype(Notation.generateStereotype(this, stereo));
-        }
+        getStereotypeFig().setOwner(getOwner());
     }
 
     ////////////////////////////////////////////////////////////////

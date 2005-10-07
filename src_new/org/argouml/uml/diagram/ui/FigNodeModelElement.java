@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.192 2005/10/06 23:05:22 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.193 2005/10/07 00:12:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1193,18 +1193,8 @@ public abstract class FigNodeModelElement
             LOG.warn("I return...");
             return;
         }
-        Object stereotype = CollectionUtil.getFirstItemOrNull(
-                Model.getFacade().getStereotypes(getOwner()));
-        if (stereotype == null) {
-            stereo.setText("");
-            return;
-        }
-        String stereoStr = Model.getFacade().getName(stereotype);
-        if (stereoStr == null || stereoStr.length() == 0) {
-            stereo.setText("");
-        } else {
-            stereo.setText(Notation.generate(this, stereotype));
-        }
+        
+        stereo.setOwner(getOwner());
     }
 
     /**
@@ -1546,15 +1536,6 @@ public abstract class FigNodeModelElement
      */
     protected Fig getStereotypeFig() {
         return stereo;
-    }
-
-    /**
-     * Set the text describing the stereotype.
-     *
-     * @param stereotype the stereotype text
-     */
-    public void setStereotype(String stereotype) {
-        stereo.setText(stereotype);
     }
 
     /**

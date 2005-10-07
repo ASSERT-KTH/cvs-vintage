@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.115 2005/10/06 23:05:22 bobtarling Exp $
+// $Id: FigInterface.java,v 1.116 2005/10/07 00:12:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,8 +140,6 @@ public class FigInterface extends FigClassifierBox {
         // before, so it overlaps the name box, and the blanking takes out both
         // lines. Initially not set to be displayed, but this will be changed
         // when we try to render it, if we find we have a stereotype.
-        setStereotype(NotationHelper.getLeftGuillemot()
-                + "Interface" + NotationHelper.getRightGuillemot());
         getStereotypeFig().setFilled(true);
         getStereotypeFig().setLineWidth(1);
         getStereotypeFig().setHeight(STEREOHEIGHT + 1);
@@ -846,9 +844,7 @@ public class FigInterface extends FigClassifierBox {
      */
     protected void updateStereotypeText() {
         Rectangle rect = getBounds();
-        setStereotype(NotationHelper.getLeftGuillemot()
-                + "Interface"
-                + NotationHelper.getRightGuillemot());
+        getStereotypeFig().setOwner(getOwner());
         setBounds(rect.x, rect.y, rect.width, rect.height);
     }
 
