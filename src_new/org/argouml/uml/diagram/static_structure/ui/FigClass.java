@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.170 2005/10/07 00:12:13 bobtarling Exp $
+// $Id: FigClass.java,v 1.171 2005/10/07 14:04:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -842,8 +842,8 @@ public class FigClass extends FigClassifierBox
         setBounds(
                 rect.x,
                 rect.y, 
-                heightWithoutStereo + stereotypeHeight, 
-                rect.height);
+                rect.width,
+                heightWithoutStereo + stereotypeHeight);
         calcBounds();
         newlyCreated = false;
     }
