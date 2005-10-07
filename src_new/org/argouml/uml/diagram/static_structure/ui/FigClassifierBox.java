@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.6 2005/10/07 16:19:48 bobtarling Exp $
+// $Id: FigClassifierBox.java,v 1.7 2005/10/07 16:50:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +113,7 @@ abstract public class FigClassifierBox extends FigNodeModelElement
         int ypos = operPort.getY();
 
         Rectangle rect = getBounds();
-        updateFigGroupSize(getOperationsFig(), xpos, ypos, 0, 0);
+        operationsCompartment.updateFigGroupSize(xpos, ypos, 0, 0, isCheckSize(), ROWHEIGHT);
         // ouch ugly but that's for a next refactoring
         // TODO: make setBounds, calcBounds and updateBounds consistent
         setBounds(rect.x, rect.y, rect.width, rect.height);

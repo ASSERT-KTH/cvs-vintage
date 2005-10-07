@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.116 2005/10/07 00:12:13 bobtarling Exp $
+// $Id: FigInterface.java,v 1.117 2005/10/07 16:50:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -797,8 +797,13 @@ public class FigInterface extends FigClassifierBox {
         // Finally update the bounds of the operations box
 
         /*aSize =*/
-        updateFigGroupSize(operationsFig, x, currentY,
-                        newW, newH + y - currentY);
+        operationsFig.updateFigGroupSize(
+                x, 
+                currentY, 
+                newW, 
+                newH + y - currentY, 
+                isCheckSize(), 
+                ROWHEIGHT);
 
         // set bounds of big box
 
@@ -831,7 +836,7 @@ public class FigInterface extends FigClassifierBox {
         int ypos = operPort.getY();
 
         Rectangle rect = getBounds();
-        updateFigGroupSize(getOperationsFig(), xpos, ypos, 0, 0);
+        operationsCompartment.updateFigGroupSize(xpos, ypos, 0, 0, isCheckSize(), ROWHEIGHT);
         // ouch ugly but that's for a next refactoring
         // TODO: make setBounds, calcBounds and updateBounds consistent
         setBounds(rect.x, rect.y, rect.width, rect.height);
