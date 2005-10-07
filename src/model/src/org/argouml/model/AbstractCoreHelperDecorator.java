@@ -1,4 +1,4 @@
-// $Id: AbstractCoreHelperDecorator.java,v 1.3 2005/08/14 05:08:05 linus Exp $
+// $Id: AbstractCoreHelperDecorator.java,v 1.4 2005/10/07 15:03:38 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -500,6 +500,14 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
     }
 
     /**
+     * @see org.argouml.model.CoreHelper#removeStereotype(
+     *         java.lang.Object, java.lang.Object)
+     */
+    public void removeStereotype(Object modelElement, Object stereotype) {
+        impl.removeStereotype(modelElement, stereotype);
+    }
+
+    /**
      * @see org.argouml.model.CoreHelper#removeTaggedValue(
      *         java.lang.Object, java.lang.String)
      */
@@ -641,6 +649,14 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
      */
     public void addSourceFlow(Object handle, Object flow) {
         impl.addSourceFlow(handle, flow);
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#addStereotype(
+     *         java.lang.Object, java.lang.Object)
+     */
+    public void addStereotype(Object modelElement, Object stereotype) {
+        impl.addStereotype(modelElement, stereotype);
     }
 
     /**
