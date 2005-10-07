@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.48 2005/09/13 18:32:23 mvw Exp $
+// $Id: TargetManager.java,v 1.49 2005/10/07 17:00:16 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -441,6 +441,8 @@ public final class TargetManager {
 	internalOnSetTarget(TargetEvent.TARGET_SET, oldTargets);
 
         endTargetTransaction();
+        
+        debugTM();
     }
 
     private void internalOnSetTarget(String eventName, Object[] oldTargets) {
@@ -570,8 +572,6 @@ public final class TargetManager {
 	internalOnSetTarget(TargetEvent.TARGET_SET, oldTargets);
 
 	endTargetTransaction();
-        
-        debugTM();
     }
 
     /**
