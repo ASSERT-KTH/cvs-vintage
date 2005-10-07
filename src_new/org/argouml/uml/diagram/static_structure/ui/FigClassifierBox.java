@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.5 2005/10/06 23:05:22 bobtarling Exp $
+// $Id: FigClassifierBox.java,v 1.6 2005/10/07 16:19:48 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,10 +73,12 @@ abstract public class FigClassifierBox extends FigNodeModelElement
         // before, so it overlaps the name box, and the blanking takes out both
         // lines. Initially not set to be displayed, but this will be changed
         // when we try to render it, if we find we have a stereotype.
-        getStereotypeFig().setFilled(true);
-        getStereotypeFig().setLineWidth(1);
-        // +1 to have 1 pixel overlap with getNameFig()
-        getStereotypeFig().setHeight(STEREOHEIGHT + 1);
+        if (getStereotypeFig() != null) {
+            getStereotypeFig().setFilled(true);
+            getStereotypeFig().setLineWidth(1);
+            // +1 to have 1 pixel overlap with getNameFig()
+            getStereotypeFig().setHeight(STEREOHEIGHT + 1);
+        }
         
     }
     
