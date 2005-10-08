@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.44 2005/08/02 04:36:50 mkl Exp $
+// $Id: TabTaggedValues.java,v 1.45 2005/10/08 20:20:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
+import org.argouml.kernel.NsumlEnabler;
 import org.argouml.model.Model;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.AbstractArgoJPanel;
@@ -202,6 +203,9 @@ public class TabTaggedValues extends AbstractArgoJPanel
      *         org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
+        if (!NsumlEnabler.isNsuml()) {
+            setTarget(e.getNewTarget());
+        }
     }
 
     /**
