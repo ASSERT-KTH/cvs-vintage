@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroupItem;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
@@ -39,7 +39,7 @@ public interface IModelFacade {
 
 	IGroupItem createGroupItem();
 
-	IContact createContact();
+	IContactModel createContact();
 
 	IHeaderList createHeaderList();
 

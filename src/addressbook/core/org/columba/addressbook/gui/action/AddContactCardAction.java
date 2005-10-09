@@ -20,10 +20,9 @@ package org.columba.addressbook.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.folder.AddressbookFolder;
-import org.columba.addressbook.gui.dialog.contact.ContactDialog;
+import org.columba.addressbook.gui.dialog.contact.ContactEditorDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.dialog.ErrorDialog;
@@ -65,16 +64,14 @@ public class AddContactCardAction extends DefaultTreeAction {
 		AddressbookFolder folder = (AddressbookFolder) mediator.getTree()
 				.getSelectedFolder();
 
-		IContact card = new Contact();
+		ContactModel model = new ContactModel();
 
-		ContactDialog dialog = new ContactDialog(mediator.getView().getFrame(),
-				card);
+		ContactEditorDialog dialog = new ContactEditorDialog(mediator.getView().getFrame());
 
 		if (dialog.getResult()) {
-
 			try {
 				// add contact to folder
-				folder.add(card);
+				folder.add(dialog.getDestModel());
 			} catch (Exception e) {
 				if (Logging.DEBUG)
 					e.printStackTrace();

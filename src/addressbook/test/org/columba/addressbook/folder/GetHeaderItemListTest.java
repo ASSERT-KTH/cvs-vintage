@@ -17,15 +17,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.VCARD;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class GetHeaderItemListTest extends AbstractFolderTstCase {
 
@@ -34,16 +32,16 @@ public class GetHeaderItemListTest extends AbstractFolderTstCase {
 	 */
 	public GetHeaderItemListTest(String arg0) {
 		super(arg0);
-	
+
 	}
 
 	/*
 	 * Class under test for HeaderItemList getHeaderItemList()
 	 */
 	public void testGetHeaderItemList() throws Exception {
-		IContact c = new Contact();
+		ContactModel c = new ContactModel();
 
-		c.set(VCARD.DISPLAYNAME, "displayname");
+		c.setSortString("sortstring");
 
 		Object uid = getSourceFolder().add(c);
 
@@ -51,7 +49,7 @@ public class GetHeaderItemListTest extends AbstractFolderTstCase {
 
 		IHeaderItem item = list.get(uid);
 
-		assertEquals("same displayname", c.get(VCARD.DISPLAYNAME), item
+		assertEquals("same displayname", c.getSortString(), item
 				.getDisplayName());
 	}
 

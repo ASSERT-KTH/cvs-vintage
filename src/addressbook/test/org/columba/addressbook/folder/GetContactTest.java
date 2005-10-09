@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.VCARD;
 
 /**
@@ -36,15 +36,14 @@ public class GetContactTest extends AbstractFolderTstCase {
 	}
 
 	public void testGet() throws Exception {
-		IContact c = new Contact();
+		ContactModel c = new ContactModel();
 
-		c.set(VCARD.NICKNAME, "nickname");
+		c.setNickName("nickname");
 
 		Object uid = getSourceFolder().add(c);
 
-		IContact c2 = getSourceFolder().get(uid);
+		IContactModel c2 = getSourceFolder().get(uid);
 
-		assertEquals("same nickname", c.get(VCARD.NICKNAME), c2
-				.get(VCARD.NICKNAME));
+		assertEquals("same nickname", c.getNickName(), c2.getNickName());
 	}
 }

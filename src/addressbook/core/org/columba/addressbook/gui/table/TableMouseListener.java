@@ -23,9 +23,10 @@ import java.awt.event.MouseEvent;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.IContactStorage;
-import org.columba.addressbook.gui.dialog.contact.ContactDialog;
+import org.columba.addressbook.gui.dialog.contact.ContactEditorDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.core.gui.base.DoubleClickListener;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.logging.Logging;
@@ -64,10 +65,11 @@ public class TableMouseListener extends DoubleClickListener
       if (uids.length == 0)
         return;
 
-      IContact card = null;
+      // FIXME: ugly cast to ContactModel
+      IContactModel card = null;
       try
       {
-        card = (IContact) folder.get(uids[0]);
+        card = (IContactModel) folder.get(uids[0]);
       }
       catch (Exception ex)
       {
@@ -78,8 +80,8 @@ public class TableMouseListener extends DoubleClickListener
         new ErrorDialog(ex.getMessage(), ex);
       }
 
-      ContactDialog dialog = new ContactDialog(mediator.getView().getFrame(),
-                                               card);
+      ContactEditorDialog dialog = new ContactEditorDialog(mediator.getView().getFrame(),
+                                               (ContactModel) card);
 
       if (dialog.getResult())
       {

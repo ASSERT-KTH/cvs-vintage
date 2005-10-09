@@ -28,6 +28,7 @@ import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.config.Config;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.shutdown.ShutdownManager;
 
 /**
  * @author fdietz
@@ -68,6 +69,8 @@ public class AbstractFolderTstCase extends TestCase {
 		Logging.DEBUG = true;
 		Logging.createDefaultHandler();
 
+		ShutdownManager.getInstance();
+		
 		new AddressbookMain();
 
 		// now load all available plugins

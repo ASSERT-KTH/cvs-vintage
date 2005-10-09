@@ -15,20 +15,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
-
-import org.columba.addressbook.model.IContactModel;
+package org.columba.addressbook.parser;
 
 /**
- * Contact storage backend.
+ * SyntaxException is thrown when the contact xml document does not
+ * have the correct syntax.
  * 
  * @author fdietz
- *
  */
-public interface DataStorage {
+public class SyntaxException extends Exception {
 
-	IContactModel load(Object uid) throws Exception;
-	void save(Object uid, IContactModel contact) throws Exception;
-	void modify(Object uid, IContactModel contact) throws Exception;
-	void remove(Object uid) throws Exception;
+	public SyntaxException() {
+		super();
+	}
+
+	public SyntaxException(String message) {
+		super(message);
+	}
+
 }

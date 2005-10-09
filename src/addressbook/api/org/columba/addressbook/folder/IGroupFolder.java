@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroup;
 
 /**
@@ -27,9 +27,9 @@ import org.columba.addressbook.model.IGroup;
  */
 public interface IGroupFolder {
 	/**
-	 * @see org.columba.addressbook.folder.IContactStorage#add(org.columba.addressbook.model.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	Object add(IContact contact) throws Exception;
+	Object add(IContactModel contact) throws Exception;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#count()
@@ -44,13 +44,13 @@ public interface IGroupFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	IContact get(Object uid) throws Exception;
+	IContactModel get(Object uid) throws Exception;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
-	 *      org.columba.addressbook.model.Contact)
+	 *      IContactModel)
 	 */
-	void modify(Object uid, IContact contact) throws Exception;
+	void modify(Object uid, IContactModel contact) throws Exception;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)

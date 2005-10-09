@@ -17,10 +17,9 @@
 //All Rights Reserved.
 package org.columba.addressbook.model;
 
-
 /**
  * @author fdietz
- *  
+ * 
  */
 public class ContactItem extends HeaderItem implements IContactItem {
 
@@ -31,7 +30,7 @@ public class ContactItem extends HeaderItem implements IContactItem {
 	private String website;
 
 	/**
-	 *  
+	 * 
 	 */
 	public ContactItem() {
 		super();
@@ -42,12 +41,20 @@ public class ContactItem extends HeaderItem implements IContactItem {
 	/**
 	 * @param contact
 	 */
-	public ContactItem(IContact contact) {
+	public ContactItem(IContactModel contact) {
 		super();
 
-		setDisplayName(contact.get(VCARD.DISPLAYNAME));
-		setAddress(contact.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET));
-		setWebsite(contact.get(VCARD.URL));
+		if (contact == null)
+			throw new IllegalArgumentException("contact == null");
+
+		setDisplayName(contact.getSortString());
+		
+		// fall-back to formatted name
+		if (getDisplayName() == null || getDisplayName().length() == 0)
+			setDisplayName(contact.getFormattedName());	
+
+		setAddress(contact.getPreferredEmail());
+		setWebsite(contact.getHomePage());
 
 		setContact(true);
 	}

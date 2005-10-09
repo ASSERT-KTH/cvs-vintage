@@ -21,9 +21,9 @@ import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
-import org.columba.addressbook.model.VCARD;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.EmailModel;
+import org.columba.addressbook.parser.ParserUtil;
 import org.columba.core.logging.Logging;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
@@ -34,12 +34,13 @@ import org.columba.ristretto.parser.ParserException;
  * @author fdietz
  */
 public final class ContactFacade implements IContactFacade {
-	
-	private static final java.util.logging.Logger LOG = 
-        java.util.logging.Logger.getLogger("org.columba.addressbook.facade"); //$NON-NLS-1$
+
+	private static final java.util.logging.Logger LOG = java.util.logging.Logger
+			.getLogger("org.columba.addressbook.facade"); //$NON-NLS-1$
 
 	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#addContact(int, java.lang.String)
+	 * @see org.columba.addressbook.facade.IContactFacade#addContact(int,
+	 *      java.lang.String)
 	 */
 	public void addContact(int uid, String address) {
 		if (address == null) {
@@ -64,15 +65,19 @@ public final class ContactFacade implements IContactFacade {
 				.getInstance().getFolder(uid);
 		try {
 			if (selectedFolder.exists(adr.getMailAddress()) == null) {
-				IContact card = new Contact();
+				ContactModel card = new ContactModel();
 
 				String fn = adr.getShortAddress();
 
-				card.set(VCARD.FN, fn);
-				card.set(VCARD.DISPLAYNAME, fn);
-				card.set(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET, adr
-						.getMailAddress());
-				card.fillFullName(fn);
+				card.setFormattedName(fn);
+				// backwards compatibility
+				card.setSortString(fn);
+				card.addEmail(new EmailModel(adr.getMailAddress(), EmailModel.TYPE_WORK));
+
+				String[] result = ParserUtil.tryBreakName(fn);
+				card.setGivenName(result[0]);
+				card.setFamilyName(result[1]);
+				card.setAdditionalNames(result[2]);
 				selectedFolder.add(card);
 
 			}

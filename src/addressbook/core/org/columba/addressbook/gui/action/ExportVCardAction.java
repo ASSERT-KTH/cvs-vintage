@@ -28,7 +28,7 @@ import javax.swing.JFileChooser;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.api.gui.frame.IFrameMediator;
 
@@ -72,7 +72,7 @@ public class ExportVCardAction extends DefaultTableAction {
 
 			for (int i = 0; i < uids.length; i++) {
 				try {
-					IContact contact = sourceFolder.get(uids[i]);
+					IContactModel contact = sourceFolder.get(uids[i]);
 					File f = new File(file, "contact"+uids[i].toString() + ".vcf");
 
 					BufferedOutputStream s = new BufferedOutputStream(

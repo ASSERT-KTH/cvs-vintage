@@ -23,89 +23,95 @@ import java.io.FileReader;
 import java.nio.ByteBuffer;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.EmailModel;
+import org.columba.addressbook.model.PhoneModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.ristretto.coder.Base64;
-
 
 /**
  * Import addressbook data in LDIF format.
  */
 public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter {
-    public NetscapeLDIFAddressbookImporter() {
-        super();
-    }
+	public NetscapeLDIFAddressbookImporter() {
+		super();
+	}
 
-    public NetscapeLDIFAddressbookImporter(File sourceFile,
-        AbstractFolder destinationFolder) {
-        super(sourceFile, destinationFolder);
-    }
+	public NetscapeLDIFAddressbookImporter(File sourceFile,
+			AbstractFolder destinationFolder) {
+		super(sourceFile, destinationFolder);
+	}
 
-    public void importAddressbook(File file) throws Exception {
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        String str;
-        IContact card = new Contact();
+	public void importAddressbook(File file) throws Exception {
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String str;
+		ContactModel card = new ContactModel();
 
-        while ((str = in.readLine()) != null) {
-            // start parsing line by line
-            if (str.length() == 0) {
-                // empty line, means new contactcard
-                saveContact(card);
+		while ((str = in.readLine()) != null) {
+			// start parsing line by line
+			if (str.length() == 0) {
+				// empty line, means new contactcard
+				saveContact(card);
 
-                card = new Contact();
-            } else {
-                // parse key:value lines
-                int index = str.indexOf(':');
+				card = new ContactModel();
+			} else {
+				// parse key:value lines
+				int index = str.indexOf(':');
 
-                if ((index > 0) && (index < (str.length() - 1))) {
-                    String key = str.substring(0, index);
-                    String value;
+				if ((index > 0) && (index < (str.length() - 1))) {
+					String key = str.substring(0, index);
+					String value;
 
-                    if (str.charAt(index + 1) == ':') {
-                        ByteBuffer bytes = Base64.decode(str.substring(index +
-                                    2).trim());
-                        value = new String(bytes.array(), "UTF-8");
-                    } else {
-                        value = str.substring(index + 1);
-                    }
+					if (str.charAt(index + 1) == ':') {
+						ByteBuffer bytes = Base64.decode(str.substring(
+								index + 2).trim());
+						value = new String(bytes.array(), "UTF-8");
+					} else {
+						value = str.substring(index + 1);
+					}
 
-                    value = value.trim();
+					value = value.trim();
 
-                    if (key.equalsIgnoreCase("cn")) {
-                        card.set("displayname", value);
-                    } else if (key.equalsIgnoreCase("givenname")) {
-                        card.set("n", "given", value);
-                    } else if (key.equalsIgnoreCase("sn")) {
-                        card.set("n", "family", value);
-                    } else if (key.equalsIgnoreCase("mail")) {
-                        card.set("email", "internet", value);
-                    } else if (key.equalsIgnoreCase("xmozillanickname")) {
-                        card.set("nickname", value);
-                    } else if (key.equalsIgnoreCase("o")) {
-                        card.set("organisation", value);
-                    } else if (key.equalsIgnoreCase("telephonenumber")) {
-                        card.set("tel", "work", value);
-                    } else if (key.equalsIgnoreCase("homephone")) {
-                        card.set("tel", "home", value);
-                    } else if (key.equalsIgnoreCase("facsimiletelephonenumber")) {
-                        card.set("tel", "fax", value);
-                    } else if (key.equalsIgnoreCase("pagerphone")) {
-                        card.set("tel", "pager", value);
-                    } else if (key.equalsIgnoreCase("cellphone")) {
-                        card.set("tel", "mobile", value);
-                    } else if (key.equalsIgnoreCase("homeurl")) {
-                        card.set("url", value);
-                    }
-                }
-            }
-        }
+					if (key.equalsIgnoreCase("cn")) {
+						card.setSortString(value);
+					} else if (key.equalsIgnoreCase("givenname")) {
+						card.setGivenName(value);
+					} else if (key.equalsIgnoreCase("sn")) {
+						card.setFamilyName(value);
+					} else if (key.equalsIgnoreCase("mail")) {
+						card.addEmail(new EmailModel(value,
+								EmailModel.TYPE_WORK));
+					} else if (key.equalsIgnoreCase("xmozillanickname")) {
+						card.setNickName(value);
+					} else if (key.equalsIgnoreCase("o")) {
+						card.setOrganisation(value);
+					} else if (key.equalsIgnoreCase("telephonenumber")) {
+						card.addPhone(new PhoneModel(value,
+								PhoneModel.TYPE_BUSINESS_PHONE));
+					} else if (key.equalsIgnoreCase("homephone")) {
+						card.addPhone(new PhoneModel(value,
+								PhoneModel.TYPE_HOME_PHONE));
+					} else if (key.equalsIgnoreCase("facsimiletelephonenumber")) {
+						card.addPhone(new PhoneModel(value,
+								PhoneModel.TYPE_BUSINESS_FAX));
+					} else if (key.equalsIgnoreCase("pagerphone")) {
+						card.addPhone(new PhoneModel(value,
+								PhoneModel.TYPE_PAGER));
+					} else if (key.equalsIgnoreCase("cellphone")) {
+						card.addPhone(new PhoneModel(value,
+								PhoneModel.TYPE_MOBILE_PHONE));
+					} else if (key.equalsIgnoreCase("homeurl")) {
+						card.setHomePage(value);
+					}
+				}
+			}
+		}
 
-        in.close();
-    }
+		in.close();
+	}
 
-    public String getDescription() {
-        return AddressbookResourceLoader.getString("dialog",
-            "addressbookimport", "netscapeldifaddressbook_description");
-    }
+	public String getDescription() {
+		return AddressbookResourceLoader.getString("dialog",
+				"addressbookimport", "netscapeldifaddressbook_description");
+	}
 }

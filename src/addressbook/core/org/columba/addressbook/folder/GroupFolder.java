@@ -26,6 +26,7 @@ import org.columba.addressbook.model.Group;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroup;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.resourceloader.ImageLoader;
@@ -75,10 +76,10 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.IContactStorage#add(org.columba.addressbook.model.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	public Object add(IContact contact) throws Exception {
-		Object uid = contact.getUid();
+	public Object add(IContactModel contact) throws Exception {
+		Object uid = contact.getId();
 
 		group.addMember(uid);
 
@@ -106,7 +107,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public IContact get(Object uid) throws Exception {
+	public IContactModel get(Object uid) throws Exception {
 
 		AbstractFolder parent = (AbstractFolder) getParent();
 
@@ -115,9 +116,9 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
-	 *      org.columba.addressbook.model.Contact)
+	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContact contact) throws Exception {
+	public void modify(Object uid, IContactModel contact) throws Exception {
 		AbstractFolder parent = (AbstractFolder) getParent();
 
 		parent.modify(uid, contact);
@@ -145,7 +146,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 
 		Integer[] members = group.getMembers();
 		for (int i = 0; i < members.length; i++) {
-			IContact c = parent.get(members[i]);
+			IContactModel c = parent.get(members[i]);
 			if (c == null) {
 				// contact doesn't exist in parent folder anymore
 				// -> remove it

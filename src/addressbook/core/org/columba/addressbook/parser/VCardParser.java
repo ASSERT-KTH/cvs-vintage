@@ -17,9 +17,7 @@ package org.columba.addressbook.parser;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import net.wimpi.pim.Pim;
 import net.wimpi.pim.contact.basicimpl.CommunicationsImpl;
@@ -36,12 +34,15 @@ import net.wimpi.pim.contact.model.OrganizationalIdentity;
 import net.wimpi.pim.contact.model.PersonalIdentity;
 import net.wimpi.pim.factory.ContactIOFactory;
 
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
-import org.columba.addressbook.model.VCARD;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.EmailModel;
+import org.columba.addressbook.model.IContactModel;
 
 /**
  * Contact data parser for a vCard-standard compliant text/plain file.
+ * <p>
+ * It makes use of the jpim library. Its not really a wrapper. It only
+ * creates a mapping between the jpim data model and our data model.
  * 
  * @author fdietz
  */
@@ -55,7 +56,7 @@ public class VCardParser {
 	 * @param out
 	 *            outputstream
 	 */
-	public static void write(IContact c, OutputStream out) {
+	public static void write(IContactModel c, OutputStream out) {
 		ContactIOFactory ciof = Pim.getContactIOFactory();
 		ContactMarshaller marshaller = ciof.createContactMarshaller();
 		marshaller.setEncoding("UTF-8");
@@ -67,66 +68,56 @@ public class VCardParser {
 		exportContact.setPersonalIdentity(identity);
 
 		// set sort-string/displayname
-		if (c.exists(VCARD.DISPLAYNAME))
-			identity.setSortString(c.get(VCARD.DISPLAYNAME));
+
+		identity.setSortString(c.getSortString());
 
 		// set first name
-		if (c.exists(VCARD.N_GIVEN))
-			identity.setFirstname(c.get(VCARD.N_GIVEN));
+		identity.setFirstname(c.getGivenName());
 		// set formatted name
-		if (c.exists(VCARD.FN))
-			identity.setFormattedName(c.formatGet(VCARD.FN));
+		identity.setFormattedName(c.getFormattedName());
 		// set last name
-		if (c.exists(VCARD.N_FAMILY))
-			identity.setLastname(c.get(VCARD.N_FAMILY));
+
+		identity.setLastname(c.getFamilyName());
 
 		// add all additional names (middle names)
-		String[] s = getType(c.get(VCARD.N_ADDITIONALNAMES));
+		String[] s = ParserUtil.getArrayOfString(c.getAdditionalNames(), ",");
 		for (int i = 0; i < s.length; i++) {
 			identity.addAdditionalName(s[i]);
 		}
 
 		// add all nicknames
-		s = getType(c.get(VCARD.NICKNAME));
+		s = ParserUtil.getArrayOfString(c.getNickName(), ",");
 		for (int i = 0; i < s.length; i++) {
 			identity.addNickname(s[i]);
 		}
 
 		// add all prefixes
-		s = getType(c.get(VCARD.N_PREFIX));
+		s = ParserUtil.getArrayOfString(c.getNamePrefix(), ",");
 		for (int i = 0; i < s.length; i++) {
 			identity.addPrefix(s[i]);
 		}
 
 		// add all suffixes
-		s = getType(c.get(VCARD.N_SUFFIX));
+		s = ParserUtil.getArrayOfString(c.getNameSuffix(), ",");
 		for (int i = 0; i < s.length; i++) {
 			identity.addSuffix(s[i]);
 		}
 
 		// set website/homepage
-		if (c.exists(VCARD.URL))
-			exportContact.setURL(c.get(VCARD.URL));
+		exportContact.setURL(c.getHomePage());
 
 		Communications communications = new CommunicationsImpl();
 		exportContact.setCommunications(communications);
 
 		// add email addresses
-		EmailAddress adr = new EmailAddressImpl();
-		if (c.exists(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET)) {
-			adr.setType(EmailAddress.TYPE_INTERNET);
-			adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET));
-			communications.addEmailAddress(adr);
-		}
-		if (c.exists(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400)) {
-			adr.setType(EmailAddress.TYPE_X400);
-			adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400));
-			communications.addEmailAddress(adr);
-		}
 
-		if (c.exists(VCARD.EMAIL, VCARD.EMAIL_TYPE_PREF)) {
-			adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_PREF));
-			communications.setPreferredEmailAddress(adr);
+		Iterator it = c.getEmailIterator();
+		while (it.hasNext()) {
+			EmailModel model = (EmailModel) it.next();
+			EmailAddress adr = new EmailAddressImpl();
+			adr.setType(EmailAddress.TYPE_INTERNET);
+			adr.setAddress(model.getAddress());
+			communications.addEmailAddress(adr);
 		}
 
 		OrganizationalIdentity organizationalIdentity = new OrganizationalIdentityImpl();
@@ -134,8 +125,7 @@ public class VCardParser {
 		organizationalIdentity.setOrganization(new OrganizationImpl());
 
 		// set name of organization
-		if (c.exists(VCARD.ORG))
-			organizationalIdentity.getOrganization().setName(c.get(VCARD.ORG));
+		organizationalIdentity.getOrganization().setName(c.getOrganisation());
 
 		// save contact to outputstream
 		marshaller.marshallContact(out, exportContact);
@@ -148,7 +138,7 @@ public class VCardParser {
 	 *            inputstream to vCard data
 	 * @return contact
 	 */
-	public static IContact read(InputStream in) {
+	public static IContactModel read(InputStream in) {
 		ContactIOFactory ciof = Pim.getContactIOFactory();
 		ContactUnmarshaller unmarshaller = ciof.createContactUnmarshaller();
 		unmarshaller.setEncoding("UTF-8");
@@ -156,57 +146,57 @@ public class VCardParser {
 		net.wimpi.pim.contact.model.Contact importContact = unmarshaller
 				.unmarshallContact(in);
 
-		IContact c = new Contact();
+		ContactModel c = new ContactModel();
 
 		OrganizationalIdentity organisationalIdentity = importContact
 				.getOrganizationalIdentity();
 
 		// name of organisation
-		c.set(VCARD.ORG, organisationalIdentity.getOrganization().getName());
+		c.setOrganisation(organisationalIdentity.getOrganization().getName());
 
 		/*
 		 * not supported in ui anyway!
 		 * 
 		 * c.set(VCARD.ROLE, organisationalIdentity.getRole());
 		 * c.set(VCARD.TITLE, organisationalIdentity.getTitle());
-		 *  
+		 * 
 		 */
 
 		if (importContact.hasPersonalIdentity()) {
 			PersonalIdentity identity = importContact.getPersonalIdentity();
-
-			// displayname (Columba-specific additional attribute)
-			c.set(VCARD.DISPLAYNAME, identity.getSortString());
-
+			
 			// sort-string
-			c.set(VCARD.SORTSTRING, identity.getSortString());
+			c.setSortString(identity.getSortString());
 
 			// list of nick names
 			if (identity.getNicknameCount() > 0)
-				c.set(VCARD.NICKNAME, getString(identity.listNicknames()));
+				c.setNickName(ParserUtil.getStringOfArray(identity
+						.listNicknames(), ","));
 
 			// list of prefixes
 			if (identity.listPrefixes().length > 0)
-				c.set(VCARD.N_PREFIX, getString(identity.listPrefixes()));
+				c.setNamePrefix(ParserUtil.getStringOfArray(identity
+						.listPrefixes(), ","));
 
-			c.set(VCARD.N_FAMILY, identity.getLastname());
-			c.set(VCARD.N_GIVEN, identity.getFirstname());
+			c.setFamilyName(identity.getLastname());
+			c.setGivenName(identity.getFirstname());
 
 			// list of additional names (middle names)
 			if (identity.listAdditionalNames().length > 0)
-				c.set(VCARD.N_ADDITIONALNAMES, getString(identity
-						.listAdditionalNames()));
+				c.setAdditionalNames(ParserUtil.getStringOfArray(identity
+						.listAdditionalNames(), ","));
 
 			// list of suffices
 			if (identity.listSuffixes().length > 0)
-				c.set(VCARD.N_SUFFIX, getString(identity.listSuffixes()));
+				c.setNameSuffix(ParserUtil.getStringOfArray(identity
+						.listSuffixes(), ","));
 
 			// formatted name
-			c.formatSet(VCARD.FN, identity.getFormattedName());
+			c.setFormattedName(identity.getFormattedName());
 		}
 
 		// url to website/homepage
-		c.set(VCARD.URL, importContact.getURL());
+		c.setHomePage(importContact.getURL());
 
 		// email addresses
 		if (importContact.hasCommunications()) {
@@ -216,87 +206,12 @@ public class VCardParser {
 			while (it.hasNext()) {
 				EmailAddress adr = (EmailAddress) it.next();
 				String type = adr.getType();
-				if (type.equals(EmailAddress.TYPE_INTERNET))
-					c.set(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET, adr
-							.getAddress());
-				else if (type.equals(EmailAddress.TYPE_X400))
-					c.set(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400, adr.getAddress());
+				c.addEmail(new EmailModel(adr.getAddress(),
+						EmailModel.TYPE_WORK));
 			}
 		}
 
-		/*
-		 * 
-		 * not supported in ui anyway
-		 * 
-		 * 
-		 * if (importContact.getAddressCount() > 0) {
-		 * 
-		 * Iterator it = importContact.getAddresses(); Address address =
-		 * (Address) it.next();
-		 * 
-		 * StringBuffer buf = new StringBuffer(); if ( address.isDomestic() )
-		 * buf.append(VCARD.ADR_TYPE_DOM+","); if ( address.isHome() )
-		 * buf.append(VCARD.ADR_TYPE_HOME+","); if ( address.isInternational() )
-		 * buf.append(VCARD.ADR_TYPE_INTL+","); if ( address.isParcel() )
-		 * buf.append(VCARD.ADR_TYPE_PARCEL+","); if ( address.isPostal() )
-		 * buf.append(VCARD.ADR_TYPE_POSTAL+","); if ( address.isWork() )
-		 * buf.append(VCARD.ADR_TYPE_WORK+","); // remove last "," character
-		 * buf.substring(0, buf.length()-1); // country c.set(VCARD.ADR_COUNTRY,
-		 * address.getCountry());
-		 * 
-		 * c.set(VCARD.ADR_POSTOFFICEBOX, address.getPostBox());
-		 * c.set(VCARD.ADR_EXTENDEDADDRESS, address.getExtended());
-		 * c.set(VCARD.ADR_STREETADDRESS, address.getStreet());
-		 * c.set(VCARD.ADR_REGION, address.getRegion());
-		 * c.set(VCARD.ADR_POSTALCODE, address.getPostalCode()); // address
-		 * label c.set(VCARD.LABEL_TYPE_DOM, address.getLabel());
-		 * c.set(VCARD.LABEL_TYPE_INTL, address.getLabel());
-		 * c.set(VCARD.LABEL_TYPE_POSTAL, address.getLabel());
-		 * c.set(VCARD.LABEL_TYPE_PARCEL, address.getLabel());
-		 * c.set(VCARD.LABEL_TYPE_HOME, address.getLabel());
-		 * c.set(VCARD.LABEL_TYPE_WORK, address.getLabel());
-		 * c.set(VCARD.LABEL_TYPE_PREF, address.getLabel()); }
-		 */
-
 		return c;
-	}
-
-	/**
-	 * Create array from comma-separated string.
-	 * 
-	 * @param s
-	 *            comma-separated string
-	 * @return string array
-	 */
-	static String[] getType(String s) {
-		ArrayList list = new ArrayList();
-
-		StringTokenizer tok = new StringTokenizer(s, ",");
-		while (tok.hasMoreTokens()) {
-			String t = tok.nextToken();
-			list.add(t);
-		}
-
-		return (String[]) list.toArray(new String[] { "" });
-
-	}
-
-	/**
-	 * Create comma-separated string from string array.
-	 * 
-	 * @param s
-	 *            string array
-	 * @return comma separated string
-	 */
-	static String getString(String[] s) {
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < s.length; i++) {
-			buf.append(s[i]);
-			if (i < s.length - 1)
-				buf.append(",");
-		}
-
-		return buf.toString();
 	}
 
 }

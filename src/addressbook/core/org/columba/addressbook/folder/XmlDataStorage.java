@@ -19,8 +19,8 @@ package org.columba.addressbook.folder;
 
 import java.io.File;
 
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModelFactory;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
@@ -47,17 +47,16 @@ public class XmlDataStorage implements DataStorage {
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#load(java.lang.Object)
 	 */
-	public IContact load(Object uid) throws Exception {
+	public IContactModel load(Object uid) throws Exception {
 		File file = getFile(uid);
 
 		Document doc = XmlNewIO.load(file);
 
 		if ( doc == null) return null;
 		
-		IContact contact = new Contact(doc, uid);
-		
+		IContactModel model = ContactModelFactory.unmarshall(doc, ((Integer) uid).toString());	
 
-		return contact;
+		return model;
 	}
 
 	/**
@@ -72,20 +71,22 @@ public class XmlDataStorage implements DataStorage {
 
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#save(java.lang.Object,
-	 *      org.columba.addressbook.folder.Contact)
+	 *      IContactModel)
 	 */
-	public void save(Object uid, IContact contact) throws Exception {
+	public void save(Object uid, IContactModel contact) throws Exception {
 		File file = getFile(uid);
 
-		XmlNewIO.save(contact.getDocument(), file);
+		Document doc = ContactModelFactory.marshall(contact);
+		
+		XmlNewIO.save(doc, file);
 
 	}
 
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#modify(java.lang.Object,
-	 *      org.columba.addressbook.folder.Contact)
+	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContact contact) throws Exception {
+	public void modify(Object uid, IContactModel contact) throws Exception {
 		save(uid, contact);
 
 	}

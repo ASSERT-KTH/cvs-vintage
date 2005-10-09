@@ -22,7 +22,9 @@ import java.io.FileReader;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
-import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.EmailModel;
+import org.columba.addressbook.model.PhoneModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**
@@ -38,7 +40,8 @@ public class CSVAddressbookImporter extends DefaultAddressbookImporter {
 		super();
 	}
 
-	public CSVAddressbookImporter(File sourceFile, AbstractFolder destinationFolder) {
+	public CSVAddressbookImporter(File sourceFile,
+			AbstractFolder destinationFolder) {
 		super(sourceFile, destinationFolder);
 	}
 
@@ -53,7 +56,7 @@ public class CSVAddressbookImporter extends DefaultAddressbookImporter {
 			int counter = -1;
 
 			// create new contact card
-			Contact card = new Contact();
+			ContactModel card = new ContactModel();
 
 			StringBuffer token = new StringBuffer();
 			int pos = 0;
@@ -65,28 +68,25 @@ public class CSVAddressbookImporter extends DefaultAddressbookImporter {
 					counter++;
 
 					if (counter == 0) {
-
-						card.set("n", "given", token.toString());
+						card.setGivenName(token.toString());
 					} else if (counter == 1) {
-
-						card.set("n", "family", token.toString());
+						card.setFamilyName(token.toString());
 					} else if (counter == 2) {
-
-						card.set("displayname", token.toString());
+						card.setSortString(token.toString());
 					} else if (counter == 3) {
-						card.set("nickname", token.toString());
+						card.setNickName(token.toString());
 					} else if (counter == 4) {
-
-						card.set("email", "internet", token.toString());
+						card.addEmail(new EmailModel(token.toString(),
+								EmailModel.TYPE_WORK));
 					} else if (counter == 5) {
-
-						card.set("email", "x-email2", token.toString());
+						card.addEmail(new EmailModel(token.toString(),
+								EmailModel.TYPE_HOME));
 					} else if (counter == 8) {
-
-						card.set("tel", "work", token.toString());
+						card.addPhone(new PhoneModel(token.toString(),
+								PhoneModel.TYPE_BUSINESS_PHONE));
 					} else if (counter == 9) {
-
-						card.set("tel", "home", token.toString());
+						card.addPhone(new PhoneModel(token.toString(),
+								PhoneModel.TYPE_HOME_PHONE));
 					}
 
 					token = new StringBuffer();
@@ -108,10 +108,8 @@ public class CSVAddressbookImporter extends DefaultAddressbookImporter {
 	}
 
 	public String getDescription() {
-		return AddressbookResourceLoader.getString(
-			"dialog",
-			"addressbookimport",
-			"mozillacsvaddressbook_description");
+		return AddressbookResourceLoader.getString("dialog",
+				"addressbookimport", "mozillacsvaddressbook_description");
 	}
 
 }

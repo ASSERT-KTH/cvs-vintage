@@ -25,6 +25,10 @@ package org.columba.addressbook.model;
  * @author fdietz
  */
 public interface VCARD {
+	
+	public static String VCARD = "vcard";
+	
+	public static String ID = "id";
 
 	/** *********************** Identification Types *********************** */
 
@@ -92,6 +96,7 @@ public interface VCARD {
 	 * Columba-specific extension
 	 * <p>
 	 * Name which is displayed throughout Columba.
+	 * @deprecated	use formattedName instead
 	 */
 	public static String DISPLAYNAME = "displayname";
 
@@ -130,8 +135,10 @@ public interface VCARD {
 
 	public static String ADR_STREETADDRESS = "street";
 
+	// city
 	public static String ADR_LOCALITY = "locality";
 
+	// state/province/county
 	public static String ADR_REGION = "region";
 
 	public static String ADR_POSTALCODE = "pcode";
@@ -296,5 +303,33 @@ public interface VCARD {
 	 */
 	public static String ORG = "org";
 
+	public static String X_COLUMBA_DEPARTMENT = "department";
+	public static String X_COLUMBA_OFFICE = "office";
+	
+	
 	public static String URL = "url";
+	
+	public static String BDAY = "bday";
+	
+	public static String NOTE = "note";
+	
+	public static String CATEGORY = "category";
+	
+	public static String PHOTO = "photo";
+	/**
+	 * Columba-specific extensions
+	 */
+	 public static String X_COLUMBA_URL_BLOG = "url-blog";
+	 public static String X_COLUMBA_URL_CALENDAR = "url-calendar";
+	 public static String X_COLUMBA_URL_FREEBUSY = "url-freebusy";
+	 
+	 public static String IM = "im";
+	 
+	 public static String X_COLUMBA_IM_YAHOO = "im-yahoo";
+	 public static String X_COLUMBA_IM_AIM = "im-aim";
+	 public static String X_COLUMBA_IM_JABBER = "im-jabber";
+	 public static String X_COLUMBA_IM_MSN = "im-msn";
+	 public static String X_COLUMBA_IM_ICQ = "im-icq";
+	 
+	 
 }

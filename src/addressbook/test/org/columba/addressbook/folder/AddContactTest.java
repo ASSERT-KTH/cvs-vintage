@@ -17,9 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
-import org.columba.addressbook.model.VCARD;
+import org.columba.addressbook.model.ContactModel;
 
 /**
  * @author fdietz
@@ -39,9 +37,9 @@ public class AddContactTest extends AbstractFolderTstCase {
 	 * Class under test for Object add(Contact)
 	 */
 	public void testAddContact() throws Exception {
-		IContact c = new Contact();
+		ContactModel c = new ContactModel();
 
-		c.set(VCARD.NICKNAME, "nickname");
+		c.setNickName("nickname");
 
 		Object uid = getSourceFolder().add(c);
 
@@ -50,25 +48,25 @@ public class AddContactTest extends AbstractFolderTstCase {
 	}
 
 	public void testAddContact2() throws Exception {
-		IContact c = new Contact();
+		ContactModel c = new ContactModel();
 
-		c.set(VCARD.NICKNAME, "nickname");
+		c.setNickName("nickname");
 
 		Object uid = getSourceFolder().add(c);
 
 		assertEquals("nextUid", 1, getSourceFolder().getNextMessageUid());
 
-		c = new Contact();
+		c = new ContactModel();
 
-		c.set(VCARD.NICKNAME, "nickname 2");
+		c.setNickName("nickname 2");
 
 		uid = getSourceFolder().add(c);
 
 		assertEquals("nextUid", 2, getSourceFolder().getNextMessageUid());
 
-		c = new Contact();
+		c = new ContactModel();
 
-		c.set(VCARD.NICKNAME, "nickname 3");
+		c.setNickName("nickname 3");
 
 		uid = getSourceFolder().add(c);
 

@@ -26,12 +26,12 @@ import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.folder.IGroupFolder;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.addressbook.model.VCARD;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.logging.Logging;
 import org.columba.mail.connector.ServiceConnector;
@@ -105,7 +105,7 @@ public class ListBuilder {
 						.getCollectedAddresses();
 
 				// try to find a matching contact item
-				IContact item = null;
+				IContactModel item = null;
 				try {
 
 					Object uid = personal.exists(s);
@@ -123,10 +123,13 @@ public class ListBuilder {
 				}
 
 				// if match found
-				if (item != null)
-					result
-							.add(item.get(VCARD.EMAIL,
-									VCARD.EMAIL_TYPE_INTERNET));
+				if (item != null) {
+					// simply get the first address
+					// TODO: use preferred one
+					Iterator it2 = item.getEmailIterator(); 
+					if ( it2.hasNext() )
+						result.add( ((EmailModel)it2.next()).getAddress());
+				}
 				else
 					result.add(s);
 			}

@@ -17,9 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
-import org.columba.addressbook.model.VCARD;
+import org.columba.addressbook.model.ContactModel;
 
 /**
  * @author fdietz
@@ -39,12 +37,12 @@ public class RemoveContactTest extends AbstractFolderTstCase {
 	 * Class under test for void remove(Object)
 	 */
 	public void testRemoveObject() throws Exception {
-		IContact c = new Contact();
+		ContactModel c = new ContactModel();
 
-		c.set(VCARD.NICKNAME, "nickname");
+		c.setNickName("nickname");
 
 		Object uid = getSourceFolder().add(c);
-
+		
 		getSourceFolder().remove(uid);
 
 		assertEquals("folder contact count == 0", 0, getSourceFolder().count());

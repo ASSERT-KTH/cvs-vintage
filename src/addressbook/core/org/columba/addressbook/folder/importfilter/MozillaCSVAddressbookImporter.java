@@ -22,84 +22,89 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.EmailModel;
+import org.columba.addressbook.model.PhoneModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-
 
 /**
  * @version 1.0
  * @author
  */
 public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
-	
-	private static final java.util.logging.Logger LOG = 
-        java.util.logging.Logger.getLogger("org.columba.addressbook.folder.importfilter"); //$NON-NLS-1$
-	
-    public MozillaCSVAddressbookImporter() {
-        super();
-    }
 
-    public MozillaCSVAddressbookImporter(File sourceFile,
-        AbstractFolder destinationFolder) {
-        super(sourceFile, destinationFolder);
-    }
+	private static final java.util.logging.Logger LOG = java.util.logging.Logger
+			.getLogger("org.columba.addressbook.folder.importfilter"); //$NON-NLS-1$
 
-    public void importAddressbook(File file) throws Exception {
-        LOG.info("importing addressbook::::"); //$NON-NLS-1$
+	public MozillaCSVAddressbookImporter() {
+		super();
+	}
 
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        String str;
+	public MozillaCSVAddressbookImporter(File sourceFile,
+			AbstractFolder destinationFolder) {
+		super(sourceFile, destinationFolder);
+	}
 
-        while ((str = in.readLine()) != null) {
-            // start parsing line
-            int counter = -1;
-            IContact card = new Contact();
+	public void importAddressbook(File file) throws Exception {
+		LOG.info("importing addressbook::::"); //$NON-NLS-1$
 
-            StringBuffer token = new StringBuffer();
-            int pos = 0;
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String str;
 
-            while (pos < str.length()) {
-                char ch = str.charAt(pos);
+		while ((str = in.readLine()) != null) {
+			// start parsing line
+			int counter = -1;
+			ContactModel card = new ContactModel();
 
-                if (ch == ',') {
-                    // found new token
-                    counter++;
+			StringBuffer token = new StringBuffer();
+			int pos = 0;
 
-                    if (counter == 0) {
-                        card.set("n", "given", token.toString());
-                    } else if (counter == 1) {
-                        card.set("n", "family", token.toString());
-                    } else if (counter == 2) {
-                        card.set("displayname", token.toString());
-                    } else if (counter == 3) {
-                        card.set("nickname", token.toString());
-                    } else if (counter == 4) {
-                        card.set("email", "internet", token.toString());
-                    } else if (counter == 5) {
-                        card.set("email", "x-email2", token.toString());
-                    } else if (counter == 8) {
-                        card.set("tel", "work", token.toString());
-                    } else if (counter == 9) {
-                        card.set("tel", "home", token.toString());
-                    }
+			while (pos < str.length()) {
+				char ch = str.charAt(pos);
 
-                    token = new StringBuffer();
-                } else {
-                    token.append(ch);
-                }
+				if (ch == ',') {
+					// found new token
+					counter++;
 
-                pos++;
-            }
+					if (counter == 0) {
+						card.setGivenName(token.toString());
+					} else if (counter == 1) {
+						card.setFamilyName(token.toString());
+					} else if (counter == 2) {
+						// backwards compatibility
+						card.setSortString(token.toString());
+					} else if (counter == 3) {
+						card.setNickName(token.toString());
+					} else if (counter == 4) {
+						card.addEmail(new EmailModel(token.toString(),
+								EmailModel.TYPE_WORK));
+					} else if (counter == 5) {
+						card.addEmail(new EmailModel(token.toString(),
+								EmailModel.TYPE_HOME));
+					} else if (counter == 8) {
+						card.addPhone(new PhoneModel(token.toString(),
+								PhoneModel.TYPE_BUSINESS_PHONE));
+					} else if (counter == 9) {
+						card.addPhone(new PhoneModel(token.toString(),
+								PhoneModel.TYPE_HOME_PHONE));
+					}
 
-            saveContact(card);
-        }
+					token = new StringBuffer();
+				} else {
+					token.append(ch);
+				}
 
-        in.close();
-    }
+				pos++;
+			}
 
-    public String getDescription() {
-        return AddressbookResourceLoader.getString("dialog",
-            "addressbookimport", "mozillacsvaddressbook_description");
-    }
+			saveContact(card);
+		}
+
+		in.close();
+	}
+
+	public String getDescription() {
+		return AddressbookResourceLoader.getString("dialog",
+				"addressbookimport", "mozillacsvaddressbook_description");
+	}
 }

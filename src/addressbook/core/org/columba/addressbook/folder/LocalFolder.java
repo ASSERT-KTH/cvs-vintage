@@ -18,7 +18,7 @@ package org.columba.addressbook.folder;
 import java.util.logging.Logger;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactModel;
 
 
 /**
@@ -54,9 +54,9 @@ public abstract class LocalFolder extends AbstractFolder {
 
   
 	/**
-	 * @see org.columba.addressbook.folder.IContactStorage#add(org.columba.addressbook.folder.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	public Object add(IContact contact) throws Exception{
+	public Object add(IContactModel contact) throws Exception{
 		Object uid = super.add(contact);
 
         getDataStorageInstance().save(uid, contact);
@@ -66,13 +66,13 @@ public abstract class LocalFolder extends AbstractFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public IContact get(Object uid) throws Exception{
+	public IContactModel get(Object uid) throws Exception{
 		return getDataStorageInstance().load(uid);
 	}
 	/**
-	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object, org.columba.addressbook.folder.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object, IContactModel)
 	 */
-	public void modify(Object uid, IContact contact) throws Exception{
+	public void modify(Object uid, IContactModel contact) throws Exception{
 		super.modify(uid, contact);
 		
 		getDataStorageInstance().modify(uid, contact);

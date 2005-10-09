@@ -29,14 +29,15 @@ import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IGroupFolder;
-import org.columba.addressbook.gui.dialog.contact.ContactDialog;
+import org.columba.addressbook.gui.dialog.contact.ContactEditorDialog;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.focus.FocusManager;
 import org.columba.addressbook.gui.focus.FocusOwner;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
@@ -102,9 +103,9 @@ public class EditPropertiesAction extends DefaultTableAction implements
 				return;
 			}
 
-			IContact card = null;
+			IContactModel card = null;
 			try {
-				card = (IContact) folder.get(uids[0]);
+				card = (IContactModel) folder.get(uids[0]);
 			} catch (Exception e) {
 
 				if (Logging.DEBUG)
@@ -113,14 +114,15 @@ public class EditPropertiesAction extends DefaultTableAction implements
 				new ErrorDialog(e.getMessage(), e);
 			}
 
-			ContactDialog dialog = new ContactDialog(mediator.getView()
+			// 
+			ContactEditorDialog dialog = new ContactEditorDialog(mediator.getView()
 					.getFrame(), card);
 
 			if (dialog.getResult()) {
 
 				try {
 					// modify card properties in folder
-					folder.modify(uids[0], card);
+					folder.modify(uids[0], dialog.getDestModel());
 				} catch (Exception e1) {
 					if (Logging.DEBUG)
 						e1.printStackTrace();

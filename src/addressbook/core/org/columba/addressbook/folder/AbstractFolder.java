@@ -27,9 +27,9 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItemList;
-import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.config.Config;
@@ -241,9 +241,9 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 */
 
 	/**
-	 * @see org.columba.addressbook.folder.IContactStorage#add(org.columba.addressbook.folder.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	public Object add(IContact contact) throws Exception {
+	public Object add(IContactModel contact) throws Exception {
 		Object uid = generateNextMessageUid();
 
 		IContactItem item = new ContactItem(contact);
@@ -259,9 +259,9 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * 
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
-	 *      org.columba.addressbook.folder.Contact)
+	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContact contact) throws Exception {
+	public void modify(Object uid, IContactModel contact) throws Exception {
 
 		IContactItem item = new ContactItem(contact);
 
@@ -284,7 +284,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public abstract IContact get(Object uid) throws Exception;
+	public abstract IContactModel get(Object uid) throws Exception;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#count()

@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactModel;
 
 /**
  * Contact storage facility.
@@ -33,13 +33,13 @@ public interface IContactStorage extends IFolder{
 	
 	boolean exists(Object uid) throws Exception;
 
-	IContact get(Object uid) throws Exception;
+	IContactModel get(Object uid) throws Exception;
 
 	void remove(Object uid) throws Exception;
 
-	void modify(Object uid, IContact contact) throws Exception;
+	void modify(Object uid, IContactModel contact) throws Exception;
 
-	Object add(IContact contact) throws Exception;
+	Object add(IContactModel contact) throws Exception;
 	
 	
 }

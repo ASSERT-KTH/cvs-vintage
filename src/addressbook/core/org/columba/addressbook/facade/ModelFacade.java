@@ -17,13 +17,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
-import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroupItem;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
@@ -68,8 +68,8 @@ public class ModelFacade implements IModelFacade {
 	/**
 	 * @see org.columba.addressbook.facade.IModelFacade#createContact()
 	 */
-	public IContact createContact() {
-		return new Contact();
+	public IContactModel createContact() {
+		return new ContactModel();
 	}
 
 	/**

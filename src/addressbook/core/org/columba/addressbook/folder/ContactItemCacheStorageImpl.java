@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.ContactModelFactory;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.WrongFileFormatException;
 import org.columba.core.logging.Logging;
 import org.columba.core.xml.XmlNewIO;
@@ -118,7 +118,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#add(org.columba.addressbook.folder.HeaderItem)
+	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#add(IContactModel)
 	 */
 	public void add(Object uid, IContactItem item) throws Exception {
 		getContactItemMap().add(uid, item);
@@ -135,7 +135,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#modify(java.lang.Object,
-	 *      org.columba.addressbook.folder.HeaderItem)
+	 *      IContactModel)
 	 */
 	public void modify(Object uid, IContactItem item) throws Exception {
 		getContactItemMap().remove(item);
@@ -201,8 +201,9 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	            	
 	            	Document doc = XmlNewIO.load(newFile);
 	            
-	            	IContact contact = new Contact(doc, new Integer(i));
-	            	IContactItem item = new ContactItem(contact);
+	            	IContactModel model = ContactModelFactory.unmarshall(doc, new Integer(i).toString());
+	            	
+	            	IContactItem item = new ContactItem(model);
 	  
 	            	item.setUid(new Integer(i));
 	             

@@ -23,7 +23,7 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.gui.frame.FrameManager;
@@ -132,7 +132,7 @@ public abstract class DefaultAddressbookImporter implements IExtensionInterface 
 	/**
 	 * use this method to save a message to the specified destination folder
 	 */
-	protected void saveContact(IContact card) throws Exception {
+	protected void saveContact(IContactModel card) throws Exception {
 		destinationFolder.add(card);
 
 		counter++;

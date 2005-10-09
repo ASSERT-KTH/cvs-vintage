@@ -17,9 +17,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.IContact;
-import org.columba.addressbook.model.VCARD;
+import org.columba.addressbook.model.ContactModel;
+import org.columba.addressbook.model.IContactModel;
 
 /**
  * @author fdietz
@@ -37,18 +36,18 @@ public class ModifyContactTest extends AbstractFolderTstCase {
 	
 
 	public void testModify() throws Exception{
-		IContact c = new Contact();
+		ContactModel c = new ContactModel();
 
-		c.set(VCARD.NICKNAME, "old");
+		c.setNickName("nickname");
 
 		Object uid = getSourceFolder().add(c);
 
-		c.set(VCARD.NICKNAME, "new");
+		c.setNickName("new");
 		getSourceFolder().modify(uid, c);
 		
-		IContact c2 = getSourceFolder().get(uid);
+		IContactModel c2 = getSourceFolder().get(uid);
 
-		assertEquals("nichname", "new", c2.get(VCARD.NICKNAME));
+		assertEquals("nichname", "new", c2.getNickName());
 	}
 
 }
