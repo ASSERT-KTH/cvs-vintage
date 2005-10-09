@@ -1,5 +1,5 @@
 /*
- * HelpViewer.java - HTML Help viewer
+ * HelpViewerComponent.java - HTML Help viewer
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * HTML, and implements a URL history.
  * 
  * @author Slava Pestov
- * @version $Id: HelpViewerComponent.java,v 1.1 2005/10/06 09:10:49 ezust Exp $
+ * @version $Id: HelpViewerComponent.java,v 1.2 2005/10/09 23:06:28 ezust Exp $
  */
 public class HelpViewerComponent extends JPanel implements 
 	EBComponent, HelpViewer, HelpHistoryModelListener
