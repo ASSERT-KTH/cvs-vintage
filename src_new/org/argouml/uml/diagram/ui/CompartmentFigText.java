@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.24 2005/07/25 13:49:04 bobtarling Exp $
+// $Id: CompartmentFigText.java,v 1.25 2005/10/10 00:56:15 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,20 +115,8 @@ public class CompartmentFigText extends FigSingleLineText {
      * @return  Current fill status&mdash;always <code>true</code>.
      */
     public boolean getFilled() {
-        return true;
+        return false;
     }
-
-
-    /**
-     * Override for correct graphical behaviour.<p>
-     *
-     * @return  Current fill colour&mdash;always the fill colour of the
-     *          associated compartment fig.
-     */
-    public Color getFillColor() {
-        return refFig.getFillColor();
-    }
-
 
     /**
      * Override for correct graphical behaviour.<p>

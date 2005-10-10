@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.123 2005/10/05 23:53:58 bobtarling Exp $
+// $Id: PropPanel.java,v 1.124 2005/10/10 00:56:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
-import org.argouml.kernel.NsumlEnabler;
+import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ContainerDispatcher;
 import org.argouml.model.Model;
@@ -208,7 +208,7 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
     public JLabel addField(String label, Component component) {
         // This test will prevent us placing a stereotype
         // combo unless NSUML
-        if (NsumlEnabler.isNsuml() || component != null) {
+        if (SingleStereotypeEnabler.isEnabled() || component != null) {
             JLabel jlabel = new JLabel(label);
             jlabel.setFont(smallFont);
             component.setFont(smallFont);

@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.1 2005/10/08 12:56:12 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.2 2005/10/10 00:56:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.tigris.gef.presentation.Fig;
 /**
  * @author Bob Tarling
  */
-public class FigStereotypesCompartment extends FigFeaturesCompartment {
+public class FigStereotypesCompartment extends FigCompartment {
     /**
      * The constructor.
      *
@@ -54,9 +54,6 @@ public class FigStereotypesCompartment extends FigFeaturesCompartment {
      * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#populate()
      */
     public void populate() {
-        if (!isVisible()) {
-            return;
-        }
         Object modelElement = getGroup().getOwner();
         Fig bigPort = this.getBigPort();
         int xpos = bigPort.getX();

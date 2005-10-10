@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.197 2005/10/08 12:56:12 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.198 2005/10/10 00:56:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,9 +74,10 @@ import org.argouml.cognitive.ToDoList;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
-import org.argouml.kernel.NsumlEnabler;
+import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.language.helpers.NotationHelper;
 import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.DiElement;
 import org.argouml.model.Model;
@@ -293,7 +294,7 @@ public abstract class FigNodeModelElement
         name.setFilled(true);
         name.setText(placeString());
 
-        if (NsumlEnabler.isNsuml()) {
+        if (SingleStereotypeEnabler.isEnabled()) {
             stereotypeFig = new FigSingleLineText(10, 10, 90, 15, true);
         } else {
             stereotypeFig = new FigStereotypesCompartment(10, 10, 90, 15);
@@ -471,7 +472,7 @@ public abstract class FigNodeModelElement
             }
 
             // Add stereotypes submenu
-            if (!NsumlEnabler.isNsuml()) {
+            if (!SingleStereotypeEnabler.isEnabled()) {
                 Collection models =
                     ProjectManager.getManager().getCurrentProject().getModels();
                 ArrayList availableStereotypes =
@@ -1718,7 +1719,9 @@ class ActionAddStereotype extends AbstractAction {
     private Object stereotype;
     
     public ActionAddStereotype(Object modelElement, Object stereotype) {
-        super("<<" + Model.getFacade().getName(stereotype) + ">>");
+        super(NotationHelper.getLeftGuillemot() + 
+                Model.getFacade().getName(stereotype) + 
+                NotationHelper.getRightGuillemot());
         this.modelElement = modelElement;
         this.stereotype = stereotype;
     }

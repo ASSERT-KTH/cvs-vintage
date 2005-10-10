@@ -1,4 +1,4 @@
-// $Id: FigSingleLineText.java,v 1.3 2005/09/07 21:03:52 linus Exp $
+// $Id: FigSingleLineText.java,v 1.4 2005/10/10 00:56:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,5 @@ public class FigSingleLineText extends FigText {
         setTabAction(FigText.END_EDITING);
         setReturnAction(FigText.END_EDITING);
         setLineWidth(0);
-//        name.setReturnAction(FigText.END_EDITING);
-//        name.setTabAction(FigText.END_EDITING);
     }
 }
