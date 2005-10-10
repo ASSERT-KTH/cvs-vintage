@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.178 2005/10/10 21:57:07 bobtarling Exp $
+// $Id: FigClass.java,v 1.179 2005/10/10 23:17:29 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,8 +87,8 @@ public class FigClass extends FigClassifierBox
     FigAttributesCompartment attributesFigCompartment;
     
     Fig borderFig;
-    Fig attributesSeperator;
     Fig operationsSeperator;
+    Fig attributesSeperator;
     
     /**
      * Text highlighted by mouse actions on the diagram.<p>
@@ -187,9 +187,7 @@ public class FigClass extends FigClassifierBox
         borderFig.setLineColor(Color.black);
         
         operationsSeperator = new FigLine(10, 10, 11, 10);
-//        operationsSeperator.setLineColor(Color.red);
         attributesSeperator = new FigLine(10, 10, 11, 10);
-//        attributesSeperator.setLineColor(Color.green);
         
         if (SingleStereotypeEnabler.isEnabled()) {
             getStereotypeFig().setLineWidth(1);
@@ -968,7 +966,7 @@ public class FigClass extends FigClassifierBox
      */
     protected void setBoundsImpl(int x, int y, int w, int h) {
         if (SingleStereotypeEnabler.isEnabled()) {
-            setBoundsImplNsuml(x, y, w, h);
+            setBoundsImplSingleStereotype(x, y, w, h);
             return;
         }
         
@@ -1051,7 +1049,7 @@ public class FigClass extends FigClassifierBox
         firePropChange("bounds", oldBounds, getBounds());
     }
 
-    protected void setBoundsImplNsuml(int x, int y, int w, int h) {
+    protected void setBoundsImplSingleStereotype(int x, int y, int w, int h) {
 
         // Save our old boundaries (needed later), and get minimum size
         // info. "aSize will be used to maintain a running calculation of our
