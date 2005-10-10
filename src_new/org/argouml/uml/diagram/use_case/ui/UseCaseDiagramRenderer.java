@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.24 2005/07/14 17:16:19 bobtarling Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.25 2005/10/10 20:25:56 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.uml.diagram.UmlDiagramRenderer;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
 import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
+import org.argouml.uml.diagram.static_structure.ui.FigPackage;
 import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
@@ -102,6 +103,8 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
             figNode = new FigUseCase(gm, node);
         } else if (Model.getFacade().isAComment(node)) {
             figNode = new FigComment(gm, node);
+        } else if (Model.getFacade().isAPackage(node)) {
+            figNode = new FigPackage(gm, node);
         } else {
             LOG.debug(this.getClass().toString()
                   + ": getFigNodeFor(" + gm.toString() + ", "
