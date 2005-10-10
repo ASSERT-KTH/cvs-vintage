@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBox.java,v 1.10 2005/04/21 16:12:53 bobtarling Exp $
+// $Id: UMLReceptionSignalComboBox.java,v 1.11 2005/10/10 11:50:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
+import org.argouml.uml.ui.UMLListCellRenderer2;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
 
 /**
@@ -42,10 +43,11 @@ public class UMLReceptionSignalComboBox extends UMLComboBox2 {
      * @param arg0 the model
      */
     public UMLReceptionSignalComboBox(
-        UMLUserInterfaceContainer container,
-        UMLComboBoxModel2 arg0) {
+            UMLUserInterfaceContainer container,
+            UMLComboBoxModel2 arg0) {
         // TODO: This super constructor has been deprecated
         super(arg0);
+        setRenderer(new UMLListCellRenderer2(true));
     }
 
     /**
