@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.10 2005/10/10 00:56:15 bobtarling Exp $
+// $Id: FigFeaturesCompartment.java,v 1.11 2005/10/10 21:57:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,32 +161,6 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
     }
     
     
-    protected void setBoundsImpl(int x, int y, int w, int h) {
-        if (SingleStereotypeEnabler.isEnabled()) {
-            super.setBoundsImpl(x, y, w, h);
-        } else {
-            int newW = w;
-            int n = getFigs().size() - 1;
-            int newH = h;
-            
-            Iterator figs = iterator();
-            Fig fi;
-            int fw, yy = y;
-            while (figs.hasNext()) {
-                fi = (Fig) figs.next();
-                if (fi != getBigPort()) {
-                    fw = fi.getMinimumSize().width;
-                    fi.setBounds(x + 1, yy + 1, fw, fi.getHeight());
-                    if (newW < fw + 2) {
-                        newW = fw + 2;
-                    }
-                    yy += fi.getHeight();
-                }
-            }
-            getBigPort().setBounds(x, y, newW, newH);
-            calcBounds();
-        }
-    }
     /**
      * The minimum width is the minimum width of the widest child
      * The minium height is the total minimum height of all child figs.
