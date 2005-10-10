@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.176 2005/10/10 00:56:15 bobtarling Exp $
+// $Id: FigClass.java,v 1.177 2005/10/10 19:39:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,15 +220,8 @@ public class FigClass extends FigClassifierBox
         addFig(operationsSeperator);       //4
         addFig(attributesSeperator);       //4
 
-        getStereotypeFig().setFillColor(Color.red);
-        getNameFig().setFillColor(Color.green);
-        operationsFig.setFillColor(Color.blue);
-        attributesFigCompartment.setFillColor(Color.magenta);
-        
         getStereotypeFig().setFilled(false);
         getNameFig().setFilled(false);
-        operationsFig.setFilled(false);
-        attributesFigCompartment.setFilled(false);
 
         setSuppressCalcBounds(false);
         // Set the bounds of the figure to the total of the above (hardcoded)

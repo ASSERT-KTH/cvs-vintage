@@ -1,4 +1,4 @@
-// $Id: FigCompartment.java,v 1.12 2005/10/10 00:56:15 bobtarling Exp $
+// $Id: FigCompartment.java,v 1.13 2005/10/10 19:39:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public abstract class FigCompartment extends FigGroup {
      */
     public FigCompartment(int x, int y, int w, int h) {
         bigPort = new FigRect(x, y, w, h, Color.black, Color.white);
-        bigPort.setFilled(true);
+        bigPort.setFilled(SingleStereotypeEnabler.isEnabled());
         setFilled(true);
         
         if (SingleStereotypeEnabler.isEnabled()) {
