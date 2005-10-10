@@ -1,4 +1,4 @@
-// $Id: ModuleInterface.java,v 1.3 2005/06/25 19:16:34 linus Exp $
+// $Id: ModuleInterface.java,v 1.4 2005/10/10 21:06:32 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,16 +36,15 @@ public interface ModuleInterface {
      * Method to enable the module.<p>
      *
      * If it cannot enable the module because some other module is
-     * not enabled it can either return false or throw an exception.
+     * not enabled it can return <code>false</code>.
      * In that case the module loader will defer this attempt until
      * all other modules are loaded (or until some more of ArgoUML is loaded
      * if at startup). Eventually it is only this and some other modules
      * that is not loaded and they will then be listed as having problems.
      *
      * @return true if all went well
-     * @throws Exception if there is a problem
      */
-    boolean enable() throws Exception;
+    boolean enable();
 
     /**
      * Method to disable the module.<p>

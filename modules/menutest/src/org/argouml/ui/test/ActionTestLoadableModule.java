@@ -1,4 +1,4 @@
-// $Id: ActionTestLoadableModule.java,v 1.4 2005/01/09 21:10:40 linus Exp $
+// $Id: ActionTestLoadableModule.java,v 1.5 2005/10/10 21:06:32 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,7 @@ import org.argouml.moduleloader.ModuleInterface;
 /**
  * Module that registers itself to the Tools menu.<p>
  *
- * This is primarily designed to be able to test ModuleLoader2.
- * <p>
+ * This is primarily designed to be able to test ModuleLoader2.<p>
  *
  * @author Linus Tolke
  * @since  0.17.1
@@ -52,6 +51,9 @@ public final class ActionTestLoadableModule extends UMLAction
     private static final Logger LOG =
         Logger.getLogger(ActionTestLoadableModule.class);
 
+    /**
+     * The menu item.
+     */
     private JMenuItem menuItem;
 
     /**
@@ -80,17 +82,11 @@ public final class ActionTestLoadableModule extends UMLAction
     /**
      * @see ModuleInterface#enable()
      */
-    public boolean enable() throws Exception {
-	try {
-	    // Register into the Tools menu.
-	    GenericArgoMenuBar menubar =
-		(GenericArgoMenuBar) ProjectBrowser.getInstance().getJMenuBar();
-	    menubar.getTools().add(menuItem);
-	} catch (Throwable e) {
-	    LOG.debug("Some problem when adding the module.", e);
-	    disable();
-	    return false;
-	}
+    public boolean enable() {
+        // Register into the Tools menu.
+        GenericArgoMenuBar menubar =
+            (GenericArgoMenuBar) ProjectBrowser.getInstance().getJMenuBar();
+        menubar.getTools().add(menuItem);
 	return true;
     }
 
@@ -129,4 +125,9 @@ public final class ActionTestLoadableModule extends UMLAction
             return null;
         }
     }
+
+    /**
+     * The version uid.
+     */
+    private static final long serialVersionUID = -2570516012301142091L;
 }
