@@ -1,4 +1,4 @@
-// $Id: UseCasesTestSuite.java,v 1.4 2005/10/10 13:44:54 mkl Exp $
+// $Id: UseCasesTestSuite.java,v 1.5 2005/10/10 14:08:19 mkl Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ public class UseCasesTestSuite {
         TestSuite suite =
 	    new TestSuite("Tests for "
 			  + UseCasesTestSuite.class.getPackage().getName());
-	suite.addTestSuite(TestUMLExtendBaseComboBoxModel.class);
 	suite.addTestSuite(TestUMLExtendExtensionPointListModel.class);
 	suite.addTestSuite(TestUMLExtensionPointExtendListModel.class);
 	suite.addTestSuite(TestUMLExtensionPointLocationDocument.class);
