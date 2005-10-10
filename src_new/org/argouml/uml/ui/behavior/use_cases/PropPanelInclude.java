@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.40 2005/09/08 18:24:47 mkl Exp $
+// $Id: PropPanelInclude.java,v 1.41 2005/10/10 12:46:41 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,14 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
-import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
@@ -63,17 +64,15 @@ public class PropPanelInclude extends PropPanelModelElement {
 
         addSeperator();
 
-        JComboBox baseBox =
-	    new UMLComboBox2(new UMLIncludeBaseComboBoxModel(),
-			     ActionSetIncludeBase.getInstance());
+        JList baseBox =
+	    new UMLLinkedList(new UMLIncludeBaseListModel());
         addField(Translator.localize("label.usecase-base"),
-		 baseBox);
+		 getSingleRowScroll(baseBox));
 
-        JComboBox additionBox =
-	    new UMLComboBox2(new UMLIncludeAdditionComboBoxModel(),
-			     ActionSetIncludeAddition.getInstance());
+        JList additionBox =
+	    new UMLLinkedList(new UMLIncludeAdditionListModel());
         addField(Translator.localize("label.addition"),
-		 additionBox);
+		 getSingleRowScroll(additionBox));
 
         // Add the toolbar buttons:
         addAction(new ActionNavigateNamespace());
@@ -81,6 +80,15 @@ public class PropPanelInclude extends PropPanelModelElement {
         addAction(new ActionDeleteSingleModelElement());
     }
 
+    /**
+     * @return a scrollpane with a single row
+     */
+    protected JScrollPane getSingleRowScroll(JList list) {
+        list.setVisibleRowCount(1);
+        JScrollPane scroll = new JScrollPane(list);
+
+        return scroll;
+    }
 
     /**
      * Get the current base use case of the include relationship.<p>

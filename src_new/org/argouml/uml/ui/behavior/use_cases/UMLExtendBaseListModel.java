@@ -1,4 +1,4 @@
-// $Id: UMLIncludeAdditionComboBoxModel.java,v 1.26 2005/06/07 07:20:00 bobtarling Exp $
+// $Id: UMLExtendBaseListModel.java,v 1.1 2005/10/10 12:46:41 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,20 +25,24 @@
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLComboBoxModel2;
+import org.argouml.uml.ui.UMLModelElementListModel2;
+
 
 /**
- * @since Oct 7, 2002
+ * @since Oct 5, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
+public class UMLExtendBaseListModel extends UMLModelElementListModel2 {
+
+
+
+
 
     /**
-     * Constructor for UMLIncludeAdditionComboBoxModel.
+     * Constructor for UMLExtendBaseComboBoxModel.
      */
-    public UMLIncludeAdditionComboBoxModel() {
-//      there is a bug in NSUML so this model listens for base modelevents
-        super("base", false);
+    public UMLExtendBaseListModel() {
+        super("base");
         Model.getPump().addClassModelEventListener(this,
                 Model.getMetaTypes().getNamespace(), "ownedElement");
     }
@@ -47,35 +51,17 @@ public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        Object inc = /*(MInclude)*/ getTarget();
-        if (inc == null) {
-            return;
-        }
-        Object ns = Model.getFacade().getNamespace(inc);
-        addAll(Model.getModelManagementHelper().getAllModelElementsOfKind(ns,
-                Model.getMetaTypes().getUseCase()));
-        if (contains(Model.getFacade().getAddition(inc))) {
-            removeElement(Model.getFacade().getAddition(inc));
-        }
+        if (!isEmpty())
+            removeAllElements();
+        addElement(Model.getFacade().getBase(getTarget()));
     }
 
-    /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#getSelectedModelElement()
-     */
-    protected Object getSelectedModelElement() {
-        if (getTarget() != null) {
-            return Model.getFacade().getAddition(getTarget());
-        }
-        return null;
-    }
-
+   
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return Model.getFacade().isAUseCase(element)
-            && Model.getFacade().getNamespace(getTarget())
-                == Model.getFacade().getNamespace(element);
+        return Model.getFacade().isAUseCase(element);
     }
 
 }

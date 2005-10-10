@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.27 2005/06/03 10:11:39 bobtarling Exp $
+// $Id: UMLIncludeBaseListModel.java,v 1.1 2005/10/10 12:46:41 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,64 +24,35 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLComboBoxModel2;
-
+import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
- * @since Oct 5, 2002
- * @author jaap.branderhorst@xs4all.nl
+ * 
+ * @author MarkusK
+ *
  */
-public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
+public class UMLIncludeBaseListModel extends UMLModelElementListModel2 {
 
-
-
-
-
-    /**
-     * Constructor for UMLExtendBaseComboBoxModel.
-     */
-    public UMLExtendBaseComboBoxModel() {
-        super("base", false);
+    public UMLIncludeBaseListModel() {
+        // there is a bug in NSUML so this model
+        // listens for addition modelevents
+        super("addition");
         Model.getPump().addClassModelEventListener(this,
                 Model.getMetaTypes().getNamespace(), "ownedElement");
     }
 
-    /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
-     */
+    
     protected void buildModelList() {
-        Object extend = /*(MExtend)*/ getTarget();
-        if (extend == null) {
-            return;
-        }
-        Project p = ProjectManager.getManager().getCurrentProject();
-        Object model = p.getRoot();
-        setElements(Model.getModelManagementHelper()
-                .getAllModelElementsOfKindWithModel(model,
-                        Model.getMetaTypes().getUseCase()));
-        if (Model.getFacade().getExtension(extend) != null) {
-            removeElement(Model.getFacade().getExtension(extend));
-        }
+        if (!isEmpty())
+            removeAllElements();
+        addElement(Model.getFacade().getBase(getTarget()));
     }
 
-    /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#getSelectedModelElement()
-     */
-    protected Object getSelectedModelElement() {
-        if (getTarget() != null) {
-            return Model.getFacade().getBase(getTarget());
-        }
-        return null;
-    }
-
-    /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
-     */
     protected boolean isValidElement(Object element) {
-        return Model.getFacade().isAUseCase(element);
+        return Model.getFacade().isAUseCase(element)
+            && Model.getFacade().getNamespace(element)
+                == Model.getFacade().getNamespace(getTarget());
     }
 
 }
