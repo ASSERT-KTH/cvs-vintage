@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.57 2005/10/10 12:52:55 mkl Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.58 2005/10/10 16:43:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -226,12 +226,9 @@ public class UseCaseDiagramGraphModel
      *              this graph, <code>false</code> otherwise.
      */
     public boolean canAddEdge(Object edge)  {
-        if (super.canAddEdge(edge)) {
-            return true;
+        if (edge == null) {
+            return false;
         }
-
-        // Give up if we are already on the graph
-        if (edge == null) return false;
         if (containsEdge(edge)) {
             return false;
         }
