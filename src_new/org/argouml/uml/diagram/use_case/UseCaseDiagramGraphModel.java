@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.56 2005/05/03 20:23:42 mvw Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.57 2005/10/10 12:52:55 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,7 +204,8 @@ public class UseCaseDiagramGraphModel
 	    return false;
 	}
         return Model.getFacade().isAActor(node) 
-            || Model.getFacade().isAUseCase(node);
+            || Model.getFacade().isAUseCase(node)
+            || Model.getFacade().isAPackage(node);
     }
 
 
