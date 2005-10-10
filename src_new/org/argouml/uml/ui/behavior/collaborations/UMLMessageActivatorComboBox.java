@@ -1,4 +1,4 @@
-// $Id: UMLMessageActivatorComboBox.java,v 1.13 2005/04/21 16:12:52 bobtarling Exp $
+// $Id: UMLMessageActivatorComboBox.java,v 1.14 2005/10/10 08:26:57 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
+import org.argouml.uml.ui.UMLListCellRenderer2;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
 /**
  * The combobox for activators on the message proppanel. The only reason this
@@ -48,6 +49,7 @@ public class UMLMessageActivatorComboBox extends UMLComboBox2 {
         UMLComboBoxModel2 arg0) {
         // TODO: This super constructor has been deprecated
         super(arg0);
+        setRenderer(new UMLListCellRenderer2(true));
     }
 
     /**
