@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.69 2005/09/08 18:24:47 mkl Exp $
+// $Id: PropPanelUseCase.java,v 1.70 2005/10/10 12:47:43 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,41 +108,6 @@ public class PropPanelUseCase extends PropPanelClassifier {
         addAction(new ActionDeleteSingleModelElement());
     }
 
-
-    /**
-     * <p>Invoked by the "Add use case" toolbar button to create a new use case
-     *   property panel in the same namespace as the current use case.</p>
-     *
-     * <p>This code uses getFactory and adds the use case explicitly to the
-     *   namespace. Extended to actually navigate to the new use case.</p>
-     */
-    private class ActionNewUseCase extends AbstractActionNewModelElement {
-
-        /**
-         * The constructor.
-         */
-        public ActionNewUseCase() {
-            super("button.new-usecase");
-            putValue(Action.NAME, Translator.localize("button.new-usecase"));
-        }
-
-        /**
-         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-         */
-        public void actionPerformed(ActionEvent e) {
-            Object target = TargetManager.getInstance().getModelTarget();
-            if (Model.getFacade().isAUseCase(target)) {
-                Object ns = Model.getFacade().getNamespace(target);
-                if (ns != null) {
-                    Object useCase = Model.getUseCasesFactory()
-                        .createUseCase();
-                    Model.getCoreHelper().addOwnedElement(ns, useCase);
-                    TargetManager.getInstance().setTarget(useCase);
-                    super.actionPerformed(e);
-                }
-            }
-        }
-    }
 
     /**
      * <p>Invoked by the "New Extension Point" toolbar button to create a new

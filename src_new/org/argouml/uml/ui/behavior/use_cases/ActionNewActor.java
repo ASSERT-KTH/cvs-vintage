@@ -1,4 +1,4 @@
-// $Id: ActionNewActor.java,v 1.7 2005/01/30 20:47:47 linus Exp $
+// $Id: ActionNewActor.java,v 1.8 2005/10/10 12:47:43 mkl Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  *
  * @author Michiel
  */
-class ActionNewActor extends AbstractActionNewModelElement {
+public class ActionNewActor extends AbstractActionNewModelElement {
 
     /**
      * The constructor.
