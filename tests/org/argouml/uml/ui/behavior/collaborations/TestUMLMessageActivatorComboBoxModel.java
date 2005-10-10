@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.17 2005/10/03 00:45:04 bobtarling Exp $
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.18 2005/10/10 01:43:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,15 +99,6 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
     public void testSetActivator() {
         Model.getCollaborationsHelper().setActivator(elem, activators[0]);
         assertTrue(model.getSelectedItem() == activators[0]);
-    }
-
-    /**
-     * Test setActivator() with null argument.
-     */
-    public void testSetActivatorToNull() {
-        Model.getCollaborationsHelper().setActivator(elem, activators[0]);
-        Model.getCollaborationsHelper().setActivator(elem, null);
-        assertNull(model.getSelectedItem());
     }
 
     /**
