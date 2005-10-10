@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.3 2005/10/10 21:57:07 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.4 2005/10/10 23:18:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,9 @@ import org.tigris.gef.presentation.FigText;
  * @author Bob Tarling
  */
 public class FigStereotypesCompartment extends FigCompartment {
+    
+    String pseudoStereotype;
+    
     /**
      * The constructor.
      *
@@ -55,16 +58,43 @@ public class FigStereotypesCompartment extends FigCompartment {
      * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#populate()
      */
     public void populate() {
+        
+        int acounter = 1;
         Object modelElement = getGroup().getOwner();
         Fig bigPort = this.getBigPort();
         int xpos = bigPort.getX();
         int ypos = bigPort.getY();
-        int acounter = 1;
+
+        List figs = getFigs();
+        CompartmentFigText stereotypeTextFig;
+        
+        if (pseudoStereotype != null) {
+            if (figs.size() <= acounter) {
+                stereotypeTextFig =
+                    new FigFeature(
+                            xpos + 1,
+                            ypos + 1
+                            + (acounter - 1)
+                                * FigNodeModelElement.ROWHEIGHT,
+                            0,
+                            FigNodeModelElement.ROWHEIGHT - 2,
+                            bigPort);
+                // bounds not relevant here
+                stereotypeTextFig.setJustification(FigText.JUSTIFY_CENTER);
+                addFig(stereotypeTextFig);
+            } else {
+                stereotypeTextFig =
+                    (CompartmentFigText) figs.get(acounter);
+            }
+            stereotypeTextFig.setText(
+                    Notation.generate((NotationContext) getGroup(),
+                            pseudoStereotype));
+            acounter++;
+        }
+        
         Collection stereos = Model.getFacade().getStereotypes(modelElement);
         if (stereos != null) {
             Iterator iter = stereos.iterator();
-            List figs = getFigs();
-            CompartmentFigText stereotypeTextFig;
             while (iter.hasNext()) {
                 Object stereotype = iter.next();
                 if (figs.size() <= acounter) {
@@ -101,5 +131,16 @@ public class FigStereotypesCompartment extends FigCompartment {
                 }
             }
         }
+    }
+    
+    /**
+     * Allows a parent Fig to specify some stereotype text to display that is
+     * not actually contained by its owner.
+     * An example of this usage is to display <<interface>> as a stereotype
+     * on FigInterface.
+     * @param stereotype the text of the pseudo stereotype
+     */
+    public void setPseudoSereotype(String stereotype) {
+        pseudoStereotype = stereotype;
     }
 }
