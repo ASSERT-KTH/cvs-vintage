@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.18 2005/09/09 13:18:52 mkl Exp $
+// $Id: Facade.java,v 1.19 2005/10/11 21:19:22 rastaman Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2494,7 +2494,7 @@ public interface Facade {
      * @return classifier
      */
     Object getOwner(Object handle);
-
+    
     /**
      * Return the tag of a tagged value.
      *
@@ -2647,6 +2647,7 @@ public interface Facade {
      * @return TimeExpression
      */
     Object getWhen(Object target);
+
     /**
      * Recognizer for TagDefinition. Implemented only in UML 1.4+ metamodels.
      *
@@ -2655,4 +2656,17 @@ public interface Facade {
      */
     boolean isATagDefinition(Object handle);
 
+    /**
+     * Return the TagDefinitions for a StereoType
+     * @param handle
+     * @return
+     */
+    Collection getTagDefinitions(Object handle);
+
+    /**
+     * Return the TagDefinition for a TaggedValue
+     * @param handle
+     * @return
+     */
+    Object getTagDefinition(Object handle);
 }
