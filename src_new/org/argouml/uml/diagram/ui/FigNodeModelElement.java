@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.199 2005/10/10 15:53:24 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.200 2005/10/11 16:09:32 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -348,10 +348,10 @@ public abstract class FigNodeModelElement
                 clone.setBigPort(cloneFig);
             }
             if (thisFig == name) {
-                clone.name = (FigText) cloneFig;
+                clone.name = (FigText) thisFig;
             }
             if (thisFig == stereotypeFig) {
-                clone.stereotypeFig = (Fig) cloneFig;
+                clone.stereotypeFig = (Fig) thisFig;
             }
         }
         return clone;
