@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.120 2005/10/10 23:18:00 bobtarling Exp $
+// $Id: FigInterface.java,v 1.121 2005/10/11 09:36:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -143,11 +143,11 @@ public class FigInterface extends FigClassifierBox {
         if (SingleStereotypeEnabler.isEnabled()) {
             FigText stereotypeFig = (FigText)getStereotypeFig();
             stereotypeFig.setText(NotationHelper.getLeftGuillemot()
-                    + "Interface" + NotationHelper.getRightGuillemot());
+                    + "interface" + NotationHelper.getRightGuillemot());
             getStereotypeFig().setLineWidth(1);
         } else {
             ((FigStereotypesCompartment)getStereotypeFig())
-            .setPseudoSereotype("Interface");
+            .setPseudoSereotype("interface");
             
             borderFig = new FigEmptyRect(10, 10, 0, 0);
             borderFig.setLineWidth(1);
