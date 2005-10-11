@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.26 2005/04/23 16:30:44 linus Exp $
+// $Id: PropPanelActionState.java,v 1.27 2005/10/11 11:36:15 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,14 @@
 package org.argouml.uml.ui.behavior.activity_graphs;
 
 import javax.swing.ImageIcon;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.tigris.swidgets.Orientation;
+import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.behavior.state_machines.AbstractPropPanelState;
+import org.argouml.uml.ui.behavior.state_machines.UMLTransitionStatemachineListModel;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -61,10 +65,12 @@ public class PropPanelActionState extends AbstractPropPanelState {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
-
+                getStereotypeSelector());       
+        addField(Translator.localize("label.container"),
+                getContainerScroll());
         addField(Translator.localize("label.entry"),
                 getEntryScroll());
+        
         addSeperator();
 
         addField(Translator.localize("label.incoming"),
