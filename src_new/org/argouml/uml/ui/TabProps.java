@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.76 2005/09/27 23:57:36 bobtarling Exp $
+// $Id: TabProps.java,v 1.77 2005/10/11 21:23:58 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,6 +129,7 @@ import org.argouml.uml.ui.foundation.core.PropPanelParameter;
 import org.argouml.uml.ui.foundation.core.PropPanelPermission;
 import org.argouml.uml.ui.foundation.core.PropPanelUsage;
 import org.argouml.uml.ui.foundation.extension_mechanisms.PropPanelStereotype;
+import org.argouml.uml.ui.foundation.extension_mechanisms.PropPanelTagDefinition;
 import org.argouml.uml.ui.model_management.PropPanelModel;
 import org.argouml.uml.ui.model_management.PropPanelPackage;
 import org.argouml.uml.ui.model_management.PropPanelSubsystem;
@@ -593,6 +594,9 @@ public class TabProps
         if (Model.getFacade().isASynchState(modelElement)) { 
             return new PropPanelSynchState();
         }
+        if (Model.getFacade().isATagDefinition(modelElement)) {
+            return new PropPanelTagDefinition();
+        }       
         if (Model.getFacade().isATerminateAction(modelElement)) { 
             return new PropPanelTerminateAction();
         }
