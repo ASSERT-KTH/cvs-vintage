@@ -614,7 +614,8 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 				fileunderComboBox.addItem(fn);
 			}
 			
-			fileunderComboBox.setSelectedIndex(0);
+			if( fileunderComboBox.getModel().getSize() > 0)
+				fileunderComboBox.setSelectedIndex(0);
 		}
 	}
 
