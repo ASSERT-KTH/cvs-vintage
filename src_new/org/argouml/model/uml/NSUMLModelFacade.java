@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.24 2005/09/09 13:19:41 mkl Exp $
+// $Id: NSUMLModelFacade.java,v 1.25 2005/10/11 21:17:35 rastaman Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4750,5 +4750,19 @@ public class NSUMLModelFacade implements Facade {
 	public boolean isAEnumeration(Object handle) {
 		return false;
 	}
+
+    /**
+     * @see org.argouml.model.Facade#getTagDefinition(java.lang.Object)
+     */
+    public Object getTagDefinition(Object handle) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    /**
+     * @see org.argouml.model.Facade#getTagDefinitions(java.lang.Object)
+     */
+    public Collection getTagDefinitions(Object handle) {
+        throw new RuntimeException("Not implemented");
+    }
 	
 }
