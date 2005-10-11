@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.50 2005/09/08 18:25:48 mkl Exp $
+// $Id: PropPanelStereotype.java,v 1.51 2005/10/11 21:22:21 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,17 +50,23 @@ import org.tigris.swidgets.FlexiGridLayout;
 public class PropPanelStereotype extends PropPanelModelElement {
 
     private static UMLGeneralizableElementSpecializationListModel
-        specializationListModel =
-            new UMLGeneralizableElementSpecializationListModel();
+    specializationListModel =
+        new UMLGeneralizableElementSpecializationListModel();
 
     private static UMLGeneralizableElementGeneralizationListModel
         generalizationListModel =
             new UMLGeneralizableElementGeneralizationListModel();
 
+    private static UMLTagDefinitionListModel
+    tagDefinitionListModel =
+        new UMLTagDefinitionListModel();
+    
     private JScrollPane generalizationScroll;
 
     private JScrollPane specializationScroll;
 
+    private JScrollPane tagDefinitionScroll;
+    
     /**
      * Construct new stereotype properties tab
      */
@@ -94,7 +100,8 @@ public class PropPanelStereotype extends PropPanelModelElement {
                 getGeneralizationScroll());
         addField(Translator.localize("label.specializations"),
                 getSpecializationScroll());
-
+        addField(Translator.localize("label.tagdefinitions"),
+                getTagDefinitionScroll());
         addAction(new ActionNavigateNamespace());
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());
@@ -127,4 +134,17 @@ public class PropPanelStereotype extends PropPanelModelElement {
         return specializationScroll;
     }
 
+    /**
+     * Returns the specializationScroll.
+     *
+     * @return JScrollPane
+     */
+    protected JScrollPane getTagDefinitionScroll() {
+        if (tagDefinitionScroll == null) {
+            JList list = new UMLLinkedList(tagDefinitionListModel);
+            tagDefinitionScroll = new JScrollPane(list);
+        }
+        return tagDefinitionScroll;
+    }
+    
 } /* end class PropPanelStereotype */
