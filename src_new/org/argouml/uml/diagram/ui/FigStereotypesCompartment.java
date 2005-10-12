@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.7 2005/10/12 13:59:29 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.8 2005/10/12 15:39:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationContext;
+import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.language.helpers.NotationHelper;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.static_structure.ui.FigFeature;
@@ -172,6 +173,30 @@ public class FigStereotypesCompartment extends FigCompartment {
                     removeFig((Fig) figs.get(i));
                 }
             }
+        }
+    }
+    
+    protected void setBoundsImpl(int x, int y, int w, int h) {
+        if (SingleStereotypeEnabler.isEnabled()) {
+            super.setBoundsImpl(x, y, w, h);
+        } else {
+            int n = getFigs().size() - 1;
+            int newH = h;
+            
+            Iterator figs = iterator();
+            Fig fig;
+            int fw;
+            int yy = y;
+            while (figs.hasNext()) {
+                fig = (Fig) figs.next();
+                if (fig != getBigPort()) {
+                    fw = w - 2;
+                    fig.setBounds(x + 1, yy + 1, fw, fig.getMinimumSize().height);
+                    yy += fig.getMinimumSize().height;
+                }
+            }
+            getBigPort().setBounds(x, y, w, newH);
+            calcBounds();
         }
     }
     
