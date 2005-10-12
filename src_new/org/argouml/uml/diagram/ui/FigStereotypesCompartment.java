@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.6 2005/10/12 12:09:18 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.7 2005/10/12 13:59:29 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,6 +77,15 @@ public class FigStereotypesCompartment extends FigCompartment {
     public FigStereotypesCompartment(int x, int y, int w, int h) {
         super(x, y, w, h);
     }
+    
+    
+
+    public void setOwner(Object own) {
+        super.setOwner(own);
+        populate();
+    }
+
+
 
     /**
      * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#populate()
@@ -87,8 +96,12 @@ public class FigStereotypesCompartment extends FigCompartment {
             LOG.warn("Cannot populate the stereotype compartment unless it has a parent.");
             return;
         }
-        int acounter = 1;
         Object modelElement = getGroup().getOwner();
+        if (modelElement == null) {
+            LOG.warn("Cannot populate the stereotype compartment unless the parent has an owner.");
+            return;
+        }
+        int acounter = 1;
         Fig bigPort = this.getBigPort();
         int xpos = bigPort.getX();
         int ypos = bigPort.getY();
