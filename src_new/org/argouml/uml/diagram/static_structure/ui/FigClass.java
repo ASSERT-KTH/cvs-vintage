@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.181 2005/10/11 20:31:24 bobtarling Exp $
+// $Id: FigClass.java,v 1.182 2005/10/12 14:49:37 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -443,6 +443,21 @@ public class FigClass extends FigClassifierBox
                 damage();
             }
         }
+    }
+    
+    public void setLineWidth(int w) {
+        borderFig.setLineWidth(w);
+        if (SingleStereotypeEnabler.isEnabled()) {
+            getOperationsFig().setLineWidth(w);
+            getAttributesFig().setLineWidth(w);
+        } else {
+            attributesSeperator.setLineWidth(w);
+            operationsSeperator.setLineWidth(w);
+        }
+    }
+    
+    public int getLineWidth() {
+        return borderFig.getLineWidth();
     }
 
     /**

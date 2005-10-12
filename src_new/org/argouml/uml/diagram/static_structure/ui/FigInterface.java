@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.122 2005/10/11 16:51:00 bobtarling Exp $
+// $Id: FigInterface.java,v 1.123 2005/10/12 14:49:37 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -454,6 +454,20 @@ public class FigInterface extends FigClassifierBox {
         super.setLineColor(lColor);
         stereoLineBlinder.setLineColor(stereoLineBlinder.getFillColor());
     }
+    
+    public void setLineWidth(int w) {
+        borderFig.setLineWidth(w);
+        if (SingleStereotypeEnabler.isEnabled()) {
+            getOperationsFig().setLineWidth(w);
+        } else {
+            operationsSeperator.setLineWidth(w);
+        }
+    }
+    
+    public int getLineWidth() {
+        return borderFig.getLineWidth();
+    }
+
 
     /**
      * @see org.tigris.gef.presentation.Fig#translate(int, int)
