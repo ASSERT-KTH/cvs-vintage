@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.57 2005/10/04 14:54:22 bobtarling Exp $
+// $Id: UMLComboBoxModel2.java,v 1.58 2005/10/12 12:54:10 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -315,6 +315,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
      * @param target the target
      */
     protected void setTarget(Object target) {
+        LOG.debug("setTarget target :  " + target);
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
         if (Model.getFacade().isABase(target) || target instanceof Diagram) {
             ModelEventPump eventPump = Model.getPump();
@@ -543,6 +544,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
      * @see TargetListener#targetAdded(TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
+        LOG.debug("targetAdded targetevent :  " + e);
         setTarget(e.getNewTarget());
     }
 
@@ -550,6 +552,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
      * @see TargetListener#targetRemoved(TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
+        LOG.info("targetRemoved targetevent :  " + e);
         Object currentTarget = comboBoxTarget;
         Object oldTarget =
 	    e.getOldTargets().length > 0
@@ -564,13 +567,14 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
             }
             comboBoxTarget = e.getNewTarget();
         }
-        // setTarget(e.getNewTarget());
+        setTarget(e.getNewTarget());
     }
 
     /**
      * @see TargetListener#targetSet(TargetEvent)
      */
     public void targetSet(TargetEvent e) {
+        LOG.debug("targetSet targetevent :  " + e);
         setTarget(e.getNewTarget());
 
     }
