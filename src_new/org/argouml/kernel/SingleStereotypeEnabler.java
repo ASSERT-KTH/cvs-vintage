@@ -1,4 +1,4 @@
-// $Id: SingleStereotypeEnabler.java,v 1.1 2005/10/10 00:53:35 bobtarling Exp $
+// $Id: SingleStereotypeEnabler.java,v 1.2 2005/10/12 14:15:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ public class SingleStereotypeEnabler {
      * To see work in progress for multiple stereotypes on MDR change this flag
      * to false.
      */
-    private static boolean enabled = true;
+    private static boolean enabled = false;
     
     private SingleStereotypeEnabler() {
     }
