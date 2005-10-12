@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.36 2005/10/06 23:05:22 bobtarling Exp $
+// $Id: FigActor.java,v 1.37 2005/10/12 12:09:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.base.Selection;
@@ -328,20 +329,39 @@ public class FigActor extends FigNodeModelElement {
      * org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
      */
     protected void updateStereotypeText() {
-        super.updateStereotypeText();
-        if (!Model.getFacade().getStereotypes(getOwner()).isEmpty()) {
-            getStereotypeFig().setBounds(
-                (getBigPort().getCenter().x 
-                                     - getStereotypeFig().getWidth() / 2),
-                (getBigPort().getY() + getBigPort().getHeight()
-                                     + MIN_VERT_PADDING),
-                getStereotypeFig().getWidth(),
-                getStereotypeFig().getHeight());
+        if (SingleStereotypeEnabler.isEnabled()) {
+            super.updateStereotypeText();
+            if (!Model.getFacade().getStereotypes(getOwner()).isEmpty()) {
+                getStereotypeFig().setBounds(
+                    (getBigPort().getCenter().x 
+                                         - getStereotypeFig().getWidth() / 2),
+                    (getBigPort().getY() + getBigPort().getHeight()
+                                         + MIN_VERT_PADDING),
+                    getStereotypeFig().getWidth(),
+                    getStereotypeFig().getHeight());
+            } else {
+                getStereotypeFig().setBounds(getBigPort().getCenter().x,
+                                             getBigPort().getCenter().y,
+                                             0, 
+                                             0);
+            }
         } else {
-            getStereotypeFig().setBounds(getBigPort().getCenter().x,
-                                         getBigPort().getCenter().y,
-                                         0, 
-                                         0);
+            super.updateStereotypeText();
+            if (!Model.getFacade().getStereotypes(getOwner()).isEmpty()) {
+                Dimension stereoMin = getStereotypeFig().getMinimumSize();
+                getStereotypeFig().setBounds(
+                    (getBigPort().getCenter().x 
+                                         - getStereotypeFig().getWidth() / 2),
+                    (getBigPort().getY() + getBigPort().getHeight()
+                                         + MIN_VERT_PADDING),
+                    stereoMin.width,
+                    stereoMin.height);
+            } else {
+                getStereotypeFig().setBounds(getBigPort().getCenter().x,
+                                             getBigPort().getCenter().y,
+                                             0, 
+                                             0);
+            }
         }
         damage();
     }
