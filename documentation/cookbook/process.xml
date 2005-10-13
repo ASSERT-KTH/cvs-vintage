@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: process.xml,v 1.18 2005/03/10 20:23:11 linus Exp $ -->
+<!-- $Id: process.xml,v 1.19 2005/10/13 20:00:49 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -49,12 +49,20 @@ them on the
       <para>
 Here is the big picture of the life of an Issue.
 </para>
+
+    <note>
+      <para>
+Since October 2005, new issues are created in the UNCONFIRMED state
+instead of the new state.
+This picture and the processes around the issues are not yet updated.
+</para>
+    </note>
+
       <mediaobject>
         <imageobject>
           <imagedata fileref="images/cookbook/IssueBigPicture.gif" format="GIF"/>
         </imageobject>
       </mediaobject>
-
     </sect1>
 
     <sect1 id="issue_attributes">
