@@ -1,4 +1,4 @@
-// $Id: FigCompartment.java,v 1.14 2005/10/10 21:57:07 bobtarling Exp $
+// $Id: FigCompartment.java,v 1.15 2005/10/14 18:07:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public abstract class FigCompartment extends FigGroup {
     /**
      * The minimum width is the minimum width of the child with the widest
      * miniumum width.
-     * The minium height is the total minimum height of all child figs plus a
+     * The minimum height is the total minimum height of all child figs plus a
      * 2 pixel padding.
      * @return the minimum width
      */
@@ -112,7 +112,7 @@ public abstract class FigCompartment extends FigGroup {
             int yy = y;
             while (figs.hasNext()) {
                 fig = (Fig) figs.next();
-                if (fig != getBigPort()) {
+                if (fig.isVisible() && fig != getBigPort()) {
                     fw = fig.getMinimumSize().width;
                     fig.setBounds(x + 1, yy + 1, fw, fig.getMinimumSize().height);
                     if (newW < fw + 2) {
