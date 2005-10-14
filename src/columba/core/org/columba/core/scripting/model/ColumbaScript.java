@@ -18,24 +18,35 @@
 package org.columba.core.scripting.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import org.columba.core.scripting.config.BeanshellConfig;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 public class ColumbaScript {
 
 	private final File scriptFile;
 
-	private String name = "", author = "", description = "";
+	private String name = "", author = "", description = "", extension = "";
 
 	public ColumbaScript(File file) {
 		scriptFile = file;
+    extension = extractExtensionFromFilename();
 	}
 
+  private String extractExtensionFromFilename()
+  {
+
+    String name = scriptFile.getName();
+    int pos = name.lastIndexOf('.');
+    if (pos == -1 || pos+1 == name.length())
+      return null;
+      
+    return name.substring(pos+1);
+    
+  }
+  
+  public String getExtension()
+  {
+    return extension;
+  }
+  
 	public void setMetadata(String name, String author, String desc) {
 		this.name = name;
 		this.author = author;
@@ -56,31 +67,6 @@ public class ColumbaScript {
 
 	public String getDescription() {
 		return description;
-	}
-
-	public void execute() {
-		/* TODO execute through the Beanshell engine */
-		/*
-		 * it's the script responsability to define the "metadata" by invoking
-		 * .setName(), .setAuthor() and .setDescription()
-		 * 
-		 * 
-		 */
-		System.out.println("Executing bsh: " + getPath());
-		Interpreter bsh = new Interpreter();
-		try {
-			bsh.set("COLUMBA_SCRIPT_PATH", BeanshellConfig.getInstance()
-					.getPath().getPath());
-			bsh.set("cScript", this);
-			bsh.source(getPath());
-
-		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} catch (EvalError ex) {
-			ex.printStackTrace();
-		}
 	}
 
 	public long getLastModified() {

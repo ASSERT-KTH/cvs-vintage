@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import org.columba.core.gui.scripting.ScriptManagerDocument;
 import org.columba.core.scripting.config.BeanshellConfig;
 import org.columba.core.scripting.config.OptionsObserver;
+import org.columba.core.scripting.interpreter.InterpreterManager;
 import org.columba.core.scripting.model.ColumbaScript;
 
 /**
@@ -67,6 +68,8 @@ public class FileObserverThread extends Thread implements OptionsObserver,
 
 	private final BeanshellFileFilter beanshellFilter = new BeanshellFileFilter();
 
+  private final InterpreterManager interpreterManager = new InterpreterManager();
+  
 	private long lastExecution = System.currentTimeMillis();
 
 	private boolean finish = false;
@@ -197,7 +200,7 @@ public class FileObserverThread extends Thread implements OptionsObserver,
 
 	private void execChangedFiles(List files) {
 		for (Iterator it = files.iterator(); it.hasNext();)
-			((ColumbaScript) it.next()).execute();
+      interpreterManager.executeScript( (ColumbaScript)it.next() );
 	}
 
 	private class BeanshellFileFilter implements FileFilter {
