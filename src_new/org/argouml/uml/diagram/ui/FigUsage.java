@@ -1,4 +1,4 @@
-// $Id: FigUsage.java,v 1.12 2005/01/09 14:58:56 linus Exp $
+// $Id: FigUsage.java,v 1.13 2005/10/14 16:13:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,10 @@ package org.argouml.uml.diagram.ui;
 
 import java.beans.PropertyChangeEvent;
 
+import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.language.helpers.NotationHelper;
 import org.tigris.gef.base.Layer;
+import org.tigris.gef.presentation.FigText;
 
 /**
  * This class represents a Fig for a Usage.
@@ -68,12 +70,14 @@ public class FigUsage extends FigDependency {
      */
     protected void modelChanged(PropertyChangeEvent e) {
         super.modelChanged(e);
-        String stereoTypeStr = getStereotypeFig().getText();
-
-        if (stereoTypeStr == null || "".equals(stereoTypeStr)) {
-            getStereotypeFig().setText(
-                NotationHelper.getLeftGuillemot() + "use"
-                + NotationHelper.getRightGuillemot());
+        
+        if (SingleStereotypeEnabler.isEnabled()) {
+            String stereoTypeStr = ((FigText)getStereotypeFig()).getText();
+            if (stereoTypeStr == null || "".equals(stereoTypeStr)) {
+                ((FigText)getStereotypeFig()).setText(
+                    NotationHelper.getLeftGuillemot() + "use"
+                    + NotationHelper.getRightGuillemot());
+            }
         }
     }
 

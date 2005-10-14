@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.9 2005/10/12 15:45:06 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.10 2005/10/14 16:13:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,11 +93,7 @@ public class FigStereotypesCompartment extends FigCompartment {
      */
     public void populate() {
         
-        if (getGroup() == null) {
-            LOG.warn("Cannot populate the stereotype compartment unless it has a parent.");
-            return;
-        }
-        Object modelElement = getGroup().getOwner();
+        Object modelElement = getOwner();
         if (modelElement == null) {
             LOG.warn("Cannot populate the stereotype compartment unless the parent has an owner.");
             return;
@@ -157,9 +153,9 @@ public class FigStereotypesCompartment extends FigCompartment {
                     stereotypeTextFig =
                         (CompartmentFigText) figs.get(acounter);
                 }
-                stereotypeTextFig.setText(
-                        Notation.generate((NotationContext) getGroup(),
-                        stereotype));
+                stereotypeTextFig.setText(NotationHelper.getLeftGuillemot() +
+                        Model.getFacade().getName(stereotype) +
+                        NotationHelper.getRightGuillemot());
                 stereotypeTextFig.setOwner(stereotype); //TODO: update the model again here?
                 /* This causes another event, and modelChanged() called,
                  * and updateAttributes() called again...

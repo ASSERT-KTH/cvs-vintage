@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.202 2005/10/12 12:09:18 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.203 2005/10/14 16:13:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1709,26 +1709,3 @@ public abstract class FigNodeModelElement
  * Action to add a stero type to the model element represented by this Fig.
  * @author Bob Tarling
  */
-class ActionAddStereotype extends AbstractAction {
-    
-    /**
-     * Logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(ActionAddStereotype.class);
-    
-    private Object modelElement;
-    private Object stereotype;
-    
-    public ActionAddStereotype(Object modelElement, Object stereotype) {
-        super(NotationHelper.getLeftGuillemot() + 
-                Model.getFacade().getName(stereotype) + 
-                NotationHelper.getRightGuillemot());
-        this.modelElement = modelElement;
-        this.stereotype = stereotype;
-    }
-    
-    public void actionPerformed(ActionEvent ae) {
-        Model.getCoreHelper().addStereotype(modelElement, stereotype);
-    }
-}
