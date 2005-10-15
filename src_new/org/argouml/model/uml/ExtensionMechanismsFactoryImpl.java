@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.11 2005/09/04 21:38:34 linus Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.12 2005/10/15 12:44:08 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -266,6 +266,22 @@ public class ExtensionMechanismsFactoryImpl
 	target.setIcon(source.getIcon());
 	// TODO: constraints
 	// TODO: required tags
+    }
+
+    /**
+     * Unimplemented in NSUML / UML 1.3.
+     * @see org.argouml.model.ExtensionMechanismsFactory#buildTagDefinition(java.lang.String, java.lang.Object, java.lang.Object)
+     */
+    public Object buildTagDefinition(String text, Object stereotype, Object ns) {
+        return null;
+    }
+
+    /**
+     * Unimplemented in NSUML / UML 1.3.
+     * @see org.argouml.model.ExtensionMechanismsFactory#createTagDefinition()
+     */
+    public Object createTagDefinition() {
+        return null;
     }
 }
 
