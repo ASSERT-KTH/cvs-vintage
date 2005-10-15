@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.36 2005/10/11 23:08:58 rastaman Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.37 2005/10/15 12:42:45 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -367,6 +367,7 @@ public final class ResourceLoaderWrapper {
         images.put("button.new-subactivitystate", "SubactivityState");
         images.put("button.new-submachinestate", "SubmachineState");
         images.put("button.new-synchstate", "SynchState");
+        images.put("button.new-tagdefinition", "TagDefinition");
         images.put("button.new-transition", "Transition");
         images.put("button.new-uniaggregation", "UniAggregation");
         images.put("button.new-uniassociation", "UniAssociation");
