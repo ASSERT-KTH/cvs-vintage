@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.184 2005/10/15 00:57:39 bobtarling Exp $
+// $Id: FigClass.java,v 1.185 2005/10/15 23:25:54 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -862,6 +862,9 @@ public class FigClass extends FigClassifierBox
         Object source = null;
         if (mee != null) {
             source = mee.getSource();
+        } else {
+            LOG.warn("ModelChanged called with no event. " + 
+                    "Please javadoc the situation in which this can happen");
         }
 
         // attributes
@@ -1291,12 +1294,14 @@ public class FigClass extends FigClassifierBox
         //display attr/op properties if necessary:
         Rectangle r = new Rectangle(me.getX() - 1, me.getY() - 1, 2, 2);
         Fig f = hitFig(r);
-        if (f == getAttributesFig() && getAttributesFig().getHeight() > 0) {
+        if (f == getAttributesFig()
+                && getAttributesFig().getHeight() > 0) {
             // TODO: in future version of GEF call getFigs returning array
             Vector v = new Vector(getAttributesFig().getFigs());
             i = (v.size() - 1) * (me.getY() - f.getY() - 3)
                 / getAttributesFig().getHeight();
-            if (i >= 0 && i < v.size() - 1) {
+            if (i >= 0 && i < v.size() - 1 &&
+                    v.elementAt(i + 1) instanceof CompartmentFigText) {
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
@@ -1308,7 +1313,8 @@ public class FigClass extends FigClassifierBox
             Vector v = new Vector(getOperationsFig().getFigs());
             i = (v.size() - 1) * (me.getY() - f.getY() - 3)
                 / getOperationsFig().getHeight();
-            if (i >= 0 && i < v.size() - 1) {
+            if (i >= 0 && i < v.size() - 1 &&
+                    v.elementAt(i + 1) instanceof CompartmentFigText) {
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
