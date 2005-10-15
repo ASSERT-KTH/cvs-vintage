@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.125 2005/10/14 18:07:36 bobtarling Exp $
+// $Id: FigInterface.java,v 1.126 2005/10/15 23:34:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -353,29 +353,14 @@ public class FigInterface extends FigClassifierBox {
             aSize.height += stereoMin.height;
         }
 
-        // Allow space for each of the operations we have
-
         if (operationsFig.isVisible()) {
-
-            // Loop through all the operations, to find the widest (remember
-            // the first fig is the box for the whole lot, so ignore it).
-
-            Iterator it = operationsFig.getFigs().iterator();
-            it.next(); // ignore
-
-            while (it.hasNext()) {
-                int elemWidth =
-                        ((FigText) it.next()).getMinimumSize().width + 2;
-                aSize.width = Math.max(aSize.width, elemWidth);
-            }
-            aSize.height +=
-                ROWHEIGHT * Math.max(1, operationsFig.getFigs().size() - 1) + 1;
+            Dimension operMin = getOperationsFig().getMinimumSize();
+            aSize.width = Math.max(aSize.width, operMin.width);
+            aSize.height += operMin.height;
         }
 
         // we want to maintain a minimum width for Interfaces
         aSize.width = Math.max(60, aSize.width);
-
-        // And now aSize has the answer
 
         return aSize;
     }
