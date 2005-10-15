@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.4 2005/04/28 20:32:22 mvw Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.5 2005/10/15 12:49:35 rastaman Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,4 +107,20 @@ public interface ExtensionMechanismsFactory {
      * @return a newly created stereotype
      */
     Object copyStereotype(Object source, Object ns);
+ 
+    /**
+     * Build an initialized instance of a TagDefinition.
+     * @param text is the name of the TagDeginition
+     * @param stereotype is the optional stereotype owning the TagDefinition
+     * @param ns is the namespace to put the TagDefinition.
+     * @return a newly created TagDefinition.
+     */
+    Object buildTagDefinition(String text, Object stereotype, Object ns);
+    
+    /**
+     * Create a TagDefinition
+     * @return a TagDefinition
+     */
+    Object createTagDefinition();
+    
 }
