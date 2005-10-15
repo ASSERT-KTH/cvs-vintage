@@ -1,4 +1,4 @@
-// $Id: ActionSetTagDefinitionOwner.java,v 1.2 2005/10/15 12:48:50 rastaman Exp $
+// $Id: ActionSetTagDefinitionMultiplicity.java,v 1.1 2005/10/15 12:48:50 rastaman Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,60 +22,43 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+
 package org.argouml.uml.ui.foundation.extension_mechanisms;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.SwingUtilities;
-
-import org.apache.log4j.Logger;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
-import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.uml.ui.ActionSetMultiplicity;
+
 
 /**
  *
  * @author mkl
+ * @author lmaitre
  *
  */
-public class ActionSetTagDefinitionOwner extends UMLAction {
+public class ActionSetTagDefinitionMultiplicity extends ActionSetMultiplicity {
 
-    private Logger LOG = Logger.getLogger(ActionSetTagDefinitionOwner.class);
-  
-    /**
-     * The Singleton.
-     */
-    public static final ActionSetTagDefinitionOwner SINGLETON =
-    new ActionSetTagDefinitionOwner();
-    
     /**
      * Constructor.
      */
-    public ActionSetTagDefinitionOwner() {
-        super("Set", HAS_ICON);
+    public ActionSetTagDefinitionMultiplicity() {
+        super();
     }
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see org.argouml.uml.ui.ActionSetMultiplicity#setSelectedItem(
+     * java.lang.Object, java.lang.Object)
      */
-    public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e);
-        Object source = e.getSource();
-        LOG.info("Receiving "+e+"/"+e.getID()+"/"+e.getActionCommand());
-        if (source instanceof UMLComboBox2 
-                && e.getModifiers()==ActionEvent.MOUSE_EVENT_MASK) {
-            UMLComboBox2 combo = (UMLComboBox2) source;
-            final Object o = combo.getSelectedItem();
-            final Object tagDefinition = combo.getTarget();
-            LOG.info("Set owner to "+o);
-            if (Model.getFacade().isAStereotype(o) &&
-            		Model.getFacade().isATagDefinition(tagDefinition)) {
-                   SwingUtilities.invokeLater(new Runnable() {
-                       public void run() {
-                        Model.getCoreHelper().setOwner(tagDefinition,o);
-                       }
-                   });
+    public void setSelectedItem(Object item, Object target) {
+        if (target != null
+                && Model.getFacade().isATagDefinition(target)) {
+            if (Model.getFacade().isAMultiplicity(item)) {
+                Model.getCoreHelper().setMultiplicity(target, item);
+            } else {
+                Model.getCoreHelper().setMultiplicity(target, null);
             }
+
         }
+
     }
+
 }
