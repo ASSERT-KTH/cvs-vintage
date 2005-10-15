@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.12 2005/10/14 18:07:36 bobtarling Exp $
+// $Id: FigFeaturesCompartment.java,v 1.13 2005/10/15 23:32:45 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -230,7 +230,7 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
         }
         
         public Dimension getMinimumSize() {
-            return new Dimension((_x2 - _x1) +1, getLineWidth());
+            return new Dimension(0, getLineWidth());
         }
         
         public void setBoundsImpl(int x, int y, int w, int h) {
