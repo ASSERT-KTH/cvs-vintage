@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.29 2005/10/15 15:42:31 rastaman Exp $
+// $Id: PerspectiveManager.java,v 1.30 2005/10/15 16:51:23 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,7 @@ import org.argouml.ui.explorer.rules.GoCompositeStateToSubvertex;
 import org.argouml.ui.explorer.rules.GoDiagramToEdge;
 import org.argouml.ui.explorer.rules.GoDiagramToNode;
 import org.argouml.ui.explorer.rules.GoElementToMachine;
+import org.argouml.ui.explorer.rules.GoEnumerationToLiterals;
 import org.argouml.ui.explorer.rules.GoGeneralizableElementToSpecialized;
 import org.argouml.ui.explorer.rules.GoInteractionToMessages;
 import org.argouml.ui.explorer.rules.GoLinkToStimuli;
@@ -364,7 +365,7 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoStateToOutgoingTrans());
         packagePerspective.addRule(new GoSubmachineStateToStateMachine());
         packagePerspective.addRule(new GoStereotypeToTagDefinition());
-
+        
         ExplorerPerspective diagramPerspective = new ExplorerPerspective(
                 "combobox.item.diagram-centric");
         diagramPerspective.addRule(new GoProjectToModel());
@@ -454,6 +455,7 @@ public class PerspectiveManager {
             new GoComponentToResidentModelElement(),
             new GoCompositeStateToSubvertex(), new GoDiagramToEdge(),
             new GoDiagramToNode(), new GoElementToMachine(),
+            new GoEnumerationToLiterals(),
             new GoGeneralizableElementToSpecialized(),
             new GoInteractionToMessages(), new GoLinkToStimuli(),
             new GoMessageToAction(), new GoModelElementToComment(),
