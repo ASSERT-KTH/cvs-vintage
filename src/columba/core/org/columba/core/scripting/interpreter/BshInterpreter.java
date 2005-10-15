@@ -34,6 +34,12 @@ public class BshInterpreter
 {
   private final static String[] EXTENSIONS = new String[]{"bsh","beanshell"};
   
+  
+  public String getName()
+  {
+    return "Beanshell Interpreter";
+  }
+
   public String[] getSupportedExtensions()
   {
     return EXTENSIONS;

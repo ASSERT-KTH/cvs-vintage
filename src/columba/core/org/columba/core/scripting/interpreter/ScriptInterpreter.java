@@ -24,6 +24,7 @@ import org.columba.core.scripting.model.ColumbaScript;
  */
 public interface ScriptInterpreter
 {
+  public String getName();
   public String[] getSupportedExtensions();
   public void execute(ColumbaScript script);
 }

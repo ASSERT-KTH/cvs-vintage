@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -52,38 +53,31 @@ public class FileObserverThread extends Thread implements OptionsObserver,
 	private static final Logger LOG = Logger.getLogger(FileObserverThread.class
 			.getName());
 
-	/*
-	 * TODO at some point in time, move this pattern to the config.xml file but
-	 * not everything, just the extension (i.e. bsh) part. Then, it'll enable
-	 * the use of this kind of stuff in the config.xml: <filter>bsh</filter>
-	 * <filter>groovy</filter> <filter>whatever</filter>
-	 * 
-	 * which will be passed on in the format bsh|groovy|whatever to the pattern
-	 * builder. the resulting pattern will be something like:
-	 * ".*\\.(bsh|groovy|whatever)$"
-	 */
-	private static final String SCRIPT_EXTENSION_PATTERN = ".*\\.(bsh)$";
-
-	private final BeanshellConfig config = BeanshellConfig.getInstance();
-
-	private final BeanshellFileFilter beanshellFilter = new BeanshellFileFilter();
-
-  private final InterpreterManager interpreterManager = new InterpreterManager();
+	private final BeanshellConfig config;
+	private final BeanshellFileFilter beanshellFilter;
+  private final InterpreterManager interpreterManager;
+  private final List observers;
+  private Map scriptList;
   
-	private long lastExecution = System.currentTimeMillis();
-
+	private long lastExecution;
+  private int pollingInterval = -1;
 	private boolean finish = false;
-
-	private Map scriptList = new HashMap();
-
-	private int pollingInterval = -1;
-
+  
 	private static FileObserverThread instance = null;
 
-	private List observers = new ArrayList();
-
 	private FileObserverThread() {
-		pollingInterval = config.getOptions().getInternalPollingInterval();
+    
+    config = BeanshellConfig.getInstance();
+    beanshellFilter = new BeanshellFileFilter();
+    interpreterManager = new InterpreterManager();
+    
+    scriptList = new HashMap();
+    observers = new Vector();
+    lastExecution = System.currentTimeMillis();
+    
+    pollingInterval = config.getOptions().getInternalPollingInterval();
+    beanshellFilter.compileFilter(interpreterManager.getSupportedExtensions());
+    
 	}
 
 	public void setScriptList(Map scripts) {
@@ -205,9 +199,27 @@ public class FileObserverThread extends Thread implements OptionsObserver,
 
 	private class BeanshellFileFilter implements FileFilter {
 
-		private Pattern extensionPattern = Pattern
-				.compile(SCRIPT_EXTENSION_PATTERN);
+		private Pattern extensionPattern = null;
 
+    private String join(String[] values, char separator)
+    {
+    
+      StringBuffer bf = new StringBuffer(256);
+      for(int i=0;i<values.length;i++)
+        bf = bf.append(values[i] + separator);
+
+      if (bf.length() > 0)
+        bf = bf.deleteCharAt(bf.length()-1);
+               
+      return bf.toString();
+       
+    }
+    
+    public void compileFilter(String[] validExtensions)
+    {
+      extensionPattern = Pattern.compile(".*\\.(" + join(validExtensions,'|') + ")$");
+    }
+    
 		public boolean accept(File aPathname) {
 			return extensionPattern.matcher(aPathname.getPath()).matches();
 		}

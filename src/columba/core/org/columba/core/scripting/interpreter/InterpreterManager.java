@@ -20,6 +20,7 @@ package org.columba.core.scripting.interpreter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.columba.core.scripting.model.ColumbaScript;
 
@@ -35,6 +36,9 @@ import org.columba.core.scripting.model.ColumbaScript;
  */
 public class InterpreterManager
 {
+
+  private static final Logger LOG = 
+    Logger.getLogger(InterpreterManager.class.getName());
 
   /**
 
@@ -55,6 +59,9 @@ public class InterpreterManager
   
   public void registerInterpreter(ScriptInterpreter interpreter)
   {
+  
+    LOG.entering("registerInterpreter",interpreter.getName());
+    
     /* find out if the interpreter is already registered */
     /* if so, remove it */
     /*XXX this is not thread-safe, though luck. It isn't supposed to be. */
@@ -70,23 +77,34 @@ public class InterpreterManager
     {
       Object previous = interpreters.put(extensions[i],interpreter); 
       if (previous != null)
-        System.out.println(previous.getClass().getName() +  " doesn't handle " + extensions[i] + " anymore"); /*TODO proper logging, proper message */
+        LOG.warning(previous.getClass().getName() +  " doesn't handle " +
+                            extensions[i] + " anymore");
     }
-      
+    
+    LOG.exiting("registerInterpreter",interpreter.getName());
+    
   }
   
   public void executeScript(ColumbaScript script)
   {
-  
-    ScriptInterpreter interpreter = (ScriptInterpreter)interpreters.get(script.getExtension());
+    LOG.entering("executeScript",script.getPath());
+    
+    ScriptInterpreter interpreter = 
+      (ScriptInterpreter)interpreters.get(script.getExtension());
+      
     if (interpreter == null)
     {
-      System.out.println("No interpreter found for " + script.getName() ); /*TODO proper logging */
+      LOG.warning("No interpreter found for " + script.getPath() );
       return;
     }   
     
     interpreter.execute(script);
     
+    LOG.exiting("executeScript",script.getPath());
   }
   
+  public String[] getSupportedExtensions()
+  {
+    return (String[])interpreters.keySet().toArray(new String[]{});
+  }
 }
