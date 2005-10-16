@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.14 2005/10/16 02:27:53 bobtarling Exp $
+// $Id: FigFeaturesCompartment.java,v 1.15 2005/10/16 14:23:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Iterator;
 
@@ -213,7 +214,7 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
                     yy += fig.getMinimumSize().height;
                 }
             }
-            getBigPort().setBounds(x, y, newW, newH);
+            getBigPort().setBounds(x + 1, y + 1, newW - 3, newH - 1);
             calcBounds();
         }
     }

@@ -1,4 +1,4 @@
-// $Id: FigOperationsCompartment.java,v 1.7 2005/10/16 02:27:53 bobtarling Exp $
+// $Id: FigOperationsCompartment.java,v 1.8 2005/10/16 14:23:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 
 package org.argouml.uml.diagram.ui;
 
+import java.awt.Color;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
