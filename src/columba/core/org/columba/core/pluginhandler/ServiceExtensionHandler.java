@@ -2,14 +2,10 @@ package org.columba.core.pluginhandler;
 
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.columba.api.exception.PluginException;
-import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.Extension;
@@ -25,8 +21,6 @@ public class ServiceExtensionHandler extends ExtensionHandler {
 
 	public static final String NAME = "org.columba.core.service";
 
-	private final Map serviceList;
-
 	public ServiceExtensionHandler() {
 
 		/* only initialize this core service */
@@ -34,8 +28,6 @@ public class ServiceExtensionHandler extends ExtensionHandler {
 
 		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
 		loadExtensionsFromStream(is);
-
-		serviceList = new HashMap();
 
 	}
 	
@@ -86,6 +78,8 @@ public class ServiceExtensionHandler extends ExtensionHandler {
 			// 
 			// instance reference is kept in hashmap automatically
 			IColumbaService service = getServiceInstance(extension);
+      service.initService();
+      
 		}
 
 	}
