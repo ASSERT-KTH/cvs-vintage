@@ -24,6 +24,7 @@ import java.net.URLClassLoader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.RepaintManager;
@@ -33,6 +34,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
 import org.columba.api.backgroundtask.IBackgroundTaskManager;
+import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IPluginManager;
 import org.columba.api.shutdown.IShutdownManager;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
@@ -52,6 +54,7 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ServiceExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
@@ -310,6 +313,37 @@ public class Main {
 			FrameManager.getInstance().openStoredViews();
 		}
 
+    /* initialize services before dismissing the splash screen */
+    ServiceExtensionHandler serviceHandler = null;
+
+    try
+    {
+      serviceHandler = (ServiceExtensionHandler)PluginManager.getInstance().getHandler("org.columba.core.service");
+      serviceHandler.initServices();
+      ShutdownManager.getInstance().register(new Runnable()
+        {
+          public void run()
+          {
+            ServiceExtensionHandler serviceHandler = null;
+            try
+            {
+              serviceHandler = (ServiceExtensionHandler)PluginManager.getInstance().getHandler("org.columba.core.service");
+              serviceHandler.stopServices();
+              serviceHandler.disposeServices();
+            }
+            catch(PluginHandlerNotFoundException ex)
+            {
+              LOG.log(Level.SEVERE,"",ex);
+            }
+          }
+          
+        });
+    }
+    catch(PluginHandlerNotFoundException ex)
+    {
+      LOG.log(Level.SEVERE,"",ex);
+    }
+        
 		profiler.pop("frames");
 
 		// for ( int i=0; i<frameMediator.length; i++) {
@@ -326,6 +360,10 @@ public class Main {
 		ComponentManager.getInstance().postStartup();
 
 		profiler.pop("main");
+    
+    /* everything is up and running, start services */
+    if (serviceHandler != null)
+      serviceHandler.startServices();
 	}
 
 	/**
