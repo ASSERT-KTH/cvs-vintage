@@ -57,5 +57,6 @@
 	<classpathentry kind="lib" path="lib/bsh-2.0b2.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.0-all.jar"/>
 	<classpathentry sourcepath="/flexdock" kind="lib" path="lib/flexdock-0.3.7.jar"/>
+	<classpathentry kind="lib" path="lib/jython.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
