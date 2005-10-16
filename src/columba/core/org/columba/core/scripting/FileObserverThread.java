@@ -54,7 +54,7 @@ public class FileObserverThread extends Thread implements OptionsObserver,
 			.getName());
 
 	private final BeanshellConfig config;
-	private final BeanshellFileFilter beanshellFilter;
+	private final ScriptFileFilter fileFilter;
   private final InterpreterManager interpreterManager;
   private final List observers;
   private Map scriptList;
@@ -68,7 +68,7 @@ public class FileObserverThread extends Thread implements OptionsObserver,
 	private FileObserverThread() {
     
     config = BeanshellConfig.getInstance();
-    beanshellFilter = new BeanshellFileFilter();
+    fileFilter = new ScriptFileFilter();
     interpreterManager = new InterpreterManager();
     
     scriptList = new HashMap();
@@ -76,7 +76,7 @@ public class FileObserverThread extends Thread implements OptionsObserver,
     lastExecution = System.currentTimeMillis();
     
     pollingInterval = config.getOptions().getInternalPollingInterval();
-    beanshellFilter.compileFilter(interpreterManager.getSupportedExtensions());
+    fileFilter.compileFilter(interpreterManager.getSupportedExtensions());
     
 	}
 
@@ -189,7 +189,7 @@ public class FileObserverThread extends Thread implements OptionsObserver,
 			return new File[] {};
 		}
 
-		return configPath.listFiles(beanshellFilter);
+		return configPath.listFiles(fileFilter);
 	}
 
 	private void execChangedFiles(List files) {
@@ -197,7 +197,7 @@ public class FileObserverThread extends Thread implements OptionsObserver,
       interpreterManager.executeScript( (ColumbaScript)it.next() );
 	}
 
-	private class BeanshellFileFilter implements FileFilter {
+	private class ScriptFileFilter implements FileFilter {
 
 		private Pattern extensionPattern = null;
 
