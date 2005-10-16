@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.69 2005/09/12 11:24:15 mkl Exp $
+// $Id: PropPanelPackage.java,v 1.70 2005/10/16 13:15:17 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,7 @@ import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementLeafCheckBox;
 import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementRootCheckBox;
 import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementSpecializationListModel;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
+import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewTagDefinition;
 import org.argouml.util.ConfigLoader;
 import org.tigris.swidgets.GridLayout2;
 import org.tigris.swidgets.Orientation;
@@ -129,6 +130,7 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addAction(new ActionAddPackage());
         addAction(new ActionAddDataType());
         addAction(new ActionNewStereotype());
+        addAction(new ActionNewTagDefinition());
         addAction(new ActionDeleteSingleModelElement());
     }
 

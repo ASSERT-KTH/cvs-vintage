@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.52 2005/10/12 14:48:42 mkl Exp $
+// $Id: PropPanelStereotype.java,v 1.53 2005/10/16 13:15:17 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,6 +104,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
                 getTagDefinitionScroll());
         addAction(new ActionNavigateNamespace());
         addAction(new ActionNewStereotype());
+        addAction(new ActionNewTagDefinition());
         addAction(new ActionDeleteSingleModelElement());
     }
 
