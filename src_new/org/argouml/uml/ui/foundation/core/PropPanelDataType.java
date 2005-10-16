@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.68 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelDataType.java,v 1.69 2005/10/16 09:15:09 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,10 +51,16 @@ public class PropPanelDataType extends PropPanelClassifier {
 
     private JScrollPane attributeScroll;
 
+    private JScrollPane literalsScroll;
+    
     private JScrollPane operationScroll;
 
+    
     private static UMLClassAttributeListModel attributeListModel =
         new UMLClassAttributeListModel();
+    
+    private static UMLEnumerationLiteralsListModel literalsListModel =
+        new UMLEnumerationLiteralsListModel();
 
     private static UMLClassOperationListModel operationListModel =
         new UMLClassOperationListModel();
@@ -91,8 +97,11 @@ public class PropPanelDataType extends PropPanelClassifier {
         addField(Translator.localize("label.operations"),
                 getOperationScroll());
 
-        addField(Translator.localize("label.literals"),
+        addField(Translator.localize("label.attributes"),
                 getAttributeScroll());
+
+        addField(Translator.localize("label.literals"),
+                getLiteralsScroll());
 
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionAddDataType());
@@ -243,4 +252,17 @@ public class PropPanelDataType extends PropPanelClassifier {
         return attributeScroll;
     }
 
+    /**
+     * Returns the attributeScroll.
+     *
+     * @return JScrollPane
+     */
+    public JScrollPane getLiteralsScroll() {
+        if (literalsScroll == null) {
+            JList list = new UMLLinkedList(literalsListModel);
+            literalsScroll = new JScrollPane(list);
+        }
+        return literalsScroll;
+    }
+    
 } /* end class PropPanelDataType */
