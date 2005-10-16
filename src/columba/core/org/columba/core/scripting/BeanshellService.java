@@ -69,13 +69,6 @@ public class BeanshellService implements IColumbaService {
 			return false;
 
 		/*
-		 * seems like we're ready to go add a new configuration hook, so that
-		 * scripts can be maintained in a configuration dialog of some sort
-		 */
-		if (!addMenuItem())
-			return false;
-
-		/*
 		 * initialize file observer thread with a reference to our
 		 * beanshellScripts map
 		 */
@@ -84,19 +77,6 @@ public class BeanshellService implements IColumbaService {
 		LOG.info("BeanshellService initialized...");
 		return true;
 
-	}
-
-	private boolean addMenuItem() {
-
-		MenuExtensionPoint menu = (MenuExtensionPoint) ExtensionPointManager
-				.getInstance().getExtensionPoint(
-						MenuExtensionPoint.EXTENSION_POINT_ID);
-
-		menu.addAction(new BeanshellManagerAction(),
-				"utilities",
-				"bottom");
-
-		return true;
 	}
 
 	/**
