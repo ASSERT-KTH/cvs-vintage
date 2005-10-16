@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.29 2005/10/05 17:03:51 bobtarling Exp $
+// $Id: CoreHelperImpl.java,v 1.30 2005/10/16 08:33:12 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3470,5 +3470,13 @@ class CoreHelperImpl implements CoreHelper {
      */
     public void removeStereotype(Object handle, Object stereo) {
         // This will never be implemented in NSUML
+    }
+
+    /**
+     * Unimplemented in UML 1.3
+     * @see org.argouml.model.CoreHelper#setEnumerationLiterals(java.lang.Object, java.util.List)
+     */
+    public void setEnumerationLiterals(Object enumeration, List literals) {
+        // ILB
     }
 }
