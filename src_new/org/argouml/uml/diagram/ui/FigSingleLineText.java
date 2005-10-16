@@ -1,4 +1,4 @@
-// $Id: FigSingleLineText.java,v 1.5 2005/10/16 16:11:24 bobtarling Exp $
+// $Id: FigSingleLineText.java,v 1.6 2005/10/16 16:15:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.diagram.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.StringTokenizer;
 
 import org.tigris.gef.presentation.FigText;
 
