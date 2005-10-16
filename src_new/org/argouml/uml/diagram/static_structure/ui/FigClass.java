@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.186 2005/10/16 02:27:54 bobtarling Exp $
+// $Id: FigClass.java,v 1.187 2005/10/16 16:30:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,18 +27,15 @@ package org.argouml.uml.diagram.static_structure.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.text.ParseException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Action;
-import javax.swing.SingleSelectionModel;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
@@ -47,10 +44,8 @@ import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
-import org.argouml.persistence.ZargoFilePersister;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
-import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
@@ -60,7 +55,6 @@ import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigAttributesCompartment;
 import org.argouml.uml.diagram.ui.FigEmptyRect;
-import org.argouml.uml.diagram.ui.FigFeaturesCompartment;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigStereotypesCompartment;
 import org.argouml.uml.generator.ParserDisplay;
@@ -71,7 +65,6 @@ import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
-import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
@@ -323,16 +316,6 @@ public class FigClass extends FigClassifierBox
      */
     private FigAttributesCompartment getAttributesFig() {
         return attributesFigCompartment;
-    }
-
-    /**
-     * Returns the status of the operation field.
-     * @return true if the operations are visible, false otherwise
-     *
-     * @see org.argouml.uml.diagram.ui.OperationsCompartmentContainer#isOperationsVisible()
-     */
-    public boolean isOperationsVisible() {
-        return getOperationsFig().isVisible();
     }
 
     /**
