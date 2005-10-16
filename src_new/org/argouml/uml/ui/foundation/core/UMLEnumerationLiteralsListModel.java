@@ -1,4 +1,4 @@
-// $Id: UMLEnumerationLiteralsListModel.java,v 1.1 2005/10/16 09:15:09 rastaman Exp $
+// $Id: UMLEnumerationLiteralsListModel.java,v 1.2 2005/10/16 13:13:44 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,8 +49,7 @@ public class UMLEnumerationLiteralsListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (getTarget() != null ) {
-
+        if (Model.getFacade().isAEnumeration(getTarget())) {
             setAllElements(Model.getFacade().getEnumerationLiterals(getTarget()));
         }
     }
@@ -58,8 +57,12 @@ public class UMLEnumerationLiteralsListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
-    protected boolean isValidElement(Object/*MBase*/ element) {
-        return (Model.getFacade().getEnumerationLiterals(getTarget()).contains(element));
+    protected boolean isValidElement(Object element) {
+        if (Model.getFacade().isAEnumeration(getTarget())) {
+            List literals = Model.getFacade().getEnumerationLiterals(getTarget());
+            return literals.contains(element);
+        }
+        return false;
     }
 
     /**
