@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.columba.core.scripting.config.BeanshellConfig;
 import org.columba.core.scripting.model.ColumbaScript;
 
 
@@ -53,7 +54,7 @@ public class InterpreterManager
     interpreters = new HashMap();
     
     registerInterpreter(new BshInterpreter());
-    /*registerInterperter(new JythonInterpreter());*/
+    registerInterpreter(new JythonInterpreter());
     /*registerInterpreter(new GroovyInterperter());*/
   }
   
@@ -98,7 +99,13 @@ public class InterpreterManager
       return;
     }   
     
-    interpreter.execute(script);
+    Map vars = new HashMap();
+    vars.put( ScriptInterpreter.SCRIPT_PATH, 
+        BeanshellConfig.getInstance().getPath().getPath());
+
+    vars.put(ScriptInterpreter.SCRIPT_OBJ, script);
+    
+    interpreter.execute(script,vars);
     
     LOG.exiting("executeScript",script.getPath());
   }

@@ -17,6 +17,8 @@
 */
 package org.columba.core.scripting.interpreter;
 
+import java.util.Map;
+
 import org.columba.core.scripting.model.ColumbaScript;
 
 /**
@@ -24,7 +26,11 @@ import org.columba.core.scripting.model.ColumbaScript;
  */
 public interface ScriptInterpreter
 {
+  public static final String
+    SCRIPT_PATH = "scriptPath",
+    SCRIPT_OBJ = "scriptObj";
+    
   public String getName();
   public String[] getSupportedExtensions();
-  public void execute(ColumbaScript script);
+  public void execute(ColumbaScript script, Map vars);
 }
