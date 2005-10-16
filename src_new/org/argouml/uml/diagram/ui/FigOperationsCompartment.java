@@ -1,4 +1,4 @@
-// $Id: FigOperationsCompartment.java,v 1.6 2005/10/14 18:07:35 bobtarling Exp $
+// $Id: FigOperationsCompartment.java,v 1.7 2005/10/16 02:27:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,5 +119,12 @@ public class FigOperationsCompartment extends FigFeaturesCompartment {
                 }
             }
         }
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#createFeature()
+     */
+    public void createFeature() {
+        (new ActionAddOperation()).actionPerformed(null);
     }
 }
