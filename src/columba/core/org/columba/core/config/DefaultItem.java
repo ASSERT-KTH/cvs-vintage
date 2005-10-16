@@ -108,7 +108,11 @@ public class DefaultItem implements Cloneable, IDefaultItem {
 			element = root.addSubElement(pathToElement);
 		}
 
-		element.addAttribute(key, newValue);
+    if (key == null)
+      element.setData(newValue);
+    else
+      element.addAttribute(key, newValue);
+    
 	}
 
 	/** ************************** helper classes ************************** */
