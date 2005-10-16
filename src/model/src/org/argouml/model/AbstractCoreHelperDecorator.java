@@ -1,4 +1,4 @@
-// $Id: AbstractCoreHelperDecorator.java,v 1.4 2005/10/07 15:03:38 bobtarling Exp $
+// $Id: AbstractCoreHelperDecorator.java,v 1.5 2005/10/16 08:36:57 rastaman Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.model;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * An abstract Decorator for the {@link CoreHelper}.
@@ -1119,5 +1120,12 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
      */
     public void removeElementResidence(Object handle, Object residence) {
         impl.removeElementResidence(handle, residence);
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#setEnumerationLiterals(java.lang.Object, java.util.List)
+     */
+    public void setEnumerationLiterals(Object enumeration, List literals) {
+        impl.setEnumerationLiterals(enumeration, literals);
     }
 }

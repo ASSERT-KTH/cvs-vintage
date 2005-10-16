@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.8 2005/10/05 17:03:51 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.9 2005/10/16 08:36:57 rastaman Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.model;
 
 import java.util.Collection;
+import java.util.List;
 
 
 
@@ -254,7 +255,7 @@ public interface CoreHelper {
      * @return Collection
      */
     Collection getRealizedInterfaces(Object cls);
-
+    
     /**
      * Returns all classes some generalizable element extends.
      *
@@ -1244,5 +1245,12 @@ public interface CoreHelper {
      * @param residence
      */
     void removeElementResidence(Object handle, Object residence);
+    
+    /**
+     * Set the (ordered) list of literals of an enumeration.
+     * @param enumeration
+     * @param literals A list of Literals.
+     */
+    void setEnumerationLiterals(Object enumeration, List literals);
     
 }
