@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.15 2005/10/16 14:23:39 bobtarling Exp $
+// $Id: FigFeaturesCompartment.java,v 1.16 2005/10/16 16:23:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Iterator;
 
@@ -176,15 +175,17 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
     
     
     /**
-     * The minimum width is the minimum width of the widest child
-     * The minium height is the total minimum height of all child figs.
+     * The minimum width is the minimum width of the widest child feature.
+     * The minium height is the total minimum height of all child figs but no
+     * less than 21 pixels.
      * @return the minimum width
      */
     public Dimension getMinimumSize() {
-        if (super.getMinimumSize().height > 21) {
-            return super.getMinimumSize();
+        Dimension d = super.getMinimumSize();
+        if (d.height < 21) {
+            d.height = 21;
         }
-        return new Dimension(0, 20);
+        return d;
     }
     
     protected void setBoundsImpl(int x, int y, int w, int h) {
