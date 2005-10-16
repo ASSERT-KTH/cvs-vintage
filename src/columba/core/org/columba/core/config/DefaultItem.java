@@ -89,7 +89,10 @@ public class DefaultItem implements Cloneable, IDefaultItem {
 		XmlElement element = getElement(pathToElement);
 
 		if (element != null) {
-			return element.getAttribute(key);
+      if (key == null || key.length() == 0)
+        return element.getData();
+      else
+        return element.getAttribute(key);
 		} else {
 			return null;
 		}
