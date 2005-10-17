@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.11 2005/10/17 11:26:55 bobtarling Exp $
+// $Id: FigClassifierBox.java,v 1.12 2005/10/17 19:48:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,12 +86,10 @@ abstract public class FigClassifierBox extends FigNodeModelElement
      * @see java.lang.Object#clone()
      */
     public Object clone() {
-        FigClass figClone = (FigClass) super.clone();
+        FigClassifierBox figClone = (FigClassifierBox) super.clone();
         Iterator thisIter = this.getFigs().iterator();
-        Iterator cloneIter = figClone.getFigs().iterator();
         while (thisIter.hasNext()) {
             Fig thisFig = (Fig) thisIter.next();
-            Fig cloneFig = (Fig) cloneIter.next();
             if (thisFig == operationsFig) {
                 figClone.operationsFig = (FigOperationsCompartment) thisFig;
                 return figClone;

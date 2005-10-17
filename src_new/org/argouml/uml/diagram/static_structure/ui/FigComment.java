@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.56 2005/10/17 11:26:55 bobtarling Exp $
+// $Id: FigComment.java,v 1.57 2005/10/17 19:48:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigMultiLineText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.argouml.uml.diagram.ui.FigOperationsCompartment;
 import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Geometry;
 import org.tigris.gef.base.Selection;
@@ -195,11 +196,19 @@ public class FigComment
      */
     public Object clone() {
         FigComment figClone = (FigComment) super.clone();
-        Iterator it = figClone.getFigs().iterator();
-        figClone.setBigPort((FigRect) it.next());
-        figClone.body = (FigPoly) it.next();
-        figClone.urCorner = (FigPoly) it.next();
-        figClone.text = (FigText) it.next();
+        Iterator thisIter = this.getFigs().iterator();
+        while (thisIter.hasNext()) {
+            Object thisFig = thisIter.next();
+            if (thisFig == body) {
+                figClone.body = (FigPoly) thisFig;
+            }
+            if (thisFig == urCorner) {
+                figClone.urCorner = (FigPoly) thisFig;
+            }
+            if (thisFig == text) {
+                figClone.text = (FigText) thisFig;
+            }
+        }
         return figClone;
     }
 
