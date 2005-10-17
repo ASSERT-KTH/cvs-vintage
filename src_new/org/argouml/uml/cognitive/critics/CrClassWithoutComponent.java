@@ -1,4 +1,4 @@
-// $Id: CrClassWithoutComponent.java,v 1.21 2005/09/26 21:24:51 bobtarling Exp $
+// $Id: CrClassWithoutComponent.java,v 1.22 2005/10/17 11:26:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,9 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrClassWithoutComponent.java,v 1.21 2005/09/26 21:24:51 bobtarling Exp $
+// $Id: CrClassWithoutComponent.java,v 1.22 2005/10/17 11:26:58 bobtarling Exp $
 package org.argouml.uml.cognitive.critics;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 

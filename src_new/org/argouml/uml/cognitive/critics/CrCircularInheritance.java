@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.22 2005/07/18 13:55:08 mkl Exp $
+// $Id: CrCircularInheritance.java,v 1.23 2005/10/17 11:26:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,17 +24,12 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
-import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLDecision;
-import org.argouml.uml.cognitive.UMLToDoItem;
 
 /**
  * Well-formedness rule [2] for MGeneralizableElement. See page 31 of UML 1.1

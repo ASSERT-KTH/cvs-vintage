@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.21 2005/01/09 14:58:13 linus Exp $
+// $Id: EmailExpertDialog.java,v 1.22 2005/10/17 11:26:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,10 +138,10 @@ public class EmailExpertDialog extends ArgoDialog {
     public void actionPerformed(ActionEvent e) {
 	super.actionPerformed(e);
 	if (e.getSource() == getOkButton()) {
-	    String to = emailTo.getText();
-	    String cc = emailCc.getText();
-	    String subject = emailSubject.getText();
-	    LOG.debug("sending email!");
+//	    String to = emailTo.getText();
+//	    String cc = emailCc.getText();
+//	    String subject = emailSubject.getText();
+	    LOG.warn("sending email is not implemented!");
 	} else {
 	    if (e.getSource() == getCancelButton()) {
 	        LOG.debug("cancel");

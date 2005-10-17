@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.44 2005/10/07 00:12:13 bobtarling Exp $
+// $Id: FigComponentInstance.java,v 1.45 2005/10/17 11:26:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,12 +32,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.util.*;
 
-import org.argouml.application.api.Notation;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
-import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;

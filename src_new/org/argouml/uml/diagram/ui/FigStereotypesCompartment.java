@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.10 2005/10/14 16:13:42 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.11 2005/10/17 11:26:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Notation;
-import org.argouml.application.api.NotationContext;
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.language.helpers.NotationHelper;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.static_structure.ui.FigFeature;
@@ -173,7 +170,6 @@ public class FigStereotypesCompartment extends FigCompartment {
     }
     
     protected void setBoundsImpl(int x, int y, int w, int h) {
-        int n = getFigs().size() - 1;
         Fig fig;
         int yy = y;
         Iterator figs = iterator();

@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.10 2005/10/16 02:27:54 bobtarling Exp $
+// $Id: FigClassifierBox.java,v 1.11 2005/10/17 11:26:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -42,8 +41,6 @@ import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
-import org.tigris.gef.presentation.FigGroup;
-import org.tigris.gef.presentation.FigRect;
 
 /**
  * Class to display graphics for a UML Class in a diagram.<p>

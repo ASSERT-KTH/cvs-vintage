@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.127 2005/10/16 02:27:53 bobtarling Exp $
+// $Id: FigInterface.java,v 1.128 2005/10/17 11:26:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.diagram.static_structure.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -53,8 +52,6 @@ import org.argouml.uml.diagram.ui.ActionCompartmentDisplay;
 import org.argouml.uml.diagram.ui.ActionEdgesDisplay;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigEmptyRect;
-import org.argouml.uml.diagram.ui.FigFeaturesCompartment;
-import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigOperationsCompartment;
 import org.argouml.uml.diagram.ui.FigStereotypesCompartment;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -64,8 +61,6 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
-import org.tigris.gef.presentation.FigGroup;
-import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 

@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.48 2005/05/15 09:56:45 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.49 2005/10/17 11:26:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.diagram.sequence;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.VetoableChangeListener;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -37,15 +36,11 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
-import org.argouml.uml.diagram.sequence.ui.FigMessage;
-import org.argouml.uml.diagram.sequence.ui.FigMessagePort;
 import org.argouml.uml.diagram.sequence.ui.FigClassifierRole;
-import org.argouml.uml.diagram.sequence.ui.FigReturnActionMessage;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Mode;
 import org.tigris.gef.base.ModeManager;
-import org.tigris.gef.presentation.Fig;
 
 /**
  * This class defines a bridge between the UML meta-model

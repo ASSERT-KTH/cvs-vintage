@@ -1,4 +1,4 @@
-// $Id: TestUMLAction.java,v 1.3 2005/06/05 15:13:08 linus Exp $
+// $Id: TestUMLAction.java,v 1.4 2005/10/17 11:26:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,8 +69,6 @@ public class TestUMLAction extends TestCase {
      * sure that the static interface has not changed.
      */
     private void compileTestStatics() {
-	boolean t1 = UMLAction.HAS_ICON;
-	boolean t2 = UMLAction.NO_ICON;
 	UMLAction.getMnemonic(new String());
     }
 

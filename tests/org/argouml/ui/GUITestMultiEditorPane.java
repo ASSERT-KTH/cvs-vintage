@@ -1,4 +1,4 @@
-// $Id: GUITestMultiEditorPane.java,v 1.8 2005/07/28 08:17:05 linus Exp $
+// $Id: GUITestMultiEditorPane.java,v 1.9 2005/10/17 11:26:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,16 +24,7 @@
 
 package org.argouml.ui;
 
-import java.awt.Component;
-
-import javax.swing.JTabbedPane;
-
 import junit.framework.TestCase;
-
-import org.argouml.model.Model;
-import org.argouml.ui.targetmanager.TargetEvent;
-import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
-import org.tigris.gef.presentation.FigText;
 
 /**
  * @author jaap.branderhorst@xs4all.nl

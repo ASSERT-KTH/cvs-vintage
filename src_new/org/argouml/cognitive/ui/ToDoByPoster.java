@@ -1,4 +1,4 @@
-// $Id: ToDoByPoster.java,v 1.13 2005/03/05 10:37:21 mvw Exp $
+// $Id: ToDoByPoster.java,v 1.14 2005/10/17 11:26:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,7 +140,6 @@ public class ToDoByPoster extends ToDoPerspective
     public void toDoItemsRemoved(ToDoListEvent tde) {
 	LOG.debug("toDoItemRemoved");
 	ToDoList list = Designer.theDesigner().getToDoList(); //source?
-	Vector items = tde.getToDoItems();
 	Object[] path = new Object[2];
 	path[0] = Designer.theDesigner().getToDoList();
 

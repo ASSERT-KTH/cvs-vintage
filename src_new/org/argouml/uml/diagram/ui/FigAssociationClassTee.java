@@ -1,4 +1,4 @@
-// $Id: FigAssociationClassTee.java,v 1.1 2005/05/15 09:56:46 bobtarling Exp $
+// $Id: FigAssociationClassTee.java,v 1.2 2005/10/17 11:26:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import org.tigris.gef.presentation.Fig;

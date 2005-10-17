@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.13 2005/10/10 00:56:15 bobtarling Exp $
+// $Id: FigFeature.java,v 1.14 2005/10/17 11:26:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,8 @@
 package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.StringTokenizer;
 
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.CompartmentFigText;

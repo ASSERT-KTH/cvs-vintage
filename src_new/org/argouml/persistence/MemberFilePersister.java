@@ -1,4 +1,4 @@
-// $Id: MemberFilePersister.java,v 1.5 2005/07/05 19:38:30 bobtarling Exp $
+// $Id: MemberFilePersister.java,v 1.6 2005/10/17 11:26:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.55 2005/10/12 13:59:30 bobtarling Exp $
+// $Id: FigComment.java,v 1.56 2005/10/17 11:26:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import java.util.Iterator;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Notation;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.SingleStereotypeEnabler;

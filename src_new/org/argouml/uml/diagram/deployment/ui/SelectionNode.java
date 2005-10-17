@@ -1,4 +1,4 @@
-// $Id: SelectionNode.java,v 1.25 2005/07/12 21:34:32 mvw Exp $
+// $Id: SelectionNode.java,v 1.26 2005/10/17 11:26:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.diagram.deployment.ui;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -142,9 +141,6 @@ public class SelectionNode extends SelectionNodeClarifiers {
 	}
 	int cx = getContent().getX(), cy = getContent().getY();
 	int cw = getContent().getWidth(), ch = getContent().getHeight();
-	int newX = cx, newY = cy, newW = cw, newH = ch;
-	Dimension minSize = getContent().getMinimumSize();
-	int minWidth = minSize.width, minHeight = minSize.height;
 	Object edgeType = null;
 	Object nodeType = Model.getMetaTypes().getNode();
 	int bx = mX, by = mY;

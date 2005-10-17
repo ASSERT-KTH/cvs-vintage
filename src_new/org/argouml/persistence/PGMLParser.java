@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.28 2005/06/21 14:02:10 bobtarling Exp $
+// $Id: PGMLParser.java,v 1.29 2005/10/17 11:26:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -457,8 +457,6 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
             boolean closeStream) throws SAXException {
         
         try {
-            String errmsg = "Exception in readDiagram";
-    
             //initialise parsing attributes:
             _figRegistry = new HashMap();
             InputSource source = new InputSource(is);
@@ -862,7 +860,7 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
                 if (f instanceof FigGroup) {
                     FigGroup fg = (FigGroup) f;
                     int i = Integer.parseInt(subIndex);
-                    f = (Fig) fg.getFigAt(i);
+                    f = fg.getFigAt(i);
                 }
             }
         }

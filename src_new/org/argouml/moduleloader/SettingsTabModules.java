@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.7 2005/07/10 18:57:26 linus Exp $
+// $Id: SettingsTabModules.java,v 1.8 2005/10/17 11:26:56 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,14 +26,12 @@ package org.argouml.moduleloader;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -193,8 +191,6 @@ public class SettingsTabModules extends SettingsTabHelper {
 	}
 
 	notYetLoadedPanel = new JPanel();
-	LayoutManager layout =
-	    new BoxLayout(notYetLoadedPanel, BoxLayout.Y_AXIS);
 
 	Iterator iter =
 	    ModuleLoader2.notYetLoadedModules().entrySet().iterator();
@@ -208,7 +204,6 @@ public class SettingsTabModules extends SettingsTabHelper {
 	    button.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 		    try {
-			Class moduleClass =
 			    getClass().getClassLoader().loadClass(classname);
 		    } catch (ClassNotFoundException e) {
 			JOptionPane.showMessageDialog(

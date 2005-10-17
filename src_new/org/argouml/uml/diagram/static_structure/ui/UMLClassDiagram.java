@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.75 2005/09/02 14:46:01 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.76 2005/10/17 11:26:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,17 +31,13 @@ import javax.swing.Action;
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.ClassDiagram;
-import org.argouml.model.DiDiagram;
 import org.argouml.model.Model;
-import org.argouml.ui.GraphChangeAdapter;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
-import org.tigris.gef.graph.GraphModel;
 
 /**
  * @author jrobbins@ics.uci.edy
