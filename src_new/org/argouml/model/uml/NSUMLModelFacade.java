@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.27 2005/10/15 16:49:44 rastaman Exp $
+// $Id: NSUMLModelFacade.java,v 1.28 2005/10/17 12:08:54 rastaman Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4756,7 +4756,8 @@ public class NSUMLModelFacade implements Facade {
      * @see org.argouml.model.Facade#getTagDefinition(java.lang.Object)
      */
     public Object getTagDefinition(Object handle) {
-        return null;
+        throw new IllegalArgumentException("Unimplemented in UML 1.3");
+        //return null;
     }
 
     /**
@@ -4764,7 +4765,8 @@ public class NSUMLModelFacade implements Facade {
      * @see org.argouml.model.Facade#getTagDefinitions(java.lang.Object)
      */
     public Collection getTagDefinitions(Object handle) {
-        return null;
+        throw new IllegalArgumentException("Unimplemented in UML 1.3");
+        //return null;
     }
 
     /**
@@ -4772,7 +4774,8 @@ public class NSUMLModelFacade implements Facade {
      * @see org.argouml.model.Facade#getEnumerationLiterals(java.lang.Object)
      */
     public List getEnumerationLiterals(Object handle) {
-        return null;
+        throw new IllegalArgumentException("Unimplemented in UML 1.3");
+        //return null;
     }
 	
 }
