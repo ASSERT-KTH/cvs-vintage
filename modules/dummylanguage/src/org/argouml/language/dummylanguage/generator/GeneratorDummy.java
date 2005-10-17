@@ -1,4 +1,4 @@
-// $Id: GeneratorDummy.java,v 1.14 2005/05/21 18:16:30 mvw Exp $
+// $Id: GeneratorDummy.java,v 1.15 2005/10/17 18:15:55 mvw Exp $
 // Copyright (c) 2001-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.language.dummylanguage.generator;
 
 import org.argouml.application.api.Notation;
-import org.argouml.application.api.PluggableNotation;
 import org.argouml.model.Model;
 import org.argouml.uml.generator.Generator2;
 
@@ -40,8 +39,7 @@ import org.argouml.uml.generator.Generator2;
  * @stereotype singleton
  */
 public final class GeneratorDummy
-	extends Generator2
-	implements PluggableNotation {
+	extends Generator2 {
     /**
      * The singleton.
      */

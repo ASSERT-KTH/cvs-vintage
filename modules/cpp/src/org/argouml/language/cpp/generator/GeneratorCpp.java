@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.56 2005/08/09 22:44:53 aslo Exp $
+// $Id: GeneratorCpp.java,v 1.57 2005/10/17 18:15:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ import org.argouml.uml.generator.Generator2;
  * tries to generate 1265 files in parallel and guesses why it doesn't work :-)
  */
 public class GeneratorCpp extends Generator2
-    implements PluggableNotation, FileGenerator {
+    implements FileGenerator {
 
     /**
      * The logger.

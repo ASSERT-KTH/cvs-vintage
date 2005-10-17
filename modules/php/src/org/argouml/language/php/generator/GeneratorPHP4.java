@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.28 2005/07/12 14:21:18 bobtarling Exp $
+// $Id: GeneratorPHP4.java,v 1.29 2005/10/17 18:15:55 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,6 @@ import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Notation;
-import org.argouml.application.api.PluggableNotation;
 import org.argouml.language.php.PHPDocumentor;
 import org.argouml.model.Model;
 import org.argouml.uml.UUIDHelper;
@@ -56,7 +55,7 @@ import org.argouml.uml.generator.Generator2;
  */
 public class GeneratorPHP4
     extends Generator2
-    implements PluggableNotation, FileGenerator {
+    implements FileGenerator {
 
     /**
      * Sets the indentation level to four spaces
