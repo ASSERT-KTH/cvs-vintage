@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IrmiPRODelegate.java,v 1.1 2005/05/14 00:03:58 rhs Exp $
+ * $Id: IrmiPRODelegate.java,v 1.2 2005/10/19 14:45:01 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -30,14 +30,13 @@ package org.objectweb.carol.rmi.multi;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.objectweb.carol.irmi.PRO;
-import org.objectweb.carol.irmi.Interceptor;
 import org.objectweb.carol.irmi.ClientInterceptor;
+import org.objectweb.carol.irmi.Interceptor;
+import org.objectweb.carol.irmi.PRO;
 import org.objectweb.carol.irmi.Server;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
@@ -47,7 +46,6 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JRMPServerRequestInfoImpl;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServiceContext;
-import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.ConfigurationRepository;
