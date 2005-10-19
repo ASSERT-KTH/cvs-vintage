@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.21 2005/09/26 12:41:59 coqp Exp $
+ * $Id: CarolDefaultValues.java,v 1.22 2005/10/19 13:40:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -68,9 +68,20 @@ public class CarolDefaultValues {
     public static final String  SERVER_IRMI_PORT = CAROL_PREFIX + ".irmi.server.port";
 
     /**
+     * Use a single interface for creating the registry in server mode case (irmi)
+     */
+    public static final String  SERVER_IRMI_SINGLE_ITF = CAROL_PREFIX + ".irmi.interfaces.bind.single";
+
+    /**
      * Port number to use in server mode case (jrmp)
      */
     public static final String  SERVER_JRMP_PORT = CAROL_PREFIX + ".jrmp.server.port";
+
+    /**
+     * Use a single interface for creating the registry in server mode case (jrmp)
+     */
+    public static final String  SERVER_JRMP_SINGLE_ITF = CAROL_PREFIX + ".jrmp.interfaces.bind.single";
+
 
     /**
      * Port number to use in server mode case (jeremie)

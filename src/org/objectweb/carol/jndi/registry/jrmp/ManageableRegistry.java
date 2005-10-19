@@ -22,11 +22,12 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ManageableRegistry.java,v 1.5 2005/03/15 09:55:13 benoitf Exp $
+ * $Id: ManageableRegistry.java,v 1.1 2005/10/19 13:40:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
-package org.objectweb.carol.jndi.registry;
+package org.objectweb.carol.jndi.registry.jrmp;
 
+import java.net.InetAddress;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
@@ -40,10 +41,14 @@ import java.rmi.server.ServerNotActiveException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.objectweb.carol.jndi.registry.RMIManageableSocketFactory;
+
 import sun.rmi.registry.RegistryImpl;
 
 /**
  * JRMP Registry without checks for bind
+ * This class do some invalid import on Sun classes and won't compile
+ * on free JVM.
  * @author Guillaume Rivière
  */
 public class ManageableRegistry extends RegistryImpl {
@@ -222,13 +227,14 @@ public class ManageableRegistry extends RegistryImpl {
      * Create a new registry on given port and use exported object port given
      * @param port registry port
      * @param objectPort exported objects port
+     * @param inetAddress ip to use for the bind (instead of using all interfaces)
      * @return a new Registry object
      * @throws RemoteException if registry cannot be built
      */
-    public static Registry createManagableRegistry(int port, int objectPort) throws RemoteException {
+    public static Registry createManagableRegistry(int port, int objectPort, InetAddress inetAddress) throws RemoteException {
         // used fixed port factory only if user want set the port
-        if (objectPort > 0) {
-            RMISocketFactory socketFactory = RMIFixedPortFirewallSocketFactory.register(objectPort);
+        if (objectPort > 0 || inetAddress != null) {
+            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(objectPort, inetAddress);
             return new ManageableRegistry(port, socketFactory, socketFactory);
         } else {
             return new ManageableRegistry(port);
@@ -252,7 +258,7 @@ public class ManageableRegistry extends RegistryImpl {
             if (args.length >= 1) {
                 regPort = Integer.parseInt(args[0]);
             }
-            createManagableRegistry(regPort, 0);
+            createManagableRegistry(regPort, 0, null);
             System.out.println("ManageableRegistry started on port " + regPort);
             // The registry should not exiting because of the Manager binded
 

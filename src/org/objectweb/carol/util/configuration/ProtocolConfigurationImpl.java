@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ProtocolConfigurationImpl.java,v 1.3 2005/04/28 11:37:26 benoitf Exp $
+ * $Id: ProtocolConfigurationImpl.java,v 1.4 2005/10/19 13:40:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -130,8 +129,8 @@ public class ProtocolConfigurationImpl implements ProtocolConfiguration, Protoco
      */
     protected void parseURL() throws ConfigurationException {
         String url = getProviderURL();
-        port = getPortOfUrl(url);
-        host = getHostOfUrl(url);
+        port = ConfigurationUtil.getPortOfUrl(url);
+        host = ConfigurationUtil.getHostOfUrl(url);
     }
 
     /**
@@ -188,64 +187,9 @@ public class ProtocolConfigurationImpl implements ProtocolConfiguration, Protoco
         return (String) jndiEnv.get(Context.PROVIDER_URL);
     }
 
-    /**
-     * Parses the given url, and returns the port number. 0 is given in error
-     * case)
-     * @param url given url on which extract port number
-     * @return port number of the url
-     * @throws ConfigurationException if URL is invalid
-     */
-    protected int getPortOfUrl(String url) throws ConfigurationException {
-        int portNumber = 0;
-        try {
-            StringTokenizer st = new StringTokenizer(url, ":");
-            st.nextToken();
-            st.nextToken();
-            if (st.hasMoreTokens()) {
-                StringTokenizer lastst = new StringTokenizer(st.nextToken(), "/");
-                String pts = lastst.nextToken().trim();
-                int i = pts.indexOf(',');
-                if (i > 0) {
-                    pts = pts.substring(0, i);
-                }
-                portNumber = new Integer(pts).intValue();
-            }
-            return portNumber;
-        } catch (Exception e) {
-            // don't rethrow original exception. only URL name is important
-            throw new ConfigurationException("Invalid URL '" + url + "'. It should be on the format <protocol>://<hostname>:<port>");
-        }
-    }
 
-    /**
-     * Parses the given url, and returns the hostname
-     * If not found, returns localhost
-     * @param url given url on which extract hostname
-     * @return hostname of the url
-     * @throws ConfigurationException if URL is invalid
-     */
-    protected  String getHostOfUrl(String url) throws ConfigurationException {
-        String host = null;
-        // this would be simpler with a regexp :)
-        try {
-            // url is of the form protocol://<hostname>:<port>
-            String[] tmpSplitStr = url.split(":");
 
-            // array should be of length = 3
-            // get 2nd element (should be //<hostname>)
-            String tmpHost = tmpSplitStr[1];
 
-            // remove //
-            String[] tmpSplitHost = tmpHost.split("/");
-
-            // Get last element of the array to get hostname
-            host = tmpSplitHost[tmpSplitHost.length - 1];
-        } catch (Exception e) {
-            // don't rethrow original exception. only URL name is important
-            throw new ConfigurationException("Invalid URL '" + url + "'. It should be on the format <protocol>://<hostname>:<port>");
-        }
-        return host;
-    }
 
 
     /**

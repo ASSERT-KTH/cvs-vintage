@@ -22,20 +22,21 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPRegistry.java,v 1.11 2005/03/15 09:53:27 benoitf Exp $
+ * $Id: JRMPRegistry.java,v 1.12 2005/10/19 13:40:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
 
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import org.objectweb.carol.jndi.registry.ManageableRegistry;
-import org.objectweb.carol.jndi.registry.RMIFixedPortFirewallSocketFactory;
+import org.objectweb.carol.jndi.registry.jrmp.ManageableRegistry;
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.ConfigurationUtil;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -60,6 +61,11 @@ public class JRMPRegistry extends AbsRegistry implements NameService {
     private static Registry registry = null;
 
     /**
+     * InetAddress to use for creating registry (by default use all interfaces)
+     */
+    private InetAddress registryInetAddress = null;
+
+    /**
      * Default constructor
      */
     public JRMPRegistry() {
@@ -82,15 +88,24 @@ public class JRMPRegistry extends AbsRegistry implements NameService {
                     String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
                     objectPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName, "0"),
                             propertyName);
+
+                    // Read if regstry should use a single interface
+                    propertyName = CarolDefaultValues.SERVER_JRMP_SINGLE_ITF;
+                    boolean useSingleItf = Boolean.valueOf(getConfigProperties().getProperty(propertyName, "false")).booleanValue();
+                    if (useSingleItf) {
+                        String url = getConfigProperties().getProperty(CarolDefaultValues.CAROL_PREFIX + ".jrmp." + CarolDefaultValues.URL_PREFIX);
+                        registryInetAddress = InetAddress.getByName(ConfigurationUtil.getHostOfUrl(url));
+                    }
+
                 } else {
                     TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_JRMP_PORT
                             + "' defined in carol.properties file.");
                 }
             }
-            if (objectPort > 0) {
-                RMIFixedPortFirewallSocketFactory.register(objectPort);
+         /*   if (objectPort > 0) {
+                RMIManageableSocketFactory.register(objectPort);
             }
-
+            */
 
             if (!isStarted()) {
 
@@ -98,8 +113,12 @@ public class JRMPRegistry extends AbsRegistry implements NameService {
                     TraceCarol.infoCarol("Using JRMP fixed server port number '" + objectPort + "'.");
                 }
 
+                if (registryInetAddress != null) {
+                    TraceCarol.infoCarol("Using Specific address to bind registry '" + registryInetAddress + "'.");
+                }
+
                 if (getPort() >= 0) {
-                    registry = ManageableRegistry.createManagableRegistry(getPort(), objectPort);
+                    registry = ManageableRegistry.createManagableRegistry(getPort(), objectPort, registryInetAddress);
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
 
@@ -162,7 +181,11 @@ public class JRMPRegistry extends AbsRegistry implements NameService {
             return true;
         }
         try {
-            LocateRegistry.getRegistry(getPort()).list();
+            if (registryInetAddress != null) {
+                LocateRegistry.getRegistry(registryInetAddress.getHostAddress(), getPort()).list();
+            } else {
+                LocateRegistry.getRegistry(getPort()).list();
+            }
         } catch (RemoteException re) {
             return false;
         }

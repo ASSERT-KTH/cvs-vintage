@@ -19,23 +19,26 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RMIFixedPortFirewallSocketFactory.java,v 1.3 2005/03/15 09:55:03 benoitf Exp $
+ * $Id: RMIManageableSocketFactory.java,v 1.1 2005/10/19 13:40:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.RMISocketFactory;
 
 /**
- * Socket factory allowing to use a fixed port instead of a random port (when
- * it's 0). This is useful for firewall issues.
+ * Socket factory allowing to :
+ *    - use a fixed port instead of a random port (when port is 0).
+ *        (This is useful for firewall issues)
+ *    - Bind on a specific IP address
  * @author Florent Benoit
  */
-public class RMIFixedPortFirewallSocketFactory extends RMISocketFactory {
+public class RMIManageableSocketFactory extends RMISocketFactory {
 
     /**
      * Rmi socket factory instance
@@ -53,12 +56,20 @@ public class RMIFixedPortFirewallSocketFactory extends RMISocketFactory {
     private int exportedObjectsPort;
 
     /**
+     * InetAddress used for bind on a specific IP
+     */
+    private InetAddress inetAddress = null;
+
+    /**
      * Constructor
      * @param port exported objects port number
+     * @param inetAddress ip to use for the bind (instead of all),
+     *                    if null take default 0.0.0.0 listener
      */
-    private RMIFixedPortFirewallSocketFactory(int port) {
+    private RMIManageableSocketFactory(int port, InetAddress inetAddress) {
         super();
         this.exportedObjectsPort = port;
+        this.inetAddress = inetAddress;
     }
 
     /**
@@ -74,9 +85,16 @@ public class RMIFixedPortFirewallSocketFactory extends RMISocketFactory {
         if (port == 0 && exportedObjectfixedSocket != null) {
             return exportedObjectfixedSocket;
         }
-        ServerSocket ss = new ServerSocket(port);
+        ServerSocket ss = null;
+
+        if (inetAddress == null) {
+            ss = new ServerSocket(port);
+        } else {
+            // 0 value will be replaced by a default value
+            ss = new ServerSocket(port, 0, inetAddress);
+        }
         // Keep the socket for the exported object port
-        if (port == exportedObjectsPort) {
+        if (port == exportedObjectsPort && exportedObjectsPort > 0) {
             exportedObjectfixedSocket = ss;
         }
         return ss;
@@ -98,11 +116,13 @@ public class RMIFixedPortFirewallSocketFactory extends RMISocketFactory {
      * Register the factory
      * @return the factory which was created
      * @param port given port number for exporting objects
+     * @param inetAddress ip to use for the bind (instead of all),
+     *                    if null take default 0.0.0.0 listener
      * @throws RemoteException if the registration is not possible
      */
-    public static RMISocketFactory register(int port) throws RemoteException {
+    public static RMISocketFactory register(int port, InetAddress inetAddress) throws RemoteException {
         if (factory == null) {
-            factory = new RMIFixedPortFirewallSocketFactory(port);
+            factory = new RMIManageableSocketFactory(port, inetAddress);
 
             // Registring as default socket factory
             try {

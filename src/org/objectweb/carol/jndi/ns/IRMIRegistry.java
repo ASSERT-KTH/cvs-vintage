@@ -1,14 +1,15 @@
 package org.objectweb.carol.jndi.ns;
 
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import org.objectweb.carol.jndi.registry.ManageableRegistry;
-import org.objectweb.carol.jndi.registry.RMIFixedPortFirewallSocketFactory;
+import org.objectweb.carol.jndi.registry.RegistryCreator;
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.ConfigurationUtil;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -28,6 +29,12 @@ public class IRMIRegistry extends AbsRegistry implements NameService {
      * Instance port number (firewall)
      */
     private static int objectPort = 0;
+
+
+    /**
+     * InetAddress to use for creating registry (by default use all interfaces)
+     */
+    private InetAddress registryInetAddress = null;
 
     /**
      * registry
@@ -57,15 +64,24 @@ public class IRMIRegistry extends AbsRegistry implements NameService {
                     String propertyName = CarolDefaultValues.SERVER_IRMI_PORT;
                     objectPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName, "0"),
                             propertyName);
+
+                    // Read if regstry should use a single interface
+                    propertyName = CarolDefaultValues.SERVER_IRMI_SINGLE_ITF;
+                    boolean useSingleItf = Boolean.valueOf(getConfigProperties().getProperty(propertyName, "false")).booleanValue();
+                    if (useSingleItf) {
+                        String url = getConfigProperties().getProperty(CarolDefaultValues.CAROL_PREFIX + ".irmi." + CarolDefaultValues.URL_PREFIX);
+                        registryInetAddress = InetAddress.getByName(ConfigurationUtil.getHostOfUrl(url));
+                    }
                 } else {
                     TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IRMI_PORT
                             + "' defined in carol.properties file.");
                 }
             }
-            if (objectPort > 0) {
-                RMIFixedPortFirewallSocketFactory.register(objectPort);
-            }
 
+          /*  if (objectPort > 0 || registryInetAddress != null) {
+                RMIManageableSocketFactory.register(objectPort, registryInetAddress);
+            }
+           */
 
             if (!isStarted()) {
 
@@ -73,8 +89,12 @@ public class IRMIRegistry extends AbsRegistry implements NameService {
                     TraceCarol.infoCarol("Using IRMI fixed server port number '" + objectPort + "'.");
                 }
 
+                if (registryInetAddress != null) {
+                    TraceCarol.infoCarol("Using Specific address to bind registry '" + registryInetAddress + "'.");
+                }
+
                 if (getPort() >= 0) {
-                    registry = ManageableRegistry.createManagableRegistry(getPort(), objectPort);
+                    registry = RegistryCreator.createRegistry(getPort(), objectPort, registryInetAddress);
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
 
