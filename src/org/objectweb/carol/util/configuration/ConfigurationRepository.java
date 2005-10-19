@@ -19,13 +19,14 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.5 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: ConfigurationRepository.java,v 1.6 2005/10/19 16:54:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
@@ -295,7 +296,11 @@ public class ConfigurationRepository {
                 // if protocol is cmi, configure it
                 if (protocolName.equals("cmi")) {
                     try {
-                        org.objectweb.carol.cmi.ServerConfig.setProperties(properties);
+                        //org.objectweb.carol.cmi.ServerConfig.setProperties(properties);
+                        Class clazz = Thread.currentThread().getContextClassLoader().loadClass("org.objectweb.carol.cmi.ServerConfig");
+                        Method m = clazz.getMethod("setProperties", new Class[] {Properties.class});
+                        m.invoke(null, new Object[] {properties});
+
                     } catch (NoClassDefFoundError ncdfe) {
                         if (logger.isDebugEnabled()) {
                             logger.debug("Cmi is not available, don't configure it.");
