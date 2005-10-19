@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.52 2005/10/19 16:55:00 benoitf Exp $
+ - $Id: build.xml,v 1.53 2005/10/19 16:55:40 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -50,7 +50,7 @@
   <property file="${config}/configure.properties" />
 
   <!-- carol meta information -->
-  <property name="carol.version" value="2.0.8" />
+  <property name="carol.version" value="2.0.9" />
   <property name="carol.name" value="Carol" />
   <property name="carol.package" value="org.objectweb.carol" />
 
