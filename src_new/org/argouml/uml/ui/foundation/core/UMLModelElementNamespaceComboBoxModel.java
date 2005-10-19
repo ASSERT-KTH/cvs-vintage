@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.27 2005/06/07 07:20:00 bobtarling Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.28 2005/10/19 13:04:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,17 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import java.beans.PropertyChangeEvent;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.argouml.kernel.NsumlEnabler;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.AddAssociationEvent;
+import org.argouml.model.AttributeChangeEvent;
+import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.Model;
+import org.argouml.model.RemoveAssociationEvent;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
@@ -72,5 +81,34 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
         }
         return null;
     }
-
+    
+    /**
+     * If the property that this comboboxmodel depicts is changed in the UML
+     * model, this method will make sure that it is changed in the comboboxmodel
+     * too.
+     *
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (NsumlEnabler.isNsuml()) {
+            super.propertyChange(evt);
+            return;
+        }
+        if (evt instanceof DeleteInstanceEvent) {
+            if (contains(getChangedElement(evt))) {
+                Object o = getChangedElement(evt);
+                if (o instanceof Collection) {
+                    removeAll((Collection) o);
+                } else {
+                    removeElement(o);
+                }
+            }
+        } else if (evt instanceof AddAssociationEvent &&
+                evt.getPropertyName().equals(getPropertySetName()) &&
+                evt.getSource() == getTarget() &&
+                (isClearable() || getChangedElement(evt) != null)) {
+            Object elem = getChangedElement(evt);
+            setSelectedItem(elem);
+        }
+    }
 }
