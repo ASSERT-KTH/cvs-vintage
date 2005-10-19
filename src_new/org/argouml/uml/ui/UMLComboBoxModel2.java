@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.58 2005/10/12 12:54:10 mkl Exp $
+// $Id: UMLComboBoxModel2.java,v 1.59 2005/10/19 17:02:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -577,6 +577,14 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
         LOG.debug("targetSet targetevent :  " + e);
         setTarget(e.getNewTarget());
 
+    }
+
+    protected boolean isClearable() {
+        return isClearable;
+    }
+
+    protected String getPropertySetName() {
+        return propertySetName;
     }
 
 }
