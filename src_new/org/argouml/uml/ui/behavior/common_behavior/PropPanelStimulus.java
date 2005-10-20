@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.61 2005/09/08 18:23:30 mkl Exp $
+// $Id: PropPanelStimulus.java,v 1.62 2005/10/20 05:29:04 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,11 +55,6 @@ public class PropPanelStimulus extends PropPanelModelElement {
     public PropPanelStimulus() {
         super("Stimulus Properties", lookupIcon("Stimulus"),
                 ConfigLoader.getTabPropsOrientation());
-
-        Object[] namesToWatch = {
-	    Model.getMetaTypes().getAction(),
-	};
-        getContainerDispatcher().setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
                 getNameTextField());

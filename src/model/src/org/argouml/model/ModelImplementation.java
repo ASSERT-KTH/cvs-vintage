@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.11 2005/08/12 19:30:25 mvw Exp $
+// $Id: ModelImplementation.java,v 1.12 2005/10/20 05:29:04 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -294,14 +294,6 @@ public interface ModelImplementation {
      * @throws UmlException on any error while writing
      */
     XmiWriter getXmiWriter(Object model, Writer writer) throws UmlException;
-
-    /**
-     * Factory for new ContainerDispatchers.
-     *
-     * @param container The container to register with the ContainerDispatcher.
-     * @return a new instance of a ContainerDispatcher.
-     */
-    ContainerDispatcher createContainerDispatcher(Container container);
 
     /**
      * Allows an external system to register itself to recieve mementos created

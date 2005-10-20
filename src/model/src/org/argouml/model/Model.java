@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.18 2005/08/12 19:30:25 mvw Exp $
+// $Id: Model.java,v 1.19 2005/10/20 05:29:04 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model;
 
-import java.awt.Container;
 import java.io.Writer;
 
 import org.apache.log4j.Logger;
@@ -502,18 +501,6 @@ public final class Model {
      */
     public static boolean isInitiated() {
         return impl != null;
-    }
-
-
-    /**
-     * Create a new ComponentDispatcher for a Component.
-     *
-     * @param container The Component the dispatcher should be registered to.
-     * @return A newly created Container Dispatcher.
-     */
-    public static ContainerDispatcher createContainerDispatcher(
-            Container container) {
-        return impl.createContainerDispatcher(container);
     }
 
     /**

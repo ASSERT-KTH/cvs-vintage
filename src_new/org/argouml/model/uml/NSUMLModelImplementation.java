@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.16 2005/09/06 15:01:35 linus Exp $
+// $Id: NSUMLModelImplementation.java,v 1.17 2005/10/20 05:29:03 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model.uml;
 
-import java.awt.Container;
 import java.io.Writer;
 
 import org.argouml.model.ActivityGraphsFactory;
@@ -36,7 +35,6 @@ import org.argouml.model.CollaborationsHelper;
 import org.argouml.model.CommonBehaviorFactory;
 import org.argouml.model.CommonBehaviorHelper;
 import org.argouml.model.ConcurrencyKind;
-import org.argouml.model.ContainerDispatcher;
 import org.argouml.model.CopyHelper;
 import org.argouml.model.CoreFactory;
 import org.argouml.model.CoreHelper;
@@ -383,14 +381,6 @@ public class NSUMLModelImplementation implements ModelImplementation {
     public XmiWriter getXmiWriter(Object model, Writer writer)
         throws UmlException {
         return new XmiWriterImpl(model, writer);
-    }
-
-    /**
-     * @see org.argouml.model.ModelImplementation#createContainerDispatcher(
-     *         java.awt.Container)
-     */
-    public ContainerDispatcher createContainerDispatcher(Container container) {
-        return new ContainerDispatcherImpl(container);
     }
 
     /**

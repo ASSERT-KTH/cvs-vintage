@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.64 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelParameter.java,v 1.65 2005/10/20 05:29:04 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,14 +55,6 @@ public class PropPanelParameter extends PropPanelModelElement {
 	      "Parameter",
 	      lookupIcon("Parameter"),
 	      ConfigLoader.getTabPropsOrientation());
-        Object[] namesToWatch = {
-	    Model.getMetaTypes().getStereotype(),
-	    Model.getMetaTypes().getOperation(),
-	    Model.getMetaTypes().getParameter(),
-	    Model.getMetaTypes().getClassifier(),
-	};
-
-        getContainerDispatcher().setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
