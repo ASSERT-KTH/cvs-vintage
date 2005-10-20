@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.28 2005/10/17 12:08:54 rastaman Exp $
+// $Id: NSUMLModelFacade.java,v 1.29 2005/10/20 03:12:19 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2279,7 +2279,8 @@ public class NSUMLModelFacade implements Facade {
     }
 
     /**
-     * Get the Expression belonging to an Argument, Guard, ChangeEvent or timeEvent.
+     * Get the Expression belonging to an Argument, Guard, ChangeEvent 
+     * or timeEvent.
      *
      * @param handle the Object to get the Expression from
      * @return Object the Expression
@@ -2295,7 +2296,7 @@ public class NSUMLModelFacade implements Facade {
             return ((MTimeEvent) handle).getWhen();
         }
         if (handle instanceof MArgument) {
-            return ((MArgument)handle).getValue();
+            return ((MArgument) handle).getValue();
         }
         return illegalArgumentObject(handle);
     }
@@ -3753,7 +3754,7 @@ public class NSUMLModelFacade implements Facade {
             return ((MLink) handle).getStimuli();
         }
         if (isAAction(handle)) {
-            return ((MAction)handle).getStimuli();
+            return ((MAction) handle).getStimuli();
         }
 	return illegalArgumentCollection(handle);
     }
@@ -4150,7 +4151,7 @@ public class NSUMLModelFacade implements Facade {
             return ((MMessage) handle).getAction();
         }
         if (handle instanceof MArgument) {
-            return ((MArgument)handle).getAction();
+            return ((MArgument) handle).getAction();
         }
 	return illegalArgumentObject(handle);
     }
@@ -4272,7 +4273,7 @@ public class NSUMLModelFacade implements Facade {
         } else if (handle instanceof MCallConcurrencyKind) {
             name = ((MCallConcurrencyKind) handle).getName();
         } else if (handle instanceof MParameterDirectionKind) {
-        		name = ((MParameterDirectionKind) handle).getName();
+            name = ((MParameterDirectionKind) handle).getName();
         } else {
             illegalArgument(handle);
         }
@@ -4735,21 +4736,21 @@ public class NSUMLModelFacade implements Facade {
     }
 
 
-	/**
-	 * Not implemented in the UML 1.3 metamodel.
-	 * @see org.argouml.model.Facade#isATagDefinition(java.lang.Object)
-	 */
-	public boolean isATagDefinition(Object handle) {
-		return false;
-	}
-
-	/**
-	 * Not implemented in the UML 1.3 metamodel.
-	 * @see org.argouml.model.Facade#isATagDefinition(java.lang.Object)
-	 */
-	public boolean isAEnumeration(Object handle) {
-		return false;
-	}
+    /**
+     * Not implemented in the UML 1.3 metamodel.
+     * @see org.argouml.model.Facade#isATagDefinition(java.lang.Object)
+     */
+    public boolean isATagDefinition(Object handle) {
+        return false;
+    }
+    
+    /**
+     * Not implemented in the UML 1.3 metamodel.
+     * @see org.argouml.model.Facade#isAEnumeration(java.lang.Object)
+     */
+    public boolean isAEnumeration(Object handle) {
+        return false;
+    }
 
     /**
      * Not implemented in the UML 1.3 metamodel.
@@ -4765,8 +4766,8 @@ public class NSUMLModelFacade implements Facade {
      * @see org.argouml.model.Facade#getTagDefinitions(java.lang.Object)
      */
     public Collection getTagDefinitions(Object handle) {
-        throw new IllegalArgumentException("Unimplemented in UML 1.3");
-        //return null;
+        //throw new IllegalArgumentException("Unimplemented in UML 1.3");
+        return new ArrayList();
     }
 
     /**
@@ -4774,8 +4775,8 @@ public class NSUMLModelFacade implements Facade {
      * @see org.argouml.model.Facade#getEnumerationLiterals(java.lang.Object)
      */
     public List getEnumerationLiterals(Object handle) {
-        throw new IllegalArgumentException("Unimplemented in UML 1.3");
-        //return null;
+        //throw new IllegalArgumentException("Unimplemented in UML 1.3");
+        return new ArrayList();
     }
 	
 }
