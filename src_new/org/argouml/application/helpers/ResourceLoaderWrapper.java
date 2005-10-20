@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.37 2005/10/15 12:42:45 rastaman Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.38 2005/10/20 07:06:12 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -361,7 +361,7 @@ public final class ResourceLoaderWrapper {
         images.put("button.new-sendaction", "SendAction");
         images.put("button.new-shallowhistory", "ShallowHistory");
         images.put("button.new-signal", "New Signal");
-        images.put("button.new-state", "State");
+        images.put("button.new-simplestate", "SimpleState");
         images.put("button.new-stereotype", "Stereotype");
         images.put("button.new-stubstate", "StubState");
         images.put("button.new-subactivitystate", "SubactivityState");
