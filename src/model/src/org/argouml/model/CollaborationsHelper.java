@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.2 2005/08/12 19:30:25 mvw Exp $
+// $Id: CollaborationsHelper.java,v 1.3 2005/10/20 07:14:23 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -296,8 +296,11 @@ public interface CollaborationsHelper {
     void setContext(Object handle, Object col);
 
     /**
+     * Set the successors of a message
+     * (named messsage3 in UML 1.3 & successor in UML 1.4)
+     * 
      * @param handle Message
-     * @param messages Collection of predecessor messages
+     * @param messages Collection of successor messages
      */
     void setMessages3(Object handle, Collection messages);
 
