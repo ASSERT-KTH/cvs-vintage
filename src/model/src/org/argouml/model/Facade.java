@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.20 2005/10/15 16:52:32 rastaman Exp $
+// $Id: Facade.java,v 1.21 2005/10/20 07:13:02 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2205,7 +2205,6 @@ public interface Facade {
      *
      * @param handle GeneralizableElement to retrieve from.
      * @return Collection of Specializations.
-     * @deprecated UML 1.3 only
      */
     Collection getSpecializations(Object handle);
 
