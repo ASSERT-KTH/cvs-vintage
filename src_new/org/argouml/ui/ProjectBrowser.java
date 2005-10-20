@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.161 2005/08/15 09:29:23 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.162 2005/10/20 07:16:21 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1138,7 +1138,6 @@ public class ProjectBrowser
                 p = oldProject;
             } catch (OutOfMemoryError ex) {
                 p = oldProject;
-                System.gc();
                 LOG.error("Out of memory while loading project", ex);
                 success = false;
                 reportError(
@@ -1204,7 +1203,6 @@ public class ProjectBrowser
                 Designer.enableCritiquing();
             }
         }
-        System.gc();
         return success;
     }
 
