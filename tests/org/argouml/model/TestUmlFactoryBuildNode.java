@@ -1,4 +1,4 @@
-// $Id: TestUmlFactoryBuildNode.java,v 1.3 2005/08/20 09:31:08 linus Exp $
+// $Id: TestUmlFactoryBuildNode.java,v 1.4 2005/10/20 07:19:30 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,9 +90,8 @@ public class TestUmlFactoryBuildNode extends TestCase {
                 Model.getMetaTypes().getCompositeState()));
         assertNotNull(Model.getUmlFactory().buildNode(
                 Model.getMetaTypes().getFinalState()));
-        // SimpleState not currently supported
-//        assertNotNull(Model.getUmlFactory().buildNode(
-//                Model.getMetaTypes().getSimpleState()));
+        assertNotNull(Model.getUmlFactory().buildNode(
+                Model.getMetaTypes().getSimpleState()));
 
         /*
          * State is concrete in UML 1.3, but becomes abstract in UML 1.4, so we
