@@ -96,6 +96,7 @@
             <pathelement path="${native.base}/${lib.jdic}"/>
             <pathelement path="${lib.mac_mock}"/>
             <pathelement path="${lib.flexdoc}"/>
+            <pathelement path="${lib.jython}"/>
         </path>
         <path id="run.classpath">
             <path refid="compile.classpath"/>
@@ -271,7 +272,7 @@
             <manifest>
                 <attribute name="Main-Class" value="org.columba.core.main.Main"/>
                 <attribute name="Class-Path"
-                           value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc}"/>
+                           value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc} ${lib.jython}"/>
                 <attribute name="Sealed" value="false"/>
             </manifest>
         </jar>
