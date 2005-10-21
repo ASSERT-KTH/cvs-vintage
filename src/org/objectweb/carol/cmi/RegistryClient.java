@@ -19,11 +19,13 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryClient.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
+ * $Id: RegistryClient.java,v 1.2 2005/10/21 14:33:27 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -78,7 +80,12 @@ public class RegistryClient implements Registry {
      * @throws RemoteException if an exception is encountered
      */
      public Remote lookup(String name)throws NotBoundException, RemoteException {
-        Object obj = cr.lookup(name);
+
+		URLClassLoader cl = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+		URL[] urls = cl.getURLs();
+
+        Object obj = cr.lookup(name,urls);
+
         if (obj instanceof Remote) {
             return (Remote) obj;
         }

@@ -19,12 +19,14 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryImpl.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
+ * $Id: RegistryImpl.java,v 1.2 2005/10/21 14:33:27 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -102,7 +104,7 @@ public final class RegistryImpl implements RegistryInternal {
      * @throws NotBoundException if entry is not found
      * @throws RemoteException if an exception is encountered
      */
-    public Object lookup(String n) throws NotBoundException, RemoteException {
+    public Object lookup(String n, URL[] urls) throws NotBoundException, RemoteException {
         Object obj;
         synchronized (lreg) {
             obj = lreg.get(n);
@@ -113,10 +115,17 @@ public final class RegistryImpl implements RegistryInternal {
             }
             return obj;
         }
-        try {
+		ClassLoader oldcl = null ;
+		try {
             if (TraceCarol.isDebugCmiRegistry()) {
                 TraceCarol.debugCmiRegistry("lookup found global object for " + n);
             }
+			// Use a classloader with same classpath than the client side
+			// Works only if the client and server parts are on the same node
+			// Clearly : the client side need a local JNDI registry
+			oldcl = Thread.currentThread().getContextClassLoader();
+			URLClassLoader cl = new URLClassLoader(urls,oldcl);
+			Thread.currentThread().setContextClassLoader(cl);
             ServerStubList sl = DistributedEquiv.getGlobal(REG_PREFIX + n);
             if (sl != null) {
                 if (TraceCarol.isDebugCmiRegistry()) {
@@ -128,7 +137,10 @@ public final class RegistryImpl implements RegistryInternal {
             throw new RemoteException(e.toString());
         } catch (IOException e) {
             throw new RemoteException(e.toString());
+        } finally {
+			Thread.currentThread().setContextClassLoader(oldcl);
         }
+
         throw new NotBoundException(n);
     }
 

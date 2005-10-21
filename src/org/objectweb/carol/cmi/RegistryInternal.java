@@ -19,11 +19,12 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryInternal.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
+ * $Id: RegistryInternal.java,v 1.2 2005/10/21 14:33:27 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
 
+import java.net.URL;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -55,7 +56,7 @@ interface RegistryInternal extends Remote {
      * @throws NotBoundException if entry is not found
      * @throws RemoteException if an exception is encountered
      */
-    public Object lookup(String name)
+    public Object lookup(String name, URL[] urls)
         throws NotBoundException, RemoteException;
 
     /**

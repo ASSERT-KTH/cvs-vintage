@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: StubConfig.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
+ * $Id: StubConfig.java,v 1.2 2005/10/21 14:33:27 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
@@ -29,6 +29,8 @@ import java.lang.reflect.Constructor;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.WeakHashMap;
+
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Used to get information on a remote object. Searches for CMI configuration
@@ -91,11 +93,11 @@ public class StubConfig {
         Class confClass;
         try {
             confClass = (loader != null) ? loader.loadClass(clName + "_Cmi")
-                    : Class.forName(clName);
+                    : Class.forName(clName+ "_Cmi");
         } catch (ClassNotFoundException e) {
             remoteToConfig.put(remoteObjClass, noStubConfig);
-            // Maybe we should display a trace to tell that this object
-            // has not been recognized as a clustered object
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes("Class <"+clName+"> has not been recognized as a clustered object");
             return null;
         }
         StubConfig sc = new StubConfig();
