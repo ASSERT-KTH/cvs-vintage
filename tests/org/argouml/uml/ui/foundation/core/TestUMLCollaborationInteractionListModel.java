@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationInteractionListModel.java,v 1.14 2005/08/12 19:30:28 mvw Exp $
+// $Id: TestUMLCollaborationInteractionListModel.java,v 1.15 2005/10/21 05:24:23 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,8 @@ public class TestUMLCollaborationInteractionListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-        		Model.getCollaborationsHelper().removeInteraction(getElem(),elements[i]);
+            Model.getCollaborationsHelper().removeInteraction(getElem(),
+                    elements[i]);
         }
     }
 

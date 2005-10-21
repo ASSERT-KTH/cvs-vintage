@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.13 2005/08/12 19:30:28 mvw Exp $
+// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.14 2005/10/21 05:24:23 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,8 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         helper = Model.getCoreHelper();        
-        elem = Model.getUmlFactory().buildNode(Model.getMetaTypes().getUMLClass());
+        elem = Model.getUmlFactory().buildNode(
+                Model.getMetaTypes().getUMLClass());
         list = new UMLModelElementElementResidenceListModel();
         list.setTarget(elem);
         Model.getPump().addModelEventListener(list, elem);
@@ -74,7 +75,7 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
      */
     public void testElementAdded() {
         Object res = Model.getCoreFactory().createElementResidence();
-        helper.addElementResidence(elem,res);
+        helper.addElementResidence(elem, res);
         assertTrue(list.getSize() == 1);
         assertTrue(list.getElementAt(0) == res);
     }
@@ -84,10 +85,10 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
      */
     public void testElementRemoved() {
         Object res = Model.getCoreFactory().createElementResidence();
-        helper.addElementResidence(elem,res);
+        helper.addElementResidence(elem, res);
         assertTrue(list.getSize() == 1);
         assertTrue(list.getElementAt(0) == res);
-        helper.removeElementResidence(elem,res);
+        helper.removeElementResidence(elem, res);
         assertTrue(list.getSize() == 0);
     }
 
