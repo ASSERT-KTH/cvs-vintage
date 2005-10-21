@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.17 2005/10/21 05:24:23 tfmorris Exp $
+// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.18 2005/10/21 08:44:46 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,7 @@ public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
 
 	box = new UMLFeatureOwnerScopeCheckBox();
         box.setTarget(elem);
+        Model.getPump().reallyFlushModelEvents();
     }
 
     /**
@@ -98,6 +99,7 @@ public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
             Model.getCoreHelper().setOwnerScope(elem,
                     Model.getScopeKind().getClassifier());
         }
+        Model.getPump().reallyFlushModelEvents();
         assertEquals(!selected, box.isSelected());
     }
 

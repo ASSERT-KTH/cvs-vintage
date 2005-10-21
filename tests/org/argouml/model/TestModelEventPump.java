@@ -1,4 +1,4 @@
-// $Id: TestModelEventPump.java,v 1.9 2005/06/08 20:49:01 linus Exp $
+// $Id: TestModelEventPump.java,v 1.10 2005/10/21 08:44:46 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,6 +86,7 @@ public class TestModelEventPump extends TestCase {
         Model.getCoreHelper().addOwnedElement(model, elem);
         eventcalled = false;
         listener = new TestListener();
+        Model.getPump().reallyFlushModelEvents();
     }
 
     /**
@@ -107,6 +108,7 @@ public class TestModelEventPump extends TestCase {
     public void testCreateDelete() {
         WeakReference ref = new WeakReference(elem);
         Model.getUmlFactory().delete(elem);
+        Model.getPump().reallyFlushModelEvents();
         elem = null;
         System.gc();
         assertNull(ref.get());
@@ -123,6 +125,7 @@ public class TestModelEventPump extends TestCase {
 						       "isRoot",
         					   });
         Model.getCoreHelper().setRoot(elem, true);
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -137,6 +140,7 @@ public class TestModelEventPump extends TestCase {
 						       "remove",
         					   });
         Model.getUmlFactory().delete(elem);
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -153,6 +157,7 @@ public class TestModelEventPump extends TestCase {
         Model.getCoreHelper().addParameter(
                 elem,
                 Model.getCoreFactory().createParameter());
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -169,6 +174,7 @@ public class TestModelEventPump extends TestCase {
 						       "parameter",
         					   });
         Model.getCoreHelper().removeParameter(elem, param);
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -180,6 +186,7 @@ public class TestModelEventPump extends TestCase {
         Model.getCoreHelper().addParameter(
                 elem,
                 Model.getCoreFactory().createParameter());
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(!eventcalled);
     }
 
@@ -194,6 +201,7 @@ public class TestModelEventPump extends TestCase {
                 				  "isRoot",
         				      });
         Model.getCoreHelper().setRoot(elem, true);
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -208,6 +216,7 @@ public class TestModelEventPump extends TestCase {
 				       		  "remove",
 				   	      });
         Model.getUmlFactory().delete(elem);
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -224,6 +233,7 @@ public class TestModelEventPump extends TestCase {
         Model.getCoreHelper().addParameter(
                 elem,
                 Model.getCoreFactory().createParameter());
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -240,6 +250,7 @@ public class TestModelEventPump extends TestCase {
                 				  "parameter",
         				      });
         Model.getCoreHelper().removeParameter(elem, param);
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(eventcalled);
     }
 
@@ -261,6 +272,7 @@ public class TestModelEventPump extends TestCase {
         Model.getCoreHelper().addParameter(
                 elem,
                 Model.getCoreFactory().createParameter());
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(!eventcalled);
     }
 
@@ -277,6 +289,7 @@ public class TestModelEventPump extends TestCase {
         Model.getCoreHelper().addParameter(
                 elem,
                 Model.getCoreFactory().createParameter());
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(!eventcalled);
     }
 }

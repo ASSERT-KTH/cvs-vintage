@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.17 2005/01/20 23:20:34 linus Exp $
+// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.18 2005/10/21 08:44:46 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,6 +55,7 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
         elem = Model.getCoreFactory().buildClass(ns);
         model = new UMLModelElementClientDependencyListModel();
         model.setTarget(elem);
+        Model.getPump().reallyFlushModelEvents();
     }
 
     /**
@@ -78,6 +79,7 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
             dependencies[i] =
                 Model.getCoreFactory().buildDependency(elem, suppliers[i]);
         }
+        Model.getPump().reallyFlushModelEvents();
         assertEquals(10, model.getSize());
         assertEquals(model.getElementAt(5), dependencies[5]);
         assertEquals(model.getElementAt(0), dependencies[0]);
@@ -98,6 +100,7 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
         for (int i = 0; i < 5; i++) {
             Model.getCoreHelper().removeClientDependency(elem, dependencies[i]);
         }
+        Model.getPump().reallyFlushModelEvents();
         assertEquals(5, model.getSize());
         assertEquals(dependencies[5], model.getElementAt(0));
     }

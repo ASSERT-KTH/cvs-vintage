@@ -1,4 +1,4 @@
-// $Id: CheckUMLModelHelper.java,v 1.2 2005/08/20 09:31:08 linus Exp $
+// $Id: CheckUMLModelHelper.java,v 1.3 2005/10/21 08:44:47 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,19 +59,7 @@ public final class CheckUMLModelHelper {
      * @param mo the model object that we try to delete, release and reclaim.
      */
     public static void deleteAndRelease(Object mo) {
-	Class c = mo.getClass();
-
-	// Call methods that exists for all objects and that always return
-	// something meaningfull.
-	TestCase.assertTrue("toString() corrupt in " + c,
-		      mo.toString() != null);
-
-	Model.getUmlFactory().delete(mo);
-
-	WeakReference wo = new WeakReference(mo);
-	mo = null;
-	System.gc();
-	TestCase.assertTrue("Could not reclaim " + c, wo.get() == null);
+        deleteAndRelease(mo, null);
     }
 
     /**
@@ -91,17 +79,17 @@ public final class CheckUMLModelHelper {
 	// something meaningfull.
 	TestCase.assertTrue("toString() corrupt in " + c,
 		      	    mo.toString() != null);
-	TestCase.assertTrue("getUMLClassName() corrupt in " + c,
-		      	    Model.getFacade().getUMLClassName(mo) != null);
+        if (name != null) {
+            TestCase.assertTrue("getUMLClassName() corrupt in " + c,
+                    Model.getFacade().getUMLClassName(mo) != null);
+            TestCase.assertTrue(
+                    "getUMLClassName() different from expected in " + c,
+                    name.equals(Model.getFacade().getUMLClassName(mo)));
+        }
 
-	TestCase.assertTrue(
-            "getUMLClassName() different from expected in " + c,
-	    name.equals(Model.getFacade().getUMLClassName(mo)));
-
+        WeakReference wo = new WeakReference(mo);
 	Model.getUmlFactory().delete(mo);
-
-	WeakReference wo = new WeakReference(mo);
-
+        Model.getPump().reallyFlushModelEvents();
 	mo = null;
 	System.gc();
 	TestCase.assertTrue("Could not reclaim " + c, wo.get() == null);

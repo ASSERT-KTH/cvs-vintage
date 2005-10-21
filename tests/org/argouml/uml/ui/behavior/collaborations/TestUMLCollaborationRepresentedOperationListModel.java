@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationRepresentedOperationListModel.java,v 1.16 2005/01/20 23:20:26 linus Exp $
+// $Id: TestUMLCollaborationRepresentedOperationListModel.java,v 1.17 2005/10/21 08:44:46 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,6 +55,7 @@ public class TestUMLCollaborationRepresentedOperationListModel
         elem = Model.getCollaborationsFactory().createCollaboration();
         model = new UMLCollaborationRepresentedOperationListModel();
         model.setTarget(elem);
+        Model.getPump().reallyFlushModelEvents();
     }
 
     /**
@@ -72,6 +73,7 @@ public class TestUMLCollaborationRepresentedOperationListModel
     public void testSetRepresentedOperation() {
         Object oper = Model.getCoreFactory().createOperation();
         Model.getCollaborationsHelper().setRepresentedOperation(elem, oper);
+        Model.getPump().reallyFlushModelEvents();
         assertEquals(1, model.getSize());
         assertEquals(oper, model.getElementAt(0));
     }
@@ -83,6 +85,7 @@ public class TestUMLCollaborationRepresentedOperationListModel
         Object oper = Model.getCoreFactory().createOperation();
         Model.getCollaborationsHelper().setRepresentedOperation(elem, oper);
         Model.getCollaborationsHelper().setRepresentedOperation(elem, null);
+        Model.getPump().reallyFlushModelEvents();
         assertEquals(0, model.getSize());
         assertTrue(model.isEmpty());
     }
