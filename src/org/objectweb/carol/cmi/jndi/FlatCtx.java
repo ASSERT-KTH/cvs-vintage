@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: FlatCtx.java,v 1.6 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: FlatCtx.java,v 1.7 2005/10/21 14:36:06 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 /*
@@ -62,6 +62,7 @@ import java.util.Hashtable;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.NameAlreadyBoundException;
@@ -134,7 +135,7 @@ class FlatCtx implements Context {
 
     /**
      * Retrieves the named object
-     * @param name string to lookup
+     * @param n string to lookup
      * @return object found
      * @throws NamingException context can't be found
      */
@@ -142,12 +143,27 @@ class FlatCtx implements Context {
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("lookup(" + name + ")");
         }
+
         if (name.equals("")) {
             // Asking to look up this context itself.  Create and return
             // a new instance with its own independent environment.
             return (new FlatCtx(myEnv));
+        } else if (name.startsWith("cmi://") || name.startsWith("\"cmi://") ) {
+            String n = null;
+            if (name.startsWith("\"") && (name.endsWith("\""))) {
+                n = name.substring(1,name.length()-1);
+            } else {
+                n = name;
+            }
+            Hashtable h = new Hashtable();
+            String url = n.substring(0,n.indexOf('/',"cmi://".length()+1));
+            h.put(Context.PROVIDER_URL,url);
+            h.put(Context.INITIAL_CONTEXT_FACTORY, "org.objectweb.carol.cmi.jndi.CmiInitialContextFactory");
+
+            return new InitialContext(h).lookup(n.substring(url.length()+1));
         }
         try {
+
             Object obj = reg.lookup(name);
             if (obj instanceof RemoteReference) {
                 return NamingManager.getObjectInstance(
@@ -184,17 +200,32 @@ class FlatCtx implements Context {
 
     /**
      * Add an entry in the registry
-     * @param name name to associate with the bound object
+     * @param n name to associate with the bound object
      * @param obj added object
      * @throws NamingException object can't be bound
      */
-    public void bind(String name, Object obj) throws NamingException {
+    public void bind(String n, Object obj) throws NamingException {
         if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("bind(" + name + ")");
+            TraceCarol.debugJndiCarol("bind(" + n + ")");
         }
-        if (name.equals("")) {
+        if (n.equals("")) {
             throw new InvalidNameException("Cannot bind empty name");
         }
+        String name = null;
+        if (n.startsWith("cmi://") || n.startsWith("\"cmi://") ) {
+            if (n.startsWith("\"") && (n.endsWith("\""))) {
+                n = n.substring(1,n.length()-1);
+            } else {
+                n = n;
+            }
+            Hashtable h = new Hashtable();
+            String url = n.substring(0,n.indexOf('/',"cmi://".length()+1));
+            name =  n.substring(url.length()+1) ;
+
+        } else {
+            name = n;
+        }
+
         Object o = NamingManager.getStateToBind(obj, null, this, myEnv);
         try {
             //XXX Should support Serializable objects ?
@@ -235,16 +266,30 @@ class FlatCtx implements Context {
 
     /**
      * Update an entry in the registry
-     * @param name name to update in the registry
+     * @param n name to update in the registry
      * @param obj added object
      * @throws NamingException object can't be updated
      */
-    public void rebind(String name, Object obj) throws NamingException {
+    public void rebind(String n, Object obj) throws NamingException {
         if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("rebind(" + name + ")");
+            TraceCarol.debugJndiCarol("rebind(" + n + ")");
         }
-        if (name.equals("")) {
+        if (n.equals("")) {
             throw new InvalidNameException("Cannot bind empty name");
+        }
+        String name = null;
+        if (n.startsWith("cmi://") || n.startsWith("\"cmi://") ) {
+            if (n.startsWith("\"") && (n.endsWith("\""))) {
+                n = n.substring(1,n.length()-1);
+            } else {
+                n = n;
+            }
+            Hashtable h = new Hashtable();
+            String url = n.substring(0,n.indexOf('/',"cmi://".length()+1));
+            name =  n.substring(url.length()+1) ;
+
+        } else {
+            name = n;
         }
         Object o = NamingManager.getStateToBind(obj, null, this, myEnv);
         try {
