@@ -62,6 +62,8 @@ Source: {#JE}; DestDir: {app}\lib\
 Source: {#JDOM}; DestDir: {app}\lib\
 Source: {#JPIM}; DestDir: {app}\lib\
 Source: {#FLEXDOC}; DestDir: {app}\lib\
+Source: {#BSH}; DestDir: {app}\lib\
+Source: {#JYTHON}; DestDir: {app}\lib\
 Source: native\win32\{#JNIWRAP}; DestDir: {app}\native\win32\lib\
 Source: native\win32\{#WINPACK}; DestDir: {app}\native\win32\lib\
 Source: native\win32\{#JDIC}; DestDir: {app}\native\win32\lib\

@@ -158,6 +158,7 @@
             <include name="${lib.groovy}"/>
             <include name="${lib.bsh}"/>
             <include name="${lib.flexdoc}"/>
+            <include name="${lib.jython}"/>
             <include name="${native.linux}${lib.jdic}"/>
             <include name="${native.linux}${lib.native}"/>
             <include name="${native.win32}${lib.jdic}"/>
@@ -479,6 +480,7 @@
                 <include name="${lib.groovy}"/>
                 <include name="${lib.bsh}"/>
                 <include name="${lib.flexdoc}"/>
+                <include name="${lib.jython}"/>
             </fileset>
             <fileset dir="${dist.webstart}">
                 <include name="columba.jnlp"/>
@@ -543,6 +545,7 @@
             <replacefilter token="@bsh@" value="${lib.bsh}"/>
             <replacefilter token="@native@" value="${lib.native}"/>
             <replacefilter token="@flexdoc@" value="${lib.flexdoc}"/>
+            <replacefilter token="@jython@" value="${lib.jython}"/>
         </replace>
     </target>
 
@@ -668,6 +671,7 @@
             <arg value="/dBSH=${lib.bsh}"/>
             <arg value="/dJDIC=${lib.jdic}"/>
             <arg value="/dFLEXDOC=${lib.flexdoc}"/>
+            <arg value="/dJYTHON=${lib.jython}"/>
         </exec>
 
         <exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -694,6 +698,7 @@
             <arg value="/dGROOVY=${lib.groovy}"/>
             <arg value="/dBSH=${lib.bsh}"/>
             <arg value="/dFLEXDOC=${lib.flexdoc}"/>
+            <arg value="/dJYTHON=${lib.jython}"/>        	
         </exec>
     </target>
 
@@ -731,6 +736,7 @@
             <arg value="/dGROOVY=${lib.groovy}"/>
             <arg value="/dBSH=${lib.bsh}"/>
             <arg value="/dFLEXDOC=${lib.flexdoc} "/>
+            <arg value="/dJYTHON=${lib.jython}"/>        	
         </exec>
 
         <exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -757,7 +763,8 @@
             <arg value="/dJDIC=${lib.jdic}"/>
             <arg value="/dGROOVY=${lib.groovy}"/>
             <arg value="/dBSH=${lib.bsh}"/>
-            <arg value="/sFLEXDOC=${lib.flexdoc} "/>
+            <arg value="/dFLEXDOC=${lib.flexdoc}"/>
+            <arg value="/dJYTHON=${lib.jython}"/>        	
         </exec>
     </target>
 
