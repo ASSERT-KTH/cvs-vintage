@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPRegistry.java,v 1.12 2005/10/19 13:40:36 benoitf Exp $
+ * $Id: JRMPRegistry.java,v 1.13 2005/10/21 07:37:02 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -102,10 +102,6 @@ public class JRMPRegistry extends AbsRegistry implements NameService {
                             + "' defined in carol.properties file.");
                 }
             }
-         /*   if (objectPort > 0) {
-                RMIManageableSocketFactory.register(objectPort);
-            }
-            */
 
             if (!isStarted()) {
 
