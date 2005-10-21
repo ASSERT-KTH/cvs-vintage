@@ -26,10 +26,10 @@ import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.folder.IGroupFolder;
-import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IContactModel;
+import org.columba.addressbook.model.IEmailModel;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.api.exception.ServiceNotFoundException;
@@ -128,7 +128,7 @@ public class ListBuilder {
 					// TODO: use preferred one
 					Iterator it2 = item.getEmailIterator(); 
 					if ( it2.hasNext() )
-						result.add( ((EmailModel)it2.next()).getAddress());
+						result.add( ((IEmailModel)it2.next()).getAddress());
 				}
 				else
 					result.add(s);

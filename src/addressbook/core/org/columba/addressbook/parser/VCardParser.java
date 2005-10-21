@@ -37,6 +37,7 @@ import net.wimpi.pim.factory.ContactIOFactory;
 import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactModel;
+import org.columba.addressbook.model.IEmailModel;
 
 /**
  * Contact data parser for a vCard-standard compliant text/plain file.
@@ -113,7 +114,7 @@ public class VCardParser {
 
 		Iterator it = c.getEmailIterator();
 		while (it.hasNext()) {
-			EmailModel model = (EmailModel) it.next();
+			IEmailModel model = (IEmailModel) it.next();
 			EmailAddress adr = new EmailAddressImpl();
 			adr.setType(EmailAddress.TYPE_INTERNET);
 			adr.setAddress(model.getAddress());

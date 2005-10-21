@@ -107,7 +107,7 @@ public class ContactModelFactory {
 		// </email>
 		Iterator it = contactModel.getEmailIterator();
 		while (it.hasNext()) {
-			EmailModel m = ((EmailModel) it.next());
+			IEmailModel m = ((IEmailModel) it.next());
 			parser.addEmail(m);
 		}
 
@@ -217,7 +217,7 @@ public class ContactModelFactory {
 
 		Iterator it = parser.getEmailIterator();
 		while (it.hasNext()) {
-			model.addEmail((EmailModel) it.next());
+			model.addEmail((IEmailModel) it.next());
 		}
 
 		it = parser.getPhoneIterator();

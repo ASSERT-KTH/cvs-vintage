@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.model;
 
-public class EmailModel {
+public class EmailModel implements IEmailModel {
 
 	public static final String[] NAMES = new String[] { "work", "home", "other" };
 
@@ -65,20 +65,23 @@ public class EmailModel {
 
 	}
 
-	/**
-	 * @return Returns the address.
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.model.IEmailModel#getAddress()
 	 */
 	public String getAddress() {
 		return address;
 	}
 
-	/**
-	 * @return Returns the type.
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.model.IEmailModel#getType()
 	 */
 	public int getType() {
 		return type;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.model.IEmailModel#getTypeString()
+	 */
 	public String getTypeString() {
 		return NAMES[type];
 	}

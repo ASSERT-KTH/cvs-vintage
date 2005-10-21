@@ -123,7 +123,7 @@ public class ContactModel implements IContactModel {
 		Iterator it = getEmailIterator();
 
 		// get first item
-		EmailModel model = (EmailModel) it.next();
+		IEmailModel model = (IEmailModel) it.next();
 
 		// backwards compatiblity
 		// -> its not possible anymore to create a contact model without email
@@ -338,7 +338,7 @@ public class ContactModel implements IContactModel {
 		return emailAddressVector.iterator();
 	}
 
-	public void addEmail(EmailModel emailAddress) {
+	public void addEmail(IEmailModel emailAddress) {
 		if (emailAddress == null)
 			throw new IllegalArgumentException("emailModel == null");
 

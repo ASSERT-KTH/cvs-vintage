@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import org.columba.addressbook.model.AddressModel;
 import org.columba.addressbook.model.EmailModel;
+import org.columba.addressbook.model.IEmailModel;
 import org.columba.addressbook.model.InstantMessagingModel;
 import org.columba.addressbook.model.LabelModel;
 import org.columba.addressbook.model.PhoneModel;
@@ -147,7 +148,7 @@ public class XMLContactDocumentParser {
 		set(VCARD.ID, id);
 	}
 
-	public void addEmail(EmailModel model) {
+	public void addEmail(IEmailModel model) {
 		// create <email> element, if it doesn't exist yet
 		Element child = getParentElement().getChild(VCARD.EMAIL);
 		if (child == null) {

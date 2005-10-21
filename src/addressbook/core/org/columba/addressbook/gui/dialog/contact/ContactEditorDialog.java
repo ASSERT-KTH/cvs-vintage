@@ -45,6 +45,7 @@ import org.columba.addressbook.model.AddressModel;
 import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactModel;
+import org.columba.addressbook.model.IEmailModel;
 import org.columba.addressbook.model.InstantMessagingModel;
 import org.columba.addressbook.model.LabelModel;
 import org.columba.addressbook.model.PhoneModel;
@@ -453,19 +454,19 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			// we support up to 4 email addresses
 			Iterator it = sourceModel.getEmailIterator();
 			if (it.hasNext()) {
-				EmailModel m = (EmailModel) it.next();
+				IEmailModel m = (IEmailModel) it.next();
 				fillEmailView(m, emailComboBox1, emailTextField1);
 			}
 			if (it.hasNext()) {
-				EmailModel m = (EmailModel) it.next();
+				IEmailModel m = (IEmailModel) it.next();
 				fillEmailView(m, emailComboBox2, emailTextField2);
 			}
 			if (it.hasNext()) {
-				EmailModel m = (EmailModel) it.next();
+				IEmailModel m = (IEmailModel) it.next();
 				fillEmailView(m, emailComboBox3, emailTextField3);
 			}
 			if (it.hasNext()) {
-				EmailModel m = (EmailModel) it.next();
+				IEmailModel m = (IEmailModel) it.next();
 				fillEmailView(m, emailComboBox4, emailTextField4);
 			}
 
@@ -769,7 +770,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 	 * Fill all email ui-controls from model.
 	 * 
 	 */
-	private void fillEmailView(EmailModel m, JComboBox comboBox,
+	private void fillEmailView(IEmailModel m, JComboBox comboBox,
 			JTextField textField) {
 		if (m.getType() == EmailModel.TYPE_WORK)
 			comboBox.setSelectedIndex(0);
