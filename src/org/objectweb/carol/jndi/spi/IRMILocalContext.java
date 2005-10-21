@@ -19,21 +19,15 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IRMILocalContext.java,v 1.2 2005/10/21 07:17:44 ashah Exp $
+ * $Id: IRMILocalContext.java,v 1.3 2005/10/21 08:52:41 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
 import javax.naming.Context;
-import javax.naming.Name;
 import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
 
 import org.objectweb.carol.jndi.registry.IRMIRegistryWrapperContext;
-import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
-import org.objectweb.carol.jndi.wrapping.RemoteReference;
-import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 
 
 /**
