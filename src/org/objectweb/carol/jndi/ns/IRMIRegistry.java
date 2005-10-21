@@ -78,11 +78,6 @@ public class IRMIRegistry extends AbsRegistry implements NameService {
                 }
             }
 
-          /*  if (objectPort > 0 || registryInetAddress != null) {
-                RMIManageableSocketFactory.register(objectPort, registryInetAddress);
-            }
-           */
-
             if (!isStarted()) {
 
                 if (objectPort > 0) {
@@ -156,8 +151,13 @@ public class IRMIRegistry extends AbsRegistry implements NameService {
         if (registry != null) {
             return true;
         }
+
         try {
-            LocateRegistry.getRegistry(getPort()).list();
+            if (registryInetAddress != null) {
+                LocateRegistry.getRegistry(registryInetAddress.getHostAddress(), getPort()).list();
+            } else {
+                LocateRegistry.getRegistry(getPort()).list();
+            }
         } catch (RemoteException re) {
             return false;
         }
