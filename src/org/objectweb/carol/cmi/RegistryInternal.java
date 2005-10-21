@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryInternal.java,v 1.2 2005/10/21 14:33:27 pelletib Exp $
+ * $Id: RegistryInternal.java,v 1.3 2005/10/21 20:28:03 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
@@ -52,11 +52,22 @@ interface RegistryInternal extends Remote {
     /**
      * Retrieve an object by a name
      * @param name name to search
+     * @param urls classpath to use to carry out the lookup
      * @return object associated
      * @throws NotBoundException if entry is not found
      * @throws RemoteException if an exception is encountered
      */
     public Object lookup(String name, URL[] urls)
+        throws NotBoundException, RemoteException;
+
+    /**
+     * Retrieve an object by a name
+     * @param name name to search
+     * @return object associated
+     * @throws NotBoundException if entry is not found
+     * @throws RemoteException if an exception is encountered
+     */
+    public Object lookup(String name)
         throws NotBoundException, RemoteException;
 
     /**

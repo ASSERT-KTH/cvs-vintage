@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryImplCluster.java,v 1.1 2005/07/27 11:49:22 pelletib Exp $
+ * $Id: RegistryImplCluster.java,v 1.2 2005/10/21 20:28:03 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
@@ -30,6 +30,7 @@ package org.objectweb.carol.cmi;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.net.URL;
 import java.rmi.AlreadyBoundException;
 import java.rmi.ConnectException;
 import java.rmi.ConnectIOException;
@@ -172,6 +173,19 @@ class RegistryImplCluster implements RegistryInternal {
             }
             remove(sd);
         } while (true);
+    }
+
+    /**
+     * Retrieve an object by a name
+     * @param name name to search
+     * @param urls classpath to use to carry out the lookup
+     * @return object associated
+     * @throws NotBoundException if entry is not found
+     * @throws RemoteException if an exception is encountered
+     */
+    public Object lookup(String name, URL[] urls) throws NotBoundException, RemoteException {
+        return lookup(name);
+
     }
 
     /**

@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryImpl.java,v 1.2 2005/10/21 14:33:27 pelletib Exp $
+ * $Id: RegistryImpl.java,v 1.3 2005/10/21 20:28:03 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.cmi;
@@ -100,6 +100,7 @@ public final class RegistryImpl implements RegistryInternal {
     /**
      * Retrieve an object by a name
      * @param n name to search
+     * @param urls classpath to use to carry out the lookup
      * @return object associated
      * @throws NotBoundException if entry is not found
      * @throws RemoteException if an exception is encountered
@@ -124,8 +125,10 @@ public final class RegistryImpl implements RegistryInternal {
 			// Works only if the client and server parts are on the same node
 			// Clearly : the client side need a local JNDI registry
 			oldcl = Thread.currentThread().getContextClassLoader();
-			URLClassLoader cl = new URLClassLoader(urls,oldcl);
-			Thread.currentThread().setContextClassLoader(cl);
+            if (urls != null) {
+                URLClassLoader cl = new URLClassLoader(urls,oldcl);
+                Thread.currentThread().setContextClassLoader(cl);
+            }
             ServerStubList sl = DistributedEquiv.getGlobal(REG_PREFIX + n);
             if (sl != null) {
                 if (TraceCarol.isDebugCmiRegistry()) {
@@ -144,6 +147,16 @@ public final class RegistryImpl implements RegistryInternal {
         throw new NotBoundException(n);
     }
 
+    /**
+     * Retrieve an object by a name
+     * @param n name to search
+     * @return object associated
+     * @throws NotBoundException if entry is not found
+     * @throws RemoteException if an exception is encountered
+     */
+    public Object lookup(String n) throws NotBoundException, RemoteException {
+        return lookup(n,null);
+    }
     /**
      * Bind a single entry
      * @param n name
