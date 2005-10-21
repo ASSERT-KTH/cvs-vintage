@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.8 2005/06/18 16:13:00 linus Exp $
+// $Id: ModelEventPump.java,v 1.9 2005/10/21 08:35:09 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -217,6 +217,16 @@ public interface ModelEventPump {
 
     /**
      * Flush events from the ModelEventPump.
+     * This is the old version called after every set()
+     * The intention is for it to go away after a brief testing period.
      */
     void flushModelEvents();
+    
+    /**
+     * Flush events from the ModelEventPump.
+     * New version to be used in places that have
+     * unusual synchronization requirements (like tests)
+     * It will be renamed to flushModelEvents after transition.
+     */
+    void reallyFlushModelEvents();
 }
