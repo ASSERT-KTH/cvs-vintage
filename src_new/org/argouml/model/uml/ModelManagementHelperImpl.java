@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.12 2005/02/20 21:55:16 linus Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.13 2005/10/21 04:19:56 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -248,12 +248,8 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
     }
 
     /**
-     * Helper method for {@link #getAllModelElementsOfKind(Object, Object)}.
-     *
-     * @param nsa namespace.
-     * @param kind name of class to find, this implementation will add the "M"
-     *             for NSUML.
-     * @return a Collection.
+     * @see org.argouml.model.ModelManagementHelper#getAllModelElementsOfKind(java.lang.Object,
+     *      java.lang.String)
      */
     public Collection getAllModelElementsOfKind(Object nsa, String kind) {
 
@@ -266,7 +262,6 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
         }
         Collection col = null;
         try {
-            // TODO: This assumes we are working with MThings
             col = getAllModelElementsOfKind(nsa, Class.forName("M" + kind));
         } catch (ClassNotFoundException cnfe) {
             LOG.error(cnfe);
