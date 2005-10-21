@@ -1,4 +1,4 @@
-// $Id: TestUseCasesFactory.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// $Id: TestUseCasesFactory.java,v 1.2 2005/10/21 05:05:06 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,12 +93,14 @@ public class TestUseCasesFactory extends TestCase {
             	.buildExtend(base, extension, point);
         assertTrue("extensionpoint not added to base",
 		   !Model.getFacade().getExtensionPoints(base).isEmpty());
-        assertTrue("extend not added to base", !Model.getUseCasesHelper().getExtendingUseCases(base).isEmpty());
+        assertTrue("extend not added to base", 
+                !Model.getUseCasesHelper()
+                .getExtendingUseCases(base).isEmpty());
         assertTrue("extend not added to extension",
 		   !Model.getFacade().getExtends(extension).isEmpty());
         assertTrue("extend not added to correct extensionpoint",
 		   (Model.getFacade().getExtensionPoints(extend).contains(point)
-		    && Model.getFacade().getExtensionPoints(extend).size() == 1));
+		 && Model.getFacade().getExtensionPoints(extend).size() == 1));
     }
 
 

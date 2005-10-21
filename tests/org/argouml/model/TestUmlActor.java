@@ -1,4 +1,4 @@
-// $Id: TestUmlActor.java,v 1.4 2005/08/20 09:31:08 linus Exp $
+// $Id: TestUmlActor.java,v 1.5 2005/10/21 05:05:06 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,9 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model;
-
-import org.argouml.model.Model;
-
 
 /**
  * @author Thierry Lach
