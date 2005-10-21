@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPContextWrapperFactory.java,v 1.8 2005/09/26 14:36:30 coqp Exp $
+ * $Id: JRMPContextWrapperFactory.java,v 1.9 2005/10/21 08:58:06 coqp Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -46,7 +46,7 @@ public class JRMPContextWrapperFactory extends AbsInitialContextFactory implemen
      * @return class of the wrapper (to be instantiated + pool).
      */
     protected Class getWrapperClass() {
-        boolean localreg = new Boolean(System.getProperty(CarolDefaultValues.LOCALREG_JRMP_PROPERTY, "true")).booleanValue();
+        boolean localreg = new Boolean(System.getProperty(CarolDefaultValues.LOCALREG_JRMP_PROPERTY, "false")).booleanValue();
         if ((localreg) && JRMPRegistry.isLocal()) {
             return JRMPLocalContext.class;
         } else {
