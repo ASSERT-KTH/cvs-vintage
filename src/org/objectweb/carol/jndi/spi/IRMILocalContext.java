@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IRMILocalContext.java,v 1.1 2005/09/15 13:04:16 benoitf Exp $
+ * $Id: IRMILocalContext.java,v 1.2 2005/10/21 07:17:44 ashah Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -56,30 +56,4 @@ public class IRMILocalContext extends IRMIContext implements Context {
     public IRMILocalContext(Context irmiLocalContext) throws NamingException {
         super(new IRMIRegistryWrapperContext(irmiLocalContext.getEnvironment()));
     }
-
-    /**
-     * If this object is a reference wrapper return the reference If this object
-     * is a resource wrapper return the resource
-     * @param o the object to resolve
-     * @param name name of the object to unwrap
-     * @return the unwrapped object
-     * @throws NamingException if the object cannot be unwraped
-     */
-    protected Object unwrapObject(Object o, Name name) throws NamingException {
-        try {
-            if (o instanceof RemoteReference) {
-                // build of the Referenceable object with is Reference
-                Reference objRef = ((RemoteReference) o).getReference();
-                ObjectFactory objFact = (ObjectFactory) (Class.forName(objRef.getFactoryClassName())).newInstance();
-                return objFact.getObjectInstance(objRef, name, this, getEnvironment());
-            } else if (o instanceof JNDIRemoteResource) {
-                return ((JNDIRemoteResource) o).getResource();
-            } else {
-                return o;
-            }
-        } catch (Exception e) {
-            throw NamingExceptionHelper.create("Cannot unwrap object '" + o + "' with name '" + name + "'.", e);
-        }
-    }
-
 }
