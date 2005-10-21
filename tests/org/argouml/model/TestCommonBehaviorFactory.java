@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorFactory.java,v 1.5 2005/08/20 09:31:08 linus Exp $
+// $Id: TestCommonBehaviorFactory.java,v 1.6 2005/10/21 05:16:59 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,9 +113,9 @@ public class TestCommonBehaviorFactory extends TestCase {
 	objs.add("UninterpretedAction");
 
 	CheckUMLModelHelper.createAndRelease(
-					     Model.getCommonBehaviorFactory(),
-					     // +1 in the size of the array because we also test the null value
-					     (String[]) objs.toArray(new String[objs.size()+1]));
+	        Model.getCommonBehaviorFactory(),
+	        // +1 in array size because we also test the null value
+	        (String[]) objs.toArray(new String[objs.size()+1]));
 
     }
 
