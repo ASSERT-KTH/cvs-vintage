@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.24 2005/05/13 19:43:38 mvw Exp $
+// $Id: StylePanel.java,v 1.25 2005/10/23 08:38:19 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,8 @@ public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
 		Project p = ProjectManager.getManager()
 		    .getCurrentProject();
                 ArgoDiagram diagram = p.getActiveDiagram();
-                t = diagram.presentationFor(t);
+                if (diagram!=null)
+                    t = diagram.presentationFor(t);
 		if (!(t instanceof Fig)) {
 		    return;
 		}
