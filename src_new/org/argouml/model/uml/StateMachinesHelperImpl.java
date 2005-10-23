@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperImpl.java,v 1.15 2005/07/24 19:14:07 mvw Exp $
+// $Id: StateMachinesHelperImpl.java,v 1.16 2005/10/23 20:03:27 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -726,4 +726,44 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
         }
         return enclosing;
     }
+    
+    /**
+     * @see org.argouml.model.StateMachinesHelper#addDeferrableEvent(java.lang.Object, java.lang.Object)
+     */
+    public void addDeferrableEvent(Object state, Object deferrableEvent) {
+        if (state instanceof MState
+                && deferrableEvent instanceof MEvent) {
+            ((MState)state).addDeferrableEvent((MEvent)deferrableEvent);
+            return;            
+        }
+        throw new IllegalArgumentException("handle: " + state + " or evt: "
+                + deferrableEvent);    
+    }
+
+    /**
+     * @see org.argouml.model.StateMachinesHelper#removeDeferrableEvent(java.lang.Object, java.lang.Object)
+     */
+    public void removeDeferrableEvent(Object state, Object deferrableEvent) {
+        if (state instanceof MState
+                && deferrableEvent instanceof MEvent) {
+            ((MState)state).addDeferrableEvent((MEvent)deferrableEvent);
+            return;            
+        }
+        throw new IllegalArgumentException("handle: " + state + " or evt: "
+                + deferrableEvent);    
+    }
+
+    /**
+     * @see org.argouml.model.StateMachinesHelper#setContext(java.lang.Object, java.lang.Object)
+     */
+    public void setContext(Object statemachine, Object modelElement) {
+        if (statemachine instanceof MStateMachine
+                && modelElement instanceof MModelElement) {
+            ((MStateMachine)statemachine).setContext((MModelElement)modelElement);
+            return;            
+        }
+        throw new IllegalArgumentException("handle: " + statemachine + " or me: "
+                + modelElement);
+    }
+    
 }
