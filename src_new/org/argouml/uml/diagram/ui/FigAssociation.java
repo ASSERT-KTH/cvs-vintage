@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.97 2005/10/23 07:27:27 mvw Exp $
+// $Id: FigAssociation.java,v 1.98 2005/10/23 21:05:58 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -191,7 +191,8 @@ public class FigAssociation extends FigEdgeModelElement {
      */
     public void setOwner(Object newOwner) {
         Object oldOwner = getOwner();
-        if (newOwner != oldOwner) {
+        if (newOwner != oldOwner 
+                && (oldOwner==null||!Model.getUmlFactory().isRemoved(oldOwner))) {
             if (Model.getFacade().isAAssociation(oldOwner)) {
                 Collection oldConns = 
                     Model.getFacade().getConnections(oldOwner);
@@ -341,7 +342,8 @@ public class FigAssociation extends FigEdgeModelElement {
     protected void modelChanged(PropertyChangeEvent e) {
 	super.modelChanged(e);
 	Object association = getOwner(); //MAssociation
-	if (association == null || getLayer() == null) {
+	if (association == null || getLayer() == null 
+            || Model.getUmlFactory().isRemoved(association)) {
 	    return;
 	}
 
