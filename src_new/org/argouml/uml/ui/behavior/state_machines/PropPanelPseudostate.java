@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.35 2005/07/23 16:53:34 mvw Exp $
+// $Id: PropPanelPseudostate.java,v 1.36 2005/10/23 08:42:29 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,24 +121,30 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
      * @see org.argouml.uml.ui.PropPanel#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        refreshTarget();
-        super.targetAdded(e);
+        if (Model.getFacade().isAPseudostate(e.getNewTarget())) {
+            refreshTarget();
+            super.targetAdded(e);
+        }
     }
 
     /**
      * @see org.argouml.uml.ui.PropPanel#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        refreshTarget();
-        super.targetRemoved(e);
+        if (Model.getFacade().isAPseudostate(e.getNewTarget())) {
+            refreshTarget();
+            super.targetRemoved(e);
+        }
     }
 
     /**
      * @see org.argouml.uml.ui.PropPanel#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        refreshTarget();
-        super.targetSet(e);
+        if (Model.getFacade().isAPseudostate(e.getNewTarget())) {
+            refreshTarget();
+            super.targetSet(e);
+        }
     }
 
 } /* end class PropPanelPseudostate */
