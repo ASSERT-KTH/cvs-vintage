@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.30 2005/10/15 16:51:23 rastaman Exp $
+// $Id: PerspectiveManager.java,v 1.31 2005/10/23 15:56:33 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -365,6 +365,7 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoStateToOutgoingTrans());
         packagePerspective.addRule(new GoSubmachineStateToStateMachine());
         packagePerspective.addRule(new GoStereotypeToTagDefinition());
+        packagePerspective.addRule(new GoClassifierToStateMachine());
         
         ExplorerPerspective diagramPerspective = new ExplorerPerspective(
                 "combobox.item.diagram-centric");
