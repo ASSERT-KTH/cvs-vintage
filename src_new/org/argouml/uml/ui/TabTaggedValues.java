@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.47 2005/10/10 01:38:08 bobtarling Exp $
+// $Id: TabTaggedValues.java,v 1.48 2005/10/23 10:51:47 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -326,7 +326,7 @@ class TableModelTaggedValues extends AbstractTableModel
      * @see javax.swing.table.TableModel#getRowCount()
      */
     public int getRowCount() {
-	if (target == null) {
+	if (target == null || Model.getUmlFactory().isRemoved(target)) {
 	    return 0;
 	}
 	Collection tvs = Model.getFacade().getTaggedValuesCollection(target);
