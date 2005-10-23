@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.205 2005/10/23 07:27:26 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.206 2005/10/23 12:17:41 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -475,17 +475,16 @@ public abstract class FigNodeModelElement
                     new ArrayList(Model.getExtensionMechanismsHelper().
                     getAllPossibleStereotypes(models, getOwner()));
                 
-                availableStereotypes.removeAll(Model.getFacade().getStereotypes(getOwner()));
-                
                 if (!availableStereotypes.isEmpty()) {
                     ArgoJMenu stereotypes = new ArgoJMenu("menu.popup.add-stereotype");
                     Iterator it = availableStereotypes.iterator();
                     while (it.hasNext()) {
-                        stereotypes.add(new ActionAddStereotype(getOwner(), it.next()));
+                        stereotypes.addCheckItem(new ActionAddStereotype(getOwner(), it.next()));
                     }
                     popUpActions.insertElementAt(new JSeparator(), 0);
                     popUpActions.insertElementAt(stereotypes, 0);
                 }
+                
             }
         }
 

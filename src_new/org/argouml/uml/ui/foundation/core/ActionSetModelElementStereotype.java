@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.19 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.20 2005/10/23 12:17:41 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -73,14 +74,19 @@ public class ActionSetModelElementStereotype extends UMLAction {
 	    }
         }
         if (newStereo != oldStereo && target != null) {
-	    if (newStereo != null) {
-		newStereo =
-		    Model.getModelManagementHelper().getCorrespondingElement(
-				  newStereo,
-				  Model.getFacade().getModel(target));
-	    }
-            Model.getExtensionMechanismsHelper()
-                .setStereoType(target, newStereo);
+            // Add stereotypes submenu
+            if (SingleStereotypeEnabler.isEnabled()) { 
+	            if (newStereo != null) {
+					newStereo =
+					    Model.getModelManagementHelper().getCorrespondingElement(
+					  newStereo,
+					  	Model.getFacade().getModel(target));
+	    			}
+	            Model.getExtensionMechanismsHelper().setStereoType(target, newStereo);
+    	        } else {                          
+                		if (newStereo != null&&!Model.getFacade().getStereotypes(target).contains(newStereo))
+                    		Model.getCoreHelper().addStereotype(target, newStereo);
+            }
             super.actionPerformed(e);
         }
     }

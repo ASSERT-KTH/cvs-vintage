@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.119 2005/10/23 07:27:27 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.120 2005/10/23 12:17:41 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.Icon;
+import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 
@@ -298,13 +299,11 @@ public abstract class FigEdgeModelElement
                 new ArrayList(Model.getExtensionMechanismsHelper().
                 getAllPossibleStereotypes(models, getOwner()));
             
-            availableStereotypes.removeAll(Model.getFacade().getStereotypes(getOwner()));
-            
             if (!availableStereotypes.isEmpty()) {
                 ArgoJMenu stereotypes = new ArgoJMenu("menu.popup.add-stereotype");
                 Iterator it = availableStereotypes.iterator();
                 while (it.hasNext()) {
-                    stereotypes.add(new ActionAddStereotype(getOwner(), it.next()));
+                    stereotypes.addCheckItem(new ActionAddStereotype(getOwner(), it.next()));
                 }
                 popUpActions.insertElementAt(new JSeparator(), 0);
                 popUpActions.insertElementAt(stereotypes, 0);
