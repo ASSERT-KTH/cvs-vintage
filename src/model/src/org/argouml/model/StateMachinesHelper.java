@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.6 2005/07/24 19:14:07 mvw Exp $
+// $Id: StateMachinesHelper.java,v 1.7 2005/10/23 20:04:55 rastaman Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -347,4 +347,26 @@ public interface StateMachinesHelper {
      * @return the enclosing namespace for the event
      */
     Object findNamespaceForEvent(Object trans, Object model);
+    
+    /**
+     * Set the Context of a statemachine
+     * @param statemachine
+     * @param modelElement
+     */
+    void setContext(Object statemachine, Object modelElement);
+    
+    /**
+     * Add a deferrable event to a state
+     * @param state
+     * @param deferrableEvent
+     */
+    void addDeferrableEvent(Object state, Object deferrableEvent);
+    
+    /**
+     * Remove a deferrable event from a state
+     * @param state
+     * @param deferrableEvent
+     */
+    void removeDeferrableEvent(Object state, Object deferrableEvent);
+    
 }

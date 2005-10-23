@@ -1,4 +1,4 @@
-// $Id: AbstractStateMachinesHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
+// $Id: AbstractStateMachinesHelperDecorator.java,v 1.2 2005/10/23 20:04:55 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -355,6 +355,27 @@ public abstract class AbstractStateMachinesHelperDecorator
      */
     public Object findNamespaceForEvent(Object trans, Object model) {
         return impl.findNamespaceForEvent(trans, model);
+    }
+
+    /**
+     * @see org.argouml.model.StateMachinesHelper#addDeferrableEvent(java.lang.Object, java.lang.Object)
+     */
+    public void addDeferrableEvent(Object state, Object deferrableEvent) {
+        impl.addDeferrableEvent(state, deferrableEvent);
+    }
+
+    /**
+     * @see org.argouml.model.StateMachinesHelper#removeDeferrableEvent(java.lang.Object, java.lang.Object)
+     */
+    public void removeDeferrableEvent(Object state, Object deferrableEvent) {
+        impl.removeDeferrableEvent(state, deferrableEvent);
+    }
+
+    /**
+     * @see org.argouml.model.StateMachinesHelper#setContext(java.lang.Object, java.lang.Object)
+     */
+    public void setContext(Object statemachine, Object modelElement) {
+        impl.setContext(statemachine, modelElement);
     }
 
 }
