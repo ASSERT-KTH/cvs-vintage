@@ -1,4 +1,4 @@
-// $Id: NotationProvider2.java,v 1.11 2005/02/20 21:55:16 linus Exp $
+// $Id$
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.application.api;
+package org.argouml.application.notation;
 
 /**
  * Interface provided by classes that provide a notation.<p>

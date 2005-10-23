@@ -1,4 +1,4 @@
-// $Id: ActionAddStereotype.java,v 1.1 2005/10/14 16:13:43 bobtarling Exp $
+// $Id: ActionAddStereotype.java,v 1.2 2005/10/23 07:27:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.apache.log4j.Logger;
-import org.argouml.language.helpers.NotationHelper;
+import org.argouml.application.notation.NotationHelper;
 import org.argouml.model.Model;
 
 /**

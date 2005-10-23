@@ -1,4 +1,4 @@
-// $Id: FigUsage.java,v 1.13 2005/10/14 16:13:42 bobtarling Exp $
+// $Id: FigUsage.java,v 1.14 2005/10/23 07:27:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.uml.diagram.ui;
 
 import java.beans.PropertyChangeEvent;
 
+import org.argouml.application.notation.NotationHelper;
 import org.argouml.kernel.SingleStereotypeEnabler;
-import org.argouml.language.helpers.NotationHelper;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.presentation.FigText;
 

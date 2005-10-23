@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.96 2005/09/17 13:24:59 mvw Exp $
+// $Id: FigAssociation.java,v 1.97 2005/10/23 07:27:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.argouml.application.api.Notation;
+import org.argouml.application.notation.Notation;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;

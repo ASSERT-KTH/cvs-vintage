@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.15 2005/10/21 01:01:05 tfmorris Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.16 2005/10/23 07:27:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.ui.explorer;
 import java.beans.PropertyChangeListener;
 
 import org.argouml.application.api.Configuration;
-import org.argouml.application.api.Notation;
+import org.argouml.application.notation.Notation;
 import org.argouml.kernel.NsumlEnabler;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AddAssociationEvent;

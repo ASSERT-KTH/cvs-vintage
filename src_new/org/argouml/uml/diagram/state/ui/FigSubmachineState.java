@@ -1,4 +1,4 @@
-// $Id: FigSubmachineState.java,v 1.8 2005/09/07 21:03:52 linus Exp $
+// $Id: FigSubmachineState.java,v 1.9 2005/10/23 07:27:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import java.beans.PropertyVetoException;
 import java.text.ParseException;
 import java.util.Iterator;
 
-import org.argouml.application.api.Notation;
+import org.argouml.application.notation.Notation;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.ParserDisplay;

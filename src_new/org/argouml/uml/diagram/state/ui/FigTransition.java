@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.43 2005/09/26 10:46:51 bobtarling Exp $
+// $Id: FigTransition.java,v 1.44 2005/10/23 07:27:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.text.ParseException;
 
-import org.argouml.application.api.Notation;
+import org.argouml.application.notation.Notation;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;

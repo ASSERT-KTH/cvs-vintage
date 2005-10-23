@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.29 2005/09/11 19:31:10 mvw Exp $
+// $Id: FigState.java,v 1.30 2005/10/23 07:27:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.util.Iterator;
 
-import org.argouml.application.api.Notation;
+import org.argouml.application.notation.Notation;
 import org.argouml.model.Model;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigText;

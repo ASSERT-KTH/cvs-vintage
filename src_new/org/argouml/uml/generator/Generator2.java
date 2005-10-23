@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.10 2005/02/08 20:44:19 mvw Exp $
+// $Id: Generator2.java,v 1.11 2005/10/23 07:27:27 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,10 +30,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import org.argouml.application.api.NotationName;
-import org.argouml.application.api.NotationProvider2;
 import org.argouml.application.api.PluggableNotation;
-import org.argouml.language.helpers.NotationHelper;
+import org.argouml.application.notation.NotationHelper;
+import org.argouml.application.notation.NotationName;
+import org.argouml.application.notation.NotationProvider2;
 import org.argouml.model.Model;
 
 /**

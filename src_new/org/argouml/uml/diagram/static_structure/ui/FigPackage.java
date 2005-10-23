@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.82 2005/10/11 23:48:14 bobtarling Exp $
+// $Id: FigPackage.java,v 1.83 2005/10/23 07:27:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Configuration;
-import org.argouml.application.api.Notation;
+import org.argouml.application.notation.Notation;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;

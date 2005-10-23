@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.65 2005/09/30 00:33:19 bobtarling Exp $
+// $Id$
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.application.api;
+package org.argouml.application.notation;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -33,11 +33,11 @@ import java.util.Iterator;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.api.Configuration;
+import org.argouml.application.api.ConfigurationKey;
 import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
-import org.argouml.application.notation.NotationNameImpl;
-import org.argouml.application.notation.NotationProviderFactory;
 import org.argouml.model.Model;
 
 /**

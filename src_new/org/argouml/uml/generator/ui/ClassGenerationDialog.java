@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.50 2005/10/02 09:08:07 mvw Exp $
+// $Id: ClassGenerationDialog.java,v 1.51 2005/10/23 07:27:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,8 +53,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Notation;
-import org.argouml.application.api.NotationName;
+import org.argouml.application.notation.Notation;
+import org.argouml.application.notation.NotationName;
 import org.argouml.application.notation.NotationProviderFactory;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
