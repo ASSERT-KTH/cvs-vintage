@@ -1,4 +1,4 @@
-// $Id: ActionNewEvent.java,v 1.14 2005/07/03 09:48:46 mvw Exp $
+// $Id: ActionNewEvent.java,v 1.15 2005/10/23 20:06:51 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,6 +58,11 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
          */
         public static final  String TRIGGER = "trigger";
 
+        /**
+         * The deferrable event key
+         */
+        public static final String DEFERRABLE_EVENT = "deferrable-event";
+        
     }
     /**
      * Constructor for ActionNewEvent.
@@ -82,17 +87,20 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        Object trans = getTarget();
+        Object target = getTarget();
         Object model = 
         	ProjectManager.getManager().getCurrentProject().getModel();
         Object ns = Model.getStateMachinesHelper()
-        		.findNamespaceForEvent(trans, model);
+        		.findNamespaceForEvent(target, model);
         Object event = createEvent(ns);
         if (getValue(ROLE).equals(Roles.TRIGGER)) {
             Model.getStateMachinesHelper()
-                        .setEventAsTrigger(trans, event);
+                        .setEventAsTrigger(target, event);
         }
-        
+        if (getValue(ROLE).equals(Roles.DEFERRABLE_EVENT)) {
+            Model.getStateMachinesHelper()
+                        .addDeferrableEvent(target, event);
+        }
         TargetManager.getInstance().setTarget(event);
     }
 

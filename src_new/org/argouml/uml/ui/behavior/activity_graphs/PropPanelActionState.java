@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.28 2005/10/17 11:26:56 bobtarling Exp $
+// $Id: PropPanelActionState.java,v 1.29 2005/10/23 20:06:51 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,9 @@ public class PropPanelActionState extends AbstractPropPanelState {
                 getContainerScroll());
         addField(Translator.localize("label.entry"),
                 getEntryScroll());
+
+        addField(Translator.localize("label.deferrable"),
+                getDeferrableEventsScroll());
         
         addSeperator();
 

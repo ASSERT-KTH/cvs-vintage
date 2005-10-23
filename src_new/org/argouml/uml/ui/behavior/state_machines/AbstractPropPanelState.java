@@ -1,4 +1,4 @@
-// $Id: AbstractPropPanelState.java,v 1.2 2005/04/24 20:06:35 mvw Exp $
+// $Id: AbstractPropPanelState.java,v 1.3 2005/10/23 20:06:51 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.tigris.swidgets.Orientation;
 
@@ -60,9 +59,11 @@ public abstract class AbstractPropPanelState extends PropPanelStateVertex {
     {
         super(name, icon, orientation);
 
-        JList deferrableList = new UMLLinkedList(
+        JList deferrableList = new UMLStateDeferrableEventList(
                 new UMLStateDeferrableEventListModel());
+        
         deferrableEventsScroll = new JScrollPane(deferrableList);
+                
         entryList = new UMLStateEntryList(new UMLStateEntryListModel());
         entryList.setVisibleRowCount(1);
         entryScroll = new JScrollPane(entryList);
