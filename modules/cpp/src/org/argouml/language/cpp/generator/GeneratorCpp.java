@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.58 2005/10/23 07:27:28 mvw Exp $
+// $Id: GeneratorCpp.java,v 1.59 2005/10/24 17:47:34 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,18 +36,17 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.application.notation.Notation;
-import org.argouml.application.api.PluggableNotation;
 import org.argouml.model.Model;
 import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.UUIDHelper;
