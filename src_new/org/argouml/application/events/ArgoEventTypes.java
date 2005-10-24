@@ -1,4 +1,4 @@
-// $Id: ArgoEventTypes.java,v 1.12 2005/01/09 14:58:03 linus Exp $
+// $Id: ArgoEventTypes.java,v 1.13 2005/10/24 17:06:13 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,32 @@ public interface ArgoEventTypes {
      */
     int LAST_NOTATION_EVENT       =  1299;
 
+    /**
+     * Id indicating any GENERATION event.
+     */
+    int ANY_GENERATOR_EVENT        =  1300;
 
+    /**
+     * Id indicating the default GENERATION was changed.
+     */
+    int GENERATOR_CHANGED          =  1301;
+
+    /**
+     * Id indicating a GENERATION was added.
+     */
+    int GENERATOR_ADDED            =  1302;
+
+    /**
+     * Id indicating a GENERATION was removed.
+     */
+    int GENERATOR_REMOVED          =  1303;
+
+    /**
+     * Last generation event.
+     */
+    int LAST_GENERATOR_EVENT       =  1399;
+
+    
     /**
      * Id marker for the last Argo event.
      */

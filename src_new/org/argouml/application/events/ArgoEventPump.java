@@ -1,4 +1,4 @@
-// $Id: ArgoEventPump.java,v 1.16 2005/01/09 14:58:03 linus Exp $
+// $Id: ArgoEventPump.java,v 1.17 2005/10/24 17:06:13 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -212,6 +212,34 @@ public final class ArgoEventPump {
         }
     }
 
+    /**
+     * Handle firing a generator event.
+     *
+     * @param event The event to be fired.
+     * @param listener The listener.
+     */
+    private void handleFireGeneratorEvent(
+        ArgoGeneratorEvent event,
+        ArgoGeneratorEventListener listener) {
+        switch (event.getEventType()) {
+        case ArgoEventTypes.GENERATOR_CHANGED:
+            listener.generatorChanged(event);
+            break;
+
+        case ArgoEventTypes.GENERATOR_ADDED:
+            listener.generatorAdded(event);
+            break;
+
+        case ArgoEventTypes.GENERATOR_REMOVED:
+            listener.generatorRemoved(event);
+            break;
+
+        default:
+            LOG.error("Invalid event:" + event.getEventType());
+            break;
+        }
+    }
+
     private void handleFireEvent(ArgoEvent event, ArgoEventListener listener) {
         if (event.getEventType() == ArgoEventTypes.ANY_EVENT) {
             if (listener instanceof ArgoModuleEventListener) {
@@ -235,6 +263,13 @@ public final class ArgoEventPump {
                 if (listener instanceof ArgoNotationEventListener) {
                     handleFireNotationEvent((ArgoNotationEvent) event,
 					(ArgoNotationEventListener) listener);
+                }
+            }
+            if (event.getEventType() >= ArgoEventTypes.ANY_GENERATOR_EVENT
+                && event.getEventType() < ArgoEventTypes.LAST_GENERATOR_EVENT) {
+                if (listener instanceof ArgoGeneratorEventListener) {
+                    handleFireGeneratorEvent((ArgoGeneratorEvent) event,
+                            (ArgoGeneratorEventListener) listener);
                 }
             }
         }
