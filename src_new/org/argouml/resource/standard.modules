@@ -1,5 +1,5 @@
 #
-# $Id: standard.modules,v 1.20 2004/09/24 12:38:29 linus Exp $
+# $Id: standard.modules,v 1.21 2005/10/24 12:15:26 bobtarling Exp $
 #
 # The sequence of modules within this file may be significant.
 #
@@ -8,7 +8,7 @@
 module.settings.preferences=org.argouml.ui.SettingsTabPreferences
 module.settings.environment=org.argouml.ui.SettingsTabEnvironment
 module.settings.user=org.argouml.ui.SettingsTabUser
-module.settings.notation=org.argouml.language.ui.SettingsTabNotation
+module.settings.notation=org.argouml.application.notation.ui.SettingsTabNotation
 module.settings.appearance=org.argouml.ui.SettingsTabAppearance
 module.settings.modules=org.argouml.moduleloader.SettingsTabModules
 #module.settings.layout=org.argouml.ui.SettingsTabLayout
