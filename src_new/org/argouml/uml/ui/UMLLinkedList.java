@@ -1,4 +1,4 @@
-// $Id: UMLLinkedList.java,v 1.20 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLLinkedList.java,v 1.21 2005/10/24 14:00:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui;
 
 import java.awt.Color;
 
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
 /**
@@ -49,7 +50,7 @@ public class UMLLinkedList extends UMLList2 {
      * @param dataModel the data model
      * @param showIcon true if an icon should be shown
      */
-    public UMLLinkedList(UMLModelElementListModel2 dataModel,
+    public UMLLinkedList(ListModel dataModel,
             boolean showIcon) {
         super(dataModel, new UMLLinkedListCellRenderer(showIcon));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -64,7 +65,7 @@ public class UMLLinkedList extends UMLList2 {
      *
      * @param dataModel the data model
      */
-    public UMLLinkedList(UMLModelElementListModel2 dataModel) {
+    public UMLLinkedList(ListModel dataModel) {
         this(dataModel, true);
     }
 

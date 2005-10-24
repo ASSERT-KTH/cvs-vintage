@@ -1,4 +1,4 @@
-// $Id: UMLList2.java,v 1.21 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLList2.java,v 1.22 2005/10/24 14:00:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetListener;
@@ -60,7 +61,7 @@ public abstract class UMLList2
      * @param renderer the renderer
      */
     protected UMLList2(
-            UMLModelElementListModel2 dataModel,
+            ListModel dataModel,
             ListCellRenderer renderer) {
         super(dataModel);
         setDoubleBuffered(true);
