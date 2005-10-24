@@ -1,4 +1,4 @@
-// $Id: TabSrc.java,v 1.28 2005/10/24 17:06:13 mvw Exp $
+// $Id: TabSrc.java,v 1.29 2005/10/24 21:57:59 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,22 +27,11 @@ package org.argouml.uml.ui;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.swing.JComboBox;
 
 import org.apache.log4j.Logger;
-
-import org.argouml.application.notation.Notation;
-import org.argouml.application.notation.NotationContext;
 import org.argouml.language.ui.LanguageComboBox;
-
-import org.argouml.application.notation.Notation;
-import org.argouml.application.notation.NotationContext;
-import org.argouml.application.notation.NotationName;
-import org.argouml.application.notation.ui.NotationComboBox;
-
 import org.argouml.model.Model;
 import org.argouml.ui.TabText;
 import org.argouml.uml.generator.GeneratorHelper;
@@ -105,7 +94,9 @@ public class TabSrc
         if (modelObject != getTarget()) {
             setTarget(modelObject); // shouldn't happen
         }
-        return files[cbFiles.getSelectedIndex()].getContent();
+        if (cbFiles!=null && files!=null && files[cbFiles.getSelectedIndex()]!=null)
+            return files[cbFiles.getSelectedIndex()].getContent();
+        return null;
     }
 
     /**
