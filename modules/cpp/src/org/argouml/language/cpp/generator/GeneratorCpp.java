@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.60 2005/10/24 21:56:33 rastaman Exp $
+// $Id: GeneratorCpp.java,v 1.61 2005/10/24 22:08:30 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -483,15 +483,13 @@ public class GeneratorCpp extends Generator2
 		pathname = generateDirectoriesPathname(o, path);
 		//String pathname = path + filename;
 		// TODO: package, project basepath, tagged values to configure
-        if (pathname!=null) {
-            File f = new File(pathname);
-            if (f.exists()) {
-                LOG.info("Generating (updated) " + f.getPath());
-                sect.read(pathname);
-            } else {
-                LOG.info("Generating (new) " + f.getPath());
-            }            
-        }
+		File f = new File(pathname);
+		if (f.exists()) {
+		    LOG.info("Generating (updated) " + f.getPath());
+		    sect.read(pathname);
+		} else {
+		    LOG.info("Generating (new) " + f.getPath());
+		}
 	    }
 	}
 
@@ -504,7 +502,7 @@ public class GeneratorCpp extends Generator2
              generatorPass++) {
 	    pathname = generateDirectoriesPathname(o, path);
 	    String fileContent = generateFileAsString(o, pathname);
-	    if (fileContent.length() == 0 || pathname == null) continue;
+	    if (fileContent.length() == 0) continue;
             BufferedWriter fos = null;
 	    //String pathname = path + filename;
 	    // TODO: package, project basepath, tagged values to configure
