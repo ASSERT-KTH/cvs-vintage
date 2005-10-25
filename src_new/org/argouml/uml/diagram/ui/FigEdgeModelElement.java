@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.124 2005/10/24 14:00:16 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.125 2005/10/25 23:22:27 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -741,7 +741,6 @@ public abstract class FigEdgeModelElement
      * @see org.tigris.gef.presentation.Fig#setLayer(org.tigris.gef.base.Layer)
      */
     public void setLayer(Layer lay) {
-        LOG.info("Setting " + this + " to layer " + lay);
         super.setLayer(lay);
         getFig().setLayer(lay);
     }
