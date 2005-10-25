@@ -1,4 +1,4 @@
-// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.20 2005/10/05 15:46:59 bobtarling Exp $
+// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.21 2005/10/25 03:09:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,8 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
         }
         model = new UMLReceptionSignalComboBoxModel();
         model.targetSet(new TargetEvent(this, "set", new Object[0],
-                new Object[] { elem }));
+                new Object[] {elem}));
+        Model.getPump().reallyFlushModelEvents();
     }
 
     /**
@@ -100,6 +101,7 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
      */
     public void testSetSignal() {
         Model.getCommonBehaviorHelper().setSignal(elem, signals[0]);
+        Model.getPump().reallyFlushModelEvents();
         assertTrue(model.getSelectedItem() == signals[0]);
     }
 
@@ -108,6 +110,7 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
      */
     public void testRemoveSignal() {
         Model.getUmlFactory().delete(signals[9]);
+        Model.getPump().reallyFlushModelEvents();
         assertEquals(9, model.getSize());
         assertTrue(!model.contains(signals[9]));
     }
