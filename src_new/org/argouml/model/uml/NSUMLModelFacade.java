@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.30 2005/10/20 06:35:33 tfmorris Exp $
+// $Id: NSUMLModelFacade.java,v 1.31 2005/10/25 20:49:25 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4578,6 +4578,9 @@ public class NSUMLModelFacade implements Facade {
     public String getUMLClassName(Object handle) {
         if (handle instanceof MBase) {
             return ((MBase) handle).getUMLClassName();
+        } else if (handle instanceof MExpression
+                || handle instanceof MMultiplicity) {
+            return nsmodel.getMetaTypes().getName(handle);
         }
 	return illegalArgumentString(handle);
     }
