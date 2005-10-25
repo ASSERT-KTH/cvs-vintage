@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.19 2005/10/20 05:29:04 tfmorris Exp $
+// $Id: Model.java,v 1.20 2005/10/25 19:38:22 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,12 @@ import org.apache.log4j.Logger;
  * @author Linus Tolke
  */
 public final class Model {
+    /**
+     * The default implementation to start.
+     */
+    private static final String DEFAULT_MODEL_IMPLEMENTATION =
+        "org.argouml.model.uml.NSUMLModelImplementation";
+
     /**
      * Logger.
      */
@@ -90,7 +96,7 @@ public final class Model {
      * The decorated helper.
      */
     private static UseCasesHelper useCasesHelper;
-    
+
     /**
      * Constructor to prohibit creation.
      */
@@ -106,7 +112,7 @@ public final class Model {
         String className =
             System.getProperty(
                     "argouml.model.implementation",
-            	    "org.argouml.model.uml.DefaultModelImplementation");
+            	    DEFAULT_MODEL_IMPLEMENTATION);
 
         try {
             Class implType = Class.forName(className);
@@ -378,7 +384,7 @@ public final class Model {
      * @return the helper
      */
     public static UseCasesHelper getUseCasesHelper() {
-        return impl.getUseCasesHelper();
+        return useCasesHelper;
     }
 
     /**
@@ -534,8 +540,13 @@ public final class Model {
             mco.mementoCreated(memento);
         }
     }
-    
+
+    /**
+     * Getter for CopyHelper.
+     *
+     * @return the helper
+     */
     public static CopyHelper getCopyHelper() {
-    		return impl.getCopyHelper();
+	return impl.getCopyHelper();
     }
 }
