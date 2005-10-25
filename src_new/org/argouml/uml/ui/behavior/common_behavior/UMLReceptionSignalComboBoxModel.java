@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.27 2005/06/07 07:20:00 bobtarling Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.28 2005/10/25 19:06:53 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,14 @@
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
+import java.beans.PropertyChangeEvent;
+import java.util.Collection;
+
+import org.argouml.kernel.NsumlEnabler;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
+import org.argouml.model.RemoveAssociationEvent;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 
@@ -79,5 +84,31 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
         }
         return null;
     }
-
+    
+    /**
+     * Override UMLComboBoxModel2's default handling of RemoveAssociation. We
+     * get this from MDR for the previous signal when a different signal is
+     * selected. Don't let that remove it from the combo box. Only remove it if
+     * the signal was removed from the namespace.
+     * <p>
+     * 
+     * @see org.argouml.uml.ui.UMLComboBoxModel2#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!NsumlEnabler.isNsuml() && evt instanceof RemoveAssociationEvent) {
+            if ("ownedElement".equals(evt.getPropertyName())) {
+                Object o = getChangedElement(evt);
+                if (contains(o)) {
+                    if (o instanceof Collection) {
+                        removeAll((Collection) o);
+                    } else {
+                        removeElement(o);
+                    }
+                }
+            }
+        } else {
+            super.propertyChange(evt);
+        }
+    }
+    
 }
