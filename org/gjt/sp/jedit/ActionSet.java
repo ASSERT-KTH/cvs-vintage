@@ -137,7 +137,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.31 2004/07/12 19:25:07 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.32 2005/10/26 17:28:23 ezust Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -387,7 +387,9 @@ public class ActionSet
 	 */
 	public boolean contains(String action)
 	{
-		return actions.containsKey(action);
+		boolean retval = actions.containsKey(action);
+		return retval;
+//		return actions.containsKey(action);
 	} //}}}
 
 	//{{{ size() method

@@ -38,7 +38,9 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.38 2004/06/28 06:45:27 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.39 2005/10/26 17:28:23 ezust Exp $
+ * @see OptionDialog - a newer version which is more "componentized"
+ * 
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -248,7 +250,14 @@ public abstract class OptionsDialog extends EnhancedDialog
 	} //}}}
 
 	//{{{ Protected members
+	// {{{ createOptionTreeModel
+	/**
+	 * Creates the tree model that goes on the left of the option pane,
+	 * loading all the items that are needed.
+	 */
 	protected abstract OptionTreeModel createOptionTreeModel();
+	// }}}
+
 	protected abstract OptionGroup getDefaultGroup();
 	//}}}
 
@@ -465,7 +474,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 	//}}}
 
 	//{{{ PaneNameRenderer class
-	class PaneNameRenderer extends DefaultTreeCellRenderer
+	public static class PaneNameRenderer extends DefaultTreeCellRenderer
 	{
 		public PaneNameRenderer()
 		{
@@ -525,7 +534,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 	} //}}}
 
 	//{{{ OptionTreeModel class
-	public class OptionTreeModel implements TreeModel
+	public static class OptionTreeModel implements TreeModel
 	{
 		public void addTreeModelListener(TreeModelListener l)
 		{
