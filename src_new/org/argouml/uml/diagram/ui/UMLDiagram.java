@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.79 2005/09/12 20:13:58 mkl Exp $
+// $Id: UMLDiagram.java,v 1.80 2005/10/26 17:00:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -637,7 +637,19 @@ public abstract class UMLDiagram
             String descr) {
 
         return new RadioAction(
-            new ActionAddAssociation(aggregationKind, unidirectional, descr));
+            new ActionSetAddAssociationMode(aggregationKind, unidirectional, descr));
+    }
+
+    /**
+     * Factory method to build an Action for creating an association end edge
+     * in the diagram.
+     *
+     * @param descr the description to give this action.
+     * @return The action to create a new association.
+     */
+    protected Action makeCreateAssociationEndAction(String descr) {
+
+        return new RadioAction(new ActionSetAddAssociationEndMode(descr));
     }
 
     /**

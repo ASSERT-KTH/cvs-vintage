@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.76 2005/10/17 11:26:55 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.77 2005/10/26 17:00:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ public class UMLClassDiagram extends UMLDiagram {
     private Action actionModel;
     private Action actionSubsystem;
     private Action actionAssociation;
+    private Action actionAssociationEnd;
     private Action actionAggregation;
     private Action actionComposition;
     private Action actionUniAssociation;
@@ -264,6 +265,17 @@ public class UMLClassDiagram extends UMLDiagram {
         }
         return actionAssociation;
     }
+    
+    /**
+     * @return Returns the actionAssociation.
+     */
+    protected Action getActionAssociationEnd() {
+        if (actionAssociationEnd == null) {
+            actionAssociationEnd = makeCreateAssociationEndAction("button.new-association-end");
+        }
+        return actionAssociationEnd;
+    }
+    
     /**
      * @return Returns the actionClass.
      */

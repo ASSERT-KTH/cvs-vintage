@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.15 2005/10/21 16:57:40 bobtarling Exp $
+// $Id: ModeCreateAssociationEnd.java,v 1.1 2005/10/26 17:00:39 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ import org.tigris.gef.presentation.FigPoly;
  *
  * @author pepargouml@yahoo.es
  */
-public class ModeCreateAssociation extends ModeCreatePolyEdge {
+public class ModeCreateAssociationEnd extends ModeCreatePolyEdge {
     private FigNode newFigNodeAssociation;
     private FigEdge oldFigAssociation;
     private Object association;
