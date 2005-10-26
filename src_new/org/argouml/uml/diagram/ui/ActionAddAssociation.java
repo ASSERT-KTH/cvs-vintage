@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociation.java,v 1.12 2005/01/29 20:08:27 linus Exp $
+// $Id: ActionAddAssociation.java,v 1.13 2005/10/26 15:14:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +32,10 @@ package org.argouml.uml.diagram.ui;
 
 import org.argouml.model.Model;
 import org.argouml.ui.CmdSetMode;
+import org.tigris.gef.base.ModeCreatePolyEdge;
 
 /**
- * The ActionAddAssociation class is for creating a dummy link with a
- * stimulus and a given action type. This is done in one step when a
- * new edge between two nodes is instanciated
+ * An extension of CmdSetMode to set the parameters for an association.
  *
  * @author Bob Tarling
  */
@@ -53,7 +52,8 @@ public class ActionAddAssociation extends CmdSetMode {
      */
     public ActionAddAssociation(Object aggregationKind, boolean unidirectional,
 				String name) {
-        super(ModeCreateAssociation.class, "edgeClass",
+        //super(ModeCreateAssociation.class, "edgeClass",
+        super(ModeCreatePolyEdge.class, "edgeClass",
 	      Model.getMetaTypes().getAssociation(), name);
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));
