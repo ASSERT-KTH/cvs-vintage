@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.20 2005/10/25 19:38:22 linus Exp $
+// $Id: Model.java,v 1.21 2005/10/26 21:42:21 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public final class Model {
      * The default implementation to start.
      */
     private static final String DEFAULT_MODEL_IMPLEMENTATION =
-        "org.argouml.model.uml.NSUMLModelImplementation";
+        "org.argouml.model.mdr.MDRModelImplementation";
 
     /**
      * Logger.
