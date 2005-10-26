@@ -31,6 +31,9 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+
+
+
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 //}}}
@@ -38,8 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.39 2005/10/26 17:28:23 ezust Exp $
- * @see OptionDialog - a newer version which is more "componentized"
+ * @version $Id: OptionsDialog.java,v 1.40 2005/10/26 23:18:50 ezust Exp $
  * 
  */
 public abstract class OptionsDialog extends EnhancedDialog
