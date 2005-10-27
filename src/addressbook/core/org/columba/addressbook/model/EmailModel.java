@@ -60,6 +60,13 @@ public class EmailModel implements IEmailModel {
 			this.type = 0;
 		}
 
+		
+		//tstich: CA-41 bugfix
+		if( type.equals("x400")) {
+			foundMatch = true;
+			this.type = 0;
+		}
+		
 		if (!foundMatch)
 			throw new IllegalArgumentException("unsupported type: " + type);
 
