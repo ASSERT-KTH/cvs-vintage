@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.38 2005/10/20 07:06:12 tfmorris Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.39 2005/10/27 12:45:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -314,6 +314,7 @@ public final class ResourceLoaderWrapper {
         images.put("button.new-aggregation", "Aggregation");
         images.put("button.new-association", "Association");
         images.put("button.new-associationclass", "AssociationClass");
+        images.put("button.new-association-end", "AssociationEnd");
         images.put("button.new-associationrole", "AssociationRole");
         images.put("button.new-attribute", "New Attribute");
         images.put("button.new-callaction", "CallAction");

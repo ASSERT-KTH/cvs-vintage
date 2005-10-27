@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.77 2005/10/26 17:00:39 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.78 2005/10/27 12:45:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -143,6 +143,7 @@ public class UMLClassDiagram extends UMLDiagram {
             getAssociationActions(),
             getAggregationActions(),
             getCompositionActions(),
+            getActionAssociationEnd(),
             getActionGeneralization(),
             null,
             getActionInterface(),
