@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.45 2005/07/22 17:58:12 linus Exp $ -->
+<!-- $Id: building.xml,v 1.46 2005/10/27 19:34:12 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -1951,7 +1951,7 @@ CVS access to the argouml project (to set tags).
 </para>
 	  <para>
 You also need CVS access to the included sub-projects to set the tags there:
-(argouml-csharp, argouml-nb, ... and this list will probably grow).
+(argouml-mdr, argouml-csharp, argouml-nb, ... and this list will probably grow).
 </para>
 	</listitem>
 	<listitem>
@@ -2032,7 +2032,7 @@ and run the command
 You also need to set the tag in the sub-projects so the following command
 is more like it:
 <programlisting>
-for proj in argouml argouml-csharp argouml-nb argouml-i18n-zh
+for proj in argouml argouml-mdr argouml-csharp argouml-nb argouml-i18n-zh
 do
     ( cd &dollar;proj &amp;&amp; cvs tag VERSION_<replaceable>X_Y_Z</replaceable>_F )
 done
