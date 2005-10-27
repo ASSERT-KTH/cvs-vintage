@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.5 2005/10/15 12:49:35 rastaman Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.6 2005/10/27 18:51:14 rastaman Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,5 +122,13 @@ public interface ExtensionMechanismsFactory {
      * @return a TagDefinition
      */
     Object createTagDefinition();
+
+    /**
+     * Copy a TagDefinition into the given namespace or stereotype
+     * @param aTd The TagDefinition to copy
+     * @param aNs A Namespace or a stereotype into which place the copy
+     * @return A copy of the tagdefinition
+     */
+    Object copyTagDefinition(Object aTd, Object aNs);
     
 }
