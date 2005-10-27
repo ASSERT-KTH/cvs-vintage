@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.10 2005/10/06 23:05:22 bobtarling Exp $
+// $Id: FigNodeAssociation.java,v 1.11 2005/10/27 00:09:02 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,9 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
+import org.argouml.kernel.NsumlEnabler;
 import org.argouml.model.Model;
+import org.argouml.model.RemoveAssociationEvent;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
@@ -133,9 +135,22 @@ public class FigNodeAssociation extends FigNodeModelElement {
             damage();
         }
         if (mee.getPropertyName().equals("connection")) {
-            Collection cNew = (Collection) mee.getNewValue();
-            Collection cOld = (Collection) mee.getOldValue();
-            if (cNew.size() == 2 && cOld.size() == 3) {
+            boolean rerender = false;
+            if (NsumlEnabler.isNsuml()) {
+                Collection cNew = (Collection) mee.getNewValue();
+                Collection cOld = (Collection) mee.getOldValue();
+                rerender = cNew.size() == 2 && cOld.size() == 3;
+            } else {
+                if (mee instanceof RemoveAssociationEvent) {
+                    Object association = ((RemoveAssociationEvent) mee)
+                            .getSource();
+                    if (Model.getFacade().getConnections(association).size() 
+                            == 2) {
+                        rerender = true;
+                    }
+                }
+            }
+            if (rerender) {
                 final Object association = getOwner();
                 final Fig oldNodeFig = this;
                 SwingUtilities.invokeLater(new Runnable() {
