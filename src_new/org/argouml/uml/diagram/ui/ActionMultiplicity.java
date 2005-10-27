@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.9 2005/01/30 20:47:54 linus Exp $
+// $Id: ActionMultiplicity.java,v 1.10 2005/10/27 21:38:59 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,8 +80,8 @@ public class ActionMultiplicity extends UMLAction {
      * @param s "src" or "dest". Anything else is interpreted as "dest".
      */
     protected ActionMultiplicity(Object/*MMultiplicity*/ m, String s) {
-	//super(m.getLower() + ".." + m.getUpper(), NO_ICON);
-	super(m.toString(), true, NO_ICON);
+	super(Model.getDataTypesHelper().multiplicityToString(m), 
+                true, NO_ICON);
 	str = s;
 	mult = m;
     }
