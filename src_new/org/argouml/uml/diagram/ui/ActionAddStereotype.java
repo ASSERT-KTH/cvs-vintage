@@ -1,4 +1,4 @@
-// $Id: ActionAddStereotype.java,v 1.3 2005/10/23 12:17:41 rastaman Exp $
+// $Id: ActionAddStereotype.java,v 1.4 2005/10/27 18:53:34 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,10 @@ class ActionAddStereotype extends UMLAction {
         if (Model.getFacade().getStereotypes(modelElement).contains(stereotype)) {
             Model.getCoreHelper().removeStereotype(modelElement, stereotype);            
         } else {
-            Model.getCoreHelper().addStereotype(modelElement, stereotype);
+            Object stereo = Model.getModelManagementHelper().
+                getCorrespondingElement(stereotype, 
+                        Model.getFacade().getModel(modelElement), true);
+            Model.getCoreHelper().addStereotype(modelElement, stereo);
         }
     }
     
