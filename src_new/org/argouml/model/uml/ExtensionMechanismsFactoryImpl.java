@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.12 2005/10/15 12:44:08 rastaman Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.13 2005/10/27 18:48:31 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -283,5 +283,14 @@ public class ExtensionMechanismsFactoryImpl
     public Object createTagDefinition() {
         return null;
     }
+ 
+    /**
+     * Unimplemented in NSUML / UML 1.3.
+     * @see org.argouml.model.ExtensionMechanismsFactory#createTagDefinition()
+     */
+    public Object copyTagDefinition(Object anElement, Object aNs) {
+        return null;
+    }
+    
 }
 
