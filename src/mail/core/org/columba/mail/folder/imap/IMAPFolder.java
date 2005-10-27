@@ -588,12 +588,15 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"sync_flags"));
 
+		MailboxStatus flagStatus = new MailboxStatus();
+		
 		// Build the remote lists of messages that are UNSEEN, FLAGGED, DELETED,
 		// JUNK
 		SearchKey unseenKey = new SearchKey(SearchKey.UNSEEN);
 		List remoteUnseenUids = Arrays.asList(getServer().search(unseenKey,
 				this));
-
+		flagStatus.setUnseen(remoteUnseenUids.size());
+		
 		SearchKey flaggedKey = new SearchKey(SearchKey.FLAGGED);
 		List remoteFlaggedUids = Arrays.asList(getServer().search(flaggedKey,
 				this));
@@ -605,6 +608,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		SearchKey recentKey = new SearchKey(SearchKey.RECENT);
 		List remoteRecentUids = Arrays.asList(getServer().search(recentKey,
 				this));
+		flagStatus.setRecent(remoteRecentUids.size());
 		
 		
 		SearchKey junkKey = new SearchKey(SearchKey.KEYWORD, "JUNK");
@@ -644,7 +648,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			fireMessageFlagChanged(uid, oldFlag, 0);
 		}
 		
-		syncMailboxInfo(getServer().getStatus(this));
+		syncMailboxInfo(flagStatus);
 	}
 
 	/**

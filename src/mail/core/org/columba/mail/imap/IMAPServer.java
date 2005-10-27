@@ -162,13 +162,15 @@ public class IMAPServer implements IMAPListener, Observer {
 
 	// Used to control the state in which
 	// the automatic updated mechanism is
-	private boolean updatesEnabled;
+	private boolean updatesEnabled = true;
 
 	private IFirstLoginAction firstLoginAction;
 
 	private IUpdateFlagAction updateFlagAction;
 
 	private IExistsChangedAction existsChangedAction;
+
+	private boolean statusDirty;
 
 	public IMAPServer(ImapItem item) {
 		this.item = item;
@@ -619,7 +621,8 @@ public class IMAPServer implements IMAPListener, Observer {
 
 			// Convert to a MailboxStatus
 			selectedStatus = new MailboxStatus(messageFolderInfo);
-
+			statusDirty = false;
+			
 			selectedFolder = folder;
 
 			// delete any cached information
@@ -632,7 +635,7 @@ public class IMAPServer implements IMAPListener, Observer {
 			IMAPException, CommandCancelledException {
 		ensureLoginState();
 
-		if (selectedFolder != null && selectedFolder.equals(folder)) {
+		if (selectedFolder != null && selectedFolder.equals(folder) && !statusDirty) {
 			// We don't need to issue a additional NOOP
 			// here since the ensureLogin() call above
 			// ensures also the correct Status in a 
@@ -651,8 +654,15 @@ public class IMAPServer implements IMAPListener, Observer {
 				"statusbar", "message", "status"), new Object[] { folder
 				.getName() }));
 
-		return protocol.status(folder.getImapPath(), new String[] { "MESSAGES",
+		MailboxStatus result = protocol.status(folder.getImapPath(), new String[] { "MESSAGES",
 				"UIDNEXT", "RECENT", "UNSEEN", "UIDVALIDITY" });
+		
+		// No response means zero!
+		if( result.getUnseen() == -1) result.setUnseen(0);
+		if( result.getRecent() == -1) result.setRecent(0);
+		statusDirty = false;
+		
+		return result;
 	}
 
 	/**
@@ -864,6 +874,7 @@ public class IMAPServer implements IMAPListener, Observer {
 		updatesEnabled = false;
 		protocol.expunge();
 		updatesEnabled = true;
+		statusDirty = true;
 	}
 
 	/**
@@ -1394,6 +1405,8 @@ public class IMAPServer implements IMAPListener, Observer {
 			SequenceSet uidSet = new SequenceSet(Arrays.asList(uids));
 
 			protocol.uidStore(uidSet, variant > 0, convertToFlags(variant));
+			
+			statusDirty = true;
 		} catch (IMAPDisconnectedException e) {
 			markMessage(uids, variant, folder);
 		}
@@ -1837,12 +1850,8 @@ public class IMAPServer implements IMAPListener, Observer {
 	 *      int)
 	 */
 	public void existsChanged(String arg0, int arg1) {
-		//int newMessages = arg1 - selectedStatus.getMessages();
 		selectedStatus.setMessages(arg1);
-		/*
-		if( newMessages > 0 ) {
-			selectedStatus.setRecent(selectedStatus.getRecent() + newMessages);
-		}*/
+		statusDirty = true;
 		
 		if (updatesEnabled) {
 			if( existsChangedAction != null) {
@@ -1879,8 +1888,9 @@ public class IMAPServer implements IMAPListener, Observer {
 	 *      int)
 	 */
 	public void recentChanged(String arg0, int arg1) {
-		// selectedStatus.setRecent(arg1);
-
+		selectedStatus.setRecent(arg1);
+		statusDirty = true;
+		
 		// We trigger an update only when the exists changed
 		// which should be equal with a Recent change.
 	}
