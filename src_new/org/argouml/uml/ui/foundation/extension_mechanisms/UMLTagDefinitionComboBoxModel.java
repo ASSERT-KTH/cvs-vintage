@@ -1,4 +1,4 @@
-// $Id: UMLTagDefinitionComboBoxModel.java,v 1.1 2005/10/27 13:04:03 rastaman Exp $
+// $Id: UMLTagDefinitionComboBoxModel.java,v 1.2 2005/10/27 22:36:36 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
 public class UMLTagDefinitionComboBoxModel extends UMLComboBoxModel2 {
 
     private Logger LOG = Logger.getLogger(UMLTagDefinitionComboBoxModel.class);
-    
+
     /**
      * 
      * Constructor for UMLTagDefinitionComboBoxModel.
@@ -56,7 +56,6 @@ public class UMLTagDefinitionComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLTagDefinitionComboBoxModel() {
         super("tagdefinition", false);
-        LOG.info("UMLTagDefinitionComboBoxModel is instantiated.");
     }
 
     /**
@@ -64,7 +63,6 @@ public class UMLTagDefinitionComboBoxModel extends UMLComboBoxModel2 {
      */
     protected boolean isValidElement(Object element) {
         Object owner = Model.getFacade().getOwner(element);
-        LOG.info("Is valid "+element+" for "+owner);
         return (Model.getFacade().isATagDefinition(element) 
                 && (owner==null || Model.getFacade().getStereotypes(getTarget()).
                         contains(owner)));
@@ -76,11 +74,9 @@ public class UMLTagDefinitionComboBoxModel extends UMLComboBoxModel2 {
     protected void buildModelList() {
         removeAllElements();
         Object t = getTarget();
-        Collection tagDefs = getApplicableTagDefinitions(t);
-        LOG.info("Put "+tagDefs.size()+" tagdefinitions in list");
-        addAll(tagDefs);
+        addAll(getApplicableTagDefinitions(t));
     }
-
+    
     private Collection getApplicableTagDefinitions(Object t) {
         Set paths = new HashSet();
         Set availableTagDefs = new TreeSet(new Comparator() {        
@@ -144,11 +140,11 @@ public class UMLTagDefinitionComboBoxModel extends UMLComboBoxModel2 {
         }
     }
 
+    
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#getSelectedModelElement()
      */
     protected Object getSelectedModelElement() {
-        LOG.info("Return selectElement "+getSelectedItem());
         return getSelectedItem();
     }
 
