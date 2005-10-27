@@ -1,4 +1,4 @@
-// $Id: AddExistingNodeCommand.java,v 1.3 2005/08/13 17:47:29 mvw Exp $
+// $Id: AddExistingNodeCommand.java,v 1.4 2005/10/27 22:33:10 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.awt.event.MouseEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.tigris.gef.base.Command;
 import org.tigris.gef.base.Editor;
@@ -105,8 +106,9 @@ public class AddExistingNodeCommand implements Command, GraphFactory {
         String instructions = null;
         if (object != null) {
             instructions =
-                Translator.localize("misc.message.click-on-diagram-to-add")
-                    + object.toString();
+                Translator.localize(
+                    "misc.message.click-on-diagram-to-add",
+                    new Object[] { Model.getFacade().toString(object) });
             Globals.showStatus(instructions);
         }
         ModePlace placeMode = new ModePlace(this, instructions);
