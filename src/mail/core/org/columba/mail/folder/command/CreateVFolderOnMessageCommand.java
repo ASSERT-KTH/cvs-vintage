@@ -80,7 +80,7 @@ public class CreateVFolderOnMessageCommand extends Command {
     		ICommandReference reference, String vfolderType) {
         super(reference);
         this.vfolderType = vfolderType;
-        this.mediator = mediator;
+        this.mediator = frameController;
     }
 
     /**
