@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.40 2005/07/12 21:43:03 linus Exp $
+// $Id: Translator.java,v 1.41 2005/10/27 22:30:12 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -218,6 +218,16 @@ public final class Translator {
     }
 
 
+    /**
+     * Synonym for messageFormat to encourage developers to convert
+     * existing uses of localize() + string concatentation to use
+     * this method instead.
+     * @see org.argouml.i18n.Translator#messageFormat(String, Object[])
+     */
+    public static String localize(String key, Object[] args) {
+        return messageFormat(key,args);
+    }
+    
     /**
      * The main function of this class that localizes strings.
      *
