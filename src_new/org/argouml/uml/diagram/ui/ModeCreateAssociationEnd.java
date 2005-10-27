@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociationEnd.java,v 1.2 2005/10/27 12:45:15 bobtarling Exp $
+// $Id: ModeCreateAssociationEnd.java,v 1.3 2005/10/27 14:21:35 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,24 +83,34 @@ public class ModeCreateAssociationEnd extends ModeCreatePolyEdge {
         if (underMouse == null) {
             underMouse = editor.hit(x - 16, y - 16, 32, 32);
         }
+        
         if (underMouse == null && _npoints == 0) {
             done();
             me.consume();
             return;
         }
+
+        if (_npoints > 0) {
+            me.consume();
+            return;
+        }
         
-        if (_npoints == 0) {
+        Object modelElement = underMouse.getOwner();
+        
+        if (!Model.getFacade().isAAssociationClass(modelElement)) {
             if (underMouse instanceof FigAssociation) {
                 oldFigAssociation = (FigEdge) underMouse;
                 association = oldFigAssociation.getOwner();
-                associationEnds = Model.getFacade().getConnections(association);
+                associationEnds =
+                    Model.getFacade().getConnections(association);
                 oldFigAssociation.setOwner(null);
                 newFigNodeAssociation = placeTempNode(me);
                 underMouse = newFigNodeAssociation;
                 setSourceFigNode(newFigNodeAssociation);
                 setStartPort(newFigNodeAssociation.getOwner());
                 setStartPortFig(newFigNodeAssociation);
-            } else if (underMouse instanceof FigNodeAssociation || underMouse instanceof FigClass) {
+            } else if (underMouse instanceof FigNodeAssociation ||
+                    underMouse instanceof FigClass) {
                 if (getSourceFigNode() == null) {
                     setSourceFigNode((FigNode) underMouse);
                     setStartPort(getSourceFigNode().deepHitPort(x, y));
@@ -110,7 +120,8 @@ public class ModeCreateAssociationEnd extends ModeCreatePolyEdge {
                     me.consume();
                     return;
                 }
-                setStartPortFig(getSourceFigNode().getPortFig(getStartPort()));
+                setStartPortFig(
+                        getSourceFigNode().getPortFig(getStartPort()));
             } else {
                 done();
                 me.consume();
@@ -118,9 +129,7 @@ public class ModeCreateAssociationEnd extends ModeCreatePolyEdge {
             }
         }
 
-        if (_npoints == 0) {
-            createFig(me);
-        }
+        createFig(me);
         me.consume();
     }
 
