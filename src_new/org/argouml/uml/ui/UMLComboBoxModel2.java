@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.59 2005/10/19 17:02:00 bobtarling Exp $
+// $Id: UMLComboBoxModel2.java,v 1.60 2005/10/28 19:24:27 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -585,6 +585,20 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
 
     protected String getPropertySetName() {
         return propertySetName;
+    }
+
+    /**
+     * @return Returns the fireListEvents.
+     */
+    protected boolean isFireListEvents() {
+        return fireListEvents;
+    }
+
+    /**
+     * @param fireListEvents The fireListEvents to set.
+     */
+    protected void setFireListEvents(boolean fireListEvents) {
+        this.fireListEvents = fireListEvents;
     }
 
 }
