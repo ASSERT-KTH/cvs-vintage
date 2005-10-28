@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.3 2005/10/21 05:16:59 tfmorris Exp $
+// $Id: TestAgainstUmlModel.java,v 1.4 2005/10/28 23:22:26 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,6 +220,21 @@ public class TestAgainstUmlModel extends TestCase {
         refs.put("Dependency",            Model.getCoreFactory());
         refs.put("Abstraction",           Model.getCoreFactory());
     }
+    
+    /*
+     * TODO: Add tests for UML 1.4 types
+     * Foundation:
+     *   Artifact
+     *   Enumeration
+     *   EnumerationLiteral
+     *   Primitive
+     *   ProgrammingLanguageDataType
+     *   TemplateArgument
+     *   
+     * CommonBehavior
+     *    SubsystemInstance
+     *   
+     */
 
     static {
         refs.put("PresentationElement",   new CannotTestClassIsAbstract());
@@ -236,6 +251,8 @@ public class TestAgainstUmlModel extends TestCase {
         		new CannotTestFactoryMethod());
         refs.put("TaggedValue",
 		 Model.getExtensionMechanismsFactory());
+//        refs.put("TagDefinition",
+//                 Model.getExtensionMechanismsFactory());
         // Instance changed from concrete to abstract between UML 1.3 & 1.4
         refs.put("Instance",              new CannotTestClassIsAbstract());
         refs.put("Signal",                Model.getCommonBehaviorFactory());
