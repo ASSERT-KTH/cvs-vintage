@@ -1,4 +1,4 @@
-// $Id: TestDataTypesFactory.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// $Id: TestDataTypesFactory.java,v 1.2 2005/10/28 15:54:18 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,23 +108,5 @@ public class TestDataTypesFactory extends TestCase {
 	// VisibilityKind
 	//
     }
-    /* TODO: What is the purpose of this list?
-      public void testRemoves() {
-      String [] objs = {
-      "ActionExpression",
-      "ArgListsExpression",
-      "BooleanExpression",
-      "Expression",
-      "IterationExpression",
-      "MappingExpression",
-      "ObjectSetExpression",
-      "ProcedureExpression",
-      "TimeExpression",
-      "TypeExpression"
-      };
 
-      CheckUMLModelHelper.testRemove(this,
-      DataTypesFactory.getFactory(), objs);
-      }
-    */
 }
