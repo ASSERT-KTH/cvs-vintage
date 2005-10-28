@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.78 2005/10/27 12:45:14 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.79 2005/10/28 23:17:50 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -266,7 +266,6 @@ public class UMLClassDiagram extends UMLDiagram {
         }
         return actionAssociation;
     }
-    
     /**
      * @return Returns the actionAssociation.
      */
@@ -374,19 +373,7 @@ public class UMLClassDiagram extends UMLDiagram {
 
         return actionModel;
     }
-    /**
-     * @return Returns the actionObject.
-     */
-    protected Action getActionObject() {
-        if (actionObject == null) {
-            actionObject =
-                makeCreateNodeAction(
-                        Model.getMetaTypes().getInstance(),
-                        "Instance");
-        }
 
-        return actionObject;
-    }
     /**
      * @return Returns the actionPackage.
      */
