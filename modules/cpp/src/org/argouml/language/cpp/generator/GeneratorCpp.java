@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.62 2005/10/24 23:11:32 aslo Exp $
+// $Id: GeneratorCpp.java,v 1.63 2005/10/28 19:43:38 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1273,10 +1273,10 @@ public class GeneratorCpp extends Generator2
             return "*";
         } else if (def.length() == 0) {
             if (Model.getFacade().isAParameter(attr)
-                    && (Model.getFacade().getKind(attr).equals(
-                        Model.getDirectionKind().getOutParameter())
-                    || Model.getFacade().getKind(attr).equals(
-                            Model.getDirectionKind().getInOutParameter()))) {
+                    && (Model.getDirectionKind().getOutParameter().equals(
+                            Model.getFacade().getKind(attr)))
+                    || Model.getDirectionKind().getInOutParameter().equals(
+                            Model.getFacade().getKind(attr))) {
                 // out or inout parameters are defaulted to reference if
                 // not specified else
                 return "&";
