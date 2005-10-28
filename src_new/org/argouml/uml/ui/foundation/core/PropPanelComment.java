@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.24 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelComment.java,v 1.25 2005/10/28 23:20:15 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ class UMLCommentBodyDocument extends UMLPlainTextDocument {
          * Constructor for UMLModelElementNameDocument.
          */
         public UMLCommentBodyDocument() {
-            super("name"); // this may have to change to "body" for UML 1.4
+            super("name"); // TODO: this may have to change to "body" for UML 1.4
             /*
              * TODO: This is probably not the right location 
              * for switching off the "filterNewlines". 
