@@ -79,6 +79,8 @@ import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.StandardBorderManager;
+import org.flexdock.docking.drag.effects.EffectsManager;
+import org.flexdock.docking.drag.preview.GhostPreview;
 import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.perspective.PerspectiveManager;
 import org.flexdock.perspective.persist.FilePersistenceHandler;
@@ -270,6 +272,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 
+		// enable flexdock ghost preview
+		EffectsManager.setPreview(new GhostPreview());
 		// create the dockingPort
 		portCenter = new DefaultDockingPort();
 		portCenter.setBorderManager(new StandardBorderManager(
