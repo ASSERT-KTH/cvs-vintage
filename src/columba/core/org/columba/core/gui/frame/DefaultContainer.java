@@ -36,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.text.View;
 
@@ -396,12 +397,11 @@ public class DefaultContainer extends JFrame implements IContainer,
 				if (maximized) {
 					WindowMaximizer.maximize(frame);
 				}
+				
+				mediator.loadPositions();
 			}
 		});
-
-		// }
-
-		//mediator.loadPositions(viewItem);
+		
 	}
 
 	/**
@@ -427,7 +427,12 @@ public class DefaultContainer extends JFrame implements IContainer,
 			item.setInteger(ViewItem.WINDOW, ViewItem.HEIGHT_INT, d.height);
 		}
 
-		//mediator.savePositions(viewItem);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				mediator.savePositions();
+			}
+		});
+
 	}
 
 	/**
@@ -649,7 +654,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 * @see org.columba.api.gui.frame.IContainer#setToolBar(org.columba.core.gui.toolbar.ToolBar)
 	 */
 	public void setToolBar(JToolBar toolbar) {
-		if ( (toolbar instanceof ExtendableToolBar) == false )
+		if ((toolbar instanceof ExtendableToolBar) == false)
 			throw new IllegalArgumentException(
 					"only instance of ExtendableToolBar allowed");
 

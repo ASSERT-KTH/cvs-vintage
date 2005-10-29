@@ -125,11 +125,13 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 */
 	public boolean isTreePopupEvent;
 
-	DockingPanel treePanel;
+	private DockingPanel treePanel;
 
-	DockingPanel messageListPanel;
+	private DockingPanel messageListPanel;
 
-	DockingPanel messageViewerPanel;
+	private DockingPanel messageViewerPanel;
+	
+	private DefaultDockingPort portCenter;
 
 	/**
 	 * @param container
@@ -269,7 +271,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		panel.setLayout(new BorderLayout());
 
 		// create the dockingPort
-		DefaultDockingPort portCenter = new DefaultDockingPort();
+		portCenter = new DefaultDockingPort();
 		portCenter.setBorderManager(new StandardBorderManager(
 				new ShadowBorder()));
 		panel.add(portCenter, BorderLayout.CENTER);
@@ -286,11 +288,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// } catch (IOException e1) {
 		// }
 		treePanel.setPopupMenu(new SortFoldersMenu(this));
-		treePanel.setPreferredSize(new Dimension(100, 100));
+
 		treePanel.add(new JScrollPane(treeController.getView()));
 
 		messageListPanel = new DockingPanel("mail_folderlist", "Message List");
-		messageListPanel.setPreferredSize(new Dimension(100, 100));
 		JPanel p = new JPanel();
 		p.setLayout(new BorderLayout());
 		p.add(new JScrollPane(tableController.getView()), BorderLayout.CENTER);
@@ -307,7 +308,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		messageViewerPanel = new DockingPanel("mail_messageviewer",
 				"Message Viewer");
-		messageViewerPanel.setPreferredSize(new Dimension(100, 100));
+
 		messageViewerPanel.add(messageController);
 		try {
 			is = DiskIO
@@ -318,47 +319,11 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		messageViewerPanel.setPopupMenu(new MenuXMLDecoder(this)
 				.createPopupMenu(is));
 
-		// load docking settings from last user session
-		File configDirectory = MailConfig.getInstance().getConfigDirectory();
-
-		boolean restoreSuccess = false;
-
-		try {
-			// load persistence handler
-			PersistenceHandler persister = new FilePersistenceHandler(new File(
-					configDirectory, ThreePaneMailFrameController.FLEXDOCK_MAIL_CONFIG_XML));
-			PerspectiveManager.setPersistenceHandler(persister);
-			// load layout into memory
-			restoreSuccess = DockingManager.loadLayoutModel();
-			// store ui using in-memory layout model
-			if ( restoreSuccess)
-				restoreSuccess = DockingManager.restoreLayout();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (PersistenceException e1) {
-			e1.printStackTrace();
-		}
-
-		if (!restoreSuccess) {
-			// make sure there is nothing within the root dockingport
-			portCenter.clear();
-
-			// DockingManager.dock(messageListPanel, (DockingPort) portCenter);
-			portCenter.dock(messageListPanel, DockingConstants.CENTER_REGION);
-			messageListPanel.dock(treePanel, DockingConstants.WEST_REGION);
-			messageListPanel.dock(messageViewerPanel,
-					DockingConstants.SOUTH_REGION);
-
-			DockingManager.setSplitProportion(treePanel, 0.3f);
-			DockingManager.setSplitProportion(messageListPanel, 0.35f);
-		}
-
 		try {
 			is = DiskIO.getResourceStream("org/columba/mail/action/menu.xml");
 			getContainer().extendMenu(this, is);
 
-			// File configDirectory = MailConfig.getInstance()
-			// .getConfigDirectory();
+			File configDirectory = MailConfig.getInstance().getConfigDirectory();
 			InputStream is2 = new FileInputStream(new File(configDirectory,
 					"main_toolbar.xml"));
 			getContainer().extendToolbar(this, is2);
@@ -626,18 +591,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	public void close() {
 		super.close();
 
-		try {
-			File configDirectory = MailConfig.getInstance()
-					.getConfigDirectory();
-			PersistenceHandler persister = new FilePersistenceHandler(new File(
-					configDirectory, ThreePaneMailFrameController.FLEXDOCK_MAIL_CONFIG_XML));
-			PerspectiveManager.setPersistenceHandler(persister);
-			DockingManager.storeLayoutModel();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (PersistenceException e) {
-			e.printStackTrace();
-		}
+		
 
 		IMailFolderCommandReference r = getTreeSelection();
 
@@ -648,6 +602,66 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 			if (folder instanceof IMailbox)
 				getFolderOptionsController().save((IMailbox) folder);
+		}
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#loadPositions()
+	 */
+	public void loadPositions() {
+		boolean restoreSuccess = false;
+		// load docking settings from last user session
+		File configDirectory = MailConfig.getInstance().getConfigDirectory();
+
+		try {
+			// load persistence handler
+			PersistenceHandler persister = new FilePersistenceHandler(new File(
+					configDirectory,
+					ThreePaneMailFrameController.FLEXDOCK_MAIL_CONFIG_XML));
+			PerspectiveManager.setPersistenceHandler(persister);
+			// load layout into memory
+			restoreSuccess = DockingManager.loadLayoutModel();
+			// store ui using in-memory layout model
+			if (restoreSuccess)
+				restoreSuccess = DockingManager.restoreLayout();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (PersistenceException e1) {
+			e1.printStackTrace();
+		}
+
+		if (!restoreSuccess) {
+			// make sure there is nothing within the root dockingport
+			portCenter.clear();
+
+			// DockingManager.dock(messageListPanel, (DockingPort) portCenter);
+			portCenter.dock(messageListPanel, DockingConstants.CENTER_REGION);
+			messageListPanel
+					.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
+			messageListPanel.dock(messageViewerPanel,
+					DockingConstants.SOUTH_REGION, 0.3f);
+
+			DockingManager.setSplitProportion(treePanel, 0.3f);
+			DockingManager.setSplitProportion(messageListPanel, 0.35f);
+		}
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#savePositions()
+	 */
+	public void savePositions() {
+		try {
+			File configDirectory = MailConfig.getInstance()
+					.getConfigDirectory();
+			PersistenceHandler persister = new FilePersistenceHandler(new File(
+					configDirectory,
+					ThreePaneMailFrameController.FLEXDOCK_MAIL_CONFIG_XML));
+			PerspectiveManager.setPersistenceHandler(persister);
+			DockingManager.storeLayoutModel();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (PersistenceException e) {
+			e.printStackTrace();
 		}
 	}
 }

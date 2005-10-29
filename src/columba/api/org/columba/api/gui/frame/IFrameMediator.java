@@ -61,5 +61,8 @@ public interface IFrameMediator extends IExtensionInterface{
 	public IContentPane getContentPane();
 	
 	public void close();
+	
+	public void savePositions();
+	public void loadPositions();
 
 }

@@ -182,4 +182,14 @@ public class DefaultFrameController implements IFrameMediator {
 	public void close() {
 
 	}
+
+	public void savePositions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void loadPositions() {
+		// TODO Auto-generated method stub
+		
+	}
 }
