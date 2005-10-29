@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.125 2005/10/25 23:22:27 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.126 2005/10/29 06:46:08 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,7 +243,7 @@ public abstract class FigEdgeModelElement
         if (item != null
             && Globals.curEditor().getSelectionManager().containsFig(this)) {
             tip = item.getHeadline();
-        } else if (getOwner() != null) {
+        } else if (getOwner() != null && Model.getFacade().isABase(getOwner())) {
             tip = Model.getFacade().getTipString(getOwner());
         } else {
             tip = toString();
