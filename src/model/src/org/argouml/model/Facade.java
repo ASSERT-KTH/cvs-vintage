@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.21 2005/10/20 07:13:02 tfmorris Exp $
+// $Id: Facade.java,v 1.22 2005/10/29 06:11:48 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -211,12 +211,16 @@ public interface Facade {
     boolean isAActivityGraph(Object handle);
 
     /**
-     * Recognizer for bases. A base is an object that is some form of
-     * an element in the model. MBase in Novosoft terms.
-     *
-     * TODO: Does this have a real UML meaning? Isn't it
-     * the ModelElement that is the base? - Bob.
-     *
+     * Recognizer for an object that is some form of
+     * an element in the model. MBase was the Novosoft term.
+     * <p>
+     * In UML terms, the root of the type hierarchy is the
+     * type Element which is abstract and has subtypes
+     * ModelElement and PresentationElement.
+     * <p>
+     * TODO: This method could be renamed to be more
+     * relevant to current UML standards.
+     * <p>
      * @param handle candidate
      * @return true if handle is a base.
      */
@@ -2365,8 +2369,8 @@ public interface Facade {
     Collection getTargetFlows(Object handle);
 
     /**
-     * Returns the upper bound of the multiplicity of the given handle (an
-     * associationend).
+     * Returns the upper bound of the multiplicity of the given element
+     * (AssociationEnd, Multiplicity or MultiplicityRange)
      *
      * @param handle is the model element
      * @return int
@@ -2382,8 +2386,8 @@ public interface Facade {
     Object getUseCase(Object handle);
 
     /**
-     * Returns the upper bound of the multiplicity of the given handle (an
-     * associationend).
+     * Returns the lower bound of the multiplicity of the given element
+     * (AssociationEnd, Multiplicity or MultiplicityRange)
      *
      * @param handle is the model element
      * @return int
@@ -2674,15 +2678,15 @@ public interface Facade {
 
     /**
      * Return the TagDefinitions for a StereoType
-     * @param handle
-     * @return
+     * @param handle Stereotype to fetch TagDefinitions for
+     * @return collection of TagDefinitions
      */
     Collection getTagDefinitions(Object handle);
 
     /**
      * Return the TagDefinition for a TaggedValue
-     * @param handle
-     * @return
+     * @param handle TaggedValue to return TagDefinition for
+     * @return TagDefinition for given element
      */
     Object getTagDefinition(Object handle);
 }
