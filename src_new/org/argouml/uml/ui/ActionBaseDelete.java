@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.2 2005/07/06 19:18:59 mvw Exp $
+// $Id: ActionBaseDelete.java,v 1.3 2005/10/29 16:03:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,7 @@ import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigTextEditor;
 
 /**
  * Action for removing (moving to trash) objects from the model. Objects can be:
@@ -119,6 +120,11 @@ public abstract class ActionBaseDelete extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
+        if (FigTextEditor.getInstance().isVisible()) {
+            //Don't accept the delete if the FigTextEditor is displaying
+            return;
+        }
+        
         Project p = ProjectManager.getManager().getCurrentProject();
         Object[] targets = getTargets();
         Object target = null;
