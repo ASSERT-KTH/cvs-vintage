@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.79 2005/10/25 23:09:12 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.80 2005/10/30 22:01:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -321,13 +321,15 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
             return false;
         }
         
-        if (!containsNode(sourceModelElement)) {
+        if (!containsNode(sourceModelElement)
+                && !containsEdge(sourceModelElement)) {
             LOG.error("Edge rejected. Its source end is attached to " +
                     sourceModelElement + 
                     " but this is not in the graph model");
             return false;
         }
-        if (!containsNode(destModelElement)) {
+        if (!containsNode(destModelElement)
+                && !containsEdge(destModelElement)) {
             LOG.error("Edge rejected. Its destination end is attached to " +
                     destModelElement + 
                     " but this is not in the graph model");

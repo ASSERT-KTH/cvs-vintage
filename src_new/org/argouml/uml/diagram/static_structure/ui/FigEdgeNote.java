@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.23 2005/09/26 17:13:14 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.24 2005/10/30 22:01:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,12 +108,18 @@ public class FigEdgeNote
         }
         
         Fig destFig = theLayer.presentationFor(toNode);
+        if (destFig instanceof FigEdgeModelElement) {
+            destFig = ((FigEdgeModelElement)destFig).getCommentPort();
+        }
         if (!(destFig instanceof FigNodeModelElement)) {
             throw new IllegalArgumentException("The given comment edge must end at a model element in the given layer.");
         }
         
         Fig sourceFig = theLayer.presentationFor(fromNode);
-        if (!(destFig instanceof FigNodeModelElement)) {
+        if (sourceFig instanceof FigEdgeModelElement) {
+            sourceFig = ((FigEdgeModelElement)sourceFig).getCommentPort();
+        }
+        if (!(sourceFig instanceof FigNodeModelElement)) {
             throw new IllegalArgumentException("The given comment edge must start at a model element in the given layer.");
         }
         
