@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.67 2005/05/15 09:56:46 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.68 2005/10/31 16:49:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,9 +163,6 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      * @see org.tigris.gef.graph.MutableGraphModel#canAddEdge(java.lang.Object)
      */
     public boolean canAddEdge(Object edge) {
-        if (super.canAddEdge(edge)) {
-            return true;
-        }
         if (edge == null) {
             return false;
         }

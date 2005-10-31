@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.25 2005/10/31 13:56:52 rastaman Exp $
+// $Id: FigEdgeNote.java,v 1.26 2005/10/31 16:49:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,14 +110,6 @@ public class FigEdgeNote
         }
         
         Fig destFig = theLayer.presentationFor(toNode);
-        //TODO: Should we restrict this or also do the following for the sourceFig ?
-        if (destFig==null) {
-            GraphNodeRenderer figNodeRenderer
-            = ((LayerPerspectiveMutable)theLayer).getGraphNodeRenderer();
-            destFig = figNodeRenderer.getFigNodeFor(toNode, new HashMap());
-            destFig.setOwner(toNode);
-            theLayer.add(destFig);
-         }
         if (destFig instanceof FigEdgeModelElement) {
             destFig = ((FigEdgeModelElement)destFig).getCommentPort();
         }
