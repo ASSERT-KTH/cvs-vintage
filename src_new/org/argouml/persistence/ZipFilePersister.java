@@ -1,4 +1,4 @@
-// $Id: ZipFilePersister.java,v 1.1 2005/10/06 13:50:02 bobtarling Exp $
+// $Id: ZipFilePersister.java,v 1.2 2005/10/31 13:24:02 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -211,6 +211,7 @@ public class ZipFilePersister extends XmiFilePersister {
             p.addMember(new ProjectMemberTodoList("", p));
             p.setRoot(p.getModel());
             p.setUrl(file.toURL());
+            super.registerDiagrams(p,p.getModel());
             ProjectManager.getManager().setNeedsSave(false);
             return p;
         } catch (IOException e) {
