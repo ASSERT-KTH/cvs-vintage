@@ -1,4 +1,4 @@
-// $Id: ConfigurationProperties.java,v 1.17 2005/08/14 12:40:27 mvw Exp $
+// $Id: ConfigurationProperties.java,v 1.18 2005/10/31 19:53:47 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -205,6 +205,13 @@ class ConfigurationProperties extends ConfigurationHandler {
     void setValue(String key, String value) {
 	LOG.debug("key '" + key + "' set to '" + value + "'");
 	propertyBundle.setProperty(key, value);
+    }
+
+    /**
+     * Remove a property
+     */
+    public void remove(String key) {
+        propertyBundle.remove(key);
     }
 }
 

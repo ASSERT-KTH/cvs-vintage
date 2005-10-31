@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.21 2005/01/09 14:58:03 linus Exp $
+// $Id: Configuration.java,v 1.22 2005/10/31 19:53:47 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -353,6 +353,10 @@ public class Configuration {
 	config.removeListener(key, pcl);
     }
 
+    public static final void removeKey(ConfigurationKey key) {
+        config.remove(key.getKey());
+    }
+    
     /**
      * Create a single component configuration key.
      *
