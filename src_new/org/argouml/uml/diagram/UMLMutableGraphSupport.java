@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.34 2005/08/13 08:49:16 mvw Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.35 2005/10/31 17:17:38 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -526,6 +526,12 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
             Object edgeType,
             Object fromElement,
             Object toElement) {
+        
+        if (!nodes.contains(fromElement) || !nodes.contains(toElement)) {
+            // The connection is not valid unless both nodes are in this graph model.
+            return false;
+        }
+        
         if (edgeType.equals(CommentEdge.class)) {
             return ((Model.getFacade().isAComment(fromElement)
                    && Model.getFacade().isAModelElement(toElement))
