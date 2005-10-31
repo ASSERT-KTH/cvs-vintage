@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.3 2005/10/29 16:03:15 bobtarling Exp $
+// $Id: ActionBaseDelete.java,v 1.4 2005/10/31 05:28:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,10 +120,13 @@ public abstract class ActionBaseDelete extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-        if (FigTextEditor.getInstance().isVisible()) {
-            //Don't accept the delete if the FigTextEditor is displaying
-            return;
-        }
+// TODO: It appears this starts off as visible before first use
+// so user can't delete anything until a FigTextEditor has been used.
+// Needs to be initialized somewhere ...
+//        if (FigTextEditor.getInstance().isVisible()) {
+//            //Don't accept the delete if the FigTextEditor is displaying
+//            return;
+//        }
         
         Project p = ProjectManager.getManager().getCurrentProject();
         Object[] targets = getTargets();
