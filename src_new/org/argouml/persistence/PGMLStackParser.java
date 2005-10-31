@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.9 2005/09/26 21:24:50 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.10 2005/10/31 00:26:10 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,22 +73,24 @@ public class PGMLStackParser extends org.tigris.gef.persistence.pgml.PGMLStackPa
                                              String localname,
                                              String qname,
                                              Attributes attributes)
-        throws SAXException {
-        // Ignore non-private elements within groups
+            throws SAXException {
+        
+        // Ignore non-private elements within FigNode groups
         if (container instanceof FigGroupHandler) {
             FigGroup group = ((FigGroupHandler) container).getFigGroup();
             if (group instanceof FigNode && !qname.equals("private")) {
                 return null;
             }
         }
+        
         // Handle ItemUID in container contents
-        if ( qname.equals("private") && ( container instanceof Container))
+        if ( qname.equals("private") && ( container instanceof Container)) {
         	return new PrivateHandler( this, (Container)container);
-        DefaultHandler result =
+        }
+        
+        return
             super.getHandler(stack, container, uri, localname, qname,
                     attributes);
-
-        return result;
     }
 
     /**

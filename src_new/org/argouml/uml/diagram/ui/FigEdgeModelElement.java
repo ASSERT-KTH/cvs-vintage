@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.128 2005/10/30 22:01:39 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.129 2005/10/31 00:26:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -212,7 +212,7 @@ public abstract class FigEdgeModelElement
         ArgoEventPump.removeListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);
     }
     
-    public FigCommentPort getCommentPort() {
+    public void makeCommentPort() {
         if (commentPort == null) {
             commentPort = new FigCommentPort();
             commentPort.setOwner(getOwner());
@@ -220,7 +220,9 @@ public abstract class FigEdgeModelElement
             addPathItem(commentPort,
                     new PathConvPercent(this, 50, 0));
         }
-        
+    }
+
+    public FigCommentPort getCommentPort() {
         return commentPort;
     }
 
