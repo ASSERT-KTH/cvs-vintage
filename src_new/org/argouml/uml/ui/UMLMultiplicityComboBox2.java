@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBox2.java,v 1.11 2005/01/30 20:47:48 linus Exp $
+// $Id: UMLMultiplicityComboBox2.java,v 1.12 2005/10/31 01:51:03 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
                 	.createMultiplicity(text); //new MMultiplicity(text);
         } catch (IllegalArgumentException e) {
             Object o = search(text);
-            if (o != null && Model.getFacade().isAMultiplicity(o)) {
+            if (o != null ) {
                 multi = o;
             }
         }

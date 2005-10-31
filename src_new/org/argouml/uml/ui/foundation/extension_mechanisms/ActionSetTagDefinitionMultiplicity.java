@@ -1,4 +1,4 @@
-// $Id: ActionSetTagDefinitionMultiplicity.java,v 1.1 2005/10/15 12:48:50 rastaman Exp $
+// $Id: ActionSetTagDefinitionMultiplicity.java,v 1.2 2005/10/31 01:51:03 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,11 +52,20 @@ public class ActionSetTagDefinitionMultiplicity extends ActionSetMultiplicity {
         if (target != null
                 && Model.getFacade().isATagDefinition(target)) {
             if (Model.getFacade().isAMultiplicity(item)) {
-                Model.getCoreHelper().setMultiplicity(target, item);
+                if (!Model.getFacade().getMultiplicity(target).equals(item)) {
+                    Model.getCoreHelper().setMultiplicity(target, item);
+                }
+            } else if (item instanceof String) {
+                if (!item.equals(Model.getFacade().toString(
+                        Model.getFacade().getMultiplicity(target)))) {
+                    Model.getCoreHelper().setMultiplicity(
+                            target,
+                            Model.getDataTypesFactory().createMultiplicity(
+                                    (String) item));
+                }
             } else {
                 Model.getCoreHelper().setMultiplicity(target, null);
             }
-
         }
 
     }

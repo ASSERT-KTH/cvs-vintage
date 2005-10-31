@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.14 2005/01/30 20:47:49 linus Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.15 2005/10/31 01:51:03 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,10 +40,10 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
     private static List multiplicityList = new ArrayList();
 
     static {
-        multiplicityList.add(Model.getMultiplicities().get0N());
-        multiplicityList.add(Model.getMultiplicities().get01());
-        multiplicityList.add(Model.getMultiplicities().get11());
-        multiplicityList.add(Model.getMultiplicities().get1N());
+        multiplicityList.add("1");
+        multiplicityList.add("0..1");
+        multiplicityList.add("0..*");
+        multiplicityList.add("1..*");
     }
 
     /**
@@ -59,7 +59,7 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return Model.getFacade().isAMultiplicity(element);
+        return element instanceof String;
     }
 
     /**
@@ -80,6 +80,12 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
         if (o == null) {
             return;
         }
+        if (Model.getFacade().isAMultiplicity(o)) {
+            o = Model.getFacade().toString(o);
+            if ("".equals(o)) {
+                o = "1";
+            }
+        }
         if (!multiplicityList.contains(o) && isValidElement(o)) {
             multiplicityList.add(o);
         }
@@ -92,13 +98,8 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
      * @see javax.swing.ComboBoxModel#setSelectedItem(java.lang.Object)
      */
     public void setSelectedItem(Object anItem) {
-        if (!contains(anItem)
-	    && Model.getFacade().isAMultiplicity(anItem)) {
-
-            addElement(anItem);
-
-        }
-        super.setSelectedItem(anItem);
+        addElement(anItem);
+        super.setSelectedItem(Model.getFacade().toString(anItem));
     }
 
 }
