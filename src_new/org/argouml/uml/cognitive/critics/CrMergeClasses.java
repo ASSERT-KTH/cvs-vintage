@@ -1,4 +1,4 @@
-// $Id: CrMergeClasses.java,v 1.20 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrMergeClasses.java,v 1.21 2005/10/31 01:33:29 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,10 +78,10 @@ public class CrMergeClasses extends CrUML {
             && Model.getFacade().isNavigable(ae1))) {
 	    return NO_PROBLEM;
 	}
-	if (Model.getFacade().getMultiplicity(ae0)
-            .equals(Model.getMultiplicities().get11())
-                && Model.getFacade().getMultiplicity(ae1)
-                    .equals(Model.getMultiplicities().get11())) {
+	if (Model.getFacade().getLower(ae0) == 1
+                && Model.getFacade().getUpper(ae0) == 1
+                && Model.getFacade().getLower(ae1) == 1
+                && Model.getFacade().getUpper(ae1) == 1) {
 	    return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;

@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.30 2005/10/23 07:27:29 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.31 2005/10/31 01:32:56 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -647,7 +647,7 @@ public class GeneratorPHP4
     }
 
     /**
-     * Genarates multiplicity
+     * Generates multiplicity
      *
      * @param modelElement Model element to generate notation for.
      *
@@ -655,14 +655,14 @@ public class GeneratorPHP4
      */
     public String generateMultiplicity(Object modelElement) {
         // TODO: Auto-generated method stub
-        LOG.debug("generateMultiplicity(MMultiplicity modelElement)");
+        LOG.debug("generateMultiplicity(Multiplicity modelElement)");
 
         if (!Model.getFacade().isAMultiplicity(modelElement)) {
             throw new ClassCastException(modelElement.getClass()
                     + " has wrong object type, Multiplicity required");
         }
 
-        return "generateMultiplicity(MMultiplicity modelElement)";
+        return "generateMultiplicity(Multiplicity modelElement)";
     }
 
     /**

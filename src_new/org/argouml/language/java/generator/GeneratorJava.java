@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.119 2005/10/23 07:27:28 mvw Exp $
+// $Id: GeneratorJava.java,v 1.120 2005/10/31 01:32:56 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,10 +72,6 @@ public class GeneratorJava
      * Logger.
      */
     private static final Logger LOG = Logger.getLogger(GeneratorJava.class);
-
-    private static final String ANY_RANGE = "0..*";
-    //public static final String ANY_RANGE = "*";
-    // TODO: user preference between "*" and "0..*"
 
     private boolean verboseDocs = false;
     private boolean lfBeforeCurly = false;
@@ -370,12 +366,7 @@ public class GeneratorJava
                                     Model.getFacade().getAssociation(
                                             associationEnd2))) {
                         // association end found
-                        Object multiplicity =
-			    Model.getFacade().getMultiplicity(associationEnd2);
-                        if (!Model.getMultiplicities().get11()
-                                .equals(multiplicity)
-                                && !Model.getMultiplicities().get01().equals(
-                                        multiplicity)) {
+                        if (Model.getFacade().getUpper(associationEnd2) != 1) {
                             importSet.add("java.util.Vector");
                         } else {
 			    ftype =
@@ -575,7 +566,7 @@ public class GeneratorJava
         // actually the API of generator is buggy since to generate
         // multiplicity correctly we need the attribute too
         if (type != null && multi != null) {
-            if (multi.equals(Model.getMultiplicities().get11())) {
+            if (Model.getFacade().getUpper(multi) == 1 ) {
                 sb.append(generateClassifierRef(type)).append(' ');
             } else if (Model.getFacade().isADataType(type)) {
                 sb.append(generateClassifierRef(type)).append("[] ");
@@ -1126,8 +1117,7 @@ public class GeneratorJava
         String s = generateConstraintEnrichedDocComment(me, true, INDENT);
 
         Object/*MMultiplicity*/ m = Model.getFacade().getMultiplicity(ae);
-        if (!(Model.getMultiplicities().get11().equals(m)
-	      || Model.getMultiplicities().get01().equals(m))) {
+        if (Model.getFacade().getUpper(m) != 1) {
             // Multiplicity greater 1, that means we will generate some sort of
             // collection, so we need to specify the element type tag
             StringBuffer sDocComment = new StringBuffer(80);
@@ -1379,9 +1369,7 @@ public class GeneratorJava
 	//         s += generateName(n) + " ";
         //     if (ae.isNavigable()) s += "navigable ";
         //     if (ae.getIsOrdered()) s += "ordered ";
-        Object/*MMultiplicity*/ m = Model.getFacade().getMultiplicity(ae);
-        if (Model.getMultiplicities().get11().equals(m)
-                || Model.getMultiplicities().get01().equals(m)) {
+        if (Model.getFacade().getUpper(ae) != 1) {
             sb.append(generateClassifierRef(Model.getFacade().getType(ae)));
         } else {
             sb.append("Vector "); //generateMultiplicity(m) + " ";
@@ -1537,45 +1525,14 @@ public class GeneratorJava
      *
      * @param m the Multiplicity.
      * @return a human readable String.
-     * @see #ANY_RANGE
      * @see #generateMultiplicityRange(Object)
      */
     public String generateMultiplicity(Object m) {
-        if (m == null) {
+        if (m == null || "1".equals(Model.getFacade().toString(m))) {
             return "";
+        } else {
+            return Model.getFacade().toString(m);
         }
-        if (Model.getMultiplicities().get0N().equals(m)) {
-            return ANY_RANGE;
-	}
-        Iterator rangeEnum = Model.getFacade().getRanges(m);
-        if (rangeEnum == null)
-            return "";
-        StringBuffer sb = new StringBuffer(20);
-        while (rangeEnum.hasNext()) {
-            Object mr = rangeEnum.next();
-            sb.append(generateMultiplicityRange(mr));
-            if (rangeEnum.hasNext())
-                sb.append(',');
-        }
-        return sb.toString();
-    }
-
-    private String generateMultiplicityRange(Object mr) {
-        Integer lower = new Integer(Model.getFacade().getLower(mr));
-        Integer upper = new Integer(Model.getFacade().getUpper(mr));
-        if (lower.intValue() == -1 && upper.intValue() == -1)
-            return ANY_RANGE;
-        if (lower.intValue() == -1) {
-            return "*.." + upper.toString();
-        }
-        if (upper.intValue() == -1) {
-            return lower.toString() + "..*";
-        }
-        if (lower.intValue() == upper.intValue()) {
-            return lower.toString();
-        }
-        return lower.toString() + ".." + upper.toString();
-
     }
 
     /**
