@@ -283,6 +283,7 @@ public class DefaultSearchEngine {
 							defaultEngine);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				LOG.warning("NonDefaultSearch engine "+ nonDefaultEngine.toString()+"reported an error: falling back to default search:\n"+e.getMessage());
 				defaultEngine = new FilterRule();
 				notDefaultEngine = filter.getFilterRule();

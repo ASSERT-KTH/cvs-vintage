@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.help.search.SearchEngine;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
@@ -56,7 +57,7 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
-import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.folder.search.LuceneQueryEngine;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
@@ -512,11 +513,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				// cast to Local AbstractMessageFolder is safe here
 				AbstractLocalFolder localFolder = (AbstractLocalFolder) folder;
 
-				DefaultSearchEngine engine = null;
-
 				if (bool) {
-					// engine = new LuceneQueryEngine(localFolder);
-					localFolder.setSearchEngine(null);
+					localFolder.getSearchEngine().setNonDefaultEngine(new LuceneQueryEngine(localFolder));
 
 					// execute resyncing command
 					MailFolderCommandReference r = new MailFolderCommandReference(
@@ -524,7 +522,6 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					CommandProcessor.getInstance().addOp(
 							new SyncSearchEngineCommand(r));
 				} else {
-					// engine = new LocalSearchEngine(localFolder);
 					localFolder.setSearchEngine(null);
 				}
 			}
