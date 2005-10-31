@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.21 2005/10/26 21:42:21 linus Exp $
+// $Id: Model.java,v 1.22 2005/10/31 01:52:05 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -450,15 +450,6 @@ public final class Model {
      */
     public static DirectionKind getDirectionKind() {
         return impl.getDirectionKind();
-    }
-
-    /**
-     * Getter for the Multiplicities object.
-     *
-     * @return The object implementing the interface.
-     */
-    public static Multiplicities getMultiplicities() {
-        return impl.getMultiplicities();
     }
 
     /**

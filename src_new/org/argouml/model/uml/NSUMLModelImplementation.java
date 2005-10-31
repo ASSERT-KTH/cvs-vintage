@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.17 2005/10/20 05:29:03 tfmorris Exp $
+// $Id: NSUMLModelImplementation.java,v 1.18 2005/10/31 01:52:05 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,6 @@ import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelImplementation;
 import org.argouml.model.ModelManagementFactory;
 import org.argouml.model.ModelManagementHelper;
-import org.argouml.model.Multiplicities;
 import org.argouml.model.OrderingKind;
 import org.argouml.model.PseudostateKind;
 import org.argouml.model.ScopeKind;
@@ -343,13 +342,6 @@ public class NSUMLModelImplementation implements ModelImplementation {
      * @see org.argouml.model.ModelImplementation#getDirectionKind()
      */
     public DirectionKind getDirectionKind() {
-        return theKindsObject;
-    }
-
-    /**
-     * @see org.argouml.model.ModelImplementation#getMultiplicities()
-     */
-    public Multiplicities getMultiplicities() {
         return theKindsObject;
     }
 
