@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.189 2005/10/23 07:27:26 mvw Exp $
+// $Id: FigClass.java,v 1.190 2005/11/01 18:12:18 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1374,7 +1374,8 @@ public class FigClass extends FigClassifierBox
      */
     protected void updateListeners(Object newOwner) {
         Object oldOwner = getOwner();
-        if (oldOwner != null && oldOwner != newOwner) {
+        if (oldOwner != null && oldOwner != newOwner 
+                && !Model.getUmlFactory().isRemoved(oldOwner)) {
 	    // remove the listeners if the owner is changed
             Object cl = /*(MClass)*/ oldOwner;
             Iterator it = Model.getFacade().getFeatures(cl).iterator();
