@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.39 2005/10/27 12:45:15 bobtarling Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.40 2005/11/01 22:49:17 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -328,7 +328,7 @@ public final class ResourceLoaderWrapper {
         images.put("button.new-compositestate", "CompositeState");
         images.put("button.new-composition", "Composition");
         images.put("button.new-createaction", "CreateAction");
-        images.put("button.new-datatype", "Datatype");
+        images.put("button.new-datatype", "DataType");
         images.put("button.new-deephistory", "DeepHistory");
         images.put("button.new-dependency", "Dependency");
         images.put("button.new-destroyaction", "DestroyAction");
