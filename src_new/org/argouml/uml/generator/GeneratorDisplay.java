@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.99 2005/11/02 13:28:15 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.100 2005/11/02 13:36:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -919,9 +919,8 @@ public class GeneratorDisplay extends Generator2 {
     public String generateMultiplicity(Object m) {
         if (m == null || "1".equals(Model.getFacade().toString(m))) {
             return "";
-        } else {
-            return Model.getFacade().toString(m);
-        }
+        } 
+        return Model.getFacade().toString(m);
     }
 
     /**
