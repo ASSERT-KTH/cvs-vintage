@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.34 2005/01/30 20:47:49 linus Exp $
+// $Id: TabDocumentation.java,v 1.35 2005/11/02 06:21:56 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
+import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.swidgets.Horizontal;
 import org.tigris.swidgets.LabelledLayout;
@@ -113,6 +114,30 @@ public class TabDocumentation extends PropPanel {
         JScrollPane spDocs = new JScrollPane();
         spDocs.getViewport().add(doc);
         addField(Translator.localize("label.documentation"), spDocs);
+        
+        // Comment.name text field - editing disabled
+        UMLTextArea2 comment = new UMLTextArea2(
+                new UMLModelElementCommentDocument(false));
+        comment.setRows(2);
+        comment.setLineWrap(true);
+        comment.setWrapStyleWord(true);
+        comment.setEnabled(false);
+        comment.setDisabledTextColor(comment.getForeground());
+        JScrollPane spComment = new JScrollPane();
+        spComment.getViewport().add(comment);
+        addField(Translator.localize("label.comment.name"), spComment);
+
+        // Comment.body text field - editing disabled
+        UMLTextArea2 commentBody = new UMLTextArea2(
+                new UMLModelElementCommentDocument(true));
+        commentBody.setRows(2);
+        commentBody.setLineWrap(true);
+        commentBody.setWrapStyleWord(true);
+        commentBody.setEnabled(false);
+        commentBody.setDisabledTextColor(comment.getForeground());
+        JScrollPane spCommentBody = new JScrollPane();
+        spCommentBody.getViewport().add(commentBody);
+        addField(Translator.localize("label.comment.body"), spCommentBody);
     }
 
     /**
