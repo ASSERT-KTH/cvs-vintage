@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.38 2005/10/21 02:31:52 tfmorris Exp $
+// $Id: FindDialog.java,v 1.39 2005/11/02 08:53:35 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,6 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.NsumlEnabler;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.swingext.SpacerPanel;
@@ -649,16 +648,9 @@ class PredicateMType extends PredicateType {
         // TODO: This shouldn't know the internal form of type names,
         // but I'm not sure what GEF's PredicateType does, so I'm fixing it
         // here - tfm
-        if (NsumlEnabler.isNsuml()) {
-            if (result.startsWith("M")) {
-                result = result.substring(1);
-            }            
-        } else {
-            if (result.startsWith("Uml")) {
-                result = result.substring(3);
-            }
+        if (result.startsWith("Uml")) {
+            result = result.substring(3);
         }
-
         return result;
     }
 } /* end class PredicateMType */

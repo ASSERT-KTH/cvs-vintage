@@ -1,4 +1,4 @@
-// $Id: UmlTestSuite.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// $Id: UmlTestSuite.java,v 1.2 2005/11/02 08:53:35 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,6 @@
 
 package org.argouml.model;
 
-import org.argouml.model.uml.TestUmlModelEventPumpDeprecated;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -44,7 +42,6 @@ public class UmlTestSuite {
 			  + UmlTestSuite.class.getPackage().getName());
         suite.addTestSuite(TestUml.class);
         suite.addTestSuite(TestCopyHelper.class);
-        suite.addTestSuite(TestUmlModelEventPumpDeprecated.class);
 
 	suite.addTest(new TestSuite(TestUmlModelElement.class));
 	suite.addTest(new TestSuite(TestUmlModel.class));

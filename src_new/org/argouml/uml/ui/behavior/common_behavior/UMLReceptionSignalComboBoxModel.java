@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.28 2005/10/25 19:06:53 tfmorris Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.29 2005/11/02 08:53:33 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 
-import org.argouml.kernel.NsumlEnabler;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
@@ -95,7 +94,7 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        if (!NsumlEnabler.isNsuml() && evt instanceof RemoveAssociationEvent) {
+        if (evt instanceof RemoveAssociationEvent) {
             if ("ownedElement".equals(evt.getPropertyName())) {
                 Object o = getChangedElement(evt);
                 if (contains(o)) {

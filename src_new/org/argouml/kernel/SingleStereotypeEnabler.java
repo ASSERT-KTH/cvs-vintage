@@ -1,4 +1,4 @@
-// $Id: SingleStereotypeEnabler.java,v 1.2 2005/10/12 14:15:36 bobtarling Exp $
+// $Id: SingleStereotypeEnabler.java,v 1.3 2005/11/02 08:53:35 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,6 @@ public class SingleStereotypeEnabler {
     }
     
     public static boolean isEnabled() {
-        return enabled || NsumlEnabler.isNsuml();
+        return enabled;
     }
 }

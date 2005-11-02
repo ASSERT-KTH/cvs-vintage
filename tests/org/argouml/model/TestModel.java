@@ -1,4 +1,4 @@
-// $Id: TestModel.java,v 1.9 2005/10/21 08:44:47 tfmorris Exp $
+// $Id: TestModel.java,v 1.10 2005/11/02 08:53:35 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@ package org.argouml.model;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import org.argouml.kernel.NsumlEnabler;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -157,13 +155,8 @@ public class TestModel extends TestCase {
      */
     private static final String UML_PATH_PREFIX;
 
-    // TODO: No idea if this is right, but it was definitely wrong before - tfm
     static {
-        if (NsumlEnabler.isNsuml()) {
-            UML_PATH_PREFIX = "ru.novosoft.uml.";
-        } else {
-            UML_PATH_PREFIX = "org.omg.uml.";
-        }
+        UML_PATH_PREFIX = "org.omg.uml.";
     }
 
     /**

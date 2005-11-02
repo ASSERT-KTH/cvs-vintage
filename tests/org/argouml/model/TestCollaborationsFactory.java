@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsFactory.java,v 1.6 2005/10/25 03:08:45 tfmorris Exp $
+// $Id: TestCollaborationsFactory.java,v 1.7 2005/11/02 08:53:35 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,6 @@
 package org.argouml.model;
 
 import java.lang.ref.WeakReference;
-
-import org.argouml.kernel.NsumlEnabler;
 
 import junit.framework.TestCase;
 
@@ -146,9 +144,7 @@ public class TestCollaborationsFactory extends TestCase {
          * doing the right thing by removing it in this case where we only
          * have a single message, which then gets deleted. - tfm
          */
-        if (!NsumlEnabler.isNsuml()) {
-            assertNull("Interaction not removed", interwr.get());
-        }
+        assertNull("Interaction not removed", interwr.get());
     }
 
     /**

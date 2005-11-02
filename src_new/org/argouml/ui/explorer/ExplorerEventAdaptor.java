@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.16 2005/10/23 07:27:28 mvw Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.17 2005/11/02 08:53:34 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.beans.PropertyChangeListener;
 
 import org.argouml.application.api.Configuration;
 import org.argouml.application.notation.Notation;
-import org.argouml.kernel.NsumlEnabler;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
@@ -179,16 +178,14 @@ public final class ExplorerEventAdaptor
             // to only act on properties that are recognized, rather
             // than exclude one or more, but I don't know what they
             // all are - tfm
-            if (NsumlEnabler.isNsuml()
-                    || !("namespace".equals(pce.getPropertyName()))) {
+            if (!("namespace".equals(pce.getPropertyName()))) {
                 treeModel.modelElementRemoved(((RemoveAssociationEvent) pce)
                         .getChangedValue());
             }
         }
         
         if (pce instanceof AddAssociationEvent) {
-            if (NsumlEnabler.isNsuml()
-                    || !("namespace".equals(pce.getPropertyName()))) {
+            if (!("namespace".equals(pce.getPropertyName()))) {
                 treeModel.modelElementAdded(
                         ((AddAssociationEvent) pce).getSource());
             }
