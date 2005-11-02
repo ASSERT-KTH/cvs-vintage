@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.10 2005/10/28 23:41:50 tfmorris Exp $
+// $Id: CoreHelper.java,v 1.11 2005/11/02 06:30:02 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1001,9 +1001,15 @@ public interface CoreHelper {
 
     /**
      * Sets the body of a comment.
-     *
-     * @param handle the comment
-     * @param body the string
+     * <p>
+     * <b>NOTE:</b> For UML 1.3, this actually set Comment.name, but for UML
+     * 1.4 it sets Comment.body.  <b>This is a behavior change in the API.</b>
+     * <p>
+     * 
+     * @param handle
+     *            the Comment element
+     * @param body
+     *            the string
      */
     void setBody(Object handle, String body);
 
