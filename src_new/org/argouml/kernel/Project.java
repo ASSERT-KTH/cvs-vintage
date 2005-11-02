@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.169 2005/10/02 09:06:02 mvw Exp $
+// $Id: Project.java,v 1.170 2005/11/02 17:21:29 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -673,7 +673,10 @@ public class Project implements java.io.Serializable, TargetListener {
     public Object findTypeInModel(String s, Object ns) {
 
         if (!Model.getFacade().isANamespace(ns)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    "Looking for the classifier " + s + 
+                    " in a non-namespace object of " + ns +
+                    ". A namespace was expected.");
     	}
 
         Collection allClassifiers =
