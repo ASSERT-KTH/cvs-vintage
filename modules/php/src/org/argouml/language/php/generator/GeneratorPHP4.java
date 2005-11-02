@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.31 2005/10/31 01:32:56 tfmorris Exp $
+// $Id: GeneratorPHP4.java,v 1.32 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,9 +40,9 @@ import javax.swing.Icon;
 import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
-import org.argouml.application.notation.Notation;
 import org.argouml.language.php.PHPDocumentor;
 import org.argouml.model.Model;
+import org.argouml.notation.Notation;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
@@ -146,7 +146,7 @@ public class GeneratorPHP4
     }
 
     /**
-     * @see org.argouml.application.notation.NotationProvider2#generateSubmachine(java.lang.Object)
+     * @see org.argouml.notation.NotationProvider2#generateSubmachine(java.lang.Object)
      */
     public String generateSubmachine(Object m) {
         Object c = Model.getFacade().getSubmachine(m);
@@ -163,7 +163,7 @@ public class GeneratorPHP4
     }
 
     /**
-     * @see org.argouml.application.notation.NotationProvider2#generateObjectFlowState(java.lang.Object)
+     * @see org.argouml.notation.NotationProvider2#generateObjectFlowState(java.lang.Object)
      */
     public String generateObjectFlowState(Object m) {
         Object c = Model.getFacade().getType(m);
@@ -1894,7 +1894,7 @@ public class GeneratorPHP4
     }
 
     /**
-     * @see org.argouml.application.notation.NotationProvider2#generateActionState(java.lang.Object)
+     * @see org.argouml.notation.NotationProvider2#generateActionState(java.lang.Object)
      */
     public String generateActionState(Object actionState) {
         String ret = "";

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.172 2005/11/02 13:07:42 mvw Exp $
+// $Id: ParserDisplay.java,v 1.173 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,11 +33,11 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.notation.Notation;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.StateMachinesFactory;
+import org.argouml.notation.Notation;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.Profile;
 import org.argouml.uml.ProfileException;

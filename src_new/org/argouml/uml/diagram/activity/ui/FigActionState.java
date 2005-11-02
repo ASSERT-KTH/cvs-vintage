@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.31 2005/10/23 15:50:41 rastaman Exp $
+// $Id: FigActionState.java,v 1.32 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +31,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.util.Iterator;
 
-import org.argouml.application.notation.Notation;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
+import org.argouml.notation.Notation;
 import org.argouml.uml.diagram.state.ui.FigStateVertex;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.graph.GraphModel;

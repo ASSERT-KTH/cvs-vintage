@@ -1,4 +1,4 @@
-// $Id$
+// $Id: NotationComboBox.java,v 1.1 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.application.notation.ui;
+package org.argouml.notation.ui;
 import java.awt.Dimension;
 import java.util.ListIterator;
 
@@ -33,8 +33,8 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
 import org.argouml.application.events.ArgoNotationEventListener;
-import org.argouml.application.notation.Notation;
-import org.argouml.application.notation.NotationName;
+import org.argouml.notation.Notation;
+import org.argouml.notation.NotationName;
 
 /**
  *   This class provides a self-updating notation combo box.

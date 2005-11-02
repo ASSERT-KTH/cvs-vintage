@@ -1,4 +1,4 @@
-// $Id: TransitionNotationJava.java,v 1.1 2005/11/02 13:07:42 mvw Exp $
+// $Id: TransitionNotationJava.java,v 1.2 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class TransitionNotationJava extends TransitionNotation {
     }
 
     /**
-     * @see org.argouml.application.notation.NotationProvider4#parse(java.lang.String)
+     * @see org.argouml.notation.NotationProvider4#parse(java.lang.String)
      */
     public String parse(String text) {
         ProjectBrowser.getInstance().getStatusBar().showStatus(
@@ -50,7 +50,7 @@ public class TransitionNotationJava extends TransitionNotation {
     }
 
     /**
-     * @see org.argouml.application.notation.NotationProvider4#getParsingHelp()
+     * @see org.argouml.notation.NotationProvider4#getParsingHelp()
      */
     public String getParsingHelp() {
         return "Parsing in Java not yet supported";

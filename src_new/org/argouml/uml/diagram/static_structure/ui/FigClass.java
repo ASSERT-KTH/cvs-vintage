@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.190 2005/11/01 18:12:18 tfmorris Exp $
+// $Id: FigClass.java,v 1.191 2005/11/02 13:28:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,12 +38,12 @@ import java.util.Vector;
 import javax.swing.Action;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.notation.Notation;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
+import org.argouml.notation.Notation;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;

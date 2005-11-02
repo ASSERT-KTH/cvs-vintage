@@ -1,4 +1,4 @@
-// $Id: InitNotationJava.java,v 1.1 2005/11/02 13:07:43 mvw Exp $
+// $Id: InitNotationJava.java,v 1.2 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,9 +25,9 @@
 package org.argouml.uml.notation.java;
 
 import org.argouml.application.api.Argo;
-import org.argouml.application.notation.Notation;
-import org.argouml.application.notation.NotationName;
-import org.argouml.application.notation.NotationProviderFactory2;
+import org.argouml.notation.Notation;
+import org.argouml.notation.NotationName;
+import org.argouml.notation.NotationProviderFactory2;
 
 /**
  * This class is the only one that has the knowledge of the complete list of 

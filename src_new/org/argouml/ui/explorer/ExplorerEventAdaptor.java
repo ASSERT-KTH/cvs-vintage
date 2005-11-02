@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.17 2005/11/02 08:53:34 tfmorris Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.18 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,12 +27,12 @@ package org.argouml.ui.explorer;
 import java.beans.PropertyChangeListener;
 
 import org.argouml.application.api.Configuration;
-import org.argouml.application.notation.Notation;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
+import org.argouml.notation.Notation;
 
 /**
  * All events going to the Explorer must pass through here first!<p>

@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.47 2005/11/02 13:07:41 mvw Exp $
+// $Id: FigTransition.java,v 1.48 2005/11/02 13:28:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 
-import org.argouml.application.notation.NotationProvider4;
-import org.argouml.application.notation.NotationProviderFactory2;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
+import org.argouml.notation.NotationProvider4;
+import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.PathConvPercent2;
 import org.tigris.gef.base.Layer;

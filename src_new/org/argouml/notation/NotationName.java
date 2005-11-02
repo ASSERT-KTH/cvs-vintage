@@ -1,4 +1,4 @@
-// $Id$
+// $Id: NotationName.java,v 1.1 2005/11/02 13:28:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.application.notation;
+package org.argouml.notation;
 
 import javax.swing.Icon;
 

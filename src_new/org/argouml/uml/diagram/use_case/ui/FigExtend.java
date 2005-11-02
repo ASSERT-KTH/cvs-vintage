@@ -1,4 +1,4 @@
-// $Id: FigExtend.java,v 1.20 2005/10/23 07:27:27 mvw Exp $
+// $Id: FigExtend.java,v 1.21 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 
-import org.argouml.application.notation.Notation;
 import org.argouml.model.Model;
+import org.argouml.notation.Notation;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;

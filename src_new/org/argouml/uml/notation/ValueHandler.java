@@ -1,4 +1,4 @@
-// $Id: ValueHandler.java,v 1.1 2005/11/02 13:07:42 mvw Exp $
+// $Id: ValueHandler.java,v 1.2 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 import javax.swing.Action;
 
-import org.argouml.application.notation.NotationProvider4;
+import org.argouml.notation.NotationProvider4;
 
 /**
  * @author mvw@tigris.org
@@ -38,7 +38,7 @@ public abstract class ValueHandler implements NotationProvider4{
     protected HashMap keyTable;
     
     /**
-     * @see org.argouml.application.notation.NotationProvider4#putValue(java.lang.String, java.lang.Object)
+     * @see org.argouml.notation.NotationProvider4#putValue(java.lang.String, java.lang.Object)
      */
     public void putValue(String key, Object newValue) {
         if (keyTable == null) {

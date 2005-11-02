@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.76 2005/10/23 07:27:27 mvw Exp $
+// $Id: FigUseCase.java,v 1.77 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,8 +42,8 @@ import java.util.Vector;
 import javax.swing.Action;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.notation.Notation;
 import org.argouml.model.Model;
+import org.argouml.notation.Notation;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;

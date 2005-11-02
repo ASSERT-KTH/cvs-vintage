@@ -1,4 +1,4 @@
-// $Id$
+// $Id: ActionNotation.java,v 1.1 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.application.notation.ui;
+package org.argouml.notation.ui;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -34,9 +34,9 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import org.argouml.application.notation.Notation;
-import org.argouml.application.notation.NotationName;
 import org.argouml.i18n.Translator;
+import org.argouml.notation.Notation;
+import org.argouml.notation.NotationName;
 import org.argouml.uml.ui.UMLAction;
 
 

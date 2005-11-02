@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.22 2005/10/23 07:27:29 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.23 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,9 @@ import java.util.Iterator;
 
 import org.argouml.application.events.ArgoEvent;
 import org.argouml.application.events.ArgoEventPump;
-import org.argouml.application.notation.Notation;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
+import org.argouml.notation.Notation;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;

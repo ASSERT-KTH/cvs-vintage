@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.64 2005/10/31 01:32:55 tfmorris Exp $
+// $Id: GeneratorCpp.java,v 1.65 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,8 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
-import org.argouml.application.notation.Notation;
 import org.argouml.model.Model;
+import org.argouml.notation.Notation;
 import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.generator.FileGenerator;

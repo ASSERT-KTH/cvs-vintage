@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.43 2005/10/23 07:27:27 mvw Exp $
+// $Id: FigMessage.java,v 1.44 2005/11/02 13:28:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,9 +34,9 @@ import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.argouml.application.notation.Notation;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
+import org.argouml.notation.Notation;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.collaboration.ui.FigAssociationRole;
 import org.argouml.uml.generator.ParserDisplay;

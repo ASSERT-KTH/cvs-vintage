@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.12 2005/10/24 17:06:13 mvw Exp $
+// $Id: Generator2.java,v 1.13 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.PluggableNotation;
-import org.argouml.application.notation.NotationHelper;
-import org.argouml.application.notation.NotationName;
-import org.argouml.application.notation.NotationProvider2;
 import org.argouml.model.Model;
+import org.argouml.notation.NotationHelper;
+import org.argouml.notation.NotationName;
+import org.argouml.notation.NotationProvider2;
 
 /**
  * This class is the abstract super class that defines a code

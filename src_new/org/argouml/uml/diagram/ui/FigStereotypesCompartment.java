@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.12 2005/10/23 07:27:26 mvw Exp $
+// $Id: FigStereotypesCompartment.java,v 1.13 2005/11/02 13:28:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.notation.NotationHelper;
 import org.argouml.model.Model;
+import org.argouml.notation.NotationHelper;
 import org.argouml.uml.diagram.static_structure.ui.FigFeature;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;

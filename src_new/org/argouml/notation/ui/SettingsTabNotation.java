@@ -1,4 +1,4 @@
-// $Id$
+// $Id: SettingsTabNotation.java,v 1.1 2005/11/02 13:28:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.application.notation.ui;
+package org.argouml.notation.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -38,7 +38,7 @@ import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.application.helpers.SettingsTabHelper;
-import org.argouml.application.notation.Notation;
+import org.argouml.notation.Notation;
 import org.argouml.ui.ShadowComboBox;
 
 /**

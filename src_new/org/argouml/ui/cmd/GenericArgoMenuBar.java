@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.30 2005/10/28 19:46:52 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.31 2005/11/02 13:28:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,9 +43,9 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoModuleEvent;
 import org.argouml.application.events.ArgoModuleEventListener;
-import org.argouml.application.notation.ui.ActionNotation;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.UndoEnabler;
+import org.argouml.notation.ui.ActionNotation;
 import org.argouml.ui.ActionAutoResize;
 import org.argouml.ui.ActionExportXMI;
 import org.argouml.ui.ActionImportXMI;

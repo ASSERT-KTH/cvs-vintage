@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.213 2005/11/02 13:07:43 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.214 2005/11/02 13:28:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,11 +61,6 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
 import org.argouml.application.events.ArgoNotationEventListener;
-import org.argouml.application.notation.Notation;
-import org.argouml.application.notation.NotationContext;
-import org.argouml.application.notation.NotationName;
-import org.argouml.application.notation.NotationProvider4;
-import org.argouml.application.notation.NotationProviderFactory2;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ItemUID;
 import org.argouml.cognitive.ToDoItem;
@@ -79,6 +74,11 @@ import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.DiElement;
 import org.argouml.model.Model;
+import org.argouml.notation.Notation;
+import org.argouml.notation.NotationContext;
+import org.argouml.notation.NotationName;
+import org.argouml.notation.NotationProvider4;
+import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.ui.ActionGoToCritique;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ArgoJMenu;
@@ -1302,14 +1302,14 @@ public abstract class FigNodeModelElement
     /**
      * Returns the notation name for this fig. First start to
      * implement notations on a per fig basis.
-     * @see org.argouml.application.notation.NotationContext#getContextNotation()
+     * @see org.argouml.notation.NotationContext#getContextNotation()
      */
     public NotationName getContextNotation() {
         return currentNotationName;
     }
 
     /**
-     * @see org.argouml.application.notation.NotationContext#setContextNotation(org.argouml.application.notation.NotationName)
+     * @see org.argouml.notation.NotationContext#setContextNotation(org.argouml.notation.NotationName)
      */
     public void setContextNotation(NotationName nn) {
         currentNotationName = nn;
