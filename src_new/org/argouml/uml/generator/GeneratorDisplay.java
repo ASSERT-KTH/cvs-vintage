@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.97 2005/10/31 01:28:47 tfmorris Exp $
+// $Id: GeneratorDisplay.java,v 1.98 2005/11/02 13:07:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,10 +43,12 @@ import org.argouml.model.Model;
  * to generate for the "Display". Similarely to the GeneratorJava class,
  * this class would better have been named GeneratorUML. 
  *
- * TODO: always check for null!!!
- *
  * @stereotype singleton
  * @author jrobbins@ics.uci.edu
+ * @deprecated since V0.19.8 by mvw. Replaced by a split architecture: 
+ * see for the notation part 
+ * http://argouml.tigris.org/proposals/notation/index.html, 
+ * and for the code part issue 3546. 
  */
 public class GeneratorDisplay extends Generator2 {
 

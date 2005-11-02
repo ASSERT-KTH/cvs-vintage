@@ -1,4 +1,4 @@
-// $Id: Parser.java,v 1.24 2005/01/09 14:58:58 linus Exp $
+// $Id: Parser.java,v 1.25 2005/11/02 13:07:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,9 @@ import java.text.ParseException;
  * Parent of ParserDisplay.
  * TODO: Explain the purpose of this class!
  * TODO: Why do these functions return the object they receive?
+ * 
+ * @deprecated since V0.19.8 by mvw. Replaced by a new notation architecture: 
+ * see http://argouml.tigris.org/proposals/notation/index.html. 
  */
 public abstract class Parser {
 

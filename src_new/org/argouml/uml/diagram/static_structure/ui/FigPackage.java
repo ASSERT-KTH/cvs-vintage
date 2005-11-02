@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.83 2005/10/23 07:27:26 mvw Exp $
+// $Id: FigPackage.java,v 1.84 2005/11/02 13:07:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -181,6 +181,17 @@ public class FigPackage extends FigNodeModelElement
     public FigPackage(GraphModel gm, Object node) {
         this();
         setOwner(node);
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#initNotationProviders(java.lang.Object)
+     */
+    protected void initNotationProviders(Object own) {
+        super.initNotationProviders(own);
+        if (Model.getFacade().isAPackage(own)) {
+            notationProviderName.putValue("visibilityVisible", 
+                new Boolean(isVisibilityVisible()));
+        }
     }
 
     /**
@@ -373,32 +384,6 @@ public class FigPackage extends FigNodeModelElement
 
         forceRepaintShadow();
         setBounds(rect.x, rect.y, rect.width, rect.height);
-    }
-
-    /**
-     * Updates the text of the name FigText.
-     */
-    protected void updateNameText() {
-        if (isReadyToEdit()) {
-            if (getOwner() == null) {
-                return;
-            }
-            String nameStr =
-                Notation.generate(this, Model.getFacade().getName(getOwner()));
-            nameStr = generatePath() + nameStr;
-            Object v = Model.getFacade().getVisibility(getOwner());
-            if (v == null) {
-                /* Initially, the visibility is not set in the model. 
-                 * Still, we want to show the default, i.e. public.*/
-                v = Model.getVisibilityKind().getPublic();
-            }
-            if (visibilityVisible) {
-                nameStr = (Notation.generate(this, v) + " " + nameStr).trim();  
-                /* The trim is for when nothing is generated: omit the space. */
-            }
-            setName(nameStr);
-            updateBounds();
-        }
     }
     
     /**
@@ -867,6 +852,9 @@ public class FigPackage extends FigNodeModelElement
      */
     public void setVisibilityVisible(boolean isVisible) {
         visibilityVisible = isVisible;
+        if (notationProviderName != null)
+            notationProviderName.putValue("visibilityVisible", 
+                new Boolean(isVisible));
         renderingChanged();
         damage();
     }
