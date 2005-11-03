@@ -1,4 +1,4 @@
-// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.33 2005/10/15 12:45:54 rastaman Exp $
+// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.34 2005/11/03 00:34:02 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,9 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.util.CollectionUtil;
 
 /**
+ * This combo box only supports selection of a single stereotype.
+ * It isn't really useful after UML 1.3 and will probably go away.
+ * tfm - 2 Nov 2005
  * @since Oct 10, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
