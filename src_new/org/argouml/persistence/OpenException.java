@@ -1,4 +1,4 @@
-// $Id: OpenException.java,v 1.2 2005/01/09 14:58:07 linus Exp $
+// $Id: OpenException.java,v 1.3 2005/11/03 21:46:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,11 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.persistence;
+
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
+import org.xml.sax.SAXException;
 
 /**
  * An exception to be thrown during failure of a opening
@@ -57,6 +62,29 @@ public class OpenException extends PersistenceException {
      */
     public OpenException(Throwable cause) {
         super(cause);
+    }
+    
+    
+    public void printStackTrace() {
+        super.printStackTrace();
+        if (getCause() instanceof SAXException &&
+                ((SAXException)getCause()).getException() != null) {
+            ((SAXException)getCause()).getException().printStackTrace();
+        }
+    }
+    public void printStackTrace(PrintStream ps) {
+        super.printStackTrace(ps);
+        if (getCause() instanceof SAXException &&
+                ((SAXException)getCause()).getException() != null) {
+            ((SAXException)getCause()).getException().printStackTrace(ps);
+        }
+    }
+    public void printStackTrace(PrintWriter pw) {
+        super.printStackTrace(pw);
+        if (getCause() instanceof SAXException &&
+                ((SAXException)getCause()).getException() != null) {
+            ((SAXException)getCause()).getException().printStackTrace(pw);
+        }
     }
 }
 
