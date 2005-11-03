@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.10 2005/10/31 00:26:10 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.11 2005/11/03 21:50:28 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.diagram.ui.PathContainer;
 import org.argouml.uml.diagram.ui.StereotypeContainer;
 import org.tigris.gef.persistence.pgml.Container;
+import org.tigris.gef.persistence.pgml.FigEdgeHandler;
 import org.tigris.gef.persistence.pgml.FigGroupHandler;
 import org.tigris.gef.persistence.pgml.HandlerStack;
 import org.tigris.gef.presentation.Fig;
@@ -88,9 +89,17 @@ public class PGMLStackParser extends org.tigris.gef.persistence.pgml.PGMLStackPa
         	return new PrivateHandler( this, (Container)container);
         }
         
-        return
+        DefaultHandler handler = 
             super.getHandler(stack, container, uri, localname, qname,
                     attributes);
+        
+        if (handler instanceof FigEdgeHandler) {
+            return new org.argouml.persistence.FigEdgeHandler(
+                    this, ((FigEdgeHandler)handler).getFigEdge());
+        }
+        
+        return handler;
+
     }
 
     /**
@@ -101,7 +110,6 @@ public class PGMLStackParser extends org.tigris.gef.persistence.pgml.PGMLStackPa
         if (f instanceof FigGroup) {
             FigGroup group = (FigGroup) f;
             String clsNameBounds = attrList.getValue("description");
-            System.out.println(clsNameBounds);
             if (clsNameBounds != null) {
                 StringTokenizer st =
                     new StringTokenizer(clsNameBounds, ",;[] ");

@@ -1,4 +1,4 @@
-// $Id: FigCommentPort.java,v 1.1 2005/10/30 22:01:39 bobtarling Exp $
+// $Id: FigCommentPort.java,v 1.2 2005/11/03 21:50:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,9 +47,13 @@ public class FigCommentPort extends FigNodeModelElement {
         return false;
     }
     
-//    public Object deepHitPort(int x, int y) {
-//        return null;
-//    }
+    /**
+     * @deprecated in 0.11.1 use org.tigris.gef.persistence.pgml.PgmlUtility.getClassNameAndBounds(Fig)
+     */
+    // USED BY PGML.tee
+    public String classNameAndBounds() {
+        return getClass().getName() + "[" + getX() + ", " + getY() + ", " + getWidth() + ", " + getHeight() + "]";
+    }
     
     public Object hitPort(int x, int y) {
         return null;

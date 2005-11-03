@@ -1,4 +1,4 @@
-// $Id: ActionSetAddCommentLinkMode.java,v 1.1 2005/10/30 15:39:12 bobtarling Exp $
+// $Id: ActionSetAddCommentLinkMode.java,v 1.2 2005/11/03 21:50:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,10 +47,7 @@ public class ActionSetAddCommentLinkMode extends CmdSetMode {
      */
     public ActionSetAddCommentLinkMode() {
         super(
-                //TODO: Uncomment this line to see work in progress
-                // on commenting edges.
-//                ModeCreateCommentEdge.class,
-                ModeCreatePolyEdge.class,
+                ModeCreateCommentEdge.class,
                 "edgeClass",
                 CommentEdge.class,
                 "button.new-commentlink");

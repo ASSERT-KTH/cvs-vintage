@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.14 2005/10/06 23:05:23 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.15 2005/11/03 21:50:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -242,9 +242,22 @@ public class FigClassifierRole extends FigNodeModelElement
         fmp.setOwner(owner);
         addFig(fmp);
         updateNodeStates();
+        
         return fmp;
     }
 
+    public String getTipString(MouseEvent me) {
+        int count = 0;
+        Iterator it = getFigs().iterator();
+        while (it.hasNext()) {
+            if (it.next() instanceof FigMessagePort) {
+                count++;
+            }
+        }
+        // TODO Auto-generated method stub
+        return "" + count;
+    }
+    
     /**
      * Connect a FigMessagePort with a MessageNode by position.
      */
