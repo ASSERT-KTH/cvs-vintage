@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.43 2005/07/14 17:16:19 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.44 2005/11/03 00:39:43 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -195,6 +195,7 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
         } else if (Model.getFacade().isAAbstraction(edge)) {
             newEdge = new FigRealization(edge);
         } else if (Model.getFacade().isADependency(edge)) {
+            // TODO: MULTIPLESTEREOTYPES
             Object stereotype = CollectionUtil.getFirstItemOrNull(
                     Model.getFacade().getStereotypes(edge));
             if (stereotype != null

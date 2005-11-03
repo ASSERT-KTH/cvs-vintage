@@ -1,4 +1,4 @@
-// $Id: TestParserDisplay.java,v 1.20 2005/09/07 09:52:48 bobtarling Exp $
+// $Id: TestParserDisplay.java,v 1.21 2005/11/03 00:39:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1143,6 +1143,9 @@ public class TestParserDisplay extends TestCase {
     private void checkStereotype(Object feature, String text, String val)
         throws ParseException {
 
+        // TODO: MULTIPLESTEREOTYPES
+        // This needs to be generalized to test multiple stereotypes
+        
         if (Model.getFacade().isAAttribute(feature)) {
             ParserDisplay.SINGLETON.parseAttribute(text, feature);
             Object stereo = CollectionUtil.getFirstItemOrNull(

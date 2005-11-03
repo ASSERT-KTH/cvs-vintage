@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.121 2005/11/02 13:28:15 mvw Exp $
+// $Id: GeneratorJava.java,v 1.122 2005/11/03 00:39:43 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -447,6 +447,7 @@ public class GeneratorJava
         StringBuffer sb = new StringBuffer(80);
         String nameStr = null;
         boolean constructor = false;
+        // TODO: MULTIPLESTEREOTYPES
         Object stereo = CollectionUtil.getFirstItemOrNull(
                 Model.getFacade().getStereotypes(op));
         if (stereo != null

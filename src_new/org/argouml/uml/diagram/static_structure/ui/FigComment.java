@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.58 2005/11/02 06:21:00 tfmorris Exp $
+// $Id: FigComment.java,v 1.59 2005/11/03 00:39:43 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -731,7 +731,6 @@ public class FigComment
         }
 
         Rectangle rect = getBounds();
-        // TODO: MULTIPLESTEREOTYPES - this only shows the first stereotype
         Object stereo = CollectionUtil.getFirstItemOrNull(
                 Model.getFacade().getStereotypes(me));
 

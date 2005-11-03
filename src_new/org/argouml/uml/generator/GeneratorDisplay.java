@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.100 2005/11/02 13:36:29 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.101 2005/11/03 00:39:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,6 +252,7 @@ public class GeneratorDisplay extends Generator2 {
      */
     public String generateAttribute(Object attr, boolean documented) {
         String visibility = generateVisibility(attr);
+        // generateStereotype accepts a collection, despite its name
         String stereo = 
             generateStereotype(Model.getFacade().getStereotypes(attr));
         String name = Model.getFacade().getName(attr);

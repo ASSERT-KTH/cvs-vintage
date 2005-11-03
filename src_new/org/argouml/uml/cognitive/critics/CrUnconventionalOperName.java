@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalOperName.java,v 1.26 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: CrUnconventionalOperName.java,v 1.27 2005/11/03 00:39:43 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,6 +67,7 @@ public class CrUnconventionalOperName extends AbstractCrUnconventionalName {
             return NO_PROBLEM;
         }
         char initalChar = nameStr.charAt(0);
+        // TODO: MULTIPLESTEREOTYPES
         Object stereo = CollectionUtil.getFirstItemOrNull(
                 Model.getFacade().getStereotypes(oper));
         if ((stereo != null)

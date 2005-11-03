@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.14 2005/08/13 08:49:16 mvw Exp $
+// $Id: UmlDiagramRenderer.java,v 1.15 2005/11/03 00:39:43 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -258,6 +258,7 @@ public abstract class UmlDiagramRenderer
         } else if (Model.getFacade().isAUsage(edge)) {
             newEdge = new FigUsage();
         } else if (Model.getFacade().isADependency(edge)) {
+            // TODO: MULTIPLESTEREOTYPES
             Object stereotype = CollectionUtil.getFirstItemOrNull(
                     Model.getFacade().getStereotypes(edge));
             if (Model.getExtensionMechanismsHelper().isStereotypeInh(

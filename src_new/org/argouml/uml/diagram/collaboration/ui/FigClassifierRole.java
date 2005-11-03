@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.49 2005/11/02 13:28:15 mvw Exp $
+// $Id: FigClassifierRole.java,v 1.50 2005/11/03 00:39:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -229,6 +229,7 @@ public class FigClassifierRole extends FigNodeModelElement {
 
         Rectangle   bounds = getBounds();
 
+        // TODO: MULTIPLESTEREOTYPES
         Object stereo =
             CollectionUtil.getFirstItemOrNull(
                 Model.getFacade().getStereotypes(me));

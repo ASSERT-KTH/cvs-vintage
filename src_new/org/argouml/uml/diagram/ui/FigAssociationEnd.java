@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.13 2005/11/02 13:28:14 mvw Exp $
+// $Id: FigAssociationEnd.java,v 1.14 2005/11/03 00:39:42 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,6 +177,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
             visi = 
                 Notation.generate(this, Model.getFacade().getVisibility(owner));
         }
+        // TODO: MULTIPLESTEREOTYPES
         Object stereo = CollectionUtil.getFirstItemOrNull(
                 Model.getFacade().getStereotypes(owner));
 

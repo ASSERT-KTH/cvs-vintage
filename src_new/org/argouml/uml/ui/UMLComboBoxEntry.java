@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxEntry.java,v 1.24 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: UMLComboBoxEntry.java,v 1.25 2005/11/03 00:39:43 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,6 +202,7 @@ public class UMLComboBoxEntry implements Comparable {
                 Model.getCoreHelper().setName(
                         clone,
                         Model.getFacade().getName(element));
+                // TODO: MULTIPLESTEREOTYPES
                 Object stereo = CollectionUtil.getFirstItemOrNull(
                         Model.getFacade().getStereotypes(element));
                 Model.getCoreHelper().setStereotype(clone, stereo);
