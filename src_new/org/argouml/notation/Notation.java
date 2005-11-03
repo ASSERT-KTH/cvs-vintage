@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.1 2005/11/02 13:28:14 mvw Exp $
+// $Id: Notation.java,v 1.2 2005/11/03 04:17:13 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -486,6 +486,8 @@ public final class Notation implements PropertyChangeListener {
      * @param ctx  Context used to identify the notation
      * @param s   The UML element to generate for.
      * @return     The generated text.
+     * 
+     * TODO: MULTIPLESTEREOTYPES  Need version that handles a Collection of Stereotypes
      */
     public static String generateStereotype(
             NotationContext ctx,
