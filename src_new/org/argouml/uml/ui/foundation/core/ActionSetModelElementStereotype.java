@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.20 2005/10/23 12:17:41 rastaman Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.21 2005/11/03 00:32:42 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
 import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.Model;
@@ -56,7 +57,7 @@ public class ActionSetModelElementStereotype extends UMLAction {
      */
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        Object oldStereo = null;
+        Collection oldStereo = null;
         Object newStereo = null;
         Object target = null;
         if (source instanceof UMLComboBox2) {
@@ -66,26 +67,26 @@ public class ActionSetModelElementStereotype extends UMLAction {
             }
             if (Model.getFacade().isAModelElement(combo.getTarget())) {
                 target = /*(MModelElement)*/ combo.getTarget();
-                oldStereo = CollectionUtil.getFirstItemOrNull(
-                        Model.getFacade().getStereotypes(target));
+                oldStereo = Model.getFacade().getStereotypes(target);
             }
 	    if ("".equals(combo.getSelectedItem())) {
 	        newStereo = null;
 	    }
         }
-        if (newStereo != oldStereo && target != null) {
+        if (oldStereo != null && !oldStereo.contains(newStereo)
+                && target != null) {
             // Add stereotypes submenu
-            if (SingleStereotypeEnabler.isEnabled()) { 
-	            if (newStereo != null) {
-					newStereo =
-					    Model.getModelManagementHelper().getCorrespondingElement(
-					  newStereo,
-					  	Model.getFacade().getModel(target));
-	    			}
-	            Model.getExtensionMechanismsHelper().setStereoType(target, newStereo);
-    	        } else {                          
-                		if (newStereo != null&&!Model.getFacade().getStereotypes(target).contains(newStereo))
-                    		Model.getCoreHelper().addStereotype(target, newStereo);
+            if (SingleStereotypeEnabler.isEnabled()) {
+                if (newStereo != null) {
+                    newStereo = Model.getModelManagementHelper()
+                            .getCorrespondingElement(newStereo,
+                                    Model.getFacade().getModel(target));
+                }
+                Model.getExtensionMechanismsHelper().setStereoType(target,
+                        newStereo);
+            } else {
+                if (newStereo != null)
+                    Model.getCoreHelper().addStereotype(target, newStereo);
             }
             super.actionPerformed(e);
         }
