@@ -1,4 +1,4 @@
-// $Id: FigAttributesCompartment.java,v 1.12 2005/11/02 13:28:14 mvw Exp $
+// $Id: FigAttributesCompartment.java,v 1.13 2005/11/04 23:17:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.Model;
 import org.argouml.notation.Notation;
 import org.argouml.notation.NotationContext;
@@ -62,12 +61,7 @@ public class FigAttributesCompartment extends FigFeaturesCompartment {
         Fig attrPort = this.getBigPort();
         int xpos = attrPort.getX();
         int ypos = attrPort.getY();
-        int acounter;
-        if (SingleStereotypeEnabler.isEnabled()) {
-            acounter = 1; // Skip background port
-        } else {
-            acounter = 2; // Skip background port and seperator
-        }
+        int acounter = 2; // Skip background port and seperator
         
         Collection strs = Model.getFacade().getStructuralFeatures(cls);
         if (strs != null) {

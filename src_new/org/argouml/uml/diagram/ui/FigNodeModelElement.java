@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.215 2005/11/04 22:41:18 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.216 2005/11/04 23:17:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,6 @@ import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.DiElement;
 import org.argouml.model.Model;
@@ -292,11 +291,7 @@ public abstract class FigNodeModelElement
         nameFig.setFilled(true);
         nameFig.setText(placeString());
 
-        if (SingleStereotypeEnabler.isEnabled()) {
-            stereotypeFig = new FigSingleLineText(10, 10, 90, 15, true);
-        } else {
-            stereotypeFig = new FigStereotypesCompartment(10, 10, 90, 15);
-        }
+        stereotypeFig = new FigStereotypesCompartment(10, 10, 90, 15);
 
         readyToEdit = false;
         ArgoEventPump.addListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);
@@ -1228,10 +1223,9 @@ public abstract class FigNodeModelElement
         
         Object modelElement = getOwner();
         stereotypeFig.setOwner(modelElement);
-        if (!SingleStereotypeEnabler.isEnabled() && modelElement != null) {
+        if (modelElement != null) {
             ((FigStereotypesCompartment) stereotypeFig).populate();
         }
-        
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: StereotypeUtility.java,v 1.1 2005/10/24 16:01:24 bobtarling Exp $
+// $Id: StereotypeUtility.java,v 1.2 2005/11/04 23:17:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import java.util.TreeSet;
 import javax.swing.Action;
 
 import org.argouml.kernel.ProjectManager;
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.Model;
 
 /**
@@ -52,9 +51,6 @@ public class StereotypeUtility {
     }
 
     public static Action[] getApplyStereotypeActions(Object modelElement) {
-        if (SingleStereotypeEnabler.isEnabled()) {
-            return null;
-        }
         Set paths = new HashSet();
         Set availableStereotypes = new TreeSet(new Comparator() {
             public int compare(Object o1, Object o2) {

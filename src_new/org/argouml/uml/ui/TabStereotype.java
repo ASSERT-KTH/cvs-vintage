@@ -1,4 +1,4 @@
-// $Id: TabStereotype.java,v 1.7 2005/10/24 22:57:47 bobtarling Exp $
+// $Id: TabStereotype.java,v 1.8 2005/11/04 23:17:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui;
 
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.foundation.core.UMLModelElementStereotypeListModel;
 import org.tigris.gef.presentation.Fig;
@@ -66,9 +65,6 @@ public class TabStereotype extends PropPanel {
      * @return true if this tab should be enabled, otherwise false.
      */
     public boolean shouldBeEnabled() {
-        if (SingleStereotypeEnabler.isEnabled()) {
-            return false;
-        }
         Object target = getTarget();
         target = (target instanceof Fig) ? ((Fig) target).getOwner() : target;
         return Model.getFacade().isAModelElement(target);

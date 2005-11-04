@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.12 2005/10/17 19:48:25 bobtarling Exp $
+// $Id: FigClassifierBox.java,v 1.13 2005/11/04 23:17:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.List;
 
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigFeaturesCompartment;
@@ -129,9 +128,6 @@ abstract public class FigClassifierBox extends FigNodeModelElement
         int ypos = operPort.getY();
 
         Rectangle rect = getBounds();
-        if (SingleStereotypeEnabler.isEnabled()) {
-            operationsFig.updateFigGroupSize(xpos, ypos, 0, 0, isCheckSize(), ROWHEIGHT);
-        }
         // ouch ugly but that's for a next refactoring
         // TODO: make setBounds, calcBounds and updateBounds consistent
         setBounds(rect.x, rect.y, rect.width, rect.height);

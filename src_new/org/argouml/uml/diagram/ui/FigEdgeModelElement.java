@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.131 2005/11/03 05:35:34 tfmorris Exp $
+// $Id: FigEdgeModelElement.java,v 1.132 2005/11/04 23:17:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.DiElement;
 import org.argouml.model.Model;
@@ -173,20 +172,7 @@ public abstract class FigEdgeModelElement
         name.setReturnAction(FigText.END_EDITING);
         name.setTabAction(FigText.END_EDITING);
 
-        if (SingleStereotypeEnabler.isEnabled()) {
-            FigText stereo = new FigText(10, 30, 90, 20);
-            stereo.setFont(LABEL_FONT);
-            stereo.setTextColor(Color.black);
-            stereo.setTextFilled(false);
-            stereo.setFilled(false);
-            stereo.setLineWidth(0);
-            stereo.setExpandOnly(false);
-            stereo.setReturnAction(FigText.END_EDITING);
-            stereo.setTabAction(FigText.END_EDITING);
-            stereotypeFig = stereo;
-        } else {
-            stereotypeFig = new FigStereotypesCompartment(10, 10, 90, 15);
-        }
+        stereotypeFig = new FigStereotypesCompartment(10, 10, 90, 15);
 
         setBetweenNearestPoints(true);
         ArgoEventPump.addListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);

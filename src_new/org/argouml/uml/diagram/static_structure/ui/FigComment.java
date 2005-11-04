@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.60 2005/11/04 22:41:18 bobtarling Exp $
+// $Id: FigComment.java,v 1.61 2005/11/04 23:17:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,6 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigMultiLineText;
@@ -130,11 +129,6 @@ public class FigComment
         urCorner.setFillColor(col.darker());
         urCorner.setLineWidth(1);
 
-        if (SingleStereotypeEnabler.isEnabled()) {
-            getStereotypeFig().setHeight(STEREOHEIGHT);
-            getStereotypeFig().setVisible(false);
-        }
-        
         setBigPort(new FigRect(x, y, width, height, null, null));
         getBigPort().setFilled(false);
         getBigPort().setLineWidth(0);
@@ -484,11 +478,7 @@ public class FigComment
             aSize.width =
                 Math.max(aSize.width,
                          stereoMin.width);
-            if (SingleStereotypeEnabler.isEnabled()) {
-                aSize.height += STEREOHEIGHT;
-            } else {
-                aSize.height += stereoMin.height;
-            }
+            aSize.height += stereoMin.height;
         }
         
         // And add the gaps around the textfield to get the minimum
@@ -509,11 +499,7 @@ public class FigComment
         
         int stereotypeHeight = 0;
         if (getStereotypeFig().isVisible()) {
-            if (SingleStereotypeEnabler.isEnabled()) {
-                stereotypeHeight = STEREOHEIGHT;
-            } else {
-                stereotypeHeight = stereoMin.height;
-            }
+            stereotypeHeight = stereoMin.height;
         }
         
         Rectangle oldBounds = getBounds();
@@ -522,13 +508,8 @@ public class FigComment
         bodyTextFig.setBounds(px + 2, py + 2 + stereotypeHeight, 
                 w - 4 - dogear, h - 4 - stereotypeHeight);
 
-        if (SingleStereotypeEnabler.isEnabled()) {
-            getStereotypeFig().setBounds(px + 2, py + 2,
-                    w - 4 - dogear, STEREOHEIGHT);
-        } else {
-            getStereotypeFig().setBounds(px + 2, py + 2,
-                    w - 4 - dogear, stereoMin.height);
-        }
+        getStereotypeFig().setBounds(px + 2, py + 2,
+                w - 4 - dogear, stereoMin.height);
         
         // Resize the big port around the figure
         getBigPort().setBounds(px, py, w, h);

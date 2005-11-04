@@ -1,4 +1,4 @@
-// $Id: FigRealization.java,v 1.11 2005/10/14 16:13:42 bobtarling Exp $
+// $Id: FigRealization.java,v 1.12 2005/11/04 23:17:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigRealization.java,v 1.11 2005/10/14 16:13:42 bobtarling Exp $
+// $Id: FigRealization.java,v 1.12 2005/11/04 23:17:35 bobtarling Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 
-import org.argouml.kernel.SingleStereotypeEnabler;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadTriangle;
 import org.tigris.gef.presentation.Fig;
@@ -58,9 +57,6 @@ public class FigRealization extends FigEdgeModelElement {
         endArrow.setFillColor(Color.white);
         setDestArrowHead(endArrow);
         setBetweenNearestPoints(true);
-        if (SingleStereotypeEnabler.isEnabled()) {
-            ((FigText)getStereotypeFig()).setText("");
-        }
         getFig().setDashed(true);
     }
 
