@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.193 2005/11/05 01:18:35 bobtarling Exp $
+// $Id: FigClass.java,v 1.194 2005/11/05 16:23:48 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -629,8 +629,8 @@ public class FigClass extends FigClassifierBox
      */
     protected void textEdited(FigText ft) throws PropertyVetoException {
         super.textEdited(ft);
-        Object cls = /*(MClassifier)*/ getOwner();
-        if (cls == null) {
+        Object classifier = getOwner();
+        if (classifier == null) {
             return;
         }
         int i = new Vector(getAttributesFig().getFigs()).indexOf(ft);
@@ -638,11 +638,11 @@ public class FigClass extends FigClassifierBox
             highlightedFigText = (CompartmentFigText) ft;
             highlightedFigText.setHighlighted(true);
             try {
-                ParserDisplay.SINGLETON
-		    .parseAttributeFig(cls,
-				       /*(MAttribute)*/
-				       highlightedFigText.getOwner(),
-				       highlightedFigText.getText().trim());
+                Object attribute = highlightedFigText.getOwner();
+                ParserDisplay.SINGLETON.parseAttributeFig(
+                        classifier,
+                        attribute,
+                        highlightedFigText.getText().trim());
                 ProjectBrowser.getInstance().getStatusBar().showStatus("");
             } catch (ParseException pe) {
                 String msg = "statusmsg.bar.error.parsing.attribute";
@@ -658,11 +658,11 @@ public class FigClass extends FigClassifierBox
             highlightedFigText = (CompartmentFigText) ft;
             highlightedFigText.setHighlighted(true);
             try {
-                ParserDisplay.SINGLETON
-		    .parseOperationFig(cls,
-				       /*(MOperation)*/
-				       highlightedFigText.getOwner(),
-				       highlightedFigText.getText().trim());
+                Object operation = highlightedFigText.getOwner();
+                ParserDisplay.SINGLETON.parseOperationFig(
+                    classifier,
+                    operation,
+                    highlightedFigText.getText().trim());
                 ProjectBrowser.getInstance().getStatusBar().showStatus("");
             } catch (ParseException pe) {
                 String msg = "statusmsg.bar.error.parsing.operation";
