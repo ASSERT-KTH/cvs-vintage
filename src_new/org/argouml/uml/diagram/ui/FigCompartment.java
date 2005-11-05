@@ -1,4 +1,4 @@
-// $Id: FigCompartment.java,v 1.16 2005/11/04 23:17:36 bobtarling Exp $
+// $Id: FigCompartment.java,v 1.17 2005/11/05 01:18:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public abstract class FigCompartment extends FigGroup {
      */
     public FigCompartment(int x, int y, int w, int h) {
         bigPort = new FigRect(x, y, w, h, Color.black, Color.white);
-        bigPort.setFilled(false);
+        bigPort.setFilled(true);
         setFilled(true);
         
         bigPort.setLineWidth(0);
