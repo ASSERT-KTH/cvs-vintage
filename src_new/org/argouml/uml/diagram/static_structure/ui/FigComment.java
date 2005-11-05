@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.61 2005/11/04 23:17:36 bobtarling Exp $
+// $Id: FigComment.java,v 1.62 2005/11/05 11:25:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -432,22 +432,22 @@ public class FigComment
     // accessor methods
 
     /**
-     * Store a note in the associated model element.
+     * Stores the body text in the associated model element.
      *
-     * @param note The note to store.
+     * @param note The body text to store.
      */
-    public final void storeNote(String note) {
+    public final void storeBody(String body) {
         if (getOwner() != null) {
-            Model.getCoreHelper().setBody(getOwner(), note);
+            Model.getCoreHelper().setBody(getOwner(), body);
         }
     }
 
     /**
-     * Retrieve the note from the associated model element.
+     * Retrieve the body text from the associated model element.
      *
-     * @return The note from the associated model element.
+     * @return The body from the associated model element.
      */
-    private String retrieveNote() {
+    private String retrieveBody() {
         return (getOwner() != null)
             ? (String) Model.getFacade().getBody(getOwner())
             : null;
