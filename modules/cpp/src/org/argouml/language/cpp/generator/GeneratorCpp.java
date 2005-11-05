@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.67 2005/11/05 01:18:13 aslo Exp $
+// $Id: GeneratorCpp.java,v 1.68 2005/11/05 02:11:00 aslo Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3189,7 +3189,7 @@ public class GeneratorCpp extends Generator2
         startFileGeneration();
         for (Iterator it = elements.iterator(); it.hasNext(); ) {
             Object elem = it.next();
-            ret.add(generateFilesForElem(elem, path, deps));
+            ret.addAll(generateFilesForElem(elem, path, deps));
         }
         endFileGeneration();
         return ret;
