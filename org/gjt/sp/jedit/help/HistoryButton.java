@@ -34,12 +34,12 @@ import javax.swing.event.*;
 /**
  * History Button
  * @author Nicholas O'Leary
- * @version $Id: HistoryButton.java,v 1.2 2005/08/03 21:57:15 olearyni Exp $
+ * @version $Id: HistoryButton.java,v 1.3 2005/11/05 06:42:53 ezust Exp $
  */
-class HistoryButton extends JPanel implements ActionListener
+public class HistoryButton extends JPanel implements ActionListener
 {
-	static final int BACK    = 0;
-	static final int FORWARD = 1;
+	public static final int BACK    = 0;
+	public static final int FORWARD = 1;
 
 	//{{{ Private Members
 	private int type;

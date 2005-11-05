@@ -36,8 +36,7 @@ import org.gjt.sp.jedit.buffer.BufferIORequest;
 import org.gjt.sp.jedit.buffer.KillRing;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.gui.*;
-import org.gjt.sp.jedit.help.HelpViewerFactory;
-import org.gjt.sp.jedit.help.HelpViewerFrame;
+import org.gjt.sp.jedit.help.HelpViewerDialog;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.pluginmgr.PluginManager;
 import org.gjt.sp.jedit.search.SearchAndReplace;
@@ -49,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.253 2005/10/06 09:10:49 ezust Exp $
+ * @version $Id: jEdit.java,v 1.254 2005/11/05 06:42:53 ezust Exp $
  */
 public class jEdit
 {
@@ -2176,7 +2175,7 @@ public class jEdit
 				// Don't show the welcome message if jEdit was started
 				// with the -nosettings switch
 				if(settingsDirectory != null && getBooleanProperty("firstTime"))
-					HelpViewerFactory.create();
+					new HelpViewerDialog("welcome.html");
 				else if(jEdit.getBooleanProperty("tip.show"))
 					new TipOfTheDay(newView);
 

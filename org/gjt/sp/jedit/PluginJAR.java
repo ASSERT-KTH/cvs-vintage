@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.49 2005/01/21 01:38:24 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.50 2005/11/05 06:42:53 ezust Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -800,7 +800,7 @@ public class PluginJAR
 			BeanShell.resetClassManager();
 
 			if(actions != null)
-				jEdit.getActionContext().removeActionSet(actions);
+				jEdit.removeActionSet(actions);
 			if(browserActions != null)
 				VFSBrowser.getActionContext().removeActionSet(browserActions);
 
