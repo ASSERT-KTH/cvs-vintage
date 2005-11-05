@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.101 2005/11/04 23:17:36 bobtarling Exp $
+// $Id: PropPanelModelElement.java,v 1.102 2005/11/05 16:10:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.util.Vector;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -41,8 +39,6 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanel;
 import org.argouml.uml.ui.ScrollList;
-import org.argouml.uml.ui.UMLComboBox2;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.UMLPlainTextDocument;
@@ -84,10 +80,6 @@ public abstract class PropPanelModelElement extends PropPanel {
 
     private UMLModelElementNamespaceComboBoxModel namespaceComboBoxModel =
 	new UMLModelElementNamespaceComboBoxModel();
-
-    private static UMLModelElementStereotypeComboBoxModel
-        stereotypeComboBoxModel =
-	new UMLModelElementStereotypeComboBoxModel();
 
     private static UMLModelElementNamespaceListModel namespaceListModel =
 	new UMLModelElementNamespaceListModel();
