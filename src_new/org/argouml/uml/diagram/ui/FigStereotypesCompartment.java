@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.13 2005/11/02 13:28:14 mvw Exp $
+// $Id: FigStereotypesCompartment.java,v 1.14 2005/11/05 14:11:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,7 @@ public class FigStereotypesCompartment extends FigCompartment {
      */
     public FigStereotypesCompartment(int x, int y, int w, int h) {
         super(x, y, w, h);
+        setFilled(false);
     }
     
     
