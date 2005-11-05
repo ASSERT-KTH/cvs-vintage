@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.194 2005/11/02 08:56:29 tfmorris Exp $
+<!-- $Id: build.xml,v 1.195 2005/11/05 19:36:48 bobtarling Exp $
 This requires ANT 1.6.2
 
 if you get a message like:
@@ -751,6 +751,7 @@ Property files to be searched:
         <classpath>
 	  <pathelement location="${argo.build.classes}"/>
 	  <path refid="argo.runtime.classpath"/>
+            <path refid="argouml-mdr.runtime.classpath"/>
         </classpath>
     </java>
   </target>
@@ -785,6 +786,7 @@ Property files to be searched:
         <classpath>
 	  <pathelement location="${argo.build.classes}"/>
 	  <path refid="argo.runtime.classpath"/>
+            <path refid="argouml-mdr.runtime.classpath"/>
         </classpath>
     </java>
   </target>
