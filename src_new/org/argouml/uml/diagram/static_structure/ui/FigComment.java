@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.63 2005/11/05 11:34:42 bobtarling Exp $
+// $Id: FigComment.java,v 1.64 2005/11/05 13:56:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
+import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.ui.FigMultiLineText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.base.Geometry;
@@ -203,6 +204,19 @@ public class FigComment
             }
         }
         return figClone;
+    }
+
+    /**
+     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
+     */
+    public void setOwner(Object own) {
+        super.setOwner(own);
+        if (own != null) {
+            String body = (String)Model.getFacade().getBody(getOwner());
+            if (body != null) {
+                bodyTextFig.setText(body);
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////
