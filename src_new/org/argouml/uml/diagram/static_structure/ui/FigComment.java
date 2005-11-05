@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.62 2005/11/05 11:25:42 bobtarling Exp $
+// $Id: FigComment.java,v 1.63 2005/11/05 11:34:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,7 +175,7 @@ public class FigComment
      * @return The default text for this figure.
      */
     public String placeString() {
-        String placeString = retrieveNote();
+        String placeString = retrieveBody();
         if (placeString == null) {
             placeString = "new note";
         }
@@ -298,7 +298,7 @@ public class FigComment
     public void keyPressed(KeyEvent ke) {
         if (!readyToEdit) {
             if (Model.getFacade().isAModelElement(getOwner())) {
-                storeNote("");
+                storeBody("");
                 readyToEdit = true;
             } else {
                 LOG.debug("not ready to edit note");
@@ -410,7 +410,7 @@ public class FigComment
      */
     protected void textEdited(FigText ft) {
         if (ft == bodyTextFig) {
-            storeNote(ft.getText());
+            storeBody(ft.getText());
         }
     }
     
