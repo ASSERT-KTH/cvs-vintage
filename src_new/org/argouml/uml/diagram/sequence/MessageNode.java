@@ -1,4 +1,4 @@
-// $Id: MessageNode.java,v 1.2 2005/05/21 08:14:42 mvw Exp $
+// $Id: MessageNode.java,v 1.3 2005/11/06 02:24:26 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ public class MessageNode extends Object {
     /** Implicitly returned from being created */
     public static final int IMPLICIT_CREATED = 8;
 
+    // TODO: Need to replace this with FigMessage
     private FigMessagePort figMessagePort;
     private FigClassifierRole ownerObject;
     private int state;
@@ -79,6 +80,7 @@ public class MessageNode extends Object {
     }
 
     /**
+     * TODO: Need to replace this with getFigMessage
      * @return the figMessagePort
      */
     public FigMessagePort getFigMessagePort() {
