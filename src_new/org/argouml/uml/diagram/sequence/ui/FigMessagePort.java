@@ -1,4 +1,4 @@
-// $Id: FigMessagePort.java,v 1.5 2005/08/13 08:49:16 mvw Exp $
+// $Id: FigMessagePort.java,v 1.6 2005/11/06 01:59:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,20 +141,9 @@ public class FigMessagePort extends FigGroup {
         node = n;
     }
 
-    public int getX1() {
-	return getMyLine().getX1();
-    }
-
+    // TODO: Question - how does this differ to getY?
     public int getY1() {
 	return getMyLine().getY1();
-    }
-
-    public int getX2() {
-	return getMyLine().getX2();
-    }
-
-    public int getY2() {
-	return getMyLine().getY2();
     }
 
     private FigLine getMyLine() {
