@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationJava.java,v 1.2 2005/11/02 13:28:16 mvw Exp $
+// $Id: ModelElementNameNotationJava.java,v 1.3 2005/11/06 13:58:19 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,9 @@ public class ModelElementNameNotationJava extends ModelElementNameNotation {
      * @see org.argouml.notation.NotationProvider4#getParsingHelp()
      */
     public String getParsingHelp() {
+        if (Model.getFacade().isAStateVertex(myModelElement)) {
+            return "parsing.help.fig-statename";
+        }
         return "parsing.help.fig-nodemodelelement";
     }
 
