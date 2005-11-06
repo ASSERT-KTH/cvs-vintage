@@ -1,4 +1,4 @@
-// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.21 2005/10/21 08:44:46 tfmorris Exp $
+// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.22 2005/11/06 11:36:45 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,6 +81,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
             types[i] = Model.getCoreFactory().createClass();
             Model.getCoreHelper().addOwnedElement(m, types[i]);
         }
+        model.buildModelList();
         Model.getPump().reallyFlushModelEvents();
     }
 
@@ -129,14 +130,4 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
         Model.getPump().reallyFlushModelEvents();
         assertNull(model.getSelectedItem());
     }
-
-    /**
-     * Test deletion.
-     */
-    public void testRemovePowertype() {
-        Model.getUmlFactory().delete(types[9]);
-        Model.getPump().reallyFlushModelEvents();
-        assertTrue(!model.contains(types[9]));
-    }
-
 }

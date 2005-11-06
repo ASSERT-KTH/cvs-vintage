@@ -1,4 +1,4 @@
-// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.18 2005/10/21 08:44:46 tfmorris Exp $
+// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.19 2005/11/06 11:36:45 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,6 +72,7 @@ public class TestUMLStructuralFeatureTypeComboBoxModel extends TestCase {
             Model.getCoreHelper().addOwnedElement(m, types[i]);
         }
         Model.getCoreHelper().setType(elem, types[0]);
+        model.buildModelList();
         Model.getPump().reallyFlushModelEvents();
     }
 
