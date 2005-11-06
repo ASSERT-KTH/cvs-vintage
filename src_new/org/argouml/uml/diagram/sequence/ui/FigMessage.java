@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.7 2005/09/15 17:09:33 mvw Exp $
+// $Id: FigMessage.java,v 1.8 2005/11/06 00:18:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,7 +127,7 @@ public abstract class FigMessage
         if (result instanceof FigClassifierRole.TempFig
 	    && getOwner() != null) {
 	    result =
-		getSrcFigClassifierRole().createFigMessagePort(getOwner(),
+		getSourceFigClassifierRole().createFigMessagePort(getOwner(),
 							       result);
             setSourcePortFig(result);
         }
@@ -204,11 +204,11 @@ public abstract class FigMessage
         }
     }
 
-    public MessageNode getSrcMessagePort() {
+    public MessageNode getSourceMessageNode() {
         return ((FigMessagePort) getSourcePortFig()).getNode();
     }
 
-    public MessageNode getDestMessagePort() {
+    public MessageNode getDestMessageNode() {
         return ((FigMessagePort) getDestPortFig()).getNode();
     }
 
@@ -270,7 +270,7 @@ public abstract class FigMessage
     /**
      * @return the source figobject
      */
-    public FigClassifierRole getSrcFigClassifierRole() {
+    public FigClassifierRole getSourceFigClassifierRole() {
         return (FigClassifierRole) getSourceFigNode();
     }
 

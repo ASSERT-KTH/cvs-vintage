@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.8 2005/09/26 21:24:50 bobtarling Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.9 2005/11/06 00:18:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,7 +141,7 @@ public class RESequenceDiagramDialog extends ArgoDialog implements ActionListene
                 _classifierRole = getClassifierRole(_classifier, "obj");
                 FigClassifierRole dest = figMessage.getDestFigClassifierRole();
                 _portCnt = SequenceDiagramLayout.getNodeIndex(
-                    figMessage.getDestMessagePort().getFigMessagePort().getY());
+                    figMessage.getDestMessageNode().getFigMessagePort().getY());
                 Enumeration enu = _diagram.elements();
                 while (enu.hasMoreElements()) {
                     Object f = enu.nextElement();
@@ -156,7 +156,7 @@ public class RESequenceDiagramDialog extends ArgoDialog implements ActionListene
                     } else if (f instanceof FigMessage) {
                         dest = ((FigMessage)f).getDestFigClassifierRole();
                         int port = SequenceDiagramLayout.getNodeIndex(
-                            ((FigMessage)f).getDestMessagePort().getFigMessagePort().getY());
+                            ((FigMessage)f).getDestMessageNode().getFigMessagePort().getY());
                         if (_maxPort < port) {
                             _maxPort = port;
                         }
