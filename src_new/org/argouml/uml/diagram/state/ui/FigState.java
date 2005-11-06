@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.32 2005/11/02 13:28:15 mvw Exp $
+// $Id: FigState.java,v 1.33 2005/11/06 11:34:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,13 +97,19 @@ public abstract class FigState extends FigStateVertex {
      */
     public void setOwner(Object newOwner) {
         super.setOwner(newOwner);
-        if (Model.getFacade().isAState(newOwner)) {
+        updateInternal();
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.state.ui.FigStateVertex#initNotationProviders(java.lang.Object)
+     */
+    protected void initNotationProviders(Object own) {
+        super.initNotationProviders(own);
+        if (Model.getFacade().isAState(own)) {
             notationProviderBody = 
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                        NotationProviderFactory2.TYPE_STATEBODY, this, newOwner);
-            
-	}
-        updateInternal();
+                        NotationProviderFactory2.TYPE_STATEBODY, this, own);
+        }
     }
 
     /**
