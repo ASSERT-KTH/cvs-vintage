@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.20 2005/11/06 11:36:45 bobtarling Exp $
+// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.21 2005/11/07 06:20:30 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,4 +128,16 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
         Model.getPump().reallyFlushModelEvents();
         assertNull(model.getSelectedItem());
     }
+
+    /**
+     * Test removing the Base.
+     */
+    public void testRemoveBase() {
+        Model.getUmlFactory().delete(bases[9]);
+        // there is one extra element since removal of the base is allowed.
+        Model.getPump().reallyFlushModelEvents();
+        assertEquals(9 + 1, model.getSize());
+        assertTrue(!model.contains(bases[9]));
+    }
+
 }
