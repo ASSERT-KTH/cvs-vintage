@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalAttrName.java,v 1.25 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.26 2005/11/07 21:31:16 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,7 @@ public class CrUnconventionalAttrName extends AbstractCrUnconventionalName {
 	// check whether constant, constants are often weird and thus not a
 	// problem
 	Object/*MChangeableKind*/ ck = Model.getFacade().getChangeability(attr);
-	if (Model.getFacade().isFrozen(ck)) {
+	if (ck!=null&&Model.getFacade().isFrozen(ck)) {
 	    return NO_PROBLEM;
 	}
 
