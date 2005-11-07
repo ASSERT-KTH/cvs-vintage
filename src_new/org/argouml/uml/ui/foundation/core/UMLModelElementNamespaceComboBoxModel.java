@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.31 2005/11/02 18:32:06 tfmorris Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.32 2005/11/07 06:32:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,15 +87,16 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
     public void propertyChange(PropertyChangeEvent evt) {
         /*
          * Although we've registered for notification of ownedElement changes, a
-         * removed association doesn't necessarily mean that this is no longer
+         * added/removed association doesn't necessarily mean that this is no longer
          * available as a legal namespace. 
          * 
          * Rebuild the list from scratch to be sure it's right.
          */
-        if (evt instanceof RemoveAssociationEvent) {
-            buildModelList();
+        if (evt instanceof RemoveAssociationEvent 
+                || evt instanceof AddAssociationEvent) {
+                buildModelList();
         } else {
-            super.propertyChange(evt);
-        }
+        super.propertyChange(evt);
     }
+}
 }
