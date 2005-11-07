@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.2 2005/11/07 19:38:57 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.3 2005/11/07 23:22:30 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.argouml.uml.notation.java.InitNotationJava;
+import org.argouml.uml.notation.uml.InitNotationUml;
 
 /**
  * @author mvw@tigris.org
@@ -96,6 +99,8 @@ public class NotationProviderFactory2 {
     public static NotationProviderFactory2 getInstance() {
         if (instance == null) {
             instance = new NotationProviderFactory2();
+            InitNotationUml.init();
+            InitNotationJava.init();
         }
         return instance;
     }
