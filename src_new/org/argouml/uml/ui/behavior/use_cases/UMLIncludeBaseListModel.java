@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseListModel.java,v 1.1 2005/10/10 12:46:41 mkl Exp $
+// $Id: UMLIncludeBaseListModel.java,v 1.2 2005/11/07 15:29:42 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,20 +35,23 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
 public class UMLIncludeBaseListModel extends UMLModelElementListModel2 {
 
     public UMLIncludeBaseListModel() {
-        // there is a bug in NSUML so this model
-        // listens for addition modelevents
-        super("addition");
+        super("base");
         Model.getPump().addClassModelEventListener(this,
                 Model.getMetaTypes().getNamespace(), "ownedElement");
     }
 
-    
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
+     */
     protected void buildModelList() {
         if (!isEmpty())
             removeAllElements();
         addElement(Model.getFacade().getBase(getTarget()));
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(java.lang.Object)
+     */
     protected boolean isValidElement(Object element) {
         return Model.getFacade().isAUseCase(element)
             && Model.getFacade().getNamespace(element)
