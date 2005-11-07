@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.2 2005/07/05 14:01:23 bobtarling Exp $
+// $Id: XmiReader.java,v 1.3 2005/11/07 21:25:04 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.model;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.xml.sax.InputSource;
@@ -46,8 +47,19 @@ public interface XmiReader {
      * @param pIs the input source for parsing
      * @return MModel the UML model
      * @throws UmlException on any error
+     * @deprecated A Model file can have several top levels objects, including Activity Diagrams,
+     * so one should handle collection.
      */
     Object parseToModel(InputSource pIs) throws UmlException;
+
+    /**
+     * Parses a given inputsource to a model. Does not override the novosoft
+     * parse method since that does not have the right signature.
+     * @param pIs the input source for parsing
+     * @return MModel the UML model
+     * @throws UmlException on any error
+     */
+    Collection parse(InputSource pIs) throws UmlException;
 
     /**
      * @return the map
