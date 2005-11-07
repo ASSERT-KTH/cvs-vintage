@@ -1,4 +1,4 @@
-// $Id: XmiReaderImpl.java,v 1.3 2005/04/16 14:01:21 mvw Exp $
+// $Id: XmiReaderImpl.java,v 1.4 2005/11/07 23:49:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.model.uml;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,6 +79,10 @@ public class XmiReaderImpl implements XmiReader {
         } catch (IOException e) {
             throw new UmlException(e);
         }
+    }
+
+    public Collection parse(InputSource pIs) throws UmlException {
+        return null;
     }
 
     /**
