@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.62 2005/11/05 16:09:24 bobtarling Exp $
+// $Id: UMLComboBoxModel2.java,v 1.63 2005/11/07 06:28:27 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
         Logger.getLogger(UMLComboBoxModel2.class);
 
     /**
-     * The taget of the comboboxmodel. This is some UML modelelement
+     * The target of the comboboxmodel. This is some UML modelelement
      */
     private Object comboBoxTarget = null;
 
@@ -158,6 +158,16 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
                 Object o = getChangedElement(evt);
                 removeElement(o);
             }
+        } else if (evt instanceof AddAssociationEvent) {
+            if (getTarget() != null && isValidEvent(evt)) {
+                Object o = getChangedElement(evt);
+                addElement(o);
+            }
+        } else if (evt instanceof RemoveAssociationEvent && isValidEvent(evt)) {
+            Object o = getChangedElement(evt);
+            if (contains(o)) {
+                removeElement(o);
+            }
         }
     }
 
@@ -186,11 +196,9 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
      */
     protected void setElements(Collection elements) {
         if (elements != null) {
-            //removeAllElements();
             if (!objects.isEmpty()) {
                 fireIntervalRemoved(this, 0, objects.size() - 1);
             }
-            //addAll(elements);
             objects = Collections.synchronizedList(new ArrayList(elements));
             if (!objects.isEmpty()) {
                 fireIntervalAdded(this, 0, objects.size() - 1);
@@ -450,8 +458,9 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
     protected boolean isValidEvent(PropertyChangeEvent e) {
         boolean valid = false;
         if (!(getChangedElement(e) instanceof Collection)) {
-            valid = isValidElement(getChangedElement(e));
-            if (!valid && e.getNewValue() == null && e.getOldValue() != null) {
+            if ((e.getNewValue() == null && e.getOldValue() != null) 
+                    // Don't try to test this if we're removing the element
+                    || isValidElement(getChangedElement(e))) {
                 valid = true; // we tried to remove a value
             }
         } else {
@@ -565,7 +574,8 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
      */
     protected boolean isFireListEvents() {
         return fireListEvents;
-}
+    }
+    
     /**
      * @param fireListEvents The fireListEvents to set.
      */
