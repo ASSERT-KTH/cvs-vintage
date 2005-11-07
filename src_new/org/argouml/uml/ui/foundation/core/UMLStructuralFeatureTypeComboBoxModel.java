@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.22 2005/11/06 14:24:41 rastaman Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.23 2005/11/07 06:30:16 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,7 +106,12 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
                 }
             }
         });
+        //Object model =
+        //    ProjectManager.getManager().getCurrentProject().getRoot();
         Project p = ProjectManager.getManager().getCurrentProject();
+        if (p == null) {
+            return;
+        }
         Iterator it = p.getUserDefinedModels().iterator();
 
         while (it.hasNext()) {
@@ -114,7 +119,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 
             addAllUniqueModelElementsFrom(elements, paths, Model
                     .getModelManagementHelper().getAllModelElementsOfKind(
-                            model, Model.getMetaTypes().getClass()));
+                            model, Model.getMetaTypes().getUMLClass()));
             addAllUniqueModelElementsFrom(elements, paths, Model
                     .getModelManagementHelper().getAllModelElementsOfKind(
                             model, Model.getMetaTypes().getInterface()));
@@ -149,19 +154,16 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt instanceof AddAssociationEvent) {
-            if (getTarget() != null && isValidEvent(evt)) {
-                Object o = getChangedElement(evt);
-                setFireListEvents(false);
-                addElement(o);
-                setFireListEvents(true);
-            }
-        } else if (evt instanceof RemoveAssociationEvent) {
-            Object o = getChangedElement(evt);
-            if (contains(o)) {
-                setFireListEvents(false);
-                removeElement(o);
-                setFireListEvents(true);
+        /*
+         * The default behavior for super implementation is
+         * to add/remove elements from the list, but it isn't
+         * that simple here, because we'll receive these events
+         * on a simple type change.
+         */
+        if (evt instanceof AddAssociationEvent
+                || evt instanceof RemoveAssociationEvent) {
+            if ("ownedElement".equals(evt.getPropertyName())) {
+                buildModelList();
             }
         } else {
             super.propertyChange(evt);
