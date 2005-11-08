@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.194 2005/11/05 16:23:48 bobtarling Exp $
+// $Id: FigClass.java,v 1.195 2005/11/08 17:49:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,7 +172,7 @@ public class FigClass extends FigClassifierBox
         getStereotypeFig().setFilled(false);
         getStereotypeFig().setHeight(STEREOHEIGHT + 1);
         // +1 to have 1 pixel overlap with getNameFig()
-        getStereotypeFig().setVisible(false);
+        getStereotypeFig().setVisible(true);
         
         borderFig = new FigEmptyRect(10, 10, 0, 0);
         borderFig.setLineWidth(1);
