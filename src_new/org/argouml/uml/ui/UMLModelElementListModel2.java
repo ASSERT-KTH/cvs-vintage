@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.33 2005/07/22 07:31:14 mkl Exp $
+// $Id: UMLModelElementListModel2.java,v 1.34 2005/11/09 21:49:57 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,9 +44,10 @@ import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 
 /**
- * The model for a list that contains Mbases. The state of the MBase is still
- * kept in the Mbase itself. This list is only to be used as the model for some
- * GUI element like UMLLinkedList
+ * The model for a list that contains ModelElements. The state of the Element is
+ * still kept in the model subsystem itself. This list is only to be used as the
+ * model for some GUI element like UMLLinkedList.
+ * 
  * @since Oct 2, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -101,6 +102,9 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
         this.listTarget = t;
     }
 
+    /**
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
     public void propertyChange(PropertyChangeEvent e) {
         if (e instanceof AttributeChangeEvent) {
             if (isValidEvent(e)) {
@@ -116,7 +120,7 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
             if (isValidEvent(e)) {
                 Object o = getChangedElement(e);
                 if (o instanceof Collection) {
-                    ArrayList tempList = new ArrayList((Collection)o);
+                    ArrayList tempList = new ArrayList((Collection) o);
                     Iterator it = tempList.iterator();
                     while (it.hasNext()) {
                         Object o2 = it.next();
@@ -208,7 +212,7 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
      */
     protected Object getChangedElement(PropertyChangeEvent e) {
         if (e instanceof AssociationChangeEvent) {
-            return ((AssociationChangeEvent)e).getChangedValue();
+            return ((AssociationChangeEvent) e).getChangedValue();
         }
         return e.getNewValue();
     }
@@ -251,9 +255,6 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
 
             if (Model.getFacade().isABase(theNewTarget)) {
                 listTarget = theNewTarget;
-                // UmlModelEventPump.getPump()
-                // .removeModelEventListener(this, (MBase)_target,
-                // _eventName);
                 Model.getPump().
                     addModelEventListener(this, listTarget, eventName);
 

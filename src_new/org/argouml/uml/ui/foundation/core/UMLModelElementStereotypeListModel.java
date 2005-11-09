@@ -1,4 +1,4 @@
-// $Id: UMLModelElementStereotypeListModel.java,v 1.2 2005/10/24 22:57:47 bobtarling Exp $
+// $Id: UMLModelElementStereotypeListModel.java,v 1.3 2005/11/09 21:49:56 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,6 +67,9 @@ public class UMLModelElementStereotypeListModel
         return Model.getFacade().isAStereotype(element);
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#buildPopup(javax.swing.JPopupMenu, int)
+     */
     public boolean buildPopup(JPopupMenu popup, int index) {
         // Add stereotypes submenu
         Action[] stereoActions =

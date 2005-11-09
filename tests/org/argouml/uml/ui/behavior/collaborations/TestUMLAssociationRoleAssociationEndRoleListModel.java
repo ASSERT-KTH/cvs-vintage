@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleAssociationEndRoleListModel.java,v 1.14 2005/08/12 19:30:28 mvw Exp $
+// $Id: TestUMLAssociationRoleAssociationEndRoleListModel.java,v 1.15 2005/11/09 21:49:57 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,7 @@ public class TestUMLAssociationRoleAssociationEndRoleListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-        		Model.getCoreHelper().removeConnection(getElem(),elements[i]);
+            Model.getCoreHelper().removeConnection(getElem(), elements[i]);
         }
     }
 

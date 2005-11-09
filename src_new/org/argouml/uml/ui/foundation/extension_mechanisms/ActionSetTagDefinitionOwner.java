@@ -1,4 +1,4 @@
-// $Id: ActionSetTagDefinitionOwner.java,v 1.2 2005/10/15 12:48:50 rastaman Exp $
+// $Id: ActionSetTagDefinitionOwner.java,v 1.3 2005/11/09 21:49:56 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class ActionSetTagDefinitionOwner extends UMLAction {
      * The Singleton.
      */
     public static final ActionSetTagDefinitionOwner SINGLETON =
-    new ActionSetTagDefinitionOwner();
+            new ActionSetTagDefinitionOwner();
     
     /**
      * Constructor.
@@ -61,20 +61,21 @@ public class ActionSetTagDefinitionOwner extends UMLAction {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         Object source = e.getSource();
-        LOG.info("Receiving "+e+"/"+e.getID()+"/"+e.getActionCommand());
-        if (source instanceof UMLComboBox2 
-                && e.getModifiers()==ActionEvent.MOUSE_EVENT_MASK) {
+        LOG.info("Receiving " + e + "/" + e.getID() + "/"
+                + e.getActionCommand());
+        if (source instanceof UMLComboBox2
+                && e.getModifiers() == ActionEvent.MOUSE_EVENT_MASK) {
             UMLComboBox2 combo = (UMLComboBox2) source;
             final Object o = combo.getSelectedItem();
             final Object tagDefinition = combo.getTarget();
-            LOG.info("Set owner to "+o);
-            if (Model.getFacade().isAStereotype(o) &&
-            		Model.getFacade().isATagDefinition(tagDefinition)) {
-                   SwingUtilities.invokeLater(new Runnable() {
-                       public void run() {
-                        Model.getCoreHelper().setOwner(tagDefinition,o);
-                       }
-                   });
+            LOG.info("Set owner to " + o);
+            if (Model.getFacade().isAStereotype(o)
+                    && Model.getFacade().isATagDefinition(tagDefinition)) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        Model.getCoreHelper().setOwner(tagDefinition, o);
+                    }
+                });
             }
         }
     }
