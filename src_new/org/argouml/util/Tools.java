@@ -1,4 +1,4 @@
-// $Id: Tools.java,v 1.20 2005/01/09 14:59:13 linus Exp $
+// $Id: Tools.java,v 1.21 2005/11/09 21:19:54 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class Tools {
 
     private static final String[] PACKAGELIST =
 	new String[]{
-	    "org.argouml.application", "ru.novosoft.uml",
+	    "org.argouml.application", "org.netbeans.mdr",
             "org.tigris.gef.base", "org.xml.sax",
             "java.lang", "org.apache.log4j",
 	};
@@ -94,7 +94,8 @@ public class Tools {
             Class cls = Class.forName("org.tigris.gef.base.Editor");
             cls = Class.forName("org.xml.sax.AttributeList");
             cls = Class.forName("org.apache.log4j.Logger");
-
+            cls = Class.forName("org.netbeans.api.mdr.MDRManager");
+            
             StringBuffer sb = new StringBuffer();
 
             String saxFactory =

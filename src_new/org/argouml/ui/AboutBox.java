@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.46 2005/10/16 21:17:23 linus Exp $
+// $Id: AboutBox.java,v 1.47 2005/11/09 21:19:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,8 +130,6 @@ public class AboutBox extends JDialog {
 		    scrSize.height / 2 - imgHeight / 2);
 	getContentPane().setLayout(new BorderLayout(0, 0));
 
-        /* MVW: Added the inset JPanel, so that the image width is also
-        applied to the "ArgoUML Vx.xx.x" part */
         JPanel myInsetPanel = new JPanel();
         /* top, left, bottom, right */
         myInsetPanel.setBorder(new EmptyBorder(30, 40, 40, 40));
@@ -190,7 +188,7 @@ public class AboutBox extends JDialog {
         // Not localized:
         buf.append("* GEF (gef.tigris.org)\n");
         buf.append("* Xerces-J 2.6.2\n");
-        buf.append("* NSUML (nsuml.sourceforge.net)\n");
+        buf.append("* NetBeans MDR (mdr.netbeans.org    )\n");
         buf.append("* TU-Dresden OCL-Compiler "
                 	  + "(dresden-ocl.sourceforge.net)\n");
         buf.append("* ANTLR 2.7.2 (www.antlr.org)\n");
@@ -262,7 +260,7 @@ public class AboutBox extends JDialog {
         buf.append("+ Markus Klink\n");
         buf.append("+ Michiel van der Wulp\n");
         buf.append("+ Thomas Neustupny\n");
-        buf.append("+ Tom Morris\n");
+        buf.append("+ Tom Morris (tfmorris@gmail.com\n");
         buf.append("+ Yayan" + cpbi + "\n\n");
 
         buf.append(Translator.messageFormat(
