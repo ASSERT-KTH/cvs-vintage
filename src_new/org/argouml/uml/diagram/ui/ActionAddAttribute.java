@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.20 2005/06/17 20:51:31 mvw Exp $
+// $Id: ActionAddAttribute.java,v 1.21 2005/11/09 00:16:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.diagram.ui;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 
+import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -49,34 +50,33 @@ public class ActionAddAttribute extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	Object target = TargetManager.getInstance().getModelTarget();
-	Object/*MClassifier*/ cls = null;
+        Object target = TargetManager.getInstance().getModelTarget();
+        Object classifier = null;
+        
+        if (Model.getFacade().isAClassifier(target)
+                || Model.getFacade().isAAssociationEnd(target)) {
+            classifier = target;
+        } else if (Model.getFacade().isAFeature(target)
+        	 && Model.getFacade().isAClass(
+                                     Model.getFacade().getOwner(target))) {
+            classifier = Model.getFacade().getOwner(target);
+        } else {
+            return;
+        }
 
-	if (Model.getFacade().isAClassifier(target)
-            || Model.getFacade().isAAssociationEnd(target)) {
-	    cls = target;
-	} else if (Model.getFacade().isAFeature(target)
-		 && Model.getFacade().isAClass(
-                                 Model.getFacade().getOwner(target))) {
-	    cls = Model.getFacade().getOwner(target);
-	} else {
-	    return;
-	}
+        Project project = ProjectManager.getManager().getCurrentProject();
 
-	Collection propertyChangeListeners =
-	    ProjectManager.getManager()
-	    	.getCurrentProject().findFigsForMember(cls);
-	Object intType =
-	    ProjectManager.getManager()
-	    	.getCurrentProject().findType("int");
-	Object model =
-	    ProjectManager.getManager()
-	    	.getCurrentProject().getModel();
-	Object attr =
-	    Model.getCoreFactory().buildAttribute(cls, model, intType,
-	            propertyChangeListeners);
-	TargetManager.getInstance().setTarget(attr);
-	super.actionPerformed(ae);
+        Collection propertyChangeListeners =
+            project.findFigsForMember(classifier);
+        Object intType = project.findType("int");
+        Object model = project.getModel();
+        Object attr = Model.getCoreFactory().buildAttribute(
+                classifier, 
+                model, 
+                intType,
+                propertyChangeListeners);
+        TargetManager.getInstance().setTarget(attr);
+        super.actionPerformed(ae);
     }
 
     /**
