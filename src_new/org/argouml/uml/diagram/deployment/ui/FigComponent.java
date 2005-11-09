@@ -1,4 +1,4 @@
-// $Id: FigComponent.java,v 1.46 2005/10/17 11:26:56 bobtarling Exp $
+// $Id: FigComponent.java,v 1.47 2005/11/09 21:52:01 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -254,7 +254,7 @@ public class FigComponent extends FigNodeModelElement {
 
             if (getLayer() != null) {
                 // elementOrdering(figures);
-                List contents = getLayer().getContents();
+                List contents = new ArrayList(getLayer().getContents());
                 Iterator it = contents.iterator();
                 while (it.hasNext()) {
                     Object o = it.next();
