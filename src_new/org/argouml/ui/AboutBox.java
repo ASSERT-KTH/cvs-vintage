@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.47 2005/11/09 21:19:55 tfmorris Exp $
+// $Id: AboutBox.java,v 1.48 2005/11/09 21:35:10 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,7 +260,7 @@ public class AboutBox extends JDialog {
         buf.append("+ Markus Klink\n");
         buf.append("+ Michiel van der Wulp\n");
         buf.append("+ Thomas Neustupny\n");
-        buf.append("+ Tom Morris (tfmorris@gmail.com\n");
+        buf.append("+ Tom Morris (tfmorris@gmail.com)\n");
         buf.append("+ Yayan" + cpbi + "\n\n");
 
         buf.append(Translator.messageFormat(
