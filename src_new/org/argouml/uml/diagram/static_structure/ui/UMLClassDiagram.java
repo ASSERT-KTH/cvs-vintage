@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.79 2005/10/28 23:17:50 tfmorris Exp $
+// $Id: UMLClassDiagram.java,v 1.80 2005/11/09 18:40:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,8 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
-import org.argouml.uml.diagram.ui.ActionAddAttribute;
-import org.argouml.uml.diagram.ui.ActionAddOperation;
+import org.argouml.ui.targetmanager.ActionAddOperation;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
@@ -482,7 +482,8 @@ public class UMLClassDiagram extends UMLDiagram {
      */
     private Action getActionAttribute() {
         if (actionAttribute == null) {
-            actionAttribute = new ActionAddAttribute();
+            actionAttribute =
+                TargetManager.getInstance().getAddAttributeAction();
         }
         return actionAttribute;
     }
@@ -492,7 +493,8 @@ public class UMLClassDiagram extends UMLDiagram {
      */
     private Action getActionOperation() {
         if (actionOperation == null) {
-            actionOperation = new ActionAddOperation();
+            actionOperation = 
+                TargetManager.getInstance().getAddOperationAction();
         }
         return actionOperation;
     }

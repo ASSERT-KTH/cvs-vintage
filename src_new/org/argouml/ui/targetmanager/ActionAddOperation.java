@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.21 2005/11/09 00:16:04 bobtarling Exp $
+// $Id: ActionAddOperation.java,v 1.1 2005/11/09 18:40:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,78 +22,73 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.ui;
+package org.argouml.ui.targetmanager;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.Iterator;
 
+import javax.swing.AbstractAction;
+
+import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.ui.UMLAction;
 
 /**
- * Action to add an attribute to a classifier.<p>
- *
- * @stereotype singleton
+ * Action to add an operation to a classifier.
  */
-public class ActionAddAttribute extends UMLAction {
+public class ActionAddOperation extends AbstractAction {
+    ////////////////////////////////////////////////////////////////
+    // constructors
+
     /**
-     * The constructor for this class.
+     * The constructor.
      */
-    public ActionAddAttribute() {
-        super("button.new-attribute", true, HAS_ICON);
+    ActionAddOperation() {
+        super(Translator.localize("button.new-operation"),
+                ResourceLoaderWrapper.lookupIcon("button.new-operation"));
     }
+
+    ////////////////////////////////////////////////////////////////
+    // main methods
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-        Object target = TargetManager.getInstance().getModelTarget();
+        Project project = ProjectManager.getManager().getCurrentProject();
+        Object target =  TargetManager.getInstance().getModelTarget();
         Object classifier = null;
         
-        if (Model.getFacade().isAClassifier(target)
-                || Model.getFacade().isAAssociationEnd(target)) {
+        if (Model.getFacade().isAClassifier(target)) {
             classifier = target;
-        } else if (Model.getFacade().isAFeature(target)
-        	 && Model.getFacade().isAClass(
-                                     Model.getFacade().getOwner(target))) {
+        } else if (Model.getFacade().isAFeature(target)) {
             classifier = Model.getFacade().getOwner(target);
         } else {
             return;
         }
-
-        Project project = ProjectManager.getManager().getCurrentProject();
-
+        
         Collection propertyChangeListeners =
             project.findFigsForMember(classifier);
-        Object intType = project.findType("int");
         Object model = project.getModel();
-        Object attr = Model.getCoreFactory().buildAttribute(
-                classifier, 
-                model, 
-                intType,
-                propertyChangeListeners);
-        TargetManager.getInstance().setTarget(attr);
-        super.actionPerformed(ae);
-    }
+        Object voidType = project.findType("void");
+        Object oper = Model.getCoreFactory().buildOperation(
+                classifier, model, voidType, propertyChangeListeners);
+        TargetManager.getInstance().setTarget(oper);
 
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() {
-        /* Check if multiple items are selected: */
-        if (TargetManager.getInstance().getTargets().size() > 1) {
-            return false;
+        // TODO: None of the following should be needed. Fig such as FigClass and
+        // FigInterface should be listening for add/remove events and know when
+        // an operation has been added and add a listener to the operation to themselves
+        // See similar in FigOperationsCompartment
+        Iterator it = project.findAllPresentationsFor(classifier).iterator();
+        while (it.hasNext()) {
+            PropertyChangeListener listener =
+                (PropertyChangeListener) it.next();
+            Model.getPump().removeModelEventListener(listener, oper);
+            Model.getPump().addModelEventListener(listener, oper);
         }
-
-	Object target =  TargetManager.getInstance().getModelTarget();
-	return super.shouldBeEnabled()
-	       && (Model.getFacade().isAClass(target)
-		   || (Model.getFacade().isAFeature(target)
-		       && Model.getFacade().isAClass(
-                                       Model.getFacade().getOwner(target)))
-           || Model.getFacade().isAAssociationEnd(target));
     }
-} /* end class ActionAddAttribute */
+} /* end class ActionAddOperation */

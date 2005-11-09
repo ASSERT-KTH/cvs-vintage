@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.75 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelClass.java,v 1.76 2005/11/09 18:40:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,8 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.diagram.ui.ActionAddAttribute;
-import org.argouml.uml.diagram.ui.ActionAddOperation;
+import org.argouml.ui.targetmanager.ActionAddOperation;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -94,8 +94,8 @@ public class PropPanelClass extends PropPanelClassifier {
                 getOwnedElementsScroll());
 
         addAction(new ActionNavigateNamespace());
-        addAction(new ActionAddAttribute());
-        addAction(new ActionAddOperation());
+        addAction(TargetManager.getInstance().getAddAttributeAction());
+        addAction(TargetManager.getInstance().getAddOperationAction());
         addAction(getActionNewReception());
         addAction(new ActionNewInnerClass());
         addAction(new ActionNewClass());

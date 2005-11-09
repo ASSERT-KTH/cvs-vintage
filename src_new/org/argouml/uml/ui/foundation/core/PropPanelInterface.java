@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.58 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelInterface.java,v 1.59 2005/11/09 18:40:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,8 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.diagram.ui.ActionAddOperation;
+import org.argouml.ui.targetmanager.ActionAddOperation;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
@@ -67,7 +68,7 @@ public class PropPanelInterface extends PropPanelClassifier {
             getFeatureScroll());
 
 	addAction(new ActionNavigateNamespace());
-	addAction(new ActionAddOperation());
+	addAction(TargetManager.getInstance().getAddOperationAction());
 	addAction(getActionNewReception());
 	addAction(new ActionNewInterface());
 	addAction(new ActionNewStereotype());
