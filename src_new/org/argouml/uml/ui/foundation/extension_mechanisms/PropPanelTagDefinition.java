@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.2 2005/10/15 12:48:50 rastaman Exp $
+// $Id: PropPanelTagDefinition.java,v 1.3 2005/11/09 18:42:08 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -83,7 +84,7 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
 
         addAction(new ActionNavigateNamespace());
         addAction(new ActionNewTagDefinition());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(new ActionDeleteSingleModelElement());  
     }
 
     /**
