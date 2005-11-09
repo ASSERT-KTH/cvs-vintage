@@ -1,4 +1,4 @@
-// $Id: FigAttributesCompartment.java,v 1.13 2005/11/04 23:17:36 bobtarling Exp $
+// $Id: FigAttributesCompartment.java,v 1.14 2005/11/09 00:13:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.notation.Notation;
 import org.argouml.notation.NotationContext;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.static_structure.ui.FigFeature;
 import org.tigris.gef.presentation.Fig;
 
@@ -112,6 +115,20 @@ public class FigAttributesCompartment extends FigFeaturesCompartment {
      * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#createFeature()
      */
     public void createFeature() {
-        (new ActionAddAttribute()).actionPerformed(null);
+        Object classifier = getGroup().getOwner();
+        
+        Project project = ProjectManager.getManager().getCurrentProject();
+
+        Collection propertyChangeListeners =
+            project.findFigsForMember(classifier);
+        Object intType = project.findType("int");
+        Object model = project.getModel();
+        Object attr = Model.getCoreFactory().buildAttribute(
+                classifier, 
+                model, 
+                intType,
+                propertyChangeListeners);
+        populate();
+        TargetManager.getInstance().setTarget(attr);
     }
 }
