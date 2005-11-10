@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.2 2005/11/10 10:16:01 bobtarling Exp $
+// $Id: ActionAddOperation.java,v 1.3 2005/11/10 12:16:27 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,18 +29,17 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.swing.AbstractAction;
-
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * Action to add an operation to a classifier.
  */
-class ActionAddOperation extends AbstractAction {
+class ActionAddOperation extends UndoableAction {
     ////////////////////////////////////////////////////////////////
     // constructors
 
@@ -59,6 +58,9 @@ class ActionAddOperation extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
+        
+        super.actionPerformed(ae);
+        
         Project project = ProjectManager.getManager().getCurrentProject();
         Object target =  TargetManager.getInstance().getModelTarget();
         Object classifier = null;
