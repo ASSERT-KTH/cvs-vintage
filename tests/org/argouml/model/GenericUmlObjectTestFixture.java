@@ -1,4 +1,4 @@
-// $Id: GenericUmlObjectTestFixture.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// $Id: GenericUmlObjectTestFixture.java,v 1.2 2005/11/10 04:24:20 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.model;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
-
-import org.argouml.model.Model;
 
 /**
  * @author Thierry Lach
@@ -70,24 +68,26 @@ public abstract class GenericUmlObjectTestFixture extends TestCase {
         }
     }
 
-    private void assertNotNsumlClass(Class c) {
-        if (c != null && c.getName().startsWith("ru.novosoft")) {
-	    fail("Found nsuml class " + c.getName());
+    private void assertNotProhibitedClass(Class c) {
+        if (c != null && !c.getName().startsWith("org.argouml")) {
+	    fail("Found non-ArgoUML class " + c.getName());
         }
     }
 
     /**
-     * Ensure that the calling class does not reference NSUML in any way.
-     *
-     * @param self the testcase
+     * Ensure that the calling class does not reference non-ArgoUML classes in
+     * any way.
+     * 
+     * @param self
+     *            the testcase
      */
     protected void validateTestClassIsGeneric(TestCase self) {
         // TODO: Use reflection against the test case to ensure that it
-        // does not import nsuml
+        // does not import non-ArgoUML classes
 
 	// Check superclass.
-        //Make sure this class does not extend or reference nsuml.
-        assertNotNsumlClass(self.getClass().getSuperclass());
+        //Make sure this class does not extend or reference non-ArgoUML classes
+        assertNotProhibitedClass(self.getClass().getSuperclass());
 
 	// Enumerate declaring class
 
