@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.41 2005/10/10 12:46:41 mkl Exp $
+// $Id: PropPanelInclude.java,v 1.42 2005/11/10 03:58:56 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,15 +92,6 @@ public class PropPanelInclude extends PropPanelModelElement {
 
     /**
      * Get the current base use case of the include relationship.<p>
-     *
-     * <em>Note</em>. There is a bug in NSUML, where the "include" and
-     * "include2" associations of a use case are back to front, i.e
-     * "include" is used as the opposite end of "addition" to point to
-     * an including use case, rather than an included use case.  Fixed
-     * within the include relationship, rather than the use case, by
-     * reversing the use of access functions for the "base" and
-     * "addition" associations in the code.<p>
-     *
      * @return The UseCase that is the base of this include relationship or
      * <code>null</code> if there is none.
      */
@@ -108,39 +99,23 @@ public class PropPanelInclude extends PropPanelModelElement {
         Object base   = null;
         Object      target = getTarget();
 
-        // Note that because of the NSUML bug, we must use getAddition() rather
-        // than getBase() to get the base use case.
-
         if (Model.getFacade().isAInclude(target)) {
-            base = Model.getFacade().getAddition(target);
+            base = Model.getFacade().getBase(target);
         }
         return base;
     }
 
     /**
      * Set the base use case of the include relationship.<p>
-     *
-     * <em>Note</em>. There is a bug in NSUML, where the "include" and
-     * "include2" associations of a use case are back to front, i.e
-     * "include" is used as the opposite end of "addition" to point to
-     * an including use case, rather than an included use case.  Fixed
-     * within the include relationship, rather than the use case, by
-     * reversing the use of access functions for the "base" and
-     * "addition" associations in the code.<p>
-     *
      * @param base The UseCase to set as the base of this include relationship.
      */
     public void setBase(Object/*MUseCase*/ base) {
         Object target = getTarget();
 
-        // Note that because of the NSUML bug, we must use setAddition() rather
-        // than setBase() to set the base use case.
-
         if (Model.getFacade().isAInclude(target)) {
-            Model.getUseCasesHelper().setAddition(target, base);
+            Model.getUseCasesHelper().setBase(target, base);
         }
     }
-
 
     /**
      * Get the current addition use case of the include relationship.<p>
@@ -170,9 +145,6 @@ public class PropPanelInclude extends PropPanelModelElement {
     public void setAddition(Object/*MUseCase*/ addition) {
         Object target = getTarget();
 
-        // Note that because of the NSUML bug, we must use setBase() rather
-        // than setAddition() to set the addition use case.
-
         if (Model.getFacade().isAInclude(target)) {
             Model.getUseCasesHelper().setAddition(target, addition);
         }
@@ -188,8 +160,7 @@ public class PropPanelInclude extends PropPanelModelElement {
      * temporarily, for example while reversing a relationship. It is
      * up to a critic to track this.<p>
      *
-     * @param modElem the {@link
-     * ru.novosoft.uml.foundation.core.MModelElement} to test.
+     * @param modElem the ModelElement to test.
      *
      * @return <code>true</code> if modElem is a use case,
      * <code>false</code> otherwise.
