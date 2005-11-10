@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.57 2005/06/07 07:19:59 bobtarling Exp $
+// $Id: UmlModelEventPump.java,v 1.58 2005/11/10 22:56:15 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1418,7 +1418,7 @@ class ClassListenerHashMap {
 class EventTreeDefinition {
     private static final Logger LOG =
         Logger.getLogger(EventTreeDefinition.class);
-    private static final String FILE_NAME = "org/argouml/eventtree.xml";
+    private static final String FILE_NAME = "org/argouml/model/uml/eventtree.xml";
     private Map definition = new HashMap();
 
     /**
