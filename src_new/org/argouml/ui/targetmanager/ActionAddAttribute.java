@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.1 2005/11/09 18:40:15 bobtarling Exp $
+// $Id: ActionAddAttribute.java,v 1.2 2005/11/10 10:16:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.argouml.model.Model;
  *
  * @stereotype singleton
  */
-public class ActionAddAttribute extends AbstractAction {
+class ActionAddAttribute extends AbstractAction {
     /**
      * The constructor for this class.
      */

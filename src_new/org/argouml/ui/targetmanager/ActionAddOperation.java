@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.1 2005/11/09 18:40:15 bobtarling Exp $
+// $Id: ActionAddOperation.java,v 1.2 2005/11/10 10:16:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.argouml.model.Model;
 /**
  * Action to add an operation to a classifier.
  */
-public class ActionAddOperation extends AbstractAction {
+class ActionAddOperation extends AbstractAction {
     ////////////////////////////////////////////////////////////////
     // constructors
 

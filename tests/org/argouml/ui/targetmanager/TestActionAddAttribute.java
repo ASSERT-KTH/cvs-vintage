@@ -1,4 +1,4 @@
-// $Id: TestActionAddAttribute.java,v 1.4 2005/07/28 14:09:41 linus Exp $
+// $Id: TestActionAddAttribute.java,v 1.1 2005/11/10 10:16:02 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.ui;
+package org.argouml.ui.targetmanager;
 
 import junit.framework.TestCase;
 
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
+import org.argouml.ui.targetmanager.ActionAddAttribute;
 
 
 /**

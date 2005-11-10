@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.76 2005/11/09 18:40:16 bobtarling Exp $
+// $Id: PropPanelClass.java,v 1.77 2005/11/10 10:16:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.ui.targetmanager.ActionAddOperation;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
