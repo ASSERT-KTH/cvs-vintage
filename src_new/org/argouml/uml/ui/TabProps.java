@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.77 2005/10/11 21:23:58 rastaman Exp $
+// $Id: TabProps.java,v 1.78 2005/11/10 04:29:48 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -650,20 +650,11 @@ public class TabProps
         LOG.info("Trying to locate panel for: " + targetClassName);
         int lastDot = targetClassName.lastIndexOf(".");
 
-        if (targetClassName.startsWith("ru.novosoft.uml.")) {
-            //remove "ru.novosoft.uml."
-            if (lastDot > 0) {
-                base = targetClassName.substring(16, lastDot + 1);
-            } else {
-                base = targetClassName.substring(16);
-            }
+        //remove "org.omg.uml."
+        if (lastDot > 0) {
+            base = targetClassName.substring(12, lastDot + 1);
         } else {
-            //remove "org.omg.uml."
-            if (lastDot > 0) {
-                base = targetClassName.substring(12, lastDot + 1);
-            } else {
-                base = targetClassName.substring(12);
-            }
+            base = targetClassName.substring(12);
         }
         
         targetClassName = Model.getMetaTypes().getName(targetClass);
