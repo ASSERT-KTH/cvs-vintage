@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.71 2005/11/09 18:40:16 bobtarling Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.72 2005/11/10 04:22:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
-import org.argouml.ui.targetmanager.ActionAddAttribute;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateAssociation;
@@ -105,11 +104,10 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
 
     /**
      * The panel with the radiobuttons to set the visibility (public, protected,
-     * private) of this associationend. There is a bug (or inconsistency) with
-     * NSUML since NSUML equals this visibility with the visibility of a
-     * modelelement. The UML 1.3 spec does not. Since I try to follow the spec
-     * as much as possible, the panel is defined here and not in
-     * PropPanelModelElement
+     * private) of this associationend. <p>
+     * TODO: There was a bug in NSUML where it equated the visibility of
+     * an AssociationEnd with the visibility of its associated element.
+     * Make sure that we are correctly following the UML spec. - tfm 20051109
      */
     private JPanel visibilityRadioButtonPanel;
 
@@ -171,6 +169,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         changeabilityRadioButtonpanel =
             new UMLAssociationEndChangeabilityRadioButtonPanel(
                 Translator.localize("label.changeability"), true);
+        // TODO: Should this be UMLAssociationEndVisibilityRadioButtonPanel?
         visibilityRadioButtonPanel =
             new UMLModelElementVisibilityRadioButtonPanel(
                 Translator.localize("label.visibility"), true);
