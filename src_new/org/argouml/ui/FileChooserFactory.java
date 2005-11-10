@@ -1,4 +1,4 @@
-// $Id: FileChooserFactory.java,v 1.5 2005/02/21 22:16:26 bobtarling Exp $
+// $Id: FileChooserFactory.java,v 1.6 2005/11/10 06:05:57 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import javax.swing.JFileChooser;
  * Factory class to return a JFileChooser configured
  * according to JRE requirements.
  *
- * @deprecated this class is no longer required now we no loner support UML 1.3
+ * @deprecated this class is no longer required now we no longer support Java 1.3
  *
  * @author Bob Tarling
  */
@@ -39,10 +39,9 @@ public class FileChooserFactory {
     /**
      * Return a proper FileChooser. This replaces the normal FileChooser with a
      * system-dependent one, but solely in case of Sun Java 1.3.1 on Windows.
-     * @deprecated 
-     *
+     * 
      * @return <code>JFileChooser</code>
-     * @deprecated now we are JRE1.4+ we can just call new JFileChooser()
+     * @deprecated use JRE1.4+ class JFileChooser()
      * directly.
      */
     public static JFileChooser getFileChooser() {
