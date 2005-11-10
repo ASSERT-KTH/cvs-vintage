@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.4 2005/11/09 21:47:00 tfmorris Exp $
+// $Id: XmiReader.java,v 1.5 2005/11/10 06:08:46 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,15 +46,14 @@ public interface XmiReader {
      * @param pIs the input source for parsing
      * @return MModel the UML model
      * @throws UmlException on any error
-     * @deprecated A Model file can have several top levels objects, including Activity Diagrams,
-     * so one should handle collection.
+     * @deprecated use parse()
      */
     Object parseToModel(InputSource pIs) throws UmlException;
 
     /**
-     * Parses a given inputsource to a model. 
+     * Parses a given inputsource to a collection of top level elements. 
      * @param pIs the input source for parsing
-     * @return MModel the UML model
+     * @return a collection of top level elements
      * @throws UmlException on any error
      */
     Collection parse(InputSource pIs) throws UmlException;

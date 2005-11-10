@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.4 2005/06/22 19:37:52 linus Exp $
+// $Id: UmlFactory.java,v 1.5 2005/11/10 06:08:46 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,9 +127,6 @@ public interface UmlFactory {
     /**
      * Adds all interested (and centralized) listeners to the given
      * modelelement handle.
-     *
-     * TODO: Why is this method needed? Isn't this implementation creaping out?
-     *       It is currently not used.
      *
      * @deprecated by Linus Tolke as of 0.19.3. This is not used and poor
      *       design so strive to remove it.
