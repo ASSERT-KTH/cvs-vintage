@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.11 2005/11/02 06:30:02 tfmorris Exp $
+// $Id: CoreHelper.java,v 1.12 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1150,7 +1150,7 @@ public interface CoreHelper {
      * eg ModelManagementHelper.getCorrespondingElement(...). Or if that had
      * been used here. This function could possibly assert that the caller had
      * got it right.
-     * TODO: MULTIPLESTEREOTYPES remove this method when NSUML dropped.
+     * TODO: MULTIPLESTEREOTYPES remove this method 
      *
      * @param handle model element
      * @param stereo stereotype

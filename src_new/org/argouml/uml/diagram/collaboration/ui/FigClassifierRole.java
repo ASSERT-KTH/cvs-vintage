@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.50 2005/11/03 00:39:44 tfmorris Exp $
+// $Id: FigClassifierRole.java,v 1.51 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,13 +157,13 @@ public class FigClassifierRole extends FigNodeModelElement {
 
     /**
      * Variant constructor that associates the classifier role with a
-     * particular NSUML object.<p>
+     * particular model element.<p>
      *
      * Classifier role is constructed with {@link #FigClassifierRole()}.<p>
      *
      * @param gm    The graph model to use. Ignored in this implementation.
      * @param lay   The layer
-     * @param node  The NSUML object to associate with this Fig.
+     * @param node  The model element object to associate with this Fig.
      */
     public FigClassifierRole(GraphModel gm, Layer lay, Object node) {
         this();

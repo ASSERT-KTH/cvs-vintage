@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.126 2005/11/04 23:17:35 bobtarling Exp $
+// $Id: PropPanel.java,v 1.127 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -203,7 +203,6 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
             return jlabel;
         } else {
             return null;
-            
         }
     }
 
@@ -289,7 +288,7 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
         t = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
 
         // If the target has changed notify the third party listener if it
-        // exists and dispatch a new NSUML element listener to
+        // exists and dispatch a new element event listener to
         // ourself. Otherwise dispatch a target reasserted to ourself.
         Runnable dispatch = null;
         if (t != target) {
@@ -306,7 +305,8 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
                 modelElement = target;
             }
 
-            // This will add a new MElement listener after update is complete
+            // This will add a new ModelElement event listener 
+            // after update is complete
 
             dispatch = new UMLChangeDispatch(this,
                     UMLChangeDispatch.TARGET_CHANGED_ADD);

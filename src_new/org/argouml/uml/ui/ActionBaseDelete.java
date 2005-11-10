@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.5 2005/10/31 12:04:13 bobtarling Exp $
+// $Id: ActionBaseDelete.java,v 1.6 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ import org.tigris.gef.presentation.FigTextEditor;
 
 /**
  * Action for removing (moving to trash) objects from the model. Objects can be:
- * - Modelelements (NSUML)
+ * - Modelelements 
  * - Diagrams (argodiagram and it's children)
  * The root model and the last diagram in the project can not be removed. The
  * reason for this is to prevent problems updating the detailspane and the
@@ -297,5 +297,6 @@ public abstract class ActionBaseDelete extends UMLAction {
     /**
      * @return the complete array of targets
      */
-    abstract protected Object[] getTargets();
+    protected abstract Object[] getTargets();
+    
 } /* end class ActionRemoveFromModel */

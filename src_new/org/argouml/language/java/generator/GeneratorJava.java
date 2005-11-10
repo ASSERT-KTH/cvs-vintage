@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.122 2005/11/03 00:39:43 tfmorris Exp $
+// $Id: GeneratorJava.java,v 1.123 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -688,7 +688,7 @@ public class GeneratorJava
         }
 
         // add implemented interfaces, if needed
-        // nsuml: realizations!
+        // UML: realizations!
         if (Model.getFacade().isAClass(cls)) {
             String interfaces = generateSpecification(cls);
 	    LOG.debug("Specification: " + interfaces);
@@ -907,7 +907,7 @@ public class GeneratorJava
                             sb.append(LINE_SEPARATOR).append(INDENT).append(tv);
                         }
 
-                        // there is no ReturnType in behavioral feature (nsuml)
+                        // there is no ReturnType in behavioral feature (UML)
                         sb.append(LINE_SEPARATOR);
 			sb.append(generateMethodBody(behavioralFeature));
 			sb.append(INDENT);

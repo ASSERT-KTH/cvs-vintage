@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.42 2005/10/24 09:50:47 bobtarling Exp $
+// $Id: CrUML.java,v 1.43 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrUML.java,v 1.42 2005/10/24 09:50:47 bobtarling Exp $
+// $Id: CrUML.java,v 1.43 2005/11/10 04:20:35 tfmorris Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
@@ -107,9 +107,9 @@ public class CrUML extends Critic {
      */
     public boolean predicate(Object dm, Designer dsgr) {
 	Project p = ProjectManager.getManager().getCurrentProject();
-        if (p.isInTrash(dm) ||
-                (Model.getFacade().isAModelElement(dm) &&
-                        Model.getUmlFactory().isRemoved(dm))) {
+        if (p.isInTrash(dm)
+                || (Model.getFacade().isAModelElement(dm) 
+                && Model.getUmlFactory().isRemoved(dm))) {
             return NO_PROBLEM;
         } else {
             return predicate2(dm, dsgr);
@@ -119,7 +119,7 @@ public class CrUML extends Critic {
     /**
      * This is the decision routine for the critic.
      *
-     * @param dm is the UML entity (an NSUML object) that is being checked.
+     * @param dm is the UML entity that is being checked.
      * @param dsgr is for future development and can be ignored.
      *
      * @return boolean problem found

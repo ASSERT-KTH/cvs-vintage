@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.22 2005/10/29 06:11:48 tfmorris Exp $
+// $Id: Facade.java,v 1.23 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1242,10 +1242,6 @@ public interface Facade {
     /**
      * The base of some model element.<p>
      *
-     * There is a bug in NSUML which gets the addition and base
-     * relationships back to front for include relationships. Solve
-     * by reversing their accessors in the code.
-     *
      * @param handle the model element
      * @return the base
      */
@@ -1254,7 +1250,6 @@ public interface Facade {
     /**
      * Get the bases of a classifier role.
      *
-     *
      * @param handle classifier role.
      * @return the bases.
      */
@@ -1262,7 +1257,6 @@ public interface Facade {
 
     /**
      * Get the behaviors of a Modelelement.
-     *
      *
      * @param handle modelelement to examine.
      * @return the behaviors.
@@ -2466,10 +2460,7 @@ public interface Facade {
     Collection getActualArguments(Object handle);
 
     /**
-     * Returns an addition for a given inlcude.
-     * There is a bug in NSUML which gets the addition and base
-     * relationships back to front for include relationships. Solve
-     * reversing their accessors in the code
+     * Returns an addition for a given include.
      *
      * @param handle is the include
      * @return the addition
@@ -2595,7 +2586,7 @@ public interface Facade {
     /**
      * Return the visibility of this element.
      *
-     * @param handle an nsuml model element
+     * @param handle a model element
      * @return visibility
      */
     Object getVisibility(Object handle);

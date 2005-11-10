@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.170 2005/11/02 17:21:29 bobtarling Exp $
+// $Id: Project.java,v 1.171 2005/11/10 04:20:38 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -597,7 +597,7 @@ public class Project implements java.io.Serializable, TargetListener {
      * operation, the containing figclass is returned).
      *
      * @param member The member we are looking for.
-     *               This can be a NSUML object but also another object.
+     *              This can be a model element object but also another object.
      * @return Collection The collection with the figs.
      */
     public Collection findFigsForMember(Object member) {

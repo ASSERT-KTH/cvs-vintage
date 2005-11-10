@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.25 2005/10/10 20:25:56 mkl Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.26 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,7 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
      *
      * @param lay   The layer in the graph on which we want this figure.
      *
-     * @param node  The node to be rendered (an NSUML object)
+     * @param node  The node to be rendered (an model element object)
      *
      * @param styleAttributes an optional map of attributes to style the fig
      *
@@ -131,7 +131,7 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
      *
      * @param lay   The layer in the graph on which we want this figure.
      *
-     * @param edge  The edge to be rendered (an NSUML object)
+     * @param edge  The edge to be rendered (an model element object)
      *
      * @param styleAttributes an optional map of attributes to style the fig
      *
@@ -192,8 +192,7 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
 
             newEdge = extFig;
         } else if (Model.getFacade().isAInclude(edge)) {
-            // Include relationship is very like extend. Watch out for the NSUML
-            // bug here.
+            // Include relationship is very like extend. 
             Object   inc    = /*(MInclude)*/ edge;
             FigInclude incFig = new FigInclude(inc);
 

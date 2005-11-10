@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.54 2005/10/26 17:00:39 bobtarling Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.55 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +113,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
      * in <em>LayerManager</em>(GEF) to control the adding, changing and
      * deleting layers on the diagram...<p>
      *
-     * @param handle MNamespace from the model in NSUML...
+     * @param handle Namespace from the model 
      * @author psager@tigris.org Jan. 24, 2002
      */
     public void setNamespace(Object handle) {

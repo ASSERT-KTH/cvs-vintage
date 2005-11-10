@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelper.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: ActivityGraphsHelper.java,v 1.2 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,8 +60,9 @@ public interface ActivityGraphsHelper {
 
     /**
      * Returns true if an activitygraph may be added to the given
-     * context. To decouple ArgoUML as much as possible from the NSUML
-     * model, the parameter of the method is of type Object.<p>
+     * context. To decouple ArgoUML as much as possible from the 
+     * model implementation, the parameter of the method is of 
+     * type Object.<p>
      *
      * An ActivityGraph specifies the dynamics of<ol>
      * <li> a Package, or

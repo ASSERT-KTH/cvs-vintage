@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.12 2005/01/30 20:48:32 linus Exp $
+// $Id: TestXmiFilePersister.java,v 1.13 2005/11/10 04:20:39 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,10 +51,8 @@ public class TestXmiFilePersister extends TestCase {
     }
 
     /**
-     * This is a regression test for issue 1504. Unfortunately this test does
-     * not work since ArgoUML crashes on a classcastexception that is catched by
-     * our dear friends of NSUML. However you can use it to test things quite
-     * easily :)
+     * This is a regression test for issue 1504. 
+     * Test basic serialization to XMI file.
      */
     public void testSave() {
 
@@ -87,10 +85,8 @@ public class TestXmiFilePersister extends TestCase {
     }
 
     /**
-     * This is a regression test for issue 1504. Unfortunately this test does
-     * not work since ArgoUML crashes on a classcastexception that is catched by
-     * our dear friends of NSUML. However you can use it to test things quite
-     * easily :)
+     * This is a regression test for issue 1504. 
+     * Test loading from minimal XMI file.
      */
     public void testLoadProject() {
 

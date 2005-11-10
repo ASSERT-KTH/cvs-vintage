@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.3 2005/10/20 07:14:23 tfmorris Exp $
+// $Id: CollaborationsHelper.java,v 1.4 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,8 +190,8 @@ public interface CollaborationsHelper {
 
     /**
      * Returns true if a collaboration may be added to the given context. To
-     * decouple ArgoUML as much as possible from the NSUML model, the parameter
-     * of the method is of type Object.<p>
+     * decouple ArgoUML as much as possible from the model implementation,
+     * the parameter of the method is of type Object.<p>
      *
      * @param context the given context
      * @return boolean true if a collaboration may be added

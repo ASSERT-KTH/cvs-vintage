@@ -1,4 +1,4 @@
-// $Id: MockUMLUserInterfaceContainer.java,v 1.7 2005/08/12 19:30:27 mvw Exp $
+// $Id: MockUMLUserInterfaceContainer.java,v 1.8 2005/11/10 04:20:39 tfmorris Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class MockUMLUserInterfaceContainer
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLUserInterfaceContainer#formatElement(ru.novosoft.uml.foundation.core.ModelElement)
+     * @see org.argouml.uml.ui.UMLUserInterfaceContainer#formatElement(java.lang.Object)
      */
     public String formatElement(/*ModelElement*/Object element) {
         return null;
@@ -80,7 +80,7 @@ public class MockUMLUserInterfaceContainer
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLUserInterfaceContainer#formatNamespace(ru.novosoft.uml.foundation.core.Namespace)
+     * @see org.argouml.uml.ui.UMLUserInterfaceContainer#formatNamespace(java.lang.Object)
      */
     public String formatNamespace(/*Namespace*/Object ns) {
         return null;

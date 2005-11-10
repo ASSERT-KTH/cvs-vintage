@@ -1,4 +1,4 @@
-// $Id: ActionDeleteModelElements.java,v 1.1 2005/05/26 20:35:23 bobtarling Exp $
+// $Id: ActionDeleteModelElements.java,v 1.2 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  * Action for removing (moving to trash) objects from the model. Objects can be:
- * - Modelelements (NSUML)
+ * - Modelelements 
  * - Diagrams (argodiagram and it's children)
  * The root model and the last diagram in the project can not be removed. The
  * reason for this is to prevent problems updating the detailspane and the

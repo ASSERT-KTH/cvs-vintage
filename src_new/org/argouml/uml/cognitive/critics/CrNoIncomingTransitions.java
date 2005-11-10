@@ -1,4 +1,4 @@
-// $Id: CrNoIncomingTransitions.java,v 1.21 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.22 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class CrNoIncomingTransitions extends CrUML {
     /**
      * This is the decision routine for the critic.
      *
-     * @param dm is the UML entity (an NSUML object) that is being checked.
+     * @param dm is the UML entity that is being checked.
      * @param dsgr is for future development and can be ignored.
      *
      * @return boolean problem found

@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.68 2005/11/05 02:11:00 aslo Exp $
+// $Id: GeneratorCpp.java,v 1.69 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1860,7 +1860,7 @@ public class GeneratorCpp extends Generator2
                 if (mustGenBody && (Model.getFacade().isAClass(cls))
                         && (Model.getFacade().isAOperation(bf))
                         && (!Model.getFacade().isAbstract(bf))) {
-                    // there is no ReturnType in behavioral feature (nsuml)
+                    // there is no ReturnType in behavioral feature (uml)
                     tb.append(LINE_SEPARATOR).append(generateMethodBody(bf));
                 } else {
                     tb.append(";").append(LINE_SEPARATOR);

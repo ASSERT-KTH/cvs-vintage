@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.47 2005/08/28 17:13:40 mvw Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.48 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,24 +32,23 @@ import javax.swing.JComboBox;
 import org.argouml.model.Model;
 
 /**
- * Handles communication between the initial value JComboBox and the
- * Collection.  This class also causes NSUML to refresh and so keeps
- * the diagram in synch with the model. <p>
- *
+ * Handles communication between the initial value JComboBox and the Collection.
+ * This class also causes the model implementatoin to refresh and so keeps the
+ * diagram in synch with the model.
+ * <p>
+ * 
  * Method <code>propertySet</code> listens for MElementEvent events and
  * updates the other elements, such as type, visibility and changeability. <p>
  * Modified psager@tigris.org
- *
+ * 
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003), to be replaced by
  * something similar to {@link
  * org.argouml.uml.ui.foundation.core.UMLAttributeInitialValueListModel},
  * this class is part of the 'old'(pre 0.13.*) implementation of
  * proppanels that used reflection a lot.
  */
-public class UMLInitialValueComboBox extends JComboBox
-             implements ActionListener, UMLUserInterfaceComponent
-             //, MElementListener 
-             {
+public class UMLInitialValueComboBox extends JComboBox implements
+        ActionListener, UMLUserInterfaceComponent {
 
     private UMLUserInterfaceContainer theContainer;
 

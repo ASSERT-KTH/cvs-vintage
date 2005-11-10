@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.19 2005/06/01 15:02:18 bobtarling Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.20 2005/11/10 04:20:36 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -155,8 +155,9 @@ public abstract class UMLRadioButtonPanel
         }
     }
 
+
     /**
-     * @see ru.novosoft.uml.MElementListener#propertySet(ru.novosoft.uml.MElementEvent)
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getPropertyName().equals(propertySetName)) {

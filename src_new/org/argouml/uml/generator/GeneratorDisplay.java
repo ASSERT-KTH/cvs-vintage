@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.101 2005/11/03 00:39:44 tfmorris Exp $
+// $Id: GeneratorDisplay.java,v 1.102 2005/11/10 04:20:38 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -387,7 +387,7 @@ public class GeneratorDisplay extends Generator2 {
             s += "extends " + baseClass + " ";
         }
 
-        //nsuml: realizations!  String interfaces =
+        //UML: realizations!  String interfaces =
         //generateRealization(cls.getRealizations(), true); if
         //(!interfaces.equals("")) s += "implements " + interfaces + "
         //";

@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.4 2005/10/28 23:22:26 tfmorris Exp $
+// $Id: TestAgainstUmlModel.java,v 1.5 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -165,7 +165,7 @@ public class TestAgainstUmlModel extends TestCase {
      *
      * This brute force method should be investigated
      * in favor of determining the Uml Class namespace from
-     * the XMI data model and computing the factory
+     * the UML metamodel and computing the factory
      * at run time.
      *
      * Certain classes that cannot be tested directly in this way
@@ -173,7 +173,7 @@ public class TestAgainstUmlModel extends TestCase {
      * are marked abstract in the model.  But we need to make sure
      * that the reverse is true, that there are no elements
      * marked abstract in the model that in fact are instantiable
-     * by NSUML.
+     * by the model subsystem.
      */
 
     static {

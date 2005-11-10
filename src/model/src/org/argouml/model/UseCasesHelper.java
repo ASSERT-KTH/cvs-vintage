@@ -1,4 +1,4 @@
-// $Id: UseCasesHelper.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: UseCasesHelper.java,v 1.2 2005/11/10 04:20:35 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,6 @@ import java.util.Collection;
 public interface UseCasesHelper {
     /**
      * This method returns all extension points of a given use case.<p>
-     *
-     * Here for completeness, but actually just a wrapper for the NSUML
-     * function.<p>
      *
      * @param useCase  The use case for which we want the extension points.
      *
@@ -170,7 +167,6 @@ public interface UseCasesHelper {
 
     /**
      * Sets the addition to an include.
-     * There is a bug in NSUML that reverses additions and bases for includes.
      *
      * @param handle Include
      * @param useCase UseCase
