@@ -1,4 +1,4 @@
-// $Id: CrInvalidBranch.java,v 1.15 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: CrInvalidBranch.java,v 1.16 2005/11/10 06:13:40 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class CrInvalidBranch extends CrUML {
 	}
 	Object k = Model.getFacade().getPseudostateKind(dm);
 	if ((!Model.getFacade().equalsPseudostateKind(k,
-	        Model.getPseudostateKind().getBranch()))
+	        Model.getPseudostateKind().getChoice()))
             && (!Model.getFacade().equalsPseudostateKind(k,
                     Model.getPseudostateKind().getJunction()))) {
 	    return NO_PROBLEM;

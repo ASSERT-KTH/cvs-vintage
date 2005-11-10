@@ -1,4 +1,4 @@
-// $Id: FigBranchState.java,v 1.22 2005/07/18 19:20:29 mvw Exp $
+// $Id: FigBranchState.java,v 1.23 2005/11/10 06:13:39 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,9 @@ import org.tigris.gef.presentation.FigCircle;
 
 /**
  * Class to display graphics for a UML Choice State in a diagram - the circle.
+ * 
+ * TODO: This should really be renamed FigChoiceState.  It's the
+ * last vestige the UML 1.3 name.
  *
  * @author pepargouml
  */

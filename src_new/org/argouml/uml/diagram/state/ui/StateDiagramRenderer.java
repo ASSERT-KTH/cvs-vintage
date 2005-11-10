@@ -1,4 +1,4 @@
-// $Id: StateDiagramRenderer.java,v 1.30 2005/02/02 21:18:08 mvw Exp $
+// $Id: StateDiagramRenderer.java,v 1.31 2005/11/10 06:13:39 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,7 +105,7 @@ public class StateDiagramRenderer extends UmlDiagramRenderer {
             if (kind.equals(Model.getPseudostateKind().getInitial())) {
                 return new FigInitialState(gm, node);
             } else if (kind.equals(
-                    Model.getPseudostateKind().getBranch())) {
+                    Model.getPseudostateKind().getChoice())) {
                 return new FigBranchState(gm, node);
             } else if (kind.equals(
                     Model.getPseudostateKind().getJunction())) {

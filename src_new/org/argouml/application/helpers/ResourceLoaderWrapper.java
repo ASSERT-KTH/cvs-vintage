@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.40 2005/11/01 22:49:17 rastaman Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.41 2005/11/10 06:13:39 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -224,7 +224,7 @@ public final class ResourceLoaderWrapper {
             if (helper.equalsJOINKind(kind)) {
                 icon = joinIcon;
             }
-            if (helper.equalsBRANCHKind(kind)) {
+            if (helper.equalsCHOICEKind(kind)) {
                 icon = branchIcon;
             }
             if (helper.equalsJUNCTIONKind(kind)) {

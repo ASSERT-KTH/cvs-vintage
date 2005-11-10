@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.36 2005/10/23 08:42:29 rastaman Exp $
+// $Id: PropPanelPseudostate.java,v 1.37 2005/11/10 06:13:39 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
                     Translator.localize("label.pseudostate.join"));
             }
             if (Model.getFacade().equalsPseudostateKind(kind,
-                Model.getPseudostateKind().getBranch())) {
+                Model.getPseudostateKind().getChoice())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.choice"));
             }

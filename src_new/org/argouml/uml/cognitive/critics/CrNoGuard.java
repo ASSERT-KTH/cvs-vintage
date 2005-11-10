@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.15 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrNoGuard.java,v 1.16 2005/11/10 06:13:40 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class CrNoGuard extends CrUML {
 	}
 	if (!Model.getFacade().equalsPseudostateKind(
 	        Model.getFacade().getPseudostateKind(sv),
-	        Model.getPseudostateKind().getBranch())) {
+	        Model.getPseudostateKind().getChoice())) {
 	    return NO_PROBLEM;
 	}
 	Object g = /*(MGuard)*/ Model.getFacade().getGuard(dm);
