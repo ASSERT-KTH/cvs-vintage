@@ -438,9 +438,9 @@ public String getAttachedJavadoc(IProgressMonitor monitor, String encoding) thro
 			anchor = anchor.substring(0, indexOfOpeningParen) + anchor.substring(index);
 		}
 	}
-	if (monitor.isCanceled()) throw new OperationCanceledException();
+	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
 	final String contents = getURLContents(String.valueOf(pathBuffer), encoding);
-	if (monitor.isCanceled()) throw new OperationCanceledException();
+	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
 	if (contents == null) throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, this));
 	int indexAnchor = contents.indexOf(JavadocConstants.ANCHOR_PREFIX_START + anchor + JavadocConstants.ANCHOR_PREFIX_END);
 	if (indexAnchor == -1) throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.UNRECOGNIZED_JAVADOC_FORMAT, this));
