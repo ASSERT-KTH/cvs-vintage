@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.3 2005/11/09 18:42:08 rastaman Exp $
+// $Id: PropPanelTagDefinition.java,v 1.4 2005/11/10 01:11:14 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
 
         addAction(new ActionNavigateNamespace());
         addAction(new ActionNewTagDefinition());
-        addAction(new ActionDeleteSingleModelElement());  
+        addAction(new ActionDeleteSingleModelElement());
     }
 
     /**

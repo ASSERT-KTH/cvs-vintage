@@ -1,4 +1,4 @@
-// $Id: ActionNewTagDefinition.java,v 1.2 2005/11/09 20:17:57 rastaman Exp $
+// $Id: ActionNewTagDefinition.java,v 1.3 2005/11/10 01:11:14 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public class ActionNewTagDefinition extends AbstractActionNewModelElement {
             namespace = t;
         } else {
             namespace = Model.getFacade().getModel(t);
-        }
+            }            
         Object newTagDefinition = Model.getExtensionMechanismsFactory()
             .buildTagDefinition(
                     (String) null,
