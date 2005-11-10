@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.37 2005/09/12 18:52:15 mvw Exp $
+// $Id: FigObject.java,v 1.38 2005/11/10 06:09:23 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,8 +252,7 @@ public class FigObject extends FigNodeModelElement {
 
                 mcomp = /*(MComponent)*/ encloser.getOwner();
                 Object obj = /*(MObject)*/ getOwner();
-                Model.getCoreHelper()
-                        .setImplementationLocation(resident, mcomp);
+                Model.getCoreHelper().setModelElementContainer(resident, mcomp);
                 Model.getCoreHelper().setResident(resident, obj);
                 super.setEnclosingFig(encloser);
             } else if (encloser != null
@@ -261,9 +260,9 @@ public class FigObject extends FigNodeModelElement {
                 super.setEnclosingFig(encloser);
             } else {
                 if (Model.getFacade()
-                        .getImplementationLocation(resident) != null) {
+                        .getModelElementContainer(resident) != null) {
                     Model.getCoreHelper()
-                            .setImplementationLocation(resident, null);
+                            .setModelElementContainer(resident, null);
                     Model.getCoreHelper().setResident(resident, null);
                     super.setEnclosingFig(null);
                 }
