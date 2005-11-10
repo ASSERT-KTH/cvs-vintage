@@ -1,4 +1,4 @@
-// $Id: UMLClassifierParameterListModel.java,v 1.14 2005/01/30 20:47:34 linus Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.15 2005/11/10 04:23:34 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.argouml.model.Model;
@@ -72,6 +73,9 @@ public class UMLClassifierParameterListModel
     public void swap(int index1, int index2) {
         Object classifier = getTarget();
         List c = new ArrayList(Model.getFacade().getParameters(classifier));
+        // TODO: Verify that the following works now with MDR 
+        // and replace code - tfm - 20051109
+        
         /* The following does not work, because NSUML does not
          * fire an update event, since no parameters were added or removed...
         Collections.swap(c, index1, index2);
@@ -83,11 +87,7 @@ public class UMLClassifierParameterListModel
         cc.remove(mem1);
         cc.remove(mem2);
         Model.getCoreHelper().setParameters(classifier, cc);
-        // TODO: If we stop supporting java 1.3 ...
-        // the next line will replace the following 2
-        // Collections.swap(c, index1, index2);
-        c.set(index1, mem2);
-        c.set(index2, mem1);
+        Collections.swap(c, index1, index2);
         Model.getCoreHelper().setParameters(classifier, c);
         buildModelList();
     }
