@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.198 2005/11/09 21:43:06 tfmorris Exp $
+<!-- $Id: build.xml,v 1.199 2005/11/10 23:01:07 tfmorris Exp $
 This requires ANT 1.6.2
 
 if you get a message like:
@@ -373,8 +373,7 @@ Property files to be searched:
     <copy file="${argo.src.dir}/org/argouml/argo.ini" tofile="${argo.build.classes}/org/argouml/argo.ini"/>
     <copy file="${argo.src.dir}/org/argouml/default.xmi" tofile="${argo.build.classes}/org/argouml/default.xmi"/>
     <copy file="${argo.src.dir}/org/argouml/registry.xml" tofile="${argo.build.classes}/org/argouml/registry.xml"/>
-    <copy file="${argo.src.dir}/org/argouml/eventtree.xml" tofile="${argo.build.classes}/org/argouml/eventtree.xml"/>
-  	
+ 	
   	<!-- copy test files -->
     <copy todir="${argo.tests.classes}/testmodels">
       <fileset dir="${argo.tests.src}/testmodels" excludes="CVS/**" includes="**/**"/>
