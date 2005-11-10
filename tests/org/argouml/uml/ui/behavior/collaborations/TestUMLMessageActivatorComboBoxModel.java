@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.21 2005/11/07 06:20:30 tfmorris Exp $
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.22 2005/11/10 02:09:19 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
         model = new UMLMessageActivatorComboBoxModel();
         model.targetSet(new TargetEvent(this, "set", new Object[0],
                 new Object[] {elem}));
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
     }
 
     /**
@@ -99,7 +99,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
      */
     public void testSetActivator() {
         Model.getCollaborationsHelper().setActivator(elem, activators[0]);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertTrue(model.getSelectedItem() == activators[0]);
     }
 
@@ -108,7 +108,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
      */
     public void testRemoveBase() {
         Model.getUmlFactory().delete(activators[9]);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(9, model.getSize());
         assertTrue(!model.contains(activators[9]));
     }

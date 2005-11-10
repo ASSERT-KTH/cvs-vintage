@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.22 2005/10/21 08:44:46 tfmorris Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.23 2005/11/10 02:09:19 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
 
         model = new UMLAssociationEndRoleBaseListModel();
         model.setTarget(elem);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
     }
 
     /**
@@ -124,7 +124,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
      */
     public void testAdd() {
         Model.getCollaborationsHelper().setBase(elem, baseEnd);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(1, model.getSize());
         assertEquals(baseEnd, model.getElementAt(0));
     }
@@ -148,7 +148,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
     public void testRemove() {
         Model.getCollaborationsHelper().setBase(elem, baseEnd);
         Model.getCollaborationsHelper().setBase(elem, null);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(0, model.getSize());
     }
 

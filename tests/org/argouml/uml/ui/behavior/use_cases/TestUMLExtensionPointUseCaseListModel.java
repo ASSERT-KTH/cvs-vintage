@@ -1,4 +1,4 @@
-// $Id: TestUMLExtensionPointUseCaseListModel.java,v 1.15 2005/10/21 08:44:47 tfmorris Exp $
+// $Id: TestUMLExtensionPointUseCaseListModel.java,v 1.16 2005/11/10 02:09:20 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class TestUMLExtensionPointUseCaseListModel extends TestCase {
         elem = Model.getUseCasesFactory().createExtensionPoint();
         model = new UMLExtensionPointUseCaseListModel();
         model.setTarget(elem);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
     }
 
     /**
@@ -71,7 +71,7 @@ public class TestUMLExtensionPointUseCaseListModel extends TestCase {
     public void testSetUseCase() {
         Object usecase = Model.getUseCasesFactory().createUseCase();
         Model.getUseCasesHelper().setUseCase(elem, usecase);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(1, model.getSize());
         assertEquals(usecase, model.getElementAt(0));
     }
@@ -83,7 +83,7 @@ public class TestUMLExtensionPointUseCaseListModel extends TestCase {
         Object usecase = Model.getUseCasesFactory().createUseCase();
         Model.getUseCasesHelper().setUseCase(elem, usecase);
         Model.getUseCasesHelper().setUseCase(elem, null);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(0, model.getSize());
     }
 

@@ -1,4 +1,4 @@
-// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.23 2005/11/07 06:20:30 tfmorris Exp $
+// $Id: TestUMLGeneralizationPowertypeComboBoxModel.java,v 1.24 2005/11/10 02:09:18 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
             types[i] = Model.getCoreFactory().createClass();
             Model.getCoreHelper().addOwnedElement(m, types[i]);
         }
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
     }
 
     /**
@@ -103,7 +103,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
      * Test setup.
      */
     public void testSetUp() {
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertTrue(model.contains(types[5]));
         assertTrue(model.contains(types[0]));
         assertTrue(model.contains(types[9]));
@@ -115,7 +115,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
     public void testSetPowertype() {
         LOG.info("Setting powertype");
         Model.getCoreHelper().setPowertype(elem, types[0]);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertTrue(model.getSelectedItem() == types[0]);
         LOG.info("Powertype set");
     }
@@ -126,7 +126,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
     public void testSetPowertypeToNull() {
         Model.getCoreHelper().setPowertype(elem, types[0]);
         Model.getCoreHelper().setPowertype(elem, null);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertNull(model.getSelectedItem());
     }
 
@@ -135,7 +135,7 @@ public class TestUMLGeneralizationPowertypeComboBoxModel extends TestCase {
      */
     public void testRemovePowertype() {
         Model.getUmlFactory().delete(types[9]);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertTrue(!model.contains(types[9]));
     }
 

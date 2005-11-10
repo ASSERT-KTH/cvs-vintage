@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageReceiverListModel.java,v 1.16 2005/10/21 08:44:46 tfmorris Exp $
+// $Id: TestUMLMessageReceiverListModel.java,v 1.17 2005/11/10 02:09:19 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
         cont.setTarget(elem);
         model = new UMLMessageReceiverListModel();
         model.setTarget(elem);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
     }
 
     /**
@@ -76,7 +76,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
         Object role =
             Model.getCollaborationsFactory().createClassifierRole();
         Model.getCommonBehaviorHelper().setReceiver(elem, role);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(1, model.getSize());
         assertEquals(role, model.getElementAt(0));
     }
@@ -89,7 +89,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
             Model.getCollaborationsFactory().createClassifierRole();
         Model.getCommonBehaviorHelper().setReceiver(elem, role);
         Model.getCommonBehaviorHelper().setReceiver(elem, null);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(0, model.getSize());
         assertTrue(model.isEmpty());
     }

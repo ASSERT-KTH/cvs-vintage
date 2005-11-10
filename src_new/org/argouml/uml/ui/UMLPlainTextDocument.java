@@ -1,4 +1,4 @@
-// $Id: UMLPlainTextDocument.java,v 1.29 2005/10/28 19:22:26 tfmorris Exp $
+// $Id: UMLPlainTextDocument.java,v 1.30 2005/11/10 02:09:20 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,7 +133,7 @@ public abstract class UMLPlainTextDocument
         if (isFiring()) {
             setFiring(false);
             setProperty(getText(0, getLength()));
-            Model.getPump().reallyFlushModelEvents();
+            Model.getPump().flushModelEvents();
             setFiring(true);
         }
 
@@ -147,7 +147,7 @@ public abstract class UMLPlainTextDocument
         if (isFiring()) {
             setFiring(false);
             setProperty(getText(0, getLength()));
-            Model.getPump().reallyFlushModelEvents();
+            Model.getPump().flushModelEvents();
             setFiring(true);
         }
     }

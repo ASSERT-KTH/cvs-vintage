@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsFactory.java,v 1.7 2005/11/02 08:53:35 tfmorris Exp $
+// $Id: TestCollaborationsFactory.java,v 1.8 2005/11/10 02:09:19 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +121,7 @@ public class TestCollaborationsFactory extends TestCase {
         WeakReference meswr = new WeakReference(mes);
 
         Model.getUmlFactory().delete(cr1);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         cr1 = null;
         role = null;
         inter = null;

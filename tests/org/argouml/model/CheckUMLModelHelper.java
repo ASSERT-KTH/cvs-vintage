@@ -1,4 +1,4 @@
-// $Id: CheckUMLModelHelper.java,v 1.4 2005/10/26 20:06:54 tfmorris Exp $
+// $Id: CheckUMLModelHelper.java,v 1.5 2005/11/10 02:09:19 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public final class CheckUMLModelHelper {
 		      mo.toString() != null);
 
 	Model.getUmlFactory().delete(mo);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
 	WeakReference wo = new WeakReference(mo);
 	mo = null;
 	System.gc();
@@ -99,7 +99,7 @@ public final class CheckUMLModelHelper {
 
         WeakReference wo = new WeakReference(mo);
 
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
 	mo = null;
 	System.gc();
 	TestCase.assertTrue("Could not reclaim " + c, wo.get() == null);

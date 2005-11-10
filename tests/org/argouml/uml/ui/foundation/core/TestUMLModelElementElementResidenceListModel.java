@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.15 2005/10/21 08:44:46 tfmorris Exp $
+// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.16 2005/11/10 02:09:18 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
         list = new UMLModelElementElementResidenceListModel();
         list.setTarget(elem);
         Model.getPump().addModelEventListener(list, elem);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
     }
 
     /**
@@ -77,7 +77,7 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
     public void testElementAdded() {
         Object res = Model.getCoreFactory().createElementResidence();
         helper.addElementResidence(elem, res);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertTrue(list.getSize() == 1);
         assertTrue(list.getElementAt(0) == res);
     }
@@ -88,11 +88,11 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
     public void testElementRemoved() {
         Object res = Model.getCoreFactory().createElementResidence();
         helper.addElementResidence(elem, res);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertTrue(list.getSize() == 1);
         assertTrue(list.getElementAt(0) == res);
         helper.removeElementResidence(elem, res);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertTrue(list.getSize() == 0);
     }
 
@@ -100,7 +100,7 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
      * Test getting an element when there is none.
      */
     public void testNoElements() {
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         try {
             list.getElementAt(0);
             fail();

@@ -1,4 +1,4 @@
-// $Id: AbstractUMLModelElementListModel2Test.java,v 1.18 2005/10/25 07:10:43 tfmorris Exp $
+// $Id: AbstractUMLModelElementListModel2Test.java,v 1.19 2005/11/10 02:09:19 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public abstract class AbstractUMLModelElementListModel2Test extends TestCase {
         //MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         buildModel();
         model.setTarget(elem);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
     }
 
     /**
@@ -92,7 +92,7 @@ public abstract class AbstractUMLModelElementListModel2Test extends TestCase {
      */
     public void testAddMultiple() {
         Object[] elements = fillModel();
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(10, model.getSize());
         assertEquals(model.getElementAt(5), elements[5]);
         assertEquals(model.getElementAt(0), elements[0]);
@@ -113,9 +113,9 @@ public abstract class AbstractUMLModelElementListModel2Test extends TestCase {
      */
     public void testRemoveMultiple() {
         Object[] elements = fillModel();
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         removeHalfModel(elements);
-        Model.getPump().reallyFlushModelEvents();
+        Model.getPump().flushModelEvents();
         assertEquals(5, model.getSize());
         assertEquals(elements[5], model.getElementAt(0));
     }
