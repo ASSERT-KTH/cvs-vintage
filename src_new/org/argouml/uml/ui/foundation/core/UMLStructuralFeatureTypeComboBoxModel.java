@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.23 2005/11/07 06:30:16 tfmorris Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.24 2005/11/11 03:49:51 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -112,7 +113,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
         if (p == null) {
             return;
         }
-        Iterator it = p.getUserDefinedModels().iterator();
+        Iterator it = (new ArrayList(p.getUserDefinedModels())).iterator();
 
         while (it.hasNext()) {
             Object model = /* (MModel) */it.next();
