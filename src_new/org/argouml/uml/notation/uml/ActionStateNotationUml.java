@@ -1,4 +1,4 @@
-// $Id: ActionStateNotationUml.java,v 1.1 2005/11/07 19:38:57 mvw Exp $
+// $Id: ActionStateNotationUml.java,v 1.2 2005/11/11 17:52:37 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public class ActionStateNotationUml extends ActionStateNotation {
     /**
      * The constructor.
      * 
-     * @param actionState
+     * @param actionState the UML ActionState
      */
     public ActionStateNotationUml(Object actionState) {
         super(actionState);
