@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.19 2005/11/02 21:26:58 tfmorris Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.20 2005/11/11 03:55:10 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -180,7 +180,7 @@ public final class ExplorerEventAdaptor
             // than exclude one or more, but I don't know what they
             // all are - tfm
             if (!("namespace".equals(pce.getPropertyName()))) {
-                treeModel.modelElementRemoved(((RemoveAssociationEvent) pce)
+                treeModel.modelElementChanged(((RemoveAssociationEvent) pce)
                         .getChangedValue());
             }
         }
