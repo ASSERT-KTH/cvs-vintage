@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.134 2005/11/07 23:22:30 mvw Exp $
+// $Id: Main.java,v 1.135 2005/11/11 11:41:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -403,8 +403,8 @@ public class Main {
         System.err.println("");
         System.err.println("You can also set java settings which influence "
 			   + "the behaviour of ArgoUML:");
-        System.err.println("  -Dforce.nativelaf  [force ArgoUML to use "
-			   + "the native look and feel. [UNSUPPORTED]");
+        System.err.println("  -Xms250M -Xmx500M  [makes ArgoUML reserve "
+			   + "more memory for large projects]");
         System.err.println("\n\n");
     }
 
