@@ -11,11 +11,8 @@
 package org.eclipse.jdt.internal.core;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.CharOperation;
@@ -195,42 +192,6 @@ public String[] getParameterNames() throws JavaModelException {
 				}
 			}
 		}
-		if (this.parameterNames == null) {
-			// try to see if we can retrieve the names from the attached javadoc
-			IBinaryMethod info = (IBinaryMethod) getElementInfo();
-			final int paramCount = Signature.getParameterCount(new String(info.getMethodDescriptor()));
-			if (paramCount != 0) {
-				String javadoc = this.getAttachedJavadoc(new NullProgressMonitor(), "UTF-8"); //$NON-NLS-1$
-				if (javadoc != null) {
-					final int indexOfOpenParen = javadoc.indexOf('(');
-					if (indexOfOpenParen != -1) {
-						final int indexOfClosingParen = javadoc.indexOf(')', indexOfOpenParen);
-						if (indexOfClosingParen != -1) {
-							final char[] paramsSource =
-								CharOperation.replace(
-									javadoc.substring(indexOfOpenParen + 1, indexOfClosingParen).toCharArray(),
-									"&nbsp;".toCharArray(), //$NON-NLS-1$
-									new char[] {' '});
-							final StringTokenizer tokenizer = new StringTokenizer(String.valueOf(paramsSource), ", \n\r"); //$NON-NLS-1$
-							int index = 0;
-							final ArrayList paramNames = new ArrayList(paramCount);
-							while (tokenizer.hasMoreTokens()) {
-								final String token = tokenizer.nextToken();
-								if ((index & 1) != 0) {
-									// if odd then this is a parameter name
-									paramNames.add(token);
-								}
-								index++;
-							}
-							if (!paramNames.isEmpty()) {
-								this.parameterNames = new String[paramNames.size()];
-								paramNames.toArray(this.parameterNames);
-							}
-	 					}
-					}
-				}
-			}
-		}		
 		// if still no parameter names, produce fake ones
 		if (this.parameterNames == null) {
 			IBinaryMethod info = (IBinaryMethod) getElementInfo();
@@ -425,7 +386,7 @@ protected void toStringName(StringBuffer buffer, int flags) {
 		buffer.append(this.occurrenceCount);
 	}
 }
-public String getAttachedJavadoc(IProgressMonitor monitor, String encoding) throws JavaModelException {
+public String getAttachedJavadoc(IProgressMonitor monitor, String defaultEncoding) throws JavaModelException {
 	URL baseLocation= getJavadocBaseLocation();
 	if (baseLocation == null) {
 		return null;
@@ -478,7 +439,7 @@ public String getAttachedJavadoc(IProgressMonitor monitor, String encoding) thro
 		}
 	}
 	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
-	final String contents = getURLContents(String.valueOf(pathBuffer), encoding);
+	final String contents = getURLContents(String.valueOf(pathBuffer), defaultEncoding);
 	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
 	if (contents == null) throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, this));
 	int indexAnchor = contents.indexOf(JavadocConstants.ANCHOR_PREFIX_START + anchor + JavadocConstants.ANCHOR_PREFIX_END);
