@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.3 2005/11/07 23:22:30 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.4 2005/11/11 17:55:04 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,11 @@ public class NotationProviderFactory2 {
      * TYPE_OPERATION the text shown in a operation compartment (1 oper only)
      */
     public static final int TYPE_OPERATION = 6;
+    
+    /**
+     * TYPE_OBJECT the text shown on an object
+     */
+    public static final int TYPE_OBJECT = 7;
 
 
     /**
