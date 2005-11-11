@@ -1,4 +1,4 @@
-// $Id: GeneratorDummy.java,v 1.17 2005/11/02 13:28:16 mvw Exp $
+// $Id: GeneratorDummy.java,v 1.18 2005/11/11 03:50:44 tfmorris Exp $
 // Copyright (c) 2001-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,7 +144,7 @@ public final class GeneratorDummy
      * @see org.argouml.notation.NotationProvider2#generateMultiplicity(java.lang.Object)
      */
     public String generateMultiplicity(Object handle) {
-	return "Multiplicity(" + handle.toString() + ")";
+	return "Multiplicity(" + Model.getFacade().toString(handle) + ")";
     }
 
     /**
