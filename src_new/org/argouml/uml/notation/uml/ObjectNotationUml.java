@@ -1,4 +1,4 @@
-// $Id: ObjectNotationUml.java,v 1.1 2005/11/11 17:55:05 mvw Exp $
+// $Id: ObjectNotationUml.java,v 1.2 2005/11/11 21:42:45 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Vector;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.notation.ObjectNotation;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: ActionStateNotationUml.java,v 1.2 2005/11/11 17:52:37 mvw Exp $
+// $Id: ActionStateNotationUml.java,v 1.3 2005/11/11 21:42:45 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,7 @@
 
 package org.argouml.uml.notation.uml;
 
-import org.argouml.uml.generator.GeneratorDisplay;
-import org.argouml.uml.generator.ParserDisplay;
+import org.argouml.model.Model;
 import org.argouml.uml.notation.ActionStateNotation;
 
 
@@ -47,8 +46,20 @@ public class ActionStateNotationUml extends ActionStateNotation {
      * @see org.argouml.notation.NotationProvider4#parse(java.lang.String)
      */
     public String parse(String text) {
-        //TODO: Make the next call inline - replace ParserDisplay
-        ParserDisplay.SINGLETON.parseActionState(text, myActionState);
+        Object entry = Model.getFacade().getEntry(myActionState);
+        String language = "";
+        if (entry == null) {
+            entry =
+                Model.getCommonBehaviorFactory()
+                        .buildUninterpretedAction(myActionState);
+        } else {
+            language =
+                Model.getDataTypesHelper().getLanguage(
+                        Model.getFacade().getScript(entry));
+        }
+        Object actionExpression =
+            Model.getDataTypesFactory().createActionExpression(language, text);
+        Model.getCommonBehaviorHelper().setScript(entry, actionExpression);
         return toString();
     }
 
@@ -63,8 +74,16 @@ public class ActionStateNotationUml extends ActionStateNotation {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        /* TODO: copy this here inline! Replace GeneratorDisplay. */
-        return GeneratorDisplay.getInstance().generateActionState(myActionState);
+        String ret = "";
+        Object action = Model.getFacade().getEntry(myActionState);
+        if (action != null) {
+            Object expression = Model.getFacade().getScript(action);
+            if (expression != null) {
+                ret = (String) Model.getFacade().getBody(expression);
+//                ret = Model.getDataTypesHelper().getBody(expression);
+            }
+        }
+        return (ret == null) ? "" : ret;
     }
 
 }
