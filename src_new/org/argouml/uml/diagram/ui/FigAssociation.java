@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.101 2005/11/03 05:35:34 tfmorris Exp $
+// $Id: FigAssociation.java,v 1.102 2005/11/11 03:36:38 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -300,8 +300,8 @@ public class FigAssociation extends FigEdgeModelElement {
 	        Object[] args = {e.getLocalizedMessage()};
 	        ProjectBrowser.getInstance().getStatusBar().showStatus(
                     Translator.messageFormat(msg, args));
-	        srcMult.setText(
-                    Model.getFacade().getMultiplicity(srcAE).toString());
+	        srcMult.setText(Model.getFacade().toString(
+                        Model.getFacade().getMultiplicity(srcAE)));
 	    }
 	} else if (ft == destMult) {
 	    Object destAE = (conn.toArray())[1];
@@ -313,8 +313,8 @@ public class FigAssociation extends FigEdgeModelElement {
 	        Object[] args = {e.getLocalizedMessage()};
 	        ProjectBrowser.getInstance().getStatusBar().showStatus(
                     Translator.messageFormat(msg, args));
-	        srcMult.setText(
-                    Model.getFacade().getMultiplicity(destAE).toString());
+                srcMult.setText(Model.getFacade().toString(
+                        Model.getFacade().getMultiplicity(destAE)));
 	    }
 	}
     }
