@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.4 2005/11/11 17:55:04 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.5 2005/11/12 08:54:33 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,6 +72,11 @@ public class NotationProviderFactory2 {
      */
     public static final int TYPE_OBJECT = 7;
 
+    /**
+     * TYPE_COMPONENTINSTANCE the text shown on a componentInstance.
+     */
+    public static final int TYPE_COMPONENTINSTANCE = 8;
+
 
     /**
      * defaultLanguage the Notation language used by default, i.e. UML
@@ -79,7 +84,7 @@ public class NotationProviderFactory2 {
     private NotationName defaultLanguage;
 
     /**
-     * allLanguages is a HashMap with as key the notationName, 
+     * allLanguages is a HashMap with as key the notationName,
      * and as value a second HashMap. This latter HashMap has as key the "type"
      * converted to Integer, and as value the provider (NotationProvider4).
      */
@@ -89,7 +94,7 @@ public class NotationProviderFactory2 {
      * The instance is the singleton.
      */
     private static NotationProviderFactory2 instance = null;
-    
+
     /**
      * The constructor.
      */
@@ -97,7 +102,7 @@ public class NotationProviderFactory2 {
         super();
         allLanguages = new HashMap();
     }
-        
+
     /**
      * @return returns the singleton instance
      */
