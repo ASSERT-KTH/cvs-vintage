@@ -1,4 +1,4 @@
-// $Id: UmlException.java,v 1.4 2005/07/10 15:56:48 linus Exp $
+// $Id: UmlException.java,v 1.5 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ package org.argouml.model;
  * @author Bob Tarling
  */
 public class UmlException extends Exception {
-
     /**
      * Constructor the exception with a message.
      *
@@ -64,4 +63,9 @@ public class UmlException extends Exception {
     public UmlException(Throwable c) {
         super(c);
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -1029321716390822627L;
 }

@@ -1,4 +1,4 @@
-// $Id: DiagramInterchangeModel.java,v 1.4 2005/07/18 13:43:28 bobtarling Exp $
+// $Id: DiagramInterchangeModel.java,v 1.5 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,24 +28,24 @@ package org.argouml.model;
  * An interface to the OMG Diagram Interchange Model. Only implemented
  * by model implementations that wrap a repository that is aware of such
  * a model.<p>
- * 
+ *
  * This interface is open for change as DI requirements become more clearly
  * understood.
  * @author Bob Tarling
  */
 public interface DiagramInterchangeModel {
-    
-    public DiDiagram createDiagram(Class type, Object owner);
-    public void deleteDiagram(DiDiagram diagram);
-    
-    public DiElement createElement(DiDiagram diagram, Object modelElement);
-    public void deleteElement(DiElement diagram);
-    
+
+    DiDiagram createDiagram(Class type, Object owner);
+    void deleteDiagram(DiDiagram diagram);
+
+    DiElement createElement(DiDiagram diagram, Object modelElement);
+    void deleteElement(DiElement diagram);
+
     // These methods are based on the GraphEvents. These need replacing by
     // more specic meaningful requests of the diagram interface model
-    public void nodeAdded(Object source, Object arg);
-    public void edgeAdded(Object source, Object arg);
-    public void nodeRemoved(Object source, Object arg);
-    public void edgeRemoved(Object source, Object arg);
-    public void graphChanged(Object source, Object arg);
+    void nodeAdded(Object source, Object arg);
+    void edgeAdded(Object source, Object arg);
+    void nodeRemoved(Object source, Object arg);
+    void edgeRemoved(Object source, Object arg);
+    void graphChanged(Object source, Object arg);
 }

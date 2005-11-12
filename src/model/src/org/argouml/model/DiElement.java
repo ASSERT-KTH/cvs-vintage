@@ -1,4 +1,4 @@
-// $Id: DiElement.java,v 1.1 2005/07/14 15:06:52 bobtarling Exp $
+// $Id: DiElement.java,v 1.2 2005/11/12 23:53:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ package org.argouml.model;
  * The intention here is to pass a class of this type around instead of just
  * an Object. This will give us better compile time safety than we currently
  * get with model elments which are currently passed about as Object.
- * 
+ *
  * @author Bob Tarling
  */
 public interface DiElement {

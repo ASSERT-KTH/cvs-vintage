@@ -1,4 +1,4 @@
-// $Id: DataTypesHelper.java,v 1.4 2005/08/20 09:29:13 linus Exp $
+// $Id: DataTypesHelper.java,v 1.5 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -142,5 +142,5 @@ public interface DataTypesHelper {
      * @return The language (a String).
      */
     String getLanguage(Object handle);
-    
+
 }

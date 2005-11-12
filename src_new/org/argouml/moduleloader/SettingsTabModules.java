@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.8 2005/10/17 11:26:56 bobtarling Exp $
+// $Id: SettingsTabModules.java,v 1.9 2005/11/12 23:56:07 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,7 @@ public class SettingsTabModules extends SettingsTabHelper {
      * Table model for the table with modules.
      */
     class ModuleTableModel extends AbstractTableModel {
-	/**
+        /**
 	 * Constructor.
 	 */
 	public ModuleTableModel() {
@@ -179,6 +179,11 @@ public class SettingsTabModules extends SettingsTabHelper {
 	public boolean isCellEditable(int row, int col) {
 	    return col >= 1 && row < elements.length;
 	}
+
+        /**
+         * The UID.
+         */
+        private static final long serialVersionUID = -5970280716477119863L;
     }
 
     /**
@@ -204,7 +209,7 @@ public class SettingsTabModules extends SettingsTabHelper {
 	    button.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 		    try {
-			    getClass().getClassLoader().loadClass(classname);
+		        getClass().getClassLoader().loadClass(classname);
 		    } catch (ClassNotFoundException e) {
 			JOptionPane.showMessageDialog(
 				notYetLoadedPanel,
@@ -297,4 +302,9 @@ public class SettingsTabModules extends SettingsTabHelper {
      * @see org.argouml.application.api.SettingsTabPanel#getTabKey()
      */
     public String getTabKey() { return "tab.modules"; }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 8945027241102020504L;
 }

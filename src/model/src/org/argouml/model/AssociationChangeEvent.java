@@ -1,4 +1,4 @@
-// $Id: AssociationChangeEvent.java,v 1.4 2005/06/18 16:13:00 linus Exp $
+// $Id: AssociationChangeEvent.java,v 1.5 2005/11/12 23:53:36 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import java.util.EventObject;
  * @author Bob Tarling
  */
 public class AssociationChangeEvent extends UmlChangeEvent {
-
     /**
      * The value that was changed.
      */
@@ -67,4 +66,9 @@ public class AssociationChangeEvent extends UmlChangeEvent {
     public Object getChangedValue() {
         return changedValue;
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 6586460366990334839L;
 }

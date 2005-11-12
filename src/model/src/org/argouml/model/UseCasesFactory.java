@@ -1,4 +1,4 @@
-// $Id: UseCasesFactory.java,v 1.2 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: UseCasesFactory.java,v 1.3 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,7 @@ public interface UseCasesFactory {
      * Set the namespace to the base (preferred) or else extension's
      * namespace. We don't do any checking on base and extension. They
      * should be different, but that is someone else's problem.<p>
-     * 
+     *
      * @param abase      The base use case for the relationship
      *
      * @param anaddition The extension use case for the relationship

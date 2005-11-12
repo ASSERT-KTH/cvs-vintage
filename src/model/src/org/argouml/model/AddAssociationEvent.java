@@ -1,4 +1,4 @@
-// $Id: AddAssociationEvent.java,v 1.3 2005/06/18 16:13:00 linus Exp $
+// $Id: AddAssociationEvent.java,v 1.4 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import java.util.EventObject;
  * @author Bob Tarling
  */
 public class AddAssociationEvent extends AssociationChangeEvent {
-
     /**
      * Constructor.
      *
@@ -53,4 +52,9 @@ public class AddAssociationEvent extends AssociationChangeEvent {
         super(source, propertyName, oldValue, newValue, changedValue,
                 originalEvent);
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 1672552190650651905L;
 }

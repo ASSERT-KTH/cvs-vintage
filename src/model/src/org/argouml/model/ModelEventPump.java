@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.10 2005/11/10 02:09:19 tfmorris Exp $
+// $Id: ModelEventPump.java,v 1.11 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,8 @@ import javax.swing.Action;
  * Since the garbage collecting mechanism is not really deterministic
  * a forgotten about listener might still receive events. Unless it can
  * handle them in a harmless way, this approach should not be used.
- * (Is this still true or does it refer to the NSUML 
+ *
+ * TODO: (Is this still true or does it refer to the NSUML
  * implementation? - tfm 20051109) <p>
  *
  * TODO: What event names?

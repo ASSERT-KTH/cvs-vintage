@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.4 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: CollaborationsHelper.java,v 1.5 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -297,8 +297,8 @@ public interface CollaborationsHelper {
 
     /**
      * Set the successors of a message
-     * (named messsage3 in UML 1.3 & successor in UML 1.4)
-     * 
+     * (named messsage3 in UML 1.3 & successor in UML 1.4).
+     *
      * @param handle Message
      * @param messages Collection of successor messages
      */
@@ -335,7 +335,12 @@ public interface CollaborationsHelper {
      * @param sender the sender
      */
     void setSender(Object handle, Object sender);
-    
-    //additionnal support for interactions
+
+    /**
+     * Additionnal support for interactions.
+     *
+     * @param collab The collaboration.
+     * @param interaction The interaction.
+     */
     void removeInteraction(Object collab, Object interaction);
 }

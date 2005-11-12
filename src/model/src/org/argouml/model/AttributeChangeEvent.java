@@ -1,4 +1,4 @@
-// $Id: AttributeChangeEvent.java,v 1.3 2005/06/18 16:13:00 linus Exp $
+// $Id: AttributeChangeEvent.java,v 1.4 2005/11/12 23:53:36 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import java.util.EventObject;
  * @author Bob Tarling
  */
 public class AttributeChangeEvent extends UmlChangeEvent {
-
     /**
      * Constructor.
      *
@@ -50,4 +49,8 @@ public class AttributeChangeEvent extends UmlChangeEvent {
         super(source, propertyName, oldValue, newValue, originalEvent);
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 1573202490278617016L;
 }

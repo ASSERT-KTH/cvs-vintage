@@ -1,4 +1,4 @@
-// $Id: IllegalModelElementConnectionException.java,v 1.2 2005/07/05 16:13:41 bobtarling Exp $
+// $Id: IllegalModelElementConnectionException.java,v 1.3 2005/11/12 23:53:37 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ package org.argouml.model;
  * An Exception thrown when trying to create an invalid association or link.
  */
 public class IllegalModelElementConnectionException extends UmlException {
-
     /**
      * Constructs an instance of
      * <code>IllegalModelElementConnection</code> with the specified
@@ -58,4 +57,9 @@ public class IllegalModelElementConnectionException extends UmlException {
     public IllegalModelElementConnectionException(String msg, Throwable cause) {
         super(msg, cause);
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -3934102825576700361L;
 }
