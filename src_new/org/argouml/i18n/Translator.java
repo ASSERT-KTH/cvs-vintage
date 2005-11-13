@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.41 2005/10/27 22:30:12 tfmorris Exp $
+// $Id: Translator.java,v 1.42 2005/11/13 00:27:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -225,9 +225,9 @@ public final class Translator {
      * @see org.argouml.i18n.Translator#messageFormat(String, Object[])
      */
     public static String localize(String key, Object[] args) {
-        return messageFormat(key,args);
+        return messageFormat(key, args);
     }
-    
+
     /**
      * The main function of this class that localizes strings.
      *
