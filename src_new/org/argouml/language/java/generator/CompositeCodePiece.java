@@ -1,4 +1,4 @@
-// $Id: CompositeCodePiece.java,v 1.6 2005/01/09 14:58:06 linus Exp $
+// $Id: CompositeCodePiece.java,v 1.7 2005/11/13 17:57:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,10 +96,10 @@ public class CompositeCodePiece extends CodePiece {
      * @see org.argouml.language.java.generator.CodePiece#getStartPosition()
      */
     public int getStartPosition() {
-	if (codePieces.size() > 0)
+	if (codePieces.size() > 0) {
 	    return ((CodePiece) codePieces.firstElement()).getStartPosition();
-	else
-	    return 0;
+        }
+        return 0;
     }
 
     /**
@@ -108,10 +108,10 @@ public class CompositeCodePiece extends CodePiece {
      * @see org.argouml.language.java.generator.CodePiece#getEndPosition()
      */
     public int getEndPosition() {
-	if (codePieces.size() > 0)
+	if (codePieces.size() > 0) {
 	    return ((CodePiece) codePieces.lastElement()).getEndPosition();
-	else
-	    return 0;
+        }
+	return 0;
     }
 
     /**
@@ -120,10 +120,10 @@ public class CompositeCodePiece extends CodePiece {
      * @see org.argouml.language.java.generator.CodePiece#getStartLine()
      */
     public int getStartLine() {
-	if (codePieces.size() > 0)
+	if (codePieces.size() > 0) {
 	    return ((CodePiece) codePieces.firstElement()).getStartLine();
-	else
-	    return 0;
+        }
+        return 0;
     }
 
     /**
@@ -132,9 +132,9 @@ public class CompositeCodePiece extends CodePiece {
      * @see org.argouml.language.java.generator.CodePiece#getEndLine()
      */
     public int getEndLine() {
-	if (codePieces.size() > 0)
+	if (codePieces.size() > 0) {
 	    return ((CodePiece) codePieces.lastElement()).getEndLine();
-	else
-	    return 0;
+        }
+        return 0;
     }
 }

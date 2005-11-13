@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.16 2005/03/11 09:48:35 mkl Exp $
+// $Id: CrMultipleInheritance.java,v 1.17 2005/11/13 17:57:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,9 +62,8 @@ public class CrMultipleInheritance extends CrUML {
 	Collection gen = Model.getFacade().getGeneralizations(cls);
 	if (gen != null && gen.size() > 1) {
 	    return PROBLEM_FOUND;
-	} else {
-	    return NO_PROBLEM;
 	}
+        return NO_PROBLEM;
     }
 
     /**

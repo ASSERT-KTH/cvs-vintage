@@ -1,4 +1,4 @@
-// $Id: DismissToDoItemDialog.java,v 1.23 2005/01/09 14:58:05 linus Exp $
+// $Id: DismissToDoItemDialog.java,v 1.24 2005/11/13 17:57:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import org.argouml.cognitive.Translator;
 import org.argouml.cognitive.UnresolvableException;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.ProjectBrowser;
+import org.tigris.swidgets.Dialog;
 
 /**
  * The dialog to dismiss todo items.
@@ -79,7 +80,7 @@ public class DismissToDoItemDialog extends ArgoDialog {
         super(
             owner,
             Translator.localize("dialog.title.dismiss-todo-item"),
-            ArgoDialog.OK_CANCEL_OPTION,
+            Dialog.OK_CANCEL_OPTION,
             true);
 
         JLabel instrLabel =

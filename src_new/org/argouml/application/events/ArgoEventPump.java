@@ -1,4 +1,4 @@
-// $Id: ArgoEventPump.java,v 1.17 2005/10/24 17:06:13 mvw Exp $
+// $Id: ArgoEventPump.java,v 1.18 2005/11/13 17:57:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -344,9 +344,8 @@ public final class ArgoEventPump {
         public int hashCode() {
             if (listener != null) {
                 return eventType + listener.hashCode();
-            } else {
-                return eventType;
             }
+            return eventType;
         }
 
         /**

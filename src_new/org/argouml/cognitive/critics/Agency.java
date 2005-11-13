@@ -1,4 +1,4 @@
-// $Id: Agency.java,v 1.20 2005/09/11 12:06:08 mkl Exp $
+// $Id: Agency.java,v 1.21 2005/11/13 17:57:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,9 +118,8 @@ public class Agency extends Observable { //implements java.io.Serialization
         Designer dsgr = Designer.theDesigner();
         if (dsgr == null) {
             return null;
-	} else {
-            return dsgr.getAgency();
 	}
+        return dsgr.getAgency();
     }
     ////////////////////////////////////////////////////////////////
     // accessors
@@ -409,9 +408,8 @@ public class Agency extends Observable { //implements java.io.Serialization
         Agency a = theAgency();
         if (a == null) {
             return;
-	} else {
-            a.addObserver(obs);
 	}
+        a.addObserver(obs);
     }
 
     /**
