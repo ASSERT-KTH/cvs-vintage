@@ -1,4 +1,4 @@
-// $Id: NotationHelper.java,v 1.1 2005/11/02 13:28:14 mvw Exp $
+// $Id: NotationHelper.java,v 1.2 2005/11/13 00:19:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,12 +27,17 @@ package org.argouml.notation;
 import org.argouml.application.api.Configuration;
 
 /**
- * A helper for notation related functions. Currently, it only contains 
- * 2 functions to obtain the guillemet characters or 
- * their double bracket alternative, 
+ * A helper for notation related functions. Currently, it only contains
+ * 2 functions to obtain the guillemet characters or
+ * their double bracket alternative,
  * based on the choice made by the user in the Settings menu.
  */
-public class NotationHelper {
+public final class NotationHelper {
+    /**
+     * The constructor.
+     */
+    private NotationHelper() {
+    }
 
     /**
      * @return the left pointing guillemot, i.e. << or the one-character symbol

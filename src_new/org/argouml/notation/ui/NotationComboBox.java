@@ -1,4 +1,4 @@
-// $Id: NotationComboBox.java,v 1.1 2005/11/02 13:28:15 mvw Exp $
+// $Id: NotationComboBox.java,v 1.2 2005/11/13 00:19:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,18 +46,24 @@ public class NotationComboBox
     extends JComboBox
     implements ArgoNotationEventListener {
 
-    /** logger */
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger(NotationComboBox.class);
 
-    private static NotationComboBox singleton = null;
+    /**
+     * The instance.
+     */
+    private static NotationComboBox singleton;
 
     /**
      * @return the singleton
      */
     public static NotationComboBox getInstance() {
         // Only instantiate when we need it.
-        if (singleton == null)
+        if (singleton == null) {
             singleton = new NotationComboBox();
+        }
         return singleton;
     }
 
@@ -124,4 +130,9 @@ public class NotationComboBox
         setVisible(true);
         invalidate();
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 4059899784583789412L;
 }
