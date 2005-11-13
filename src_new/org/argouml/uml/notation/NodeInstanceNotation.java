@@ -1,4 +1,4 @@
-// $Id: AttributeNotation.java,v 1.3 2005/11/13 14:31:39 mvw Exp $
+// $Id: NodeInstanceNotation.java,v 1.1 2005/11/13 14:31:39 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,26 +27,26 @@ package org.argouml.uml.notation;
 import org.argouml.model.Model;
 
 /**
- * This abstract class forms the basis of all Notation providers
- * for the text shown in the attribute compartment of a Class.
+ * This abstract class forms the basis of all Notation providers 
+ * for the text shown in the Fig that represents a nodeInstance. 
  * Subclass this for all languages.
- *
+ * 
  * @author mvw@tigris.org
  */
-public abstract class AttributeNotation extends ValueHandler {
+public abstract class NodeInstanceNotation extends ValueHandler {
 
-    protected Object myAttribute;
-    protected Object myClass;
-
+    protected Object myNodeInstance;
+    
     /**
      * The constructor.
+     * 
+     * @param nodeInstance the nodeInstance of which we handle the text
      */
-    public AttributeNotation(Object attribute) {
-        if (!Model.getFacade().isAAttribute(attribute)) {
-            throw new IllegalArgumentException("This is not an Attribute.");
+    public NodeInstanceNotation(Object nodeInstance) {
+        if (!Model.getFacade().isANodeInstance(nodeInstance)) {
+            throw new IllegalArgumentException("This is not a NodeInstance.");
         }
-        myAttribute = attribute;
-        myClass = Model.getFacade().getOwner(attribute);
+        myNodeInstance = nodeInstance;
     }
 
 }

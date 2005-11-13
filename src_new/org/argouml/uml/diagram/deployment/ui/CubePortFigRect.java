@@ -1,4 +1,4 @@
-// $Id: AttributeNotation.java,v 1.3 2005/11/13 14:31:39 mvw Exp $
+// $Id: CubePortFigRect.java,v 1.1 2005/11/13 14:31:39 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,31 +22,59 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.notation;
+package org.argouml.uml.diagram.deployment.ui;
 
-import org.argouml.model.Model;
+import java.awt.Point;
+import java.awt.Rectangle;
+
+import org.tigris.gef.base.Geometry;
+import org.tigris.gef.presentation.FigRect;
 
 /**
- * This abstract class forms the basis of all Notation providers
- * for the text shown in the attribute compartment of a Class.
- * Subclass this for all languages.
- *
+ * The bigport needs to overrule the getClosestPoint, 
+ * because it is the port of this FigNode(Instance).
+ * 
  * @author mvw@tigris.org
  */
-public abstract class AttributeNotation extends ValueHandler {
-
-    protected Object myAttribute;
-    protected Object myClass;
-
+class CubePortFigRect extends FigRect {
+    private int d;
     /**
      * The constructor.
+     * 
+     * @param x the x
+     * @param y the y
+     * @param w the width
+     * @param h the hight
      */
-    public AttributeNotation(Object attribute) {
-        if (!Model.getFacade().isAAttribute(attribute)) {
-            throw new IllegalArgumentException("This is not an Attribute.");
-        }
-        myAttribute = attribute;
-        myClass = Model.getFacade().getOwner(attribute);
+    public CubePortFigRect(int x, int y, int w, int h, int depth) {
+        super(x, y, w, h);
+        this.d = depth;
     }
-
-}
+    
+    /**
+     * @see org.tigris.gef.presentation.Fig#getClosestPoint(java.awt.Point)
+     */
+    public Point getClosestPoint(Point anotherPt) {
+        Rectangle r = getBounds();
+        int xs[] = {r.x,     
+                r.x + d, 
+                r.x + r.width, 
+                r.x + r.width,
+                r.x + r.width - d,  
+                r.x,            
+                r.x};
+        int ys[] = {r.y + d, 
+                r.y,
+                r.y, 
+                r.y + r.height - d,
+                r.y + r.height, 
+                r.y + r.height,
+                r.y + d};
+        Point p = Geometry.ptClosestTo(
+                xs, 
+                ys,
+                7 , anotherPt);
+        return p;
+    }
+    
+}    

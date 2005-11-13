@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.178 2005/11/13 11:01:09 linus Exp $
+// $Id: ParserDisplay.java,v 1.179 2005/11/13 14:31:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3358,102 +3358,6 @@ public final class ParserDisplay {
         Object act = Model.getFacade().getDispatchAction(sti);
         Model.getCoreHelper().setName(act, action);
         Model.getCoreHelper().setName(sti, name);
-    }
-
-    /**
-     * Parse a textual representatation of an Object,
-     * i.e. a line of the form:<ul>
-     * <li>       "name: base-classes"
-     * <li> with "base-classes" a comma-seperated list of class names.
-     * </ul>
-     *
-     * @param obj
-     *            the UML Object to be parsed.
-     * @param s
-     *            the string to be parsed.
-     */
-    public void parseObject(Object/* MObject */obj, String s) {
-        s = s.trim();
-        if (s.length() == 0) {
-            return;
-        }
-        // strip any trailing semi-colons
-        if (s.charAt(s.length() - 1) == ';') {
-            s = s.substring(0, s.length() - 2);
-        }
-
-        String name = "";
-        String bases = "";
-        StringTokenizer baseTokens = null;
-
-        if (s.indexOf(":", 0) > -1) {
-            name = s.substring(0, s.indexOf(":", 0)).trim();
-            bases = s.substring(s.indexOf(":", 0) + 1).trim();
-            baseTokens = new StringTokenizer(bases, ",");
-        } else {
-            name = s;
-        }
-
-        Model.getCommonBehaviorHelper().setClassifiers(obj, new Vector());
-        if (baseTokens != null) {
-            while (baseTokens.hasMoreElements()) {
-                String typeString = baseTokens.nextToken();
-                Object type =
-                /* (MClassifier) */ProjectManager.getManager()
-                        .getCurrentProject().findType(typeString);
-                Model.getCommonBehaviorHelper().addClassifier(obj, type);
-            }
-        }
-        /* This updates the diagram - hence as last statement: */
-        Model.getCoreHelper().setName(obj, name);
-    }
-
-    /**
-     * Parse a line of the form: "name : base-node".
-     *
-     * @param noi
-     *            the node instance on which the string applies.
-     * @param s
-     *            the string to be parsed.
-     */
-    public void parseNodeInstance(Object noi, String s) {
-        // strip any trailing semi-colons
-        s = s.trim();
-        if (s.length() == 0) {
-            return;
-        }
-        if (s.charAt(s.length() - 1) == ';') {
-            s = s.substring(0, s.length() - 2);
-        }
-
-        String name = "";
-        String bases = "";
-        StringTokenizer tokenizer = null;
-
-        if (s.indexOf(":", 0) > -1) {
-            name = s.substring(0, s.indexOf(":")).trim();
-            bases = s.substring(s.indexOf(":") + 1).trim();
-        } else {
-            name = s;
-        }
-
-        tokenizer = new StringTokenizer(bases, ",");
-
-        Vector v = new Vector();
-        Object ns = Model.getFacade().getNamespace(noi);
-        if (ns != null) {
-            while (tokenizer.hasMoreElements()) {
-                String newBase = tokenizer.nextToken();
-                Object cls = Model.getFacade().lookupIn(ns, newBase.trim());
-                if (cls != null) {
-                    v.add(cls);
-                }
-            }
-        }
-
-        Model.getCommonBehaviorHelper().setClassifiers(noi, v);
-        Model.getCoreHelper().setName(noi, name);
-
     }
 
     /**

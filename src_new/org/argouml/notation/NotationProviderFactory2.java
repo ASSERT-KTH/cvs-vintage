@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.6 2005/11/13 00:19:00 linus Exp $
+// $Id: NotationProviderFactory2.java,v 1.7 2005/11/13 14:31:40 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,11 @@ public final class NotationProviderFactory2 {
      */
     public static final int TYPE_COMPONENTINSTANCE = 8;
 
-
+    /**
+     * TYPE_NODEINSTANCE the text shown on a componentInstance.
+     */
+    public static final int TYPE_NODEINSTANCE = 9;
+    
     /**
      * defaultLanguage the Notation language used by default, i.e. UML
      */
