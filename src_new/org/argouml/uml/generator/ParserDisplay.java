@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.179 2005/11/13 14:31:40 mvw Exp $
+// $Id: ParserDisplay.java,v 1.180 2005/11/13 17:56:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3310,54 +3310,6 @@ public final class ParserDisplay {
             }
         }
         return i;
-    }
-
-    /**
-     * Parse a line of the form: "name: action".
-     *
-     * @param sti
-     *            the stimulus object to which the string applies
-     * @param s
-     *            the string to be parsed.
-     */
-    public void parseStimulus(Object sti, String s) {
-        // strip any trailing semi-colons
-        s = s.trim();
-        if (s.length() == 0) {
-            return;
-        }
-        if (s.charAt(s.length() - 1) == ';') {
-            s = s.substring(0, s.length() - 2);
-        }
-
-        //cut trailing string "new Action"
-        s = s.trim();
-        if (s.length() == 0) {
-            return;
-        }
-        if (s.endsWith("new Action")) {
-            s = s.substring(0, s.length() - 10);
-        }
-
-        String name = "";
-        String action = "";
-        String actionfirst = "";
-        if (s.indexOf(":", 0) > -1) {
-            name = s.substring(0, s.indexOf(":")).trim();
-            actionfirst = s.substring(s.indexOf(":") + 1).trim();
-            if (actionfirst.indexOf(":", 0) > 1) {
-                action =
-                    actionfirst.substring(0, actionfirst.indexOf(":")).trim();
-            } else {
-                action = actionfirst;
-            }
-        } else {
-            name = s;
-        }
-
-        Object act = Model.getFacade().getDispatchAction(sti);
-        Model.getCoreHelper().setName(act, action);
-        Model.getCoreHelper().setName(sti, name);
     }
 
     /**
