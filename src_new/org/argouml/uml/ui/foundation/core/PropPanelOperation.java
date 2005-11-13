@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.88 2005/11/10 10:16:02 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.89 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,7 +156,7 @@ public class PropPanelOperation extends PropPanelFeature {
             putValue(Action.NAME,
                     Translator.localize("button.new-raised-signal"));
             Icon icon = ResourceLoaderWrapper.lookupIcon("SignalSending");
-            putValue(Action.SMALL_ICON, icon);            
+            putValue(Action.SMALL_ICON, icon);
         }
 
         /**
@@ -182,7 +182,7 @@ public class PropPanelOperation extends PropPanelFeature {
             putValue(Action.NAME,
                     Translator.localize("button.new-method"));
             Icon icon = ResourceLoaderWrapper.lookupIcon("Method");
-            putValue(Action.SMALL_ICON, icon);       
+            putValue(Action.SMALL_ICON, icon);
         }
 
         /**

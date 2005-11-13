@@ -1,4 +1,4 @@
-// $Id: ActionModifierActive.java,v 1.2 2005/06/13 18:39:15 mvw Exp $
+// $Id: ActionModifierActive.java,v 1.3 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,14 +36,14 @@ class ActionModifierActive extends AbstractActionCheckBoxMenuItem {
         super("checkbox.active-uc", NO_ICON);
         putValue("SELECTED", new Boolean(valueOfTarget(o)));
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionCheckBoxMenuItem#toggleValueOfTarget(java.lang.Object)
      */
     void toggleValueOfTarget(Object t) {
-        Model.getCoreHelper().setActive(t, !Model.getFacade().isActive(t)); 
+        Model.getCoreHelper().setActive(t, !Model.getFacade().isActive(t));
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionCheckBoxMenuItem#valueOfTarget(java.lang.Object)
      */

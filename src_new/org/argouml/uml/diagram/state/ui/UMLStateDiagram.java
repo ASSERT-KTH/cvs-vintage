@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.83 2005/11/10 06:13:39 tfmorris Exp $
+// $Id: UMLStateDiagram.java,v 1.84 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -289,7 +289,7 @@ public class UMLStateDiagram extends UMLDiagram {
     protected Action getActionBranchPseudoState() {
         return getActionChoicePseudoState();
     }
-    
+
     /**
      * @return Returns the actionChoicePseudoState.
      */
@@ -301,7 +301,7 @@ public class UMLStateDiagram extends UMLDiagram {
         }
         return actionBranchPseudoState;
     }
-    
+
     /**
      * @return Returns the actionCompositeState.
      */
@@ -476,7 +476,7 @@ public class UMLStateDiagram extends UMLDiagram {
         }
         if (Model.getUmlFactory().isRemoved(getNamespace())) {
             return true;
-        }            	
+        }
         Object context = Model.getFacade().getContext(theStateMachine);
         if (context == null) {
             return true;
@@ -495,8 +495,8 @@ public class UMLStateDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
      */
     public boolean isRelocationAllowed(Object base)  {
-    	return false; 
-    	/* TODO: We may return the following when the 
+    	return false;
+    	/* TODO: We may return the following when the
     	 * relocate() has been implemented. */
 //    	Model.getStateMachinesHelper()
 //        	.isAddingStatemachineAllowed(base);
@@ -508,5 +508,5 @@ public class UMLStateDiagram extends UMLDiagram {
     public boolean relocate(Object base) {
         return false;
     }
-    
+
 } /* end class UMLStateDiagram */

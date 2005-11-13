@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.29 2005/11/02 08:53:33 tfmorris Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.30 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,14 +83,14 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
         }
         return null;
     }
-    
+
     /**
      * Override UMLComboBoxModel2's default handling of RemoveAssociation. We
      * get this from MDR for the previous signal when a different signal is
      * selected. Don't let that remove it from the combo box. Only remove it if
      * the signal was removed from the namespace.
      * <p>
-     * 
+     *
      * @see org.argouml.uml.ui.UMLComboBoxModel2#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -109,5 +109,5 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
             super.propertyChange(evt);
         }
     }
-    
+
 }

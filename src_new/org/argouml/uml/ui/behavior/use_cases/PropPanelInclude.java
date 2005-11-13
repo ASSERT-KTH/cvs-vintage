@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.42 2005/11/10 03:58:56 tfmorris Exp $
+// $Id: PropPanelInclude.java,v 1.43 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,8 +51,8 @@ public class PropPanelInclude extends PropPanelModelElement {
      * Constructor. Builds up the various fields required.
      */
     public PropPanelInclude() {
-        super("Include", 
-                lookupIcon("Include"), 
+        super("Include",
+                lookupIcon("Include"),
                 ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),

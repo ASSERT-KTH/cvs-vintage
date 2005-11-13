@@ -1,4 +1,4 @@
-// $Id: ClassdiagramRealizationEdge.java,v 1.8 2005/02/02 18:38:09 mvw Exp $
+// $Id: ClassdiagramRealizationEdge.java,v 1.9 2005/11/13 11:01:23 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +31,11 @@ import org.tigris.gef.presentation.*;
  * @author  mkl
  */
 public class ClassdiagramRealizationEdge extends ClassdiagramInheritanceEdge {
-    
-    
+
+
     /**
      * The constructor.
-     * 
+     *
      * @param edge the fig edge
      */
     public ClassdiagramRealizationEdge(FigEdge edge) {

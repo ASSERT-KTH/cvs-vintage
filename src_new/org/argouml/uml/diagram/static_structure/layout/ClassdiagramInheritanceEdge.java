@@ -1,4 +1,4 @@
-// $Id: ClassdiagramInheritanceEdge.java,v 1.13 2005/05/12 23:13:45 bobtarling Exp $
+// $Id: ClassdiagramInheritanceEdge.java,v 1.14 2005/11/13 11:01:23 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
 
 /**
- * 
+ *
  * @author mkl
  */
 public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
@@ -48,7 +48,7 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
 
     /**
      * Constructor.
-     * 
+     *
      * @param edge the fig edge
      */
     public ClassdiagramInheritanceEdge(FigEdge edge) {
@@ -92,11 +92,11 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
 
     /**
      * @see org.argouml.uml.diagram.layout.LayoutedEdge#layout()
-     * 
+     *
      * Layout the edges in a way that they form a nice inheritance tree. Try to
      * implement these nice zigzag lines between classes and works well when the
      * row difference is one.
-     * 
+     *
      * @author Markus Klink
      * @since 0.9.6
      */
@@ -140,7 +140,7 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
 
     /**
      * Set the line-offset for this edge
-     * 
+     *
      * @param anOffset
      *            the offset to use for this edge
      */

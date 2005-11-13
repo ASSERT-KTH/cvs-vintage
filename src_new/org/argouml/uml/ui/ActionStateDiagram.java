@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.40 2005/07/22 13:13:50 bobtarling Exp $
+// $Id: ActionStateDiagram.java,v 1.41 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** 
+/**
  * Action to create a new statechart diagram.
  */
 public class ActionStateDiagram extends ActionAddDiagram {
@@ -57,7 +57,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
         Object/*MStateMachine*/ machine =
             Model.getStateMachinesFactory().buildStateMachine(target);
         return (UMLDiagram)DiagramFactory.getInstance().createDiagram(
-                UMLStateDiagram.class, 
+                UMLStateDiagram.class,
                 Model.getFacade().getNamespace(machine),
                 machine);
     }

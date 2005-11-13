@@ -1,4 +1,4 @@
-// $Id: GoComponentToResidentModelElement.java,v 1.1 2005/02/12 20:47:39 mvw Exp $
+// $Id: GoComponentToResidentModelElement.java,v 1.2 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.model.Model;
 
 /**
  * Rule for Component -> Resident Element.
- * 
+ *
  * @author mvw@tigris.org
  *
  */
@@ -53,7 +53,7 @@ public class GoComponentToResidentModelElement extends AbstractPerspectiveRule {
     public Collection getChildren(Object parent) {
         if (Model.getFacade().isAComponent(parent)) {
             // First get the collection of ElementResidence
-            Iterator eri = 
+            Iterator eri =
                 Model.getFacade().getResidentElements(parent).iterator();
             Collection result = new ArrayList();
             while (eri.hasNext()) {

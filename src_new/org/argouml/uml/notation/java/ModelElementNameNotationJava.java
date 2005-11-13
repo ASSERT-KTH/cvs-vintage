@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationJava.java,v 1.3 2005/11/06 13:58:19 mvw Exp $
+// $Id: ModelElementNameNotationJava.java,v 1.4 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class ModelElementNameNotationJava extends ModelElementNameNotation {
     }
 
     /**
-     * 
+     *
      * @return a string which represents the path
      */
     protected String generatePath() {
@@ -91,24 +91,24 @@ public class ModelElementNameNotationJava extends ModelElementNameNotation {
             while (!stack.isEmpty()) {
                 s += (String) stack.pop() + ".";
             }
-            
+
             if (s.length() > 0 && !s.endsWith(".")) {
                 s += ".";
             }
         }
         return s;
     }
-    
+
     /**
      * @return a string which represents the visibility
      */
     protected String generateVisibility() {
         String s = "";
-        Boolean b = ((Boolean)this.getValue("visibilityVisible")); 
+        Boolean b = ((Boolean)this.getValue("visibilityVisible"));
         if (b != null && b.booleanValue()) {
             Object v = Model.getFacade().getVisibility(myModelElement);
             if (v == null) {
-                /* Initially, the visibility is not set in the model. 
+                /* Initially, the visibility is not set in the model.
                  * Still, we want to show the default, i.e. public.*/
                 v = Model.getVisibilityKind().getPublic();
             }

@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.25 2005/04/15 09:46:59 mkl Exp $
+// $Id: CrConsiderSingleton.java,v 1.26 2005/11/13 11:01:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,7 @@ public class CrConsiderSingleton extends CrUML {
         if (!(Model.getFacade().isAClass(dm))) {
             return NO_PROBLEM;
         }
-        
+
         // and not association classes
         if (Model.getFacade().isAAssociationClass(dm)) {
             return NO_PROBLEM;
@@ -157,5 +157,10 @@ public class CrConsiderSingleton extends CrUML {
 	return PROBLEM_FOUND;
     }
 
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -178026888698499288L;
 } /* end class CrConsiderSingleton */
 

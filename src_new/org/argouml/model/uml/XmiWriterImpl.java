@@ -1,4 +1,4 @@
-// $Id: XmiWriterImpl.java,v 1.2 2005/04/14 18:29:45 mvw Exp $
+// $Id: XmiWriterImpl.java,v 1.3 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import ru.novosoft.uml.xmi.XMIWriter;
 /**
  * A wrapper around the genuine XmiReader that provides public access with no
  * knowledge of actual UML implementation.
- * 
+ *
  * @author Bob Tarling
  */
 public class XmiWriterImpl implements XmiWriter {
@@ -49,7 +49,7 @@ public class XmiWriterImpl implements XmiWriter {
 
     /**
      * Constructor for XMIReader.
-     * 
+     *
      * @throws UmlException
      *             when there is a problem
      * @param model
@@ -67,7 +67,7 @@ public class XmiWriterImpl implements XmiWriter {
 
     /**
      * Write XMI to registered writer
-     * 
+     *
      * @throws UmlException
      *             if it goes wrong
      */

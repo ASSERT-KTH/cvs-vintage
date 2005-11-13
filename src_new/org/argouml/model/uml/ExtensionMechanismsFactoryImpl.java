@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.13 2005/10/27 18:48:31 rastaman Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.14 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -165,7 +165,7 @@ public class ExtensionMechanismsFactoryImpl
      * Builds an initialized stereotype with no namespace.
      * A stereotype
      * must have a namespace so this method is unsafe. Use
-     * buildStereotype(String, Object). 
+     * buildStereotype(String, Object).
      *
      * @param text is the name of the stereotype
      * @return an initialized stereotype.
@@ -283,7 +283,7 @@ public class ExtensionMechanismsFactoryImpl
     public Object createTagDefinition() {
         return null;
     }
- 
+
     /**
      * Unimplemented in NSUML / UML 1.3.
      * @see org.argouml.model.ExtensionMechanismsFactory#createTagDefinition()
@@ -291,6 +291,6 @@ public class ExtensionMechanismsFactoryImpl
     public Object copyTagDefinition(Object anElement, Object aNs) {
         return null;
     }
-    
+
 }
 

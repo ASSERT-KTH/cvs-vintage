@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.25 2005/10/23 08:38:19 rastaman Exp $
+// $Id: StylePanel.java,v 1.26 2005/11/13 11:01:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,9 +47,14 @@ import org.tigris.swidgets.LabelledLayout;
  * The Presentation panel - formerly called style panel.
  *
  */
-public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
+public class StylePanel
+    extends AbstractArgoJPanel
+    implements TabFigTarget,
                 ItemListener, DocumentListener, ListSelectionListener,
                 ActionListener {
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger(StylePanel.class);
 
     private Fig panelTarget;
@@ -70,7 +75,7 @@ public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
     protected final void addSeperator() {
         add(LabelledLayout.getSeperator());
     }
-    
+
     /**
      * This method must be overriden by implementors if they don't want to
      * refresh the whole stylepanel every time a property change events is
@@ -89,11 +94,13 @@ public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
     public void setTarget(Object t) {
 	if (!(t instanceof Fig)) {
 	    if (Model.getFacade().isABase(t)) {
-		Project p = ProjectManager.getManager()
-		    .getCurrentProject();
+		Project p =
+                    ProjectManager.getManager()
+                        .getCurrentProject();
                 ArgoDiagram diagram = p.getActiveDiagram();
-                if (diagram!=null)
+                if (diagram != null) {
                     t = diagram.presentationFor(t);
+                }
 		if (!(t instanceof Fig)) {
 		    return;
 		}
@@ -127,10 +134,11 @@ public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
      * @see org.argouml.ui.TabTarget#shouldBeEnabled(java.lang.Object)
      */
     public boolean shouldBeEnabled(Object target) {
-	ArgoDiagram diagram = ProjectManager.getManager()
-	    .getCurrentProject().getActiveDiagram();
-	target = (target instanceof Fig) ? target : diagram
-	    .getContainingFig(target);
+	ArgoDiagram diagram =
+            ProjectManager.getManager()
+                .getCurrentProject().getActiveDiagram();
+	target =
+            (target instanceof Fig) ? target : diagram.getContainingFig(target);
 	return (target instanceof Fig);
     }
 
@@ -206,4 +214,8 @@ public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
         return panelTarget;
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 2183676111107689482L;
 } /* end class StylePanel */

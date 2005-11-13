@@ -1,4 +1,4 @@
-// $Id: Language.java,v 1.1 2005/10/24 17:06:13 mvw Exp $
+// $Id: Language.java,v 1.2 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +31,11 @@ import javax.swing.Icon;
  * @author Daniele Tamino
  */
 public class Language {
-    
+
     private String name;
     private String title;
     private Icon icon;
-    
+
     /**
      * @param theName The name of the language.
      * @param theTitle A string representing the language for display.
@@ -52,7 +52,7 @@ public class Language {
     }
 
     /**
-     * Creates a language with no icon.  
+     * Creates a language with no icon.
      * @param theName The name of the language.
      * @param theTitle A string representing the language for display.
      */
@@ -61,14 +61,14 @@ public class Language {
     }
 
     /**
-     * Creates a language with title equal to the name.  
+     * Creates a language with title equal to the name.
      * @param theName The name of the language.
      * @param theIcon An icon for the language.
      */
     public Language(String theName, Icon theIcon) {
         this(theName, theName, theIcon);
     }
-    
+
     /**
      * Creates a language with title equal to the name and no icon.
      * @param theName The name of the language.
@@ -120,7 +120,7 @@ public class Language {
     public void setTitle(String theTitle) {
         this.title = theTitle;
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */
@@ -128,5 +128,5 @@ public class Language {
         String tit = getTitle();
         return tit == null ? "(no name)" : tit;
     }
-    
+
 }

@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.24 2005/03/01 23:57:25 bobtarling Exp $
+// $Id: ParseState.java,v 1.25 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,12 +38,12 @@ import org.argouml.model.Model;
  * @author Marcus Andersson
  */
 class ParseState {
-    
+
     /**
      * Logger.<p>
      */
     private static final Logger LOG = Logger.getLogger(ParseState.class);
-    
+
     /**
      * When the classifier parse is finished, these features will be
      * removed from the model.
@@ -106,9 +106,9 @@ class ParseState {
     public ParseState(ParseState previousState,
                       Object mClassifier,
                       Object currentPackage) {
-        
+
         LOG.info("Parsing the state of " + mClassifier);
-        
+
         classnamePrefix =
             previousState.classnamePrefix
             + Model.getFacade().getName(mClassifier)

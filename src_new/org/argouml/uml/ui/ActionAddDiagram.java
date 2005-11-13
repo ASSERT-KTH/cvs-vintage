@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.35 2005/04/29 17:48:23 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.36 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public abstract class ActionAddDiagram extends UMLAction {
             //changes...  to eliminate coupling on gui.
             ExplorerEventAdaptor.getInstance().modelElementAdded(ns);
             TargetManager.getInstance().setTarget(diagram);
-            
+
             super.actionPerformed(e);
         } else {
             LOG.error("No valid namespace found");

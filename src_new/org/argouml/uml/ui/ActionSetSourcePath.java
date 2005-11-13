@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.27 2005/01/30 20:47:48 linus Exp $
+// $Id: ActionSetSourcePath.java,v 1.28 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public class ActionSetSourcePath extends UMLAction {
 	if (f != null) {
 	    Object obj = TargetManager.getInstance().getTarget();
 	    if (Model.getFacade().isAModelElement(obj)) {
-		Model.getCoreHelper().setTaggedValue(obj, "src_path", 
+		Model.getCoreHelper().setTaggedValue(obj, "src_path",
 		        f.getPath());
 	    }
 	}
@@ -118,7 +118,7 @@ public class ActionSetSourcePath extends UMLAction {
 	chooser.setDialogTitle(sChooserTitle);
 	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-	int retval = chooser.showDialog(ProjectBrowser.getInstance(), 
+	int retval = chooser.showDialog(ProjectBrowser.getInstance(),
             Translator.localize("dialog.button.ok"));
 	if (retval == JFileChooser.APPROVE_OPTION) {
 	    return chooser.getSelectedFile();

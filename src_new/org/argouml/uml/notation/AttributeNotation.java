@@ -1,4 +1,4 @@
-// $Id: AttributeNotation.java,v 1.1 2005/11/07 19:38:57 mvw Exp $
+// $Id: AttributeNotation.java,v 1.2 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,17 +27,17 @@ package org.argouml.uml.notation;
 import org.argouml.model.Model;
 
 /**
- * This abstract class forms the basis of all Notation providers 
- * for the text shown in the attribute compartment of a Class. 
+ * This abstract class forms the basis of all Notation providers
+ * for the text shown in the attribute compartment of a Class.
  * Subclass this for all languages.
- * 
+ *
  * @author mvw@tigris.org
  */
 public abstract class AttributeNotation extends ValueHandler {
 
     protected Object myAttribute;
     protected Object myClass;
-    
+
     /**
      * The constructor.
      */

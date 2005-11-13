@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.81 2005/09/26 21:24:49 bobtarling Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.82 2005/11/13 11:01:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,7 +198,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
             throw new IllegalStateException(
                     "The namespace of the collaboration diagram is not set");
         }
-        
+
         Collection messages;
         Iterator msgIterator;
         Collection ownedElements =
@@ -389,20 +389,21 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     public Object getDependentElement() {
         return getNamespace(); /* The collaboration. */
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
      */
     public boolean isRelocationAllowed(Object base) {
-        /* TODO: We may return the following when the 
-         * relocate() has been implemented. */
-//      if (Model.getFacade().isAOperation(base) 
+        /* TODO: We may return the following when the
+         * relocate() has been implemented.
+         */
+//      if (Model.getFacade().isAOperation(base)
 //      || Model.getFacade().isANamespace(base))
 //      return Model.getCollaborationsHelper()
 //      .isAddingCollaborationAllowed(base);
         return false;
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
      */
@@ -410,4 +411,9 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         return false;
     }
 
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 8081715986963837750L;
 } /* end class UMLCollaborationDiagram */

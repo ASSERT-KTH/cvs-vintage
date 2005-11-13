@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.58 2005/10/10 12:46:41 mkl Exp $
+// $Id: PropPanelExtend.java,v 1.59 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class PropPanelExtend extends PropPanelModelElement {
      */
 
     public PropPanelExtend() {
-        super("Extend", lookupIcon("Extend"), 
+        super("Extend", lookupIcon("Extend"),
                 ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
@@ -81,7 +81,7 @@ public class PropPanelExtend extends PropPanelModelElement {
         addSeperator();
 
 
-        // Link to the two ends. 
+        // Link to the two ends.
         addField(Translator.localize("label.usecase-base"),
                 getSingleRowScroll(new UMLLinkedList(
                         new UMLExtendBaseListModel())));
@@ -116,7 +116,7 @@ public class PropPanelExtend extends PropPanelModelElement {
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());
     }
-    
+
     /**
      * @return a scrollpane with a single row
      */

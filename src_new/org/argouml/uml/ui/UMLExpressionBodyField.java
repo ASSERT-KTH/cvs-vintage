@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.21 2005/06/01 00:15:00 bobtarling Exp $
+// $Id: UMLExpressionBodyField.java,v 1.22 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class UMLExpressionBodyField extends JTextArea
         String oldText = getText();
         String newText = model.getBody();
         LOG.debug("UMLExpressionBodyField: update: " + oldText + " " + newText);
-        
+
         if (oldText == null || newText == null || !oldText.equals(newText)) {
             if (oldText != newText) {
                 LOG.debug("setNewText!!");

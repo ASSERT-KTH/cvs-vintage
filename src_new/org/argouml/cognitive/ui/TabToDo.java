@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.30 2005/04/24 20:13:49 mvw Exp $
+// $Id: TabToDo.java,v 1.31 2005/11/13 11:01:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ import org.tigris.toolbar.ToolBar;
 public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     ////////////////////////////////////////////////////////////////
     // static variables
-    private static int numHushes = 0;
+    private static int numHushes;
 
     private static UMLAction actionNewToDoItem = new ActionNewToDoItem();
     private static UMLAction actionResolve = new ActionResolve();
@@ -68,7 +68,7 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     // instance variables
 
     private WizDescription description = new WizDescription();
-    private JPanel lastPanel = null;
+    private JPanel lastPanel;
     private BorderSplitPane splitPane;
     private Object target;
 
@@ -152,9 +152,10 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     }
 
     /**
-     * Sets the target of the TabToDo
+     * Sets the target of the TabToDo.
+     *
      * @deprecated As of ArgoUml version 0.13.5,
-     *             the visibility of this method will change to private 
+     *             the visibility of this method will change to private
      *             in the future, replaced by
      *             {@link org.argouml.ui.targetmanager.TargetManager}.
      * @param item the new target
@@ -177,7 +178,8 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     }
 
    /**
-    * Returns the target of the TabToDo
+    * Returns the target of the TabToDo.
+    *
     * @return The current target of the TabToDo
     */
     public Object getTarget() {
@@ -226,4 +228,8 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
 	setTarget(e.getNewTarget());
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 4819730646847978729L;
 } /* end class TabToDo */

@@ -1,4 +1,4 @@
-// $Id: PropPanelState.java,v 1.24 2005/10/23 20:06:51 rastaman Exp $
+// $Id: PropPanelState.java,v 1.25 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class PropPanelState extends AbstractPropPanelState {
                 getDoScroll());
         addField(Translator.localize("label.deferrable"),
                 getDeferrableEventsScroll());
-        
+
         addSeperator();
 
         addField(Translator.localize("label.incoming"),

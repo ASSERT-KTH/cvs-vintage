@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.102 2005/11/05 16:10:43 bobtarling Exp $
+// $Id: PropPanelModelElement.java,v 1.103 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,7 +160,7 @@ public abstract class PropPanelModelElement extends PropPanel {
         addField(Translator.localize("label.constraints"),
                 getConstraintScroll());
         add(getNamespaceVisibilityPanel());
-        
+
     }
 
     /**
@@ -262,7 +262,7 @@ public abstract class PropPanelModelElement extends PropPanel {
     /**
      * Returns the stereotype selecter. This is a component which allows the
      * user to select a single item as the stereotype.
-     * 
+     *
      * @return the stereotype selecter
      */
     protected JComponent getStereotypeSelector() {

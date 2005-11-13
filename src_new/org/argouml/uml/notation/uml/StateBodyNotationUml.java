@@ -1,4 +1,4 @@
-// $Id: StateBodyNotationUml.java,v 1.3 2005/11/11 21:42:45 mvw Exp $
+// $Id: StateBodyNotationUml.java,v 1.4 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class StateBodyNotationUml extends StateBodyNotation {
 
     /**
      * The constructor.
-     * 
+     *
      * @param state the state represented by the notation
      */
     public StateBodyNotationUml(Object state) {
@@ -438,7 +438,7 @@ public class StateBodyNotationUml extends StateBodyNotation {
         ae = Model.getDataTypesFactory().createActionExpression(language, s);
         Model.getCommonBehaviorHelper().setScript(old, ae);
     }
-    
+
     /**
      * This deletes modelelements, and swallows null without barking.
      *
@@ -451,7 +451,7 @@ public class StateBodyNotationUml extends StateBodyNotation {
             ProjectManager.getManager().getCurrentProject().moveToTrash(obj);
         }
     }
-    
+
     public String generateAction(Object m) {
         Collection c;
         Iterator it;
@@ -500,7 +500,7 @@ public class StateBodyNotationUml extends StateBodyNotation {
 
         return s + " (" + p + ")";
     }
-    
+
     public String generateExpression(Object expr) {
         if (Model.getFacade().isAExpression(expr))
             return generateUninterpreted(
@@ -509,7 +509,7 @@ public class StateBodyNotationUml extends StateBodyNotation {
             return generateExpression(Model.getFacade().getBody(expr));
         return "";
     }
-    
+
     /**
      * Make a string non-null.<p>
      *

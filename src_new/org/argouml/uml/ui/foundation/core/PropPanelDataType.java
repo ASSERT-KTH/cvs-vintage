@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.69 2005/10/16 09:15:09 rastaman Exp $
+// $Id: PropPanelDataType.java,v 1.70 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,13 +52,13 @@ public class PropPanelDataType extends PropPanelClassifier {
     private JScrollPane attributeScroll;
 
     private JScrollPane literalsScroll;
-    
+
     private JScrollPane operationScroll;
 
-    
+
     private static UMLClassAttributeListModel attributeListModel =
         new UMLClassAttributeListModel();
-    
+
     private static UMLEnumerationLiteralsListModel literalsListModel =
         new UMLEnumerationLiteralsListModel();
 
@@ -264,5 +264,5 @@ public class PropPanelDataType extends PropPanelClassifier {
         }
         return literalsScroll;
     }
-    
+
 } /* end class PropPanelDataType */

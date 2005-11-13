@@ -1,4 +1,4 @@
-// $Id: WizStepCue.java,v 1.8 2005/02/19 23:22:43 mvw Exp $
+// $Id: WizStepCue.java,v 1.9 2005/11/13 11:01:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.border.EtchedBorder;
 import org.argouml.swingext.SpacerPanel;
 
 
-/** 
+/**
  * A non-modal wizard step that shows instructions and prompts
  * the user to enter a string.
  *
@@ -98,7 +98,10 @@ public class WizStepCue extends WizStep {
 	getMainPanel().add(spacer2);
     }
 
-
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -5886729588114736302L;
 } /* end class WizStepCue */
 
 

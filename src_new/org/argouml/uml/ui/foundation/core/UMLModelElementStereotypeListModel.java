@@ -1,4 +1,4 @@
-// $Id: UMLModelElementStereotypeListModel.java,v 1.3 2005/11/09 21:49:56 tfmorris Exp $
+// $Id: UMLModelElementStereotypeListModel.java,v 1.4 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,12 +81,12 @@ public class UMLModelElementStereotypeListModel
         }
         return true;
     }
-    
+
     /**
      * Creates a new checkbox menu item attached to the specified
      * action object and appends it to the end of this menu.
      * TODO: This is almost a duplicate of ArgoJMenu.addCheckItem must find a
-     * way to merge. 
+     * way to merge.
      *
      * @param     a     the Action for the checkbox menu item to be added
      * @return          the new checkbox menu item

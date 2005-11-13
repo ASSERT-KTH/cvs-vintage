@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.48 2005/11/10 04:20:36 tfmorris Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.49 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,11 +36,11 @@ import org.argouml.model.Model;
  * This class also causes the model implementatoin to refresh and so keeps the
  * diagram in synch with the model.
  * <p>
- * 
+ *
  * Method <code>propertySet</code> listens for MElementEvent events and
  * updates the other elements, such as type, visibility and changeability. <p>
  * Modified psager@tigris.org
- * 
+ *
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003), to be replaced by
  * something similar to {@link
  * org.argouml.uml.ui.foundation.core.UMLAttributeInitialValueListModel},

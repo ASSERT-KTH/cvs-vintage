@@ -1,4 +1,4 @@
-// $Id: InitMenusLater.java,v 1.7 2005/10/17 11:26:57 bobtarling Exp $
+// $Id: InitMenusLater.java,v 1.8 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,10 +41,10 @@ import org.tigris.gef.base.CmdReorder;
  * third level, so the ones with the triangle on windows systems).
  *
  *  Menu's and the mnemonics of menu's and the menuitems are separated
- *  in the PropertyResourceBundle <b>menu.properties</b>.
+ *  in the PropertyResourceBundle <code>menu.properties</code>.
  *
  *  menuitems are separated in the PropertyResourceBundle
- *  <b>action.properties</b>.
+ *  <code>action.properties</code>.
  *
  *  The key's in menu.properties have the following structure:
  *
@@ -127,7 +127,7 @@ class InitMenusLater implements Runnable {
 //				   KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK);
 
 	// ---------------------------------------------- Arrange Menu
-        JMenuItem alignTops = 
+        JMenuItem alignTops =
             align.add(new AlignAction(AlignAction.ALIGN_TOPS));
 	GenericArgoMenuBar.setMnemonic(alignTops, "align tops");
 
@@ -135,12 +135,12 @@ class InitMenusLater implements Runnable {
 	    align.add(new AlignAction(AlignAction.ALIGN_BOTTOMS));
 	GenericArgoMenuBar.setMnemonic(alignBottoms, "align bottoms");
 
-	JMenuItem alignRights = 
+	JMenuItem alignRights =
             align.add(new AlignAction(AlignAction.ALIGN_RIGHTS));
 	GenericArgoMenuBar.setMnemonic(alignRights, "align rights");
 	GenericArgoMenuBar.setAccelerator(alignRights, ctrlR);
 
-	JMenuItem alignLefts = 
+	JMenuItem alignLefts =
             align.add(new AlignAction(AlignAction.ALIGN_LEFTS));
 	GenericArgoMenuBar.setMnemonic(alignLefts, "align lefts");
 	GenericArgoMenuBar.setAccelerator(alignLefts, ctrlL);

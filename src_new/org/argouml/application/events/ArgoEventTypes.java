@@ -1,4 +1,4 @@
-// $Id: ArgoEventTypes.java,v 1.13 2005/10/24 17:06:13 mvw Exp $
+// $Id: ArgoEventTypes.java,v 1.14 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,7 +128,7 @@ public interface ArgoEventTypes {
      */
     int LAST_GENERATOR_EVENT       =  1399;
 
-    
+
     /**
      * Id marker for the last Argo event.
      */

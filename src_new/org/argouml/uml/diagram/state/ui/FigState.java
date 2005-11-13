@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.33 2005/11/06 11:34:28 mvw Exp $
+// $Id: FigState.java,v 1.34 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public abstract class FigState extends FigStateVertex {
     protected static final int MARGIN = 2;
 
     protected NotationProvider4 notationProviderBody;
-    
+
     /**
      * The text inside the state.
      */
@@ -106,7 +106,7 @@ public abstract class FigState extends FigStateVertex {
     protected void initNotationProviders(Object own) {
         super.initNotationProviders(own);
         if (Model.getFacade().isAState(own)) {
-            notationProviderBody = 
+            notationProviderBody =
                 NotationProviderFactory2.getInstance().getNotationProvider(
                         NotationProviderFactory2.TYPE_STATEBODY, this, own);
         }

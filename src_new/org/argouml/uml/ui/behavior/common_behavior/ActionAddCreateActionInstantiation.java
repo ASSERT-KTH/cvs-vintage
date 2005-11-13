@@ -1,4 +1,4 @@
-// $Id: ActionAddCreateActionInstantiation.java,v 1.1 2005/07/22 07:23:44 mkl Exp $
+// $Id: ActionAddCreateActionInstantiation.java,v 1.2 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class ActionAddCreateActionInstantiation extends AbstractActionAddModelEl
 
     private Object choiceClass = Model.getMetaTypes().getClassifier();
 
-   
+
     public ActionAddCreateActionInstantiation() {
         super();
         setMultiSelect(false);
@@ -55,7 +55,7 @@ public class ActionAddCreateActionInstantiation extends AbstractActionAddModelEl
         if (selected != null && selected.size()>=1)
         Model.getCommonBehaviorHelper().setInstantiation(getTarget(), selected.get(0));
         else
-            Model.getCommonBehaviorHelper().setInstantiation(getTarget(), null);       
+            Model.getCommonBehaviorHelper().setInstantiation(getTarget(), null);
     }
 
     /**

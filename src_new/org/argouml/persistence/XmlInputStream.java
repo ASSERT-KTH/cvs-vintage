@@ -1,4 +1,4 @@
-// $Id: XmlInputStream.java,v 1.8 2005/04/17 08:22:45 mvw Exp $
+// $Id: XmlInputStream.java,v 1.9 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,6 +21,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
 package org.argouml.persistence;
 
 import java.io.BufferedInputStream;
@@ -67,7 +68,7 @@ public class XmlInputStream extends BufferedInputStream {
     /**
      * The number of characters read so far.
      */
-    private long readCount = 0;
+    private long readCount;
 
     /**
      * The expected stream length.
@@ -182,7 +183,7 @@ public class XmlInputStream extends BufferedInputStream {
 
         if (count > 0) {
             return count;
-        } 
+        }
         return -1;
     }
 

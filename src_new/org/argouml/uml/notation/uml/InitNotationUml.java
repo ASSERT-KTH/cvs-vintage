@@ -1,4 +1,4 @@
-// $Id: InitNotationUml.java,v 1.5 2005/11/12 08:54:33 mvw Exp $
+// $Id: InitNotationUml.java,v 1.6 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,37 +30,37 @@ import org.argouml.notation.NotationName;
 import org.argouml.notation.NotationProviderFactory2;
 
 /**
- * This class is the only one that has the knowledge of the complete list of 
+ * This class is the only one that has the knowledge of the complete list of
  * NotationProvider4 implementations for UML.
- * 
+ *
  * @author mvw@tigris.org
  */
 public class InitNotationUml {
-    
+
     /**
      * static initializer, register all appropriate critics.
      */
     public static void init() {
         NotationProviderFactory2 npf = NotationProviderFactory2.getInstance();
-        NotationName name = 
+        NotationName name =
             Notation.makeNotation(
                     "UML",
                     "1.4",
                     Argo.lookupIconResource("UmlNotation"));
-        
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_TRANSITION, 
+
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_TRANSITION,
                 name, TransitionNotationUml.class);
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_STATEBODY, 
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_STATEBODY,
                 name, StateBodyNotationUml.class);
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_NAME, 
-                name, ModelElementNameNotationUml.class);        
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_ACTIONSTATE, 
-                name, ActionStateNotationUml.class);        
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_OBJECT, 
-                name, ObjectNotationUml.class); 
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_COMPONENTINSTANCE, 
-                name, ComponentInstanceNotationUml.class); 
-        
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_NAME,
+                name, ModelElementNameNotationUml.class);
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_ACTIONSTATE,
+                name, ActionStateNotationUml.class);
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_OBJECT,
+                name, ObjectNotationUml.class);
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_COMPONENTINSTANCE,
+                name, ComponentInstanceNotationUml.class);
+
         NotationProviderFactory2.getInstance().setDefaultNotation(name);
     }
 

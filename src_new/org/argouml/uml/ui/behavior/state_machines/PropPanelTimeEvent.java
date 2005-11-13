@@ -1,4 +1,4 @@
-// $Id: PropPanelTimeEvent.java,v 1.15 2005/09/08 18:23:59 mkl Exp $
+// $Id: PropPanelTimeEvent.java,v 1.16 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.tigris.swidgets.GridLayout2;
 
 /**
  * The properties panel for a TimeEvent.
- * 
+ *
  * @author oliver.heyden
  */
 public class PropPanelTimeEvent extends PropPanelEvent {

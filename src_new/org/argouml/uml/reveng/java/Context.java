@@ -1,4 +1,4 @@
-// $Id: Context.java,v 1.12 2005/02/09 20:41:36 mvw Exp $
+// $Id: Context.java,v 1.13 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: Context.java,v 1.12 2005/02/09 20:41:36 mvw Exp $
+// $Id: Context.java,v 1.13 2005/11/13 11:01:22 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -82,7 +82,7 @@ abstract class Context
 	    return Model.getFacade().getName(mPackage);
 	}
 	else if (parent != null) {
-	    return getJavaName(parent) + "." 
+	    return getJavaName(parent) + "."
 	            + Model.getFacade().getName(mPackage);
 	}
 	else {

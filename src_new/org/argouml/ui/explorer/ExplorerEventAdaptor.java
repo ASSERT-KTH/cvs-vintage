@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.20 2005/11/11 03:55:10 tfmorris Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.21 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -184,18 +184,18 @@ public final class ExplorerEventAdaptor
                         .getChangedValue());
             }
         }
-        
+
         if (pce instanceof AddAssociationEvent) {
             if (!("namespace".equals(pce.getPropertyName()))) {
                 treeModel.modelElementAdded(
                         ((AddAssociationEvent) pce).getSource());
             }
         }
-        
+
         if (pce instanceof AttributeChangeEvent) {
             treeModel.modelElementChanged(pce.getSource());
         }
-        
+
         if (pce instanceof DeleteInstanceEvent) {
             treeModel.modelElementRemoved(((DeleteInstanceEvent) pce)
                     .getSource());

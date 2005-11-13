@@ -1,4 +1,4 @@
-// $Id: ActionSetPath.java,v 1.1 2005/09/12 20:07:09 mkl Exp $
+// $Id: ActionSetPath.java,v 1.2 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.tigris.gef.presentation.Fig;
 /**
  * Action to set or unset the display of the path (namespace) for elements
  * supporting such an action.
- * 
+ *
  * @see org.argouml.uml.diagram.ui.PathContainer
  * @author MarkusK
  */

@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.33 2005/07/22 13:13:49 bobtarling Exp $
+// $Id: DiagramInterface.java,v 1.34 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,7 +175,7 @@ public class DiagramInterface {
      */
     public boolean isDiagramInProject(String name) {
         Project project = ProjectManager.getManager().getCurrentProject();
-	return (findDiagramMemberByUniqueName(project, 
+	return (findDiagramMemberByUniqueName(project,
             getDiagramName(name) + ".pgml")) != null;
     }
 
@@ -201,7 +201,7 @@ public class DiagramInterface {
 	ProjectMember m;
 	if (isDiagramInProject(name)) {
             Project project = ProjectManager.getManager().getCurrentProject();
-	    m = findDiagramMemberByUniqueName(project, 
+	    m = findDiagramMemberByUniqueName(project,
                 getDiagramName(name) + ".pgml");
 
 	    // The diagram already exists in this project. Select it
@@ -231,8 +231,8 @@ public class DiagramInterface {
                     UMLClassDiagram.class,
                     ns,
                     null);
-        
-        
+
+
 	    d.setName(getDiagramName(name));
             p.addMember(d);
 	    setCurrentDiagram(d);
@@ -337,10 +337,10 @@ public class DiagramInterface {
         String diagramName = currentPackageName.replace('.', '_') + "_classes";
         ArgoDiagram d =
             DiagramFactory.getInstance().createDiagram(
-                    UMLClassDiagram.class, 
+                    UMLClassDiagram.class,
                     currentPackage == null ? p.getRoot() : currentPackage,
                     null);
-    
+
 	if (findDiagramMemberByUniqueName(p, diagramName + ".pgml") == null) {
 	    try {
 		d.setName(diagramName);
@@ -350,8 +350,8 @@ public class DiagramInterface {
 	    p.addMember(d);
 	    setCurrentDiagram(d);
 	} else {
-	    ArgoDiagram ddi = 
-	        ((ProjectMemberDiagram) findDiagramMemberByUniqueName(p, 
+	    ArgoDiagram ddi =
+	        ((ProjectMemberDiagram) findDiagramMemberByUniqueName(p,
 	                diagramName + ".pgml")).getDiagram();
 	    setCurrentDiagram(ddi);
 	}
@@ -389,9 +389,9 @@ public class DiagramInterface {
      * @param project the project
      * @return the member
      */
-    public ProjectMember findDiagramMemberByUniqueName(Project project, 
+    public ProjectMember findDiagramMemberByUniqueName(Project project,
             String name) {
-        ArrayList diagramMembers = 
+        ArrayList diagramMembers =
             project.getMembers().getMembers(ProjectMemberDiagram.class);
         for (int i = 0; i < diagramMembers.size(); i++) {
             ProjectMember pm = (ProjectMember) diagramMembers.get(i);

@@ -1,4 +1,4 @@
-// $Id: SuffixFilter.java,v 1.7 2005/07/29 20:12:05 mvw Exp $
+// $Id: SuffixFilter.java,v 1.8 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,10 +60,16 @@ public class SuffixFilter extends FileFilter {
      * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
      */
     public boolean accept(File f) {
-	if (f == null) return false;
-	if (f.isDirectory()) return true;
+	if (f == null) {
+            return false;
+        }
+	if (f.isDirectory()) {
+            return true;
+        }
 	String extension = getExtension(f);
-	if (suffix.equalsIgnoreCase(extension)) return true;
+	if (suffix.equalsIgnoreCase(extension)) {
+            return true;
+        }
 	return false;
     }
 
@@ -72,7 +78,9 @@ public class SuffixFilter extends FileFilter {
      * @return the extension string (without the dot)
      */
     public static String getExtension(File f) {
-	if (f == null) return null;
+	if (f == null) {
+            return null;
+        }
 	return getExtension(f.getName());
     }
 
@@ -103,9 +111,9 @@ public class SuffixFilter extends FileFilter {
     }
 
     /**
-     * Adding this function enables easy selection of suffixfilters 
+     * Adding this function enables easy selection of suffixfilters
      * e.g. in a combobox.
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     public String toString() {

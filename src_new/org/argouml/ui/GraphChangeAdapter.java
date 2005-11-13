@@ -1,4 +1,4 @@
-// $Id: GraphChangeAdapter.java,v 1.5 2005/08/13 08:49:17 mvw Exp $
+// $Id: GraphChangeAdapter.java,v 1.6 2005/11/13 11:01:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,40 +40,47 @@ import org.tigris.gef.presentation.Fig;
  * forwarding those as specific calls to the DiagramInterchangeModel.
  * This should be changed to a more standard Adapter architecture that
  * provides an interface for Figs and GraphModels to call only when required.
- * 
+ *
  * @author Bob Tarling
  * @stereotype singleton
  */
-public class GraphChangeAdapter implements GraphListener {
-
+public final class GraphChangeAdapter implements GraphListener {
+    /**
+     * The instance.
+     */
     private static final GraphChangeAdapter INSTANCE =
         new GraphChangeAdapter();
-    
+
+    /**
+     * The getter for the instance.
+     *
+     * @return The instance.
+     */
     public static GraphChangeAdapter getInstance() {
         return INSTANCE;
     }
-    
+
     /**
-     * The constructor of a singleton is private
+     * The constructor of a singleton is private.
      */
     private GraphChangeAdapter() {
     }
-    
+
     public DiDiagram createDiagram(Class type, Object owner) {
         if (Model.getDiagramInterchangeModel() != null) {
             return Model.getDiagramInterchangeModel()
                 .createDiagram(type, owner);
-        } 
+        }
         return null;
     }
-    
-    
+
+
     public void removeDiagram(DiDiagram dd) {
         if (Model.getDiagramInterchangeModel() != null) {
             Model.getDiagramInterchangeModel().deleteDiagram(dd);
         }
     }
-    
+
     public DiElement createElement(GraphModel gm, Object node) {
         if (Model.getDiagramInterchangeModel() != null) {
             return Model.getDiagramInterchangeModel().createElement(
@@ -81,53 +88,88 @@ public class GraphChangeAdapter implements GraphListener {
         }
         return null;
     }
-    
+
     public void removeElement(DiElement element) {
         if (Model.getDiagramInterchangeModel() != null) {
             Model.getDiagramInterchangeModel().deleteElement(element);
         }
     }
-    
-    
 
-    
+
+
+
+    /**
+     * @see org.tigris.gef.graph.GraphListener#nodeAdded(org.tigris.gef.graph.GraphEvent)
+     */
     public void nodeAdded(GraphEvent e) {
         Object source = e.getSource();
         Object arg = e.getArg();
-        if (source instanceof Fig) source = ((Fig) source).getOwner();
-        if (arg instanceof Fig) arg = ((Fig) arg).getOwner();
+        if (source instanceof Fig) {
+            source = ((Fig) source).getOwner();
+        }
+        if (arg instanceof Fig) {
+            arg = ((Fig) arg).getOwner();
+        }
         Model.getDiagramInterchangeModel().nodeAdded(source, arg);
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#edgeAdded(org.tigris.gef.graph.GraphEvent)
+     */
     public void edgeAdded(GraphEvent e) {
         Object source = e.getSource();
         Object arg = e.getArg();
-        if (source instanceof Fig) source = ((Fig) source).getOwner();
-        if (arg instanceof Fig) arg = ((Fig) arg).getOwner();
+        if (source instanceof Fig) {
+            source = ((Fig) source).getOwner();
+        }
+        if (arg instanceof Fig) {
+            arg = ((Fig) arg).getOwner();
+        }
         Model.getDiagramInterchangeModel().edgeAdded(source, arg);
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#nodeRemoved(org.tigris.gef.graph.GraphEvent)
+     */
     public void nodeRemoved(GraphEvent e) {
         Object source = e.getSource();
         Object arg = e.getArg();
-        if (source instanceof Fig) source = ((Fig) source).getOwner();
-        if (arg instanceof Fig) arg = ((Fig) arg).getOwner();
+        if (source instanceof Fig) {
+            source = ((Fig) source).getOwner();
+        }
+        if (arg instanceof Fig) {
+            arg = ((Fig) arg).getOwner();
+        }
         Model.getDiagramInterchangeModel().nodeRemoved(source, arg);
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#edgeRemoved(org.tigris.gef.graph.GraphEvent)
+     */
     public void edgeRemoved(GraphEvent e) {
         Object source = e.getSource();
         Object arg = e.getArg();
-        if (source instanceof Fig) source = ((Fig) source).getOwner();
-        if (arg instanceof Fig) arg = ((Fig) arg).getOwner();
+        if (source instanceof Fig) {
+            source = ((Fig) source).getOwner();
+        }
+        if (arg instanceof Fig) {
+            arg = ((Fig) arg).getOwner();
+        }
         Model.getDiagramInterchangeModel().edgeRemoved(source, arg);
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#graphChanged(org.tigris.gef.graph.GraphEvent)
+     */
     public void graphChanged(GraphEvent e) {
         Object source = e.getSource();
         Object arg = e.getArg();
-        if (source instanceof Fig) source = ((Fig) source).getOwner();
-        if (arg instanceof Fig) arg = ((Fig) arg).getOwner();
+        if (source instanceof Fig) {
+            source = ((Fig) source).getOwner();
+        }
+        if (arg instanceof Fig) {
+            arg = ((Fig) arg).getOwner();
+        }
         Model.getDiagramInterchangeModel().graphChanged(source, arg);
     }
 }

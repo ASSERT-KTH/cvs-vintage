@@ -1,4 +1,4 @@
-// $Id: FigCompartment.java,v 1.17 2005/11/05 01:18:35 bobtarling Exp $
+// $Id: FigCompartment.java,v 1.18 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.tigris.gef.presentation.FigRect;
  * @author Bob Tarling
  */
 public abstract class FigCompartment extends FigGroup {
-    
+
     private Fig bigPort;
 
     /**
@@ -51,7 +51,7 @@ public abstract class FigCompartment extends FigGroup {
         bigPort = new FigRect(x, y, w, h, Color.black, Color.white);
         bigPort.setFilled(true);
         setFilled(true);
-        
+
         bigPort.setLineWidth(0);
         setLineWidth(0);
         addFig(bigPort);
@@ -63,7 +63,7 @@ public abstract class FigCompartment extends FigGroup {
     public Fig getBigPort() {
         return bigPort;
     }
-    
+
     /**
      * The minimum width is the minimum width of the child with the widest
      * miniumum width.
@@ -87,16 +87,16 @@ public abstract class FigCompartment extends FigGroup {
                 minHeight += fig.getMinimumSize().height;
             }
         }
-        
+
         minHeight += 2; // 2 Pixel padding after compartment
         return new Dimension(minWidth, minHeight);
     }
-    
+
     protected void setBoundsImpl(int x, int y, int w, int h) {
         int newW = w;
         int n = getFigs().size() - 1;
         int newH = h;
-        
+
         Iterator figs = iterator();
         Fig fig;
         int fw;

@@ -1,4 +1,4 @@
-// $Id: ActionModifierRoot.java,v 1.2 2005/06/13 18:39:15 mvw Exp $
+// $Id: ActionModifierRoot.java,v 1.3 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,9 @@ class ActionModifierRoot extends AbstractActionCheckBoxMenuItem {
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionCheckBoxMenuItem#toggleValueOfTarget(java.lang.Object)
      */
     void toggleValueOfTarget(Object t) {
-        Model.getCoreHelper().setRoot(t, !Model.getFacade().isRoot(t));    
+        Model.getCoreHelper().setRoot(t, !Model.getFacade().isRoot(t));
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionCheckBoxMenuItem#valueOfTarget(java.lang.Object)
      */

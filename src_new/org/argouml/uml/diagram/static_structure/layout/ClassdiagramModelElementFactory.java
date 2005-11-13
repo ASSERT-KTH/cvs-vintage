@@ -1,4 +1,4 @@
-// $Id: ClassdiagramModelElementFactory.java,v 1.11 2005/02/02 18:38:09 mvw Exp $
+// $Id: ClassdiagramModelElementFactory.java,v 1.12 2005/11/13 11:01:23 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.tigris.gef.presentation.FigNode;
  * @author Markus Klink
  * @stereotype singleton
 */
-public class ClassdiagramModelElementFactory 
+public class ClassdiagramModelElementFactory
 {
     private static final Logger LOG =
 	Logger.getLogger(ClassdiagramModelElementFactory.class);
@@ -50,9 +50,9 @@ public class ClassdiagramModelElementFactory
      */
     public static final ClassdiagramModelElementFactory SINGLETON =
 	new ClassdiagramModelElementFactory();
-    
+
     private ClassdiagramModelElementFactory() { }
-    
+
     /** create layouter object from a Fig.*
      *
      * @param f Object which contains the Fig

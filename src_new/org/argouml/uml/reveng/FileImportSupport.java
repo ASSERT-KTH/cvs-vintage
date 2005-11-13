@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.17 2005/10/06 05:13:55 linus Exp $
+// $Id: FileImportSupport.java,v 1.18 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ import org.tigris.gef.base.Globals;
  * for other input sources.
  *
  * @author Alexander Lepekhine
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
@@ -183,9 +183,9 @@ public abstract class FileImportSupport implements PluggableImport {
      */
     public JComponent getChooser(Import imp) {
         String directory = Globals.getLastDirectory();
-        
+
         final JFileChooser chooser = new ImportFileChooser(imp, directory);
-        
+
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         SuffixFilter[] filters = getSuffixFilters();
         if (filters != null) {

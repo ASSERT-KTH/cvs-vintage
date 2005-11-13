@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.34 2005/09/12 11:23:10 mkl Exp $
+// $Id: PropPanelReception.java,v 1.35 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ import org.tigris.swidgets.GridLayout2;
  * PropertyPanel for a Reception.
  */
 public class PropPanelReception extends PropPanelModelElement {
-    
+
     private JPanel modifiersPanel;
 
     /**
@@ -61,7 +61,7 @@ public class PropPanelReception extends PropPanelModelElement {
                 getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
-        
+
         modifiersPanel =
             new JPanel(new GridLayout2());
         modifiersPanel.setBorder(

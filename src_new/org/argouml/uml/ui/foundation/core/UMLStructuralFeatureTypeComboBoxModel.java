@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.24 2005/11/11 03:49:51 tfmorris Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.25 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
  * The combobox model for the type belonging to some attribute.
- * 
+ *
  * @since Nov 2, 2002
  * @author jaap.branderhorst@xs4all.nl
  */

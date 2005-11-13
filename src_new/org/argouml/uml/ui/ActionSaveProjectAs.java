@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.46 2005/07/30 20:03:31 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.47 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         if (f == null) {
             return false;
         }
-        
+
         boolean success = ProjectBrowser.getInstance().trySave(overwrite, f);
         if (success) {
             ProjectBrowser.getInstance().setTitle(
@@ -150,7 +150,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
                 }
             }
             return theFile;
-        } 
+        }
         return null;
     }
 

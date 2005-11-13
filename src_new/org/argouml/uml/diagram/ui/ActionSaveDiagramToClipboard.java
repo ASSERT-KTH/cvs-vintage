@@ -1,4 +1,4 @@
-// $Id: ActionSaveDiagramToClipboard.java,v 1.7 2005/09/01 18:39:49 mvw Exp $
+// $Id: ActionSaveDiagramToClipboard.java,v 1.8 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class ActionSaveDiagramToClipboard
      * The constructor.
      */
     public ActionSaveDiagramToClipboard() {
-        super(Translator.localize("menu.popup.copy-diagram-to-clip"), 
+        super(Translator.localize("menu.popup.copy-diagram-to-clip"),
                 ResourceLoaderWrapper.lookupIcon("action.copy"));
     }
 
@@ -92,7 +92,7 @@ public class ActionSaveDiagramToClipboard
 
         int scale = Configuration.getInteger(
                 SaveGraphicsManager.KEY_GRAPHICS_RESOLUTION, 1);
-        
+
         Editor ce = Globals.curEditor();
         Rectangle drawingArea =
 	    ce.getLayerManager().getActiveLayer().calcDrawingArea();
@@ -108,13 +108,13 @@ public class ActionSaveDiagramToClipboard
         boolean isGridHidden = ce.getGridHidden();
         ce.setGridHidden(true); // hide grid, otherwise can't see anything
         Image diagramGifImage =
-	    ce.createImage(drawingArea.width * scale, 
+	    ce.createImage(drawingArea.width * scale,
                     drawingArea.height * scale);
         Graphics g = diagramGifImage.getGraphics();
         if (g instanceof Graphics2D) {
             ((Graphics2D) g).scale(scale, scale);
         }
-        
+
 	// background color.
         g.setColor(new Color(CmdSaveGIF.TRANSPARENT_BG_COLOR));
         g.fillRect(0, 0, drawingArea.width * scale, drawingArea.height * scale);

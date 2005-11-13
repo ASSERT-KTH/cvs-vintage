@@ -1,4 +1,4 @@
-// $Id: UsageStatistic.java,v 1.6 2005/02/28 20:44:37 bobtarling Exp $
+// $Id: UsageStatistic.java,v 1.7 2005/11/13 11:01:13 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,23 +29,15 @@ package org.argouml.ui;
  * TODO: Document its purpose or remove if useless.
  */
 public class UsageStatistic {
-    // //////////////////////////////////////////////////////////////
-    // instance variables
-    private String name;
-
-    private int value;
-
     /**
      * The constructor.
-     * 
+     *
      * @param n
      *            the name
      * @param v
      *            the value
      */
     public UsageStatistic(String n, int v) {
-        name = n;
-        value = v;
     }
 
 } /* end class UsageStatistic */

@@ -1,4 +1,4 @@
-// $Id: PropPanelSynchState.java,v 1.5 2005/07/23 16:57:43 mvw Exp $
+// $Id: PropPanelSynchState.java,v 1.6 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class PropPanelSynchState extends PropPanelStateVertex {
      * The constructor.
      */
     public PropPanelSynchState() {
-        super("Synch State", 
+        super("Synch State",
             lookupIcon("SynchState"),
             ConfigLoader.getTabPropsOrientation());
 

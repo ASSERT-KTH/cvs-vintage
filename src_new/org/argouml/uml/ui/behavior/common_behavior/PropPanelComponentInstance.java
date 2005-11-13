@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.50 2005/10/20 05:29:04 tfmorris Exp $
+// $Id: PropPanelComponentInstance.java,v 1.51 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class PropPanelComponentInstance extends PropPanelInstance {
 
         addField(Translator.localize("label.name"), getNameTextField());
 
-        addField(Translator.localize("label.stereotype"), 
+        addField(Translator.localize("label.stereotype"),
                 getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());

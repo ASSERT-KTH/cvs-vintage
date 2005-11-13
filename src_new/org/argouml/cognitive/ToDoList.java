@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.31 2005/08/13 08:49:18 mvw Exp $
+// $Id: ToDoList.java,v 1.32 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -529,9 +529,9 @@ public class ToDoList extends Observable implements Runnable, Serializable {
 
     /**
      * Add the given resolved critic to the list of resolved critics.
-     * 
+     *
      * @param rc the resolved critic
-     * @return <code>true</code> if successfully added; 
+     * @return <code>true</code> if successfully added;
      *         <code>false</code> otherwise
      */
     public boolean addResolvedCritic(ResolvedCritic rc) {
@@ -752,4 +752,8 @@ public class ToDoList extends Observable implements Runnable, Serializable {
         return res.toString();
     }
 
+    /**
+     * The UID. 
+     */
+    private static final long serialVersionUID = -1288801672594900893L;
 } /* end class ToDoList */

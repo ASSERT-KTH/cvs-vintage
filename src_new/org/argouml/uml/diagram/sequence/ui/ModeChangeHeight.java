@@ -1,4 +1,4 @@
-// $Id: ModeChangeHeight.java,v 1.4 2005/09/11 19:11:26 thn Exp $
+// $Id: ModeChangeHeight.java,v 1.5 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,6 +21,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.awt.Color;
@@ -38,7 +39,7 @@ public class ModeChangeHeight extends FigModifyingModeImpl {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public ModeChangeHeight() {
         contractSet = false;
@@ -147,4 +148,9 @@ public class ModeChangeHeight extends FigModifyingModeImpl {
     private int startX, startY, currentY;
     private Editor editor;
     private Color rubberbandColor;
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 2383958235268066102L;
 }

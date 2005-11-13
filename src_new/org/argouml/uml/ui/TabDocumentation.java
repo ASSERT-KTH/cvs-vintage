@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.35 2005/11/02 06:21:56 tfmorris Exp $
+// $Id: TabDocumentation.java,v 1.36 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +114,7 @@ public class TabDocumentation extends PropPanel {
         JScrollPane spDocs = new JScrollPane();
         spDocs.getViewport().add(doc);
         addField(Translator.localize("label.documentation"), spDocs);
-        
+
         // Comment.name text field - editing disabled
         UMLTextArea2 comment = new UMLTextArea2(
                 new UMLModelElementCommentDocument(false));

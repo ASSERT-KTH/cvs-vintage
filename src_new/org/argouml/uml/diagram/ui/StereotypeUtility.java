@@ -1,4 +1,4 @@
-// $Id: StereotypeUtility.java,v 1.2 2005/11/04 23:17:35 bobtarling Exp $
+// $Id: StereotypeUtility.java,v 1.3 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.argouml.model.Model;
 public class StereotypeUtility {
 
     /**
-     * Utility classes for 
+     * Utility classes for
      */
     private StereotypeUtility() {
         super();
@@ -65,13 +65,13 @@ public class StereotypeUtility {
                     throw new ClassCastException(e.getMessage());
                 }
             }
-        });            
+        });
         Collection models =
             ProjectManager.getManager().getCurrentProject().getModels();
-            
+
             addAllUniqueModelElementsFrom(availableStereotypes, paths, Model.getExtensionMechanismsHelper().
             getAllPossibleStereotypes(models, modelElement));
-        
+
         if (!availableStereotypes.isEmpty()) {
             Action[] menuActions = new Action[availableStereotypes.size()];
 
@@ -83,7 +83,7 @@ public class StereotypeUtility {
         }
         return null;
     }
-    
+
     /**
      * Helper method for buildModelList.
      * <p>
@@ -105,5 +105,5 @@ public class StereotypeUtility {
             }
         }
     }
-    
+
 }

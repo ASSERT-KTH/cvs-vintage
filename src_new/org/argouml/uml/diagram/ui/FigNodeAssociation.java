@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.12 2005/11/02 08:53:35 tfmorris Exp $
+// $Id: FigNodeAssociation.java,v 1.13 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,7 +100,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
 
     /**
      * The constructor.
-     * 
+     *
      * @param gm the graphmodel
      * @param node the owner (UML association)
      */
@@ -138,7 +138,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
             if (mee instanceof RemoveAssociationEvent) {
                 Object association = ((RemoveAssociationEvent) mee)
                 .getSource();
-                if (Model.getFacade().getConnections(association).size() 
+                if (Model.getFacade().getConnections(association).size()
                         == 2) {
                     rerender = true;
                 }
@@ -155,7 +155,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
                         GraphEdgeRenderer renderer =
                             editor.getGraphEdgeRenderer();
                         Layer lay = editor.getLayerManager().getActiveLayer();
-                        figEdge = 
+                        figEdge =
                             renderer.getFigEdgeFor(gm, lay, association, null);
                         editor.add(figEdge);
                         if (gm instanceof MutableGraphModel) {

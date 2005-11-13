@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.49 2005/04/24 20:13:48 mvw Exp $
+// $Id: TabConstraints.java,v 1.50 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ import tudresden.ocl.parser.node.TName;
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler
   */
-public class TabConstraints extends AbstractArgoJPanel 
+public class TabConstraints extends AbstractArgoJPanel
     implements TabModelTarget {
 
     private static final Logger LOG = Logger.getLogger(TabConstraints.class);

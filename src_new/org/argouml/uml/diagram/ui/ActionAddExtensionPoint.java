@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.13 2005/05/10 20:19:08 linus Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.14 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,7 +137,7 @@ public final class ActionAddExtensionPoint extends UMLAction {
     public boolean shouldBeEnabled() {
 	Object target = TargetManager.getInstance().getModelTarget();
 
-	return super.shouldBeEnabled() 
+	return super.shouldBeEnabled()
                 && (Model.getFacade().isAUseCase(target));
     }
 

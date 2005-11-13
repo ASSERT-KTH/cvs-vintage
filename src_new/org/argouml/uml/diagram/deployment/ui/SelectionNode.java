@@ -1,4 +1,4 @@
-// $Id: SelectionNode.java,v 1.26 2005/10/17 11:26:56 bobtarling Exp $
+// $Id: SelectionNode.java,v 1.27 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,9 @@ import org.tigris.gef.presentation.Handle;
  * @author 5eichler@informatik.uni-hamburg.de
  */
 public class SelectionNode extends SelectionNodeClarifiers {
-
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(SelectionNode.class);
     ////////////////////////////////////////////////////////////////
@@ -176,7 +178,7 @@ public class SelectionNode extends SelectionNodeClarifiers {
 	    Editor ce = Globals.curEditor();
 	    ModeCreateEdgeAndNode m =
 	        new ModeCreateEdgeAndNode(ce, edgeType, nodeType, false);
-	    m.setup((FigNode) getContent(), getContent().getOwner(), 
+	    m.setup((FigNode) getContent(), getContent().getOwner(),
                     bx, by, reverse);
 	    ce.pushMode(m);
 	}
@@ -229,5 +231,9 @@ public class SelectionNode extends SelectionNodeClarifiers {
         return Model.getCoreFactory().createNode();
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -89995395353007445L;
 } /* end class SelectionNode */
 

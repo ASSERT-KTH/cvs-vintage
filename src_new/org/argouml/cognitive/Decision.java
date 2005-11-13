@@ -1,4 +1,4 @@
-// $Id: Decision.java,v 1.15 2005/04/14 18:29:46 mvw Exp $
+// $Id: Decision.java,v 1.16 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ package org.argouml.cognitive;
  * designer is interested in making particular decisions, whereas a critic can
  * support relevant information which help making a particular decision (aka a
  * decision which lies in the domain specified by this class).
- *  
+ *
  */
 public class Decision {
     ////////////////////////////////////////////////////////////////
@@ -39,8 +39,8 @@ public class Decision {
     /**
      * This is another test.
      */
-    public static final Decision UNSPEC = new Decision(
-            "misc.decision.uncategorized", 1);
+    public static final Decision UNSPEC =
+        new Decision("misc.decision.uncategorized", 1);
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -56,7 +56,7 @@ public class Decision {
 
     /**
      * The constructor.
-     * 
+     *
      * @param n
      *            the (not yet localized) name
      * @param p

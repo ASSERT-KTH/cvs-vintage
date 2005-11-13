@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.39 2005/11/11 17:55:05 mvw Exp $
+// $Id: FigObject.java,v 1.40 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,7 @@ public class FigObject extends FigNodeModelElement {
     protected void initNotationProviders(Object own) {
         super.initNotationProviders(own);
         if (Model.getFacade().isAObject(own)) {
-            notationProvider = 
+            notationProvider =
                 NotationProviderFactory2.getInstance().getNotationProvider(
                     NotationProviderFactory2.TYPE_OBJECT, this, own);
         }
@@ -279,6 +279,9 @@ public class FigObject extends FigNodeModelElement {
 
     }
 
+    /**
+     * The UID.
+     */
     static final long serialVersionUID = -185736690375678962L;
 
     /**

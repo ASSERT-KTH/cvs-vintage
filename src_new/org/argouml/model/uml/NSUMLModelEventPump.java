@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.16 2005/10/21 08:35:09 tfmorris Exp $
+// $Id: NSUMLModelEventPump.java,v 1.17 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -234,7 +234,7 @@ class NSUMLModelEventPump
                   + modelClass + ", "
                   + propertyNames + ")");
         register(classEventListeners,
-                 new NSUMLClassEventListener(listener, modelClass, 
+                 new NSUMLClassEventListener(listener, modelClass,
                                              propertyNames, this));
     }
 
@@ -257,27 +257,27 @@ class NSUMLModelEventPump
             relay.delete();
         }
     }
-    
+
     /**
      * @see org.argouml.model.ModelEventPump#startPumpingEvents()
      */
     public void startPumpingEvents() {
         UmlModelEventPump.getPump().startPumpingEvents();
     }
-    
+
     /**
      * @see org.argouml.model.ModelEventPump#stopPumpingEvents()
      */
     public void stopPumpingEvents() {
         UmlModelEventPump.getPump().stopPumpingEvents();
     }
-    
+
     /**
      * @see org.argouml.model.ModelEventPump#flushModelEvents()
      */
     public void flushModelEvents() {
     }
-    
+
     /**
      * @see org.argouml.model.ModelEventPump#reallyFlushModelEvents()
      */

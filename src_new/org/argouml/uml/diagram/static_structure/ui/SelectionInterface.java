@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.33 2005/09/15 08:18:31 mkl Exp $
+// $Id: SelectionInterface.java,v 1.34 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public class SelectionInterface extends SelectionNodeClarifiers {
 
     /**
      * Construct a new SelectionInterface for the given Fig.
-     * 
+     *
      * @param f
      *            The given Fig.
      */
@@ -75,7 +75,7 @@ public class SelectionInterface extends SelectionNodeClarifiers {
      * Return a handle ID for the handle under the mouse, or -1 if none. TODO:
      * in the future, return a Handle instance or null.
      * <p>
-     * 
+     *
      * <pre>
      *    0-------1-------2
      *    |               |
@@ -83,7 +83,7 @@ public class SelectionInterface extends SelectionNodeClarifiers {
      *    |               |
      *    5-------6-------7
      * </pre>
-     * 
+     *
      * @see org.tigris.gef.base.Selection#hitHandle(java.awt.Rectangle,
      *      org.tigris.gef.presentation.Handle)
      */
@@ -115,7 +115,7 @@ public class SelectionInterface extends SelectionNodeClarifiers {
         if (hitAbove(cx + cw / 2, cy, gw, gh, r)) {
             h.index = 10;
             h.instructions = "Add an interface";
-        } else 
+        } else
         if (hitBelow(cx + cw / 2, cy + ch, iw, ih, r)) {
             h.index = 11;
             h.instructions = "Add a realization";

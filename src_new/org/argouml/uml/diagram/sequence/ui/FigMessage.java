@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.8 2005/11/06 00:18:52 bobtarling Exp $
+// $Id: FigMessage.java,v 1.9 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,13 +86,13 @@ public abstract class FigMessage
      */
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
-        
+
         // the menu item for RE a sequence into the diagram is offered always,
         // becauase some check (does a operation with a body exist) would be
         // too expensive
         popUpActions.insertElementAt(new ActionRESequenceDiagram(this),
                 popUpActions.size() - getPopupAddOffset());
-        
+
         return popUpActions;
     }
 

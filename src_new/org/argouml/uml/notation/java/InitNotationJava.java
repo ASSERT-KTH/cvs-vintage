@@ -1,4 +1,4 @@
-// $Id: InitNotationJava.java,v 1.2 2005/11/02 13:28:16 mvw Exp $
+// $Id: InitNotationJava.java,v 1.3 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,13 +30,13 @@ import org.argouml.notation.NotationName;
 import org.argouml.notation.NotationProviderFactory2;
 
 /**
- * This class is the only one that has the knowledge of the complete list of 
+ * This class is the only one that has the knowledge of the complete list of
  * NotationProvider4 implementations for Java.
- * 
+ *
  * @author mvw@tigris.org
  */
 public class InitNotationJava {
-    
+
     /**
      * static initializer, register all appropriate critics.
      */
@@ -47,10 +47,10 @@ public class InitNotationJava {
                     "Java",
                     null,
                     Argo.lookupIconResource("JavaNotation"));
-        
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_TRANSITION, 
+
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_TRANSITION,
                 name, TransitionNotationJava.class);
-        npf.addNotationProvider(NotationProviderFactory2.TYPE_NAME, 
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_NAME,
                 name, ModelElementNameNotationJava.class);
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionNewTagDefinition.java,v 1.3 2005/11/10 01:11:14 tfmorris Exp $
+// $Id: ActionNewTagDefinition.java,v 1.4 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 
 /**
- * This action creates a new TagDefinition in the current Model or Stereotype or 
+ * This action creates a new TagDefinition in the current Model or Stereotype or
  * Package.
  *
  * @author rastaman@tigris.org
@@ -64,7 +64,7 @@ public class ActionNewTagDefinition extends AbstractActionNewModelElement {
             namespace = t;
         } else {
             namespace = Model.getFacade().getModel(t);
-            }            
+            }
         Object newTagDefinition = Model.getExtensionMechanismsFactory()
             .buildTagDefinition(
                     (String) null,
@@ -76,5 +76,5 @@ public class ActionNewTagDefinition extends AbstractActionNewModelElement {
         TargetManager.getInstance().setTarget(newTagDefinition);
         super.actionPerformed(e);
     }
-    
+
 }

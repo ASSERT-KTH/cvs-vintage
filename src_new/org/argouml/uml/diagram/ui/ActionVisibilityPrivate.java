@@ -1,4 +1,4 @@
-// $Id: ActionVisibilityPrivate.java,v 1.2 2005/06/13 18:39:15 mvw Exp $
+// $Id: ActionVisibilityPrivate.java,v 1.3 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ class ActionVisibilityPrivate extends AbstractActionRadioMenuItem {
             Model.getVisibilityKind().getPrivate()
                 .equals(valueOfTarget(o))));
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionRadioMenuItem#toggleValueOfTarget(java.lang.Object)
      */
@@ -47,11 +47,11 @@ class ActionVisibilityPrivate extends AbstractActionRadioMenuItem {
         Model.getCoreHelper().setVisibility(t,
             Model.getVisibilityKind().getPrivate());
     }
-    
+
     /**
      * Make use of the default visibility, which is public...
      * TODO: centralise this knowledge.
-     * 
+     *
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionRadioMenuItem#valueOfTarget(java.lang.Object)
      */
     Object valueOfTarget(Object t) {

@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.11 2005/02/03 21:50:40 mvw Exp $
+// $Id: ActionAddMessage.java,v 1.12 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,15 +97,15 @@ public class ActionAddMessage extends UMLAction {
         GraphNodeRenderer gr = e.getGraphNodeRenderer();
         FigNode figMsg = gr.getFigNodeFor(gm, lay, message, null);
         ((FigMessage) figMsg).addPathItemToFigAssociationRole(lay);
-        
-        gm.getNodes().add(message); /*MVW This is not the correct way, 
-        * but it allows connecting a CommentEdge to it! 
+
+        gm.getNodes().add(message); /*MVW This is not the correct way,
+        * but it allows connecting a CommentEdge to it!
         * See e.g. ActionAddNote for the correct way.
         * Testcase:
         * 1. Select the message.
         * 2. Click the Comment tool.
         * */
-        
+
         TargetManager.getInstance().setTarget(message);
     }
 

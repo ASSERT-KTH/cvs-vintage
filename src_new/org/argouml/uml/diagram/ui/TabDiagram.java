@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.60 2005/09/26 21:24:49 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.61 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -264,8 +264,8 @@ public class TabDiagram
             Vector sels = gse.getSelections(); // the new selection
             ActionCut.getInstance().setEnabled(sels != null && !sels.isEmpty());
 
-            // TODO: If ActionCopy is no longer a singleton, how shall 
-            //       this work? 
+            // TODO: If ActionCopy is no longer a singleton, how shall
+            //       this work?
             ActionCopy.getInstance()
                     .setEnabled(sels != null && !sels.isEmpty());
             /*
@@ -284,7 +284,7 @@ public class TabDiagram
                     removedTargets.remove(o); // remains selected
                 } else {
                     // add to selection
-                    TargetManager.getInstance().addTarget(o); 
+                    TargetManager.getInstance().addTarget(o);
                 }
             }
             i = removedTargets.iterator();

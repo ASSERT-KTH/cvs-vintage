@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.43 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: CrUML.java,v 1.44 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrUML.java,v 1.43 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: CrUML.java,v 1.44 2005/11/13 11:01:11 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
@@ -108,7 +108,7 @@ public class CrUML extends Critic {
     public boolean predicate(Object dm, Designer dsgr) {
 	Project p = ProjectManager.getManager().getCurrentProject();
         if (p.isInTrash(dm)
-                || (Model.getFacade().isAModelElement(dm) 
+                || (Model.getFacade().isAModelElement(dm)
                 && Model.getUmlFactory().isRemoved(dm))) {
             return NO_PROBLEM;
         } else {
@@ -195,4 +195,8 @@ public class CrUML extends Critic {
 	return new UMLToDoItem(this, dm, dsgr);
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 1785043010468681602L;
 } /* end class CrUML */

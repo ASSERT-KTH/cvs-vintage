@@ -1,4 +1,4 @@
-// $Id: AbstractActionRadioMenuItem.java,v 1.1 2005/06/12 18:50:03 mvw Exp $
+// $Id: AbstractActionRadioMenuItem.java,v 1.2 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,10 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
 
 /**
- * This class adds the common algorithms 
- * for handling multiple targets 
+ * This class adds the common algorithms
+ * for handling multiple targets
  * for a radio menuitem to the UMLAction.
- * 
+ *
  * @author mvw@tigris.org
  */
 abstract class AbstractActionRadioMenuItem extends UMLAction {
@@ -42,13 +42,13 @@ abstract class AbstractActionRadioMenuItem extends UMLAction {
     public AbstractActionRadioMenuItem(String key, boolean hasIcon) {
         super(key, hasIcon);
     }
-           
+
     /**
      * This action should be enabled when: <ul>
-     * <li>all targets are modelelements that support this radiobutton and 
-     * <li>all targets have the radiobutton on the same item 
+     * <li>all targets are modelelements that support this radiobutton and
+     * <li>all targets have the radiobutton on the same item
      *     (mixed is not yet supported, but could be if a tri-state
-     *     radiobutton is implemented). 
+     *     radiobutton is implemented).
      * </ul>
      */
     public boolean isEnabled() {
@@ -71,17 +71,17 @@ abstract class AbstractActionRadioMenuItem extends UMLAction {
         }
         return result;
     }
-    
+
     /**
      * @param t the target modelelement
-     * @return the UML element that represents the radiobutton 
+     * @return the UML element that represents the radiobutton
      *         for this modelelement
      */
     abstract Object valueOfTarget(Object t);
-    
+
     /**
      * This action is performed on ALL targets.
-     * 
+     *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public final void actionPerformed(ActionEvent e) {
@@ -92,7 +92,7 @@ abstract class AbstractActionRadioMenuItem extends UMLAction {
         }
         super.actionPerformed(e);
     }
-    
+
     /**
      * @param t the target modelelement
      */

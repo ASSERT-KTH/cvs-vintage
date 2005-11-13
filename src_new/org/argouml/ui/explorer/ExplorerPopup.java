@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.27 2005/10/31 13:24:44 rastaman Exp $
+// $Id: ExplorerPopup.java,v 1.28 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,19 +128,19 @@ public class ExplorerPopup extends JPopupMenu {
                 activeDiagram instanceof UMLSequenceDiagram;
             final boolean stateDiagramActive =
                 activeDiagram instanceof UMLStateDiagram;
-            final Object selectedStateMachine
-                = (stateVertexSelected)
+            final Object selectedStateMachine =
+                (stateVertexSelected)
                     ? Model.getStateMachinesHelper()
 		          .getStateMachine(selectedItem)
                     : null;
-            final Object diagramStateMachine
-                = (stateDiagramActive)
+            final Object diagramStateMachine =
+                (stateDiagramActive)
                     ? ((UMLStateDiagram) activeDiagram).getStateMachine()
                     : null;
-            final Object diagramActivity
-                 = (activityDiagramActive)
+            final Object diagramActivity =
+                (activityDiagramActive)
                         ? ((UMLActivityDiagram) activeDiagram).getStateMachine()
-                        : null;            
+                        : null;
             if (!ms) {
                 if ((classifierSelected && !dataTypeSelected
                     && !classifierAndRelationShipSelected)
@@ -153,7 +153,7 @@ public class ExplorerPopup extends JPopupMenu {
                             && !sequenceDiagramActive)
                         || nAryAssociationSelected
                         || commentSelected
-            ) {
+                ) {
                     UMLAction action =
                         new ActionAddExistingNode(
                             menuLocalize("menu.popup.add-to-diagram"),
@@ -232,4 +232,9 @@ public class ExplorerPopup extends JPopupMenu {
         return Translator.localize(key);
     }
 
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -5663884871599931780L;
 }

@@ -1,4 +1,4 @@
-// $Id: ActionAddTopLevelPackage.java,v 1.19 2005/05/18 20:27:01 mvw Exp $
+// $Id: ActionAddTopLevelPackage.java,v 1.20 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,8 @@ import org.argouml.model.Model;
 
 /**
  * Add a new package at the top level, i.e. a model.<p>
- * 
- * TODO: ArgoUML currently only supports one model. 
+ *
+ * TODO: ArgoUML currently only supports one model.
  */
 public class ActionAddTopLevelPackage extends UMLAction {
 

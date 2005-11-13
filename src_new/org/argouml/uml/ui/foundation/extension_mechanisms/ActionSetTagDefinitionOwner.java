@@ -1,4 +1,4 @@
-// $Id: ActionSetTagDefinitionOwner.java,v 1.3 2005/11/09 21:49:56 tfmorris Exp $
+// $Id: ActionSetTagDefinitionOwner.java,v 1.4 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,13 +41,13 @@ import org.argouml.uml.ui.UMLComboBox2;
 public class ActionSetTagDefinitionOwner extends UMLAction {
 
     private Logger LOG = Logger.getLogger(ActionSetTagDefinitionOwner.class);
-  
+
     /**
      * The Singleton.
      */
     public static final ActionSetTagDefinitionOwner SINGLETON =
             new ActionSetTagDefinitionOwner();
-    
+
     /**
      * Constructor.
      */

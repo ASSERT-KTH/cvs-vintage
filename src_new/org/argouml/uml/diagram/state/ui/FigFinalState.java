@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.29 2005/08/13 08:49:16 mvw Exp $
+// $Id: FigFinalState.java,v 1.30 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public class FigFinalState extends FigStateVertex {
     }
 
     /**
-     * The constructor that hooks the Fig into the UML element
+     * The constructor that hooks the Fig into the UML element.
      * @param gm ignored
      * @param node the UML element
      */
@@ -135,7 +135,9 @@ public class FigFinalState extends FigStateVertex {
         return sel;
     }
 
-    /** Final states are fixed size.
+    /**
+     * Final states are fixed size.
+     *
      * @see org.tigris.gef.presentation.Fig#isResizable()
      */
     public boolean isResizable() {
@@ -214,6 +216,9 @@ public class FigFinalState extends FigStateVertex {
     public void keyPressed(KeyEvent ke) {
     }
 
+    /**
+     * The UID.
+     */
     static final long serialVersionUID = -3506578343969467480L;
 
 
@@ -222,7 +227,7 @@ public class FigFinalState extends FigStateVertex {
      *
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    /*public void setBoundsImpl(int boundX, int boundY, 
+    /*public void setBoundsImpl(int boundX, int boundY,
         int boundW, int boundH) {
         _x = boundX;
         _y = boundY;

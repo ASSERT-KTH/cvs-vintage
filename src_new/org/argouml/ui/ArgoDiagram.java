@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.40 2005/07/22 13:13:50 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.41 2005/11/13 11:01:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,11 +42,15 @@ import org.tigris.gef.presentation.Fig;
 public class ArgoDiagram extends Diagram {
 
     private ItemUID id;
-    
-    /**
-     * Hack to use vetocheck in constructing names.
-     */
-    private static ArgoDiagram theInstance = new ArgoDiagram();
+
+    static {
+        /**
+         * Hack to use vetocheck in constructing names.
+         *
+         * TODO: Is this needed?
+         */
+        new ArgoDiagram();
+    }
 
     /**
      * The constructor.
@@ -96,7 +100,9 @@ public class ArgoDiagram extends Diagram {
 
     ////////////////////////////////////////////////////////////////
     // event management
-
+    /**
+     * The UID.
+     */
     static final long serialVersionUID = -401219134410459387L;
 
     /**

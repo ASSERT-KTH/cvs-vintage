@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsFactoryImpl.java,v 1.10 2005/08/13 08:49:17 mvw Exp $
+// $Id: ActivityGraphsFactoryImpl.java,v 1.11 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,7 +163,7 @@ public class ActivityGraphsFactoryImpl
                 || theContext instanceof MClassifier
                 || theContext instanceof MPackage)) {
             throw new IllegalArgumentException(
-                    "Must have a context of a behaviorial feature, " 
+                    "Must have a context of a behaviorial feature, "
                     + "classifier or package to build an activity diagram.");
         }
 

@@ -1,4 +1,4 @@
-// $Id: ComponentInstanceNotation.java,v 1.1 2005/11/12 08:54:33 mvw Exp $
+// $Id: ComponentInstanceNotation.java,v 1.2 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,20 +27,20 @@ package org.argouml.uml.notation;
 import org.argouml.model.Model;
 
 /**
- * This abstract class forms the basis of all Notation providers 
- * for the text shown in the Fig that represents a componentInstance. 
+ * This abstract class forms the basis of all Notation providers
+ * for the text shown in the Fig that represents a componentInstance.
  * Subclass this for all languages.
- * 
+ *
  * @author mvw@tigris.org
  */
 public abstract class ComponentInstanceNotation extends ValueHandler {
 
     protected Object myComponentInstance;
-    
+
     /**
      * The constructor.
-     * 
-     * @param componentInstance the componentInstance of which 
+     *
+     * @param componentInstance the componentInstance of which
      *                          we handle the text
      */
     public ComponentInstanceNotation(Object componentInstance) {

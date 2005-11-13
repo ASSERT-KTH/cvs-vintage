@@ -1,4 +1,4 @@
-// $Id: UndoEnabler.java,v 1.2 2005/08/13 08:49:18 mvw Exp $
+// $Id: UndoEnabler.java,v 1.3 2005/11/13 11:01:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,17 +26,22 @@ package org.argouml.kernel;
 
 /**
  * Control for enabling undo functionality. Remove once undo has acceptable
- * support through all of GEF and ArgoUML
+ * support through all of GEF and ArgoUML.
+ *
  * @author Bob Tarling
  */
-public class UndoEnabler {
+public final class UndoEnabler {
 
     /**
      * Change this value to true to enable undo.
      * Do not commit to CVS in this state.
+     * TODO: Implement!
      */
     public static final boolean ENABLED = false;
-    
+
+    /**
+     * The constructor.
+     */
     private UndoEnabler() {
         super();
     }

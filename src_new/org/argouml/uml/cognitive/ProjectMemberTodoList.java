@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.15 2005/08/13 08:49:17 mvw Exp $
+// $Id: ProjectMemberTodoList.java,v 1.16 2005/11/13 11:01:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,17 +111,16 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
 
     	dsgr = Designer.theDesigner();
     	in = dsgr.getToDoList().getResolvedItems();
-        
+
     	out = new Vector();
-    	for (Iterator it = in.iterator(); it.hasNext(); ) {
+    	for (Iterator it = in.iterator(); it.hasNext();) {
             Object o = it.next();
     	    try {
                 rci = (ResolvedCritic) o;
                 if (rci == null) {
                     continue;
                 }
-    	    }
-    	    catch (ClassCastException e) {
+    	    } catch (ClassCastException e) {
         		continue;
     	    }
     	    out.addElement(new ResolvedCriticXMLHelper(rci));

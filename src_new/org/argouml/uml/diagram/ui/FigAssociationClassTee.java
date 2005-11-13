@@ -1,4 +1,4 @@
-// $Id: FigAssociationClassTee.java,v 1.2 2005/10/17 11:26:58 bobtarling Exp $
+// $Id: FigAssociationClassTee.java,v 1.3 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,25 +42,25 @@ public class FigAssociationClassTee extends FigNodeModelElement {
         bigPort = new FigCircle(0, 0, 10, 10, Color.black, Color.white);
         addFig(bigPort);
     }
-    
+
     public boolean hit(Rectangle r) {
         return false;
     }
-    
+
     public Object deepHitPort(int x, int y) {
         return null;
     }
-    
+
     public Object hitPort(int x, int y) {
         return null;
     }
-    
+
     public Fig hitFig(Rectangle r) {
         return null;
     }
-    
+
     public boolean isSelectable() {
         return false;
     }
-    
+
 }

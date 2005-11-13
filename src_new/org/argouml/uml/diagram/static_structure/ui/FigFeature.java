@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.14 2005/10/17 11:26:55 bobtarling Exp $
+// $Id: FigFeature.java,v 1.15 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,11 +135,11 @@ public class FigFeature extends CompartmentFigText {
     public Selection makeSelection() {
         return new SelectionFeature(this);
     }
-    
+
     public void setTextFilled(boolean filled) {
         super.setTextFilled(false);
     }
-    
+
     public void setFilled(boolean filled) {
         super.setFilled(false);
     }

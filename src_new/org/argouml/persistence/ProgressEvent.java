@@ -1,4 +1,4 @@
-// $Id: ProgressEvent.java,v 1.2 2005/02/10 21:28:40 mvw Exp $
+// $Id: ProgressEvent.java,v 1.3 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,20 +29,20 @@ import java.util.EventObject;
 /**
  * An event to be fired in order to tell some other listener of progress
  * through some activity.
+ *
  * @author Bob Tarling
  */
 public class ProgressEvent extends EventObject {
 
     private long length;
-    
+
     private long position;
-    
-    private String description;
-    
+
     /**
-     * Constructor for a new ProgressEvent
+     * Constructor for a new ProgressEvent.
+     *
      * @param source the source that generated this event
-     * @param thePosition the position to which progress has reach as a 
+     * @param thePosition the position to which progress has reach as a
      *        proportion of length
      * @param theLength the total length the progress is measuring
      */
@@ -50,25 +50,6 @@ public class ProgressEvent extends EventObject {
         super(source);
         this.length = theLength;
         this.position = thePosition;
-    }
-
-    /**
-     * Constructor for a new ProgressEvent
-     * @param source the source that generated this event
-     * @param thePosition the position to which progress has reach as a 
-     *        proportion of length
-     * @param theLength the total length the progress is measuring
-     * @param theDescription a text description of progress
-     */
-    public ProgressEvent(
-            Object source, 
-            long thePosition, 
-            long theLength, 
-            String theDescription) {
-        super(source);
-        this.length = theLength;
-        this.position = thePosition;
-        this.description = theDescription;
     }
 
     /**
@@ -89,11 +70,7 @@ public class ProgressEvent extends EventObject {
     }
 
     /**
-     * An potional description of progress. The GUI should replace any existing
-     * progress description it displays if it find that this is non-null.
-     * @return progress description or null if no change.
+     * The UID.
      */
-    public long getDescription() {
-        return length;
-    }
+    private static final long serialVersionUID = -440923505939663713L;
 }

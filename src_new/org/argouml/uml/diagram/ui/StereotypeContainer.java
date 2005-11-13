@@ -1,4 +1,4 @@
-// $Id: StereotypeContainer.java,v 1.1 2005/05/14 07:42:41 mvw Exp $
+// $Id: StereotypeContainer.java,v 1.2 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.diagram.ui;
 
 
 /**
-* An interface to be implemented by any Fig that may or may not 
+* An interface to be implemented by any Fig that may or may not
 * show a stereotype.
 * @author mvw@tigris.org
 */

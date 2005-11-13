@@ -1,4 +1,4 @@
-// $Id: ActionAddEventAsDeferrableEvent.java,v 1.1 2005/10/23 20:06:51 rastaman Exp $
+// $Id: ActionAddEventAsDeferrableEvent.java,v 1.2 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 /**
- * Provide a dialog which helps the user to select one event out of an existing list, 
+ * Provide a dialog which helps the user to select one event out of an existing list,
  * which will be used as the trigger of the transition.
  * @author MarkusK
  *

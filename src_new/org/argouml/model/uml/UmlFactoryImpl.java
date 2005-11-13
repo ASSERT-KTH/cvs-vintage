@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.35 2005/10/20 07:06:12 tfmorris Exp $
+// $Id: UmlFactoryImpl.java,v 1.36 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,12 +137,12 @@ import ru.novosoft.uml.model_management.MSubsystem;
 class UmlFactoryImpl
     extends AbstractUmlModelFactory
     implements UmlFactory {
-    
+
     /**
      * Logger.<p>
      */
     private static final Logger LOG = Logger.getLogger(UmlFactoryImpl.class);
-    
+
     /**
      * The model implementation.
      */
@@ -407,7 +407,7 @@ class UmlFactoryImpl
             connection = getUseCases().buildInclude(fromElement, toElement);
         } else if (elementType
                 == nsmodel.getMetaTypes().getTransition()) {
-            connection = 
+            connection =
                 getStateMachines().buildTransition(fromElement, toElement);
         }
 

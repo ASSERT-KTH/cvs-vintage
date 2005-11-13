@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactoryImpl.java,v 1.8 2005/08/20 09:29:13 linus Exp $
+// $Id: StateMachinesFactoryImpl.java,v 1.9 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -511,9 +511,9 @@ public class StateMachinesFactoryImpl
     }
 
     /**
-     * Builds a callevent with given namespace 
+     * Builds a callevent with given namespace
      * (and therefore the ownership).
-     * 
+     *
      * @param ns the namespace
      * @return MCallEvent
      */
@@ -558,7 +558,7 @@ public class StateMachinesFactoryImpl
     /**
      * Builds a signalevent whose namespace (and therefore the
      * ownership) is given.
-     * 
+     *
      * @param ns the Namespace
      * @return MSignalEvent
      */
@@ -572,7 +572,7 @@ public class StateMachinesFactoryImpl
     /**
      * Builds a named signalevent whose namespace (and therefore the
      * ownership) is given.
-     * 
+     *
      * @param ns the Namespace
      * @param name String the name of the SignalEvent
      * @return MSignalEvent
@@ -587,7 +587,7 @@ public class StateMachinesFactoryImpl
     /**
      * Builds a timeevent whose namespace (and therefore the
      * ownership) is given.
-     * 
+     *
      * @param ns the Namespace
      * @return MTimeEvent
      */
@@ -620,7 +620,7 @@ public class StateMachinesFactoryImpl
     /**
      * Builds a changeevent whose namespace (and therefore the
      * ownership) is given.
-     * 
+     *
      * @param ns the Namespace
      * @return MChangeEvent
      */
@@ -634,7 +634,7 @@ public class StateMachinesFactoryImpl
     /**
      * Builds a changeevent whose namespace (and therefore the
      * ownership) is given.
-     * 
+     *
      * @param ns the Namespace
      * @param s String for creating the BooleanExpression
      * @return MChangeEvent

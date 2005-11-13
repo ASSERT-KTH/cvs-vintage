@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.30 2005/11/06 13:58:19 mvw Exp $
+// $Id: FigStateVertex.java,v 1.31 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,10 +73,10 @@ public abstract class FigStateVertex extends FigNodeModelElement {
      */
     public void setEnclosingFig(Fig encloser) {
         super.setEnclosingFig(encloser);
-        /* If this fig is not visible, do not adapt the UML model! 
+        /* If this fig is not visible, do not adapt the UML model!
          * This is used for deleting. See issue 3042. */
         if  (!isVisible())
-            return; 
+            return;
         if (!(Model.getFacade().isAStateVertex(getOwner()))) return;
         Object stateVertex = getOwner();
         Object compositeState = null;
@@ -90,7 +90,7 @@ public abstract class FigStateVertex extends FigNodeModelElement {
                             .getStateMachine(stateVertex));
         }
         if (compositeState != null)
-            Model.getStateMachinesHelper().setContainer(stateVertex, 
+            Model.getStateMachinesHelper().setContainer(stateVertex,
                     compositeState);
     }
 
@@ -103,7 +103,7 @@ public abstract class FigStateVertex extends FigNodeModelElement {
             LayerDiagram lay =
                 ((LayerDiagram) editor.getLayerManager().getActiveLayer());
             for (int i = 0; i < getEnclosedFigs().size(); i++) {
-                FigStateVertex f = 
+                FigStateVertex f =
                     ((FigStateVertex) getEnclosedFigs().elementAt(i));
                 lay.bringInFrontOf(f, this);
                 Collection col = null;
@@ -131,7 +131,7 @@ public abstract class FigStateVertex extends FigNodeModelElement {
                     Model.getFacade().getStateMachine(
                             Model.getFacade().getContainer(pstate)))) {
                 return new SelectionActionState(this);
-            } 
+            }
             return new SelectionState(this);
         }
         return null;

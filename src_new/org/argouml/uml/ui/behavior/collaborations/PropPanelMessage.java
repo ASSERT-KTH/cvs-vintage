@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.70 2005/10/20 05:29:04 tfmorris Exp $
+// $Id: PropPanelMessage.java,v 1.71 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class PropPanelMessage extends PropPanelModelElement {
      */
     public PropPanelMessage() {
         super("Message", ConfigLoader.getTabPropsOrientation());
-        
+
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
@@ -65,39 +65,39 @@ public class PropPanelMessage extends PropPanelModelElement {
         interactionList.setVisibleRowCount(1);
         addField(Translator.localize("label.interaction"),
         	 new JScrollPane(interactionList));
-        
+
         JList senderList = new UMLLinkedList(new UMLMessageSenderListModel());
         senderList.setVisibleRowCount(1);
         JScrollPane senderScroll = new JScrollPane(senderList);
         addField(Translator.localize("label.sender"), senderScroll);
-        
+
         JList receiverList =
             new UMLLinkedList(new UMLMessageReceiverListModel());
         receiverList.setVisibleRowCount(1);
         JScrollPane receiverScroll = new JScrollPane(receiverList);
         addField(Translator.localize("label.receiver"),
                 receiverScroll);
-        
+
         addSeperator();
-        
+
         addField(Translator.localize("label.activator"),
         	 new UMLMessageActivatorComboBox(this,
         		 new UMLMessageActivatorComboBoxModel()));
-        
+
         JList actionList =
         	 new UMLMutableLinkedList(new UMLMessageActionListModel(),
         	         null, ActionNewActionForMessage.getInstance());
         actionList.setVisibleRowCount(1);
         JScrollPane actionScroll = new JScrollPane(actionList);
         addField(Translator.localize("label.action"), actionScroll);
-        
+
         JScrollPane predecessorScroll = new JScrollPane(
                 new UMLMutableLinkedList(new UMLMessagePredecessorListModel(),
         	ActionAddMessagePredecessor.getInstance(),
         	null));
         addField(Translator.localize("label.predecessor"),
         	 predecessorScroll);
-        
+
             addAction(new ActionNavigateContainerElement());
             addAction(new ActionToolNewAction());
             addAction(new ActionNewStereotype());
@@ -113,7 +113,7 @@ public class PropPanelMessage extends PropPanelModelElement {
             super("button.new-action");
             putValue(Action.NAME, Translator.localize("button.new-action"));
             Icon icon = ResourceLoaderWrapper.lookupIcon("CallAction");
-            putValue(Action.SMALL_ICON, icon);         
+            putValue(Action.SMALL_ICON, icon);
         }
 
         /**

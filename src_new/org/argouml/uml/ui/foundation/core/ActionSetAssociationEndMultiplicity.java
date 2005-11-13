@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndMultiplicity.java,v 1.6 2005/10/31 01:51:03 tfmorris Exp $
+// $Id: ActionSetAssociationEndMultiplicity.java,v 1.7 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,13 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionSetMultiplicity;
 
 /**
- * 
+ *
  * @author mkl
- * 
+ *
  */
 public class ActionSetAssociationEndMultiplicity extends ActionSetMultiplicity {
 
-    private static final ActionSetAssociationEndMultiplicity SINGLETON = 
+    private static final ActionSetAssociationEndMultiplicity SINGLETON =
         new ActionSetAssociationEndMultiplicity();
 
     /**

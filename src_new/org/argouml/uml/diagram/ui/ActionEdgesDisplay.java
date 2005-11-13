@@ -1,4 +1,4 @@
-// $Id: ActionEdgesDisplay.java,v 1.12 2005/06/18 06:53:46 mvw Exp $
+// $Id: ActionEdgesDisplay.java,v 1.13 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class ActionEdgesDisplay extends UMLAction {
     /**
      * TODO: Support commentEdges.
      * TODO: Support associations to self.
-     * 
+     *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {

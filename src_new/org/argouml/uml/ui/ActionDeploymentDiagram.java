@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.26 2005/07/22 13:13:50 bobtarling Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.27 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** 
+/**
  * Action to trigger creation of a deployment diagram.
  */
 public class ActionDeploymentDiagram extends ActionAddDiagram {
@@ -70,7 +70,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
 					       + "is not a namespace.");
         }
         return (UMLDiagram)DiagramFactory.getInstance().createDiagram(
-                UMLDeploymentDiagram.class, 
+                UMLDeploymentDiagram.class,
                 handle,
                 null);
     }

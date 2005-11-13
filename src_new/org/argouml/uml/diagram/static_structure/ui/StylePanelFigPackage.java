@@ -1,4 +1,4 @@
-// $Id: StylePanelFigPackage.java,v 1.3 2005/05/26 21:35:13 mvw Exp $
+// $Id: StylePanelFigPackage.java,v 1.4 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class StylePanelFigPackage extends StylePanelFigNodeModelElement {
         addToDisplayPane(stereoCheckBox);
         stereoCheckBox.setSelected(false);
         stereoCheckBox.addItemListener(this);
-        
+
         addToDisplayPane(visibilityCheckBox);
         visibilityCheckBox.addItemListener(this);
     }

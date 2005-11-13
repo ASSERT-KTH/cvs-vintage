@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.38 2005/11/04 23:17:36 bobtarling Exp $
+// $Id: FigActor.java,v 1.39 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,11 +49,11 @@ import org.tigris.gef.presentation.FigRect;
 public class FigActor extends FigNodeModelElement {
 
     /**
-     * The padding between 
+     * The padding between
      * the actor body and name and the top of the stereotype.<p>
      */
     protected static final int MIN_VERT_PADDING = 4;
-    
+
     //These are the positions of child figs inside this fig
     //They mst be added in the constructor in this order.
     //For now the name must not be last as this would force
@@ -322,7 +322,7 @@ public class FigActor extends FigNodeModelElement {
         super.updateNameText();
         setBounds(rect.x, rect.y, rect.width, rect.height);
     }
-    
+
     /**
      * @see
      * org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
@@ -332,7 +332,7 @@ public class FigActor extends FigNodeModelElement {
         if (!Model.getFacade().getStereotypes(getOwner()).isEmpty()) {
             Dimension stereoMin = getStereotypeFig().getMinimumSize();
             getStereotypeFig().setBounds(
-                (getBigPort().getCenter().x 
+                (getBigPort().getCenter().x
                                      - getStereotypeFig().getWidth() / 2),
                 (getBigPort().getY() + getBigPort().getHeight()
                                      + MIN_VERT_PADDING),
@@ -341,28 +341,28 @@ public class FigActor extends FigNodeModelElement {
         } else {
             getStereotypeFig().setBounds(getBigPort().getCenter().x,
                                          getBigPort().getCenter().y,
-                                         0, 
+                                         0,
                                          0);
         }
         damage();
     }
 
     /**
-     * The bigport needs to overrule the getGravityPoints, 
+     * The bigport needs to overrule the getGravityPoints,
      * because it is the port of this FigNode.
-     * 
+     *
      * @author mvw@tigris.org
      */
     class ActorPortFigRect extends FigRect {
-        
+
         /**
          * the parent fig, i.e. the Actor
          */
         private Fig parent;
-        
+
         /**
          * The constructor.
-         * 
+         *
          * @param x the x
          * @param y the y
          * @param w the width
@@ -373,7 +373,7 @@ public class FigActor extends FigNodeModelElement {
             super(x, y, w, h, null, null);
             parent = p;
         }
-        
+
         /**
          * Makes sure that the edges stick to the outline of the fig.
          * @see org.tigris.gef.presentation.Fig#getGravityPoints()
@@ -381,6 +381,6 @@ public class FigActor extends FigNodeModelElement {
         public List getGravityPoints() {
             return parent.getGravityPoints();
         }
-    }    
+    }
 
 } /* end class FigActor */

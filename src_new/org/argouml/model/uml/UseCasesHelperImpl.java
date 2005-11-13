@@ -1,4 +1,4 @@
-// $Id: UseCasesHelperImpl.java,v 1.8 2005/10/05 15:47:35 bobtarling Exp $
+// $Id: UseCasesHelperImpl.java,v 1.9 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -279,7 +279,7 @@ class UseCasesHelperImpl implements UseCasesHelper {
             throw new IllegalArgumentException(
                     "The base cannot be null");
         }
-        
+
         if (!(base instanceof MUseCase)) {
             throw new IllegalArgumentException(
                     "The base cannot be a " + base.getClass().getName());
@@ -491,7 +491,7 @@ class UseCasesHelperImpl implements UseCasesHelper {
         if (!(useCase instanceof MUseCase)) {
             throw new IllegalArgumentException("A use case must be supplied");
         }
-        
+
         if ((extend instanceof MBase) && ((MBase) extend).isRemoved()) {
             throw new IllegalStateException("Operation on a removed object ["
                     + extend + "]");

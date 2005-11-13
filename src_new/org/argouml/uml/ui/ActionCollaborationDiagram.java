@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.46 2005/07/22 13:13:50 bobtarling Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.47 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** 
+/**
  * Action to trigger creation of new collaboration diagram.
  */
 public class ActionCollaborationDiagram extends ActionAddDiagram {
@@ -65,7 +65,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
                             .buildCollaboration(namespace, target);
         }
         return (UMLDiagram)DiagramFactory.getInstance().createDiagram(
-                UMLCollaborationDiagram.class, 
+                UMLCollaborationDiagram.class,
                 collaboration,
                 null);
     }

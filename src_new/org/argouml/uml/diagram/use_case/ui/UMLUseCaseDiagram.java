@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.59 2005/10/26 17:00:38 bobtarling Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.60 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -425,13 +425,13 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         }
         return actionExtensionPoint;
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
      */
     public boolean isRelocationAllowed(Object base)  {
-    	return false; 
-		/* TODO: We may return the following when the 
+    	return false;
+		/* TODO: We may return the following when the
 		 * relocate() has been implemented. */
 //    	Model.getFacade().isAPackage(base)
 //        	|| Model.getFacade().isAClassifier(base);

@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.58 2005/10/10 16:43:13 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.59 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -203,7 +203,7 @@ public class UseCaseDiagramGraphModel
         if (containsNode(node)) {
 	    return false;
 	}
-        return Model.getFacade().isAActor(node) 
+        return Model.getFacade().isAActor(node)
             || Model.getFacade().isAUseCase(node)
             || Model.getFacade().isAPackage(node);
     }
@@ -336,7 +336,7 @@ public class UseCaseDiagramGraphModel
         // the model namespace.
 
         getNodes().add(node);
-        
+
         if (Model.getFacade().isAModelElement(node)
                 && Model.getFacade().getNamespace(node) == null) {
             Model.getCoreHelper().addOwnedElement(getHomeModel(), node);
@@ -371,7 +371,7 @@ public class UseCaseDiagramGraphModel
             throw new IllegalArgumentException(
                     "The source and dest port should be provided on an edge");
         }
-        
+
         if (LOG.isInfoEnabled()) {
             LOG.info("Adding an edge of type "
                    + edge.getClass().getName()
@@ -412,7 +412,7 @@ public class UseCaseDiagramGraphModel
      */
     public void addNodeRelatedEdges(Object node) {
         super.addNodeRelatedEdges(node);
-        
+
         // Extend and include relationships for use cases. Collect all the
         // relationships of which the use case is either end and iterate to see
         // if they can be added.
@@ -534,7 +534,7 @@ public class UseCaseDiagramGraphModel
         // Suggest that actors may not connect (see JavaDoc comment about
         // this).
 
-        if (Model.getFacade().isAActor(fromP) 
+        if (Model.getFacade().isAActor(fromP)
                 && Model.getFacade().isAActor(toP)) {
             return false;
         }

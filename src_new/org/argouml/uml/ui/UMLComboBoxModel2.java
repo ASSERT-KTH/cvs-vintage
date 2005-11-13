@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.64 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: UMLComboBoxModel2.java,v 1.65 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,7 +141,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        
+
         if (evt instanceof AttributeChangeEvent) {
             if (evt.getPropertyName().equals(propertySetName)) {
                 if (evt.getSource() == getTarget()
@@ -458,7 +458,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
     protected boolean isValidEvent(PropertyChangeEvent e) {
         boolean valid = false;
         if (!(getChangedElement(e) instanceof Collection)) {
-            if ((e.getNewValue() == null && e.getOldValue() != null) 
+            if ((e.getNewValue() == null && e.getOldValue() != null)
                     // Don't try to test this if we're removing the element
                     || isValidElement(getChangedElement(e))) {
                 valid = true; // we tried to remove a value
@@ -561,7 +561,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
     protected boolean isClearable() {
         return isClearable;
     }
-    
+
     /**
      * @return name of property registered with event listener
      */
@@ -575,7 +575,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
     protected boolean isFireListEvents() {
         return fireListEvents;
     }
-    
+
     /**
      * @param fireListEvents The fireListEvents to set.
      */

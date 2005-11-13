@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.55 2005/09/08 18:24:46 mkl Exp $
+// $Id: PropPanelActor.java,v 1.56 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class PropPanelActor extends PropPanelClassifier {
      * <p>Constructor. Builds up the various fields required.</p>
      */
     public PropPanelActor() {
-    	super("Actor", lookupIcon("Actor"), 
+    	super("Actor", lookupIcon("Actor"),
                 ConfigLoader.getTabPropsOrientation());
 
 

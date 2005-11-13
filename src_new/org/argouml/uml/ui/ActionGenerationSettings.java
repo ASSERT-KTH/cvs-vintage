@@ -1,4 +1,4 @@
-// $Id: ActionGenerationSettings.java,v 1.12 2005/10/01 06:48:50 mvw Exp $
+// $Id: ActionGenerationSettings.java,v 1.13 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** 
+/**
  * Action for viewing/editing source path settings of model elements.
  */
 public class ActionGenerationSettings extends UMLAction {

@@ -1,4 +1,4 @@
-// $Id: ConfigurationHandler.java,v 1.18 2005/10/31 19:53:47 rastaman Exp $
+// $Id: ConfigurationHandler.java,v 1.19 2005/11/13 11:01:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,35 +57,35 @@ public abstract class ConfigurationHandler {
      * Internal storage for the <code>File</code> the configuration was
      * loaded from, otherwise null.
      */
-    private File loadedFromFile = null;
+    private File loadedFromFile;
 
     /**
      * Internal storage for the <code>URL</code> the configuration was
      * loaded from, otherwise null.
      */
-    private URL loadedFromURL = null;
+    private URL loadedFromURL;
 
     /**
      * Internal flag indicating whether the configuration can be updated.
      */
-    private boolean changeable = false;
+    private boolean changeable;
 
     /**
      * Internal flag indicating whether the configuration has been loaded.
      * Configuration rules allow a single load, whether manual or automatic.
      */
-    private boolean loaded = false;
+    private boolean loaded;
 
     /**
      * Internal flag indicating whether the configuration has been modified
      * after it was loaded.
      */
-    private boolean changed = false;
+    private boolean changed;
 
     /**
      * Internal worker for property change.
      */
-    private static PropertyChangeSupport pcl = null;
+    private static PropertyChangeSupport pcl;
 
     /**
      * Logger.
@@ -570,10 +570,11 @@ public abstract class ConfigurationHandler {
      * @param value the value to set the key to.
      */
     abstract void setValue(String key, String value);
-    
+
     /**
-     * Remove the property and the assotiated value
-     * @param key
+     * Remove the property and the assotiated value.
+     *
+     * @param key The key to remove.
      */
     public abstract void remove(String key);
 }

@@ -1,4 +1,4 @@
-// $Id: ActivityDiagramGraphModel.java,v 1.8 2005/04/21 20:38:46 mvw Exp $
+// $Id: ActivityDiagramGraphModel.java,v 1.9 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class ActivityDiagramGraphModel extends StateDiagramGraphModel {
         }
         if (Model.getFacade().isAPartition(node)) {
             return true;
-        } 
+        }
         return super.canAddNode(node);
     }
 
@@ -56,4 +56,9 @@ public class ActivityDiagramGraphModel extends StateDiagramGraphModel {
         boolean canAdd = super.canAddEdge(edge);
         return canAdd;
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 5047684232283453072L;
 }

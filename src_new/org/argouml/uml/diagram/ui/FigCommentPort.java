@@ -1,4 +1,4 @@
-// $Id: FigCommentPort.java,v 1.2 2005/11/03 21:50:28 bobtarling Exp $
+// $Id: FigCommentPort.java,v 1.3 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,11 +42,11 @@ public class FigCommentPort extends FigNodeModelElement {
         bigPort = new FigCircle(0, 0, 10, 10, Color.black, Color.white);
         addFig(bigPort);
     }
-    
+
     public boolean hit(Rectangle r) {
         return false;
     }
-    
+
     /**
      * @deprecated in 0.11.1 use org.tigris.gef.persistence.pgml.PgmlUtility.getClassNameAndBounds(Fig)
      */
@@ -54,21 +54,21 @@ public class FigCommentPort extends FigNodeModelElement {
     public String classNameAndBounds() {
         return getClass().getName() + "[" + getX() + ", " + getY() + ", " + getWidth() + ", " + getHeight() + "]";
     }
-    
+
     public Object hitPort(int x, int y) {
         return null;
     }
-    
+
     public Fig hitFig(Rectangle r) {
         return null;
     }
-    
+
     public boolean isSelectable() {
         return false;
     }
-    
+
     public Fig getPortFig(Object port) {
         return bigPort;
     }
-    
+
 }

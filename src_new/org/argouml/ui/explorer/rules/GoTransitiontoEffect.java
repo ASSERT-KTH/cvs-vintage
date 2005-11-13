@@ -1,4 +1,4 @@
-// $Id: GoTransitiontoEffect.java,v 1.2 2005/07/19 18:13:53 mvw Exp $
+// $Id: GoTransitiontoEffect.java,v 1.3 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.model.Model;
 
 /**
  * Rule for Transition->Effect.
- * 
+ *
  * @author MarkusK
  */
 public class GoTransitiontoEffect extends AbstractPerspectiveRule {

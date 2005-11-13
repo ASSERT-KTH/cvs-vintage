@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.37 2005/11/10 06:13:39 tfmorris Exp $
+// $Id: PropPanelPseudostate.java,v 1.38 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
                 getIncomingScroll());
         addField(Translator.localize("label.outgoing"),
                 getOutgoingScroll());
-        
+
         TargetManager.getInstance().addTargetListener(this);
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLChangeDispatch.java,v 1.31 2005/11/10 04:20:36 tfmorris Exp $
+// $Id: UMLChangeDispatch.java,v 1.32 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,13 +124,13 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
                 dispatch((Container) component);
             if (component instanceof UMLUserInterfaceComponent
                     && component.isVisible()) {
-                
+
                 switch(eventType) {
                 case -1:
                 case 0:
                     ((UMLUserInterfaceComponent) component).targetChanged();
                     break;
-                    
+
                 case 7:
                     ((UMLUserInterfaceComponent) component).targetReasserted();
                     break;

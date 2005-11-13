@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.61 2005/10/20 05:29:04 tfmorris Exp $
+// $Id: PropPanelGeneralization.java,v 1.62 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,8 +64,8 @@ public class PropPanelGeneralization extends PropPanelModelElement {
      *
      */
     public PropPanelGeneralization() {
-        super("Generalization", 
-            lookupIcon("Generalization"), 
+        super("Generalization",
+            lookupIcon("Generalization"),
             ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),

@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.12 2005/03/07 21:34:45 mvw Exp $
+// $Id: ActionAddAssociationRole.java,v 1.13 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,10 +61,10 @@ public class ActionAddAssociationRole extends CmdSetMode {
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));
     }
-    
+
     /**
      * The constructor.
-     * 
+     *
      * @param aggregationKind the required aggregation for the association.
      * @param unidirectional true if this is to create a unidirectional
      *        association

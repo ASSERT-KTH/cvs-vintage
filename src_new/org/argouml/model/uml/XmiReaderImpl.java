@@ -1,4 +1,4 @@
-// $Id: XmiReaderImpl.java,v 1.4 2005/11/07 23:49:49 bobtarling Exp $
+// $Id: XmiReaderImpl.java,v 1.5 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  * A wrapper around the genuine XmiReader that provides public access with no
  * knowledge of actual UML implementation.
- * 
+ *
  * @author Bob Tarling
  */
 public class XmiReaderImpl implements XmiReader {
@@ -47,7 +47,7 @@ public class XmiReaderImpl implements XmiReader {
 
     /**
      * Constructor for XMIReader.
-     * 
+     *
      * @throws UmlException
      *             when there is a problem
      */
@@ -64,7 +64,7 @@ public class XmiReaderImpl implements XmiReader {
     /**
      * Parses a given inputsource to a model. Does not override the novosoft
      * parse method since that does not have the right signature.
-     * 
+     *
      * @param pIs
      *            the input source for parsing
      * @return MModel the UML model

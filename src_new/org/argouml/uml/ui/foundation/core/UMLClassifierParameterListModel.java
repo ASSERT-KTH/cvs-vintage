@@ -1,4 +1,4 @@
-// $Id: UMLClassifierParameterListModel.java,v 1.15 2005/11/10 04:23:34 tfmorris Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.16 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,9 +73,9 @@ public class UMLClassifierParameterListModel
     public void swap(int index1, int index2) {
         Object classifier = getTarget();
         List c = new ArrayList(Model.getFacade().getParameters(classifier));
-        // TODO: Verify that the following works now with MDR 
+        // TODO: Verify that the following works now with MDR
         // and replace code - tfm - 20051109
-        
+
         /* The following does not work, because NSUML does not
          * fire an update event, since no parameters were added or removed...
         Collections.swap(c, index1, index2);

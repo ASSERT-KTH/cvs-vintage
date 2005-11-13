@@ -1,4 +1,4 @@
-// $Id: CrCircularAssocClass.java,v 1.14 2005/03/11 09:43:03 mkl Exp $
+// $Id: CrCircularAssocClass.java,v 1.15 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,14 +35,14 @@ import org.argouml.uml.cognitive.UMLDecision;
 /**
  * Critic to check that an association class does not take part in further
  * association class relations. Circular is to be read in "quotes".
- * 
+ *
  * @author Markus Klink
  */
 public class CrCircularAssocClass extends CrUML {
 
     /**
      * The constructor.
-     *  
+     *
      */
     public CrCircularAssocClass() {
         setupHeadAndDesc();
@@ -56,22 +56,30 @@ public class CrCircularAssocClass extends CrUML {
      */
     public boolean predicate2(Object dm, Designer dsgr) {
         // self.allConnections->forAll(ar|ar.participant <> self)
-        if (!Model.getFacade().isAAssociationClass(dm))
+        if (!Model.getFacade().isAAssociationClass(dm)) {
             return NO_PROBLEM;
+        }
         Collection participants = Model.getFacade().getConnections(dm);
-        if (participants == null)
+        if (participants == null) {
             return NO_PROBLEM;
+        }
         Iterator iter = participants.iterator();
         while (iter.hasNext()) {
             Object aEnd = iter.next();
             if (Model.getFacade().isAAssociationEnd(aEnd)) {
                 Object type = Model.getFacade().getType(aEnd);
-                if (Model.getFacade().isAAssociationClass(type))
-                    return PROBLEM_FOUND; 
-            }           
+                if (Model.getFacade().isAAssociationClass(type)) {
+                    return PROBLEM_FOUND;
+                }
+            }
         }
         return NO_PROBLEM;
     }
 
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 5265695413303517728L;
 } /* end class CrCircularAssocClass.java */
 

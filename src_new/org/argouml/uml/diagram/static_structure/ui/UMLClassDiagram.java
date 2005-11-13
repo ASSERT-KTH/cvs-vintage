@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.81 2005/11/10 10:16:02 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.82 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -185,7 +185,7 @@ public class UMLClassDiagram extends UMLDiagram {
         manageDefault(actions, "diagram.class.dependency");
         return actions;
     }
-    
+
     /**
      * Return an array of association actions in the
      * pattern of which to build a popup toolbutton.
@@ -203,7 +203,7 @@ public class UMLClassDiagram extends UMLDiagram {
         manageDefault(actions, "diagram.class.association");
         return actions;
     }
-    
+
     private Object[] getAggregationActions() {
         Object[] actions = {
             getActionAggregation(),
@@ -212,7 +212,7 @@ public class UMLClassDiagram extends UMLDiagram {
         manageDefault(actions, "diagram.class.aggregation");
         return actions;
     }
-    
+
     private Object[] getCompositionActions() {
         Object[] actions = {
             getActionComposition(),
@@ -274,7 +274,7 @@ public class UMLClassDiagram extends UMLDiagram {
         }
         return actionAssociationEnd;
     }
-    
+
     /**
      * @return Returns the actionClass.
      */
@@ -492,12 +492,12 @@ public class UMLClassDiagram extends UMLDiagram {
      */
     private Action getActionOperation() {
         if (actionOperation == null) {
-            actionOperation = 
+            actionOperation =
                 TargetManager.getInstance().getAddOperationAction();
         }
         return actionOperation;
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
      */

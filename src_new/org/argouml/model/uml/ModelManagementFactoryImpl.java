@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactoryImpl.java,v 1.9 2005/09/04 21:38:34 linus Exp $
+// $Id: ModelManagementFactoryImpl.java,v 1.10 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,14 +50,14 @@ public class ModelManagementFactoryImpl
     /**
      * Logger.
      */
-    private static final Logger LOG = 
+    private static final Logger LOG =
             Logger.getLogger(ModelManagementFactoryImpl.class);
 
     /**
      * The root model.
      */
     private MModel rootModel;
-    
+
     /**
      * The model implementation.
      */
@@ -93,7 +93,7 @@ public class ModelManagementFactoryImpl
         LOG.info("Setting the root model to " + theRootModel);
         this.rootModel = (MModel) theRootModel;
     }
-    
+
     /**
      * Gets the root model of the project
      * @return the current root model.
@@ -101,8 +101,8 @@ public class ModelManagementFactoryImpl
     public Object getRootModel() {
         return rootModel;
     }
-    
-    
+
+
     /**
      * Create an empty but initialized instance of a UML ElementImport.
      *

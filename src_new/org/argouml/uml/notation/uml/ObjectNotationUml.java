@@ -1,4 +1,4 @@
-// $Id: ObjectNotationUml.java,v 1.2 2005/11/11 21:42:45 mvw Exp $
+// $Id: ObjectNotationUml.java,v 1.3 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class ObjectNotationUml extends ObjectNotation {
 
     /**
      * The constructor.
-     * 
+     *
      * @param theObject the UML Object
      */
     public ObjectNotationUml(Object theObject) {
@@ -118,7 +118,7 @@ public class ObjectNotationUml extends ObjectNotation {
 
         if ((nameStr.length() == 0) && (baseString.length() == 0)) {
             return "";
-        } 
+        }
         baseString = baseString.trim();
         if (baseString.length() < 1) {
             return nameStr.trim();

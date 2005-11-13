@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.53 2005/10/16 13:15:17 rastaman Exp $
+// $Id: PropPanelStereotype.java,v 1.54 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,13 +60,13 @@ public class PropPanelStereotype extends PropPanelModelElement {
     private static UMLTagDefinitionListModel
     tagDefinitionListModel =
         new UMLTagDefinitionListModel();
-    
+
     private JScrollPane generalizationScroll;
 
     private JScrollPane specializationScroll;
 
     private JScrollPane tagDefinitionScroll;
-    
+
     /**
      * Construct new stereotype properties tab
      */
@@ -147,5 +147,5 @@ public class PropPanelStereotype extends PropPanelModelElement {
         }
         return tagDefinitionScroll;
     }
-    
+
 } /* end class PropPanelStereotype */

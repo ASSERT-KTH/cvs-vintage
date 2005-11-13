@@ -1,4 +1,4 @@
-// $Id: CrUselessInterface.java,v 1.16 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrUselessInterface.java,v 1.17 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,21 +56,29 @@ public class CrUselessInterface extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!Model.getFacade().isAInterface(dm))
-	    return NO_PROBLEM;
+	if (!Model.getFacade().isAInterface(dm)) {
+            return NO_PROBLEM;
+        }
 
-	if (!Model.getFacade().isPrimaryObject(dm))
-	    return NO_PROBLEM;
+	if (!Model.getFacade().isPrimaryObject(dm)) {
+            return NO_PROBLEM;
+        }
 
 
-	Iterator iter = 
+	Iterator iter =
 	    Model.getFacade().getSupplierDependencies(dm).iterator();
 
-	while (iter.hasNext())
-	    if (Model.getFacade().isRealize(iter.next()))
+	while (iter.hasNext()) {
+	    if (Model.getFacade().isRealize(iter.next())) {
 		return NO_PROBLEM;
+            }
+        }
 
 	return PROBLEM_FOUND;
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -6586457111453473553L;
 } /* end class CrUselessInterface */

@@ -1,4 +1,4 @@
-// $Id: GoSubmachineStateToStateMachine.java,v 1.1 2005/07/19 14:10:13 mkl Exp $
+// $Id: GoSubmachineStateToStateMachine.java,v 1.2 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.Model;
 /**
  * Rule for SubmachineState to StateMachine. This enables the user to easily
  * browse the submachine states.
- * 
+ *
  * @author MarkusK
  */
 public class GoSubmachineStateToStateMachine extends AbstractPerspectiveRule {

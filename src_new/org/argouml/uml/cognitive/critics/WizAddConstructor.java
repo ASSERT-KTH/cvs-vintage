@@ -1,4 +1,4 @@
-// $Id: WizAddConstructor.java,v 1.19 2005/04/14 18:29:44 mvw Exp $
+// $Id: WizAddConstructor.java,v 1.20 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class WizAddConstructor extends UMLWizard {
     private static final Logger LOG =
         Logger.getLogger(WizAddConstructor.class);
 
-    private WizStepTextField step1 = null;
+    private WizStepTextField step1;
     private String label = Translator.localize("label.name");
     private String instructions =
 	"Please change the name of the offending model element.";
@@ -123,7 +123,7 @@ public class WizAddConstructor extends UMLWizard {
         	|| !"create".equals(Model.getFacade().getName(stereo))) {
                 continue;
             }
-        
+
             if (Model.getExtensionMechanismsHelper()
         	    .isValidStereoType(obj, stereo)) {
         	return Model.getModelManagementHelper()
@@ -131,7 +131,7 @@ public class WizAddConstructor extends UMLWizard {
         				     Model.getFacade().getModel(obj));
             }
         }
-        
+
         return null;
     }
 
@@ -161,5 +161,10 @@ public class WizAddConstructor extends UMLWizard {
         }
         return null;
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -4661562206721689576L;
 }
 

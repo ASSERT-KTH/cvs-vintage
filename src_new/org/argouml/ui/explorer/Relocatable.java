@@ -1,4 +1,4 @@
-// $Id: Relocatable.java,v 1.1 2005/09/12 20:12:18 mkl Exp $
+// $Id: Relocatable.java,v 1.2 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,31 +25,31 @@
 package org.argouml.ui.explorer;
 
 /**
- * Interface which is used by the Explorer to determine if a diagram can 
+ * Interface which is used by the Explorer to determine if a diagram can
  * change its location to a new model element.
- * 
+ *
  * @author MarkusK
  *
  */
 public interface Relocatable {
 
     /**
-     * This function should return true if it is allowed to relocate 
+     * This function should return true if it is allowed to relocate
      * this type of diagram to the given modelelement.
-     * 
+     *
      * @param base the given modelelement
      * @return true if adding a diagram here is allowed
      */
     boolean isRelocationAllowed(Object base);
 
     /**
-     * Relocate this diagram, 
-     * e.g. for a class diagram assign it a new namespace, 
-     * e.g. for a statechart move it together with the 
+     * Relocate this diagram,
+     * e.g. for a class diagram assign it a new namespace,
+     * e.g. for a statechart move it together with the
      * statemachine to a new operation/classifier. <p>
-     * 
-     * Precondition: isRelocationAllowed(base) is true. 
-     * 
+     *
+     * Precondition: isRelocationAllowed(base) is true.
+     *
      * @param base the new location, i.e. base modelelement
      * @return true if successful
      */

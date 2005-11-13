@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.77 2005/11/10 10:16:02 bobtarling Exp $
+// $Id: PropPanelClass.java,v 1.78 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class PropPanelClass extends PropPanelClassifier {
      * The constructor.
      */
     public PropPanelClass() {
-        super("Class", 
+        super("Class",
             lookupIcon("Class"),
             ConfigLoader.getTabPropsOrientation());
 

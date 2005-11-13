@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.70 2005/10/10 12:47:43 mkl Exp $
+// $Id: PropPanelUseCase.java,v 1.71 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,8 +58,8 @@ public class PropPanelUseCase extends PropPanelClassifier {
     public PropPanelUseCase() {
         // Invoke the Classifier constructor, but passing in our name and
         // representation and requesting 3 columns
-        super("UseCase", 
-            lookupIcon("UseCase"), 
+        super("UseCase",
+            lookupIcon("UseCase"),
             ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
@@ -71,7 +71,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
 
         add(getModifiersPanel());
 
-	
+
 
 	addSeperator();
 
@@ -96,7 +96,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
             ActionNewUseCaseExtensionPoint.SINGLETON);
     addField(Translator.localize("label.extension-points"),
          new JScrollPane(extensionPoints));
-    
+
         addField(Translator.localize("label.association-ends"),
             getAssociationEndScroll());
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.4 2005/11/10 01:11:14 tfmorris Exp $
+// $Id: PropPanelTagDefinition.java,v 1.5 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
     private JComponent stereotypeSelector;
 
     private static UMLTagDefinitionStereotypeComboBoxModel
-    stereotypeComboBoxModel = new UMLTagDefinitionStereotypeComboBoxModel();	
+    stereotypeComboBoxModel = new UMLTagDefinitionStereotypeComboBoxModel();
 
 
     /**
@@ -59,14 +59,14 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
      * Model for the MultiplicityComboBox
      */
     private static UMLMultiplicityComboBoxModel multiplicityComboBoxModel;
-    
+
     ////////////////////////////////////////////////////////////////
     // contructors
     /**
      * The constructor.
      */
     public PropPanelTagDefinition() {
-        super("TagDefinition", 
+        super("TagDefinition",
             lookupIcon("TagDefinition"),
             ConfigLoader.getTabPropsOrientation());
 
@@ -79,7 +79,7 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
         addField(Translator.localize("label.multiplicity"),
                 getMultiplicityComboBox());
         add(getNamespaceVisibilityPanel());
-        
+
         addSeperator();
 
         addAction(new ActionNavigateNamespace());
@@ -97,8 +97,8 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
         if (stereotypeSelector == null) {
             stereotypeSelector = new Box(BoxLayout.X_AXIS);
             stereotypeSelector.add(new UMLComboBoxNavigator(this,
-                    Translator.localize("label.stereotype.navigate.tooltip"),                    
-                    new UMLComboBox2(stereotypeComboBoxModel,new ActionSetTagDefinitionOwner())          
+                    Translator.localize("label.stereotype.navigate.tooltip"),
+                    new UMLComboBox2(stereotypeComboBoxModel,new ActionSetTagDefinitionOwner())
                     ));
         }
         return stereotypeSelector;
@@ -122,6 +122,6 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
         }
         return multiplicityComboBox;
     }
-    
-    
+
+
 } /* end class PropPanelClass */

@@ -1,4 +1,4 @@
-// $Id: ActionStateNotation.java,v 1.2 2005/11/11 17:52:37 mvw Exp $
+// $Id: ActionStateNotation.java,v 1.3 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,16 @@ package org.argouml.uml.notation;
 import org.argouml.model.Model;
 
 /**
- * This abstract class forms the basis of all Notation providers 
- * for the text shown in the Fig that represents the ActionState. 
+ * This abstract class forms the basis of all Notation providers
+ * for the text shown in the Fig that represents the ActionState.
  * Subclass this for all languages.
- * 
+ *
  * @author mvw@tigris.org
  */
 public abstract class ActionStateNotation extends ValueHandler {
 
     protected Object myActionState;
-    
+
     /**
      * The constructor.
      */

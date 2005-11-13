@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.25 2005/10/06 13:24:44 bobtarling Exp $
+// $Id: ActionExportXMI.java,v 1.26 2005/11/13 11:01:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,8 +39,7 @@ import org.argouml.persistence.PersistenceManager;
  * @author jaap.branderhorst@xs4all.nl
  * Jun 7, 2003
  */
-public final class ActionExportXMI extends AbstractAction
-{
+public final class ActionExportXMI extends AbstractAction {
 
     /**
      * The constructor.
@@ -64,12 +63,13 @@ public final class ActionExportXMI extends AbstractAction
         chooser.setAcceptAllFileFilterUsed(true);
         pm.setXmiFileChooserFilter(chooser);
 
-        String fn = Configuration.getString(
+        String fn =
+            Configuration.getString(
                 PersistenceManager.KEY_EXPORT_XMI_PATH);
         if (fn.length() > 0) {
             chooser.setSelectedFile(new File(fn));
         }
-        
+
         int result = chooser.showSaveDialog(ProjectBrowser.getInstance());
         if (result == JFileChooser.APPROVE_OPTION) {
             File theFile = chooser.getSelectedFile();
@@ -84,4 +84,9 @@ public final class ActionExportXMI extends AbstractAction
             }
         }
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -3445739054369264482L;
 }

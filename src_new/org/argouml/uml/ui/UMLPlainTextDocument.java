@@ -1,4 +1,4 @@
-// $Id: UMLPlainTextDocument.java,v 1.30 2005/11/10 02:09:20 tfmorris Exp $
+// $Id: UMLPlainTextDocument.java,v 1.31 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
 
 /**
- * Model for a text property on a model element. It listens to 
+ * Model for a text property on a model element. It listens to
  * property change events for the given property name so that
  * changes made to the underlying UML model are reflected here.
  * <p>
@@ -47,7 +47,7 @@ import org.tigris.gef.presentation.Fig;
  * be sure to preserve the flushEvents() calls to keep things
  * synchronized.  Events caused by updates are delivered
  * asynchronously to the actual update calls.
- * <p> 
+ * <p>
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
  */

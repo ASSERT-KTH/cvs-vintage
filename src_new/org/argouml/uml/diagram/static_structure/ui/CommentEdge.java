@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.12 2005/09/26 17:13:14 bobtarling Exp $
+// $Id: CommentEdge.java,v 1.13 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class CommentEdge {
     CommentEdge() {
         uuid = UUIDManager.getInstance().getNewUUID();
     }
-    
+
     /**
      * Constructor.
      *
@@ -110,7 +110,7 @@ public class CommentEdge {
         }
         dest = destination;
     }
-    
+
     /**
      * @param source The source to set.
      */

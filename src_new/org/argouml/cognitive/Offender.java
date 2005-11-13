@@ -1,4 +1,4 @@
-// $Id: Offender.java,v 1.2 2005/04/14 18:29:46 mvw Exp $
+// $Id: Offender.java,v 1.3 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,11 @@ package org.argouml.cognitive;
  * An Offender is an object which produces a ToDoItem. When such an item is
  * produced the offender as well as the designer can be informed about the new
  * ToDoItem.
- * 
+ *
  * @see DesignMaterial
- * 
+ *
  * @author MarkusK
- *  
+ *
  */
 public interface Offender {
 
@@ -40,12 +40,11 @@ public interface Offender {
      * When a poster produces a ToDoItem, both the Designer and the "offending"
      * DesignMaterial's are notified. Subclasses may, for example, visually
      * change their appearance to indicate the presence of an error. One paper
-     * called this 'clarifiers'.
-     * <p>
-     * 
+     * called this 'clarifiers'.<p>
+     *
      * @param item
      *            the todo item
      */
-    public void inform(ToDoItem item);
+    void inform(ToDoItem item);
 
 }

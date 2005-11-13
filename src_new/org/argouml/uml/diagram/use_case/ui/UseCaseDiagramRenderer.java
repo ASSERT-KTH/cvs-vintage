@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.26 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.27 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,7 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
             Map styleAttributes) {
 
         FigNodeModelElement figNode = null;
-        
+
         // Create a new version of the relevant fig
 
         if (Model.getFacade().isAActor(node)) {
@@ -116,7 +116,7 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
 
         figNode.setDiElement(
                 GraphChangeAdapter.getInstance().createElement(gm, node));
-        
+
         return figNode;
     }
 
@@ -192,7 +192,7 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
 
             newEdge = extFig;
         } else if (Model.getFacade().isAInclude(edge)) {
-            // Include relationship is very like extend. 
+            // Include relationship is very like extend.
             Object   inc    = /*(MInclude)*/ edge;
             FigInclude incFig = new FigInclude(inc);
 
@@ -275,10 +275,10 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
                     + " created with no source or destination port");
             }
         }
-        
+
         newEdge.setDiElement(
                 GraphChangeAdapter.getInstance().createElement(gm, edge));
-        
+
         return newEdge;
     }
 

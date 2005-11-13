@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.42 2005/08/20 09:29:13 linus Exp $
+// $Id: Init.java,v 1.43 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,6 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  * Registers critics for use in ArgoUML.  This class is called at
  * system startup time. If you add a new critic, you need to add a
  * line here.
- *
  *
  * @author jrobbins
  * @see org.argouml.cognitive.critics.Agency
@@ -190,31 +189,31 @@ public class Init {
 
     private static Critic crInvalidHistory =
         new CrInvalidHistory();
-    
+
     private static Critic crInvalidSynch =
         new CrInvalidSynch();
-    
+
     private static Critic crInvalidJoinTriggerOrGuard =
         new CrInvalidJoinTriggerOrGuard();
-    
+
     private static Critic crInvalidForkTriggerOrGuard =
         new CrInvalidForkTriggerOrGuard();
-    
+
     private static Critic crInvalidPseudoStateTrigger =
         new CrInvalidPseudoStateTrigger();
-    
+
     private static Critic crMultipleDeepHistoryStates =
         new CrMultipleDeepHistoryStates();
-    
+
     private static Critic crMultipleShallowHistoryStates =
         new CrMultipleShallowHistoryStates();
-    
+
     private static Critic crInvalidInitial =
         new CrInvalidInitial();
-    
+
     private static Critic crForkOutgoingTransition =
         new CrForkOutgoingTransition();
-    
+
     private static Critic crJoinIncomingTransition =
         new CrJoinIncomingTransition();
 

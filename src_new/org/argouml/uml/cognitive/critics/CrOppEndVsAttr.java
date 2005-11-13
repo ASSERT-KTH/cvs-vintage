@@ -1,4 +1,4 @@
-// $Id: CrOppEndVsAttr.java,v 1.17 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrOppEndVsAttr.java,v 1.18 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,11 +58,12 @@ public class CrOppEndVsAttr extends CrUML {
 
     /**
      * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
+     *         java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-        if (!(Model.getFacade().isAClassifier(dm)))
+        if (!(Model.getFacade().isAClassifier(dm))) {
             return NO_PROBLEM;
+        }
         Object cls = /*(MClassifier)*/ dm;
         Vector namesSeen = new Vector();
         Collection str = Model.getFacade().getFeatures(cls);
@@ -73,18 +74,21 @@ public class CrOppEndVsAttr extends CrUML {
         while (features.hasNext()) {
             Object o = features.next();
 
-            if (!(Model.getFacade().isAStructuralFeature(o)))
+            if (!(Model.getFacade().isAStructuralFeature(o))) {
                 continue;
+            }
 
             Object sf = /*(MStructuralFeature)*/ o;
 
             String sfName = Model.getFacade().getName(sf);
-            if ("".equals(sfName))
+            if ("".equals(sfName)) {
                 continue;
+            }
 
             String nameStr = sfName;
-            if (nameStr.length() == 0)
+            if (nameStr.length() == 0) {
                 continue;
+            }
 
             namesSeen.addElement(nameStr);
 
@@ -96,31 +100,43 @@ public class CrOppEndVsAttr extends CrUML {
         Iterator myEnds = assocEnds.iterator();
         while (myEnds.hasNext()) {
             Object myAe = /*(MAssociationEnd)*/ myEnds.next();
-            Object asc = /*(MAssociation)*/ 
+            Object asc =
+                /*(MAssociation)*/
                 Model.getFacade().getAssociation(myAe);
             Collection conn = Model.getFacade().getConnections(asc);
 
-            if (Model.getFacade().isAAssociationRole(asc))
+            if (Model.getFacade().isAAssociationRole(asc)) {
                 conn = Model.getFacade().getConnections(asc);
-            if (conn == null)
+            }
+            if (conn == null) {
                 continue;
+            }
 
             Iterator ascEnds = conn.iterator();
             while (ascEnds.hasNext()) {
                 Object ae = /*(MAssociationEnd)*/ ascEnds.next();
-                if (Model.getFacade().getType(ae) == cls)
+                if (Model.getFacade().getType(ae) == cls) {
                     continue;
+                }
                 String aeName = Model.getFacade().getName(ae);
-                if ("".equals(aeName))
+                if ("".equals(aeName)) {
                     continue;
+                }
                 String aeNameStr = aeName;
-                if (aeNameStr == null || aeNameStr.length() == 0)
+                if (aeNameStr == null || aeNameStr.length() == 0) {
                     continue;
+                }
 
-                if (namesSeen.contains(aeNameStr))
+                if (namesSeen.contains(aeNameStr)) {
                     return PROBLEM_FOUND;
+                }
             }
         }
         return NO_PROBLEM;
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 5784567698177480475L;
 } /* end class CrOppEndVsAttr.java */

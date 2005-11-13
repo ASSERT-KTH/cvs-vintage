@@ -1,4 +1,4 @@
-// $Id: UMLExtendExtensionListModel.java,v 1.1 2005/10/10 12:46:41 mkl Exp $
+// $Id: UMLExtendExtensionListModel.java,v 1.2 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class UMLExtendExtensionListModel extends UMLModelElementListModel2 {
         addElement(Model.getFacade().getExtension(getTarget()));
     }
 
-   
+
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */

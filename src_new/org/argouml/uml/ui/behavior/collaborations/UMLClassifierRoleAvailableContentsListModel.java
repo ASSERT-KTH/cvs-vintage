@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.27 2005/10/28 15:46:56 tfmorris Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.28 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,7 @@ public class UMLClassifierRoleAvailableContentsListModel
                 super.propertyChange(e);
         }
     }
-    
+
     /**
      * TODO: Why this function that the other models do not need?
      *

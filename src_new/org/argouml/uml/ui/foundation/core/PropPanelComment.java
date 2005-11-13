@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.27 2005/11/04 22:41:18 bobtarling Exp $
+// $Id: PropPanelComment.java,v 1.28 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.argouml.util.ConfigLoader;
  *
  * In UML 1.3, the text of the comment is kept
  * in the name of the Comment.<p>
- * 
+ *
  * In UML 1.4 and beyond, the Comment has a "body"
  * attribute, to contain the comment string.
  */
@@ -55,7 +55,7 @@ public class PropPanelComment extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        
+
         addField(Translator.localize("label.stereotype"),
                 getStereotypeSelector());
 
@@ -85,10 +85,10 @@ class UMLCommentBodyDocument extends UMLPlainTextDocument {
         public UMLCommentBodyDocument() {
             super("name"); // TODO: this may have to change to "body" for UML 1.4
             /*
-             * TODO: This is probably not the right location 
-             * for switching off the "filterNewlines". 
+             * TODO: This is probably not the right location
+             * for switching off the "filterNewlines".
              * The setting gets lost after selecting a different
-             * ModelElement in the diagram. 
+             * ModelElement in the diagram.
              * BTW, see how it is used in
              * javax.swing.text.PlainDocument.
              * See issue 1812.

@@ -1,4 +1,4 @@
-// $Id: CrTooManyOper.java,v 1.17 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrTooManyOper.java,v 1.18 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,12 +31,16 @@ import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLDecision;
 
-/** 
+/**
  * A critic to detect when a classifier has to many operations). <p>
- * 
+ *
  * TODO: exclude getter and setter operations from count
  */
 public class CrTooManyOper extends AbstractCrTooMany {
+    /**
+     * Threshold.
+     */
+    private static final int OPERATIONS_THRESHOLD = 20;
 
     /**
      * The constructor.
@@ -45,7 +49,7 @@ public class CrTooManyOper extends AbstractCrTooMany {
     public CrTooManyOper() {
         setupHeadAndDesc();
 	addSupportedDecision(UMLDecision.METHODS);
-	setThreshold(20);
+	setThreshold(OPERATIONS_THRESHOLD);
 	addTrigger("behavioralFeature");
     }
 
@@ -54,19 +58,29 @@ public class CrTooManyOper extends AbstractCrTooMany {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(Model.getFacade().isAClassifier(dm))) return NO_PROBLEM;
+	if (!(Model.getFacade().isAClassifier(dm))) {
+            return NO_PROBLEM;
+        }
 	Object cls = /*(MClassifier)*/ dm;
 	// TODO: consider inherited attributes?
-	int threshold = getThreshold();
 	Collection str = Model.getFacade().getFeatures(cls);
-	if (str == null) return NO_PROBLEM;
+	if (str == null) {
+            return NO_PROBLEM;
+        }
 	int n = 0;
 	for (Iterator iter = str.iterator(); iter.hasNext();) {
-	    if (Model.getFacade().isABehavioralFeature(iter.next()))
+	    if (Model.getFacade().isABehavioralFeature(iter.next())) {
 		n++;
+            }
 	}
-	if (n <= threshold) return NO_PROBLEM;
+	if (n <= getThreshold()) {
+            return NO_PROBLEM;
+        }
 	return PROBLEM_FOUND;
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 3221965323817473947L;
 } /* end class CrTooManyOper */

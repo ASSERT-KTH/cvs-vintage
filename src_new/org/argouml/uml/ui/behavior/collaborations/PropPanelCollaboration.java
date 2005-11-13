@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.27 2005/09/08 18:22:54 mkl Exp $
+// $Id: PropPanelCollaboration.java,v 1.28 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,7 @@ public class PropPanelCollaboration extends PropPanelNamespace {
             new JScrollPane(constrainingList));
 
         // we do not add the owned-elements since they are not of real interest
-        
+
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());

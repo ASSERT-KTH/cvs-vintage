@@ -1,4 +1,4 @@
-// $Id: ActionAutoCritique.java,v 1.4 2005/08/13 08:49:15 mvw Exp $
+// $Id: ActionAutoCritique.java,v 1.5 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,9 +37,12 @@ import org.argouml.uml.ui.UMLAction;
  */
 class ActionAutoCritique extends UMLAction {
 
+    /**
+     * The constructor.
+     */
     public ActionAutoCritique() {
 	super("action.toggle-auto-critique", NO_ICON);
-	putValue("SELECTED", 
+	putValue("SELECTED",
                 new Boolean(Designer.theDesigner().getAutoCritique()));
     }
 
@@ -57,5 +60,10 @@ class ActionAutoCritique extends UMLAction {
         ToDoList.getInstance().setPaused(!ToDoList.getInstance().isPaused());
     }
 
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 9057306108717070004L;
 } /* end class ActionAutoCritique */
 

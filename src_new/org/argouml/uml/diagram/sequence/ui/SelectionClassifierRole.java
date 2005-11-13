@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.4 2005/08/13 08:49:16 mvw Exp $
+// $Id: SelectionClassifierRole.java,v 1.5 2005/11/13 11:01:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ public class SelectionClassifierRole extends SelectionNodeClarifiers {
 
     /**
      * The constructor.
-     * 
+     *
      * @param f the fig
      */
     public SelectionClassifierRole(Fig f) {
@@ -49,7 +49,7 @@ public class SelectionClassifierRole extends SelectionNodeClarifiers {
      * Make sure that the north facing handles cannot be dragged as
      * part of a resize.
      *
-     * @see org.tigris.gef.base.Selection#dragHandle(int, int, int, int, 
+     * @see org.tigris.gef.base.Selection#dragHandle(int, int, int, int,
      * org.tigris.gef.presentation.Handle)
      */
     public void dragHandle(int mX, int mY, int anX, int anY, Handle hand) {
@@ -76,4 +76,8 @@ public class SelectionClassifierRole extends SelectionNodeClarifiers {
         return null;
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 3570571152608122095L;
 }

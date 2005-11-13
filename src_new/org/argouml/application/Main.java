@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.135 2005/11/11 11:41:31 mvw Exp $
+// $Id: Main.java,v 1.136 2005/11/13 11:01:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,8 +160,9 @@ public class Main {
         String theTheme = null;
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("-")) {
-		String themeName = LookAndFeelMgr.getInstance()
-                    .getThemeClassNameFromArg(args[i]);
+		String themeName =
+                    LookAndFeelMgr.getInstance()
+                        .getThemeClassNameFromArg(args[i]);
                 if (themeName != null) {
 		    theTheme = themeName;
                 } else if (
@@ -214,7 +215,7 @@ public class Main {
 	// is that some of the commands will use the projectbrowser.
 	st.mark("initialize gui");
         SplashScreen splash = initializeGUI(doSplash && !batch, theTheme);
-        
+
         // Register the default notation.
         org.argouml.uml.generator.GeneratorDisplay.getInstance();
 
@@ -289,7 +290,7 @@ public class Main {
         }
 
         ProjectManager.getManager().makeEmptyProject();
-        
+
         st.mark("set project");
 
         Designer.enableCritiquing();
@@ -303,7 +304,7 @@ public class Main {
         if (splash != null) {
             splash.getStatusBar().showProgress(75);
         }
-        
+
         // Initialize the module loader.
         st.mark("modules");
 
@@ -606,7 +607,9 @@ public class Main {
 	}
 
         SplashScreen splash = null;
-        if (doSplash) splash = new SplashScreen();
+        if (doSplash) {
+            splash = new SplashScreen();
+        }
 
         // make the projectbrowser
 	ProjectBrowser pb = ProjectBrowser.makeInstance(splash);
@@ -698,8 +701,10 @@ class PreloadClasses implements Runnable {
     public void run() {
 
         Class c = null;
-        if (c == null) // otherwise anoying warning
+        if (c == null) {
+            // otherwise anoying warning
             LOG.info("preloading...");
+        }
 
 	// Alphabetic order
         c = org.argouml.kernel.DelayedChangeNotify.class;

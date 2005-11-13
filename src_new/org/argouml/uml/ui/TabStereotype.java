@@ -1,4 +1,4 @@
-// $Id: TabStereotype.java,v 1.8 2005/11/04 23:17:35 bobtarling Exp $
+// $Id: TabStereotype.java,v 1.9 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ public class TabStereotype extends PropPanel {
 
     private static String orientation = Configuration.getString(Configuration
             .makeKey("layout", "tabstereotype"));
-    
+
     private Object target;
 
     private UMLModelElementStereotypeListModel stereoListModel;
@@ -82,7 +82,7 @@ public class TabStereotype extends PropPanel {
             return;
         }
         target = t;
-        
+
         stereoListModel.setTarget(t);
 
         validate();

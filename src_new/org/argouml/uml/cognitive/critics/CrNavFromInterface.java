@@ -1,4 +1,4 @@
-// $Id: CrNavFromInterface.java,v 1.17 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrNavFromInterface.java,v 1.18 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class CrNavFromInterface extends CrUML {
      */
     public CrNavFromInterface() {
         setupHeadAndDesc();
-        
+
         // Specify design issue category and knowledge type
 
         addSupportedDecision(UMLDecision.RELATIONSHIPS);
@@ -148,5 +148,9 @@ public class CrNavFromInterface extends CrUML {
         return NO_PROBLEM;
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 2660051106458704056L;
 } /* end class CrNavFromInterface */
 

@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.35 2005/11/03 00:39:44 tfmorris Exp $
+// $Id: ArgoFacade.java,v 1.36 2005/11/13 11:01:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,7 @@ public class ArgoFacade implements tudresden.ocl.check.types.ModelFacade {
 
 	if (target != null && Model.getFacade().getName(target).equals(name)) {
 	    return new ArgoAny(target);
-	} 
+	}
         Object classifier = p.findTypeInModel(name, p.getModel());
         if (classifier == null) {
             /**
@@ -178,7 +178,8 @@ class ArgoAny implements Any, Type2 {
 			|| Model.getFacade().getUpper(multiplicity)
                            == -1)) {
 		    // TODO: MULTIPLESTEREOTYPES
-		    Object stereotype = CollectionUtil.getFirstItemOrNull(
+		    Object stereotype =
+                        CollectionUtil.getFirstItemOrNull(
                             Model.getFacade().getStereotypes(ae));
 		    // to do: think about the condition of this if-statement
 		    // ordered association end -> Sequence; otherwise -> Set
@@ -264,7 +265,7 @@ class ArgoAny implements Any, Type2 {
 	}
 
 	Object foundOp = null; //MOperation
-	java.util.Collection operations = 
+	java.util.Collection operations =
                 Model.getFacade().getOperations(classifier);
 	Iterator iter = operations.iterator();
 	while (iter.hasNext() && foundOp == null) {
@@ -309,7 +310,7 @@ class ArgoAny implements Any, Type2 {
 	    return equals(type)
 		|| Model.getCoreHelper()
 		    .getAllSupertypes(classifier).contains(other.classifier);
-	} 
+	}
         return false;
     }
 
@@ -398,7 +399,7 @@ class ArgoAny implements Any, Type2 {
 	    return false;
 	}
 
-        Collection operationParameters = 
+        Collection operationParameters =
                 Model.getFacade().getParameters(operation);
 	if (!Model.getFacade().isReturn(
                         operationParameters.iterator().next())) {
@@ -416,7 +417,7 @@ class ArgoAny implements Any, Type2 {
 	int index = 0;
 	while (paramIter.hasNext()) {
 	    Object nextParam = paramIter.next();
-	    Object paramType = 
+	    Object paramType =
                     Model.getFacade().getType(nextParam); //MClassifier
 	    Type operationParam = getOclRepresentation(paramType);
 	    if (!callParams[index].conformsTo(operationParam)) {

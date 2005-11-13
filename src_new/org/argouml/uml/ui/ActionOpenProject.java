@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.64 2005/07/31 08:22:26 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.65 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,17 +114,17 @@ public class ActionOpenProject extends AbstractAction
             chooser.setAcceptAllFileFilterUsed(false);
 
             pm.setOpenFileChooserFilter(chooser);
-            
+
             String fn = Configuration.getString(
                     PersistenceManager.KEY_OPEN_PROJECT_PATH);
             if (fn.length() > 0) {
                 chooser.setSelectedFile(new File(fn));
             }
-            
+
             int retval = chooser.showOpenDialog(pb);
             if (retval == JFileChooser.APPROVE_OPTION) {
                 File theFile = chooser.getSelectedFile();
-                
+
                 if (!theFile.canRead()) {
                     /* Try adding the extension from the chosen filter. */
                     FileFilter ffilter = chooser.getFileFilter();

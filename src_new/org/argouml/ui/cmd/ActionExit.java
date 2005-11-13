@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.1 2005/05/18 20:27:00 mvw Exp $
+// $Id: ActionExit.java,v 1.2 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class ActionExit extends UMLAction
      * Remember if this form is already active, so that it does
      * not popup twice.
      */
-    private static boolean active = false;
+    private static boolean active;
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -71,7 +71,7 @@ public class ActionExit extends UMLAction
 
     /**
      * See ProjectBrowser.askConfirmationAndSave() for a very similar procedure!
-     * 
+     *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed (ActionEvent ae) {
@@ -128,4 +128,9 @@ public class ActionExit extends UMLAction
         System.exit (0);
 	return true;
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -6264722939329644183L;
 } /* end class ActionExit */

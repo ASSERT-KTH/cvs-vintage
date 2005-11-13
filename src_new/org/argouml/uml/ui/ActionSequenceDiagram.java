@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.40 2005/07/22 13:13:50 bobtarling Exp $
+// $Id: ActionSequenceDiagram.java,v 1.41 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,12 +76,12 @@ public final class ActionSequenceDiagram extends UMLAction {
             Model.getCollaborationsFactory().buildCollaboration(
                 owner,
                 target);
-        UMLDiagram diagram = 
+        UMLDiagram diagram =
             (UMLDiagram)DiagramFactory.getInstance().createDiagram(
-                UMLSequenceDiagram.class, 
+                UMLSequenceDiagram.class,
                 collaboration,
                 null);
-        
+
         ProjectManager.getManager().getCurrentProject().addMember(diagram);
         TargetManager.getInstance().setTarget(diagram);
         ExplorerEventAdaptor.getInstance().modelElementChanged(owner);

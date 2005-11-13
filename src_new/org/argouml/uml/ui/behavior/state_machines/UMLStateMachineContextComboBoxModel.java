@@ -1,4 +1,4 @@
-// $Id: UMLStateMachineContextComboBoxModel.java,v 1.2 2005/11/04 23:17:35 bobtarling Exp $
+// $Id: UMLStateMachineContextComboBoxModel.java,v 1.3 2005/11/13 11:01:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,7 @@ public class UMLStateMachineContextComboBoxModel
         return Model.getFacade().isAClass(element)
                 || Model.getFacade().isAUseCase(element);
     }
-    
+
     /**
      * Helper method for buildModelList.
      * <p>

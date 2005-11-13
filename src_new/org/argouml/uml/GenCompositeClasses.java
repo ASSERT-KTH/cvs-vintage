@@ -1,4 +1,4 @@
-// $Id: GenCompositeClasses.java,v 1.20 2005/02/19 23:22:44 mvw Exp $
+// $Id: GenCompositeClasses.java,v 1.21 2005/11/13 11:01:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,14 +74,14 @@ public class GenCompositeClasses implements ChildGenerator {
 	    if (Model.getAggregationKind().getComposite().equals(
 	            Model.getFacade().getAggregation(ae))) {
 		Object asc = Model.getFacade().getAssociation(ae);
-		ArrayList conn = 
+		ArrayList conn =
 		    new ArrayList(Model.getFacade().getConnections(asc));
 		if (conn == null || conn.size() != 2) {
 		    continue;
 		}
 		Object otherEnd =
 		    (ae == conn.get(0)) ? conn.get(1) : conn.get(0);
-		if (Model.getFacade().getType(ae) 
+		if (Model.getFacade().getType(ae)
 		        != Model.getFacade().getType(otherEnd)) {
 		    res.add(Model.getFacade().getType(otherEnd));
 		}
@@ -89,5 +89,10 @@ public class GenCompositeClasses implements ChildGenerator {
 	}
 	return res.elements();
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -6027679124153204193L;
 } /* end class GenCompositeClasses */
 

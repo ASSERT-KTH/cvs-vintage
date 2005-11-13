@@ -1,4 +1,4 @@
-// $Id: GenerationPreferences.java,v 1.9 2005/10/02 09:11:35 mvw Exp $
+// $Id: GenerationPreferences.java,v 1.10 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,10 @@
 
 package org.argouml.uml.generator;
 
-/** 
+/**
  * Stores generation preference information entered by the user
  * per project. <p>
- *  
+ *
  * TODO: The header comment is curently not used - this function
  * is not completely implemented yet. How do we store this in the project?
  * Where should the user enter his header comment?
@@ -40,15 +40,16 @@ public class GenerationPreferences implements java.io.Serializable {
     private String outputDir;
 
     /**
-     *  Constructor
+     * Constructor.
      */
     public GenerationPreferences() {
-	if (System.getProperty("file.separator").equals("/"))
+	if (System.getProperty("file.separator").equals("/")) {
 	    outputDir = "/tmp";
-	else
+        } else {
 	    //This does not even exist on many systems:
 	    //_outputDir = "c:\\temp";
             outputDir = System.getProperty("java.io.tmpdir");
+        }
     }
 
     ////////////////////////////////////////////////////////////////
@@ -73,5 +74,9 @@ public class GenerationPreferences implements java.io.Serializable {
      */
     public void setHeaderComment(String c) { headerComment = c; }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -737447110189956630L;
 } /* end class GenerationPreferences */
 

@@ -1,4 +1,4 @@
-// $Id: FigJunctionState.java,v 1.11 2005/07/16 13:07:10 mvw Exp $
+// $Id: FigJunctionState.java,v 1.12 2005/11/13 11:01:21 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,8 +35,8 @@ import org.tigris.gef.base.Geometry;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
 
-/** 
- * Class to display graphics for a UML Junction State 
+/**
+ * Class to display graphics for a UML Junction State
  * in e.g. a statechart diagram - the diamond.
  *
  * @author pepargouml
@@ -198,18 +198,18 @@ public class FigJunctionState extends FigStateVertex {
      */
     public Point getClosestPoint(Point anotherPt) {
         Rectangle r = getBounds();
-        int xs[] = {r.x + r.width / 2, 
-                    r.x + r.width,      
-                    r.x + r.width / 2, 
+        int xs[] = {r.x + r.width / 2,
+                    r.x + r.width,
+                    r.x + r.width / 2,
                     r.x,
                     r.x + r.width / 2};
         int ys[] = {r.y,
-                    r.y + r.height / 2, 
+                    r.y + r.height / 2,
                     r.y + r.height,
-                    r.y + r.height / 2, 
+                    r.y + r.height / 2,
                     r.y};
         Point p = Geometry.ptClosestTo(
-                xs, 
+                xs,
                 ys,
                 5 , anotherPt);
         return p;

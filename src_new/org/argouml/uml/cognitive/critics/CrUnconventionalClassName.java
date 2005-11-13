@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalClassName.java,v 1.21 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrUnconventionalClassName.java,v 1.22 2005/11/13 11:01:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class CrUnconventionalClassName extends AbstractCrUnconventionalName {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(Model.getFacade().isAClass(dm)) 
+	if (!(Model.getFacade().isAClass(dm))
             && !(Model.getFacade().isAInterface(dm))) {
 	    return NO_PROBLEM;
 	}
@@ -113,4 +113,8 @@ public class CrUnconventionalClassName extends AbstractCrUnconventionalName {
      */
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -3341858698991522822L;
 } /* end class CrUnconventionalClassName */

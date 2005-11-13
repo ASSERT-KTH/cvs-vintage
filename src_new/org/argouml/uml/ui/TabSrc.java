@@ -1,4 +1,4 @@
-// $Id: TabSrc.java,v 1.30 2005/10/25 06:00:53 rastaman Exp $
+// $Id: TabSrc.java,v 1.31 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,20 +48,20 @@ import org.tigris.gef.presentation.FigNode;
 public class TabSrc
     extends TabText
     implements ItemListener {
-    
+
     private static final Logger LOG = Logger.getLogger(TabSrc.class);
-    
+
     private Language langName = null;
     private String fileName = null;
     private SourceUnit[] files = null;
-    
+
     private LanguageComboBox cbLang = new LanguageComboBox();
     private JComboBox cbFiles = new JComboBox();
-    
+
     ////////////////////////////////////////////////////////////////
     // constructor
-    
-    /** 
+
+    /**
      * Create a tab that contains a toolbar.
      * Then add a notation selector onto it.
      */
@@ -83,7 +83,7 @@ public class TabSrc
     protected void finalize() {
         cbLang.removeItemListener(this);
     }
-    
+
     ////////////////////////////////////////////////////////////////
     // accessors
 
@@ -125,7 +125,7 @@ public class TabSrc
         Object modelTarget = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
         setShouldBeEnabled(Model.getFacade().isAClassifier(modelTarget));
         cbFiles.removeAllItems();
-        files = null;        
+        files = null;
         if (shouldBeEnabled()) {
             LOG.debug("TabSrc getting src for " + modelTarget);
             Collection code =
@@ -177,7 +177,7 @@ public class TabSrc
                 fileName = (String) cbFiles.getSelectedItem();
                 super.setTarget(getTarget());
             }
-            
+
         }
     }
 

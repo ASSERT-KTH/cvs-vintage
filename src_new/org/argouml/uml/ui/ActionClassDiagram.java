@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.22 2005/07/22 13:13:50 bobtarling Exp $
+// $Id: ActionClassDiagram.java,v 1.23 2005/11/13 11:01:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** 
+/**
  * Action to trigger creation of new class diagram.
  */
 public class ActionClassDiagram extends ActionAddDiagram {
@@ -54,7 +54,7 @@ public class ActionClassDiagram extends ActionAddDiagram {
     public UMLDiagram createDiagram(Object ns) {
         if (Model.getFacade().isANamespace(ns)) {
             return (UMLDiagram)DiagramFactory.getInstance().createDiagram(
-                    UMLClassDiagram.class, 
+                    UMLClassDiagram.class,
                     ns,
                     null);
         }

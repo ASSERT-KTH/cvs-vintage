@@ -1,4 +1,4 @@
-// $Id: MetaTypesImpl.java,v 1.10 2005/09/04 19:25:02 linus Exp $
+// $Id: MetaTypesImpl.java,v 1.11 2005/11/13 11:01:17 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,27 +132,27 @@ public final class MetaTypesImpl implements MetaTypes {
             clazz = modelElement.getClass();
         }
         String name = clazz.getName();
-        
+
         int startName = name.lastIndexOf('.')+1;
         if (name.charAt(startName) == 'M') {
             ++startName;
         }
-        
+
         int endName = name.length();
         if (name.endsWith("Impl")) {
             endName -= 4;
         }
-        
+
         name = name.substring(startName, endName);
-        
+
         if (name.startsWith("UML")) {
             // a diagram...
             name = name.substring(3);
         }
-        
+
         return name;
     }
-    
+
     /**
      * @return Returns the Abstraction.
      */
@@ -702,7 +702,7 @@ public final class MetaTypesImpl implements MetaTypes {
 	public Object getTagDefinition() {
 		return null;
 	}
-	
+
 	public Object getInteraction() {
 		return MInteraction.class;
 	}

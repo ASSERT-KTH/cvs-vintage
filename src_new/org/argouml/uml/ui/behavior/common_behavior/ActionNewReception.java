@@ -1,4 +1,4 @@
-// $Id: ActionNewReception.java,v 1.11 2005/07/19 18:41:44 mvw Exp $
+// $Id: ActionNewReception.java,v 1.12 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class ActionNewReception extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        Object classifier =  
+        Object classifier =
             TargetManager.getInstance().getModelTarget();
         if (!Model.getFacade().isAClassifier(classifier)) {
             throw new IllegalArgumentException(

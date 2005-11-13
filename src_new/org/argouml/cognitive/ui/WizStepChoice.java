@@ -1,4 +1,4 @@
-// $Id: WizStepChoice.java,v 1.8 2005/02/19 23:22:43 mvw Exp $
+// $Id: WizStepChoice.java,v 1.9 2005/11/13 11:01:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import javax.swing.border.EtchedBorder;
 import org.argouml.swingext.SpacerPanel;
 
 
-/** 
+/**
  * A non-modal wizard step that shows instructions and allows
  * the user to select one of a series of radio-buttons.
  *
@@ -154,14 +154,19 @@ public class WizStepChoice extends WizStep {
 	    int size = choices.size();
 	    for (int i = 0; i < size; i++) {
 		String s = (String) choices.elementAt(i);
-		if (s.equals(cmd)) selectedIndex = i;
+		if (s.equals(cmd)) {
+                    selectedIndex = i;
+                }
 	    }
 	    getWizard().doAction();
 	    enableButtons();
 	}
     }
 
-
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 8055896491830976354L;
 } /* end class WizStepChoice */
 
 

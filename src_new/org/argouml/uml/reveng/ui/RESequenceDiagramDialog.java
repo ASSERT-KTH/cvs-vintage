@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.9 2005/11/06 00:18:52 bobtarling Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.10 2005/11/13 11:01:28 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,7 @@ import org.tigris.gef.presentation.Fig;
 public class RESequenceDiagramDialog extends ArgoDialog implements ActionListener, ItemListener {
 
     private final static int X_OFFSET = 10;
-	
+
     /**
      * Constructor.
      *
@@ -272,7 +272,7 @@ public class RESequenceDiagramDialog extends ArgoDialog implements ActionListene
 		_modeChoice.addItem("Traverse calls automatically with a chosen depth");
 		_modeChoice.addItemListener(this);
 		content.add(_modeChoice, constraints);
-		
+
 		_manuPanel = getManuallyTab();
 		_autoPanel = getAutomaticallyTab();
 
@@ -280,7 +280,7 @@ public class RESequenceDiagramDialog extends ArgoDialog implements ActionListene
         _changingPanel = new JPanel(new BorderLayout(0, 0));
 		_changingPanel.add(_manuPanel, BorderLayout.CENTER);
         content.add(_changingPanel, constraints);
-		
+
 		return content;
     }
 

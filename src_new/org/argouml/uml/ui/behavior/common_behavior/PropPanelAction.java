@@ -1,4 +1,4 @@
-// $Id: PropPanelAction.java,v 1.17 2005/09/08 18:23:30 mkl Exp $
+// $Id: PropPanelAction.java,v 1.18 2005/11/13 11:01:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public abstract class PropPanelAction extends PropPanelModelElement {
 
         /**
          * The constructor.
-         * 
+         *
          * @param name
          *                the name of the properties panel
          * @param icon

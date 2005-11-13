@@ -1,4 +1,4 @@
-// $Id: UMLAddDialog.java,v 1.15 2005/07/21 06:49:26 mkl Exp $
+// $Id: UMLAddDialog.java,v 1.16 2005/11/13 11:01:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
     private JDialog dialog = null;
 
     private String title = null;
-    
+
     private boolean multiSelectAllowed = false;
 
     /**
@@ -114,7 +114,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
     /**
      * Constructs a UMLAddDialog with a UMLListCellRenderer. Modelelements are
      * represented with their names in the choices list and the selected list.
-     * 
+     *
      * @param theChoices
      *            A vector with the choices a user has.
      * @param preselected
@@ -136,7 +136,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
 
     /**
      * Constructs a UMLAddDialog with a given UMLListCellRenderer.
-     * 
+     *
      * @param theChoices
      *            A vector with the choices a user has.
      * @param preselected
@@ -295,7 +295,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
 
     /**
      * Utility method to construct a DefaultListModel from a Vector
-     * 
+     *
      * @param vec
      *            the given list
      * @return DefaultListModel
@@ -314,7 +314,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
      * actually show the dialog. This method returns either
      * JOptionPane.OK_OPTION if the user wants to select his choices or
      * JOptionPane.CANCEL_OPTION if he does not want to.
-     * 
+     *
      * @param parent
      *            The parent frame of this dialog.
      * @return int The returnvalue, can be either JOptionPane.OK_OPTION or
@@ -348,7 +348,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
 
     /**
      * Returns the choices a user can make.
-     * 
+     *
      * @return Vector
      */
     public Vector getChoices() {
@@ -362,7 +362,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
 
     /**
      * Returns the selected elements in the selected list
-     * 
+     *
      * @return Vector
      */
     public Vector getSelectedChoices() {
@@ -379,7 +379,7 @@ public class UMLAddDialog extends JPanel implements ActionListener {
     /**
      * Returns the by the user selected elements. This method should be called
      * if the selected choices are to be known.
-     * 
+     *
      * @return Vector
      */
     public Vector getSelected() {

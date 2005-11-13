@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.82 2005/08/13 09:18:11 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.83 2005/11/13 11:01:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -393,7 +393,7 @@ public class UMLActivityDiagram extends UMLDiagram {
         }
         if (Model.getUmlFactory().isRemoved(getNamespace())) {
             return true;
-        }        
+        }
         Object context = Model.getFacade().getContext(getStateMachine());
         if (context == null) {
             return true;
@@ -407,18 +407,19 @@ public class UMLActivityDiagram extends UMLDiagram {
     public Object getDependentElement() {
         return getStateMachine(); /* The ActivityGraph. */
     }
-    
-    /** 
+
+    /**
      * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
      */
     public boolean isRelocationAllowed(Object base) {
-        return false; 
-        /* TODO: We may return the following when the 
-         * relocate() has been implemented. */
+        return false;
+        /* TODO: We may return the following when the
+         * relocate() has been implemented.
+         */
 //      Model.getActivityGraphsHelper()
 //      .isAddingActivityGraphAllowed(base);
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
      */
@@ -426,5 +427,8 @@ public class UMLActivityDiagram extends UMLDiagram {
         return false;
     }
 
-
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 6223128918989919230L;
 } /* end class UMLActivityDiagram */

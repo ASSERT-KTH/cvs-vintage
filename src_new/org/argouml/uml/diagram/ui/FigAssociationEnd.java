@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.14 2005/11/03 00:39:42 tfmorris Exp $
+// $Id: FigAssociationEnd.java,v 1.15 2005/11/13 11:01:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
 
     /**
      * The constructor.
-     * 
+     *
      * @param edge the UML object: association-end
      * @param lay the layer that contains this Fig
      */
@@ -174,7 +174,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
                 && (Model.getFacade().isAClass(Model.getFacade().getType(owner))
                 || Model.getFacade().isAInterface(Model.getFacade()
                         .getType(owner)))) {
-            visi = 
+            visi =
                 Notation.generate(this, Model.getFacade().getVisibility(owner));
         }
         // TODO: MULTIPLESTEREOTYPES
@@ -214,7 +214,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         SwingUtilities.invokeLater(new Runnable() {
             public void run () {
                 Fig associationFig = layer.presentationFor(association);
-                if (!Model.getUmlFactory().isRemoved(owner) 
+                if (!Model.getUmlFactory().isRemoved(owner)
                         && Model.getFacade().getClassifier(owner) != null
                         && associationFig instanceof FigNodeAssociation) {
                     ((FigNodeAssociation) associationFig).removeFromDiagram();
