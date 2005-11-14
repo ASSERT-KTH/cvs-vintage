@@ -1,4 +1,4 @@
-// $Id: PHPDocumentor.java,v 1.9 2005/04/14 18:28:53 mvw Exp $
+// $Id: PHPDocumentor.java,v 1.10 2005/11/14 03:55:52 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,10 +169,6 @@ public final class PHPDocumentor {
      * Creates a new DocBlock for the given model element
      *
      * @param modelElement The model element to document.
-     *
-     * @return <code>true</code> on success;
-     *         <code>false</code> otherwise.
-     *
      * @throws Exception
      */
     private void create(Object modelElement) throws Exception {

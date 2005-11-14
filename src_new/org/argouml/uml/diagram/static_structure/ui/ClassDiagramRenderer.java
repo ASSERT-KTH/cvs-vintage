@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.45 2005/11/13 11:01:17 linus Exp $
+// $Id: ClassDiagramRenderer.java,v 1.46 2005/11/14 03:55:53 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -151,7 +151,7 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
         FigEdgeModelElement newEdge = null;
         if (Model.getFacade().isAAssociationClass(edge)) {
             FigAssociationClass ascCFig = new FigAssociationClass(edge, lay);
-            //TODO check why we are returning early for an association class.
+            // TODO: check why we are returning early for an association class.
             return ascCFig;
         } else if (Model.getFacade().isAAssociationEnd(edge)) {
             FigAssociationEnd asend = new FigAssociationEnd(edge, lay);
