@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.56 2005/09/13 18:32:23 mvw Exp $
+// $Id: DetailsPane.java,v 1.57 2005/11/14 17:11:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -591,7 +591,7 @@ public class DetailsPane
      * @see TargetListener#targetAdded(TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        setTarget(TargetManager.getInstance().getSingleModelTarget());
+        setTarget(TargetManager.getInstance().getSingleTarget());
         fireTargetAdded(e);
     }
 
@@ -599,7 +599,7 @@ public class DetailsPane
      * @see TargetListener#targetRemoved(TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(TargetManager.getInstance().getSingleModelTarget());
+        setTarget(TargetManager.getInstance().getSingleTarget());
         fireTargetRemoved(e);
     }
 
@@ -607,7 +607,7 @@ public class DetailsPane
      * @see TargetListener#targetSet(TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(TargetManager.getInstance().getSingleModelTarget());
+        setTarget(TargetManager.getInstance().getSingleTarget());
         fireTargetSet(e);
     }
 

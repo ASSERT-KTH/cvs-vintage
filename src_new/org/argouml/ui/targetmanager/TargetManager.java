@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.51 2005/11/13 11:01:24 linus Exp $
+// $Id: TargetManager.java,v 1.52 2005/11/14 17:11:16 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -706,6 +706,16 @@ public final class TargetManager {
         return new ArrayList(targets);
     }
 
+    /**
+     * If there is only one target, then it is returned.
+     * Otherwise null.
+     * 
+     * @return the one and only target
+     */
+    public synchronized Object getSingleTarget() {
+        return targets.size() == 1 ? targets.get(0) : null;
+    }
+    
     /**
      * @return the target from the model
      */
