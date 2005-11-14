@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeNode.java,v 1.10 2005/01/09 14:58:13 linus Exp $
+// $Id: ExplorerTreeNode.java,v 1.11 2005/11/14 23:27:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,16 @@
 
 package org.argouml.ui.explorer;
 
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+
+import org.argouml.uml.diagram.ui.UMLDiagram;
 
 /**
  * Ensures that explorer tree nodes have a default ordering.
@@ -35,7 +41,8 @@ import javax.swing.tree.TreePath;
  * @author  alexb
  * @since 0.15.2, Created on 27 September 2003, 17:40
  */
-public class ExplorerTreeNode extends DefaultMutableTreeNode {
+public class ExplorerTreeNode extends DefaultMutableTreeNode 
+									implements PropertyChangeListener {
 
     private ExplorerTreeModel model;
     private boolean expanded;
@@ -50,7 +57,9 @@ public class ExplorerTreeNode extends DefaultMutableTreeNode {
      */
     public ExplorerTreeNode(Object userObj, ExplorerTreeModel m) {
         super(userObj);
-	this.model = m;
+        this.model = m;
+        if (userObj instanceof UMLDiagram)
+            ((UMLDiagram) userObj).addPropertyChangeListener(this);
     }
 
     /**
@@ -107,5 +116,18 @@ public class ExplorerTreeNode extends DefaultMutableTreeNode {
 	    children.clear();
 	    children = null;
 	}
+    }
+    
+    /**
+     * The name of the UMLDiagram represented by this node has
+     * changed.
+     * 
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getSource() instanceof UMLDiagram &&
+                "name".equals(evt.getPropertyName())) {
+            model.nodeChanged(this);
+        }
     }
 }
