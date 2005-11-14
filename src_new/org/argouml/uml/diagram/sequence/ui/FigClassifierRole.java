@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.18 2005/11/13 11:01:18 linus Exp $
+// $Id: FigClassifierRole.java,v 1.19 2005/11/14 22:51:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,7 +232,7 @@ public class FigClassifierRole extends FigNodeModelElement
         damage();
     }
 
-    int getNodeCount() {
+    public int getNodeCount() {
         return linkPositions.size();
     }
 
@@ -357,6 +357,7 @@ public class FigClassifierRole extends FigNodeModelElement
                     fig.getHeight());
             }
         }
+        growToSize( lifeLine.getHeight()/SequenceDiagramLayout.LINK_DISTANCE+2);
         calcBounds(); //_x = x; _height = y; _w = w; _h = h;
         firePropChange("bounds", oldBounds, getBounds());
     }
@@ -571,6 +572,10 @@ public class FigClassifierRole extends FigNodeModelElement
                     }
                     if (Model.getFacade().getSender(message) == getOwner()
 			&& !selfReceiving) {
+                        if ( callers==null)
+                        {
+                            callers=new ArrayList();
+                        }
                         Object caller = Model.getFacade().getReceiver(message);
                         int callerIndex = callers.lastIndexOf(caller);
                         if (callerIndex != -1) {
@@ -1322,7 +1327,10 @@ public class FigClassifierRole extends FigNodeModelElement
 	    throws SAXException {
 
             DefaultHandler result = null;
-            if (qname.equals("group")) {
+            String description;
+            // Handle stereotype groups in Figs
+            if (qname.equals("group") && ( description=attributes.getValue( "description"))!=null &&
+                    description.startsWith( FigMessagePort.class.getName())) {
                 FigMessagePort fmp = new FigMessagePort();
                 ((FigGroupHandler) container).getFigGroup().addFig(fmp);
                 result = new FigGroupHandler((PGMLStackParser) stack, fmp);
@@ -1338,7 +1346,7 @@ public class FigClassifierRole extends FigNodeModelElement
                 parser.registerFig(fmp, attributes.getValue("name"));
             } else {
                 result =
-		    ((PGMLStackParser) stack).getHandler(stack,
+                    ((PGMLStackParser) stack).getHandler(stack,
 							 container,
 							 uri,
 							 localname,

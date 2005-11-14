@@ -1,4 +1,4 @@
-// $Id: MessageNode.java,v 1.4 2005/11/13 11:01:25 linus Exp $
+// $Id: MessageNode.java,v 1.5 2005/11/14 22:51:40 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -207,11 +207,20 @@ public class MessageNode extends Object {
     }
 
     public boolean canBeDestroyed() {
-        return figMessagePort == null
-            && (state == DONE_SOMETHING_NO_CALL
-                || state == CREATED
-                || state == CALLED || state == RETURNED
-                || state == IMPLICIT_RETURNED
-                || state == IMPLICIT_CREATED);
+        boolean destroyableNode=( figMessagePort == null 
+            && ( state == DONE_SOMETHING_NO_CALL
+                || state == CREATED 
+                || state == CALLED || state == RETURNED 
+                || state == IMPLICIT_RETURNED 
+                || state == IMPLICIT_CREATED));
+        if ( destroyableNode) {
+            for ( int i=ownerObject.getIndexOf( this)+1; 
+                destroyableNode && i<ownerObject.getNodeCount(); ++i) {
+                MessageNode node=ownerObject.getNode( i);
+                if ( node.getFigMessagePort()!=null)
+                    destroyableNode=false;
+            }
+        }
+        return destroyableNode;
     }
 }
