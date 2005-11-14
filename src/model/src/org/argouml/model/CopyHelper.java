@@ -1,4 +1,4 @@
-// $Id: CopyHelper.java,v 1.3 2005/11/14 03:01:19 tfmorris Exp $
+// $Id: CopyHelper.java,v 1.4 2005/11/14 03:03:28 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
