@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeNode.java,v 1.11 2005/11/14 23:27:53 bobtarling Exp $
+// $Id: ExplorerTreeNode.java,v 1.12 2005/11/15 17:43:50 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,10 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  * @author  alexb
  * @since 0.15.2, Created on 27 September 2003, 17:40
  */
-public class ExplorerTreeNode extends DefaultMutableTreeNode 
-									implements PropertyChangeListener {
+public class ExplorerTreeNode extends DefaultMutableTreeNode implements
+        PropertyChangeListener {
 
+    private static final long serialVersionUID = -6766504350537675845L;
     private ExplorerTreeModel model;
     private boolean expanded;
     private boolean pending;
@@ -119,14 +120,12 @@ public class ExplorerTreeNode extends DefaultMutableTreeNode
     }
     
     /**
-     * The name of the UMLDiagram represented by this node has
-     * changed.
-     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getSource() instanceof UMLDiagram &&
-                "name".equals(evt.getPropertyName())) {
+        // Name of the UMLDiagram represented by this node has changed.
+        if (evt.getSource() instanceof UMLDiagram
+                && "name".equals(evt.getPropertyName())) {
             model.nodeChanged(this);
         }
     }
