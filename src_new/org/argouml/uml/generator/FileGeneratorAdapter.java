@@ -1,4 +1,4 @@
-// $Id: FileGeneratorAdapter.java,v 1.2 2005/11/13 11:01:09 linus Exp $
+// $Id: FileGeneratorAdapter.java,v 1.3 2005/11/15 18:15:29 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,18 +175,23 @@ public class FileGeneratorAdapter implements CodeGenerator {
                     if (!f.isDirectory() && !f.getName().endsWith(".bak")) {
                         FileReader fr = new FileReader(f);
                         BufferedReader bfr = new BufferedReader(fr);
-                        StringBuffer result =
-                            new StringBuffer((int) f.length());
-                        String line = bfr.readLine();
-                        do {
-                            result.append(line);
-                            line = bfr.readLine();
-                            if (line != null) {
-                                result.append('\n');
-                            }
-                        } while (line != null);
-                        ret.add(new SourceUnit(f.toString().substring(prefix),
-                                result.toString()));
+                        try { 
+                            StringBuffer result =
+                                new StringBuffer((int) f.length());
+                            String line = bfr.readLine();
+                            do {
+                                result.append(line);
+                                line = bfr.readLine();
+                                if (line != null) {
+                                    result.append('\n');
+                                }
+                            } while (line != null);
+                            ret.add(new SourceUnit(f.toString().substring(
+                                    prefix), result.toString()));
+                        } finally {
+                            bfr.close();
+                            fr.close();
+                        }
                     }
                 }
 
