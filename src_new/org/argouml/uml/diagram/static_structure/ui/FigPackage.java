@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.87 2005/11/13 11:01:17 linus Exp $
+// $Id: FigPackage.java,v 1.88 2005/11/16 21:04:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -430,7 +430,8 @@ public class FigPackage extends FigNodeModelElement
      *
      * Some of this has "magic numbers" hardcoded in. In particular there is
      * a knowledge that the minimum height of a name compartment is 21
-     * pixels.
+     * pixels. This height is needed to be able to display the "Clarifier"
+     * inside the name compartment.
      *
      * @param xa  Desired X coordinate of upper left corner
      *

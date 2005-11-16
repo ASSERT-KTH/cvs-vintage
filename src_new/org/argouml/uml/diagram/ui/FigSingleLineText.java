@@ -1,4 +1,4 @@
-// $Id: FigSingleLineText.java,v 1.7 2005/11/13 11:01:09 linus Exp $
+// $Id: FigSingleLineText.java,v 1.8 2005/11/16 21:04:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +31,14 @@ import java.awt.Font;
 import org.tigris.gef.presentation.FigText;
 
 /**
- * A MultiLine FigText to provide consistency across Figs displaying multiple
- * lines of text.
+ * A SingleLine FigText to provide consistency across Figs displaying single
+ * lines of text.<ul>
  * <li>The display area is transparent</li>
  * <li>Text is center justified</li>
  * <li>There is no line border</li>
+ * <li>There is space below the line for a "Clarifier", 
+ * i.e. a red squiggly line.</li></ul>
+ * 
  * @author Bob Tarling
  */
 public class FigSingleLineText extends FigText {
