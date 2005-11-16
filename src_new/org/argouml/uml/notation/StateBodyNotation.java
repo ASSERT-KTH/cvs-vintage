@@ -1,4 +1,4 @@
-// $Id: StateBodyNotation.java,v 1.4 2005/11/13 14:31:39 mvw Exp $
+// $Id: StateBodyNotation.java,v 1.5 2005/11/16 21:04:36 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,14 +45,5 @@ public abstract class StateBodyNotation extends ValueHandler {
         }
         myState = state;
     }
-
-    /**
-     * @see org.argouml.notation.NotationProvider4#putValue(java.lang.String, java.lang.Object)
-     */
-    public void putValue(String key, Object newValue) {
-        // TODO: Auto-generated method stub
-
-    }
-
 
 }
