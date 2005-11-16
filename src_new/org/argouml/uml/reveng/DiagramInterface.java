@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.34 2005/11/13 11:01:25 linus Exp $
+// $Id: DiagramInterface.java,v 1.35 2005/11/16 17:35:13 thn Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,8 +144,8 @@ public class DiagramInterface {
             FigPackage newPackageFig = new FigPackage(currentGM, newPackage);
             if (currentGM.canAddNode(newPackage)) {
 
-                currentGM.addNode(newPackage);
                 currentLayer.add(newPackageFig);
+                currentGM.addNode(newPackage);
                 currentLayer.putInPosition(newPackageFig);
             }
         }
