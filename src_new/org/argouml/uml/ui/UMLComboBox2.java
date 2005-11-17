@@ -1,4 +1,4 @@
-// $Id: UMLComboBox2.java,v 1.23 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLComboBox2.java,v 1.24 2005/11/17 00:44:29 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class UMLComboBox2
     extends JComboBox implements TargettableModelView, TargetListener {
 
     /**
-     * Constructor for UMLMessageActivatorComboBox.
+     * Constructor for UMLComboBox2.
      * @deprecated As of ArgoUml version unknown (before 0.13.5),
      * replaced by {@link #UMLComboBox2(UMLComboBoxModel2, UMLAction, boolean)}
      * @param arg0 the ComboBoxModel
@@ -57,7 +57,7 @@ public class UMLComboBox2
     }
 
     /**
-     * Constructor for UMLMessageActivatorComboBox. Via the given action, the
+     * Constructor for UMLComboBox2. Via the given action, the
      * action for this combobox is done.
      * @param arg0 the ComboBoxModel
      * @param action the action
