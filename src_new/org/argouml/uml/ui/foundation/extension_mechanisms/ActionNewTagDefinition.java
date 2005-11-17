@@ -1,4 +1,4 @@
-// $Id: ActionNewTagDefinition.java,v 1.4 2005/11/13 11:01:21 linus Exp $
+// $Id: ActionNewTagDefinition.java,v 1.5 2005/11/17 22:56:44 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,20 +59,20 @@ public class ActionNewTagDefinition extends AbstractActionNewModelElement {
         Object namespace = null;
         if (Model.getFacade().isAStereotype(t)) {
             owner = t;
-            namespace = Model.getFacade().getNamespace(owner);
         } else if (Model.getFacade().isAPackage(t)) {
             namespace = t;
         } else {
             namespace = Model.getFacade().getModel(t);
-            }
+        }
         Object newTagDefinition = Model.getExtensionMechanismsFactory()
             .buildTagDefinition(
                     (String) null,
                     owner,
                     namespace
             );
-        Object multiplicity = Model.getDataTypesFactory().createMultiplicity(0,1);
-        Model.getCoreHelper().setMultiplicity(newTagDefinition,multiplicity);
+        Object multiplicity = Model.getDataTypesFactory()
+            .createMultiplicity(0, 1);
+        Model.getCoreHelper().setMultiplicity(newTagDefinition, multiplicity);
         TargetManager.getInstance().setTarget(newTagDefinition);
         super.actionPerformed(e);
     }
