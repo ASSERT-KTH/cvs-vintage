@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.18 2005/11/13 11:01:17 linus Exp $
+// $Id: FigClassifierBox.java,v 1.19 2005/11/17 21:12:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,9 @@ import org.tigris.gef.presentation.FigGroup;
 
 /**
  * Class to display graphics for a UML Class in a diagram.<p>
+ * 
+ * Note that the upper line of the name box will be blanked out 
+ * if there is eventually a stereotype above.
  */
 abstract public class FigClassifierBox extends FigNodeModelElement
         implements OperationsCompartmentContainer {
@@ -59,12 +62,6 @@ abstract public class FigClassifierBox extends FigNodeModelElement
     protected CompartmentFigText highlightedFigText = null;
 
     FigClassifierBox() {
-
-        // Set name box. Note the upper line will be blanked out if there is
-        // eventually a stereotype above.
-        getNameFig().setLineWidth(1);
-        getNameFig().setFilled(true);
-
         // this rectangle marks the operation section; all operations
         // are inside it
         operationsFig =

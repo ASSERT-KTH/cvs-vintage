@@ -1,4 +1,4 @@
-// $Id: FigSubmachineState.java,v 1.11 2005/11/02 13:28:15 mvw Exp $
+// $Id: FigSubmachineState.java,v 1.12 2005/11/17 21:12:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,20 +65,12 @@ public class FigSubmachineState extends FigState {
      */
     public FigSubmachineState() {
         super();
-
-        setBigPort(new FigRRect(getInitialX() + 1, getInitialY() + 1,
-                getInitialWidth() - 2, getInitialHeight() - 2,
-                Color.cyan, Color.cyan));
         cover =
             new FigRRect(getInitialX(), getInitialY(),
                 getInitialWidth(), getInitialHeight(),
                 Color.black, Color.white);
 
         getBigPort().setLineWidth(0);
-        getNameFig().setLineWidth(0);
-        getNameFig().setBounds(getInitialX() + 2, getInitialY() + 2,
-                getInitialWidth() - 4, getNameFig().getBounds().height);
-        getNameFig().setFilled(false);
 
         divider =
                 new FigLine(getInitialX(),
@@ -98,6 +90,7 @@ public class FigSubmachineState extends FigState {
                 getInitialWidth() - 4, include.getBounds().height);
         include.setFilled(false);
         include.setEditable(false);
+        include.setBotMargin(4); // leave some space below the "include"
 
         divider2 =
                 new FigLine(getInitialX(),

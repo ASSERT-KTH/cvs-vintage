@@ -1,4 +1,4 @@
-// $Id: FigOperationsCompartment.java,v 1.14 2005/11/13 11:01:09 linus Exp $
+// $Id: FigOperationsCompartment.java,v 1.15 2005/11/17 21:12:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class FigOperationsCompartment extends FigFeaturesCompartment {
         if (behs != null) {
             Iterator iter = behs.iterator();
             List figs = getFigs();
-            CompartmentFigText oper;
+            CompartmentFigText oper = null;
             while (iter.hasNext()) {
                 Object behaviouralFeature = iter.next();
                 if (figs.size() <= ocounter) {
@@ -108,7 +108,11 @@ public class FigOperationsCompartment extends FigFeaturesCompartment {
                     oper.setFont(FigNodeModelElement.getLabelFont());
                 }
                 oper.damage();
+                oper.setBotMargin(0);
                 ocounter++;
+            }
+            if (oper != null) {
+                oper.setBotMargin(9);
             }
             if (figs.size() > ocounter) {
                 //cleanup of unused operation FigText's

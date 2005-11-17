@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.40 2005/11/13 11:01:22 linus Exp $
+// $Id: FigObject.java,v 1.41 2005/11/17 21:12:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,6 +179,8 @@ public class FigObject extends FigNodeModelElement {
 
         int w = nameMin.width + 10;
         int h = nameMin.height + 5;
+        
+        w = Math.max(60, w);
         return new Dimension(w, h);
     }
 

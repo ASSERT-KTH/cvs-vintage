@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.24 2005/11/13 11:01:21 linus Exp $
+// $Id: FigSimpleState.java,v 1.25 2005/11/17 21:12:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,20 +61,12 @@ public class FigSimpleState extends FigState {
      * The main constructor
      */
     public FigSimpleState() {
-	setBigPort(new FigRRect(getInitialX() + 1, getInitialY() + 1,
-			 getInitialWidth() - 2, getInitialHeight() - 2,
-			 Color.cyan, Color.cyan));
 	cover =
 	    new FigRRect(getInitialX(), getInitialY(),
 			 getInitialWidth(), getInitialHeight(),
 			 Color.black, Color.white);
 
 	getBigPort().setLineWidth(0);
-	getNameFig().setLineWidth(0);
-	getNameFig().setBounds(getInitialX() + 2, getInitialY() + 2,
-			       getInitialWidth() - 4,
-			       getNameFig().getBounds().height);
-	getNameFig().setFilled(false);
 
 	divider =
 	    new FigLine(getInitialX(),

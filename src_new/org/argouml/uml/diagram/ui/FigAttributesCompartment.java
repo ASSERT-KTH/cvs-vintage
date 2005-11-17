@@ -1,4 +1,4 @@
-// $Id: FigAttributesCompartment.java,v 1.15 2005/11/13 11:01:09 linus Exp $
+// $Id: FigAttributesCompartment.java,v 1.16 2005/11/17 21:12:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ public class FigAttributesCompartment extends FigFeaturesCompartment {
         if (strs != null) {
             Iterator iter = strs.iterator();
             List figs = getFigs();
-            CompartmentFigText attr;
+            CompartmentFigText attr = null;
             while (iter.hasNext()) {
                 Object structuralFeature = iter.next();
                 if (figs.size() <= acounter) {
@@ -100,7 +100,11 @@ public class FigAttributesCompartment extends FigFeaturesCompartment {
                         Model.getScopeKind().
                         getClassifier().equals(Model.getFacade().
                                 getOwnerScope(structuralFeature)));
+                attr.setBotMargin(0);
                 acounter++;
+            }
+            if (attr != null) {
+                attr.setBotMargin(6);
             }
             if (figs.size() > acounter) {
                 //cleanup of unused attribute FigText's

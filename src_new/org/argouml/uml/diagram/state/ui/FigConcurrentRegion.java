@@ -1,4 +1,4 @@
-// $Id: FigConcurrentRegion.java,v 1.10 2005/11/13 11:01:21 linus Exp $
+// $Id: FigConcurrentRegion.java,v 1.11 2005/11/17 21:12:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,10 +78,6 @@ public class FigConcurrentRegion extends FigState
      */
     public FigConcurrentRegion() {
         super();
-        setBigPort(new FigRect(getInitialX() + 1, getInitialY() + 1,
-                getInitialWidth() - 2, getInitialHeight() - 2,
-                Color.cyan, Color.cyan));
-
         cover =
             new FigRect(getInitialX(),
                 getInitialY(),
@@ -95,10 +91,6 @@ public class FigConcurrentRegion extends FigState
         dividerline.setDashed(true);
         getBigPort().setLineWidth(0);
         cover.setLineWidth(0);
-        getNameFig().setLineWidth(0);
-        getNameFig().setBounds(getInitialX() + 2, getInitialY() + 2,
-                getInitialWidth() - 6, getNameFig().getBounds().height);
-        getNameFig().setFilled(false);
 
         // add Figs to the FigNode in back-to-front order
         addFig(getBigPort());

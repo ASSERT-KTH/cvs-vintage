@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.218 2005/11/13 11:01:09 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.219 2005/11/17 21:12:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -282,7 +282,7 @@ public abstract class FigNodeModelElement
      *
      */
     public FigNodeModelElement() {
-        // this rectangle marks the whole interface figure; everything
+        // this rectangle marks the whole modelelement figure; everything
         // is inside it:
         bigPort = new FigRect(10, 10, 0, 0, Color.cyan, Color.cyan);
 
@@ -290,6 +290,9 @@ public abstract class FigNodeModelElement
         nameFig.setLineWidth(1);
         nameFig.setFilled(true);
         nameFig.setText(placeString());
+        nameFig.setBotMargin(7); // make space for the clarifier
+        nameFig.setRightMargin(4); // margin between text and border
+        nameFig.setLeftMargin(4); 
 
         stereotypeFig = new FigStereotypesCompartment(10, 10, 90, 15);
 

@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.15 2005/11/13 11:01:17 linus Exp $
+// $Id: FigFeature.java,v 1.16 2005/11/17 21:12:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,6 +125,8 @@ public class FigFeature extends CompartmentFigText {
         setTextFilled(false);
         setJustification(FigText.JUSTIFY_LEFT);
         setReturnAction(FigText.END_EDITING);
+        setRightMargin(3);
+        setLeftMargin(3);
     }
 
     /**
