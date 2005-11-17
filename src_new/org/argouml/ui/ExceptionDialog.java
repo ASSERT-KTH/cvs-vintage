@@ -1,4 +1,4 @@
-// $Id: ExceptionDialog.java,v 1.4 2005/11/13 11:01:12 linus Exp $
+// $Id: ExceptionDialog.java,v 1.5 2005/11/17 19:20:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public ExceptionDialog(Frame f, Throwable e) {
         this(f, "An error has occured.", e);
     }
-
+    
     /**
      * The constructor.
      *
@@ -70,6 +70,23 @@ public class ExceptionDialog extends JDialog implements ActionListener {
      * @param e the exception
      */
     public ExceptionDialog(Frame f, String message, Throwable e) {
+        this(f, message, e, false);
+    }
+    
+    /**
+     * The constructor.
+     * 
+     * @param f   the <code>Frame</code> from which the dialog is displayed
+     * @param message
+     *            the message
+     * @param e   the exception
+     * @param highlightCause
+     *            give priority to Throwable.cause in display. Use this if the
+     *            main exception is mostly boilerplate and the really useful
+     *            information is in the enclosed cause.
+     */
+    public ExceptionDialog(Frame f, String message, Throwable e,
+            boolean highlightCause) {
         super(f);
         message += "\n" + "Please copy and paste the stack trace below "
                 + "and report an issue at http://www.argouml.org";
@@ -89,10 +106,16 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
+        if (highlightCause) {
+            pw.print("Cause : ");
+            e.getCause().printStackTrace(pw);
+            pw.print("-------\nFull exception : ");
+        }
         e.printStackTrace(pw);
         String exception = sw.toString();
 
         textArea.setText(exception);
+        textArea.setCaretPosition(0);
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(new JScrollPane(textArea));
         centerPanel.setPreferredSize(new Dimension(300, 200));
