@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.164 2005/11/17 19:20:44 tfmorris Exp $
+// $Id: ProjectBrowser.java,v 1.165 2005/11/17 20:22:19 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,6 +67,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.persistence.LastLoadInfo;
+import org.argouml.persistence.OpenException;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.persistence.ProjectFilePersister;
 import org.argouml.persistence.VersionException;
@@ -1244,7 +1245,7 @@ public final class ProjectBrowser
                         ProjectBrowser.getInstance(),
                         "An error occured attempting to " + attemptingTo,
                         ex, 
-                        true);
+                        ex instanceof OpenException);
             dialog.setVisible(true);
         } else {
             StringWriter sw = new StringWriter();
