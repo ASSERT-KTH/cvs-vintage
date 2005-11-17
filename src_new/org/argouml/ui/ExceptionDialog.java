@@ -1,4 +1,4 @@
-// $Id: ExceptionDialog.java,v 1.5 2005/11/17 19:20:44 tfmorris Exp $
+// $Id: ExceptionDialog.java,v 1.6 2005/11/17 20:08:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.awt.event.WindowEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -99,6 +100,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
         // the introducing label
         northLabel = new JLabel(message);
+        northLabel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         getContentPane().add(northLabel, BorderLayout.NORTH);
 
         // the text box containing the problem messages
