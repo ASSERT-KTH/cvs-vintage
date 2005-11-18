@@ -1,4 +1,4 @@
-// $Id: ModeCreateCommentEdge.java,v 1.4 2005/11/13 11:01:09 linus Exp $
+// $Id: ModeCreateCommentEdge.java,v 1.5 2005/11/18 01:35:26 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,11 +81,13 @@ public class ModeCreateCommentEdge extends ModeCreatePolyEdge {
             FigEdgeModelElement sourceEdge = (FigEdgeModelElement) underMouse;
             sourceEdge.makeCommentPort();
             FigCommentPort commentPort = sourceEdge.getCommentPort();
+            sourceEdge.computeRoute();
 
             underMouse = commentPort;
             setSourceFigNode(commentPort);
             setStartPort(sourceModelElement);
             setStartPortFig(commentPort);
+            
         } else if (underMouse instanceof FigNodeModelElement) {
             if (getSourceFigNode() == null) {
                 setSourceFigNode((FigNode) underMouse);
@@ -133,6 +135,7 @@ public class ModeCreateCommentEdge extends ModeCreatePolyEdge {
             FigEdgeModelElement destEdge = (FigEdgeModelElement) destFig;
             destEdge.makeCommentPort();
             destFig = destEdge.getCommentPort();
+            destEdge.computeRoute();
         }
 
         if (destFig instanceof FigNodeModelElement) {
