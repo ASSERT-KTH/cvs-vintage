@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.52 2005/11/14 17:11:16 mvw Exp $
+// $Id: TargetManager.java,v 1.53 2005/11/18 07:43:25 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -228,12 +228,18 @@ public final class TargetManager {
 			+ "of the history");
             }
             navigateBackward = true;
-            setTarget(((WeakReference) history.get(--currentTarget)).get());
+            // If nothing selected, go to last selected target
+            if (targets.size() == 0) {
+                setTarget(((WeakReference) history.get(currentTarget)).get());
+            } else {
+                setTarget(((WeakReference) history.get(--currentTarget)).get());
+            }
             navigateBackward = false;
         }
 
         /**
          * Checks if it's possible to navigate back.
+         * 
          * @return true if it's possible to navigate back.
          */
         private boolean navigateBackPossible() {
