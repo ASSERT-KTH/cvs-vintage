@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.35 2005/11/13 11:01:25 linus Exp $
+// $Id: FigActionState.java,v 1.36 2005/11/18 05:13:20 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -240,7 +240,6 @@ public class FigActionState extends FigStateVertex {
                 damage();
             } else {
                 if (getOwner() != null
-                        && !Model.getUmlFactory().isRemoved(getOwner())
                         && Model.getFacade().getEntry(getOwner()) == mee
                                 .getSource()) {
                     updateNameText();

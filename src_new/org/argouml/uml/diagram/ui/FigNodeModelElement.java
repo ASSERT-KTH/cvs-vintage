@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.219 2005/11/17 21:12:19 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.220 2005/11/18 05:13:20 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1469,8 +1469,7 @@ public abstract class FigNodeModelElement
             ArgoEventPump.removeListener(this);
         }
         Object own = getOwner();
-        if (Model.getFacade().isAClassifier(own)
-                &&!Model.getUmlFactory().isRemoved(own)) {
+        if (Model.getFacade().isAClassifier(own)) {
             Iterator it = Model.getFacade().getFeatures(own).iterator();
             while (it.hasNext()) {
                 Object feature = it.next();

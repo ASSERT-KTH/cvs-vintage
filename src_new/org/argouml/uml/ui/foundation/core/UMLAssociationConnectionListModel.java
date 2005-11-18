@@ -1,4 +1,4 @@
-// $Id: UMLAssociationConnectionListModel.java,v 1.14 2005/11/11 03:53:22 tfmorris Exp $
+// $Id: UMLAssociationConnectionListModel.java,v 1.15 2005/11/18 05:13:19 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,8 +49,7 @@ public class UMLAssociationConnectionListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (getTarget() != null
-                && !Model.getUmlFactory().isRemoved(getTarget())) {
+        if (getTarget() != null) {
             setAllElements(Model.getFacade().getConnections(getTarget()));
         }
     }
