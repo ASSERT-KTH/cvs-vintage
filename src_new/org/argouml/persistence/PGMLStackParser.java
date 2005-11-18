@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.12 2005/11/13 11:01:17 linus Exp $
+// $Id: PGMLStackParser.java,v 1.13 2005/11/18 14:45:25 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,9 +30,11 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
+import org.argouml.uml.diagram.ui.ExtensionsCompartmentContainer;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.diagram.ui.PathContainer;
 import org.argouml.uml.diagram.ui.StereotypeContainer;
+import org.argouml.uml.diagram.ui.VisibilityContainer;
 import org.tigris.gef.persistence.pgml.Container;
 import org.tigris.gef.persistence.pgml.FigEdgeHandler;
 import org.tigris.gef.persistence.pgml.FigGroupHandler;
@@ -194,9 +196,15 @@ public class PGMLStackParser
             } else if ("stereotypeVisible".equals(name)) {
                 ((StereotypeContainer) fig)
                     .setStereotypeVisible(value.equalsIgnoreCase("true"));
+            } else if ("visibilityVisible".equals(name)) {
+                ((VisibilityContainer) fig)
+                .setVisibilityVisible(value.equalsIgnoreCase("true"));
             } else if ("pathVisible".equals(name)) {
                 ((PathContainer) fig)
                     .setPathVisible(value.equalsIgnoreCase("true"));
+            }else if ("extensionPointVisible".equals(name)) {
+                ((ExtensionsCompartmentContainer) fig)
+                    .setExtensionPointVisible(value.equalsIgnoreCase("true"));
             }
         }
     }

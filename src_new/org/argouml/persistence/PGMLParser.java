@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.30 2005/11/13 11:01:17 linus Exp $
+// $Id: PGMLParser.java,v 1.31 2005/11/18 14:45:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.FigInterface;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
+import org.argouml.uml.diagram.ui.ExtensionsCompartmentContainer;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
@@ -683,14 +684,17 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
                 ((AttributesCompartmentContainer) fig)
                     .setAttributesVisible(value.equalsIgnoreCase("true"));
             } else if ("stereotypeVisible".equals(name)) {
-                    ((StereotypeContainer) fig)
+                ((StereotypeContainer) fig)
                     .setStereotypeVisible(value.equalsIgnoreCase("true"));
             } else if ("visibilityVisible".equals(name)) {
-                    ((VisibilityContainer) fig)
+                ((VisibilityContainer) fig)
                     .setVisibilityVisible(value.equalsIgnoreCase("true"));
             } else if ("pathVisible".equals(name)) {
-                    ((PathContainer) fig)
+                ((PathContainer) fig)
                     .setPathVisible(value.equalsIgnoreCase("true"));
+            } else if ("extensionPointVisible".equals(name)) {
+                ((ExtensionsCompartmentContainer) fig)
+                    .setExtensionPointVisible(value.equalsIgnoreCase("true"));
             }
         }
     }

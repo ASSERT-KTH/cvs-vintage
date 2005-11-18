@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.79 2005/11/13 11:01:25 linus Exp $
+// $Id: FigUseCase.java,v 1.80 2005/11/18 14:45:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -408,6 +408,16 @@ public class FigUseCase extends FigNodeModelElement
                 popUpActions.size() - getPopupAddOffset());
 
         return popUpActions;
+    }
+
+    /**
+     * USED BY PGML.tee.
+     * @return the class name and bounds together with compartment
+     * visibility.
+     */
+    public String classNameAndBounds() {
+        return super.classNameAndBounds()
+                + "extensionPointVisible=" + isExtensionPointVisible();
     }
 
     /**
@@ -1491,15 +1501,4 @@ public class FigUseCase extends FigNodeModelElement
         damage();
     }
 
-
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#postLoad()
-     */
-    public void postLoad() {
-        super.postLoad();
-        if (epVec != null && epVec.isVisible()) {
-            setExtensionPointVisible(true);
-        }
-    }
 } /* end class FigUseCase */
