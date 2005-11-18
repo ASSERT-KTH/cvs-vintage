@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.127 2005/11/13 11:01:22 linus Exp $
+// $Id: Modeller.java,v 1.128 2005/11/18 04:18:23 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.reveng.java;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -779,9 +780,9 @@ public class Modeller {
 	            Model.getConcurrencyKind().getSequential());
 	}
 
-	for (Iterator i =
-	        Model.getFacade().getParameters(mOperation).iterator();
-	     i.hasNext();) {
+        Collection c = new ArrayList(Model.getFacade()
+                .getParameters(mOperation));
+	for (Iterator i = c.iterator(); i.hasNext();) {
 	    Model.getCoreHelper().removeParameter(mOperation, i.next());
 	}
 
