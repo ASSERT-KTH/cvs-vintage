@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.34 2005/11/13 11:01:18 linus Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.35 2005/11/18 05:17:13 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.beans.PropertyChangeEvent;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AddAssociationEvent;
+import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
 import org.argouml.uml.ui.UMLComboBoxModel2;
@@ -89,7 +90,8 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
          * Rebuild the list from scratch to be sure it's correct.
          */
         if (evt instanceof RemoveAssociationEvent
-                || evt instanceof AddAssociationEvent) {
+                || evt instanceof AddAssociationEvent
+                || evt instanceof AttributeChangeEvent) {
             buildModelList();
         } else {
             super.propertyChange(evt);
