@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.50 2005/11/19 13:45:14 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.51 2005/11/19 16:57:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -520,11 +520,13 @@ public class SequenceDiagramGraphModel
     }
 
 
-    public void setHomeModel(Object ns) {
-        if (!Model.getFacade().isANamespace(ns))
-            throw new IllegalArgumentException();
-        setCollaboration( ns);
-        super.setHomeModel( ns);
+    public void setHomeModel(Object namespace) {
+        if (!Model.getFacade().isANamespace(namespace))
+            throw new IllegalArgumentException(
+                    "A sequence diagram home model must be a namespace, received a "
+                    + namespace);
+        setCollaboration( namespace);
+        super.setHomeModel( namespace);
     }
 
 }

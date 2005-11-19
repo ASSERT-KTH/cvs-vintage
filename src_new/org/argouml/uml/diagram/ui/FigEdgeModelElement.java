@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.134 2005/11/18 05:13:20 tfmorris Exp $
+// $Id: FigEdgeModelElement.java,v 1.135 2005/11/19 16:57:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -293,8 +293,7 @@ public abstract class FigEdgeModelElement
             }
         }
         // Add stereotypes submenu
-        Action[] stereoActions =
-            StereotypeUtility.getApplyStereotypeActions(getOwner());
+        Action[] stereoActions = getApplyStereotypeActions();
         if (stereoActions != null) {
             popUpActions.insertElementAt(new JSeparator(), 0);
             ArgoJMenu stereotypes = new ArgoJMenu(
@@ -305,6 +304,10 @@ public abstract class FigEdgeModelElement
             popUpActions.insertElementAt(stereotypes, 0);
         }
         return popUpActions;
+    }
+    
+    protected Action[] getApplyStereotypeActions() {
+        return StereotypeUtility.getApplyStereotypeActions(getOwner());
     }
 
     /**

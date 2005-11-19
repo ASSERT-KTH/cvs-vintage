@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.27 2005/11/13 11:01:17 linus Exp $
+// $Id: FigEdgeNote.java,v 1.28 2005/11/19 16:57:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 import java.util.HashMap;
 
+import javax.swing.Action;
+
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedVChangeListener;
@@ -38,6 +40,7 @@ import org.argouml.model.Model;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.argouml.uml.diagram.ui.StereotypeUtility;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.graph.GraphNodeRenderer;
@@ -186,7 +189,14 @@ public class FigEdgeNote
     public Object getOwner() {
         return owner;
     }
-
+    
+    /**
+     * Overrides the standard method to return null. A note edge
+     * cannot have a stereotype.
+     */
+    final protected Action[] getApplyStereotypeActions() {
+        return null;
+    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#postLoad()
