@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.49 2005/10/17 11:26:56 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.50 2005/11/19 13:45:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.sequence.ui.FigClassifierRole;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Mode;
@@ -170,32 +171,43 @@ public class SequenceDiagramGraphModel
         if (edge == null) {
             return false;
         }
-        if ( getEdges().contains( edge))
+        
+        if ( getEdges().contains( edge)) {
             return false;
+        }
+        
         Object end0 = null;
         Object end1 = null;
-        if (Model.getFacade().isAMessage(edge)) {
-            end0 =
-                Model.getFacade().getSender( edge);
-            end1 =
-		Model.getFacade().getReceiver( edge);
-        }
-        if (end0 == null || end1 == null) {
-            return false;
-        }
-        if (!getNodes().contains(end0)) {
-            return false;
-        }
-        if (!getNodes().contains(end1)) {
-            return false;
-        }
-        /*
-        if (getEdges().contains(edge)) {
-            return false;
-        }
-*/
-        return true;
 
+        if (Model.getFacade().isAMessage(edge)) {
+            end0 = Model.getFacade().getSender( edge);
+            end1 = Model.getFacade().getReceiver( edge);
+        } else if (edge instanceof CommentEdge) {
+            end0 = ((CommentEdge) edge).getSource();
+            end1 = ((CommentEdge) edge).getDestination();
+        }
+        // Both ends must be defined and nodes that are on the graph already.
+        if (end0 == null || end1 == null) {
+            LOG.error("Edge rejected. Its ends are not attached to anything");
+            return false;
+        }
+        
+        if (!containsNode(end0)
+                && !containsEdge(end0)) {
+            LOG.error("Edge rejected. Its source end is attached to " +
+                    end0 +
+                    " but this is not in the graph model");
+            return false;
+        }
+        if (!containsNode(end1)
+                && !containsEdge(end1)) {
+            LOG.error("Edge rejected. Its destination end is attached to " +
+                    end1 +
+                    " but this is not in the graph model");
+            return false;
+        }
+        
+        return true;
     }
 
     /**

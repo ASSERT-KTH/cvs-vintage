@@ -1,4 +1,4 @@
-// $Id: ActionSetAddCommentLinkMode.java,v 1.2 2005/11/03 21:50:28 bobtarling Exp $
+// $Id: ActionSetAddCommentLinkMode.java,v 1.3 2005/11/19 13:45:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ package org.argouml.uml.diagram.ui;
 
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
-import org.tigris.gef.base.ModeCreatePolyEdge;
 
 /**
  * An extension of CmdSetMode to set the parameters for a comment link.
