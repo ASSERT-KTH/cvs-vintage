@@ -1,4 +1,4 @@
-// $Id: ModeCreateCommentEdge.java,v 1.6 2005/11/19 13:45:14 bobtarling Exp $
+// $Id: ModeCreateCommentEdge.java,v 1.7 2005/11/20 01:15:09 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,7 +162,7 @@ public class ModeCreateCommentEdge extends ModeCreatePolyEdge {
                 p.setComplete(true);
 
                 setNewEdge(graphModel.connect(
-                       getStartPort(), foundPort, CommentEdge.class));
+                       getStartPort(), foundPort, (Object)CommentEdge.class));
 
                 // Calling connect() will add the edge to the GraphModel and
                 // any LayerPersectives on that GraphModel will get a

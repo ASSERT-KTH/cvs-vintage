@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.220 2005/11/18 05:13:20 tfmorris Exp $
+// $Id: FigNodeModelElement.java,v 1.221 2005/11/20 01:15:09 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1566,9 +1566,9 @@ public abstract class FigNodeModelElement
     }
 
     /**
-     * @return Returns the _bigPort.
+     * @return the fig which is the port where edges connect to this node
      */
-    protected Fig getBigPort() {
+    public Fig getBigPort() {
         return bigPort;
     }
 

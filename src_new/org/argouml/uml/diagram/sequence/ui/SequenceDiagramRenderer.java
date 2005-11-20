@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramRenderer.java,v 1.20 2005/07/12 20:50:54 linus Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.21 2005/11/20 01:15:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SequenceDiagramRenderer.java,v 1.20 2005/07/12 20:50:54 linus Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.21 2005/11/20 01:15:08 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -32,7 +32,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.UmlDiagramRenderer;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
+import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigEdge;
@@ -63,12 +65,9 @@ public class SequenceDiagramRenderer extends UmlDiagramRenderer {
         FigNode result = null;
         if (Model.getFacade().isAClassifierRole(node)) {
             result = new FigClassifierRole(node);
-        }
-        if (Model.getFacade().isAComment(node)) {
+        } else if (Model.getFacade().isAComment(node)) {
             result = new FigComment(gm, node);
         }
-        // if (node instanceof MStimulus) return new FigSeqStimulus(gm, node);
-        // TODO: Something here.
         LOG.debug("SequenceDiagramRenderer getFigNodeFor " + result);
         return result;
     }
@@ -82,6 +81,9 @@ public class SequenceDiagramRenderer extends UmlDiagramRenderer {
      */
     public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge,
 				 Map styleAttributes) {
+        if (edge instanceof CommentEdge) {
+            return new FigEdgeNote(edge, lay);
+        }
         return getFigEdgeFor(edge, styleAttributes);
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigCommentPort.java,v 1.3 2005/11/13 11:01:09 linus Exp $
+// $Id: FigCommentPort.java,v 1.4 2005/11/20 01:15:09 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,11 @@ public class FigCommentPort extends FigNodeModelElement {
 
     public boolean hit(Rectangle r) {
         return false;
+    }
+    
+    public void setOwner(Object own) {
+        bigPort.setOwner(own);
+        super.setOwner(own);
     }
 
     /**
