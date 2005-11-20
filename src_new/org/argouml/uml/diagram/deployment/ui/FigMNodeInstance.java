@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.42 2005/11/13 14:31:39 mvw Exp $
+// $Id: FigMNodeInstance.java,v 1.43 2005/11/20 10:28:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,9 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.argouml.model.Model;
 import org.argouml.notation.NotationProvider4;
@@ -263,7 +264,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
 
         if (getLayer() != null) {
             // elementOrdering(figures);
-            List contents = getLayer().getContents();
+            Collection contents = new ArrayList(getLayer().getContents());
             Iterator it = contents.iterator();
             while (it.hasNext()) {
                 Object o = it.next();
