@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.40 2005/10/26 23:18:50 ezust Exp $
+ * @version $Id: OptionsDialog.java,v 1.41 2005/11/20 05:19:23 ezust Exp $
  * 
  */
 public abstract class OptionsDialog extends EnhancedDialog
@@ -536,7 +536,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 	} //}}}
 
 	//{{{ OptionTreeModel class
-	public static class OptionTreeModel implements TreeModel
+	public class OptionTreeModel implements TreeModel
 	{
 		public void addTreeModelListener(TreeModelListener l)
 		{
