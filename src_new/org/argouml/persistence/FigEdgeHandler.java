@@ -1,4 +1,4 @@
-// $Id: FigEdgeHandler.java,v 1.3 2005/11/20 01:15:09 bobtarling Exp $
+// $Id: FigEdgeHandler.java,v 1.4 2005/11/20 02:35:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,7 +128,7 @@ public class FigEdgeHandler
     }
 
     /**
-     * Get the FigNode that the fig if represents.
+     * Get the FigNode that the fig id represents.
      *
      * @param parser The parser to use.
      * @param figId (In the form Figx.y.z)
@@ -160,7 +160,7 @@ public class FigEdgeHandler
     private Fig getPortFig(FigNode figNode) {
         if (figNode instanceof FigCommentPort) {
             // TODO: Can we just do this every time, no need for else - Bob
-            return ((FigNodeModelElement)figNode).getBigPort();
+            return figNode;
         } else {
             return (Fig) figNode.getPortFigs().get(0);
         }
