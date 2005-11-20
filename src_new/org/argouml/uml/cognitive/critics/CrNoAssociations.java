@@ -1,4 +1,4 @@
-// $Id: CrNoAssociations.java,v 1.23 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrNoAssociations.java,v 1.24 2005/11/20 10:24:58 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import org.argouml.uml.cognitive.UMLDecision;
  * associations. It checks for inherited associations as well and
  * keeps silent if it finds any.  For usecases it checks the
  * extend/include relationships as well.
+ * If the classifier has dependencies defined, then the critic 
+ * remains silent (see issue 1129).
  */
 public class CrNoAssociations extends CrUML {
 
@@ -64,26 +66,33 @@ public class CrNoAssociations extends CrUML {
         if (!(Model.getFacade().isPrimaryObject(dm)))
             return NO_PROBLEM;
 
-        // if the object does not have a name,
-        // than no problem
+        // If the classifier does not have a name,
+        // then no problem - the model is not finished anyhow.
         if ((Model.getFacade().getName(dm) == null)
 	    || ("".equals(Model.getFacade().getName(dm)))) {
             return NO_PROBLEM;
 	}
 
-        // abstract elements do not necessarily require associations
+        // Abstract elements do not necessarily require associations
         if (Model.getFacade().isAGeneralizableElement(dm)
 	    && Model.getFacade().isAbstract(dm)) {
             return NO_PROBLEM;
         }
 
-        // types can probably have associations, but we should not nag at them
+        // Types can probably have associations, but we should not nag at them
         // not having any.
         // utility is a namespace collection - also not strictly required
         // to have associations.
         if (Model.getFacade().isType(dm))
             return NO_PROBLEM;
         if (Model.getFacade().isUtility(dm))
+            return NO_PROBLEM;
+
+        // See issue 1129: If the classifier has dependencies,
+        // then mostly there is no problem. 
+        if (Model.getFacade().getClientDependencies(dm).size() > 0)
+            return NO_PROBLEM;
+        if (Model.getFacade().getSupplierDependencies(dm).size() > 0)
             return NO_PROBLEM;
 
         //TODO: different critic or special message for classes
