@@ -1,4 +1,4 @@
-// $Id: FigDependency.java,v 1.19 2005/09/26 10:46:52 bobtarling Exp $
+// $Id: FigDependency.java,v 1.20 2005/11/21 21:15:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,26 +88,30 @@ public class FigDependency extends FigEdgeModelElement {
         super.setOwner(own);
 
         if (Model.getFacade().isADependency(own)) {
-            Object newDep = own; //MDependency
+            Object dependency = own; 
             ModelEventPump pump = Model.getPump();
-            Iterator it = Model.getFacade().getSuppliers(newDep).iterator();
+
+            Iterator it = Model.getFacade().getSuppliers(dependency).iterator();
             while (it.hasNext()) {
                 Object o = it.next();
                 pump.removeModelEventListener(this, o);
                 pump.addModelEventListener(this, o);
             }
-            it = Model.getFacade().getClients(newDep).iterator();
+
+            it = Model.getFacade().getClients(dependency).iterator();
             while (it.hasNext()) {
                 Object o = it.next();
                 pump.removeModelEventListener(this, o);
                 pump.addModelEventListener(this, o);
             }
-            pump.removeModelEventListener(this, newDep);
-            pump.addModelEventListener(this, newDep);
+
+            pump.removeModelEventListener(this, dependency);
+            pump.addModelEventListener(this, dependency);
+
             Object supplier =	// MModelElement
-                (Model.getFacade().getSuppliers(newDep).toArray())[0];
+                (Model.getFacade().getSuppliers(dependency).toArray())[0];
             Object client =	// MModelElement
-                (Model.getFacade().getClients(newDep).toArray())[0];
+                (Model.getFacade().getClients(dependency).toArray())[0];
 
             FigNode supFN = (FigNode) getLayer().presentationFor(supplier);
             FigNode cliFN = (FigNode) getLayer().presentationFor(client);
@@ -122,8 +126,26 @@ public class FigDependency extends FigEdgeModelElement {
             }
         }
     }
+    
+    
+    
     ////////////////////////////////////////////////////////////////
     // accessors
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#updateListeners(java.lang.Object)
+     */
+    protected void updateListeners(Object newOwner) {
+        super.updateListeners(newOwner);
+        if (Model.getFacade().isADependency(newOwner)) {
+            Iterator it = Model.getFacade().getStereotypes(newOwner).iterator();
+            while (it.hasNext()) {
+                Object o = it.next();
+                Model.getPump().removeModelEventListener(this, o);
+                Model.getPump().addModelEventListener(this, o);
+            }
+        }
+    }
 
     /**
      * @see org.tigris.gef.presentation.FigEdge#setFig(org.tigris.gef.presentation.Fig)
@@ -152,7 +174,17 @@ public class FigDependency extends FigEdgeModelElement {
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
     protected void modelChanged(PropertyChangeEvent e) {
-        // do not set _name
+        if ((e != null) && (e.getSource() == getOwner()
+                        && e.getPropertyName().equals("stereotype"))) {
+            if (e.getOldValue() != null) {
+                Model.getPump().removeModelEventListener(this,
+                        e.getOldValue(), "name");
+            }
+            if (e.getNewValue() != null) {
+                Model.getPump().addModelEventListener(this,
+                        e.getNewValue(), "name");
+            }
+        }
         updateStereotypeText();
     }
 
