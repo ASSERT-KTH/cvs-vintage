@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.24 2005/11/12 23:53:37 linus Exp $
+// $Id: Facade.java,v 1.25 2005/11/21 17:19:47 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1994,9 +1994,9 @@ public interface Facade {
     Collection getOtherLinkEnds(Object handle);
 
     /**
-     * The list of owned elements of the the package.
+     * The list of owned elements of the the namespace.
      *
-     * @param handle package to retrieve from.
+     * @param handle namespace to retrieve from.
      * @return A Collection with the owned elements.
      */
     Collection getOwnedElements(Object handle);

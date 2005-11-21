@@ -1,4 +1,4 @@
-// $Id: UMLNamespaceOwnedElementListModel.java,v 1.9 2005/01/30 20:47:34 linus Exp $
+// $Id: UMLNamespaceOwnedElementListModel.java,v 1.10 2005/11/21 17:19:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
+ * A model for all elements owned by a namespace.
  *
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 2, 2003
