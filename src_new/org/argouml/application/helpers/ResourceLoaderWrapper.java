@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.42 2005/11/13 11:01:26 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.43 2005/11/21 17:20:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,6 +131,7 @@ public final class ResourceLoaderWrapper {
 	String lookAndFeelArgoUmlImagePath =
 	    lookAndFeelPath(lookAndFeelClassName, "argouml");
 	ResourceLoader.addResourceExtension("gif");
+        ResourceLoader.addResourceExtension("png");
 	ResourceLoader.addResourceLocation(lookAndFeelGeneralImagePath);
 	ResourceLoader.addResourceLocation(lookAndFeelNavigationImagePath);
 	ResourceLoader.addResourceLocation(lookAndFeelDiagramImagePath);
