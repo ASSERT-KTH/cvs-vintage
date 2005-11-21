@@ -1,4 +1,4 @@
-// $Id: SplashPanel.java,v 1.10 2005/11/21 17:20:46 mvw Exp $
+// $Id: SplashPanel.java,v 1.11 2005/11/21 17:56:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ class SplashPanel extends JPanel {
     /**
      * The constructor.
      * 
-     * @param iconName
+     * @param iconName the name of the image to be shown
      */
     public SplashPanel(String iconName) {
 	super();
