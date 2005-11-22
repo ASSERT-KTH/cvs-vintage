@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.124 2005/11/13 11:01:34 linus Exp $
+// $Id: GeneratorJava.java,v 1.125 2005/11/22 00:07:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1385,7 +1385,7 @@ public class GeneratorJava
 	//         s += generateName(n) + " ";
         //     if (ae.isNavigable()) s += "navigable ";
         //     if (ae.getIsOrdered()) s += "ordered ";
-        if (Model.getFacade().getUpper(ae) != 1) {
+        if (Model.getFacade().getUpper(ae) == 1) {
             sb.append(generateClassifierRef(Model.getFacade().getType(ae)));
         } else {
             sb.append("Vector "); //generateMultiplicity(m) + " ";
