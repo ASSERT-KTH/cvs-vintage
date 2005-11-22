@@ -91,7 +91,9 @@ public class FilterPreferencesAction extends AbstractColumbaAction implements
 	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+		TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
+		
+		if (treeEvent.getSelected().length == 1 && treeEvent.getSelected()[0] instanceof IMailbox) {
 			setEnabled(true);
 		} else {
 			setEnabled(false);

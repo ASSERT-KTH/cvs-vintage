@@ -97,10 +97,10 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+		if (((TreeSelectionChangedEvent) e).getSelected().length ==1 ) {
 			IMailFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
-			if ((folder != null) && folder instanceof IMailbox) {
+			if (folder instanceof IMailbox) {
 				IFolderItem item = folder.getConfiguration();
 
 				if (item.getString("property", "accessrights").equals("user")) {

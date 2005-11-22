@@ -27,6 +27,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -81,7 +82,7 @@ public class ApplyFilterAction extends AbstractColumbaAction implements
 	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+		if (((TreeSelectionChangedEvent) e).getSelected().length == 1 && ((TreeSelectionChangedEvent) e).getSelected()[0] instanceof IMailbox) {
 			setEnabled(true);
 		} else {
 			setEnabled(false);

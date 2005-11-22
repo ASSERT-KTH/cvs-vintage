@@ -23,6 +23,7 @@ import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkFolderAsReadCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -71,7 +72,7 @@ public class MarkFolderAsReadAction extends AbstractColumbaAction implements
 
 	/** {@inheritDoc} */
 	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+		if (((TreeSelectionChangedEvent) e).getSelected().length == 1 && ((TreeSelectionChangedEvent) e).getSelected()[0] instanceof IMailbox) {
 			setEnabled(true);
 		} else {
 			setEnabled(false);
