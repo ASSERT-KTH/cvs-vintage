@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TraceCarol.java,v 1.9 2005/03/15 17:54:52 benoitf Exp $
+ * $Id: TraceCarol.java,v 1.10 2005/11/23 21:35:39 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -67,22 +67,6 @@ public class TraceCarol {
     private static Log exportCarolLogger = null;
 
     /**
-     * Logger for PREFIX + ".cmi.des"
-     */
-    private static Log cmiDesLogger = null;
-
-    /**
-     * Logger for PREFIX + ".cmi.jndi"
-     */
-    private static Log cmiJndiLogger = null;
-
-    /**
-     * Logger for PREFIX + ".cmi.registry"
-     */
-    private static Log cmiRegistryLogger = null;
-
-
-    /**
      * Utility class, no constructor
      */
     private TraceCarol() {
@@ -98,9 +82,6 @@ public class TraceCarol {
         jndiEncCarolLogger = LogFactory.getLog(PREFIX + ".jndi.enc");
         rmiCarolLogger = LogFactory.getLog(PREFIX + ".rmi");
         exportCarolLogger = LogFactory.getLog(PREFIX + ".rmi.export");
-        cmiDesLogger = LogFactory.getLog(PREFIX + ".cmi.des");
-        cmiJndiLogger = LogFactory.getLog(PREFIX + ".cmi.jndi");
-        cmiRegistryLogger = LogFactory.getLog(PREFIX + ".cmi.registry");
     }
 
     /**
@@ -253,62 +234,4 @@ public class TraceCarol {
             exportCarolLogger.debug(msg);
         }
     }
-
-    /**
-     * Test if Cmi DES debug messages are logged.
-     * @return boolean <code>true</code> if Cmi DES debug messages are logged,
-     *         <code>false</code> otherwise
-     */
-     public static boolean isDebugCmiDes() {
-        return (cmiDesLogger != null) && cmiDesLogger.isDebugEnabled();
-    }
-
-    /**
-     * Log a Cmi DES debug message.
-     * @param msg Cmi DES debug message
-     */
-    public static void debugCmiDes(String msg) {
-        if (cmiDesLogger != null) {
-            cmiDesLogger.debug(msg);
-        }
-    }
-
-    /**
-     * Test if Cmi JNDI debug messages are logged.
-     * @return boolean <code>true</code> if Cmi JNDI debug messages are
-     *         logged, <code>false</code> otherwise
-     */
-     public static boolean isDebugCmiJndi() {
-        return (cmiJndiLogger != null) && cmiJndiLogger.isDebugEnabled();
-    }
-
-    /**
-     * Log a Cmi JNDI debug message.
-     * @param msg Cmi JNDI debug message
-     */
-    public static void debugCmiJndi(String msg) {
-        if (cmiJndiLogger != null) {
-            cmiJndiLogger.debug(msg);
-        }
-    }
-
-    /**
-     * Test if Cmi registry debug messages are logged.
-     * @return boolean <code>true</code> if Cmi registry debug messages are
-     *         logged, <code>false</code> otherwise
-     */
-     public static boolean isDebugCmiRegistry() {
-        return (cmiRegistryLogger != null) && cmiRegistryLogger.isDebugEnabled();
-    }
-
-    /**
-     * Log a Cmi registry debug message.
-     * @param msg Cmi registry debug message
-     */
-    public static void debugCmiRegistry(String msg) {
-        if (cmiRegistryLogger != null) {
-            cmiRegistryLogger.debug(msg);
-        }
-    }
-
 }

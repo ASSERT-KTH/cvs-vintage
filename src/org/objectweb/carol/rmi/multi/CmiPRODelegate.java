@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiPRODelegate.java,v 1.4 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: CmiPRODelegate.java,v 1.5 2005/11/23 21:35:40 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -51,7 +51,8 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      * Get the lower ORB delegate to export objects.
      */
     public CmiPRODelegate() {
-        cmi = new PRODelegate();
+        PortableRemoteObjectDelegate rmi = new JrmpPRODelegate() ;
+        cmi = new PRODelegate(rmi);
     }
 
     /**

@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.22 2005/10/19 13:40:36 benoitf Exp $
+ * $Id: CarolDefaultValues.java,v 1.23 2005/11/23 21:35:39 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -56,6 +56,17 @@ public class CarolDefaultValues {
      * Server mode property (if true, this means that carol is running in a server which export objects)
      */
     public static final String SERVER_MODE = CAROL_PREFIX + ".server.mode";
+
+    /**
+     * Setter class property name (specifies the protocol class used to set the properties in this protocol)
+     */
+    public static final String SETTER_CLASS_PROPERTIES = "properties.setter.class";
+
+    /**
+     * Setter method property name (specifies the method of the class given by the
+     * SETTER_CLASS_PROPERTIES used to set the properties in this protocol)
+     */
+    public static final String SETTER_METHOD_PROPERTIES = "properties.setter.method";
 
     /**
      * Port number to use in server mode case (iiop)

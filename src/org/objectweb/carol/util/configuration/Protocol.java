@@ -19,14 +19,17 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: Protocol.java,v 1.1 2005/04/07 15:07:07 benoitf Exp $
+ * $Id: Protocol.java,v 1.2 2005/11/23 21:35:39 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
+
+import org.apache.commons.logging.Log;
 
 
 /**
@@ -97,9 +100,10 @@ public class Protocol {
      * Build a new protocol object with given parameters
      * @param name the name of this protocol
      * @param properties properties of this protocol
+     * @param logger logger
      * @throws ConfigurationException if properties are missing
      */
-    public Protocol(String name, Properties properties) throws ConfigurationException {
+    public Protocol(String name, Properties properties, Log logger) throws ConfigurationException {
         if (name == null || "".equals(name)) {
             throw new ConfigurationException("Cannot build a protocol with null or empty name");
         }
@@ -121,7 +125,6 @@ public class Protocol {
         // Registry class
         this.registryClassName = getValue(prefixProtocol + CarolDefaultValues.NS_PREFIX);
 
-
         // JVM interceptors
         interceptorNamePrefix = properties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
                 + CarolDefaultValues.INTERCEPTOR_PKGS_PREFIX);
@@ -139,7 +142,28 @@ public class Protocol {
             }
         }
 
+        // set the properties in the underlying protocol if needed
+        String setterClass = properties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
+                + CarolDefaultValues.SETTER_CLASS_PROPERTIES);
 
+        if (setterClass != null) {
+            String setterMethod = getValue(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
+                + CarolDefaultValues.SETTER_METHOD_PROPERTIES);
+            try {
+                //org.objectweb.carol.cmi.ServerConfig.setProperties(properties);
+                Class clazz = Thread.currentThread().getContextClassLoader().loadClass(setterClass);
+                Method m = clazz.getMethod(setterMethod, new Class[] {Properties.class});
+                m.invoke(null, new Object[] {properties});
+
+            } catch (NoClassDefFoundError ncdfe) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(name + "is not available, don't configure it.");
+                }
+            } catch (Exception ex) {
+                TraceCarol.error("Cannot set the " + name + " configuration.", ex);
+                throw new ConfigurationException("Cannot set the " + name + " configuration.", ex);
+            }
+        }
     }
 
     /**

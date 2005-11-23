@@ -19,14 +19,13 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.6 2005/10/19 16:54:08 benoitf Exp $
+ * $Id: ConfigurationRepository.java,v 1.7 2005/11/23 21:35:39 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
@@ -290,26 +289,9 @@ public class ConfigurationRepository {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Build protocol object for protocol name found '" + protocolName + "'.");
                 }
-                Protocol protocol = new Protocol(protocolName, properties);
+                Protocol protocol = new Protocol(protocolName, properties, logger);
                 managedProtocols.put(protocolName, protocol);
 
-                // if protocol is cmi, configure it
-                if (protocolName.equals("cmi")) {
-                    try {
-                        //org.objectweb.carol.cmi.ServerConfig.setProperties(properties);
-                        Class clazz = Thread.currentThread().getContextClassLoader().loadClass("org.objectweb.carol.cmi.ServerConfig");
-                        Method m = clazz.getMethod("setProperties", new Class[] {Properties.class});
-                        m.invoke(null, new Object[] {properties});
-
-                    } catch (NoClassDefFoundError ncdfe) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("Cmi is not available, don't configure it.");
-                        }
-                    } catch (Exception ex) {
-                        TraceCarol.error("Cannot set the cmi configuration.", ex);
-                        throw new ConfigurationException("Cannot set the cmi configuration.", ex);
-                    }
-                }
             }
         }
 

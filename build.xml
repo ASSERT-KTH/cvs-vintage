@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.54 2005/10/24 05:20:20 ashah Exp $
+ - $Id: build.xml,v 1.55 2005/11/23 21:35:40 pelletib Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -84,8 +84,6 @@
   </condition>
   <!-- Some classes need sun classes or have invalid signatures with jikes -->
   <patternset id="needs.sun.classes">
-    <exclude name="**/org/objectweb/carol/cmi/**"
-             unless="sun.classes.present" />
     <exclude name="**/org/objectweb/carol/jndi/ns/JRMP*.java"
              unless="sun.classes.present" />
     <exclude name="**/org/objectweb/carol/jndi/ns/Cmi*.java"
@@ -135,7 +133,6 @@
     <antcall target="compile.stub" />
     <antcall target="compile.stub.jeremie" />
     <antcall target="compile.jonathan" />
-    <antcall target="compile.cmi" />
   </target>
 
   <!-- Compile base file -->
@@ -237,17 +234,6 @@
       <!-- include specific rmi iiop interception features -->
       <include name="**/org/objectweb/carol/rmi/jonathan/**/*.java" />
     </javac>
-  </target>
-
-  <target name="compile.cmi">
-    <rmic base="${build}/classes"
-          classname="org.objectweb.carol.cmi.RegistryImpl">
-      <classpath refid="carol.classpath" />
-    </rmic>
-    <rmic base="${build}/classes"
-          classname="org.objectweb.carol.cmi.jndi.ReferenceImpl">
-      <classpath refid="carol.classpath" />
-    </rmic>
   </target>
 
   <!-- **************************************-->
