@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.41 2005/11/13 11:01:14 linus Exp $
+// $Id: ActionSequenceDiagram.java,v 1.42 2005/11/24 21:50:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,8 +70,9 @@ public final class ActionSequenceDiagram extends UMLAction {
         if (Model.getFacade().isAClassifier(target)) {
             owner = Model.getFacade().getNamespace(target);
         } else if (Model.getFacade().isAOperation(target)) {
-            owner = Model.getFacade().getNamespace(target);
+            owner = Model.getFacade().getOwner(target);
         }
+        if (owner == null) return; // The UML allows for this. We don't.
         Object collaboration =
             Model.getCollaborationsFactory().buildCollaboration(
                 owner,

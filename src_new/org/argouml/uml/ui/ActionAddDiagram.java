@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.36 2005/11/13 11:01:14 linus Exp $
+// $Id: ActionAddDiagram.java,v 1.37 2005/11/24 21:50:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,13 @@ public abstract class ActionAddDiagram extends UMLAction {
             ns = target;
         } else {
             Object owner = null;
-            if (Model.getFacade().isABase(target)) {
+            if (Model.getFacade().isAOperation(target)) {
+                owner = Model.getFacade().getOwner(target);
+                if (owner != null && Model.getFacade().isANamespace(owner)) {
+                    ns = owner;
+                }
+            }
+            if (ns == null && Model.getFacade().isABase(target)) {
                 owner = Model.getFacade().getModelElementContainer(target);
                 if (owner != null && Model.getFacade().isANamespace(owner)) {
                     ns = owner;
