@@ -1,4 +1,4 @@
-// $Id: ActionAddDataType.java,v 1.5 2005/01/30 20:47:34 linus Exp $
+// $Id: ActionAddDataType.java,v 1.6 2005/11/25 15:28:20 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,8 +58,8 @@ public class ActionAddDataType extends AbstractActionNewModelElement {
         if (Model.getFacade().isANamespace(target))
             ns = target;
         if (Model.getFacade().isAParameter(target))
-            if (Model.getFacade().getModelElementContainer(target) != null)
-                target = Model.getFacade().getModelElementContainer(target);
+            if (Model.getFacade().getBehavioralFeature(target) != null)
+                target = Model.getFacade().getBehavioralFeature(target);
         if (Model.getFacade().isAFeature(target))
             if (Model.getFacade().getOwner(target) != null)
                 target = Model.getFacade().getOwner(target);
