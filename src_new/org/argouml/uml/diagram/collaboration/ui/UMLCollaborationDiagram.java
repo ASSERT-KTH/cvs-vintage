@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.82 2005/11/13 11:01:27 linus Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.83 2005/11/25 07:20:08 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.collaboration.CollabDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAssociationRole;
@@ -248,9 +247,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     private Action getActionClassifierRole() {
         if (actionClassifierRole == null) {
             actionClassifierRole =
-                new RadioAction(new CmdCreateNode(
-                        Model.getMetaTypes().getClassifierRole(),
-                        "button.new-classifierrole"));
+                new RadioAction(new ActionAddClassifierRole());
         }
         return actionClassifierRole;
     }
