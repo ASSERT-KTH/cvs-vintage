@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.49 2005/08/13 08:49:16 mvw Exp $
+// $Id: UMLSequenceDiagram.java,v 1.50 2005/11/26 08:44:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,18 +81,15 @@ public class UMLSequenceDiagram extends UMLDiagram {
         }
         ((SequenceDiagramGraphModel) getGraphModel())
 	    .setCollaboration(collaboration);
+        setNamespace(collaboration); //See issue 3373.
     }
 
     /**
-     * Returns the owner of this diagram. In the case of sequencediagrams it's
-     * allways the root model.
+     * Returns the owner of this diagram. 
      *
      * @see org.argouml.uml.diagram.ui.UMLDiagram#getOwner()
      */
     public Object getOwner() {
-        // TODO: in the future (when there are multiple models) this
-        // should be changeable
-        //return ProjectManager.getManager().getCurrentProject().getRoot();
         return getNamespace();
     }
 
