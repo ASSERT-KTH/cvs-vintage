@@ -1,4 +1,4 @@
-// $Id: ExceptionDialog.java,v 1.6 2005/11/17 20:08:03 mvw Exp $
+// $Id: ExceptionDialog.java,v 1.7 2005/11/26 20:41:45 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        if (highlightCause) {
+        if (highlightCause && e.getCause() != null) {
             pw.print("Cause : ");
             e.getCause().printStackTrace(pw);
             pw.print("-------\nFull exception : ");
