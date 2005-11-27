@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.50 2005/11/06 08:35:03 linus Exp $ -->
+<!-- $Id: building.xml,v 1.51 2005/11/27 20:39:43 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -2563,7 +2563,17 @@ active.
 </para>
 	    </listitem>
 	  </orderedlist>
-	</listitem>
+   	</listitem>
+	  
+	<listitem>
+	  <para>Notify persons responsible for installers</para>
+	  <para>
+This is done by sending a mail on the
+<ulink url="mailto:dev@argoumlinstallers.tigris.org">
+  installers mailing list
+</ulink>.
+</para>
+   	</listitem>
 	  
 	<listitem>
 	  <para>Make announcements!</para>
