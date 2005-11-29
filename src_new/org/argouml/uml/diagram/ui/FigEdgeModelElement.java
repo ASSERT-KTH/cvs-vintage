@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.135 2005/11/19 16:57:40 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.136 2005/11/29 18:33:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -646,9 +646,8 @@ public abstract class FigEdgeModelElement
      * @param e the event
      */
     protected void modelChanged(PropertyChangeEvent e) {
-        if (getOwner() != null) {
+        if (getOwner() != null && Model.getUmlFactory().isRemoved(getOwner()))
             return;
-        }
         if (e == null
             || (e.getSource() == getOwner()
                     && "name".equals(e.getPropertyName()))) {
