@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.136 2005/11/29 18:33:00 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.137 2005/11/29 21:43:22 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -639,15 +639,13 @@ public abstract class FigEdgeModelElement
     // internal methods
 
     /**
-     * This is called after any part of the UML MModelElement has
+     * This is called after any part of the UML ModelElement has
      * changed. This method automatically updates the name FigText.
      * Subclasses should override and update other parts.<p>
      *
      * @param e the event
      */
     protected void modelChanged(PropertyChangeEvent e) {
-        if (getOwner() != null && Model.getUmlFactory().isRemoved(getOwner()))
-            return;
         if (e == null
             || (e.getSource() == getOwner()
                     && "name".equals(e.getPropertyName()))) {
