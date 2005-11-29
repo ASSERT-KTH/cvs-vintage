@@ -31,13 +31,14 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
+import org.gjt.sp.jedit.msg.*;
 //}}}
 
 /**
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.44 2005/01/09 19:44:54 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.45 2005/11/29 19:31:18 jchoyt Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -344,28 +345,48 @@ public class DefaultInputHandler extends InputHandler
 				if(KeyEventWorkaround.isNumericKeypad(keyStroke.key))
 					KeyEventWorkaround.numericKeypadKey();
 			}
+			sendShortcutPrefixOff();
 		}
 		else if(o instanceof Hashtable)
 		{
 			setCurrentBindings((Hashtable)o);
+			EditBus.send(new ShortcutPrefixActive(null, currentBindings, true));
+			shortcutOn = true;
 			return true;
 		}
 		else if(o instanceof String)
 		{
 			setCurrentBindings(bindings);
+			sendShortcutPrefixOff();
 			invokeAction((String)o);
 			return true;
 		}
 		else if(o instanceof EditAction)
 		{
 			setCurrentBindings(bindings);
+			sendShortcutPrefixOff();
 			invokeAction((EditAction)o);
 			return true;
 		}
-
+		sendShortcutPrefixOff();
 		return false;
 	} //}}}
 
+	//{{{ handleKey() methodprotected void sendShortcutPrefixOff()
+	/**
+	 *  If 
+	 */
+	protected void sendShortcutPrefixOff()
+	{
+		if( shortcutOn == true )
+		{
+			EditBus.send(new ShortcutPrefixActive(null, null, false));
+			shortcutOn = false;
+		}
+	} //}}}
+	
+	protected boolean shortcutOn=false;
+	
 	//{{{ getSymbolicModifierName() method
 	/**
 	 * Returns a the symbolic modifier name for the specified Java modifier
@@ -397,7 +418,7 @@ public class DefaultInputHandler extends InputHandler
 	//{{{ Private members
 
 	// Stores prefix name in bindings hashtable
-	private static Object PREFIX_STR = "PREFIX_STR";
+	public static Object PREFIX_STR = "PREFIX_STR";
 
 	private Hashtable bindings;
 	private Hashtable currentBindings;
