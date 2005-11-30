@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.52 2005/11/20 01:15:09 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.53 2005/11/30 23:48:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -264,7 +264,12 @@ public class SequenceDiagramGraphModel
     public boolean canConnect(Object fromP, Object toP, Object edgeType) {
         
         if (edgeType == CommentEdge.class && 
-                (Model.getFacade().isAComment(fromP) || Model.getFacade().isAComment(fromP))) {
+                (Model.getFacade().isAComment(fromP) || 
+                        Model.getFacade().isAComment(toP)) &&
+                !(Model.getFacade().isAComment(fromP) &&
+                        Model.getFacade().isAComment(toP))) {
+            // We can connect if we get a comment edge and one (only one) node
+            // that is a comment.
             return true;
         }
         
