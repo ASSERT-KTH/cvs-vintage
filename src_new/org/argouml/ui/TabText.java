@@ -1,4 +1,4 @@
-// $Id: TabText.java,v 1.25 2005/11/13 11:01:13 linus Exp $
+// $Id: TabText.java,v 1.26 2005/11/30 00:36:47 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,30 +103,36 @@ public class TabText
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    /**
-     * @see org.argouml.ui.TabTarget#setTarget(java.lang.Object)
-     */
-    public void setTarget(Object t) {
+    private void doGenerateText() {
         parseChanges = false;
-        target = t;
-        if (t == null) {
+        if (getTarget() == null) {
             textArea.setEnabled(false);
             textArea.setText("Nothing selected");
             enabled = false;
         } else {
             textArea.setEnabled(true);
-            String generatedText = genText(t);
-            if (generatedText != null) {
-                textArea.setText(generatedText);
-                enabled = true;
-                textArea.setCaretPosition(0);
-            } else {
-                textArea.setEnabled(false);
-                textArea.setText("N/A");
-                enabled = false;
-            }
+	    if (isVisible()) {
+		String generatedText = genText(getTarget());
+		if (generatedText != null) {
+		    textArea.setText(generatedText);
+		    enabled = true;
+		    textArea.setCaretPosition(0);
+		} else {
+		    textArea.setEnabled(false);
+		    textArea.setText("N/A");
+		    enabled = false;
+		}
+	    }
         }
         parseChanges = true;
+    }
+
+    /**
+     * @see org.argouml.ui.TabTarget#setTarget(java.lang.Object)
+     */
+    public void setTarget(Object t) {
+        target = t;
+	doGenerateText();
     }
 
     /**
@@ -256,6 +262,17 @@ public class TabText
      */
     protected boolean shouldBeEnabled() {
         return enabled;
+    }
+
+    /**
+     * Generates the text whenever this panel becomes visible.
+     * @see java.awt.Component#setVisible(boolean)
+     */
+    public void setVisible(boolean visible) {
+	super.setVisible(visible);
+	if (visible) {
+	    doGenerateText();
+	}
     }
 
     /**
