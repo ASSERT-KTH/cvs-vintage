@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.50 2005/05/13 14:44:46 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.51 2005/11/30 22:13:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,6 +94,20 @@ public class ActionSaveProject extends AbstractAction {
             ActionSaveProjectAs.SINGLETON.actionPerformed(e);
         } else {
             ProjectBrowser.getInstance().trySave(true);
+        }
+    }
+
+    /**
+     * When we become enabled inform the user by highlighting the title bar
+     * with an asterisk.
+     */
+    public void setEnabled(boolean enabled) {
+        if (enabled == this.enabled) {
+            return;
+        }
+        super.setEnabled(enabled);
+        if (enabled) {
+            ProjectBrowser.getInstance().showSaveIndicator();
         }
     }
 

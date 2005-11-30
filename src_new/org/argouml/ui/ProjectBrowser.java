@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.165 2005/11/17 20:22:19 tfmorris Exp $
+// $Id: ProjectBrowser.java,v 1.166 2005/11/30 22:13:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -506,7 +506,11 @@ public final class ProjectBrowser
             }
         }
     }
-
+    
+    public void showSaveIndicator() {
+        super.setTitle(getTitle() + " *");
+    }
+    
     /**
      * Updates the window title to contain the latest values for
      * project name, active diagram, and save status.
@@ -854,6 +858,8 @@ public final class ProjectBrowser
         } else if (evt.getPropertyName()
             .equals(ProjectManager.SAVE_STATE_PROPERTY_NAME)) {
             // the save state changed
+            // TODO: remove after 0.20. We don't need to listen for this
+            // but now is not a good time to change.
             updateTitle();
         }
     }
