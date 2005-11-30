@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.17 2005/11/13 11:01:17 linus Exp $
+// $Id: NSUMLModelEventPump.java,v 1.18 2005/11/30 21:16:59 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -393,7 +393,7 @@ abstract class NSUMLEventListener implements MElementListener {
      * @param pce The event to send.
      */
     private void fire(PropertyChangeEvent pce) {
-        pump.fireAction();
+        pump.enableSaveAction();
         PropertyChangeListener pcl = getListener();
         if (pcl != null) {
             pcl.propertyChange(pce);

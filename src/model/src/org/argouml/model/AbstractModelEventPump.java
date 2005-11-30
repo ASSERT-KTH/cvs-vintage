@@ -1,4 +1,4 @@
-// $Id: AbstractModelEventPump.java,v 1.3 2005/05/05 22:51:23 linus Exp $
+// $Id: AbstractModelEventPump.java,v 1.4 2005/11/30 21:16:59 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,9 +198,9 @@ public abstract class AbstractModelEventPump {
     }
 
     /**
-     * The saveAction is updated (if needed).
+     * Enable the save action.
      */
-    public void fireAction() {
+    public void enableSaveAction() {
         if (saveAction != null && !saveAction.isEnabled()) {
             saveAction.setEnabled(true);
         }
