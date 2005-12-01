@@ -255,9 +255,21 @@ public class ForwardInlineCommand extends ForwardCommand {
 
 			quotedBody = buf.toString();
 		} else {
+			BasicHeader rfcHeader = new BasicHeader(folder.getHeaderFields(
+					uids[0], headerfields));
+			String date = DateFormat.getDateTimeInstance(DateFormat.LONG,
+					DateFormat.MEDIUM).format(rfcHeader.getDate());
+			String from = rfcHeader.getFrom().toString();			
+		
 			// Text: Addition of > before each line
-			quotedBody = StreamUtils.readCharacterStream(
-					new QuoteFilterInputStream(bodyStream)).toString();
+			StringBuffer buf = StreamUtils.readCharacterStream(
+					new QuoteFilterInputStream(bodyStream));
+			
+	        buf.insert(0, ">\n");
+			buf.insert(0, "> Date: " + date + "\n");
+	        buf.insert(0, "> From: " + from + "\n");
+					
+			quotedBody = buf.toString();
 		}
 
 		bodyStream.close();
