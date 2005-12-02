@@ -1,4 +1,4 @@
-// $Id: InitMenusLater.java,v 1.8 2005/11/13 11:01:25 linus Exp $
+// $Id: InitMenusLater.java,v 1.9 2005/12/02 00:58:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,26 +179,29 @@ class InitMenusLater implements Runnable {
 	GenericArgoMenuBar.setMnemonic(distributeVCenters,
 				       "distribute vertical centers");
 
-        JMenuItem reorderBringForward =
-	    reorder.add(new CmdReorder(CmdReorder.BRING_FORWARD));
-	GenericArgoMenuBar.setMnemonic(reorderBringForward,
-				       "reorder bring forward");
+        if (reorder != null) {
+            JMenuItem reorderBringForward =
+                reorder.add(new CmdReorder(CmdReorder.BRING_FORWARD));
+                GenericArgoMenuBar.setMnemonic(reorderBringForward,
+                               "reorder bring forward");
 
-        JMenuItem reorderSendBackward =
-	    reorder.add(new CmdReorder(CmdReorder.SEND_BACKWARD));
-	GenericArgoMenuBar.setMnemonic(reorderSendBackward,
-				       "reorder send backward");
+                JMenuItem reorderSendBackward =
+                reorder.add(new CmdReorder(CmdReorder.SEND_BACKWARD));
+                GenericArgoMenuBar.setMnemonic(reorderSendBackward,
+                               "reorder send backward");
 
-        JMenuItem reorderBringToFront =
-	    reorder.add(new CmdReorder(CmdReorder.BRING_TO_FRONT));
-	GenericArgoMenuBar.setMnemonic(reorderBringToFront,
-				       "reorder bring to front");
+                JMenuItem reorderBringToFront =
+                reorder.add(new CmdReorder(CmdReorder.BRING_TO_FRONT));
+                GenericArgoMenuBar.setMnemonic(reorderBringToFront,
+                               "reorder bring to front");
 
-        JMenuItem reorderSendToBack =
-	    reorder.add(new CmdReorder(CmdReorder.SEND_TO_BACK));
-	GenericArgoMenuBar.setMnemonic(reorderSendToBack,
-				       "reorder send to back");
+                JMenuItem reorderSendToBack =
+                reorder.add(new CmdReorder(CmdReorder.SEND_TO_BACK));
+                GenericArgoMenuBar.setMnemonic(reorderSendToBack,
+                               "reorder send to back");
 
+        }
+        
         JMenuItem nudgeLeft = nudge.add(new CmdNudge(CmdNudge.LEFT));
 	GenericArgoMenuBar.setMnemonic(nudgeLeft, "nudge left");
 

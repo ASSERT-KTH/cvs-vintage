@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.137 2005/11/29 21:43:22 tfmorris Exp $
+// $Id: FigEdgeModelElement.java,v 1.138 2005/12/02 00:58:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -256,6 +256,10 @@ public abstract class FigEdgeModelElement
      */
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
+        
+        // TODO: Remove this line after 0.20.
+        // This is a hack that removes the ordering menu according to issue 3645
+        popUpActions.remove(0);
 
         // popupAddOffset should be equal to the number of items added here:
         popUpActions.addElement(new JSeparator());
