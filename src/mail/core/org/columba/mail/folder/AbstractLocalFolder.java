@@ -309,7 +309,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		h.set("columba.uid", newUid);
 		getHeaderList().add(h,newUid);
 
-		fireMessageAdded(newUid);
+		fireMessageAdded(newUid, getFlags(newUid));
 		return newUid;
 	}
 

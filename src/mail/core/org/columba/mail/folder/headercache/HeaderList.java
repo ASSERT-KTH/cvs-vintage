@@ -2,6 +2,7 @@ package org.columba.mail.folder.headercache;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Set;
 
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
@@ -38,6 +39,10 @@ public class HeaderList implements IHeaderList {
 
     public Enumeration keys() {
         return map.keys();
+    }
+    
+    public Set keySet() {
+    	return map.keySet();
     }
     
     public Enumeration elements() {

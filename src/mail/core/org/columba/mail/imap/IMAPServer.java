@@ -1084,6 +1084,33 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
+	
+	/**
+	 * Fetch list of flags and parse it.
+	 * 
+	 * @param folder
+	 *            mailbox name
+	 * 
+	 * @return list of flags
+	 * @throws Exception
+	 */
+	public IMAPFlags[] fetchFlagsListStartFrom2(int startIdx, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
+		IStatusObservable observable = getObservable();
+
+		ensureSelectedState(folder);
+		if (selectedStatus.getMessages() - startIdx >= 0) {
+			SequenceSet set = new SequenceSet();
+			set.add(startIdx, Math.min(startIdx + 9, selectedStatus.getMessages()));
+
+			IMAPFlags[] result = protocol.fetchFlags(set);
+
+			return result;
+		} else {
+			return new IMAPFlags[0];
+		}
+	}
+	
 	public NamespaceCollection fetchNamespaces() throws IOException,
 			IMAPException, CommandCancelledException {
 		ensureLoginState();

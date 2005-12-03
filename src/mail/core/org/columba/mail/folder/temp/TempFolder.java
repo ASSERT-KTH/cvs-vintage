@@ -227,7 +227,7 @@ public class TempFolder extends AbstractMessageFolder {
 
         messageList.put(newUid, new ColumbaMessage(h, message));
 
-        fireMessageAdded(newUid);
+        fireMessageAdded(newUid, getFlags(newUid));
         return newUid;
     }
 

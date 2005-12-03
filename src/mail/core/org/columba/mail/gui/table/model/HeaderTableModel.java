@@ -19,6 +19,7 @@ package org.columba.mail.gui.table.model;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -29,7 +30,6 @@ import javax.swing.event.TableColumnModelEvent;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.mail.folder.headercache.PersistantHeaderList;
 import org.columba.mail.gui.table.IHeaderTableModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IColumbaHeader;
@@ -122,9 +122,11 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		}
 	}
 
-	public void update() {
+	public void reset() {
 		if (root == null) {
 			root = new MessageNode(new ColumbaHeader(), "0");
+
+			tree.setRootNode(root);		
 		}
 
 		// remove all children from tree
@@ -132,7 +134,7 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 
 		// clear messagenode cache
 		map.clear();
-
+		
 		if ((headerList == null) || (headerList.count() == 0)) {
 			// table is empty
 			// -> just display empty table
@@ -143,26 +145,43 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 			
 			return;
 		}
-
+		
+		
+	}
+	
+	public void update() {
+		if ((headerList == null) || (headerList.count() == 0)) {
+			// table is empty
+			// -> just display empty table			
+			root.removeAllChildren();
+			
+			getTreeModel().nodeStructureChanged(getRootNode());
+			
+			fireTableDataChanged();
+			
+			return;
+		}
+		
 		// add every header from HeaderList to the table as MessageNode
-		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
+		for (Iterator it = headerList.keySet().iterator(); it.hasNext();) {
 			// get unique id
-			Object uid = e.nextElement();
+			Object uid = it.next();
+			
+			if( !map.containsKey(uid)) {
+				// get header
+				IColumbaHeader header = headerList.get(uid);
 
-			// get header
-			IColumbaHeader header = headerList.get(uid);
+				// create MessageNode
+				MessageNode child = new MessageNode(header, uid);
 
-			// create MessageNode
-			MessageNode child = new MessageNode(header, uid);
+				// add this node to cache
+				map.put(uid, child);
 
-			// add this node to cache
-			map.put(uid, child);
-
-			// add node to tree
-			root.add(child);
+				// add node to tree
+				root.add(child);
+			}
 		}
 
-		tree.setRootNode(root);
 		
 		Enumeration e = visitors.elements();
 		while (e.hasMoreElements()) {
@@ -174,7 +193,7 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		
 		fireTableDataChanged();
 	}
-
+	
 	public void clear() {
 		root = new MessageNode(new ColumbaHeader(), "0");
 		tree.setRootNode(root);
@@ -189,6 +208,7 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 	public void set(IHeaderList headerList) {
 		this.headerList = headerList;
 
+		reset();
 		update();
 	}
 
@@ -205,21 +225,8 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		return headerList;
 	}
 
-	public void setHeaderList(PersistantHeaderList list) {
-		headerList = list;
-		
-		update();
-	}
-
 	public MessageNode getMessageNode(Object uid) {
 		return (MessageNode) map.get(uid);
-	}
-
-	/**
-	 * @return
-	 */
-	public Map getMap() {
-		return map;
 	}
 
 	public DefaultTreeModel getTreeModel() {

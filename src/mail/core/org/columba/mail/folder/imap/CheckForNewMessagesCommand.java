@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.folder.command;
+package org.columba.mail.folder.imap;
 
 import java.awt.Toolkit;
 import java.io.IOException;
@@ -27,8 +27,6 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.folder.imap.IMAPRootFolder;
 
 /**
  * Check for new messages in IMAPFolder.
@@ -46,6 +44,7 @@ public class CheckForNewMessagesCommand extends Command {
 		super(reference);
 		this.action = action;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -66,7 +65,7 @@ public class CheckForNewMessagesCommand extends Command {
 
 		// check for new headers
 		try {
-			imapFolder.ensureFolderIsSynced(false, false);
+			imapFolder.synchronizeHeaderlist();
 		} catch (IOException e) {
 			worker.cancel();
 			throw new CommandCancelledException(e);

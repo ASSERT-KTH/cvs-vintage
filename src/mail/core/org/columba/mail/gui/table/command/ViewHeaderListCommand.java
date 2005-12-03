@@ -99,7 +99,6 @@ public class ViewHeaderListCommand extends Command implements
 
 		// fetch the headerlist
 		try {
-			if( folder instanceof IMAPFolder ) ((IMAPFolder)folder).ensureFolderIsSynced(false, true);
 			headerList = (folder).getHeaderList();
 		} catch (Exception e) {
 			updateGui = false;

@@ -35,7 +35,6 @@ import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.RootFolder;
-import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.imap.FetchSubFolderListCommand;
 import org.columba.mail.imap.IExistsChangedAction;

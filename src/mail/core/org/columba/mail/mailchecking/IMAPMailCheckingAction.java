@@ -22,7 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.command.CheckForNewMessagesCommand;
+import org.columba.mail.folder.imap.CheckForNewMessagesCommand;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;

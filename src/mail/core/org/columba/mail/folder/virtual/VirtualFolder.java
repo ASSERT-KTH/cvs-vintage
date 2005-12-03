@@ -409,14 +409,18 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 					header = new ColumbaHeader(h);
 					header.setAttributes(sourceFolder.getAttributes(sourceUid));
 					header.setFlags(sourceFolder.getFlags(sourceUid));
-					fireMessageAdded(add((ColumbaHeader) header, sourceFolder, sourceUid));
+					Object uid = add((ColumbaHeader) header, sourceFolder, sourceUid);
+					fireMessageAdded(uid, getFlags(uid));
 				} else {
+					if( !folder.exists(resultUids[i])) continue;
+					
 					Header h = folder.getHeaderFields(resultUids[i],
 							headerfields);
 					header = new ColumbaHeader(h);
 					header.setAttributes(folder.getAttributes(resultUids[i]));
 					header.setFlags(folder.getFlags(resultUids[i]));
-					fireMessageAdded(add(header, folder, resultUids[i]));
+					Object uid = add(header, folder, resultUids[i]);
+					fireMessageAdded(uid, getFlags(uid));
 
 				}
 
@@ -1118,7 +1122,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 				header.setAttributes(folder.getAttributes(resultUids[0]));
 				header.setFlags(folder.getFlags(resultUids[0]));
 				
-				fireMessageAdded(add(header, folder, resultUids[0]));
+				Object uid = add(header, folder, resultUids[0]);
+				fireMessageAdded(uid, getFlags(uid));
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -1172,7 +1177,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 					header.setAttributes(folder.getAttributes(resultUids[0]));
 					header.setFlags(folder.getFlags(resultUids[0]));
 					
-					fireMessageAdded(add(header, folder, resultUids[0]));
+					Object uid = add(header, folder, resultUids[0]);
+					fireMessageAdded(uid, getFlags(uid));
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();

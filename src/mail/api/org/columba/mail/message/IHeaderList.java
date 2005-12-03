@@ -18,6 +18,7 @@
 package org.columba.mail.message;
 
 import java.util.Enumeration;
+import java.util.Set;
 
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
@@ -41,6 +42,8 @@ public interface IHeaderList {
 	IColumbaHeader remove(Object uid);
 
 	Enumeration keys();
+	
+	Set keySet();
 
 	Object[] getUids();
 	

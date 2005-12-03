@@ -577,7 +577,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.FrameController#init()
+	 * @see org.columba.core.gui.FrameController#reset()
 	 */
 	protected void init() {
 

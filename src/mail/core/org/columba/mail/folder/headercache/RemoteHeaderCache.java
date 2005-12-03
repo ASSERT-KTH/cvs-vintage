@@ -125,10 +125,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 
 		int count = headerList.count();
 
-		if (count == 0) {
-			return;
-		}
-
 		writer.writeObject(new Integer(count));
 
 		ColumbaHeader h;
