@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.0/docbookx.dtd">
-<!-- $Id: argomanual.xml,v 1.24 2005/11/28 20:48:03 mvw Exp $ -->
+<!-- $Id: argomanual.xml,v 1.25 2005/12/04 22:09:00 mvw Exp $ -->
 <!--
 Copyright (c) 1996-2005 The Regents of the University of California. All
 Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -8089,7 +8089,7 @@ UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
         <sect2>
 
-          <title>Save Graphics...</title>
+          <title>Export Graphics...</title>
 
           <para>This menu entry brings up a dialog box allowing the 
           currently selected diagram (in the editing pane) to be saved 
@@ -8140,7 +8140,8 @@ UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
           </itemizedlist>
 
-          <para>The PNG format is the default.</para>
+          <para>The graphics format that is selected by default
+          is set in the dialog under the menu entry Edit - Settings...</para>
 
           <caution>
 
@@ -8151,7 +8152,23 @@ UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
           </caution>
 
         </sect2>
+        
+        <sect2 id="s2.ref.menu_export_all_graphics">
 
+          <title>Export All Graphics...</title>
+
+          <para>This menu entry brings up a dialog box 
+          to select a directory. 
+          In this directory, for all diagrams in the current project,
+          a graphics file is generated.</para>
+          
+          <para>The names of the files are deducted from the diagram names.
+          The graphics format that is produced
+          is set in the dialog under the Edit menu 
+          (see <xref linkend="s2.ref.menu_settings"/>).</para>
+
+        </sect2>
+        
         <sect2 id="s2.ref.menu_save_config">
 
           <title>Save Configuration</title>
