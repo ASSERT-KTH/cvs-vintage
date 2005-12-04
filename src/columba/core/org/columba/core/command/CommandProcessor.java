@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import org.columba.api.command.ICommand;
 import org.columba.core.base.Mutex;
+import org.columba.core.gui.exception.ExceptionHandler;
 
 /**
  * Scheduler for background threads
@@ -45,6 +46,8 @@ public class CommandProcessor implements Runnable {
 
 	private int timeStamp;
 
+	private boolean stopped = false;
+
 	private static CommandProcessor instance = new CommandProcessor();
 
 	public CommandProcessor() {
@@ -65,7 +68,10 @@ public class CommandProcessor implements Runnable {
 
 		// Create the workers
 		for (int i = 0; i < MAX_WORKERS; i++) {
-			worker.add(new Worker(this));
+			Worker w = new Worker(this);
+			w.addExceptionListener(new ExceptionHandler());
+			worker.add(w);
+			
 		}
 
 		oneMutex = new Mutex();
@@ -240,7 +246,7 @@ public class CommandProcessor implements Runnable {
 		Worker worker = null;
 		boolean sleep;
 
-		while (true) {
+		while (true && !stopped ) {
 			sleep = startOperation();
 
 			if (sleep) {
@@ -262,9 +268,9 @@ public class CommandProcessor implements Runnable {
 			OperationItem opItem;
 			Worker worker;
 			opItem = nextOpItem();
-			if (opItem != null) {
+			if (opItem != null && !stopped) {
 				worker = getWorker(opItem.getOperation().getPriority());
-				if (worker != null) {
+				if (worker != null && !stopped) {
 					operationQueue.remove(opItem);
 
 					worker.process(opItem.getOperation(), opItem
@@ -281,6 +287,11 @@ public class CommandProcessor implements Runnable {
 			oneMutex.release();
 		}
 		return sleep;
+	}
+
+	public synchronized void stop() {
+		stopped = true;
+		notify();
 	}
 
 }
