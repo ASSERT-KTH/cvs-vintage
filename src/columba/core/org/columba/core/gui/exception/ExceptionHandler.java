@@ -30,6 +30,7 @@ import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
 
+import org.columba.api.exception.IExceptionListener;
 import org.columba.core.connectionstate.ConnectionStateImpl;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.resourceloader.GlobalResourceLoader;
@@ -44,7 +45,7 @@ import sun.net.ConnectionResetException;
  * 
  * @author fdietz
  */
-public class ExceptionHandler {
+public class ExceptionHandler implements IExceptionListener {
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -173,5 +174,9 @@ public class ExceptionHandler {
 
 		new ErrorDialog(details, e);
 
+	}
+
+	public void exceptionOccured(Exception e) {
+		processException(e);
 	}
 }
