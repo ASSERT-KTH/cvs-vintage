@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.2 2005/11/13 11:01:25 linus Exp $
+// $Id: ActionExit.java,v 1.3 2005/12/06 02:09:54 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,7 @@ public class ActionExit extends UMLAction
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project p = ProjectManager.getManager().getCurrentProject();
 
-	if (p != null && ProjectManager.getManager().needsSave() && !active) {
+	if (p != null && ActionSaveProject.getInstance().isEnabled() && !active) {
 	    active = true;
 	    String t =
 		MessageFormat.format(Translator.localize(

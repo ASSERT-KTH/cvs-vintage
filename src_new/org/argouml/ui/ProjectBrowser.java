@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.167 2005/11/30 23:03:51 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.168 2005/12/06 02:09:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -239,6 +239,8 @@ public final class ProjectBrowser
             ResourceLoaderWrapper.lookupIconResource("ArgoIcon");
         this.setIconImage(argoImage.getImage());
         //
+        ProjectManager.getManager().setSaveAction(
+                ActionSaveProject.getInstance());
 
         // adds this as listener to projectmanager so it gets updated when the
         // project changes
@@ -495,7 +497,7 @@ public final class ProjectBrowser
         } else {
             // ask the Project if we are "dirty" - i.e. need to save
             String changeIndicator = "";
-            if (ProjectManager.getManager().needsSave()) {
+            if (ActionSaveProject.getInstance().isEnabled()) {
                 changeIndicator = " *";
             }
             ArgoDiagram activeDiagram =
@@ -1046,7 +1048,7 @@ public final class ProjectBrowser
         Project p = ProjectManager.getManager().getCurrentProject();
 
 
-        if (p != null && ProjectManager.getManager().needsSave()) {
+        if (p != null && ActionSaveProject.getInstance().isEnabled()) {
             String t =
                 MessageFormat.format(Translator.localize(
                         "optionpane.open-project-save-changes-to"),
