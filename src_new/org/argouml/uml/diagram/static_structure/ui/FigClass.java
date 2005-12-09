@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.200 2005/11/18 05:13:20 tfmorris Exp $
+// $Id: FigClass.java,v 1.201 2005/12/09 01:13:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -944,6 +944,9 @@ public class FigClass extends FigClassifierBox
         if (isOperationsVisible()) {
             int operationsY = y + currentHeight;
             int operationsHeight = (h + y) - operationsY - 1;
+            if (operationsHeight < getOperationsFig().getMinimumSize().height) {
+                operationsHeight = getOperationsFig().getMinimumSize().height;
+            }
             getOperationsFig().setBounds(
                     x,
                     operationsY,
