@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.35 2005/11/17 21:12:19 mvw Exp $
+// $Id: FigState.java,v 1.36 2005/12/09 17:24:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -143,7 +143,8 @@ public abstract class FigState extends FigStateVertex {
             }
             // we don't have to act on incoming and outgoing
             // transitions since that doesn't change the fig.
-        } else if (Model.getFacade().getInternalTransitions(getOwner())
+        } else if (getOwner() != null)
+            if (Model.getFacade().getInternalTransitions(getOwner())
                 .contains(mee.getSource())
                 || // the internal transitions
                 (mee.getSource() == Model.getFacade().getEntry(getOwner()))
