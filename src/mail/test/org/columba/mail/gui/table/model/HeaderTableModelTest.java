@@ -21,10 +21,10 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.columba.mail.folder.headercache.HeaderList;
-import org.columba.mail.folder.headercache.PersistantHeaderList;
+import org.columba.mail.folder.headercache.MemoryHeaderList;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IHeaderList;
+import org.columba.mail.message.IPersistantHeaderList;
 import org.frapuccino.treetable.Tree;
 import org.frapuccino.treetable.TreeTable;
 
@@ -37,7 +37,7 @@ public class HeaderTableModelTest extends TestCase {
     public static String[] columns = { "Subject", "From", "columba.date"};
 
     protected IHeaderList createHeaderList() {
-        IHeaderList list = new HeaderList();
+        IHeaderList list = new MemoryHeaderList();
         ColumbaHeader h = new ColumbaHeader();
         h.set("columba.uid", new Integer(0));
         h.set("Subject", "Test1");

@@ -41,6 +41,12 @@ public class SendableHeader extends ColumbaHeader {
         return ((Integer) attributes.get("columba.accountuid")).intValue();
     }
 
+    /**
+     * List of String representing the mail addresses.
+     * 
+     * 
+     * @return List of address Strings
+     */
     public List getRecipients() {
         return ((List) attributes.get("columba.recipients"));
     }

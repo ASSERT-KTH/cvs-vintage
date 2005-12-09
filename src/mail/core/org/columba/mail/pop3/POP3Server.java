@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,12 +37,14 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.folder.headercache.PersistantHeaderList;
+import org.columba.mail.folder.headercache.BerkeleyDBHeaderList;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.ICloseableIterator;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
+import org.columba.mail.message.IPersistantHeaderList;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.Header;
@@ -72,7 +73,7 @@ public class POP3Server {
 
 	private POP3Store store;
 
-	protected PersistantHeaderList headerList;
+	protected IPersistantHeaderList headerList;
 
 	private Lock lock;
 
@@ -94,8 +95,10 @@ public class POP3Server {
 
 		store = new POP3Store(item);
 
-		headerList = new PersistantHeaderList(new POP3HeaderCache(this));
-
+		if(!this.getConfigFile().isDirectory()) this.getConfigFile().delete();
+		headerList = new BerkeleyDBHeaderList(this.getConfigFile(),  new POP3HeaderBinding());
+		((BerkeleyDBHeaderList)headerList).setKeyType(String.class);
+		
 		lock = new Lock();
 
 		setCacheChanged(false);
@@ -130,18 +133,14 @@ public class POP3Server {
 	}
 
 	public List synchronize() throws Exception {
-		// Get the uids from the headercache
-		LinkedList headerUids = new LinkedList();
-		Enumeration keys = getHeaderList().keys();
-
 		if (getHeaderList().count() == 0) {
 			LOG.severe(accountItem.getName() + " - POP3 Headerlist is empty!");
 		}
 
-		while (keys.hasMoreElements()) {
-			headerUids.add(keys.nextElement());
-		}
+		// Get the uids from the headercache
 
+		LinkedList headerUids = new LinkedList(getHeaderList().keySet());
+		
 		// Get the list of the uids on the server
 		// Important: Use a clone of the List since
 		// we must not change it!
@@ -192,15 +191,14 @@ public class POP3Server {
 			POP3Exception, CommandCancelledException {
 		LOG.info("Removing message older than " + date);
 		IHeaderList headerList = getHeaderList();
-		Enumeration uids = headerList.keys();
-		while (uids.hasMoreElements()) {
-			Object uid = uids.nextElement();
-			IColumbaHeader header = headerList.get(uid);
+		ICloseableIterator it = headerList.headerIterator();
+		while (it.hasNext()) {
+			IColumbaHeader header = (IColumbaHeader) it.next();
 			if (((Date) header.get("columba.date")).before(date)) {
-				deleteMessage(uid);
-				LOG.info("removed " + uid + " from " + accountItem.getName());
+				deleteMessage(header.get("columba.uid"));
 			}
 		}
+		it.close();
 	}
 
 	public void cleanUpServer() throws IOException, POP3Exception,
@@ -223,20 +221,14 @@ public class POP3Server {
 	private void removeAllDownloadedMessages() throws IOException,
 			CommandCancelledException, POP3Exception {
 		IHeaderList headerList = getHeaderList();
-		Enumeration uids = headerList.keys();
-		while (uids.hasMoreElements()) {
-			Object uid = uids.nextElement();
-			deleteMessage(uid);
+		ICloseableIterator it = headerList.keyIterator();
+		while (it.hasNext()) {
+			deleteMessage(it.next());
 		}
+		it.close();
 	}
 
 	private IHeaderList getHeaderList() {
-		try {
-			headerList.restore();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return headerList;
 	}
 

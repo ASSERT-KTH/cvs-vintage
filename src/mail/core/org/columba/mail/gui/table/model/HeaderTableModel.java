@@ -19,7 +19,6 @@ package org.columba.mail.gui.table.model;
 
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -32,6 +31,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.mail.gui.table.IHeaderTableModel;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ICloseableIterator;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.frapuccino.treetable.AbstractTreeTableModel;
@@ -92,6 +92,8 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		for (int i = 0; i < uids.length; i++) {
 			MessageNode node = (MessageNode) map.get(uids[i]);
 
+			node.setUserObject(getHeaderList().get(uids[i]));
+			
 			if (node != null) {
 				// update treemodel
 				getTreeModel().nodeChanged(node);
@@ -163,7 +165,8 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		}
 		
 		// add every header from HeaderList to the table as MessageNode
-		for (Iterator it = headerList.keySet().iterator(); it.hasNext();) {
+		ICloseableIterator it;
+		for (it = headerList.keyIterator(); it.hasNext();) {
 			// get unique id
 			Object uid = it.next();
 			
@@ -181,6 +184,7 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 				root.add(child);
 			}
 		}
+		it.close();
 
 		
 		Enumeration e = visitors.elements();

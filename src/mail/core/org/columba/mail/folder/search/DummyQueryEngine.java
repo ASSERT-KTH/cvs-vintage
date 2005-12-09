@@ -73,4 +73,9 @@ public class DummyQueryEngine implements QueryEngine {
  */
     public void reset() throws Exception {
     }
+
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.command;
 
-import java.util.Enumeration;
-
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
@@ -26,6 +24,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
+import org.columba.mail.message.ICloseableIterator;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 
@@ -51,9 +50,9 @@ public class MailboxSizeCommand extends Command {
 		
 		if (folder instanceof IMailbox) {
 			IHeaderList headerList = ((IMailbox) folder).getHeaderList();
-			Enumeration e = headerList.elements();
-			while (e.hasMoreElements()) {
-				IColumbaHeader header = (IColumbaHeader) e.nextElement();
+			ICloseableIterator it = headerList.headerIterator();
+			while (it.hasNext()) {
+				IColumbaHeader header = (IColumbaHeader) it.next();
 				Integer sizeInt = (Integer) header.getAttributes().get(
 						"columba.size");
 
@@ -61,6 +60,7 @@ public class MailboxSizeCommand extends Command {
 					total += sizeInt.intValue();
 				}
 			}
+			it.close();
 		}
 	}
 

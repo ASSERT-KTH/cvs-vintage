@@ -83,7 +83,7 @@ public class ColumbaHeader implements IColumbaHeader {
         attributes.put("columba.priority",
             new Integer(basicHeader.getPriority()));
 
-        Address from = basicHeader.getFrom();
+       	Address from = basicHeader.getFrom();
 
         if (from != null) {
             attributes.put("columba.from", from);

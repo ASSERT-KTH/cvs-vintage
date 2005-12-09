@@ -16,6 +16,7 @@
 
 package org.columba.mail.folder;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -28,9 +29,9 @@ import org.columba.core.filter.FilterList;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.headercache.BerkeleyDBHeaderList;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
-import org.columba.mail.folder.headercache.LocalHeaderCache;
-import org.columba.mail.folder.headercache.PersistantHeaderList;
+import org.columba.mail.folder.headercache.IHeaderListCorruptedListener;
 import org.columba.mail.folder.headercache.SyncHeaderList;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
@@ -38,6 +39,7 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IColumbaMessage;
 import org.columba.mail.message.IHeaderList;
+import org.columba.mail.message.IPersistantHeaderList;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.SourceInputStream;
 import org.columba.ristretto.message.Attributes;
@@ -87,13 +89,15 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 */
 	protected ColumbaMessage aktMessage;
 
+	private boolean firstOpen = true;
+	
 	/**
 	 * implement your own mailbox format here
 	 */
 
 	protected IDataStorage dataStorage;
 
-	protected PersistantHeaderList headerList;
+	protected IPersistantHeaderList headerList;
 
 	/**
 	 * @param item
@@ -116,7 +120,18 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 		filterList = new FilterList(filterListElement);
 		
-        headerList = new PersistantHeaderList(new LocalHeaderCache(this));
+        //headerList = new PersistantHeaderList(new LocalHeaderCache(this));
+		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),"headerlist"));
+		final AbstractMessageFolder folder = this;		
+		headerList.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
+
+			public void headerListCorrupted(IHeaderList headerList) {
+				try {
+					SyncHeaderList.sync(folder, headerList);
+				} catch (IOException e) {
+					LOG.severe(e.getMessage());
+				}
+			}});
         
         setSearchEngine(new DefaultSearchEngine(this));        
 	}
@@ -142,7 +157,18 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 		filterList = new FilterList(filterListElement);
 
-        headerList = new PersistantHeaderList(new LocalHeaderCache(this));	
+        //headerList = new PersistantHeaderList(new LocalHeaderCache(this));	
+		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),"headerlist"));
+		final AbstractMessageFolder folder = this;		
+		headerList.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
+
+			public void headerListCorrupted(IHeaderList headerList) {
+				try {
+					SyncHeaderList.sync(folder, headerList);
+				} catch (IOException e) {
+					LOG.severe(e.getMessage());
+				}
+			}});
 
         setSearchEngine(new DefaultSearchEngine(this));        	
 	}
@@ -505,7 +531,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		ListTools.substract(keyList, cachedList);
 
 		if (keyList.size() == 0) {
-			return getHeaderList().getHeaderFields(uid, keys);
+			return getHeaderList().get(uid).getHeader();
 		} else {
 			// We need to parse
 			// get message with UID
@@ -556,17 +582,14 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	}
 
 	public IHeaderList getHeaderList() throws Exception {
-		if( !headerList.isRestored()) {
-			try {
-				headerList.restore();
-			} catch (IOException e) {
-				SyncHeaderList.sync(this, headerList);
-			}
-	
+		if( firstOpen ) {
+		
 			if( headerList.count() != getDataStorageInstance().getMessageCount()) {
 				// 	Must be out of sync!
 				SyncHeaderList.sync(this, headerList);
 			}
+			
+			firstOpen = false;
 		}
 	
 		return headerList;

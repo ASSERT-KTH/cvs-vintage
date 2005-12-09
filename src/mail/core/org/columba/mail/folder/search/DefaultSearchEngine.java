@@ -392,4 +392,8 @@ public class DefaultSearchEngine {
 	public void sync() throws Exception {
 		getNonDefaultEngine().sync();
 	}
+
+	public void save() {
+		getNonDefaultEngine().save();
+	}
 }

@@ -97,7 +97,7 @@ public class CreateSubFolderAction extends AbstractColumbaAction implements
 	public void selectionChanged(SelectionChangedEvent e) {
 		TreeSelectionChangedEvent ev = (TreeSelectionChangedEvent) e;
 		
-		if ( ev.getSelected() != null && ev.getSelected().length == 1 && ev.getSelected()[0].getAllowsChildren()) {
+		if ( ev.getSelected() != null && ev.getSelected().length == 1 && ev.getSelected()[0] != null && ev.getSelected()[0].getAllowsChildren()) {
 			setEnabled(true);
 		} else {
 			setEnabled(false);

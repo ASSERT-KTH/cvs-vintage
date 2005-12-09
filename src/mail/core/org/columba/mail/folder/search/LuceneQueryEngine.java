@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -52,6 +51,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.IFolderEvent;
+import org.columba.mail.message.ICloseableIterator;
 import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MimePart;
@@ -494,14 +494,15 @@ public class LuceneQueryEngine implements QueryEngine {
 
 			Object uid;
 			int i = 0;
-
-			for (Enumeration e = hl.keys(); e.hasMoreElements();) {
-				uid = e.nextElement();
+			ICloseableIterator it;
+			for (it = hl.keyIterator(); it.hasNext();) {
+				uid = it.next();
 				
 				writer.addDocument(getDocument(uid));
 
 				getObservable().setCurrent(i);
 			}
+			it.close();
 
 			getObservable().setCurrent(count);
 
@@ -518,4 +519,14 @@ public class LuceneQueryEngine implements QueryEngine {
 	public IStatusObservable getObservable() {
 		return folder.getObservable();
 	}
+
+	public void save() {
+		try {
+			mergeRAMtoIndex();
+		} catch (IOException e) {
+			LOG.severe(e.getMessage());
+		}
+		
+	}
+
 }

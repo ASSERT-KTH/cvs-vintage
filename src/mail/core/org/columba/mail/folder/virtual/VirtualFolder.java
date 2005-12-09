@@ -47,13 +47,15 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
-import org.columba.mail.folder.headercache.HeaderList;
+import org.columba.mail.folder.headercache.MemoryHeaderList;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ICloseableIterator;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
@@ -86,7 +88,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	public VirtualFolder(FolderItem item, String path) {
 		super(item, path);
 
-		headerList = new HeaderList();
+		headerList = new MemoryHeaderList();
 
 		ensureValidFilterElement();
 	}
@@ -100,7 +102,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		item.setString("property", "include_subfolders", "true");
 		item.setString("property", "source_uid", "101");
 
-		headerList = new HeaderList();
+		headerList = new MemoryHeaderList();
 
 		ensureValidFilterElement();
 	}
@@ -220,13 +222,13 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		}
 		
 		// redo the seach for the flags criteria		
-		Enumeration uids = headerList.keys();
-		while( uids.hasMoreElements()) {
-			h = (VirtualHeader) headerList.get(uids.nextElement());
+		ICloseableIterator it = headerList.headerIterator();
+		while( it.hasNext()) {
+			h = (VirtualHeader) it.next();
 			
 			try {
 				if( h.getSrcFolder().searchMessages(filter, new Object[] {h.getSrcUid()}).length == 0) {
-					headerList.remove(h.getVirtualUid());
+					it.remove();
 
 					// notify listeners
 					fireMessageRemoved(h.getVirtualUid(), null);
@@ -236,6 +238,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 				e.printStackTrace();
 			}
 		}
+		it.close();
+		
 	}
 
 	public void addSearchToHistory() throws Exception {
@@ -520,8 +524,6 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * @see org.columba.modules.mail.folder.Folder#remove(Object)
 	 */
 	public void removeMessage(Object uid) throws Exception {
-		// notify listeners
-		fireMessageRemoved(uid, getFlags(uid));
 
 		// get source folder reference
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
@@ -533,6 +535,9 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 
 		// remove from virtual folder
 		headerList.remove(uid);
+
+		// notify listeners
+		fireMessageRemoved(uid, getFlags(uid));	
 	}
 
 	/**
@@ -810,28 +815,21 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			activate();
 		}
 		
-		int count = headerList.count();
-		Object[] uids = new Object[count];
-		int i = 0;
-
-		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-			uids[i++] = e.nextElement();
-		}
-
-		return uids;
+		return headerList.getUids();
 	}
 
 	protected Object srcUidToVirtualUid(IMailFolder srcFolder, Object uid) {
-		Enumeration uids = headerList.keys();
+		ICloseableIterator it = headerList.headerIterator();
 		
-		
-		while( uids.hasMoreElements() ) {
-			VirtualHeader h = (VirtualHeader) headerList.get(uids.nextElement());
+		while( it.hasNext() ) {
+			VirtualHeader h = (VirtualHeader) it.next();
 			if( h.getSrcUid().equals(uid) && h.getSrcFolder().equals(srcFolder) ) {
+				it.close();
 				return h.getVirtualUid();
 			}
 			
 		}
+		it.close();
 		
 		return null;
 	}
@@ -1186,14 +1184,20 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		} 
 		
 		if( virtualUid != null ) {
+			// Update the Virtual Header
+			
+			VirtualHeader h = (VirtualHeader) headerList.get(virtualUid);
+			AbstractMessageFolder folder = (AbstractMessageFolder)e.getSource();
+			try {			
+				h.setAttributes( folder.getAttributes( e.getChanges()));				
+				h.setFlags( folder.getFlags(e.getChanges()));
+			
+				updateMailFolderInfo(e.getOldFlags(), e.getParameter());
+			} catch (Exception e1) {
+			}
 		
-		try {
-			updateMailFolderInfo(e.getOldFlags(), e.getParameter());
-		} catch (Exception e1) {
-		}
-		
-		//fire updates
-		fireMessageFlagChanged(virtualUid, e.getOldFlags(), e.getParameter());
+			//fire updates
+			fireMessageFlagChanged(virtualUid, e.getOldFlags(), e.getParameter());
 		}
 	}
 

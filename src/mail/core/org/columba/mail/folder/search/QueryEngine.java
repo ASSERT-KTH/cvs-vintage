@@ -91,4 +91,6 @@ public interface QueryEngine {
  * @throws Exception
  */
     void reset() throws Exception;
+    
+    void save();
 }

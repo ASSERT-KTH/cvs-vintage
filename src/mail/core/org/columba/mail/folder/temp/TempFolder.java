@@ -27,7 +27,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.folder.headercache.HeaderList;
+import org.columba.mail.folder.headercache.MemoryHeaderList;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
@@ -72,7 +72,7 @@ public class TempFolder extends AbstractMessageFolder {
             directoryFile = new File(dir);
         }
 
-        headerList = new HeaderList();
+        headerList = new MemoryHeaderList();
         messageList = new Hashtable();
         
         setSearchEngine(new DefaultSearchEngine(this));

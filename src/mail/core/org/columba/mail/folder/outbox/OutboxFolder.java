@@ -17,18 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.AbstractLocalFolder;
-import org.columba.mail.folder.headercache.LocalHeaderCache;
+import org.columba.mail.folder.headercache.BerkeleyDBHeaderList;
 import org.columba.mail.folder.mh.CachedMHFolder;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.SendableHeader;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 
@@ -47,8 +42,8 @@ public class OutboxFolder extends CachedMHFolder {
 
 	public OutboxFolder(FolderItem item, String path) {
 		super(item, path);
-
-		headerList.setStore(new OutboxHeaderCache(this));
+		
+		((BerkeleyDBHeaderList)headerList).setHeaderBinding(new OutboxHeaderBinding());
 		
 		sendListManager[0] = new SendListManager();
 		sendListManager[1] = new SendListManager();
@@ -106,38 +101,4 @@ public class OutboxFolder extends CachedMHFolder {
 		return uid;
 	}
 
-
-	class OutboxHeaderCache extends LocalHeaderCache {
-
-		public OutboxHeaderCache(AbstractLocalFolder folder) {
-			super(folder);
-		}
-
-		public ColumbaHeader createHeaderInstance() {
-			return new SendableHeader();
-		}
-
-		protected void loadHeader(ColumbaHeader h) throws IOException {
-			super.loadHeader(h);
-
-			try {
-				Integer accountUid = (Integer) reader.readObject();
-				h.getAttributes().put("columba.accountuid", accountUid);
-
-				List recipients = (List) reader.readObject();
-				h.getAttributes().put("columba.recipients", recipients);
-				;
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-
-		protected void saveHeader(ColumbaHeader h) throws IOException {
-			super.saveHeader(h);
-
-			writer.writeObject(h.getAttributes().get("columba.accountuid"));
-
-			writer.writeObject(h.getAttributes().get("columba.recipients"));
-		}
-	}
 }

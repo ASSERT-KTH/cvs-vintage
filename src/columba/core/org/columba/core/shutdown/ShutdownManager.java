@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import org.columba.api.shutdown.IShutdownManager;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.TaskManager;
 import org.columba.core.logging.Logging;
 import org.columba.core.main.ColumbaServer;
@@ -111,6 +112,8 @@ public class ShutdownManager implements IShutdownManager {
 				// shutdown manager
 				BackgroundTaskManager.getInstance().stop();
 
+				CommandProcessor.getInstance().stop();
+				
 				while (!isShutdownHook()
 						&& (TaskManager.getInstance().count() > 0)) {
 					// ask user to kill pending running commands or wait

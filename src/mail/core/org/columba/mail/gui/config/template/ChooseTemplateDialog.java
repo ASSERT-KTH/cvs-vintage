@@ -119,15 +119,7 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
     }
 
     protected void initComponents() {
-        // pack all UIDs in a list
-        Vector v = new Vector();
-        Enumeration enumeration = headerList.keys();
-
-        while (enumeration.hasMoreElements()) {
-            v.add(enumeration.nextElement());
-        }
-
-        list = new JList(v);
+        list = new JList( headerList.getUids());
         list.addListSelectionListener(this);
         list.setPreferredSize(new Dimension(200, 300));
         list.setCellRenderer(new HeaderCellRenderer(headerList));

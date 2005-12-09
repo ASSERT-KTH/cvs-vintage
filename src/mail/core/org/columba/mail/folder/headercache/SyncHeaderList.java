@@ -43,7 +43,7 @@ public class SyncHeaderList {
 		messageFolderInfo.setExists(0);
 		messageFolderInfo.setRecent(0);
 		messageFolderInfo.setUnseen(0);
-		headerList.clear();
+		// headerList.clear();
 
 		folder.setChanged(true);
 
@@ -58,50 +58,51 @@ public class SyncHeaderList {
 				folder.getObservable().setCurrent(i);
 			}
 
-			if( !headerList.exists(uids[i])) {
-			try {
-				Source source = ds.getMessageSource(uids[i]);
+			if (!headerList.exists(uids[i])) {
+				try {
+					Source source = ds.getMessageSource(uids[i]);
 
-				if (source.length() == 0) {
-					ds.removeMessage(uids[i]);
+					if (source.length() == 0) {
+						ds.removeMessage(uids[i]);
 
-					continue;
+						continue;
+					}
+
+					header = new ColumbaHeader(HeaderParser.parse(source));
+
+					// make sure that we have a Message-ID
+					String messageID = (String) header.get("Message-Id");
+					if (messageID != null)
+						header.set("Message-ID", header.get("Message-Id"));
+
+					header = CachedHeaderfields.stripHeaders(header);
+
+					if (isOlderThanOneWeek(today, ((Date) header
+							.getAttributes().get("columba.date")))) {
+						header.getFlags().set(Flags.SEEN);
+					}
+
+					// message size should be at least 1 KB
+					int size = Math.max(source.length() / 1024, 1);
+					header.getAttributes().put("columba.size",
+							new Integer(size));
+
+					// set the attachment flag
+					header.getAttributes().put("columba.attachment",
+							header.hasAttachments());
+
+					header.getAttributes().put("columba.uid", uids[i]);
+
+					headerList.add(header, uids[i]);
+					source.close();
+					source = null;
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-
-				header = new ColumbaHeader(HeaderParser.parse(source));
-
-				// make sure that we have a Message-ID
-				String messageID = (String) header.get("Message-Id");
-				if (messageID != null)
-					header.set("Message-ID", header.get("Message-Id"));
-
-				header = CachedHeaderfields.stripHeaders(header);
-
-				if (isOlderThanOneWeek(today, ((Date) header.getAttributes()
-						.get("columba.date")))) {
-					header.getFlags().set(Flags.SEEN);
-				}
-
-				// message size should be at least 1 KB
-				int size = Math.max(source.length() / 1024, 1);
-				header.getAttributes().put("columba.size", new Integer(size));
-
-				// set the attachment flag
-				header.getAttributes().put("columba.attachment",
-						header.hasAttachments());
-
-				header.getAttributes().put("columba.uid", uids[i]);
-
-				headerList.add(header, uids[i]);
-				source.close();
-				source = null;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
 			} else {
 				header = headerList.get(uids[i]);
 			}
-			
+
 			if (header.getFlags().getRecent()) {
 				messageFolderInfo.incRecent();
 			}

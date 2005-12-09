@@ -17,38 +17,30 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Set;
+import java.io.IOException;
 
-import org.columba.ristretto.message.Attributes;
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
+import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.folder.headercache.IHeaderListCorruptedListener;
+import org.columba.mail.message.ColumbaHeader;
+
 
 /**
- * @author fdietz
+ * Wrapper around a Hashtable to allow typesafe
+ * mapping of {@link ColumbaHeader} objects.
+ * <p>
+ * Every {@link IMailbox} uses this headerlist
+ * internally to store headerfields.
+ * <p>
  *
+ * @see CachedHeaderfields
+ *
+ * @author fdietz
  */
-public interface IHeaderList {
-	void add(IColumbaHeader header, Object uid);
+public interface IPersistantHeaderList extends IHeaderList {
 
-	int count();
+	public void persist() throws IOException;
 
-	boolean exists(Object uid);
+	public void addHeaderListCorruptedListener(IHeaderListCorruptedListener listener);
 
-	IColumbaHeader get(Object uid);
-
-	IColumbaHeader remove(Object uid);
-
-	Set keySet();
-
-	Object[] getUids();
-	
-	void clear();
-
-	void update(Object uid, IColumbaHeader header);
-
-	ICloseableIterator keyIterator();
-
-	ICloseableIterator headerIterator();
 }

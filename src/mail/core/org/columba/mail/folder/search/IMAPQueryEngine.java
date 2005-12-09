@@ -84,4 +84,9 @@ public class IMAPQueryEngine implements QueryEngine {
     public void reset() throws Exception {
         // method is not needed by IMAP
     }
+
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
 }

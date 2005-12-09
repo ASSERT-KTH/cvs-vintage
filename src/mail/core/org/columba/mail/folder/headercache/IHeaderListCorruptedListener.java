@@ -15,40 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.message;
+package org.columba.mail.folder.headercache;
 
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Set;
+import org.columba.mail.message.IHeaderList;
 
-import org.columba.ristretto.message.Attributes;
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
+public interface IHeaderListCorruptedListener {
 
-/**
- * @author fdietz
- *
- */
-public interface IHeaderList {
-	void add(IColumbaHeader header, Object uid);
-
-	int count();
-
-	boolean exists(Object uid);
-
-	IColumbaHeader get(Object uid);
-
-	IColumbaHeader remove(Object uid);
-
-	Set keySet();
-
-	Object[] getUids();
+	public void headerListCorrupted(IHeaderList headerList);
 	
-	void clear();
-
-	void update(Object uid, IColumbaHeader header);
-
-	ICloseableIterator keyIterator();
-
-	ICloseableIterator headerIterator();
 }

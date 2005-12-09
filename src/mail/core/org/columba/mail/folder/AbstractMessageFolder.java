@@ -36,6 +36,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.IFolderListener;
 import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
@@ -209,10 +210,6 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 			}
 		}
 
-		try {
-			getHeaderList().remove(uid);
-		} catch (Exception e) {
-		}
 		setChanged(true);
 
 		//      update treenode
@@ -340,11 +337,11 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 				.toString());
 		// on startup, there's shouldn't be any recent messages
 		// -> we simply remember 0 recent messages here
-		property.addAttribute("recent", "0");
-		/*
+		// property.addAttribute("recent", "0");
+		
+		
 		property.addAttribute("recent", new Integer(info.getRecent())
 				.toString());
-				*/
 
 		if (info.getUidNext() != -1) {
 			property.addAttribute("uidnext", new Integer(info.getUidNext())
@@ -408,6 +405,9 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 */
 	public void save() throws Exception {
 		saveMessageFolderInfo();
+		if( getSearchEngine() != null ) {
+			getSearchEngine().save();
+		}
 	}
 
 	/**
@@ -536,7 +536,9 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * @throws Exception
 	 */
 	protected void markMessage(Object uid, int variant) throws Exception {
-		Flags flags = getFlags(uid);
+		IColumbaHeader header = getHeaderList().get(uid);
+		
+		Flags flags = header.getFlags();
 		
 		updateMailFolderInfo(flags, variant);
 		
@@ -633,6 +635,9 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		}
 		setChanged(true);
 		
+		header.setFlags(flags);		
+		getHeaderList().update(uid, header);
+		
 		fireMessageFlagChanged(uid, oldFlags, variant);
 	}
 
@@ -693,11 +698,11 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * @throws Exception
 	 */
 	public void removeMessage(Object uid) throws Exception {
-		// notify listeners
-		fireMessageRemoved(uid, getFlags(uid));
-
 		// remove from header-list
-		getHeaderList().remove(uid);
+		IColumbaHeader header = getHeaderList().remove(uid);
+
+		// notify listeners
+		fireMessageRemoved(uid, header.getFlags());	
 	}
 
 	/** ****************************** IAttributeStorage *********************** */
@@ -727,7 +732,13 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 */
 	public void setAttribute(Object uid, String key, Object value)
 			throws Exception {
-		getHeaderList().setAttribute(uid, key, value);
+		
+		IColumbaHeader header = getHeaderList().get(uid);
+		
+		header.getAttributes().put(key, value);
+		
+		getHeaderList().update(uid, header);
+		
 		//  set folder changed flag
 		// -> if not, the header cache wouldn't notice that something
 		// -> has changed. And wouldn't save the changes.
@@ -738,14 +749,14 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * @see org.columba.mail.folder.IMailbox#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
-		return getHeaderList().getFlags(uid);
+		return getHeaderList().get(uid).getFlags();
 	}
 
 	/**
 	 * @see org.columba.mail.folder.IMailbox#getAttributes(java.lang.Object)
 	 */
 	public Attributes getAttributes(Object uid) throws Exception {
-		return getHeaderList().getAttributes(uid);
+		return getHeaderList().get(uid).getAttributes();
 	}
 
 	/**
@@ -753,7 +764,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
-		return getHeaderList().getAttribute(uid, key);
+		return getHeaderList().get(uid).getAttributes().get(key);
 	}
 
 	/**

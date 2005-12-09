@@ -55,6 +55,7 @@ import org.columba.mail.nativ.defaultmailclient.SystemDefaultMailClientHandler;
 import org.columba.mail.parser.MailUrlParser;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
+import org.columba.mail.shutdown.ClearRecentFlagPlugin;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.spam.SaveSpamDBPlugin;
@@ -98,6 +99,7 @@ public class MailMain implements IComponentPlugin {
 			ex.printStackTrace();
 		}
 
+		
 		Runnable plugin = new SaveAllFoldersPlugin();
 		BackgroundTaskManager.getInstance().register(plugin);
 
@@ -109,6 +111,10 @@ public class MailMain implements IComponentPlugin {
 		BackgroundTaskManager.getInstance().register(plugin);
 		ShutdownManager.getInstance().register(plugin);
 
+		plugin = new ClearRecentFlagPlugin();
+		ShutdownManager.getInstance().register(plugin);
+		
+		
 		ServiceRegistry.getInstance().register(
 				org.columba.mail.facade.IConfigFacade.class,
 				"org.columba.mail.facade.ConfigFactory");
