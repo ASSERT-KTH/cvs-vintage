@@ -1,4 +1,4 @@
-// $Id: PropPanelDependency.java,v 1.32 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelDependency.java,v 1.33 2005/12/10 18:17:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public class PropPanelDependency extends PropPanelRelationship {
      * @see org.argouml.uml.ui.PropPanel#PropPanel(String, Orientation)
      */
     protected PropPanelDependency(String name, Orientation orientation) {
-        super(name, lookupIcon("Dependency"), orientation);
+        super(name, lookupIcon(name), orientation);
         JList supplierList = new UMLLinkedList(
                 new UMLDependencySupplierListModel(), true);
         supplierScroll = new JScrollPane(supplierList);
