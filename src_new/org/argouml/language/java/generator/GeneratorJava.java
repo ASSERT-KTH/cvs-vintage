@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.125 2005/11/22 00:07:50 bobtarling Exp $
+// $Id: GeneratorJava.java,v 1.126 2005/12/10 18:59:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -453,12 +453,15 @@ public class GeneratorJava
         StringBuffer sb = new StringBuffer(80);
         String nameStr = null;
         boolean constructor = false;
-        // TODO: MULTIPLESTEREOTYPES
-        Object stereo =
-            CollectionUtil.getFirstItemOrNull(
-                Model.getFacade().getStereotypes(op));
-        if (stereo != null
-                && Model.getFacade().getName(stereo).equals("create")) {
+
+        Iterator its = Model.getFacade().getStereotypes(op).iterator();
+        String name = "";
+        while (its.hasNext()) {
+            Object o = its.next();
+            name = Model.getFacade().getName(o);
+            if ("create".equals(name)) break;
+        }
+        if("create".equals(name)) {
             // constructor
             nameStr =
                 generateName(Model.getFacade().getName(
