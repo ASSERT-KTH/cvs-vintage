@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.16 2005/11/10 06:13:37 tfmorris Exp $
+// $Id: UmlDiagramRenderer.java,v 1.17 2005/12/10 18:49:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -82,7 +83,6 @@ import org.argouml.uml.diagram.use_case.ui.FigActor;
 import org.argouml.uml.diagram.use_case.ui.FigExtend;
 import org.argouml.uml.diagram.use_case.ui.FigInclude;
 import org.argouml.uml.diagram.use_case.ui.FigUseCase;
-import org.argouml.util.CollectionUtil;
 import org.tigris.gef.graph.GraphEdgeRenderer;
 import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.Fig;
@@ -251,11 +251,15 @@ public abstract class UmlDiagramRenderer
         } else if (Model.getFacade().isAUsage(edge)) {
             newEdge = new FigUsage();
         } else if (Model.getFacade().isADependency(edge)) {
-            // TODO: MULTIPLESTEREOTYPES
-            Object stereotype = CollectionUtil.getFirstItemOrNull(
-                    Model.getFacade().getStereotypes(edge));
-            if (Model.getExtensionMechanismsHelper().isStereotypeInh(
-                            stereotype, "realize", "Abstraction")) {
+            Collection c = Model.getFacade().getStereotypes(edge);
+            Iterator i = c.iterator();
+            String name = "";
+            while (i.hasNext()) {
+                Object o = i.next();
+                name = Model.getFacade().getName(o);
+                if ("realize".equals(name)) break;
+            }
+            if("realize".equals(name)) {
                 newEdge = new FigRealization();
             } else {
                 newEdge = new FigDependency();
