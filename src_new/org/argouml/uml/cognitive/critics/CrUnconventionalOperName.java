@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalOperName.java,v 1.27 2005/11/03 00:39:43 tfmorris Exp $
+// $Id: CrUnconventionalOperName.java,v 1.28 2005/12/10 15:42:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,9 @@
 
 package org.argouml.uml.cognitive.critics;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.ToDoItem;
@@ -32,7 +35,6 @@ import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.UMLToDoItem;
-import org.argouml.util.CollectionUtil;
 
 /**
  * Critic to detect whether an operation name obeys to certain rules.
@@ -67,13 +69,15 @@ public class CrUnconventionalOperName extends AbstractCrUnconventionalName {
             return NO_PROBLEM;
         }
         char initalChar = nameStr.charAt(0);
-        // TODO: MULTIPLESTEREOTYPES
-        Object stereo = CollectionUtil.getFirstItemOrNull(
-                Model.getFacade().getStereotypes(oper));
-        if ((stereo != null)
-                && ("create".equals(Model.getFacade().getName(stereo))
-                    || "constructor".equals(Model.getFacade().getName(stereo)))) {
-            return NO_PROBLEM;
+        
+        Collection stereos = Model.getFacade().getStereotypes(oper);
+        Iterator i = stereos.iterator();
+        while (i.hasNext()) {
+            Object stereo = i.next();
+            if ("create".equals(Model.getFacade().getName(stereo))
+                || "constructor".equals(Model.getFacade().getName(stereo))) {
+                return NO_PROBLEM;
+            }
         }
         if (!Character.isLowerCase(initalChar)) {
             return PROBLEM_FOUND;
