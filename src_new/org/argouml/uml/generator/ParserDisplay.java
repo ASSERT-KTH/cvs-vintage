@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.182 2005/12/08 20:35:33 mvw Exp $
+// $Id: ParserDisplay.java,v 1.183 2005/12/10 15:28:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1214,7 +1214,6 @@ public final class ParserDisplay {
                     if (hasEq) {
                         value += token;
                     } else {
-                        // TODO: MULTIPLESTEREOTYPES
                         if (stereotype != null) {
                             throw new ParseException(
                                 "Attribute cannot have two sets of stereotypes", 
