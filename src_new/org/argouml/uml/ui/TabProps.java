@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.81 2005/12/01 00:06:31 bobtarling Exp $
+// $Id: TabProps.java,v 1.82 2005/12/10 18:40:12 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -487,9 +487,6 @@ public class TabProps
         if (Model.getFacade().isADataType(modelElement)) {
             return new PropPanelDataType();
         }
-        if (Model.getFacade().isADependency(modelElement)) {
-            return new PropPanelDependency();
-        }
         if (Model.getFacade().isADestroyAction(modelElement)) {
             return new PropPanelDestroyAction();
         }
@@ -627,6 +624,9 @@ public class TabProps
         }
         if (Model.getFacade().isATimeEvent(modelElement)) {
             return new PropPanelTimeEvent();
+        }
+        if (Model.getFacade().isADependency(modelElement)) {
+            return new PropPanelDependency();
         }
         // Create prop panels for primitives
         if (modelElement instanceof FigText) {
