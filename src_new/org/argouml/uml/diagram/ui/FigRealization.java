@@ -1,4 +1,4 @@
-// $Id: FigRealization.java,v 1.12 2005/11/04 23:17:35 bobtarling Exp $
+// $Id: FigRealization.java,v 1.13 2005/12/10 18:47:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigRealization.java,v 1.12 2005/11/04 23:17:35 bobtarling Exp $
+// $Id: FigRealization.java,v 1.13 2005/12/10 18:47:56 mvw Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
@@ -35,7 +35,9 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
 
 /**
- * This class represents a Fig for a Realization.
+ * This class represents a Fig for a Realization,
+ * i.e. a dependency with stereotype <<realize>>.
+ * It has a dashed line and a triangle arrow-head.
  *
  *
  * @author agauthie

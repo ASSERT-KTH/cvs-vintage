@@ -1,4 +1,4 @@
-// $Id: FigDependency.java,v 1.20 2005/11/21 21:15:17 mvw Exp $
+// $Id: FigDependency.java,v 1.21 2005/12/10 18:47:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,9 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 
 /**
+ * This class represents a Fig for a Dependency.
+ * It has a dashed line and a V-shaped arrow-head.
+ * 
  * @author ics 125b course, spring 1998
  */
 public class FigDependency extends FigEdgeModelElement {
