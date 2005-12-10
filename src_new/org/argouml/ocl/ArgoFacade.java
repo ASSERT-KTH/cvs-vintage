@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.36 2005/11/13 11:01:27 linus Exp $
+// $Id: ArgoFacade.java,v 1.37 2005/12/10 19:22:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,15 +177,15 @@ class ArgoAny implements Any, Type2 {
 		    && (Model.getFacade().getUpper(multiplicity) > 1
 			|| Model.getFacade().getUpper(multiplicity)
                            == -1)) {
-		    // TODO: MULTIPLESTEREOTYPES
-		    Object stereotype =
-                        CollectionUtil.getFirstItemOrNull(
-                            Model.getFacade().getStereotypes(ae));
-		    // to do: think about the condition of this if-statement
-		    // ordered association end -> Sequence; otherwise -> Set
-		    if (stereotype != null
-			    && stereotype.toString() != null
-			    && "ordered".equals(stereotype.toString())) {
+		    Collection c = Model.getFacade().getStereotypes(ae);
+		    Iterator i = c.iterator();
+		    String stname = "";
+		    while (i.hasNext()) {
+		        Object o = i.next();
+		        stname = Model.getFacade().getName(o);
+		        if ("ordered".equals(stname)) break;
+		    }
+		    if("ordered".equals(stname)) {
 			isSequence = true;
 		    } else {
 			isSet = true;
