@@ -111,7 +111,7 @@ public class DefaultHeaderBinding extends TupleBinding {
 			}
 		}
 
-		out.writeInt(new Integer(BooleanCompressor.compress(b)));
+		out.writeInt(new Integer(BooleanCompressor.compress(b)).intValue());
 
 		// save other internal headerfields, of non-boolean type
 		String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
