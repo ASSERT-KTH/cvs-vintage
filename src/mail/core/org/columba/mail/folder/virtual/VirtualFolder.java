@@ -1108,6 +1108,10 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * @see org.columba.mail.folder.event.IFolderListener#messageAdded(org.columba.mail.folder.event.IFolderEvent)
 	 */
 	public void messageAdded(IFolderEvent e) {
+		//deactivate the folder
+		deactivate();
+		return;
+		/*
 		AbstractMessageFolder folder = (AbstractMessageFolder)e.getSource();
 		
 		try {
@@ -1126,7 +1130,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		
+		*/
 	}
 
 	/* (non-Javadoc)
