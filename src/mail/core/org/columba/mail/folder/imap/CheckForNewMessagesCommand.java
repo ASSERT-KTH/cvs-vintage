@@ -39,10 +39,18 @@ public class CheckForNewMessagesCommand extends Command {
 	IMAPFolder imapFolder;
 
 	private Action action;
+	private boolean triggerNotification;
+	
+	
+	public CheckForNewMessagesCommand(ICommandReference reference) {
+		super(reference);
+		triggerNotification = false;
+	}
 
 	public CheckForNewMessagesCommand(Action action, ICommandReference reference) {
 		super(reference);
 		this.action = action;
+		triggerNotification = true;
 	}
 
 	/*
@@ -75,7 +83,7 @@ public class CheckForNewMessagesCommand extends Command {
 		int newTotal = imapFolder.getMessageFolderInfo().getExists();
 		
 		//TODO: make Beep with a nice Action instead
-		if ((newTotal != total) ) {
+		if (triggerNotification && (newTotal != total) ) {
 			if( ((IMAPRootFolder)imapFolder.getRootFolder()).getAccountItem().getImapItem().getBoolean("enable_sound")) {
 				Toolkit kit = Toolkit.getDefaultToolkit();
 				kit.beep(); //system beep

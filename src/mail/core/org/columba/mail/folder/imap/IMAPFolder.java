@@ -207,7 +207,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
 					new CheckForNewMessagesCommand(
-							null, new MailFolderCommandReference(this)));
+							new MailFolderCommandReference(this)));
 		} 
 
 		return headerList;
@@ -930,7 +930,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			// 	Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
 				new CheckForNewMessagesCommand(
-						null, new MailFolderCommandReference(this)));
+						new MailFolderCommandReference(this)));
 		}
 
 		return uid;
@@ -1054,7 +1054,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
 					new CheckForNewMessagesCommand(
-							null, new MailFolderCommandReference(this)));
+							new MailFolderCommandReference(this)));
 		}
 
 		return uid;
