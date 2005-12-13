@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.169 2005/12/13 00:47:27 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.170 2005/12/13 12:52:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -500,7 +500,7 @@ public final class ProjectBrowser
         if (ActionSaveProject.getInstance().isEnabled()) {
             changeIndicator = " *";
         }
-        super.setTitle(title + " - " + changeIndicator);
+        super.setTitle(title + changeIndicator);
     }
 
     /**
@@ -532,7 +532,7 @@ public final class ProjectBrowser
      * the curreny save action enabled status.
      */
     public void showSaveIndicator() {
-        super.setTitle(title);
+        setTitle(title);
     }
     
     /**
