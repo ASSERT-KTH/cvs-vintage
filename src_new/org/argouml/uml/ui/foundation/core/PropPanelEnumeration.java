@@ -1,4 +1,4 @@
-// $Id: PropPanelEnumeration.java,v 1.1 2005/12/01 00:06:31 bobtarling Exp $
+// $Id: PropPanelEnumeration.java,v 1.2 2005/12/13 18:02:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,8 +94,6 @@ public class PropPanelEnumeration extends PropPanelDataType {
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
             if (Model.getFacade().isAClassifier(target)) {
-                Object stereotype = CollectionUtil.getFirstItemOrNull(
-                        Model.getFacade().getStereotypes(target));
     
                 Collection propertyChangeListeners =
                     ProjectManager.getManager()
