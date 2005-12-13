@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.51 2005/11/30 22:13:52 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.52 2005/12/13 00:47:29 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,9 +106,7 @@ public class ActionSaveProject extends AbstractAction {
             return;
         }
         super.setEnabled(enabled);
-        if (enabled) {
-            ProjectBrowser.getInstance().showSaveIndicator();
-        }
+        ProjectBrowser.getInstance().showSaveIndicator();
     }
 
 } /* end class ActionSaveProject */
