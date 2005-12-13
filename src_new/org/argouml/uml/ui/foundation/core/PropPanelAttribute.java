@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.59 2005/11/09 18:40:16 bobtarling Exp $
+// $Id: PropPanelAttribute.java,v 1.60 2005/12/13 18:59:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,6 +93,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         addAction(new ActionNavigateContainerElement());
         addAction(TargetManager.getInstance().getAddAttributeAction());
         addAction(new ActionAddDataType());
+        addAction(new ActionAddEnumeration());
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());
     }

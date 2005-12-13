@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.5 2005/11/12 23:53:37 linus Exp $
+// $Id: CoreFactory.java,v 1.6 2005/12/13 18:59:53 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -364,6 +364,13 @@ public interface CoreFactory {
      * @return an initialized UML DataType instance.
      */
     Object buildDataType(String name, Object owner);
+    
+    /**
+     * @param name is the name
+     * @param owner is the namespace
+     * @return an initialized UML Enumeration instance
+     */
+    Object buildEnumeration(String name, Object owner);
 
     /**
      * Builds a modelelement dependency between two modelelements.<p>

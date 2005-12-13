@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.29 2005/09/28 22:28:37 bobtarling Exp $
+// $Id: CoreFactoryImpl.java,v 1.30 2005/12/13 18:59:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1081,6 +1081,14 @@ public class CoreFactoryImpl
 	    dt.setNamespace((MNamespace) owner);
 	}
 	return dt;
+    }
+
+    /**
+     * @see org.argouml.model.CoreFactory#buildEnumeration(java.lang.String, java.lang.Object)
+     */
+    public Object buildEnumeration(String name, Object owner) {
+        // TODO: Auto-generated method stub
+        return null;
     }
 
     /**

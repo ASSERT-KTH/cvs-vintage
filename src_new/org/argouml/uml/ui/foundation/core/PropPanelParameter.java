@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.66 2005/11/14 03:55:53 tfmorris Exp $
+// $Id: PropPanelParameter.java,v 1.67 2005/12/13 18:59:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,6 @@ public class PropPanelParameter extends PropPanelModelElement {
 
     /**
      * The constructor.
-     *
      */
     public PropPanelParameter() {
         super(
@@ -79,6 +78,7 @@ public class PropPanelParameter extends PropPanelModelElement {
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionAddParameter());
         addAction(new ActionAddDataType());
+        addAction(new ActionAddEnumeration());
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());
     }

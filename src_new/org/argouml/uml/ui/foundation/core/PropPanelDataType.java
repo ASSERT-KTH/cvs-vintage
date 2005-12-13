@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.71 2005/12/01 00:06:31 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.72 2005/12/13 18:59:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,6 +90,7 @@ public class PropPanelDataType extends PropPanelClassifier {
 
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionAddDataType());
+        addAction(new ActionAddEnumeration());
         addAction(new ActionAddQueryOperation());
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());
