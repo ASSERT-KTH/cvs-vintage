@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.30 2005/12/13 18:59:53 mvw Exp $
+// $Id: CoreFactoryImpl.java,v 1.31 2005/12/14 20:40:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1087,6 +1087,14 @@ public class CoreFactoryImpl
      * @see org.argouml.model.CoreFactory#buildEnumeration(java.lang.String, java.lang.Object)
      */
     public Object buildEnumeration(String name, Object owner) {
+        // TODO: Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @see org.argouml.model.CoreFactory#buildEnumerationLiteral(java.lang.String, java.lang.Object)
+     */
+    public Object buildEnumerationLiteral(String name, Object enumeration) {
         // TODO: Auto-generated method stub
         return null;
     }
