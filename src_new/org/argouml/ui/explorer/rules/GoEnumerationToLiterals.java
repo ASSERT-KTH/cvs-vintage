@@ -1,4 +1,4 @@
-// $Id: GoEnumerationToLiterals.java,v 1.2 2005/11/13 11:01:21 linus Exp $
+// $Id: GoEnumerationToLiterals.java,v 1.3 2005/12/14 22:18:56 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 
+/**
+ * Go rule to navigate from an Enumeration to its Literals. <p>
+ * Enumeration->Literal.
+ */
 public class GoEnumerationToLiterals extends AbstractPerspectiveRule {
 
     /**
@@ -61,14 +66,7 @@ public class GoEnumerationToLiterals extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.AbstractPerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-        return "Enumeration->Literals";
-    }
-
-    /**
-     * @see org.argouml.ui.explorer.rules.AbstractPerspectiveRule#toString()
-     */
-    public String toString() {
-        return super.toString();
+        return Translator.localize ("misc.enumeration.literal");
     }
 
     /**

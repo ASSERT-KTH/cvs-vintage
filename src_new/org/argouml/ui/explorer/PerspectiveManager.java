@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.32 2005/11/13 11:01:17 linus Exp $
+// $Id: PerspectiveManager.java,v 1.33 2005/12/14 22:18:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -301,7 +301,12 @@ public final class PerspectiveManager {
             if (getPerspectives().size() == 0) {
                 loadDefaultPerspectives();
             }
-        } catch (Exception e1) {
+        } catch (ClassNotFoundException e) {
+
+        } catch (InstantiationException e) {
+
+        } catch (IllegalAccessException e) {
+
         }
     }
 
@@ -341,6 +346,7 @@ public final class PerspectiveManager {
         packagePerspective.addRule(new GoUseCaseToExtensionPoint());
         packagePerspective.addRule(new GoClassifierToStructuralFeature());
         packagePerspective.addRule(new GoClassifierToBehavioralFeature());
+        packagePerspective.addRule(new GoEnumerationToLiterals());
         packagePerspective.addRule(new GoCollaborationToInteraction());
         packagePerspective.addRule(new GoInteractionToMessages());
         packagePerspective.addRule(new GoMessageToAction());
