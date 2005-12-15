@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.25 2005/11/21 17:19:47 mvw Exp $
+// $Id: Facade.java,v 1.26 2005/12/15 14:22:47 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -430,6 +430,14 @@ public interface Facade {
      */
     boolean isAEnumeration(Object handle);
 
+    /**
+     * Recognizer for UML EnumerationLiteral
+     * 
+     * @param handle the candidate
+     * @return true if handle is an UML EnumerationLiteral
+     */
+    boolean isAEnumerationLiteral(Object handle);
+    
     /**
      * Recognizer for Event.
      *
@@ -1419,6 +1427,14 @@ public interface Facade {
      */
     Object getEntry(Object handle);
 
+    /**
+     * Returns the Enumeration of an EnumerationLiteral.
+     * 
+     * @param handle the enumerationliteral
+     * @return the enumeration
+     */
+    Object getEnumeration(Object handle);
+    
     /**
      * Returns the enumeration literals of a UML Enumeration.
      *
