@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.114 2005/07/13 20:46:02 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.115 2005/12/16 07:26:16 ezust Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -1137,8 +1137,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 				return;
 
 			int offset = caret - textArea.getLineStartOffset(physicalLine);
-			textArea.offsetToXY(physicalLine,offset,textArea.returnValue);
-			int caretX = textArea.returnValue.x;
+			textArea.offsetToXY(physicalLine, offset, textArea.offsetXY);
+			int caretX = textArea.offsetXY.x;
 			int height = fm.getHeight();
 
 			gfx.setColor(caretColor);

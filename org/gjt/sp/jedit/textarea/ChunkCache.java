@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.105 2005/07/13 20:46:01 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.106 2005/12/16 07:26:16 ezust Exp $
  */
 class ChunkCache
 {
@@ -61,6 +61,12 @@ class ChunkCache
 	} //}}}
 
 	//{{{ getScreenLineOfOffset() method
+	/**
+	 * @param line physical line number of document 
+	 * @param offset number of characters from the left of the line. 
+	 * @return number of pixels from the left of the textArea where the
+	 * cursor should be
+	 */
 	int getScreenLineOfOffset(int line, int offset)
 	{
 		if(lineInfo.length == 0)
@@ -81,8 +87,7 @@ class ChunkCache
 				LineInfo last = getLineInfo(lastScreenLine);
 
 				if(offset >= last.offset
-					&& offset < last.offset + last.length)
-				{
+					&& offset < last.offset + last.length) {
 					return lastScreenLine;
 				}
 			}
