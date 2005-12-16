@@ -1,4 +1,4 @@
-// $Id: TestGeneratorJava.java,v 1.1 2005/12/16 13:32:41 mkl Exp $
+// $Id: TestGeneratorJava.java,v 1.2 2005/12/16 14:16:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
 
 package org.argouml.language.java.generator;
 
@@ -86,6 +85,26 @@ public class TestGeneratorJava extends TestCase {
                 Model.getVisibilityKind().getProtected());
         result = GeneratorJava.getInstance().generateClassifierStart(class1);
         assertTrue("A class should not have protected in its specification",
+                result.indexOf("protected") == -1);
+    }
+
+    /**
+     * check the Java Code Generator does not generate a protected class ....
+     */
+    public void testGenerateClassifierStart2() {
+        StringBuffer result;
+
+        Model.getCoreHelper().setVisibility(inter1,
+                Model.getVisibilityKind().getPublic());
+        result = GeneratorJava.getInstance().generateClassifierStart(inter1);
+        assertTrue("A interface should have public in its specification",
+                result.indexOf("public") == 0);
+
+        Model.getCoreHelper().setVisibility(inter1,
+                Model.getVisibilityKind().getProtected());
+        result = GeneratorJava.getInstance().generateClassifierStart(inter1);
+        assertTrue(
+                "A interface should not have protected in its specification",
                 result.indexOf("protected") == -1);
     }
 
