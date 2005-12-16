@@ -602,4 +602,19 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		super.save();
 		headerList.persist();
 	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.AbstractMessageFolder#loadMessageFolderInfo()
+	 */
+	protected void loadMessageFolderInfo() {
+		super.loadMessageFolderInfo();
+		
+		int storedCount = getDataStorageInstance().getMessageCount();
+		//Check if still consistent
+		if( messageFolderInfo.getExists() > storedCount) {
+			messageFolderInfo.setExists(storedCount);
+			messageFolderInfo.setUnseen(Math.min(messageFolderInfo.getUnseen(), storedCount));
+		}
+		
+	}
 }
