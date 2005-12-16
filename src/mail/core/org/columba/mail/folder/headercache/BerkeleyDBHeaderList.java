@@ -219,13 +219,14 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 		
 		DatabaseEntry result = new DatabaseEntry();
 		try {
-			db.get(null, getDatabaseEntry(uid), result, LockMode.DEFAULT);
+			OperationStatus status = db.get(null, getDatabaseEntry(uid), result, LockMode.DEFAULT);
+			if( status.equals(OperationStatus.SUCCESS) ) {
+				return (IColumbaHeader)headerBinding.entryToObject(result);
+			}
 		} catch (DatabaseException e) {
 			LOG.fine(e.getMessage());
-			return null;
 		}
-		
-		return (IColumbaHeader)headerBinding.entryToObject(result);
+		return null;		
 	}
 
 
