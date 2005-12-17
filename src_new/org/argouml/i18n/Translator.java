@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.42 2005/11/13 00:27:05 linus Exp $
+// $Id: Translator.java,v 1.43 2005/12/17 07:54:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,6 +113,7 @@ public final class Translator {
             new Locale("en", ""),
             new Locale("fr", ""),
             new Locale("es", ""),
+            new Locale("de", ""),
             new Locale("nb", ""),
             new Locale("ru", ""),
             new Locale("zh", ""),
