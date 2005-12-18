@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.22 2005/11/13 11:01:17 linus Exp $
+// $Id: XmiFilePersister.java,v 1.23 2005/12/18 13:31:12 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,6 +176,7 @@ public class XmiFilePersister extends AbstractFilePersister {
             Project p = new Project();
             XMIParser.getSingleton().readModels(p, file.toURL());
             Object model = XMIParser.getSingleton().getCurModel();
+            XMIParser.getSingleton().registerDiagrams(p);            
             Model.getUmlHelper().addListenersToModel(model);
             p.setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
             p.addMember(new ProjectMemberTodoList("", p));
