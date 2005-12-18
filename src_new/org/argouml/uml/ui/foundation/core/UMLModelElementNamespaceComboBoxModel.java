@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.38 2005/12/18 10:27:57 mvw Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.39 2005/12/18 20:13:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,9 +100,11 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
         /*
          * Rebuild the list from scratch to be sure it's correct.
          */
-        if (evt.getSource() == getTarget()
+        Object t = getTarget();
+        if (t != null 
+                && evt.getSource() == t
                 && evt.getNewValue() != null) {
-            setTarget(getTarget());
+            setTarget(t);
         }
     }
 }
