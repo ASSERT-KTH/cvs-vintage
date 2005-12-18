@@ -1,4 +1,4 @@
-// $Id: ZipFilePersister.java,v 1.4 2005/11/13 11:01:17 linus Exp $
+// $Id: ZipFilePersister.java,v 1.5 2005/12/18 13:33:13 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,11 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
+import org.argouml.model.Model;
 import org.argouml.uml.ProjectMemberModel;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
 import org.argouml.uml.diagram.ProjectMemberDiagram;
+import org.xml.sax.InputSource;
 
 /**
  * To persist to and from zipped xmi file storage.
@@ -208,11 +210,16 @@ public class ZipFilePersister extends XmiFilePersister {
                         fileName.indexOf('.'),
                         fileName.lastIndexOf('.'));
             InputStream stream = openZipStreamAt(file.toURL(), extension);
-            MemberFilePersister persister = new ModelMemberFilePersister();
-            persister.load(p, stream);
+            InputSource is = new InputSource(stream);
+            is.setSystemId(file.toURL().toExternalForm());
+            XMIParser.getSingleton().readModels(p, is);
+            XMIParser.getSingleton().registerDiagrams(p);            
+            Object model = XMIParser.getSingleton().getCurModel();
+            Model.getUmlHelper().addListenersToModel(model);
+            p.setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
             p.addMember(new ProjectMemberTodoList("", p));
-            p.setRoot(p.getModel());
-            p.setUrl(file.toURL());
+            p.addMember(model);
+            p.setRoot(model);
             ProjectManager.getManager().setNeedsSave(false);
             return p;
         } catch (IOException e) {
