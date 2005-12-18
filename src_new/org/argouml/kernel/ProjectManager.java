@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.66 2005/12/13 12:52:50 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.67 2005/12/18 09:16:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -236,6 +236,7 @@ public final class ProjectManager
      */
     public Project makeEmptyProject() {
         Model.getPump().stopPumpingEvents();
+        
         creatingCurrentProject = true;
         LOG.info("making empty project");
         Project oldProject = currentProject;
@@ -252,17 +253,18 @@ public final class ProjectManager
         currentProject.addMember(DiagramFactory.getInstance()
                 .createDiagram(UMLUseCaseDiagram.class, model, null));
         currentProject.addMember(new ProjectMemberTodoList("", currentProject));
-        ProjectManager.getManager().setNeedsSave(false);
         currentProject.setActiveDiagram(d);
         firePropertyChanged(CURRENT_PROJECT_PROPERTY_NAME,
                             oldProject, currentProject);
         creatingCurrentProject = false;
-        UndoManager.getInstance().empty();
 
+        UndoManager.getInstance().empty();
         if (!UndoEnabler.ENABLED) {
             UndoManager.getInstance().setUndoMax(0);
         }
         Model.getPump().startPumpingEvents();
+        
+        ProjectManager.getManager().setNeedsSave(false);
         return currentProject;
     }
     
