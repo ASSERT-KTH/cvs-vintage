@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.12 2005/11/13 11:01:17 linus Exp $
+// $Id: ModelMemberFilePersister.java,v 1.13 2005/12/18 13:34:51 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.model.Model;
 import org.argouml.model.UmlException;
-import org.argouml.model.XmiReader;
 import org.argouml.model.XmiWriter;
 import org.argouml.uml.ProjectMemberModel;
 import org.xml.sax.InputSource;
@@ -78,12 +77,11 @@ public class ModelMemberFilePersister extends MemberFilePersister {
         // changed the loading of the projectfiles to solve hanging
         // of argouml if a project is corrupted. Issue 913
         // Created xmireader with method getErrors to check if parsing went well
-        XmiReader xmiReader = null;
         try {
-            xmiReader = Model.getXmiReader();
             source.setEncoding("UTF-8");
-            mmodel = xmiReader.parseToModel(source);
-        } catch (UmlException e) {
+            XMIParser.getSingleton().readModels(project ,source);
+            mmodel = XMIParser.getSingleton().getCurModel();
+        } catch (OpenException e) {
             LastLoadInfo.getInstance().setLastLoadStatus(false);
             LastLoadInfo.getInstance().setLastLoadMessage(
                     "UmlException parsing XMI.");
@@ -100,7 +98,7 @@ public class ModelMemberFilePersister extends MemberFilePersister {
 
         project.addMember(mmodel);
 
-        project.setUUIDRefs(new HashMap(xmiReader.getXMIUUIDToObjectMap()));
+        project.setUUIDRefs(new HashMap(XMIParser.getSingleton().getUUIDRefs()));
     }
 
     /**
