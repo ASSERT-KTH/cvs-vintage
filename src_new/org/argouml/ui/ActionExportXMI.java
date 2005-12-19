@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.26 2005/11/13 11:01:12 linus Exp $
+// $Id: ActionExportXMI.java,v 1.27 2005/12/19 18:53:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,8 +65,9 @@ public final class ActionExportXMI extends AbstractAction {
 
         String fn =
             Configuration.getString(
-                PersistenceManager.KEY_EXPORT_XMI_PATH);
+                PersistenceManager.KEY_PROJECT_NAME_PATH);
         if (fn.length() > 0) {
+            fn = PersistenceManager.getInstance().getBaseName(fn);
             chooser.setSelectedFile(new File(fn));
         }
 
@@ -76,8 +77,9 @@ public final class ActionExportXMI extends AbstractAction {
             if (theFile != null) {
                 String name = theFile.getName();
                 Configuration.setString(
-                        PersistenceManager.KEY_EXPORT_XMI_PATH,
-                        theFile.getPath());
+                        PersistenceManager.KEY_PROJECT_NAME_PATH,
+                        PersistenceManager.getInstance().getBaseName(
+                                theFile.getPath()));
                 name = pm.fixXmiExtension(name);
                 theFile = new File(theFile.getParent(), name);
                 ProjectBrowser.getInstance().trySave(false, theFile);

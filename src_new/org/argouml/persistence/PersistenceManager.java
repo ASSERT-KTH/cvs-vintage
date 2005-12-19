@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.17 2005/11/13 11:01:17 linus Exp $
+// $Id: PersistenceManager.java,v 1.18 2005/12/19 18:53:17 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,21 +73,16 @@ public final class PersistenceManager {
     private ZipFilePersister zipPersister;
 
     /**
-     * The configuration key for the "save project" file location.
+     * The configuration key for the project file location.
      */
-    public static final ConfigurationKey KEY_SAVE_PROJECT_PATH =
-        Configuration.makeKey("project", "save", "path");
+    public static final ConfigurationKey KEY_PROJECT_NAME_PATH =
+        Configuration.makeKey("project", "name", "path");
+
     /**
      * The configuration key for the "open project" file location.
      */
     public static final ConfigurationKey KEY_OPEN_PROJECT_PATH =
         Configuration.makeKey("project", "open", "path");
-
-    /**
-     * The configuration key for the "export xmi" file location.
-     */
-    public static final ConfigurationKey KEY_EXPORT_XMI_PATH =
-        Configuration.makeKey("xmi", "export", "path");
 
     /**
      * The configuration key for the "import xmi" file location.

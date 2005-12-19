@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.48 2005/12/13 00:47:28 bobtarling Exp $
+// $Id: ActionSaveProjectAs.java,v 1.49 2005/12/19 18:53:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,8 +126,9 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         PersistenceManager.getInstance().setSaveFileChooserFilters(chooser);
 
         String fn = Configuration.getString(
-                PersistenceManager.KEY_SAVE_PROJECT_PATH);
+                PersistenceManager.KEY_PROJECT_NAME_PATH);
         if (fn.length() > 0) {
+            fn = PersistenceManager.getInstance().getBaseName(fn);
             chooser.setSelectedFile(new File(fn));
         }
 
@@ -138,9 +139,9 @@ public class ActionSaveProjectAs extends ActionSaveProject {
                 (AbstractFilePersister) chooser.getFileFilter();
             if (theFile != null) {
                 Configuration.setString(
-                        PersistenceManager.KEY_SAVE_PROJECT_PATH,
-                        theFile.getPath());
-
+                        PersistenceManager.KEY_PROJECT_NAME_PATH,
+                        PersistenceManager.getInstance().getBaseName(
+                                theFile.getPath()));
                 String name = theFile.getName();
                 if (!name.endsWith("." + filter.getExtension())) {
                     theFile =
