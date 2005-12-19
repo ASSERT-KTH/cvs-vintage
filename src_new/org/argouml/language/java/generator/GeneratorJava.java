@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.126 2005/12/10 18:59:53 mvw Exp $
+// $Id: GeneratorJava.java,v 1.127 2005/12/19 19:50:21 thn Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -664,10 +664,12 @@ public class GeneratorJava
         // so the next line is commented. See Issue 1505
         //sb.append (LINE_SEPARATOR);
         sb.append(DocumentationManager.getComments(cls));
-	sb.append(generateConstraintEnrichedDocComment(cls, true, ""));
+        sb.append(generateConstraintEnrichedDocComment(cls, true, ""));
 
         // Now add visibility
-        sb.append(generateVisibility(Model.getFacade().getVisibility(cls)));
+        if (Model.getFacade().isPublic(cls)) {
+            sb.append(generateVisibility(Model.getFacade().getVisibility(cls)));
+        }
 
         // Add other modifiers
         if (Model.getFacade().isAbstract(cls)
@@ -1099,7 +1101,7 @@ public class GeneratorJava
         if (s == null || s.length() == 0 || s.equals("/** */"))
             return "";
         String t = Model.getFacade().getTagOfTag(tv);
-        if (t.equals("documentation"))
+        if ("documentation".equals(t))
             return "";
         return generateName(t) + "=" + s;
     }
