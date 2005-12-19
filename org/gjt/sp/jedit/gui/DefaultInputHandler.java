@@ -32,13 +32,14 @@ import java.util.StringTokenizer;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 import org.gjt.sp.jedit.msg.*;
+import javax.swing.event.*;
 //}}}
 
 /**
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.45 2005/11/29 19:31:18 jchoyt Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.46 2005/12/19 02:29:26 jchoyt Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -350,7 +351,7 @@ public class DefaultInputHandler extends InputHandler
 		else if(o instanceof Hashtable)
 		{
 			setCurrentBindings((Hashtable)o);
-			EditBus.send(new ShortcutPrefixActive(null, currentBindings, true));
+			ShortcutPrefixActiveEvent.firePrefixStateChange(currentBindings, true);
 			shortcutOn = true;
 			return true;
 		}
@@ -380,7 +381,7 @@ public class DefaultInputHandler extends InputHandler
 	{
 		if( shortcutOn == true )
 		{
-			EditBus.send(new ShortcutPrefixActive(null, null, false));
+			ShortcutPrefixActiveEvent.firePrefixStateChange(null, false);
 			shortcutOn = false;
 		}
 	} //}}}
@@ -423,4 +424,5 @@ public class DefaultInputHandler extends InputHandler
 	private Hashtable bindings;
 	private Hashtable currentBindings;
 	//}}}
+
 }
