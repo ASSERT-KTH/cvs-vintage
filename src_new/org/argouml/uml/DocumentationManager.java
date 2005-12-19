@@ -1,4 +1,4 @@
-// $Id: DocumentationManager.java,v 1.23 2005/01/30 20:47:43 linus Exp $
+// $Id: DocumentationManager.java,v 1.24 2005/12/19 19:46:12 thn Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,22 +130,22 @@ public class DocumentationManager {
      * @return true if the given element has docs.
      */
     public static boolean hasDocs(Object o) {
-	if (Model.getFacade().isAModelElement(o)) {
-	    Iterator i = Model.getFacade().getTaggedValues(o);
+        if (Model.getFacade().isAModelElement(o)) {
+            Iterator i = Model.getFacade().getTaggedValues(o);
 
-	    if (i != null) {
-		while (i.hasNext()) {
-		    Object tv = i.next();
-		    String tag = Model.getFacade().getTagOfTag(tv);
-		    String value = Model.getFacade().getValueOfTag(tv);
-		    if ((tag.equals("documentation") || tag.equals("javadocs"))
-			&& value != null && value.trim().length() > 0) {
-			return true;
-		    }
-		}
-	    }
-	}
-	return false;
+            if (i != null) {
+                while (i.hasNext()) {
+                    Object tv = i.next();
+                    String tag = Model.getFacade().getTagOfTag(tv);
+                    String value = Model.getFacade().getValueOfTag(tv);
+                    if (("documentation".equals(tag) || "javadocs".equals(tag))
+                        && value != null && value.trim().length() > 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
