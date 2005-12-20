@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationUml.java,v 1.6 2005/12/20 07:54:45 tfmorris Exp $
+// $Id: ModelElementNameNotationUml.java,v 1.7 2005/12/20 18:20:19 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.GeneratorDisplay;
-import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.notation.ModelElementNameNotation;
 import org.argouml.util.MyTokenizer;
 
@@ -240,22 +239,7 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
             Model.getCoreHelper().setName(me, name);
         }
 
-        if (stereotype != null) {
-            stereotype = stereotype.trim();
-
-            // TODO: MULTIPLESTEREOTYPES
-            // handle mulitple comma-separated stereotypes in guillemots
-            
-            //TODO: Make this here inline. Replace ParserDisplay!
-            Object stereo =
-                ParserDisplay.SINGLETON.getStereotype(me, stereotype);
-
-            if (stereo != null) {
-                Model.getCoreHelper().addStereotype(me, stereo);
-            } else if ("".equals(stereotype)) {
-                Model.getCoreHelper().clearStereotypes(me);
-            }
-        }
+        NotationUtilityUml.dealWithStereotypes(me, stereotype);
 
         if (path != null) {
             Object nspe =
