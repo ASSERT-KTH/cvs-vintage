@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.32 2005/11/13 11:01:11 linus Exp $
+// $Id: WizOperName.java,v 1.33 2005/12/20 07:54:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,9 +79,9 @@ public class WizOperName extends WizMEName {
 
     private WizStepCue step2;
 
-    private Object oldStereotype;
+    private Object createStereotype;
 
-    private boolean oldStereotypeIsSet;
+    private boolean addedCreateStereotype;
 
     /**
      * @see org.argouml.cognitive.ui.Wizard#getNumSteps()
@@ -165,8 +165,8 @@ public class WizOperName extends WizMEName {
         if (origStep == 1) {
             Object oper = getModelElement();
 
-            if (oldStereotypeIsSet) {
-                Model.getCoreHelper().setStereotype(oper, oldStereotype);
+            if (addedCreateStereotype) {
+                Model.getCoreHelper().removeStereotype(oper, createStereotype);
             }
         }
     }
@@ -201,13 +201,6 @@ public class WizOperName extends WizMEName {
                 stereotypePathChosen = true;
                 Object oper = getModelElement();
 
-                if (!oldStereotypeIsSet) {
-                    // TODO: MULTIPLESTEREOTYPES
-                    oldStereotype =
-                        CollectionUtil.getFirstItemOrNull(
-                            Model.getFacade().getStereotypes(oper));
-                    oldStereotypeIsSet = true;
-                }
 
                 // We need to find the stereotype with the name
                 // "create" and the base class BehavioralFeature in
@@ -249,7 +242,9 @@ public class WizOperName extends WizMEName {
                 }
 
                 try {
-                    Model.getCoreHelper().setStereotype(oper, theStereotype);
+                    createStereotype = theStereotype;
+                    Model.getCoreHelper().addStereotype(oper, theStereotype);
+                    addedCreateStereotype = true;
                 } catch (Exception pve) {
                     LOG.error("could not set stereotype", pve);
                 }

@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationUml.java,v 1.5 2005/11/13 11:01:22 linus Exp $
+// $Id: ModelElementNameNotationUml.java,v 1.6 2005/12/20 07:54:45 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,9 +122,12 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
         return s;
     }
 
+    /**
+     * @return a string representing the visibility
+     */
     protected String generateVisibility() {
         String s = "";
-        Boolean b = ((Boolean)this.getValue("visibilityVisible"));
+        Boolean b = ((Boolean) this.getValue("visibilityVisible"));
         if (b != null && b.booleanValue()) {
             Object v = Model.getFacade().getVisibility(myModelElement);
             if (v == null) {
@@ -164,7 +167,7 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
                 if ("<<".equals(token) || "«".equals(token)) {
                     if (stereotype != null) {
                         throw new ParseException("Element cannot have "
-                                + "two stereotypes", st.getTokenIndex());
+                                + "two groups of stereotypes", st.getTokenIndex());
                     }
 
                     stereotype = "";
@@ -240,14 +243,17 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
         if (stereotype != null) {
             stereotype = stereotype.trim();
 
+            // TODO: MULTIPLESTEREOTYPES
+            // handle mulitple comma-separated stereotypes in guillemots
+            
             //TODO: Make this here inline. Replace ParserDisplay!
             Object stereo =
                 ParserDisplay.SINGLETON.getStereotype(me, stereotype);
 
             if (stereo != null) {
-                Model.getCoreHelper().setStereotype(me, stereo);
+                Model.getCoreHelper().addStereotype(me, stereo);
             } else if ("".equals(stereotype)) {
-                Model.getCoreHelper().setStereotype(me, null);
+                Model.getCoreHelper().clearStereotypes(me);
             }
         }
 

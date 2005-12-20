@@ -1,4 +1,4 @@
-// $Id: ModelerImpl.java,v 1.3 2005/09/04 01:05:16 euluis Exp $
+// $Id: ModelerImpl.java,v 1.4 2005/12/20 07:54:45 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -880,7 +880,7 @@ public class ModelerImpl implements Modeler {
             // outside of the class definition!
             assert Model.getFacade().isAClass(contextStack.peek());
             xtor = buildOperation(contextStack.peek(), getVoid());
-            Model.getExtensionMechanismsHelper().setStereoType(xtor,
+            Model.getExtensionMechanismsHelper().addCopyStereotype(xtor,
                 getStereotype(xtor, stereotypeName));
             contextStack.push(xtor);
         }

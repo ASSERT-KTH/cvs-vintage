@@ -1,4 +1,4 @@
-// $Id: ActionAddStereotype.java,v 1.6 2005/11/13 11:01:09 linus Exp $
+// $Id: ActionAddStereotype.java,v 1.7 2005/12/20 07:54:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.SwingUtilities;
-
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.notation.NotationHelper;
@@ -38,38 +36,39 @@ import org.argouml.uml.ui.UMLAction;
  * @author Bob Tarling
  */
 class ActionAddStereotype extends UMLAction {
-
+    
     /**
      * Logger.
      */
     private static final Logger LOG =
         Logger.getLogger(ActionAddStereotype.class);
-
+    
     private Object modelElement;
     private Object stereotype;
-
+    
     public ActionAddStereotype(Object modelElement, Object stereotype) {
-        super(NotationHelper.getLeftGuillemot() +
-                Model.getFacade().getName(stereotype) +
-                NotationHelper.getRightGuillemot(), NO_ICON);
+        super(NotationHelper.getLeftGuillemot()
+                + Model.getFacade().getName(stereotype)
+                + NotationHelper.getRightGuillemot(), NO_ICON);
         this.modelElement = modelElement;
         this.stereotype = stereotype;
     }
-
+    
     public void actionPerformed(ActionEvent ae) {
         if (Model.getFacade().getStereotypes(modelElement).contains(stereotype)) {
             Model.getCoreHelper().removeStereotype(modelElement, stereotype);
         } else {
             Object stereo = Model.getModelManagementHelper().
-                getCorrespondingElement(stereotype,
+                getCorrespondingElement(stereotype, 
                         Model.getFacade().getModel(modelElement), true);
             Model.getCoreHelper().addStereotype(modelElement, stereo);
         }
     }
-
+    
     public Object getValue(String key) {
         if ("SELECTED".equals(key)) {
-            if (Model.getFacade().getStereotypes(modelElement).contains(stereotype))
+            if (Model.getFacade().getStereotypes(modelElement).contains(
+                    stereotype))
                 return Boolean.TRUE;
             else
                 return Boolean.FALSE;

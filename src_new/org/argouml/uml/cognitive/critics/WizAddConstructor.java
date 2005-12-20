@@ -1,4 +1,4 @@
-// $Id: WizAddConstructor.java,v 1.20 2005/11/13 11:01:11 linus Exp $
+// $Id: WizAddConstructor.java,v 1.21 2005/12/20 07:54:44 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,7 @@ public class WizAddConstructor extends UMLWizard {
 	        Model.getCoreFactory().buildOperation(me, model,
 	                voidType, newName, propertyChangeListeners);
 	    Model.getCoreHelper()
-	        .setStereotype(oper, getCreateStereotype(oper));
+	        .addStereotype(oper, getCreateStereotype(oper));
 	    TargetManager.getInstance().setTargets(savedTargets);
 	}
     }

@@ -1,4 +1,4 @@
-// $Id: AbstractCoreHelperDecorator.java,v 1.5 2005/10/16 08:36:57 rastaman Exp $
+// $Id: AbstractCoreHelperDecorator.java,v 1.6 2005/12/20 07:54:43 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,6 +55,14 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
      */
     protected CoreHelper getComponent() {
         return impl;
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#clearStereotypes(
+     *         java.lang.Object, java.lang.Object)
+     */
+    public void clearStereotypes(Object modelElement) {
+        impl.clearStereotypes(modelElement);
     }
 
     /**
@@ -653,6 +661,13 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
     }
 
     /**
+     * @see org.argouml.model.CoreHelper#addAllStereotypes(java.lang.Object, java.util.Collection)
+     */
+    public void addAllStereotypes(Object modelElement, Collection stereotypes) {
+        impl.addStereotype(modelElement, stereotypes);
+    }
+
+    /**
      * @see org.argouml.model.CoreHelper#addStereotype(
      *         java.lang.Object, java.lang.Object)
      */
@@ -874,14 +889,6 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
      */
     public void setSpecifications(Object handle, Collection specifications) {
         impl.setSpecifications(handle, specifications);
-    }
-
-    /**
-     * @see org.argouml.model.CoreHelper#setStereotype(
-     *         java.lang.Object, java.lang.Object)
-     */
-    public void setStereotype(Object handle, Object stereo) {
-        impl.setStereotype(handle, stereo);
     }
 
     /**

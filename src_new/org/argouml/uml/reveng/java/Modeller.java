@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.128 2005/11/18 04:18:23 tfmorris Exp $
+// $Id: Modeller.java,v 1.129 2005/12/20 07:54:45 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -471,7 +471,7 @@ public class Modeller {
 		    Model.getCoreHelper().setNamespace(
 		            mAbstraction,
 		            currentPackage);
-		    Model.getCoreHelper().setStereotype(
+		    Model.getCoreHelper().addStereotype(
 		            mAbstraction,
 		            getStereotype("realize"));
 		} catch (ClassifierNotFoundException e) {
@@ -795,7 +795,7 @@ public class Modeller {
                 && name.equals(Model.getFacade().getName(parseState
                         .getClassifier())))) {
 	    // Constructor
-	    Model.getCoreHelper().setStereotype(mOperation,
+	    Model.getCoreHelper().addStereotype(mOperation,
                 getStereotype(mOperation, "create", "BehavioralFeature"));
 	} else {
 	    try {
@@ -1732,6 +1732,9 @@ public class Modeller {
                 modelElement, "documentation"), sJavaDocs);
 	    // If there is a tagged value named stereotype, make it a real
 	    // stereotype
+            // TODO: MULTIPLESTEREOTYPES - should we allow multiple instances
+            // of this tagged value?  Or parse a single instance for multiple
+            // stereotypes? - tfm
             Object tv =
                 Model.getFacade().getTaggedValue(modelElement, "stereotype");
             String stereo = null;
@@ -1739,7 +1742,7 @@ public class Modeller {
                 stereo = Model.getFacade().getValueOfTag(tv);
             }
 	    if (stereo != null && stereo.length() > 0) {
-		Model.getCoreHelper().setStereotype(
+		Model.getCoreHelper().addStereotype(
 		        modelElement,
 		        getStereotype(stereo));
 	    }

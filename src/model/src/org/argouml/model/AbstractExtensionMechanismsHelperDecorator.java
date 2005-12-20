@@ -1,4 +1,4 @@
-// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.3 2005/08/14 05:08:05 linus Exp $
+// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.4 2005/12/20 07:54:43 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,12 +119,12 @@ public abstract class AbstractExtensionMechanismsHelperDecorator
     }
 
     /**
-     * @see org.argouml.model.ExtensionMechanismsHelper#setStereoType(
+     * @see org.argouml.model.ExtensionMechanismsHelper#addCopyStereotype(
      *         java.lang.Object,
      *         java.lang.Object)
      */
-    public void setStereoType(Object modelElement, Object stereotype) {
-        impl.setStereoType(modelElement, stereotype);
+    public void addCopyStereotype(Object modelElement, Object stereotype) {
+        impl.addCopyStereotype(modelElement, stereotype);
     }
 
     /**

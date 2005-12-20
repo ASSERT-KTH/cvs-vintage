@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.103 2005/11/13 11:01:18 linus Exp $
+// $Id: PropPanelModelElement.java,v 1.104 2005/12/20 07:54:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,8 +59,6 @@ public abstract class PropPanelModelElement extends PropPanel {
     private JScrollPane namespaceScroll;
 
     private JComponent namespaceSelector;
-
-    private JComponent stereotypeSelector;
 
     private JScrollPane supplierDependencyScroll;
 

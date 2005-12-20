@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.14 2005/08/13 07:30:09 mvw Exp $
+// $Id: TestModelFacade2.java,v 1.15 2005/12/20 07:54:43 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,15 +125,11 @@ public class TestModelFacade2 extends TestCase {
                     "TestStereotype",
                     Model.getFacade().getNamespace(cls));
         
-        Model.getCoreHelper().setStereotype(cls, stereotype);
+        Model.getCoreHelper().addStereotype(cls, stereotype);
         
         Collection coll2 = Model.getFacade().getStereotypes(cls);
         
         assertEquals(1, coll2.size());
         assertTrue(coll2.contains(stereotype));
-        assertEquals(
-            stereotype,
-            CollectionUtil.getFirstItemOrNull(
-                    Model.getFacade().getStereotypes(cls)));
     }
 }

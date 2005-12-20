@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.3 2005/11/12 23:53:37 linus Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.4 2005/12/20 07:54:43 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,7 +119,7 @@ public interface ExtensionMechanismsHelper {
      * @param modelElement is the model element
      * @param stereotype is the stereotype
      */
-    void setStereoType(Object modelElement, Object stereotype);
+    void addCopyStereotype(Object modelElement, Object stereotype);
 
     /**
      * Tests if a stereotype is a stereotype with some name and base class.
