@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.33 2005/12/14 22:18:56 mvw Exp $
+// $Id: PerspectiveManager.java,v 1.34 2005/12/20 20:46:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -355,6 +355,7 @@ public final class PerspectiveManager {
         packagePerspective.addRule(new GoStimulusToAction());
         packagePerspective.addRule(new GoClassifierToCollaboration());
         packagePerspective.addRule(new GoOperationToCollaboration());
+        packagePerspective.addRule(new GoModelElementToComment());
         /*
          * Removed the next one due to issue 2165.
          * packagePerspective.addRule(new GoOperationToCollaborationDiagram());
