@@ -1,4 +1,4 @@
-// $Id: GoModelToDiagrams.java,v 1.14 2005/01/30 20:47:47 linus Exp $
+// $Id: GoModelToDiagrams.java,v 1.15 2005/12/20 21:17:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
@@ -60,7 +61,11 @@ public class GoModelToDiagrams extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-	// TODO: What?
+        if (Model.getFacade().isAModel(parent)) {
+            Set set = new HashSet();
+            set.add(parent);
+            return set;
+        }
 	return null;
     }
 }
