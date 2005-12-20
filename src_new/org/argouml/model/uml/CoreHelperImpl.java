@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.31 2005/11/13 11:01:17 linus Exp $
+// $Id: CoreHelperImpl.java,v 1.32 2005/12/20 18:18:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3478,5 +3478,21 @@ class CoreHelperImpl implements CoreHelper {
      */
     public void setEnumerationLiterals(Object enumeration, List literals) {
         // ILB
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#addAllStereotypes(java.lang.Object, java.util.Collection)
+     */
+    public void addAllStereotypes(Object modelElement, Collection stereos) {
+        // TODO: Auto-generated method stub
+        
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#clearStereotypes(java.lang.Object)
+     */
+    public void clearStereotypes(Object handle) {
+        // TODO: Auto-generated method stub
+        
     }
 }
