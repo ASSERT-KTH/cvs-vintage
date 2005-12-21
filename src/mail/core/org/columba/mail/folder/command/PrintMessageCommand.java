@@ -106,7 +106,7 @@ public class PrintMessageCommand extends Command {
         columbaParagraph.setFontStyle(Font.BOLD);
 
         cParagraph link = new cParagraph();
-        link.setText(" - http://sourceforge.columba.net");
+        link.setText(" - http://www.columbamail.org");
         link.setTextAlignment(cParagraph.LEFT);
         link.setLeftMargin(columbaParagraph.getSize(new cCmUnit(100)).getWidth());
         link.setColor(Color.lightGray);
