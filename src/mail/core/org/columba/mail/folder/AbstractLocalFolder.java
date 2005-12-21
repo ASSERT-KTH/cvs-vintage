@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -81,7 +82,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	/**
 	 * the next messag which gets added to this folder receives this unique ID
 	 */
-	protected int nextMessageUid;
+	protected int nextMessageUid = -1;
 
 	/**
 	 * we keep one message in cache in order to not needing to parse it twice
@@ -195,6 +196,15 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 * @return <class>Integer </class> containing UID
 	 */
 	protected Object generateNextMessageUid() {
+		if( nextMessageUid == -1) {
+			Integer maxUid = (Integer) Collections.max(Arrays.asList(headerList.getUids()));
+			if( maxUid != null) {
+				nextMessageUid = maxUid.intValue() + 1;
+			} else {
+				nextMessageUid = 0;
+			}
+		}
+		
 		return new Integer(nextMessageUid++);
 	}
 
