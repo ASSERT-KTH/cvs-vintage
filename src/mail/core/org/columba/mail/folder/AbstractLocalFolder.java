@@ -197,8 +197,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 */
 	protected Object generateNextMessageUid() {
 		if( nextMessageUid == -1) {
-			Integer maxUid = (Integer) Collections.max(Arrays.asList(headerList.getUids()));
-			if( maxUid != null) {
+			if( headerList.count() > 0) {			
+				Integer maxUid = (Integer) Collections.max(Arrays.asList(headerList.getUids()));
 				nextMessageUid = maxUid.intValue() + 1;
 			} else {
 				nextMessageUid = 0;
