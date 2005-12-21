@@ -102,7 +102,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.99 2005/01/21 01:38:24 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.100 2005/12/21 07:44:17 ezust Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -273,6 +273,8 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			}
 
 			entry.container.show(entry);
+			Object reason = DockableWindowUpdate.ACTIVATED;
+			EditBus.send(new DockableWindowUpdate(this, reason, name));
 		}
 		else
 			/* an error occurred */;
