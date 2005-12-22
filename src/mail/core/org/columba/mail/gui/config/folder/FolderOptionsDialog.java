@@ -115,9 +115,11 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	private JLabel sizeLabel2;
 
 	private JButton exportButton;
-
+	
 	private MultiLineLabel enableLabel;
 
+	private JLabel enableTextIndexingLabel;
+	
 	private JCheckBox enableTextIndexingCheckBox;
 
 	private boolean renameFolder;
@@ -200,7 +202,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				"6dlu, right:max(25dlu;default), 3dlu, fill:default:grow, fill:0dlu:grow", //$NON-NLS-1$
 
 				// 3 columns
-				"pref, 3dlu, pref, 6dlu, pref, 3dlu, pref, 3dlu, pref, 6dlu, pref, 24dlu, pref, 3dlu, pref, 6dlu, default, 0dlu"); //$NON-NLS-1$
+				"pref, 3dlu, pref, 6dlu, pref, 3dlu, pref, 3dlu, pref, 3dlu, pref, 6dlu, pref, 24dlu, pref, 3dlu, pref, 6dlu, default, 0dlu"); //$NON-NLS-1$
 
 		// create a form builder
 		PanelBuilder builder = new PanelBuilder(layout);
@@ -228,20 +230,26 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		builder.add(sizeLabel, cc.xy(2, 11));
 		builder.add(sizeLabel2, cc.xy(4, 11));
 
+		//@author tstich: Added Lucene gui element here
+		builder.add(enableTextIndexingLabel, cc.xy(2,13));		
+		builder.add(enableTextIndexingCheckBox, cc.xy(4,13));		
+
 		builder.appendGlueRow();
 
 		builder.addSeparator(MailResourceLoader.getString("dialog",
-				"folderoptions", "archiving_messages"), cc.xywh(1, 13, 5, 1)); //$NON-NLS-1$
+				"folderoptions", "archiving_messages"), cc.xywh(1, 15, 5, 1)); //$NON-NLS-1$
 
-		builder.add(locationLabel, cc.xy(2, 15));
-		builder.add(locationLabel2, cc.xy(4, 15));
+		builder.add(locationLabel, cc.xy(2, 17));
+		builder.add(locationLabel2, cc.xy(4, 17));
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 
 		panel.add(exportButton, BorderLayout.EAST);
-		builder.add(panel, cc.xywh(4, 17, 2, 1));
+		builder.add(panel, cc.xywh(4, 19, 2, 1));
 
+		
+		
 		return builder.getPanel();
 	}
 
@@ -336,10 +344,13 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		exportButton.setActionCommand("EXPORT"); //$NON-NLS-1$
 		exportButton.addActionListener(this);
 
-		enableTextIndexingCheckBox = new JCheckBox(MailResourceLoader
+		enableTextIndexingLabel = new JLabel(MailResourceLoader
 				.getString(
 						"dialog", "folderoptions", "enable_full-text_indexing")); //$NON-NLS-1$
+		enableTextIndexingLabel.setFont(boldFont);
 
+		enableTextIndexingCheckBox = new JCheckBox(); //$NON-NLS-1$
+		
 		enableLabel = new MultiLineLabel(MailResourceLoader.getString(
 				"dialog", "folderoptions", "this_is_an_experimental_feature")); //$NON-NLS-1$
 		enableLabel.setFont(boldFont);
@@ -473,6 +484,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 				enableTextIndexingCheckBox.setSelected(bool);
 			} else {
+				enableTextIndexingLabel.setEnabled(false);
 				enableTextIndexingCheckBox.setEnabled(false);
 			}
 		} else {
