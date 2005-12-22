@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.32 2005/12/20 18:18:36 mvw Exp $
+// $Id: CoreHelperImpl.java,v 1.33 2005/12/22 18:58:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1133,6 +1133,14 @@ class CoreHelperImpl implements CoreHelper {
             list.addAll(getAllAttributes(it.next()));
         }
         return list;
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#getAllVisibleElements(java.lang.Object)
+     */
+    public Collection getAllVisibleElements(Object ns) {
+        // TODO: Auto-generated method stub
+        return null;
     }
 
     /**

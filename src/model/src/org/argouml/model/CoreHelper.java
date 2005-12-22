@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.15 2005/12/20 07:54:43 tfmorris Exp $
+// $Id: CoreHelper.java,v 1.16 2005/12/22 18:58:17 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -396,6 +396,16 @@ public interface CoreHelper {
      * @return Collection
      */
     Collection getAllAttributes(Object clazz);
+    
+    /**
+     * Returns a Set containing all ModelElements visible 
+     * outside of the Namespace. 
+     * This is an "Additional Operation" from the UML spec.
+     * 
+     * @param ns the given namespace
+     * @return the collection with modelelements
+     */
+    Collection getAllVisibleElements(Object ns);
 
     /**
      * Returns the source of a relation. The source of a relation is
