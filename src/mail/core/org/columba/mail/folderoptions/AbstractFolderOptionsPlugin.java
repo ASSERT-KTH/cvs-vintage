@@ -144,6 +144,8 @@ public abstract class AbstractFolderOptionsPlugin implements IExtensionInterface
 			XmlElement result = FolderItem.getGlobalOptions().getElement(getName());
 			if( result == null ) {
 				return createDefaultElement(true);
+			} else {
+				return result;
 			}
 		}
 
