@@ -92,7 +92,10 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		for (int i = 0; i < uids.length; i++) {
 			MessageNode node = (MessageNode) map.get(uids[i]);
 
-			node.setUserObject(getHeaderList().get(uids[i]));
+			IColumbaHeader header = getHeaderList().get(uids[i]);
+			if( header == null) continue;
+			
+			node.setUserObject(header);
 			
 			if (node != null) {
 				// update treemodel

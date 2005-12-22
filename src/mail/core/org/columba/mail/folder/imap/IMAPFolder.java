@@ -132,19 +132,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		item.setString("property", "accessrights", "user");
 		item.setString("property", "subfolder", "true");
 
-		//headerList = new PersistantHeaderList(new RemoteHeaderCache(this));
 		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(), "headerlist"));
-		final AbstractMessageFolder folder = this;		
-		headerList.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
-
-			public void headerListCorrupted(IHeaderList headerList) {
-				try {
-					SyncHeaderList.sync(folder, headerList);
-				} catch (IOException e) {
-					LOG.severe(e.getMessage());
-				}
-			}});
-
 	}
 
 	/**

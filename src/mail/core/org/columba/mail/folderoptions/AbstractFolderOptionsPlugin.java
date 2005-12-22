@@ -141,7 +141,10 @@ public abstract class AbstractFolderOptionsPlugin implements IExtensionInterface
 	public XmlElement getConfigNode(IMailbox folder) {
 		// global option
 		if (folder == null) {
-			return FolderItem.getGlobalOptions().getElement(getName());
+			XmlElement result = FolderItem.getGlobalOptions().getElement(getName());
+			if( result == null ) {
+				return createDefaultElement(true);
+			}
 		}
 
 		// use folder specific options

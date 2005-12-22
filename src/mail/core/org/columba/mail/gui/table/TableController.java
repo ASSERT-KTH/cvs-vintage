@@ -500,9 +500,13 @@ public class TableController implements ListSelectionListener,
 	 * @see org.columba.mail.gui.table.ITableController#selectLastRow()
 	 */
 	public Object selectLastRow() {
-		Object result = getView().selectLastRow();
+		if( getView().getColumnCount() > 0) {		
+			Object result = getView().selectLastRow();
+			return result;
+		} else {
+			return null;
+		}
 
-		return result;
 	}
 
 	/**
