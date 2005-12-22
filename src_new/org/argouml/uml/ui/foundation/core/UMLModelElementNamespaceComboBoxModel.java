@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.40 2005/12/22 11:55:04 mvw Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.41 2005/12/22 18:43:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,6 +108,10 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
                 && evt.getNewValue() != null) {
 //            setTarget(t); // this fixes issue 3780, but causes issue 3832.
             buildModelList();
+            /* In some cases (se issue 3780) the list remains the same, but
+             * the selected item differs. Without the next step, 
+             * the combo would not be refreshed.*/
+            setSelectedItem(getSelectedModelElement());
         }
     }
 }
