@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.255 2005/12/16 07:26:16 ezust Exp $
+ * @version $Id: jEdit.java,v 1.256 2005/12/26 23:53:29 ezust Exp $
  */
 public class jEdit
 {
@@ -1684,6 +1684,7 @@ public class jEdit
 		{
 			path = path.toLowerCase();
 		}
+		EditBus.send(new BufferUpdate(buffer,view,BufferUpdate.CLOSING));
 		bufferHash.remove(path);
 		removeBufferFromList(buffer);
 		buffer.close();
