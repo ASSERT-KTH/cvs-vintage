@@ -102,7 +102,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.100 2005/12/21 07:44:17 ezust Exp $
+ * @version $Id: DockableWindowManager.java,v 1.101 2005/12/27 00:27:53 ezust Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -300,6 +300,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 	 */
 	public void hideDockableWindow(String name)
 	{
+		
 		Entry entry = (Entry)windows.get(name);
 		if(entry == null)
 		{
@@ -307,8 +308,12 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			return;
 		}
 
+
+		
 		if(entry.win == null)
 			return;
+		Object reason = DockableWindowUpdate.DEACTIVATED;
+		EditBus.send(new DockableWindowUpdate(this, reason, name));
 
 		entry.container.show(null);
 	} //}}}
