@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a buffer-related change occurs.
  * @author Slava Pestov
- * @version $Id: BufferUpdate.java,v 1.10 2005/12/26 23:53:29 ezust Exp $
+ * @version $Id: BufferUpdate.java,v 1.11 2005/12/27 19:24:10 ezust Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -40,7 +40,8 @@ public class BufferUpdate extends EBMessage
 	public static final Object CREATED = "CREATED";
 	
 	/**
-	 * About to be closed 
+	 * About to be closed
+	 * @since jEdit 4.2pre3 
 	 */
 	public static final Object CLOSING = "CLOSING";
 	/**
