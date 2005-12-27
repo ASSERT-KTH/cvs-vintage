@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.88 2005/03/09 23:46:07 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.89 2005/12/27 00:07:10 ezust Exp $
  */
 public class GUIUtilities
 {
@@ -910,7 +910,7 @@ public class GUIUtilities
 			{
 				String styleName = "view.style."
 					+ Token.tokenToString((byte)i)
-					.toLowerCase();
+					.toLowerCase(Locale.ENGLISH);
 				styles[i] = GUIUtilities.parseStyle(
 					jEdit.getProperty(styleName),
 					family,size,color);
