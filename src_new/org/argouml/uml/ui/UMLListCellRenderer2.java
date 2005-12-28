@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.32 2005/12/28 13:43:16 mvw Exp $
+// $Id: UMLListCellRenderer2.java,v 1.33 2005/12/28 13:54:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.32 2005/12/28 13:43:16 mvw Exp $
+// $Id: UMLListCellRenderer2.java,v 1.33 2005/12/28 13:54:37 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -158,14 +158,14 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             }
             if (Model.getFacade().isAStereotype(value)) {
                 Object b = Model.getFacade().getBaseClass(value);
-                name = name + " <i>[" + makeText(b) + "]</i>";
+                name = name + " [" + makeText(b) + "]";
             }
         } else if (Model.getFacade().isAMultiplicity(value)) {
             name = Model.getFacade().getName(value);
         } else {
             name = makeTypeName(value);
         }
-        return "<html>" + name + "</html>";
+        return name;
 
     }
 
