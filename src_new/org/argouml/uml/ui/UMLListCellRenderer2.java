@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.31 2005/10/31 01:51:03 tfmorris Exp $
+// $Id: UMLListCellRenderer2.java,v 1.32 2005/12/28 13:43:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.31 2005/10/31 01:51:03 tfmorris Exp $
+// $Id: UMLListCellRenderer2.java,v 1.32 2005/12/28 13:43:16 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -32,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.UIManager;
 
-import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
 
@@ -47,8 +46,8 @@ import org.argouml.model.Model;
  */
 public class UMLListCellRenderer2 extends DefaultListCellRenderer {
 
-    private static final Logger LOG =
-        Logger.getLogger(UMLListCellRenderer2.class);
+//    private static final Logger LOG =
+//        Logger.getLogger(UMLListCellRenderer2.class);
 
     /**
      * True if the icon for the modelelement should be shown. The icon is, for
@@ -157,12 +156,16 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             if (name == null || name.equals("")) {
                 name = "(anon " + makeTypeName(elem) + ")";
             }
+            if (Model.getFacade().isAStereotype(value)) {
+                Object b = Model.getFacade().getBaseClass(value);
+                name = name + " <i>[" + makeText(b) + "]</i>";
+            }
         } else if (Model.getFacade().isAMultiplicity(value)) {
             name = Model.getFacade().getName(value);
         } else {
             name = makeTypeName(value);
         }
-        return name;
+        return "<html>" + name + "</html>";
 
     }
 
