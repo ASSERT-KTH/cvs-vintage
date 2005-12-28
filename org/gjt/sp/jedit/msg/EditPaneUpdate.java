@@ -24,7 +24,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when an edit pane-related change occurs.
  * @author Slava Pestov
- * @version $Id: EditPaneUpdate.java,v 1.4 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: EditPaneUpdate.java,v 1.5 2005/12/28 15:55:37 ezust Exp $
  *
  * @since jEdit 2.5pre1
  */
@@ -45,6 +45,13 @@ public class EditPaneUpdate extends EBMessage
 	 */
 	public static final Object BUFFER_CHANGED = "BUFFER_CHANGED";
 
+	/**
+	 * Edit pane buffer about to change
+	 * @since 4.3pre3
+	 */
+	public static final Object BUFFER_CHANGING = "BUFFER_CHANGING";
+
+	
 	/**
 	 * Creates a new edit pane update message.
 	 * @param editPane The edit pane
