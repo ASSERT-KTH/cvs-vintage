@@ -1,4 +1,4 @@
-// $Id: FigConcurrentRegion.java,v 1.11 2005/11/17 21:12:19 mvw Exp $
+// $Id: FigConcurrentRegion.java,v 1.12 2005/12/28 09:30:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -412,6 +412,7 @@ public class FigConcurrentRegion extends FigState
      */
     public void setFilled(boolean f) {
         cover.setFilled(f);
+        getBigPort().setFilled(f);
     }
 
     /**
