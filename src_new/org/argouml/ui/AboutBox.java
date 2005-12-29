@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.49 2005/12/03 15:12:01 linus Exp $
+// $Id: AboutBox.java,v 1.50 2005/12/29 18:24:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,7 +232,7 @@ public class AboutBox extends JDialog {
         buf.append("+ Localization German: Harald Braun\n");
         buf.append("+ Localization Spanish: Stewart Munoz\n");
         buf.append("+ Localization British English: Alex Bagehot\n");
-        buf.append("+ Localization Norwegian (bokmål): Hans Fredrik Nordhaug\n");
+        buf.append("+ Localization Norwegian (bokm\u00E5l): Hans Fredrik Nordhaug\n");
         buf.append("+ Localization Chinese: Jeff Liu\n\n");
 
         buf.append(Translator.messageFormat(
