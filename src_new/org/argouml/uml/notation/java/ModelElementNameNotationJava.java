@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationJava.java,v 1.4 2005/11/13 11:01:20 linus Exp $
+// $Id: ModelElementNameNotationJava.java,v 1.5 2005/12/30 13:48:31 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,9 +78,7 @@ public class ModelElementNameNotationJava extends ModelElementNameNotation {
      */
     protected String generatePath() {
         String s = "";
-        Object o = this.getValue("pathVisible");
-        boolean b = (o == null) ? false : ((Boolean) o).booleanValue();
-        if (b) {
+        if (isValue("pathVisible")) {
             Object p = myModelElement;
             Stack stack = new Stack();
             Object ns = Model.getFacade().getNamespace(p);
@@ -104,8 +102,7 @@ public class ModelElementNameNotationJava extends ModelElementNameNotation {
      */
     protected String generateVisibility() {
         String s = "";
-        Boolean b = ((Boolean)this.getValue("visibilityVisible"));
-        if (b != null && b.booleanValue()) {
+        if (isValue("visibilityVisible")) {
             Object v = Model.getFacade().getVisibility(myModelElement);
             if (v == null) {
                 /* Initially, the visibility is not set in the model.

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.221 2005/11/20 01:15:09 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.222 2005/12/30 13:48:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -944,13 +944,16 @@ public abstract class FigNodeModelElement
      *
      * It is also possible to alter the text to be edited
      * already here, e.g. by adding the stereotype in front of the name,
-     * but that seems not user-friendly.
+     * by calling 
+     * <code>notationProviderName.putValue("fullyHandleStereotypes", 
+     * true);</code>, but that seems not user-friendly. See issue 3838.
      *
      * @param ft the FigText that will be edited and contains the start-text
      */
     protected void textEditStarted(FigText ft) {
         if (ft == getNameFig()) {
             showHelp(notationProviderName.getParsingHelp());
+            ft.setText(notationProviderName.toString());
         }
     }
 

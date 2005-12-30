@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.184 2005/12/20 18:20:20 mvw Exp $
+// $Id: ParserDisplay.java,v 1.185 2005/12/30 13:48:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -898,7 +898,7 @@ public final class ParserDisplay {
             setProperties(op, properties, operationSpecialStrings);
         }
 
-        NotationUtilityUml.dealWithStereotypes(op, stereotype);
+        NotationUtilityUml.dealWithStereotypes(op, stereotype, true);
     }
 
     /**
@@ -1415,7 +1415,7 @@ public final class ParserDisplay {
             setProperties(attribute, properties, attributeSpecialStrings);
         }
 
-        NotationUtilityUml.dealWithStereotypes(attribute, stereotype);
+        NotationUtilityUml.dealWithStereotypes(attribute, stereotype, true);
     }
 
     /**

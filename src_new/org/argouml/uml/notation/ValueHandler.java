@@ -1,4 +1,4 @@
-// $Id: ValueHandler.java,v 1.3 2005/11/13 11:01:11 linus Exp $
+// $Id: ValueHandler.java,v 1.4 2005/12/30 13:48:30 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,5 +69,21 @@ public abstract class ValueHandler implements NotationProvider4{
         return keyTable.get(key);
     }
 
+    /**
+     * @see org.argouml.notation.NotationProvider4#putValue(java.lang.String, boolean)
+     */
+    public void putValue(String key, boolean newValue) {
+        Boolean b = new Boolean(newValue);
+        putValue(key, b);
+    }
+
+    /**
+     * @see org.argouml.notation.NotationProvider4#isValue(java.lang.String)
+     */
+    public boolean isValue(String key) {
+        Object o = this.getValue(key);
+        if (!(o instanceof Boolean)) return false;
+        return ((Boolean) o).booleanValue();
+    }
 
 }
