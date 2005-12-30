@@ -1,4 +1,4 @@
-// $Id: ActionSetMetaClass.java,v 1.7 2005/01/30 20:48:14 linus Exp $
+// $Id: ActionSetMetaClass.java,v 1.8 2005/12/30 16:06:01 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,9 @@ import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
 /**
- *
+ * Action to set the baseclass of a stereotype.
+ * 
  * @author mkl
- *
  */
 public class ActionSetMetaClass extends UMLAction {
 
@@ -61,23 +61,21 @@ public class ActionSetMetaClass extends UMLAction {
         Object stereo = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
-            newBase = combo.getSelectedItem();
-            Object o = combo.getTarget();
-            if (Model.getFacade().isAStereotype(o)) {
-                stereo = /* (String) */o;
-                o = combo.getSelectedItem();
-
-                newBase = /* (MUseCase) */o;
+            stereo = combo.getTarget();
+            if (Model.getFacade().isAStereotype(stereo)) {
                 oldBase = Model.getFacade().getBaseClass(stereo);
-                if (newBase != oldBase) {
-                    Model.getExtensionMechanismsHelper().setBaseClass(
-                            stereo,
-                            newBase);
-                } else {
-                    if (o != null && o.equals("")) {
+                newBase = combo.getSelectedItem();
+                if (newBase != null) { // TODO: How come this happens?
+                    if (newBase != oldBase) {
                         Model.getExtensionMechanismsHelper().setBaseClass(
                                 stereo,
-                                "ModelElement");
+                                newBase);
+                    } else {
+                        if (newBase != null && newBase.equals("")) {
+                            Model.getExtensionMechanismsHelper().setBaseClass(
+                                    stereo,
+                            "ModelElement");
+                        }
                     }
                 }
             }

@@ -1,4 +1,4 @@
-// $Id: UMLMetaClassComboBoxModel.java,v 1.6 2005/01/30 20:48:14 linus Exp $
+// $Id: UMLMetaClassComboBoxModel.java,v 1.7 2005/12/30 16:06:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,20 @@ public class UMLMetaClassComboBoxModel extends UMLComboBoxModel2 {
 
         "Association", "AssociationEnd", "Attribute", "Operation",
         "Generalization", "Flow", "Usage", "BehavioralFeature",
+        "Feature", "Namespace", "GeneralizableElement", 
+        "Parameter", "Constraint", "StructuralFeature", "Method",
+        "Relationship", "AssociationClass", "Dependency",
+        "Binding", "Artifact", "EnumerationLiteral",
+        "Primitive", "Enumeration", "Reception", "Action",
+        "Instance", "Stimulus", "Object", "LinkEnd", "DataValue",
+        "ClassifierRole", "Collaboration", "Interaction", "Message",
+        "UseCase", "ExtensionPoint",
+        "StateMachine", "Guard", "Transition", "StateVertex", "State",
+        "SynchState", "PseudoState", "SubState", "CompositeState",
+        "SimpleState", "FinalState", "SubmachineState",
+        "Event", "SignalEvent", "TimeEvent", "ChangeEvent",
+        "Partition", "ActivityGraph", "SubactivityState", 
+        "ActionState", "CallState", "ClassifierInState",
 
         "CallEvent", "Abstraction", "Component", "Package", "Constraint",
         "Comment", "ObjectFlowState",
