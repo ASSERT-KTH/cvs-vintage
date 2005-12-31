@@ -61,7 +61,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.363 2005/12/31 21:34:21 ezust Exp $
+ * @version $Id: JEditTextArea.java,v 1.364 2005/12/31 22:03:39 ezust Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -164,11 +164,10 @@ public class JEditTextArea extends JComponent
 		sl.add("magicCaret: " + magicCaret);
 		sl.add("offsetXY" + offsetXY.toString());
 		sl.add("oldCaretLine: " + oldCaretLine);
-		sl.add("physLastLine: " + physLastLine);
 		sl.add("screenLastLine: " + screenLastLine);
 		sl.add("visibleLines: " + visibleLines);
 		sl.add("firstPhysicalLine: " + getFirstPhysicalLine());
-		sl.add("lastPhysicalLine=" + getLastPhysicalLine());
+		sl.add("physLastLine: " + physLastLine);
 		return TextUtilities.join(sl, "\n");
 	}
 	
