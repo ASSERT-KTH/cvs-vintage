@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.51 2005/08/05 22:29:19 kpouer Exp $
+ * @version $Id: TextUtilities.java,v 1.52 2005/12/31 21:34:21 ezust Exp $
  */
 public class TextUtilities
 {
@@ -251,6 +251,20 @@ public class TextUtilities
 		return findWordStart(line, pos, noWordSep, true, false);
 	} //}}}
 
+	public static String join(Collection c, String delim) {
+		StringBuffer retval = new StringBuffer();
+		Iterator itr = c.iterator();
+		if (itr.hasNext()) {
+			retval.append( itr.next().toString() );
+		}
+		else return "";
+		while (itr.hasNext()) {
+			retval.append(delim);
+			retval.append(itr.next().toString());
+		}
+		return retval.toString();
+	}
+	
 	//{{{ findWordStart() method
 	/**
 	 * Locates the start of the word at the specified position.
