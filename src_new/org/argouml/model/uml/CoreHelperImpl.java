@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.33 2005/12/22 18:58:17 mvw Exp $
+// $Id: CoreHelperImpl.java,v 1.34 2006/01/01 19:27:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -535,6 +535,7 @@ class CoreHelperImpl implements CoreHelper {
         while (depIterator.hasNext()) {
             Object dep = depIterator.next();
             Object stereo = CollectionUtil.getFirstItemOrNull(
+                    //TODO: MULTIPLE STEREOTYPES
                     Model.getFacade().getStereotypes(dep));
             if ((dep instanceof MAbstraction)
                 && stereo != null
