@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.199 2005/11/10 23:01:07 tfmorris Exp $
+<!-- $Id: build.xml,v 1.200 2006/01/04 21:03:33 linus Exp $
 This requires ANT 1.6.2
 
 if you get a message like:
@@ -1023,7 +1023,7 @@ cd ../argouml/src_new
     <!--        individual users can set as wanted.                -->
     <!--        That is part of issue 579.                         -->
 
-    <junit errorproperty="junit.failure" fork="yes" haltonfailure="false" maxmemory="48M" printsummary="true">
+    <junit errorproperty="junit.failure" fork="yes" haltonfailure="false" maxmemory="128M" printsummary="true">
 	<sysproperty key="log4j.configuration" value="org/argouml/resource/default.lcf"/>
 	<sysproperty key="argouml.tests.dir" value="${argo.tests.src}"/>
         <classpath>
