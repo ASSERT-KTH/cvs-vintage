@@ -1,4 +1,4 @@
-// $Id: UMLEditableComboBox.java,v 1.9 2005/11/17 00:50:26 bobtarling Exp $
+// $Id: UMLEditableComboBox.java,v 1.10 2006/01/05 20:15:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLEditableComboBox.java,v 1.9 2005/11/17 00:50:26 bobtarling Exp $
+// $Id: UMLEditableComboBox.java,v 1.10 2006/01/05 20:15:09 mvw Exp $
 
 package org.argouml.uml.ui;
 
@@ -174,7 +174,7 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 implements FocusL
             if (((UMLComboBoxModel2) getModel()).contains(anObject)) {
                 editor.setText(((UMLListCellRenderer2) getRenderer())
                         .makeText(anObject));
-                if (theShowIcon)
+                if (theShowIcon && (anObject != null))
                     panel.setIcon(ResourceLoaderWrapper.getInstance()
                             .lookupIcon(anObject));
             } else
