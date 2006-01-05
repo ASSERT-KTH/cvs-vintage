@@ -87,6 +87,9 @@ public class ExtendableMenuBar extends JMenuBar {
 
 		ExtendableMenu menu = (ExtendableMenu) map.get(menuId);
 		menu.insert(action, placeholderId);
+    /*TODO before inserting, find out if there's already a menu item
+     * with the same action command. if so, replace it, otherwise insert new
+     */
 	}
 
 }
