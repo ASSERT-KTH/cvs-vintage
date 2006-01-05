@@ -20,6 +20,7 @@ package org.columba.core.scripting.interpreter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.columba.core.scripting.config.BeanshellConfig;
@@ -105,7 +106,17 @@ public class InterpreterManager
 
     vars.put(ScriptInterpreter.SCRIPT_OBJ, script);
     
-    interpreter.execute(script,vars);
+    try
+    {
+      interpreter.execute(script,vars);
+    }
+    catch(Exception ex)
+    {
+      /* any errors that may occur cannot stop other scripts from running */
+      LOG.log(Level.SEVERE,"Exception caught in script:" + script.getPath() ,ex);
+      ex.printStackTrace();
+      
+    }
     
     LOG.exiting("executeScript",script.getPath());
   }
