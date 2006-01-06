@@ -1,4 +1,4 @@
-// $Id: AbstractCoreHelperDecorator.java,v 1.7 2005/12/22 18:58:17 mvw Exp $
+// $Id: AbstractCoreHelperDecorator.java,v 1.8 2006/01/06 23:53:44 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1141,5 +1141,12 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
      */
     public void setEnumerationLiterals(Object enumeration, List literals) {
         impl.setEnumerationLiterals(enumeration, literals);
+    }
+    
+    /**
+     * @see org.argouml.model.CoreHelper#getAllMetatypeNames()
+     */
+    public Collection getAllMetatypeNames() {
+        return impl.getAllMetatypeNames();
     }
 }
