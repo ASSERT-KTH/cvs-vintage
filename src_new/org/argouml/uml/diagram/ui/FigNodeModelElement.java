@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.222 2005/12/30 13:48:30 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.223 2006/01/07 10:48:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1535,7 +1535,7 @@ public abstract class FigNodeModelElement
 //     * @param fig the stereotype Fig
 //     */
 //    protected void setStereotypeFig(Fig fig) {
-//        stereo = (FigStereotype)fig;
+//        stereo = (FigStereotypeText)fig;
 //    }
 //
     /**

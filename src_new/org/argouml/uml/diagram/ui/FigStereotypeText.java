@@ -1,4 +1,4 @@
-// $Id$
+// $Id: FigStereotypeText.java,v 1.1 2006/01/07 10:48:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.tigris.gef.presentation.FigText;
  *
  * @author Bob Tarling
  */
-public class FigStereotype extends FigGroup {
+public class FigStereotypeText extends FigGroup {
 
     /**
      * Logger.
@@ -61,7 +61,7 @@ public class FigStereotype extends FigGroup {
      * @param expandOnly
      *            true if the fig can only grow, not shrink
      */
-    public FigStereotype(int x, int y, int w, int h, boolean expandOnly) {
+    public FigStereotypeText(int x, int y, int w, int h, boolean expandOnly) {
         super();
         addStereotypeText("stereo", x, y);
     }
