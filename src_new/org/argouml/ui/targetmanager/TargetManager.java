@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.53 2005/11/18 07:43:25 tfmorris Exp $
+// $Id: TargetManager.java,v 1.54 2006/01/07 11:03:38 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -789,6 +789,7 @@ public final class TargetManager {
 	                + listeners[i + 1]
 	                            + " an error is thrown.",
 	                            e);
+                e.printStackTrace();
             }
         }
     }
@@ -810,6 +811,7 @@ public final class TargetManager {
 			  + listeners[i + 1]
 			  + " an error is thrown.",
 			  e);
+                e.printStackTrace();
 	    }
         }
     }
@@ -831,6 +833,7 @@ public final class TargetManager {
 			  + listeners[i + 1]
 			  + " an error is thrown.",
 			  e);
+                e.printStackTrace();
 	    }
         }
     }
