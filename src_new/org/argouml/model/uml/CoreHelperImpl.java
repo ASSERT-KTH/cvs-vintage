@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.35 2006/01/07 00:32:10 tfmorris Exp $
+// $Id: CoreHelperImpl.java,v 1.36 2006/01/07 10:26:57 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3502,5 +3502,10 @@ class CoreHelperImpl implements CoreHelper {
     public void clearStereotypes(Object handle) {
         // TODO: Auto-generated method stub
         
+    }
+
+    public Collection getAllMetatypeNames() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
