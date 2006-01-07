@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.26 2005/12/15 14:22:47 mvw Exp $
+// $Id: Facade.java,v 1.27 2006/01/07 19:02:18 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1782,15 +1782,13 @@ public interface Facade {
     Collection getConstraints(Object handle);
 
     /**
-     * Returns the container for the given modelelement. The container is the
-     * owner of the modelelement. It will be null for elements that don't have
-     * an owner. All elements except for the root element in a project should
-     * have an owner. The root element is allways a model.<p>
-     *
-     * In  the future, this function could return the container of Figs too.
-     *
-     * @param handle is the base
-     * @return Object
+     * Returns the Component that is the container for the given modelelement,
+     * according the ElementResidence relationship in the metamodel. 
+     * The container will be null for modelelements that don't have
+     * an ElementResidence relationship defined between itself and a Component.
+     * 
+     * @param handle is the modelelement
+     * @return Object the Component
      */
     Object getModelElementContainer(Object handle);
 
