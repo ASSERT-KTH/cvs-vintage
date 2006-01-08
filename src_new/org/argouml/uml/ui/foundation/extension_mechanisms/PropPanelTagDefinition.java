@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.6 2005/11/14 03:55:52 tfmorris Exp $
+// $Id: PropPanelTagDefinition.java,v 1.7 2006/01/08 14:32:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,11 +43,11 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelTagDefinition extends PropPanelModelElement {
 
-    private JComponent stereotypeSelector;
+    private JComponent ownerSelector;
 
-    private static UMLTagDefinitionStereotypeComboBoxModel 
-        stereotypeComboBoxModel = 
-            new UMLTagDefinitionStereotypeComboBoxModel();
+    private static UMLTagDefinitionOwnerComboBoxModel 
+        ownerComboBoxModel = 
+            new UMLTagDefinitionOwnerComboBoxModel();
 
 
     /**
@@ -72,8 +72,8 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
+        addField(Translator.localize("label.owner"),
+                getOwnerSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
         addField(Translator.localize("label.multiplicity"),
@@ -93,16 +93,16 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
      *
      * @return the stereotype selecter
      */
-    protected JComponent getStereotypeSelector() {
-        if (stereotypeSelector == null) {
-            stereotypeSelector = new Box(BoxLayout.X_AXIS);
-            stereotypeSelector.add(new UMLComboBoxNavigator(this,
-                    Translator.localize("label.stereotype.navigate.tooltip"),
-                    new UMLComboBox2(stereotypeComboBoxModel,
+    protected JComponent getOwnerSelector() {
+        if (ownerSelector == null) {
+            ownerSelector = new Box(BoxLayout.X_AXIS);
+            ownerSelector.add(new UMLComboBoxNavigator(this,
+                    Translator.localize("label.owner.navigate.tooltip"),
+                    new UMLComboBox2(ownerComboBoxModel,
                             new ActionSetTagDefinitionOwner())
                     ));
         }
-        return stereotypeSelector;
+        return ownerSelector;
     }
 
     /**
