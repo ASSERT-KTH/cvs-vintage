@@ -106,17 +106,6 @@ public class LuceneQueryEngine implements QueryEngine {
 			e.printStackTrace();
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				try {
-					// to be executed on shutdown
-					mergeRAMtoIndex();
-				} catch (IOException ioe) {
-					LOG.severe(ioe.getMessage());
-				}
-			}
-		}, "LuceneIndexMerger"));
-
 		luceneLastModified = -1;
 		ramLastModified = -1;
 
@@ -162,6 +151,7 @@ public class LuceneQueryEngine implements QueryEngine {
 		// Check if index is consitent with mailbox
 		try {
 			if( getFileReader().numDocs() != folder.getHeaderList().count() ) {
+				LOG.warning("Lucene Index includes " + getFileReader().numDocs() + " messages, but mailbox has " + folder.getHeaderList().count());
 				sync();
 			}
 		} catch (Exception e) {
@@ -187,7 +177,12 @@ public class LuceneQueryEngine implements QueryEngine {
 						.getCurrentVersion(luceneIndexDir);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.severe(e.getLocalizedMessage());
+			try {
+				reset();
+			} catch (Exception e1) {
+				LOG.severe(e.getLocalizedMessage());
+			}
 		}
 
 		return fileIndexReader;

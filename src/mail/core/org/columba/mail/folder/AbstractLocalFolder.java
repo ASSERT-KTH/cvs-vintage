@@ -32,7 +32,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.headercache.BerkeleyDBHeaderList;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
-import org.columba.mail.folder.headercache.IHeaderListCorruptedListener;
 import org.columba.mail.folder.headercache.SyncHeaderList;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;

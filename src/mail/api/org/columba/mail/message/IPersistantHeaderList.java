@@ -19,23 +19,18 @@ package org.columba.mail.message;
 
 import java.io.IOException;
 
+import org.columba.mail.folder.IHeaderListCorruptedListener;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.folder.headercache.CachedHeaderfields;
-import org.columba.mail.folder.headercache.IHeaderListCorruptedListener;
-import org.columba.mail.message.ColumbaHeader;
 
 
 /**
  * Wrapper around a Hashtable to allow typesafe
- * mapping of {@link ColumbaHeader} objects.
+ * mapping of {@link IColumbaHeader} objects.
  * <p>
  * Every {@link IMailbox} uses this headerlist
  * internally to store headerfields.
  * <p>
  *
- * @see CachedHeaderfields
- *
- * @author fdietz
  */
 public interface IPersistantHeaderList extends IHeaderList {
 

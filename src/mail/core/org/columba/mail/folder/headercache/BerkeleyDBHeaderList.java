@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.columba.mail.folder.IHeaderListCorruptedListener;
 import org.columba.mail.message.ICloseableIterator;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IPersistantHeaderList;

@@ -505,6 +505,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		}
 
+		hideButton.setSelected(false);
 		hideButton.addActionListener(new HideActionListener(centerPanel,
 				topPanel, hideButton));
 
