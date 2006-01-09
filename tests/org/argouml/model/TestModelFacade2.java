@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.15 2005/12/20 07:54:43 tfmorris Exp $
+// $Id: TestModelFacade2.java,v 1.16 2006/01/09 23:04:05 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,6 @@
 package org.argouml.model;
 
 import java.util.Collection;
-
-import org.argouml.util.CollectionUtil;
 
 import junit.framework.TestCase;
 
@@ -93,6 +91,28 @@ public class TestModelFacade2 extends TestCase {
 
 	Collection collection = Model.getFacade().getPartitions(container);
 	assertTrue(collection.contains(partition));
+        assertTrue(container.equals(Model.getFacade().getModelElementContainer(
+                partition)));
+    }
+    
+    /**
+     * Test getModelElementContainer.
+     */
+    public void testGetModelElementContainer() {
+        StateMachinesFactory factory = Model.getStateMachinesFactory();
+        StateMachinesHelper helper = Model.getStateMachinesHelper();
+
+        Object stateMachine = factory.createStateMachine();
+        Object state = factory.createSimpleState();
+        Object action = Model.getCommonBehaviorFactory().createCallAction();
+        helper.setStateMachine(state, stateMachine);
+        helper.setEntry(state, action);
+
+        Object parentComposite = Model.getFacade().getModelElementContainer(
+                action);
+        assertTrue(state.equals(parentComposite));
+        assertTrue(stateMachine.equals(Model.getFacade()
+                .getModelElementContainer(parentComposite)));
     }
 
     /**
