@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.15 2005/10/31 01:51:03 tfmorris Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.16 2006/01/09 18:20:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,7 +99,8 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
      */
     public void setSelectedItem(Object anItem) {
         addElement(anItem);
-        super.setSelectedItem(Model.getFacade().toString(anItem));
+        super.setSelectedItem((anItem == null) ? null 
+                : Model.getFacade().toString(anItem));
     }
 
 }

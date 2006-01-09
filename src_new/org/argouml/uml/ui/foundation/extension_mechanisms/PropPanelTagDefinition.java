@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.8 2006/01/08 16:32:29 mvw Exp $
+// $Id: PropPanelTagDefinition.java,v 1.9 2006/01/09 18:20:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.uml.ui.foundation.extension_mechanisms;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -168,8 +168,9 @@ class UMLTagDefinitionNamespaceComboBoxModel
     protected void buildModelList() {
         Object model =
             ProjectManager.getManager().getCurrentProject().getRoot();
-        Collection c = new ArrayList();
+        Collection c = new HashSet();
         c.add(null);
+        c.add(model);
         c.addAll(Model.getModelManagementHelper().getAllNamespaces(model));
         setElements(c);
     }
