@@ -1,4 +1,4 @@
-// $Id: OCLUtil.java,v 1.15 2005/04/14 18:29:47 mvw Exp $
+// $Id: OCLUtil.java,v 1.16 2006/01/09 23:15:12 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,14 +47,13 @@ public final class OCLUtil {
      */
     public static Object getInnerMostEnclosingNamespace (Object me) {
 
-        if (!Model.getFacade().isAModelElement(me)) {
-            throw new IllegalArgumentException();
-	}
+        if (Model.getFacade().isAFeature(me)) {
+            me = Model.getFacade().getOwner(me);
+        }
 
-	while ((me != null)
-	       && (!(Model.getFacade().isANamespace(me)))) {
-	    me = Model.getFacade().getModelElementContainer(me);
-	}
+        if (!Model.getFacade().isANamespace(me)) {
+            throw new IllegalArgumentException();
+        }
 
 	return me;
     }
