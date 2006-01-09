@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.10 2005/11/13 11:01:28 linus Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.11 2006/01/09 21:16:25 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -230,8 +230,9 @@ public class RESequenceDiagramDialog extends ArgoDialog implements ActionListene
         if (target instanceof Fig) {
             target = ((Fig) target).getOwner();
         }
-        if (Model.getFacade().isABase(target)) {
-            newTarget = Model.getFacade().getModelElementContainer(target);
+        if (Model.getFacade().isAModelElement(target)
+                && Model.getFacade().getNamespace(target) != null) {
+            newTarget = Model.getFacade().getNamespace(target);
         } else if (target instanceof Diagram) {
             Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);
             if (target != firstDiagram) {

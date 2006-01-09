@@ -1,4 +1,4 @@
-// $Id: CrMultipleShallowHistoryStates.java,v 1.5 2005/11/13 11:01:11 linus Exp $
+// $Id: CrMultipleShallowHistoryStates.java,v 1.6 2006/01/09 21:16:24 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class CrMultipleShallowHistoryStates extends CrUML {
         }
 
         // container state / composite state
-        Object cs = Model.getFacade().getModelElementContainer(dm);
+        Object cs = Model.getFacade().getContainer(dm);
         if (cs == null) {
             LOG.debug("null parent state");
             return NO_PROBLEM;
@@ -110,7 +110,7 @@ public class CrMultipleShallowHistoryStates extends CrUML {
      */
     protected ListSet computeOffenders(Object ps) {
         ListSet offs = new ListSet(ps);
-        Object cs = Model.getFacade().getModelElementContainer(ps);
+        Object cs = Model.getFacade().getContainer(ps);
         if (cs == null) {
             LOG.debug("null parent in still valid");
             return offs;

@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.41 2005/11/17 21:12:20 mvw Exp $
+// $Id: FigObject.java,v 1.42 2006/01/09 21:16:26 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -262,17 +262,15 @@ public class FigObject extends FigNodeModelElement {
 
                 mcomp = /*(MComponent)*/ encloser.getOwner();
                 Object obj = /*(MObject)*/ getOwner();
-                Model.getCoreHelper().setModelElementContainer(resident, mcomp);
+                Model.getCoreHelper().setContainer(resident, mcomp);
                 Model.getCoreHelper().setResident(resident, obj);
                 super.setEnclosingFig(encloser);
             } else if (encloser != null
                     && Model.getFacade().isANode(encloser.getOwner())) {
                 super.setEnclosingFig(encloser);
             } else {
-                if (Model.getFacade()
-                        .getModelElementContainer(resident) != null) {
-                    Model.getCoreHelper()
-                            .setModelElementContainer(resident, null);
+                if (Model.getFacade().getContainer(resident) != null) {
+                    Model.getCoreHelper().setContainer(resident, null);
                     Model.getCoreHelper().setResident(resident, null);
                     super.setEnclosingFig(null);
                 }

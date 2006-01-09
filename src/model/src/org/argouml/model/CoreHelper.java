@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.17 2006/01/06 23:53:44 tfmorris Exp $
+// $Id: CoreHelper.java,v 1.18 2006/01/09 21:16:25 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -919,9 +919,18 @@ public interface CoreHelper {
      *
      * @param handle the ElementResidence
      * @param component the Component
-     * @deprecated UML 1.3 only - use setModelElementContainer
+     * @deprecated UML 1.3 only - use setContainer
      */
     void setImplementationLocation(Object handle, Object component);
+
+    /**
+     * Set the Container of the given ElementResidence
+     * to the given Component.
+     *
+     * @param handle the ElementResidence
+     * @param component the Component
+     */
+    void setContainer(Object handle, Object component);
 
     /**
      * Sets an initial value.
@@ -973,10 +982,12 @@ public interface CoreHelper {
 
     /**
      * Sets the container that owns the handle.<p>
-     *
+     * 
      * <em>Warning: the implementation does not support setting the owner
      * of actions.</em>
      * Use setState1 etc. on action for that goal.<p>
+     * Use a more specific method such as setOwner, setContainer, etc if
+     * at all possible, rather than this method.
      *
      * @param handle
      *            The modelelement that must be added to the container

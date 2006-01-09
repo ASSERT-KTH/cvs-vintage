@@ -1,4 +1,4 @@
-// $Id: AbstractCoreHelperDecorator.java,v 1.8 2006/01/06 23:53:44 tfmorris Exp $
+// $Id: AbstractCoreHelperDecorator.java,v 1.9 2006/01/09 21:16:25 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -800,6 +800,14 @@ public abstract class AbstractCoreHelperDecorator implements CoreHelper {
      */
     public void setImplementationLocation(Object handle, Object component) {
         impl.setImplementationLocation(handle, component);
+    }
+
+    /**
+     * @see org.argouml.model.CoreHelper#setContainer(
+     *         java.lang.Object, java.lang.Object)
+     */
+    public void setContainer(Object handle, Object component) {
+        impl.setContainer(handle, component);
     }
 
     /**

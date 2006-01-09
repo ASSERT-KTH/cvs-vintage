@@ -1,4 +1,4 @@
-// $Id: TabTaggedValuesModel.java,v 1.7 2005/11/18 05:13:20 tfmorris Exp $
+// $Id: TabTaggedValuesModel.java,v 1.8 2006/01/09 21:16:26 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -197,7 +197,7 @@ public class TabTaggedValuesModel extends AbstractTableModel implements
         if (tvs.size() <= rowIndex) {
             Object tv = Model.getExtensionMechanismsFactory()
                     .createTaggedValue();
-            Model.getCoreHelper().setModelElementContainer(tv,target);
+            Model.getExtensionMechanismsHelper().addTaggedValue(target, tv);
             if (columnIndex == 0) {
                 Model.getExtensionMechanismsHelper().setTag(tv, aValue);
             }
@@ -216,7 +216,7 @@ public class TabTaggedValuesModel extends AbstractTableModel implements
         } else {
             Object tv = tvs.elementAt(rowIndex);
             if (columnIndex == 0) {
-                    Model.getExtensionMechanismsHelper().setTag(tv, aValue);
+                Model.getExtensionMechanismsHelper().setTag(tv, aValue);
             }
             if (columnIndex == 1) {
                 Model.getCommonBehaviorHelper().setValue(tv, aValue);

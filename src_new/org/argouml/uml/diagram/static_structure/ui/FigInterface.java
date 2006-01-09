@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.136 2005/11/17 21:12:18 mvw Exp $
+// $Id: FigInterface.java,v 1.137 2006/01/09 21:16:24 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -458,16 +458,15 @@ public class FigInterface extends FigClassifierBox {
 
         // The next if-clause is important for the Deployment-diagram
         // it detects if the enclosing fig is a component, in this case
-        // the ImplementationLocation will be set for the owning MInterface
+        // the container will be set for the owning Interface
         if (encloser != null
                 && (Model.getFacade().isAComponent(encloser.getOwner()))) {
             Object component = /*(MComponent)*/ encloser.getOwner();
             Object in = /*(MInterface)*/ getOwner();
-            Model.getCoreHelper().setModelElementContainer(resident,
-                    component);
+            Model.getCoreHelper().setContainer(resident, component);
             Model.getCoreHelper().setResident(resident, in);
         } else {
-            Model.getCoreHelper().setModelElementContainer(resident, null);
+            Model.getCoreHelper().setContainer(resident, null);
             Model.getCoreHelper().setResident(resident, null);
         }
     }
