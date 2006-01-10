@@ -1,4 +1,4 @@
-// $Id: PersistenceException.java,v 1.2 2005/01/09 14:58:08 linus Exp $
+// $Id: PersistenceException.java,v 1.3 2006/01/10 16:44:16 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,6 @@ package org.argouml.persistence;
  */
 public class PersistenceException extends Exception {
 
-    private Throwable cause = null;
-
     /**
      * Constructor
      */
@@ -52,56 +50,15 @@ public class PersistenceException extends Exception {
      * @param c the cause of the exception
      */
     public PersistenceException(String message, Throwable c) {
-        super(message);
-        this.cause = c;
+        super(message, c);
     }
 
     /**
      * @param c the cause of the exception
      */
     public PersistenceException(Throwable c) {
-        super();
-        this.cause = c;
+        super(c);
     }
 
-    /**
-     * @see java.lang.Throwable#getCause()
-     */
-    public Throwable getCause() {
-        return cause;
-    }
-
-    /**
-     * @see java.lang.Throwable#printStackTrace()
-     */
-    public void printStackTrace() {
-        super.printStackTrace();
-        if (cause != null) {
-            System.out.println("Caused by:");
-            cause.printStackTrace();
-        }
-    }
-
-    /**
-     * @see java.lang.Throwable#printStackTrace(java.io.PrintStream)
-     */
-    public void printStackTrace(java.io.PrintStream ps) {
-        super.printStackTrace(ps);
-        if (cause != null) {
-            ps.println("Caused by:");
-            cause.printStackTrace(ps);
-        }
-    }
-
-    /**
-     * @see java.lang.Throwable#printStackTrace(java.io.PrintWriter)
-     */
-    public void printStackTrace(java.io.PrintWriter pw) {
-        super.printStackTrace(pw);
-        if (cause != null) {
-            pw.println("Caused by:");
-            cause.printStackTrace(pw);
-        }
-    }
 }
 
