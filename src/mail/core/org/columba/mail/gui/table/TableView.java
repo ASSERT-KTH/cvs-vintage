@@ -76,7 +76,7 @@ public class TableView extends TreeTable {
 
 		getTree().setCellRenderer(new SubjectTreeRenderer(this));
 		
-		
+		getTree().setLargeModel(true);
 	}
 
 	public void resetRowHeight() {
