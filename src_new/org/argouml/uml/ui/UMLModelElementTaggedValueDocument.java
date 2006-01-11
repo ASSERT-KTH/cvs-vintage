@@ -1,4 +1,4 @@
-// $Id: UMLModelElementTaggedValueDocument.java,v 1.12 2005/01/30 20:47:48 linus Exp $
+// $Id: UMLModelElementTaggedValueDocument.java,v 1.13 2006/01/11 21:33:10 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,10 @@ public class UMLModelElementTaggedValueDocument extends UMLPlainTextDocument {
         //stores the action command into the UMLPlainTextDocument
         //class which is also used
         //for setProperty and getProperty
+        
+        // TODO: This appears to expect that the UML 1.3 tag name
+        // will appear as a property name in an event, but with the
+        // UML 1.4 switch to TagDefinitions, this won't work
         super(taggedValue);
     }
 
