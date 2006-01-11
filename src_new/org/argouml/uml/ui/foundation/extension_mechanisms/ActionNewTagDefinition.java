@@ -1,4 +1,4 @@
-// $Id: ActionNewTagDefinition.java,v 1.5 2005/11/17 22:56:44 tfmorris Exp $
+// $Id: ActionNewTagDefinition.java,v 1.6 2006/01/11 22:47:17 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,9 +70,6 @@ public class ActionNewTagDefinition extends AbstractActionNewModelElement {
                     owner,
                     namespace
             );
-        Object multiplicity = Model.getDataTypesFactory()
-            .createMultiplicity(0, 1);
-        Model.getCoreHelper().setMultiplicity(newTagDefinition, multiplicity);
         TargetManager.getInstance().setTarget(newTagDefinition);
         super.actionPerformed(e);
     }
