@@ -1,4 +1,4 @@
-// $Id: TestCopyHelper.java,v 1.3 2005/12/20 07:54:43 tfmorris Exp $
+// $Id: TestCopyHelper.java,v 1.4 2006/01/11 23:40:18 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,15 @@ public class TestCopyHelper extends TestCase {
     public TestCopyHelper(String name) {
 	super(name);
 	
+    }
+    
+    /**
+     * @see junit.framework.TestCase#setUp()
+     */
+    public void setUp() {
+        // Make sure we have a root model for TagDefinitions to get put in.
+        ModelManagementFactory mmf = Model.getModelManagementFactory();
+        mmf.setRootModel(mmf.createModel());
     }
 
     /**

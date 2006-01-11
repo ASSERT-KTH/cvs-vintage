@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.16 2006/01/09 23:04:05 tfmorris Exp $
+// $Id: TestModelFacade2.java,v 1.17 2006/01/11 23:45:15 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,7 +119,9 @@ public class TestModelFacade2 extends TestCase {
      * Test some Tagged Value functions.
      */
     public void testTaggedValue() {
-	Object cls = Model.getCoreFactory().buildClass();
+        Model.getModelManagementFactory().setRootModel(
+                Model.getModelManagementFactory().createModel());
+        Object cls = Model.getCoreFactory().buildClass();
 
 	assertNull(Model.getFacade().getTaggedValue(cls, "fooValue"));
 	Model.getCoreHelper().setTaggedValue(cls, "fooValue", "foo");
