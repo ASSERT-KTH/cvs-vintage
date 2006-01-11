@@ -1,4 +1,4 @@
-// $Id: TabStereotype.java,v 1.10 2005/12/28 13:43:16 mvw Exp $
+// $Id: TabStereotype.java,v 1.11 2006/01/11 18:49:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,9 +118,9 @@ public class TabStereotype extends PropPanel {
                 Translator.localize("label.available-stereotypes")));
 
         // make buttons
-        addStButton = new JButton("<<");
+        addStButton = new JButton(">>");
         addStButton.setToolTipText(Translator.localize("button.add-stereo"));
-        removeStButton = new JButton(">>");
+        removeStButton = new JButton("<<");
         removeStButton.setToolTipText(Translator.localize(
                 "button.remove-stereo"));
         addStButton.setEnabled(false);
@@ -156,10 +156,10 @@ public class TabStereotype extends PropPanel {
         thePanel.setLayout(new BoxLayout(thePanel, BoxLayout.X_AXIS));
         thePanel.setBorder(BorderFactory.createEmptyBorder(
                 INSET_PX, INSET_PX, INSET_PX, INSET_PX));        
-        thePanel.add(selectedScroll);
+        thePanel.add(availableScroll);
         thePanel.add(xferButtons);
         thePanel.add(Box.createRigidArea(new Dimension(5,1)));
-        thePanel.add(availableScroll);
+        thePanel.add(selectedScroll);
         
         return thePanel;
     }
