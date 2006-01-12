@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.11 2006/01/12 07:07:33 tfmorris Exp $
+// $Id: PropPanelTagDefinition.java,v 1.12 2006/01/12 07:09:00 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,6 @@ import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.foundation.core.ActionSetStructuralFeatureType;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.uml.ui.foundation.core.UMLModelElementNamespaceComboBoxModel;
-import org.argouml.uml.ui.foundation.core.UMLNamespaceOwnedElementListModel;
 import org.argouml.uml.ui.foundation.core.UMLStructuralFeatureTypeComboBoxModel;
 import org.argouml.util.ConfigLoader;
 
