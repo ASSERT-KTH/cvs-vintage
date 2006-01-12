@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.28 2006/01/09 21:16:25 tfmorris Exp $
+// $Id: Facade.java,v 1.29 2006/01/12 07:07:33 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2359,6 +2359,14 @@ public interface Facade {
      * @return the type
      */
     Object getType(Object handle);
+
+    /**
+     * Returns collection of TaggedValues typed by a TagDefinition
+     *
+     * @param handle the TagDefinition
+     * @return collection of TaggedValues
+     */
+    Collection getTypedValues(Object handle);
 
     /**
      * Returns the target of some transition.
