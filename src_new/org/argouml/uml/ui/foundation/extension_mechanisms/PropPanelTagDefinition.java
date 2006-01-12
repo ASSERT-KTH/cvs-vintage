@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.12 2006/01/12 07:09:00 tfmorris Exp $
+// $Id: PropPanelTagDefinition.java,v 1.13 2006/01/12 17:28:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
-import org.argouml.uml.ui.ActionNavigateNamespace;
+import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
@@ -116,7 +116,7 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
         addField(Translator.localize("label.tagged-values"),
                 getTypedValuesScroll());
         
-        addAction(new ActionNavigateNamespace());
+        addAction(new ActionNavigateContainerElement());
         addAction(new ActionNewTagDefinition());
         addAction(new ActionDeleteSingleModelElement());
     }
