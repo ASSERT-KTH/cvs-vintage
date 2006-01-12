@@ -1,4 +1,4 @@
-// $Id: TestJavaImportClass.java,v 1.2 2005/11/14 03:55:52 tfmorris Exp $
+// $Id: TestJavaImportClass.java,v 1.3 2006/01/12 08:02:15 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,7 @@ public class TestJavaImportClass extends TestCase {
             lexer.setTokenObjectClass("org.argouml.uml.reveng.java.ArgoToken");
             parser = new JavaRecognizer(lexer);
             _model = Model.getModelManagementFactory().createModel();
+            Model.getModelManagementFactory().setRootModel(_model);
             modeller = new Modeller(_model, null, null, false, false,
                     "TestClass.java");
         } catch (Exception ex) {}
