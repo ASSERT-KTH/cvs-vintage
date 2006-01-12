@@ -21,7 +21,7 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Include_Guard.bsh,v 1.6 2005/12/21 19:36:17 ezust Exp $
+ * $Id: Include_Guard.bsh,v 1.1 2006/01/12 01:59:33 ezust Exp $
  *
  * Notes on use:
  *
