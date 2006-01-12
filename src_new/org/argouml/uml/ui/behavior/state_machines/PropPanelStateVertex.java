@@ -1,4 +1,4 @@
-// $Id: PropPanelStateVertex.java,v 1.31 2005/11/13 11:01:20 linus Exp $
+// $Id: PropPanelStateVertex.java,v 1.32 2006/01/12 17:16:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
-import org.argouml.uml.ui.ActionNavigateNamespace;
+import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
@@ -70,7 +70,7 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
         compositeList.setVisibleRowCount(1);
         containerScroll = new JScrollPane(compositeList);
 
-        addAction(new ActionNavigateNamespace());
+        addAction(new ActionNavigateContainerElement());
         addExtraButtons();
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());
