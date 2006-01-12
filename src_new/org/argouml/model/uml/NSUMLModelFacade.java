@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.33 2005/12/15 14:22:47 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.34 2006/01/12 17:15:57 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4801,6 +4801,11 @@ public class NSUMLModelFacade implements Facade {
         } else {
             return illegalArgumentList(handle);
         }
+    }
+
+    public Collection getTypedValues(Object handle) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
