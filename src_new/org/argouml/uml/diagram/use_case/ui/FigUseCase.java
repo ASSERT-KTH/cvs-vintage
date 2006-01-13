@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.80 2005/11/18 14:45:25 mvw Exp $
+// $Id: FigUseCase.java,v 1.81 2006/01/13 20:03:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1329,14 +1329,25 @@ public class FigUseCase extends FigNodeModelElement
         // Let our superclass sort itself out first
 
         super.modelChanged(mee);
+
+        boolean damage = false;
         if (mee == null
 	    || mee.getPropertyName().equals("extensionPoint")
 	    || Model.getFacade().isAExtensionPoint(mee.getSource())) {
             updateExtensionPoint();
             return;
         }
+        if (mee != null && Model.getFacade().getStereotypes(getOwner())
+                .contains(mee.getSource())) {
+            updateStereotypeText();
+            damage = true;
+        }
         if (mee == null || mee.getPropertyName().equals("isAbstract")) {
             updateNameText();
+            damage = true;
+        }
+        if (damage) {
+            damage();
         }
     }
 

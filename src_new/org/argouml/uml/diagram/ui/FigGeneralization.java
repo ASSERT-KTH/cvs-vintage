@@ -1,4 +1,4 @@
-// $Id: FigGeneralization.java,v 1.22 2005/09/07 21:03:52 linus Exp $
+// $Id: FigGeneralization.java,v 1.23 2006/01/13 20:03:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.uml.diagram.ui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
@@ -115,8 +117,8 @@ public class FigGeneralization extends FigEdgeModelElement {
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
     protected void modelChanged(PropertyChangeEvent e) {
-	// do not set _name
-	updateStereotypeText();
+        super.modelChanged(e);
+        updateListeners(getOwner());
 	updateDiscriminatorText();
     }
 
@@ -175,6 +177,29 @@ public class FigGeneralization extends FigEdgeModelElement {
 		throw new IllegalStateException("FigGeneralization "
 						+ "has an illegal owner");
 	    }
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#updateListeners(java.lang.Object)
+     */
+    protected void updateListeners(Object newOwner) {
+        Object oldOwner = getOwner();
+        if (oldOwner != null) {
+            Model.getPump().removeModelEventListener(this, oldOwner);
+            if (Model.getFacade().isAGeneralization(oldOwner)) {
+                Collection oldConns = Model.getFacade().getStereotypes(oldOwner);
+                for (Iterator i = oldConns.iterator(); i.hasNext();) {
+                    Model.getPump().removeModelEventListener(this, i.next());
+                }
+            }
+        }
+        if (Model.getFacade().isAGeneralization(newOwner)) {
+            Model.getPump().addModelEventListener(this, newOwner);
+            Collection newConns = Model.getFacade().getStereotypes(newOwner);
+            for (Iterator i = newConns.iterator(); i.hasNext();) {
+                Model.getPump().addModelEventListener(this, i.next());
+            }
+        }
     }
 
     /**
