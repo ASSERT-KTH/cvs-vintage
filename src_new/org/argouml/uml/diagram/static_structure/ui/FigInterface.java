@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.137 2006/01/09 21:16:24 tfmorris Exp $
+// $Id: FigInterface.java,v 1.138 2006/01/13 22:10:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -586,7 +586,8 @@ public class FigInterface extends FigClassifierBox {
         if (getOwner() == null) {
             return;
         }
-
+        super.modelChanged(mee);
+        boolean damage = false;
         // operations
         if (mee == null
                 || Model.getFacade().isAOperation(mee.getSource())
@@ -594,10 +595,16 @@ public class FigInterface extends FigClassifierBox {
                 || (mee.getSource() == getOwner()
                 && mee.getPropertyName().equals("feature"))) {
             updateOperations();
+            damage = true;
+        }
+        if (mee != null && Model.getFacade().getStereotypes(getOwner())
+                .contains(mee.getSource())) {
+            updateStereotypeText();
+            damage = true;
+        }
+        if (damage) {
             damage();
         }
-        super.modelChanged(mee);
-
     }
 
     /**
