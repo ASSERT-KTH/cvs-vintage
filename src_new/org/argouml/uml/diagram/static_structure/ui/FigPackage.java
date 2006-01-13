@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.88 2005/11/16 21:04:01 mvw Exp $
+// $Id: FigPackage.java,v 1.89 2006/01/13 22:07:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -363,16 +363,23 @@ public class FigPackage extends FigNodeModelElement
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
     protected void modelChanged(PropertyChangeEvent mee) {
+        super.modelChanged(mee);
+        boolean damage = false;
         // visibility
         if (mee == null
                 || Model.getFacade().isAPackage(mee.getSource())
                 || (mee.getSource() == getOwner()
                 && mee.getPropertyName().equals("visibility"))) {
             renderingChanged();
+            damage = true;
+        }
+        if (mee != null && Model.getFacade().getStereotypes(getOwner())
+                .contains(mee.getSource())) {
+            updateStereotypeText();
+            damage = true;
+        }
+        if (damage) {
             damage();
-        } else {
-            // name, etc. updating
-            super.modelChanged(mee);
         }
     }
 
