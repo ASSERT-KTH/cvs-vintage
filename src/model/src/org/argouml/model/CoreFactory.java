@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.7 2005/12/14 20:40:27 mvw Exp $
+// $Id: CoreFactory.java,v 1.8 2006/01/13 07:19:49 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -369,6 +369,7 @@ public interface CoreFactory {
      * @param name is the name
      * @param owner is the namespace
      * @return an initialized UML Enumeration instance
+     * @since UML 1.4
      */
     Object buildEnumeration(String name, Object owner);
     
@@ -376,6 +377,7 @@ public interface CoreFactory {
      * @param name is the name
      * @param enumeration is the enumeration of the literal
      * @return an initialized UML EnumerationLiteral instance
+     * @since UML 1.4
      */
     Object buildEnumerationLiteral(String name, Object enumeration);
 
