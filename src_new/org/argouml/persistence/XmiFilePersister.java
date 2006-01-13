@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.23 2005/12/18 13:31:12 rastaman Exp $
+// $Id: XmiFilePersister.java,v 1.24 2006/01/13 07:59:44 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,7 +106,7 @@ public class XmiFilePersister extends AbstractFilePersister {
             for (int i = 0; i < size; i++) {
                 ProjectMember projectMember =
                     (ProjectMember) project.getMembers().get(i);
-                if (projectMember.getType().equalsIgnoreCase("xmi")) {
+                if (projectMember.getType().equalsIgnoreCase(getExtension())) {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Saving member of type: "
                               + ((ProjectMember) project.getMembers()
