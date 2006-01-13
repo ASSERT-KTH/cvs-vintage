@@ -1,4 +1,4 @@
-// $Id: NotationUtilityUml.java,v 1.2 2005/12/30 13:48:29 mvw Exp $
+// $Id: NotationUtilityUml.java,v 1.3 2006/01/13 21:58:30 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,8 @@ public final class NotationUtilityUml {
             Iterator i = Model.getFacade().getStereotypes(umlobject).iterator();
             while (i.hasNext()) {
                 String stereotypename = Model.getFacade().getName(i.next());
-                if (!stereotypes.contains(stereotypename)) {
+                if (stereotypename != null 
+                        && !stereotypes.contains(stereotypename)) {
                     toBeRemoved.add(getStereotype(umlobject, stereotypename));
                 }
             }
