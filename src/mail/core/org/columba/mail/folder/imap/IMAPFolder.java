@@ -108,18 +108,21 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		engine.setNonDefaultEngine(new IMAPQueryEngine(this));
 		setSearchEngine(engine);
 
-		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(), "headerlist"));
-		
-		final AbstractMessageFolder folder = this;		
-		headerList.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
+		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),
+				"headerlist"));
 
-			public void headerListCorrupted(IHeaderList headerList) {
-				try {
-					SyncHeaderList.sync(folder, headerList);
-				} catch (IOException e) {
-					LOG.severe(e.getMessage());
-				}
-			}});
+		final AbstractMessageFolder folder = this;
+		headerList
+				.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
+
+					public void headerListCorrupted(IHeaderList headerList) {
+						try {
+							SyncHeaderList.sync(folder, headerList);
+						} catch (IOException e) {
+							LOG.severe(e.getMessage());
+						}
+					}
+				});
 	}
 
 	/**
@@ -132,7 +135,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		item.setString("property", "accessrights", "user");
 		item.setString("property", "subfolder", "true");
 
-		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(), "headerlist"));
+		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),
+				"headerlist"));
 	}
 
 	/**
@@ -196,7 +200,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			CommandProcessor.getInstance().addOp(
 					new CheckForNewMessagesCommand(
 							new MailFolderCommandReference(this)));
-		} 
+		}
 
 		return headerList;
 	}
@@ -237,169 +241,175 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		if (status.getMessages() == 0) {
 			purgeHeaderList();
-			
+
 			syncMailboxInfo(status);
 
 			return;
 		}
 
-		if( !firstSync && status.getMessages() == this.getMessageFolderInfo().getExists() ) {
+		if (!firstSync
+				&& status.getMessages() == this.getMessageFolderInfo()
+						.getExists()) {
 			return;
 		}
-		
-		List localUids = new LinkedList(Arrays.asList(getHeaderList().getUids()));
+
+		List localUids = new LinkedList(Arrays
+				.asList(getHeaderList().getUids()));
 		// Sort the uid list
 		Collections.sort(localUids);
 
-		int newMessages = 0;
-
 		int largestLocalUid = localUids.size() > 0 ? ((Integer) localUids
 				.get(localUids.size() - 1)).intValue() : -1;
-		int largestLocalUidIndex = -1;
-		int removedLocalUids = 0;
 
 		int largestRemoteUid = (int) status.getUidNext() - 1;
 
 		if (localUids.size() == status.getMessages()
 				&& largestRemoteUid == largestLocalUid) {
 			// Seems to be no change!
-			if( firstSync ) {
+			if (firstSync) {
 				firstSync = false;
 				synchronizeFlags(status);
 			} else {
 				syncMailboxInfo(status);
 			}
-			
+
 			return;
 		}
 
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"sync_messages"));
 
-		if (status.getMessages() > 0) {
-			largestRemoteUid = getServer().fetchUid(
-					new SequenceSet(SequenceEntry.STAR), this);
-			if (largestRemoteUid == -1) {
-				largestRemoteUid = getServer().fetchUid(
-						new SequenceSet(status.getMessages()), this);
-			}
+		/*
+		 * largestRemoteUid = getServer().fetchUid( new
+		 * SequenceSet(SequenceEntry.STAR), this); if (largestRemoteUid == -1) {
+		 * largestRemoteUid = getServer().fetchUid( new
+		 * SequenceSet(status.getMessages()), this); }
+		 */
 
+		int largestLocalUidIndex = findLargestLocalUidIndex(localUids);
+
+		int newMessages = status.getMessages() - largestLocalUidIndex;
+
+		/*
+		 * // Somehow there are new messages that // have a lower index -> out
+		 * of sync if (localUids.size() - status.getMessages() + newMessages <
+		 * 0) {
+		 * 
+		 * LOG.severe("Folder " + getName() + " is out of sync -> recreating the
+		 * cache!"); purgeHeaderList(); // all messages are new newMessages =
+		 * status.getMessages(); // Set the index of the largest Uid to 0 // ->
+		 * ensure it works with the fetch of new // messages part below
+		 * largestLocalUidIndex = 0; largestLocalUid = -1;
+		 * 
+		 * localUids.clear(); }
+		 */
+		LOG.fine("Found " + newMessages + " new Messages");
+
+		// If we have new messages add them to the headerlist
+		if (newMessages > 0) {
 			printStatusMessage(MailResourceLoader.getString("statusbar",
-					"message", "sync_messages"));
+					"message", "fetch_new_headers"));
 
-			// Compute the number of new messages
-			if (localUids.size() > 0) {
-				// Number of new messages = largestRemoteUid - largestLocalUid
-				largestLocalUid = ((Integer) localUids
-						.get(localUids.size() - 1)).intValue();
+			// Ensure sizes are correct
+			getMessageFolderInfo().setExists(localUids.size());
+			getMessageFolderInfo().setUnseen(
+					Math.min(getMessageFolderInfo().getUnseen(), localUids
+							.size()));
+			getMessageFolderInfo().setRecent(0);
 
-				// Find the index of the largest local Uid
-				int position = localUids.size() - 1;
-				while (largestLocalUidIndex == -1
-						&& position >= localUids.size() - 10 && position >= 0) {
-					largestLocalUidIndex = getServer().getIndex(
-							(Integer) localUids.get(position--), this);
-				}
+			List newUids = fetchNewMessages(largestLocalUidIndex);
 
-				// Still not found -> do a binary search
-				if (largestLocalUidIndex == -1) {
-					int a, b, c;
-					int index;
-					a = 0;
-					b = position;
-					while (b > a && b - a > 1) {
-						c = Math.round((b - a) * 0.5f) + a;
+			localUids.addAll(newUids);
 
-						index = getServer().getIndex(
-								(Integer) localUids.get(c), this);
-						if (index == -1) {
-							b = c;
-						} else {
-							a = c;
-							largestLocalUidIndex = index;
-						}
-					}
-
-					removedLocalUids = localUids.size() - 1 - position;
-				} else {
-					// -2 because of the decrement in line 317
-					removedLocalUids = localUids.size() - 2 - position;
-				}
-
-				// Check if all local uids have been deleted
-				if (largestLocalUidIndex == -1) {
-					newMessages = status.getMessages();
-
-					// Set the index of the largest Uid to 0
-					// -> ensure it works with the fetch of new
-					// messages part below
-					largestLocalUidIndex = 0;
-				} else {
-					newMessages = status.getMessages() - largestLocalUidIndex;
-				}
+			if (newUids.size() < newMessages) {
+				// There are still more messages to update
+				// -> issue another fetch messages command
+				CommandProcessor.getInstance().addOp(
+						new FetchMessagesCommand(
+								new MailFolderCommandReference(this),
+								newMessages, largestLocalUidIndex, newUids
+										.size()));
 
 			} else {
-				// all messages are new
-				newMessages = status.getMessages();
-
-				// Set the index of the largest Uid to 0
-				// -> ensure it works with the fetch of new
-				// messages part below
-				largestLocalUidIndex = 0;
+				fetchDone();
 			}
+		} else {
 
-			// Somehow there are new messages that
-			// have a lower index -> out of sync
-			if (localUids.size() - status.getMessages() - removedLocalUids
-					+ newMessages < 0) {
+			// Number of deleted messages is computed from exists on imap and
+			// local
+			// newMessages
+			findRemovedMessages(status, localUids);
 
-				LOG.severe("Folder " + getName()
-						+ " is out of sync -> recreating the cache!");
-				purgeHeaderList();
-
-				// all messages are new
-				newMessages = status.getMessages();
-
-				// Set the index of the largest Uid to 0
-				// -> ensure it works with the fetch of new
-				// messages part below
-				largestLocalUidIndex = 0;
-				largestLocalUid = -1;
-
-				localUids.clear();
-			}
-
-			LOG.fine("Found " + newMessages + " new Messages");
-
-			// If we have new messages add them to the headerlist
-			if (newMessages > 0) {
-				printStatusMessage(MailResourceLoader.getString("statusbar",
-						"message", "fetch_new_headers"));
-
-				// Ensure sizes are correct
-				getMessageFolderInfo().setExists(localUids.size());
-				getMessageFolderInfo().setUnseen( Math.min(getMessageFolderInfo().getUnseen(), localUids.size()));
-				getMessageFolderInfo().setRecent( 0 );
-
-				List newUids = fetchNewMessages(largestLocalUidIndex);
-
-				localUids.addAll(newUids);
-				
-				if (newUids.size() < newMessages) {
-					// There are still more messages to update
-					// -> issue another fetch messages command
-					CommandProcessor.getInstance().addOp(
-							new FetchMessagesCommand(
-									new MailFolderCommandReference(this),
-									newMessages, largestLocalUidIndex, newUids.size()));
-
-					return;
-				}
+			if (firstSync) {
+				firstSync = false;
+				synchronizeFlags(status);
+			} else {
+				syncMailboxInfo(status);
 			}
 		}
 
-		// Number of deleted messages is computed from exists on imap and local
-		// newMessages
+	}
+
+	private int findLargestLocalUidIndex(List localUids) throws IOException,
+			IMAPException, CommandCancelledException {
+		int largestLocalUidIndex = -1;
+
+		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
+				"sync_messages"));
+
+		// Compute the number of new messages
+		if (localUids.size() > 0) {
+			// Find the index of the largest local Uid
+			int position = localUids.size() - 1;
+			while (largestLocalUidIndex == -1
+					&& position >= localUids.size() - 10 && position >= 0) {
+				largestLocalUidIndex = getServer().getIndex(
+						(Integer) localUids.get(position--), this);
+			}
+
+			// Still not found -> do a binary search
+			if (largestLocalUidIndex == -1) {
+				int a, b, c;
+				int index;
+				a = 0;
+				b = position;
+				while (b > a && b - a > 1) {
+					c = Math.round((b - a) * 0.5f) + a;
+
+					index = getServer().getIndex((Integer) localUids.get(c),
+							this);
+					if (index == -1) {
+						b = c;
+					} else {
+						a = c;
+						largestLocalUidIndex = index;
+					}
+				}
+
+				// removedLocalUids = localUids.size() - 1 - position;
+			} else {
+				// -2 because of the decrement in line 317
+				// removedLocalUids = localUids.size() - 2 - position;
+			}
+
+			// Check if all local uids have been deleted
+			if (largestLocalUidIndex == -1) {
+				// all messages are new
+				largestLocalUidIndex = 0;
+			}
+
+		} else {
+			// all messages are new
+			largestLocalUidIndex = 0;
+		}
+		return largestLocalUidIndex;
+	}
+
+	private void findRemovedMessages(MailboxStatus status, List localUids)
+			throws Exception, IOException, IMAPException,
+			CommandCancelledException {
+		int largestRemoteUid = (int) status.getUidNext() - 1;
+
 		int deletedMessages = localUids.size() - status.getMessages();
 
 		LOG.fine("Found " + deletedMessages + " deleted Messages");
@@ -476,31 +486,23 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			}
 
 		}
-		
-		if( firstSync  ) {
-			firstSync = false;
-			synchronizeFlags(status);
-		} else {
-			syncMailboxInfo(status);
-		}
 	}
 
 	private void purgeHeaderList() throws Exception {
 		ICloseableIterator it = getHeaderList().keyIterator();
-		while( it.hasNext() ) {
+		while (it.hasNext()) {
 			Object uid = it.next();
 			fireMessageRemoved(uid, getHeaderList().get(uid).getFlags());
 		}
 		it.close();
 		getHeaderList().clear();
-		
+
 		getMessageFolderInfo().reset();
 		fireFolderPropertyChanged();
 	}
 
-	List fetchNewMessages(int startIndex)
-			throws IOException, IMAPException, CommandCancelledException,
-			Exception {
+	List fetchNewMessages(int startIndex) throws IOException, IMAPException,
+			CommandCancelledException, Exception {
 		IMAPFlags[] newFlags = getServer().fetchFlagsListStartFrom2(
 				startIndex + 1, this);
 
@@ -521,24 +523,6 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		// fire message added updates
 		for (int i = 0; i < newFlags.length; i++) {
 			fireMessageAdded(newFlags[i].getUid(), newFlags[i]);
-		}
-
-		// Apply filter on new messages if enabled
-		IMAPRootFolder rootFolder = (IMAPRootFolder) getRootFolder();
-		AccountItem accountItem = rootFolder.getAccountItem();
-		ImapItem item = accountItem.getImapItem();
-
-		boolean applyFilter = item.getBooleanWithDefault(
-				"automatically_apply_filter", false);
-
-		// if "automatically apply filter" is selected & there
-		// are
-		// new
-		// messages
-		if (applyFilter) {
-			CommandProcessor.getInstance().addOp(
-					new ApplyFilterCommand(new MailFolderCommandReference(this,
-							newUids.toArray())));
 		}
 
 		return newUids;
@@ -571,13 +555,13 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 	}
 
-	private void synchronizeFlags(MailboxStatus status) throws Exception, IOException,
-			CommandCancelledException, IMAPException {
+	private void synchronizeFlags(MailboxStatus status) throws Exception,
+			IOException, CommandCancelledException, IMAPException {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"sync_flags"));
 
 		MailboxStatus flagStatus = new MailboxStatus();
-		flagStatus.setMessages( status.getMessages());
+		flagStatus.setMessages(status.getMessages());
 
 		// Build the remote lists of messages that are UNSEEN, FLAGGED, DELETED,
 		// JUNK
@@ -610,67 +594,67 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		int recent = 0;
 		int deleted = 0;
 		int junk = 0;
-		
+
 		while (headerIterator.hasNext()) {
-			IColumbaHeader header = (IColumbaHeader)headerIterator.next();
+			IColumbaHeader header = (IColumbaHeader) headerIterator.next();
 			Object uid = header.get("columba.uid");
-			
+
 			Flags flag = header.getFlags();
 			Flags oldFlag = (Flags) flag.clone();
 
 			int index;
-			
+
 			index = Collections.binarySearch(remoteUnseenUids, uid);
-			flag.setSeen( index < 0);
+			flag.setSeen(index < 0);
 			if (!flag.getSeen()) {
 				unseen++;
-			} 
+			}
 
 			index = Collections.binarySearch(remoteDeletedUids, uid);
-			flag.setDeleted( index>= 0);
-			if( flag.getDeleted() ) {
+			flag.setDeleted(index >= 0);
+			if (flag.getDeleted()) {
 				deleted++;
 			}
 
-			index = Collections.binarySearch(remoteFlaggedUids, uid);			
-			flag.setFlagged( index >= 0);
-			if( flag.getFlagged()) {
+			index = Collections.binarySearch(remoteFlaggedUids, uid);
+			flag.setFlagged(index >= 0);
+			if (flag.getFlagged()) {
 				flagged++;
 			}
-			
 
 			index = Collections.binarySearch(remoteRecentUids, uid);
-			flag.setRecent( index >= 0);
-			if( flag.getRecent()) {
+			flag.setRecent(index >= 0);
+			if (flag.getRecent()) {
 				recent++;
 			}
 
 			index = Collections.binarySearch(remoteJunkUids, uid);
-			header.getAttributes()
-				.put(
-						"columba.spam",
-						new Boolean( index >= 0));			
-			if( index >= 0) {
+			header.getAttributes().put("columba.spam", new Boolean(index >= 0));
+			if (index >= 0) {
 				junk++;
 			}
 
-			if( !flag.equals(oldFlag)) {
+			if (!flag.equals(oldFlag)) {
 				getHeaderList().update(uid, header);
-				
+
 				fireMessageFlagChanged(uid, oldFlag, 0);
 			}
 		}
 		headerIterator.close();
 
-		if( remoteJunkUids.size() != junk || remoteRecentUids.size() != recent || remoteFlaggedUids.size() != flagged || remoteDeletedUids.size() != deleted || remoteUnseenUids.size() != unseen ) {
+		if (remoteJunkUids.size() != junk || remoteRecentUids.size() != recent
+				|| remoteFlaggedUids.size() != flagged
+				|| remoteDeletedUids.size() != deleted
+				|| remoteUnseenUids.size() != unseen) {
 			// Something is awfully wrong
-			LOG.severe("Headerlist of "+this.getName()+ " is corrupted. Recreating...");
+			LOG.severe("Headerlist of " + this.getName()
+					+ " is corrupted. Recreating...");
 			purgeHeaderList();
-			
+
 			synchronizeHeaderlist();
 			return;
 		}
-		
+
 		syncMailboxInfo(flagStatus);
 	}
 
@@ -694,7 +678,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			// Junk flag
 			header.getAttributes().put("columba.spam",
 					Boolean.valueOf(flags.get(IMAPFlags.JUNK)));
-			
+
 			getHeaderList().update(uid, header);
 		}
 	}
@@ -719,7 +703,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	public void innerCopy(IMailbox destiny, Object[] uids) throws Exception {
 		IMAPFolder destFolder = (IMAPFolder) destiny;
 		IHeaderList srcHeaderList = getHeaderList();
-		IPersistantHeaderList destHeaderList = (IPersistantHeaderList)destFolder.getHeaderList();
+		IPersistantHeaderList destHeaderList = (IPersistantHeaderList) destFolder
+				.getHeaderList();
 
 		Object[] destUids = getServer().copy(destFolder, uids, this);
 
@@ -731,34 +716,35 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		// update headerlist of destination-folder
 		// -> this is necessary to reflect the changes visually
 		// but only do it if the target folder is still in sync!
-		
+
 		Integer largestDestUid = new Integer(-1);
 		ICloseableIterator it = destHeaderList.keyIterator();
-		while( it.hasNext()) {
-			Integer uid = (Integer)it.next();
-			if( largestDestUid.compareTo(uid) < 0) {
+		while (it.hasNext()) {
+			Integer uid = (Integer) it.next();
+			if (largestDestUid.compareTo(uid) < 0) {
 				largestDestUid = uid;
 			}
 		}
 		it.close();
-		
-		if( ((Integer)destUids[0]).intValue() == largestDestUid.intValue() + 1) {
-		int j = 0;
-		for (int i = 0; i < uids.length; i++) {
-			IColumbaHeader destHeader = (IColumbaHeader) srcHeaderList.get(
-					uids[i]).clone();
-			// Was this message actually copied?
-			destHeader.set("columba.uid", destUids[j]);
-			destHeaderList.add(destHeader, destUids[j]);
 
-			// We need IMAPFlags
-			IMAPFlags flags = new IMAPFlags(destHeader.getFlags().getFlags());
-			flags.setUid(destUids[j]);
+		if (((Integer) destUids[0]).intValue() == largestDestUid.intValue() + 1) {
+			int j = 0;
+			for (int i = 0; i < uids.length; i++) {
+				IColumbaHeader destHeader = (IColumbaHeader) srcHeaderList.get(
+						uids[i]).clone();
+				// Was this message actually copied?
+				destHeader.set("columba.uid", destUids[j]);
+				destHeaderList.add(destHeader, destUids[j]);
 
-			destFolder.fireMessageAdded(flags.getUid(), flags);
-			j++;
-		} }
-		
+				// We need IMAPFlags
+				IMAPFlags flags = new IMAPFlags(destHeader.getFlags()
+						.getFlags());
+				flags.setUid(destUids[j]);
+
+				destFolder.fireMessageAdded(flags.getUid(), flags);
+				j++;
+			}
+		}
 
 	}
 
@@ -903,8 +889,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			getServer().setFlags(new Object[] { uid }, imapFlags, this);
 		}
 
-		if( getServer().isSelected(this)) {
-			//Parser the header
+		if (getServer().isSelected(this)) {
+			// Parser the header
 			Header header = withHeaderInputStream.getHeader();
 
 			// update the HeaderList
@@ -915,10 +901,10 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 			fireMessageAdded(uid, cHeader.getFlags());
 		} else {
-			// 	Trigger Synchronization
+			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
-				new CheckForNewMessagesCommand(
-						new MailFolderCommandReference(this)));
+					new CheckForNewMessagesCommand(
+							new MailFolderCommandReference(this)));
 		}
 
 		return uid;
@@ -1031,7 +1017,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		Integer uid = getServer().append(withHeaderInputStream, this);
 
-		if( getServer().isSelected(this)) {
+		if (getServer().isSelected(this)) {
 			// update the HeaderList
 			Header header = withHeaderInputStream.getHeader();
 			ColumbaHeader h = new ColumbaHeader(header);
@@ -1123,8 +1109,45 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		headerList.persist();
 	}
 
-	public void fetchDone() throws IOException, CommandCancelledException, IMAPException, Exception {
-		synchronizeFlags(getServer().getStatus(this));
+	void fetchDone() throws IOException, CommandCancelledException,
+			IMAPException, Exception {
+		MailboxStatus status = getServer().getStatus(this);
+
+		List localUids = new LinkedList(Arrays
+				.asList(getHeaderList().getUids()));
+		// Sort the uid list
+		Collections.sort(localUids);
+
+		// Number of deleted messages is computed from exists on imap and local
+		// newMessages
+		findRemovedMessages(status, localUids);
+
+		if (firstSync) {
+			firstSync = false;
+			synchronizeFlags(status);
+		} else {
+			syncMailboxInfo(status);
+		}
+
+		// Apply filter if enabled
+		IMAPRootFolder rootFolder = (IMAPRootFolder) getRootFolder();
+		AccountItem accountItem = rootFolder.getAccountItem();
+		ImapItem item = accountItem.getImapItem();
+
+		boolean applyFilter = item.getBooleanWithDefault(
+				"automatically_apply_filter", false);
+
+		// if "automatically apply filter" is selected & there
+		// are
+		// new
+		// messages
+		if (applyFilter) {
+			CommandProcessor.getInstance()
+					.addOp(
+							new ApplyFilterCommand(
+									new MailFolderCommandReference(this)));
+		}
+
 	}
 
 }
