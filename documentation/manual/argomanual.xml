@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "../docbook-setup/docbookx/docbookx.dtd">
-<!-- $Id: argomanual.xml,v 1.27 2005/12/07 22:21:02 mvw Exp $ -->
+<!-- $Id: argomanual.xml,v 1.28 2006/01/15 13:21:36 mvw Exp $ -->
 <!--
 Copyright (c) 1996-2005 The Regents of the University of California. All
 Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -7693,26 +7693,33 @@ UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
           Files of type:</literal> to specify a filter on the files to 
           be shown in the directory listing. Only files that match the 
           filter are listed. The available filters are listed below. 
-          The default filter is the first one (.zargo).</para>
+          The default filter is the first one, 
+          which combines all available formats.</para>
 
           <itemizedlist>
 
             <listitem>
-
-              <para>ArgoUML file (*.zargo, *.uml)</para>
-
+              <para>ArgoUML file (*.zargo, *.uml, *.xmi, *.xml, *.zip)</para>
             </listitem>
 
             <listitem>
-
               <para>ArgoUML compressed project file (*.zargo)</para>
-
             </listitem>
 
             <listitem>
-
               <para>ArgoUML project file (*.uml)</para>
+            </listitem>
 
+            <listitem>
+              <para>XML Metadata Interchange (*.xmi)</para>
+            </listitem>
+            
+            <listitem>
+              <para>XML Metadata Interchange (*.xml)</para>
+            </listitem>
+            
+            <listitem>
+              <para>XMI compressed project file (*.zip)</para>
             </listitem>
 
           </itemizedlist>
