@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="externals/mx4j.jar"/>
 	<classpathentry kind="lib" path="externals/irmi.jar"/>
 	<classpathentry kind="lib" path="externals/ow_cmi.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cmitrunk"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
