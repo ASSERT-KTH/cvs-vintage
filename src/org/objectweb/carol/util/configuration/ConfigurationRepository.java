@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.7 2005/11/23 21:35:39 pelletib Exp $
+ * $Id: ConfigurationRepository.java,v 1.8 2006/01/17 16:14:45 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -289,7 +289,7 @@ public class ConfigurationRepository {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Build protocol object for protocol name found '" + protocolName + "'.");
                 }
-                Protocol protocol = new Protocol(protocolName, properties, logger);
+                Protocol protocol = new Protocol(protocolName, properties, logger, domainName, serverName);
                 managedProtocols.put(protocolName, protocol);
 
             }

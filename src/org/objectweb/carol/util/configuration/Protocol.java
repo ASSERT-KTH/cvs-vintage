@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: Protocol.java,v 1.2 2005/11/23 21:35:39 pelletib Exp $
+ * $Id: Protocol.java,v 1.3 2006/01/17 16:14:45 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -101,9 +101,13 @@ public class Protocol {
      * @param name the name of this protocol
      * @param properties properties of this protocol
      * @param logger logger
-     * @throws ConfigurationException if properties are missing
+     * @param domainName the name of the JOnAS domain
+     * @param serverName the name of the server for creating mbeans
+      * @throws ConfigurationException if properties are missing
      */
-    public Protocol(String name, Properties properties, Log logger) throws ConfigurationException {
+    public Protocol(String name, Properties properties, Log logger, String domainName, String serverName)
+        throws ConfigurationException {
+
         if (name == null || "".equals(name)) {
             throw new ConfigurationException("Cannot build a protocol with null or empty name");
         }
@@ -144,16 +148,25 @@ public class Protocol {
 
         // set the properties in the underlying protocol if needed
         String setterClass = properties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
-                + CarolDefaultValues.SETTER_CLASS_PROPERTIES);
+                + CarolDefaultValues.SETTER_CLASS);
 
         if (setterClass != null) {
-            String setterMethod = getValue(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
+            String setterMethodProperties = getValue(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
                 + CarolDefaultValues.SETTER_METHOD_PROPERTIES);
+            String setterMethodMBean = getValue(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
+                    + CarolDefaultValues.SETTER_METHOD_MBEAN);
+
             try {
-                //org.objectweb.carol.cmi.ServerConfig.setProperties(properties);
+                //org.objectweb.carol.cmi.ServerConfig
                 Class clazz = Thread.currentThread().getContextClassLoader().loadClass(setterClass);
-                Method m = clazz.getMethod(setterMethod, new Class[] {Properties.class});
-                m.invoke(null, new Object[] {properties});
+
+                //org.objectweb.carol.cmi.ServerConfig.setProperties(properties);
+                Method mProperties = clazz.getMethod(setterMethodProperties, new Class[] {Properties.class});
+                mProperties.invoke(null, new Object[] {properties});
+
+                //org.objectweb.carol.cmi.ServerConfig.setMBean(domainName, serverName);
+                Method mMBean = clazz.getMethod(setterMethodMBean, new Class[] {String.class, String.class});
+                mMBean.invoke(null, new Object[] {domainName, serverName});
 
             } catch (NoClassDefFoundError ncdfe) {
                 if (logger.isDebugEnabled()) {

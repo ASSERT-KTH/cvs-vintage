@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.23 2005/11/23 21:35:39 pelletib Exp $
+ * $Id: CarolDefaultValues.java,v 1.24 2006/01/17 16:14:45 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -60,13 +60,19 @@ public class CarolDefaultValues {
     /**
      * Setter class property name (specifies the protocol class used to set the properties in this protocol)
      */
-    public static final String SETTER_CLASS_PROPERTIES = "properties.setter.class";
+    public static final String SETTER_CLASS = "setter.class";
 
     /**
-     * Setter method property name (specifies the method of the class given by the
+     * Setter method properties property name (specifies the method of the class given by the
      * SETTER_CLASS_PROPERTIES used to set the properties in this protocol)
      */
-    public static final String SETTER_METHOD_PROPERTIES = "properties.setter.method";
+    public static final String SETTER_METHOD_PROPERTIES = "setter.methodProperties";
+
+    /**
+     * Setter method MBean property name (specifies the method of the class given by the
+     * SETTER_CLASS_PROPERTIES used to set the properties in this protocol)
+     */
+    public static final String SETTER_METHOD_MBEAN = "setter.methodMBean";
 
     /**
      * Port number to use in server mode case (iiop)
