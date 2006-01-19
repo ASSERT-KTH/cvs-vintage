@@ -72,7 +72,8 @@ public abstract class SaveAttachmentCommand extends Command {
 		bodyStream = new ProgressObservedInputStream(bodyStream, worker);
 
 		File destFile = getDestinationFile(header);
-
+		if ( destFile == null ) return;
+		
 		worker.setDisplayText("Saving " + destFile.getName());
 
 		// write to temporary file

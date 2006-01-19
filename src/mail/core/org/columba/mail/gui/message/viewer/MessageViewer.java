@@ -18,16 +18,15 @@
 package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.Scrollable;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
-import org.columba.core.config.DefaultItem;
-import org.columba.core.gui.util.FontProperties;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -41,18 +40,13 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 
 /**
- * IViewer for a complete RFC822 message.
+ * Viewer for a complete RFC822 message.
  * 
  * @author fdietz
  */
-public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
-		Scrollable {
+public class MessageViewer extends JPanel implements ICustomViewer {
 
-	protected AttachmentsViewer attachmentsViewer;
-
-	private InlineAttachmentsViewer inlineAttachmentsViewer;
-
-	private EncryptionStatusViewer securityInformationController;
+	private SecurityStatusViewer securityInformationController;
 
 	private TextViewer bodytextViewer;
 
@@ -67,28 +61,23 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	/**
 	 * 
 	 */
-	public Rfc822MessageViewer(MessageController mediator) {
+	public MessageViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;
+
+		Border outterBorder = BorderFactory.createCompoundBorder(BorderFactory
+				.createEmptyBorder(10, 10, 10, 10), new MessageBorder(
+				Color.LIGHT_GRAY, 1, true));
+		Border innerBorder = BorderFactory.createCompoundBorder(outterBorder,
+				new LineBorder(Color.WHITE, 5, true));
+
+		setBorder(innerBorder);
 
 		initComponents();
 
 		layoutComponents();
 
-	}
-
-	private boolean showAttachmentsInlineEnabled() {
-		XmlElement gui = MailConfig.getInstance().get("options").getElement(
-				"/options/gui");
-		XmlElement messageviewer = gui.getElement("messageviewer");
-
-		if (messageviewer == null) {
-			messageviewer = gui.addSubElement("messageviewer");
-		}
-
-		DefaultItem item = new DefaultItem(messageviewer);
-		return item.getBooleanWithDefault("inline_attachments", false);
 	}
 
 	/**
@@ -109,17 +98,10 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 
 		getHeaderController().view(folder, uid, mediator);
 
-		if (showAttachmentsInlineEnabled()) {
-			inlineAttachmentsViewer.view(folder, uid, mediator);
-		} else {
-			MimeTree mimePartTree = folder.getMimePartTree(uid);
-			MimePart mp = chooseBodyPart(mimePartTree);
-			if (mp != null)
-				getBodytextViewer()
-						.view(folder, uid, mp.getAddress(), mediator);
-
-			attachmentsViewer.view(folder, uid, mediator);
-		}
+		MimeTree mimePartTree = folder.getMimePartTree(uid);
+		MimePart mp = chooseBodyPart(mimePartTree);
+		if (mp != null)
+			getBodytextViewer().view(folder, uid, mp.getAddress(), mediator);
 
 		getSpamStatusViewer().view(folder, uid, mediator);
 		getSecurityInformationViewer().view(folder, uid, mediator);
@@ -129,19 +111,14 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		layoutComponents();
 
 		getHeaderController().updateGUI();
 
-		if (showAttachmentsInlineEnabled()) {
-			inlineAttachmentsViewer.updateGUI();
-		} else {
-			getBodytextViewer().updateGUI();
-			attachmentsViewer.updateGUI();
-		}
+		getBodytextViewer().updateGUI();
 
 		getSpamStatusViewer().updateGUI();
 		getSecurityInformationViewer().updateGUI();
+
 	}
 
 	/**
@@ -157,13 +134,6 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	 */
 	public boolean isVisible() {
 		return true;
-	}
-
-	/**
-	 * @return Returns the attachmentsViewer.
-	 */
-	public AttachmentsViewer getAttachmentsViewer() {
-		return attachmentsViewer;
 	}
 
 	/**
@@ -183,10 +153,9 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	/**
 	 * @return Returns the inlineAttachmentsViewer.
 	 */
-	public InlineAttachmentsViewer getInlineAttachmentsViewer() {
-		return inlineAttachmentsViewer;
-	}
-
+	// public InlineAttachmentsViewer getInlineAttachmentsViewer() {
+	// return inlineAttachmentsViewer;
+	// }
 	/**
 	 * @return Returns the pgpFilter.
 	 */
@@ -197,7 +166,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	/**
 	 * @return Returns the securityInformationController.
 	 */
-	public EncryptionStatusViewer getSecurityInformationViewer() {
+	public SecurityStatusViewer getSecurityInformationViewer() {
 		return securityInformationController;
 	}
 
@@ -209,61 +178,54 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	}
 
 	public void setAttachmentSelectionReference(MailFolderCommandReference ref) {
-		getAttachmentsViewer().setLocalReference(ref);
+		// TODO
 	}
 
 	public MailFolderCommandReference getAttachmentSelectionReference() {
-		return getAttachmentsViewer().getLocalReference();
+		// TODO
+		return null;
 	}
 
 	private void initComponents() {
 		spamStatusController = new SpamStatusViewer(mediator);
 		bodytextViewer = new TextViewer(mediator);
-		securityInformationController = new EncryptionStatusViewer(mediator);
-		headerController = new HeaderViewer(mediator);
+		securityInformationController = new SecurityStatusViewer(mediator);
+		headerController = new HeaderViewer(mediator,
+				securityInformationController, spamStatusController);
 
-		attachmentsViewer = new AttachmentsViewer(mediator);
-
-		inlineAttachmentsViewer = new InlineAttachmentsViewer(mediator);
-
-		pgpFilter = new PGPMessageFilter(mediator.getFrameController(), this);
+		pgpFilter = new PGPMessageFilter(mediator.getFrameController(), mediator);
 		pgpFilter.addSecurityStatusListener(securityInformationController);
-		pgpFilter.addSecurityStatusListener(headerController.getStatusPanel());
 
 	}
 
 	private void layoutComponents() {
 
-		removeAll();
+		Color backgroundColor = UIManager.getColor("TextField.background");
 
 		setLayout(new BorderLayout());
 
 		JPanel top = new JPanel();
+		top.setBackground(backgroundColor);
 		top.setLayout(new BorderLayout());
 
 		if (spamStatusController.isVisible())
 			top.add(spamStatusController.getView(), BorderLayout.NORTH);
 
-		if (headerController.isVisible())
-			top.add(headerController.getView(), BorderLayout.CENTER);
+		top.add(headerController, BorderLayout.CENTER);
 
 		add(top, BorderLayout.NORTH);
 
 		JPanel bottom = new JPanel();
+		bottom.setBackground(backgroundColor);
+
 		bottom.setLayout(new BorderLayout());
 
-		if (securityInformationController.isVisible())
-			bottom.add(securityInformationController.getView(),
-					BorderLayout.NORTH);
+		JComponent c = getBodytextViewer().getView();
+		c.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		c.setBackground(backgroundColor);
+		bottom.add(c, BorderLayout.CENTER);
 
-		if (showAttachmentsInlineEnabled()) {
-			bottom.add(inlineAttachmentsViewer, BorderLayout.CENTER);
-		} else {
-			bottom.add(getBodytextViewer(), BorderLayout.CENTER);
-			bottom.add(attachmentsViewer, BorderLayout.SOUTH);
-		}
-
-		add(bottom, BorderLayout.SOUTH);
+		add(bottom, BorderLayout.CENTER);
 	}
 
 	public void clear() {
@@ -281,49 +243,6 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 
 	public String getSelectedText() {
 		return getBodytextViewer().getSelectedText();
-	}
-
-	/** ************** Scrollable interface ******************** */
-
-	/**
-	 * @see javax.swing.Scrollable#getPreferredScrollableViewportSize()
-	 */
-	public Dimension getPreferredScrollableViewportSize() {
-		return getPreferredSize();
-	}
-
-	/**
-	 * @see javax.swing.Scrollable#getScrollableUnitIncrement(java.awt.Rectangle,
-	 *      int, int)
-	 */
-	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
-		Font textFont = FontProperties.getTextFont();
-
-		return textFont.getSize() * 3;
-	}
-
-	/**
-	 * @see javax.swing.Scrollable#getScrollableBlockIncrement(java.awt.Rectangle,
-	 *      int, int)
-	 */
-	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
-		Font textFont = FontProperties.getTextFont();
-
-		return textFont.getSize() * 10;
-	}
-
-	/**
-	 * @see javax.swing.Scrollable#getScrollableTracksViewportWidth()
-	 */
-	public boolean getScrollableTracksViewportWidth() {
-		return true;
-	}
-
-	/**
-	 * @see javax.swing.Scrollable#getScrollableTracksViewportHeight()
-	 */
-	public boolean getScrollableTracksViewportHeight() {
-		return false;
 	}
 
 	private MimePart chooseBodyPart(MimeTree mimePartTree) {

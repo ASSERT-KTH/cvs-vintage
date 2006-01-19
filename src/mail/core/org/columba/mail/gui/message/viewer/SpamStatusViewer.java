@@ -121,12 +121,13 @@ public class SpamStatusViewer extends JPanel implements ICustomViewer,
 	public void updateUI() {
 		super.updateUI();
 
-		setBackground(Color.white);
+		setBorder(new MessageBorder(new Color(255, 176, 100), 1, true));
+		
+		Color color = new Color(255, 255, 160);
+		
 		if (panel != null)
-			panel.setBackground(Color.orange);
+			panel.setBackground(color);
 
-		if (label != null)
-			label.setFont(label.getFont().deriveFont(Font.BOLD));
 
 	}
 

@@ -19,10 +19,14 @@ package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
@@ -32,16 +36,28 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 
 import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
+import org.columba.core.desktop.ColumbaDesktop;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.StreamUtils;
@@ -53,8 +69,11 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OptionsItem;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -65,10 +84,9 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 /**
- * IViewer displays message body text.
+ * Display message body text.
  * 
  * @author fdietz
- * 
  */
 public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		CaretListener {
@@ -122,6 +140,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 	private Object uid;
 
+	private boolean usingJDIC;
+
 	public TextViewer(MessageController mediator) {
 		super();
 
@@ -130,6 +150,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		initHTMLViewerPlugin();
 
 		setLayout(new BorderLayout());
+
 		add(viewerPlugin.getView(), BorderLayout.CENTER);
 
 		initConfiguration();
@@ -138,7 +159,11 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		// FocusManager.getInstance().registerComponent(new MyFocusOwner());
 
-		mediator.addMouseListener(viewerPlugin.getView());
+		if (!usingJDIC)
+			((JTextPane) ((JScrollPane) viewerPlugin.getView()).getViewport()
+					.getView()).addMouseListener(new URLMouseListener());
+
+		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 	}
 
 	private void initHTMLViewerPlugin() {
@@ -155,9 +180,12 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 						.severe("Error while trying to load JDIC based html viewer -> falling back to Swing's JTextPane instead");
 
 				viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
-			}
+				usingJDIC = false;
+			} else
+				usingJDIC = true;
 		} else {
 			viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
+			usingJDIC = false;
 		}
 
 	}
@@ -341,11 +369,10 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		// read configuration from options.xml file
 		// create css-stylesheet string
 		// set font of html-element <P>
-		css = "<style type=\"text/css\">\n" +
-			"body {font-family:\"" + name + "\"; font-size:\"" + size + "pt; \"} \n" +
-			"a { color: blue; text-decoration: underline }\n" +
-			"font.quoting {color:#949494;} \n"+
-			"</style>\n";
+		css = "<style type=\"text/css\">\n" + "body {font-family:\"" + name
+				+ "\"; font-size:\"" + size + "pt; \"} \n"
+				+ "a { color: blue; text-decoration: underline }\n"
+				+ "font.quoting {color:#949494;} \n" + "</style>\n";
 	}
 
 	/*
@@ -486,6 +513,131 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	 */
 	public boolean isHtmlMessage() {
 		return htmlMessage;
+	}
+
+	protected void processPopup(MouseEvent ev) {
+		// final URL url = extractURL(ev);
+		ColumbaURL mailto = extractMailToURL(ev);
+		mediator.setSelectedURL(mailto);
+
+		final MouseEvent event = ev;
+		// open context-menu
+		// -> this has to happen in the awt-event dispatcher thread
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				mediator.getPopupMenu().show(event.getComponent(),
+						event.getX(), event.getY());
+			}
+		});
+	}
+
+	protected URL extractURL(MouseEvent event) {
+		JEditorPane pane = (JEditorPane) event.getSource();
+		HTMLDocument doc = (HTMLDocument) pane.getDocument();
+
+		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
+		AttributeSet a = e.getAttributes();
+		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
+
+		if (anchor == null) {
+			return null;
+		}
+
+		URL url = null;
+
+		try {
+			url = new URL((String) anchor.getAttribute(HTML.Attribute.HREF));
+		} catch (MalformedURLException mue) {
+			return null;
+		}
+
+		return url;
+	}
+
+	/**
+	 * this method extracts any url, but if URL's protocol is mailto: then this
+	 * method also extracts the corresponding recipient name whatever it may be.
+	 * <br>
+	 * This "kind of" superseeds the previous extractURL(MouseEvent) method.
+	 */
+	private ColumbaURL extractMailToURL(MouseEvent event) {
+
+		ColumbaURL url = new ColumbaURL(extractURL(event));
+		if (url.getRealURL() == null)
+			return null;
+
+		if (!url.getRealURL().getProtocol().equalsIgnoreCase("mailto"))
+			return url;
+
+		JEditorPane pane = (JEditorPane) event.getSource();
+		HTMLDocument doc = (HTMLDocument) pane.getDocument();
+
+		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
+		AttributeSet a = e.getAttributes();
+		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
+
+		try {
+			url.setSender(doc.getText(e.getStartOffset(), (e.getEndOffset() - e
+					.getStartOffset())));
+		} catch (BadLocationException e1) {
+			url.setSender("");
+		}
+
+		return url;
+	}
+
+	class URLMouseListener implements MouseListener {
+
+		public void mousePressed(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		public void mouseReleased(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		public void mouseEntered(MouseEvent event) {
+		}
+
+		public void mouseExited(MouseEvent event) {
+		}
+
+		public void mouseClicked(MouseEvent event) {
+			if (!SwingUtilities.isLeftMouseButton(event)) {
+				return;
+			}
+
+			URL url = extractURL(event);
+
+			if (url == null) {
+				return;
+			}
+
+			mediator.setSelectedURL(new ColumbaURL(url));
+
+			// URLController c = new URLController();
+
+			if (url.getProtocol().equalsIgnoreCase("mailto")) {
+				// open composer
+				ComposerController controller = new ComposerController();
+				new DefaultContainer(controller);
+
+				ComposerModel model = new ComposerModel();
+				model.setTo(url.getFile());
+
+				// apply model
+				controller.setComposerModel(model);
+
+				controller.updateComponents(true);
+			} else {
+				ColumbaDesktop.getInstance().browse(url);
+			}
+		}
 	}
 
 }

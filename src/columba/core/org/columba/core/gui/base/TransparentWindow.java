@@ -30,6 +30,7 @@ import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JWindow;
 
 
@@ -51,6 +52,7 @@ public class TransparentWindow extends JWindow {
         updateScreen();
 
         enableEvents(AWTEvent.FOCUS_EVENT_MASK);
+
     }
 
     protected void updateScreen() {

@@ -113,7 +113,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		image = new ImageIcon(Toolkit.getDefaultToolkit().createImage(data));
 		//image = new ImageIcon(data);
 
-		Container parent = mediator.getViewport();
+		Container parent = mediator;
 		int cwidth = (int) parent.getWidth();
 
 		// if image is bigger than message viewer size

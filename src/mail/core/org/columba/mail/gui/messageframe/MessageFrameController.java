@@ -155,7 +155,7 @@ public class MessageFrameController extends AbstractMailFrameController
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 
-		panel.add(messageController, BorderLayout.CENTER);
+		panel.add(messageController.getView(), BorderLayout.CENTER);
 
 		ViewItem viewItem = getViewItem();
 

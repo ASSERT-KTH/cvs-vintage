@@ -16,96 +16,173 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.desktop.ColumbaDesktop;
-import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.message.filter.PGPMessageFilter;
 import org.columba.mail.gui.message.util.ColumbaURL;
-import org.columba.mail.gui.message.viewer.Rfc822MessageViewer;
+import org.columba.mail.gui.message.viewer.HeaderViewer;
+import org.columba.mail.gui.message.viewer.MessageBorder;
+import org.columba.mail.gui.message.viewer.SecurityStatusViewer;
+import org.columba.mail.gui.message.viewer.SpamStatusViewer;
+import org.columba.mail.gui.message.viewer.TextViewer;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.MimeType;
 
 /**
- * this class shows the messagebody
+ * Shows the message. This includes message headers, body text, attachments and
+ * status.
  */
-public class MessageController extends JScrollPane implements
-		HyperlinkListener, CharsetListener, IMessageController {
+public class MessageController extends JPanel implements CharsetListener,
+		IMessageController {
 
 	private MailFrameMediator frameController;
 
 	private MouseListener listener;
 
-	private int active;
+	private SecurityStatusViewer securityStatusViewer;
 
-	private JPanel panel;
+	private TextViewer bodytextViewer;
 
-	private Rfc822MessageViewer messageViewer;
+	private SpamStatusViewer spamStatusViewer;
+
+	private HeaderViewer headerController;
+
+	private PGPMessageFilter pgpFilter;
 
 	private URLObservable urlObservable;
 
 	private ExtendablePopupMenu menu;
 
-	private URLMouseListener mouseListener;
-
 	private IMailbox folder;
+
 	private Object uid;
 
 	public MessageController(MailFrameMediator frameMediator) {
 		this.frameController = frameMediator;
 
-		mouseListener = new URLMouseListener();
+		Border outterBorder = BorderFactory.createCompoundBorder(BorderFactory
+				.createEmptyBorder(10, 10, 10, 10), new MessageBorder(
+				Color.LIGHT_GRAY, 1, true));
+		Border innerBorder = BorderFactory.createCompoundBorder(outterBorder,
+				new LineBorder(Color.WHITE, 5, true));
 
-		messageViewer = new Rfc822MessageViewer(this);
+		setBorder(innerBorder);
 
-		// FIXME: no hardcoded Color.white
-		getViewport().setBackground(Color.white);
+		initComponents();
 
-		setViewportView(messageViewer);
+		layoutComponents();
 
 		((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
 		urlObservable = new URLObservable();
+
+		addComponentListener(new ComponentListener() {
+
+			public void componentHidden(ComponentEvent e) {
+			}
+
+			public void componentMoved(ComponentEvent e) {
+			}
+
+			public void componentResized(ComponentEvent e) {
+				try {
+					updateGUI();
+					repaint();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			public void componentShown(ComponentEvent e) {
+			}
+
+		});
+	}
+
+	private void initComponents() {
+		spamStatusViewer = new SpamStatusViewer(this);
+		bodytextViewer = new TextViewer(this);
+		securityStatusViewer = new SecurityStatusViewer(this);
+		headerController = new HeaderViewer(this, securityStatusViewer,
+				spamStatusViewer);
+
+		pgpFilter = new PGPMessageFilter(getFrameController(), this);
+		pgpFilter.addSecurityStatusListener(securityStatusViewer);
+
+	}
+
+	private void layoutComponents() {
+
+		Color backgroundColor = UIManager.getColor("TextField.background");
+
+		setLayout(new BorderLayout());
+
+		JPanel top = new JPanel();
+		top.setBackground(backgroundColor);
+		top.setLayout(new BorderLayout());
+
+		if (spamStatusViewer.isVisible())
+			top.add(spamStatusViewer.getView(), BorderLayout.NORTH);
+
+		top.add(headerController, BorderLayout.CENTER);
+
+		add(top, BorderLayout.NORTH);
+
+		JPanel bottom = new JPanel();
+		bottom.setBackground(backgroundColor);
+
+		bottom.setLayout(new BorderLayout());
+
+		JComponent c = bodytextViewer.getView();
+		c.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		c.setBackground(backgroundColor);
+		bottom.add(c, BorderLayout.CENTER);
+
+		add(bottom, BorderLayout.CENTER);
 	}
 
 	public void clear() {
-		messageViewer.clear();
+		// TODO implement clear()
 
-		setViewportView(messageViewer);
 	}
 
-	public void hyperlinkUpdate(HyperlinkEvent e) {
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#filterMessage(org.columba.mail.folder.IMailbox,
+	 *      java.lang.Object)
+	 */
+	public IMailFolderCommandReference filterMessage(IMailbox folder, Object uid)
+			throws Exception {
+		return pgpFilter.filter(folder, uid);
 	}
 
 	/**
@@ -117,9 +194,7 @@ public class MessageController extends JScrollPane implements
 		return frameController;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
 	 */
 	public void charsetChanged(CharsetEvent e) {
@@ -129,14 +204,11 @@ public class MessageController extends JScrollPane implements
 								.getTableSelection()));
 	}
 
-	/** ************************ CaretUpdateListener interface **************** */
-
 	/** *********************************************************************** */
 
 	/**
-	 * Show message in messages viewer.
-	 * <p>
-	 * Should be called in Command.execute() or in another background thread.
+	 * Show message in messages viewer. Should be called in
+	 * <code>Command.execute()</code> or in another background thread.
 	 * 
 	 * @param folder
 	 *            selected folder
@@ -147,8 +219,26 @@ public class MessageController extends JScrollPane implements
 	public void showMessage(IMailbox folder, Object uid) throws Exception {
 		this.folder = folder;
 		this.uid = uid;
-		
-		messageViewer.view(folder, uid, (MailFrameMediator) frameController);
+
+		// if necessary decrypt/verify message
+		IMailFolderCommandReference newRefs = filterMessage(folder, uid);
+
+		// map to new reference
+		if (newRefs != null) {
+			folder = (IMailbox) newRefs.getSourceFolder();
+			uid = newRefs.getUids()[0];
+		}
+
+		MimeTree mimePartTree = folder.getMimePartTree(uid);
+		MimePart mp = chooseBodyPart(mimePartTree);
+		if (mp != null)
+			bodytextViewer.view(folder, uid, mp.getAddress(), this
+					.getFrameController());
+
+		spamStatusViewer.view(folder, uid, this.getFrameController());
+		securityStatusViewer.view(folder, uid, this.getFrameController());
+
+		headerController.view(folder, uid, this.getFrameController());
 
 	}
 
@@ -160,153 +250,34 @@ public class MessageController extends JScrollPane implements
 	 */
 	public void updateGUI() throws Exception {
 
-		messageViewer.updateGUI();
+		bodytextViewer.updateGUI();
 
-		getVerticalScrollBar().setValue(0);
+		spamStatusViewer.updateGUI();
+		securityStatusViewer.updateGUI();
+
+		headerController.updateGUI();
+
 	}
 
-	/**
-	 * @return Returns the messageViewer.
-	 */
-	public Rfc822MessageViewer getMessageViewer() {
-		return messageViewer;
+	public IMailFolderCommandReference getReference() {
+		return new MailFolderCommandReference(folder, new Object[] { uid });
 	}
 
-	public MailFolderCommandReference getAttachmentSelectionReference() {
-		return getMessageViewer().getAttachmentsViewer().getLocalReference();
+	public JComponent getView() {
+		return this;
 	}
 
 	public void addURLObserver(Observer observer) {
-		getUrlObservable().addObserver(observer);
+		urlObservable.addObserver(observer);
+	}
+
+	public void setSelectedURL(ColumbaURL url) {
+		urlObservable.setUrl(url);
 	}
 
 	public String getSelectedText() {
-		return getMessageViewer().getSelectedText();
-	}
-
-	protected void processPopup(MouseEvent ev) {
-		// final URL url = extractURL(ev);
-		ColumbaURL mailto = extractMailToURL(ev);
-		urlObservable.setUrl(mailto);
-
-		final MouseEvent event = ev;
-		// open context-menu
-		// -> this has to happen in the awt-event dispatcher thread
-		SwingUtilities.invokeLater(new Runnable() {
-
-			public void run() {
-				getPopupMenu().show(event.getComponent(), event.getX(),
-						event.getY());
-			}
-		});
-	}
-
-	protected URL extractURL(MouseEvent event) {
-		JEditorPane pane = (JEditorPane) event.getSource();
-		HTMLDocument doc = (HTMLDocument) pane.getDocument();
-
-		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
-		AttributeSet a = e.getAttributes();
-		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-
-		if (anchor == null) {
-			return null;
-		}
-
-		URL url = null;
-
-		try {
-			url = new URL((String) anchor.getAttribute(HTML.Attribute.HREF));
-		} catch (MalformedURLException mue) {
-			return null;
-		}
-
-		return url;
-	}
-
-	/**
-	 * this method extracts any url, but if URL's protocol is mailto: then this
-	 * method also extracts the corresponding recipient name whatever it may be.
-	 * <br>
-	 * This "kind of" superseeds the previous extractURL(MouseEvent) method.
-	 */
-	private ColumbaURL extractMailToURL(MouseEvent event) {
-
-		ColumbaURL url = new ColumbaURL(extractURL(event));
-		if (url.getRealURL() == null)
-			return null;
-
-		if (!url.getRealURL().getProtocol().equalsIgnoreCase("mailto"))
-			return url;
-
-		JEditorPane pane = (JEditorPane) event.getSource();
-		HTMLDocument doc = (HTMLDocument) pane.getDocument();
-
-		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
-		AttributeSet a = e.getAttributes();
-		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-
-		try {
-			url.setSender(doc.getText(e.getStartOffset(), (e.getEndOffset() - e
-					.getStartOffset())));
-		} catch (BadLocationException e1) {
-			url.setSender("");
-		}
-
-		return url;
-	}
-
-	class URLMouseListener implements MouseListener {
-
-		public void mousePressed(MouseEvent event) {
-			if (event.isPopupTrigger()) {
-				processPopup(event);
-			}
-		}
-
-		public void mouseReleased(MouseEvent event) {
-			if (event.isPopupTrigger()) {
-				processPopup(event);
-			}
-		}
-
-		public void mouseEntered(MouseEvent event) {
-		}
-
-		public void mouseExited(MouseEvent event) {
-		}
-
-		public void mouseClicked(MouseEvent event) {
-			if (!SwingUtilities.isLeftMouseButton(event)) {
-				return;
-			}
-
-			URL url = extractURL(event);
-
-			if (url == null) {
-				return;
-			}
-
-			getUrlObservable().setUrl(new ColumbaURL(url));
-
-			// URLController c = new URLController();
-
-			if (url.getProtocol().equalsIgnoreCase("mailto")) {
-				// open composer
-				ComposerController controller = new ComposerController();
-				new DefaultContainer(controller);
-
-				ComposerModel model = new ComposerModel();
-				model.setTo(url.getFile());
-
-				// apply model
-				controller.setComposerModel(model);
-
-				controller.updateComponents(true);
-			} else {
-				ColumbaDesktop.getInstance().browse(url);
-			}
-		}
+		// TODO
+		throw new IllegalArgumentException("not implemented yet");
 	}
 
 	/**
@@ -329,18 +300,12 @@ public class MessageController extends JScrollPane implements
 				InputStream is = DiskIO
 						.getResourceStream("org/columba/mail/action/message_contextmenu.xml");
 
-				menu = new MenuXMLDecoder(getFrameController()).createPopupMenu(is);
+				menu = new MenuXMLDecoder(getFrameController())
+						.createPopupMenu(is);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	/**
-	 * @see org.columba.mail.gui.message.IMessageController#addMouseListener(javax.swing.JTextPane)
-	 */
-	public void addMouseListener(JComponent c) {
-		c.addMouseListener(mouseListener);
 	}
 
 	public IMailbox getShownFolder() {
@@ -350,4 +315,62 @@ public class MessageController extends JScrollPane implements
 	public Object getShownUid() {
 		return uid;
 	}
+
+	private MimePart chooseBodyPart(MimeTree mimePartTree) {
+		MimePart bodyPart = null;
+
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
+				.getRoot().getElement("/options/html");
+
+		// ensure that there is an HTML part in the email, otherwise JTextPanel
+		// throws a RuntimeException
+
+		// Which Bodypart shall be shown? (html/plain)
+		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
+				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
+			bodyPart = mimePartTree.getFirstTextPart("html");
+		} else {
+			bodyPart = mimePartTree.getFirstTextPart("plain");
+		}
+
+		return bodyPart;
+
+	}
+
+	private boolean hasHtmlPart(MimePart mimeTypes) {
+
+		if (mimeTypes.getHeader().getMimeType().equals(
+				new MimeType("text", "plain")))
+			return true; // exit immediately
+
+		java.util.List children = mimeTypes.getChilds();
+
+		for (int i = 0; i < children.size(); i++) {
+			if (hasHtmlPart(mimeTypes.getChild(i)))
+				return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * @param mimePartTree
+	 */
+	private Integer[] getBodyPartAddress(MimeTree mimePartTree) {
+		MimePart bodyPart = null;
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
+				.getRoot().getElement("/options/html");
+
+		// Which Bodypart shall be shown? (html/plain)
+		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
+				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
+			bodyPart = mimePartTree.getFirstTextPart("html");
+		} else {
+			bodyPart = mimePartTree.getFirstTextPart("plain");
+		}
+
+		return bodyPart.getAddress();
+	}
+
 }

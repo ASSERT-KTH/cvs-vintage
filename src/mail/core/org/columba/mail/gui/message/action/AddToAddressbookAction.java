@@ -41,10 +41,12 @@ import org.columba.ristretto.parser.ParserException;
  */
 public class AddToAddressbookAction extends AbstractColumbaAction implements
 		Observer {
-	ColumbaURL url = null;
+	private String emailAddress;
+
+	private ColumbaURL url = null;
 
 	/**
-	 *  
+	 * 
 	 */
 	public AddToAddressbookAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
@@ -54,9 +56,23 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
 
-		//	listen for URL changes
-		((MessageViewOwner) controller).getMessageController()
-				.addURLObserver(this);
+		// listen for URL changes
+		((MessageViewOwner) controller).getMessageController().addURLObserver(
+				this);
+	}
+
+	/**
+	 * 
+	 */
+	public AddToAddressbookAction(IFrameMediator controller, String emailAddress) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"viewer_addressbook"));
+
+		this.emailAddress = emailAddress;
+
+		setEnabled(true);
+
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
 	}
 
 	/*
@@ -72,8 +88,8 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 			e.printStackTrace();
 			return;
 		}
-        // ask the user which addressbook he wants to save this address to
-        ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
+		// ask the user which addressbook he wants to save this address to
+		ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
 
 		org.columba.addressbook.folder.IFolder selectedFolder = dialog
 				.getSelectedFolder();
@@ -91,8 +107,14 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 		}
 
 		try {
-			// create Address from URL
-			Address address = Address.parse(url.getSender());
+			Address address = null;
+			if (emailAddress != null)
+				address = Address.parse(emailAddress);
+			else
+				// create Address from URL
+				address = Address.parse(url.getSender());
+
+			//Address address = Address.parse(url.getSender());
 			// add contact to addressbook
 			contactFacade.addContact(selectedFolder.getUid(), address
 					.toString());
@@ -109,7 +131,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 	public void update(Observable arg0, Object arg1) {
 
 		url = ((URLObservable) arg0).getUrl();
-
+		
 		// only enable this action, if this is a mailto: URL
 		if (url == null)
 			setEnabled(false);

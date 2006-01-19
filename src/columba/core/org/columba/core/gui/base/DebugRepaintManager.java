@@ -55,10 +55,10 @@ public class DebugRepaintManager extends RepaintManager {
 
     private void checkThread(JComponent c) {
         if (!SwingUtilities.isEventDispatchThread() && checkIsShowing(c)) {
-            LOG.info("----------Wrong Thread START"); //$NON-NLS-1$
+        	System.err.println("----------Wrong Thread START"); //$NON-NLS-1$
             LOG.info(getStracktraceAsString(new Exception()));
             dumpComponentTree(c);
-            LOG.info("----------Wrong Thread END"); //$NON-NLS-1$
+            System.err.println("----------Wrong Thread END"); //$NON-NLS-1$
         }
     }
 
@@ -84,13 +84,13 @@ public class DebugRepaintManager extends RepaintManager {
     }
 
    private void dumpComponentTree(Component c) {
-        LOG.info("----------Component Tree"); //$NON-NLS-1$
+        System.err.println("----------Component Tree"); //$NON-NLS-1$
         resetTabCount();
         for (; c != null; c = c.getParent()) {
             printTabIndent();
-            LOG.info(c.toString());
+            System.err.println(c.toString());
             printTabIndent();
-            LOG.info("Showing:" + c.isShowing() + " Visible: " + c.isVisible()); //$NON-NLS-2$
+            System.err.println("Showing:" + c.isShowing() + " Visible: " + c.isVisible()); //$NON-NLS-2$
             incrementTabCount();
         }
     }
@@ -105,7 +105,7 @@ public class DebugRepaintManager extends RepaintManager {
 
     private void printTabIndent() {
         for (int i = 0; i < this.tabCount; i++) {
-            System.out.print("\t");
+        	System.err.print("\t");
         }
     }
 }

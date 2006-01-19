@@ -18,8 +18,10 @@ package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Image;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  * 
  */
-public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
+public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 		SecurityStatusListener {
 
 	public static final int DECRYPTION_SUCCESS = 0;
@@ -64,10 +66,14 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 
 	private MessageController mediator;
 
-	public EncryptionStatusViewer(MessageController mediator) {
+	private static final Color background = Color.YELLOW;
+
+	public SecurityStatusViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;
+
+		
 
 		setLayout(new BorderLayout());
 
@@ -82,7 +88,7 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 		text = new JLabel();
 		add(text, BorderLayout.CENTER);
 
-		setValue(EncryptionStatusViewer.NOOP, "");
+		setValue(SecurityStatusViewer.NOOP, "");
 
 		updateUI();
 
@@ -92,25 +98,32 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 	public void updateUI() {
 		super.updateUI();
 
-		setBackground(Color.white);
+		setBorder(new MessageBorder(new Color(255, 255, 60), 1, true));
+		
+		Color color = new Color(255, 255, 160);
+
+		setBackground(color);
 
 		if (icon != null) {
-			icon.setBackground(Color.white);
+			icon.setBackground(color);
 		}
 
 		if (text != null) {
-			text.setBackground(Color.white);
+			text.setBackground(color);
 		}
 
 		if (left != null) {
-			left.setBackground(Color.white);
+			left.setBackground(color);
 		}
 	}
 
 	private void setValue(int value, String message) {
+		ImageIcon image = null;
+
 		switch (value) {
-		case EncryptionStatusViewer.DECRYPTION_SUCCESS: {
-			icon.setIcon(ImageLoader.getImageIcon("pgp-signature-ok.png"));
+		case SecurityStatusViewer.DECRYPTION_SUCCESS: {
+			image = ImageLoader.getImageIcon("pgp-signature-ok.png");
+
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_decrypt_success"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",
@@ -119,8 +132,8 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 			break;
 		}
 
-		case EncryptionStatusViewer.DECRYPTION_FAILURE: {
-			icon.setIcon(ImageLoader.getImageIcon("pgp-signature-bad.png"));
+		case SecurityStatusViewer.DECRYPTION_FAILURE: {
+			image = ImageLoader.getImageIcon("pgp-signature-bad.png");
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_encrypt_fail"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",
@@ -129,8 +142,8 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 			break;
 		}
 
-		case EncryptionStatusViewer.VERIFICATION_SUCCESS: {
-			icon.setIcon(ImageLoader.getImageIcon("pgp-signature-ok.png"));
+		case SecurityStatusViewer.VERIFICATION_SUCCESS: {
+			image = ImageLoader.getImageIcon("pgp-signature-ok.png");
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_verify_success"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",
@@ -139,8 +152,9 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 			break;
 		}
 
-		case EncryptionStatusViewer.VERIFICATION_FAILURE: {
-			icon.setIcon(ImageLoader.getImageIcon("pgp-signature-bad.png"));
+		case SecurityStatusViewer.VERIFICATION_FAILURE: {
+			image = ImageLoader.getImageIcon("pgp-signature-bad.png");
+
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_verify_fail"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",
@@ -149,8 +163,8 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 			break;
 		}
 
-		case EncryptionStatusViewer.NO_KEY: {
-			icon.setIcon(ImageLoader.getImageIcon("pgp-signature-nokey.png"));
+		case SecurityStatusViewer.NO_KEY: {
+			image = ImageLoader.getImageIcon("pgp-signature-nokey.png");
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_verify_nokey"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",
@@ -159,7 +173,7 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 			break;
 		}
 
-		case EncryptionStatusViewer.NOOP: {
+		case SecurityStatusViewer.NOOP: {
 			text.setText("");
 			icon.setIcon(null);
 
@@ -167,6 +181,14 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 		}
 		}
 
+		if (image != null) {
+			// scale image
+			image = new ImageIcon(image.getImage().getScaledInstance(16, 16,
+					Image.SCALE_SMOOTH));
+
+			icon.setIcon(image);
+		}
+		
 		updateUI();
 	}
 
@@ -181,7 +203,8 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("<html><body><p>");
-		buf.append("<b>" + title + "</b><br>");
+		//buf.append("<b>" + title + "</b><br>");
+		buf.append(title + "<br>");
 		buf.append(html);
 		buf.append("</p></body></html>");
 

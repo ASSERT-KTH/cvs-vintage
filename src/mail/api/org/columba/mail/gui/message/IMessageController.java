@@ -19,47 +19,41 @@ package org.columba.mail.gui.message;
 
 import java.util.Observer;
 
-import javax.swing.JComponent;
-
-import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 
 /**
  * @author fdietz
- *
+ * 
  */
 public interface IMessageController {
-	
 
 	/**
 	 * Show message in messages viewer.
 	 * <p>
-	 * Should be called in Command.execute() or in another background
-	 * thread.
+	 * Should be called in Command.execute() or in another background thread.
 	 * 
-	 * @param folder		selected folder
-	 * @param uid			selected message UID
+	 * @param folder
+	 *            selected folder
+	 * @param uid
+	 *            selected message UID
 	 * @throws Exception
 	 */
 	void showMessage(IMailbox folder, Object uid) throws Exception;
 
-	IMailbox getShownFolder();	
-	
+	IMailbox getShownFolder();
+
 	Object getShownUid();
-	
+
 	/**
-	 * Revalidate message viewer components. 
+	 * Revalidate message viewer components.
 	 * <p>
 	 * Call this method after showMessage() to force a repaint():
-	 *
+	 * 
 	 */
 	void updateGUI() throws Exception;
-	
+
 	void clear();
-	
-	//IMailFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception;
-	
+
 	void addURLObserver(Observer observer);
-	
-	void addMouseListener(JComponent c);
+
 }

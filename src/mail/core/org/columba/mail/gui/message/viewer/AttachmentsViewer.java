@@ -23,9 +23,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -34,14 +34,13 @@ import javax.swing.UIManager;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
-import org.columba.core.gui.menu.MenuXMLDecoder;
-import org.columba.core.io.DiskIO;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.action.OpenAttachmentAction;
+import org.columba.mail.gui.message.action.SaveAsAttachmentAction;
 import org.columba.mail.gui.message.command.SaveAttachmentTemporaryCommand;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeTree;
@@ -85,7 +84,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 		// set double-click action for attachment viewer
 		setDoubleClickAction(new OpenAttachmentAction(mediator
-				.getFrameController()));
+				.getFrameController(), this));
 	}
 
 	/**
@@ -153,6 +152,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 					type.getSubtype());
 
 			add(icon, text, tooltip.toString());
+
 			output = true;
 		}
 
@@ -177,6 +177,8 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
+		if (mimePartTree == null ) return;
+		
 		setMimePartTree(mimePartTree);
 	}
 
@@ -187,26 +189,14 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 		return this;
 	}
 
-	public void createPopupMenu() {
-		// menu = new AttachmentMenu(getFrameController());
-
-		try {
-			InputStream is = DiskIO
-					.getResourceStream("org/columba/mail/action/attachment_contextmenu.xml");
-
-			menu = new MenuXMLDecoder(mediator.getFrameController())
-					.createPopupMenu(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	private JPopupMenu getPopupMenu() {
 		// bug #999990 (fdietz): make sure popup menu is created correctly
 		if (menu == null) {
-			createPopupMenu();
-
+			menu = new ExtendablePopupMenu("mail.attachmentviewer");
+			menu.add(new OpenAttachmentAction(mediator.getFrameController(),
+					this));
+			menu.add(new SaveAsAttachmentAction(mediator.getFrameController(),
+					this));
 		}
 
 		return menu;
@@ -234,10 +224,6 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 		private void maybeShowPopup(MouseEvent e) {
 			if (e.isPopupTrigger()) {
-				/*
-				 * if (getView().countSelected() <= 1) {
-				 * getView().select(e.getPoint(), 0); }
-				 */
 
 				if (countSelected() >= 1) {
 					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
@@ -271,9 +257,14 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 	 * 
 	 * @return the selected mime part.
 	 */
-	public StreamableMimePart getSelectedMimePart() {
+	private StreamableMimePart getSelectedMimePart() {
 		return (StreamableMimePart) model.getDisplayedMimeParts().get(
 				getSelectedIndex());
+	}
+
+	public Integer[] getSelected() {
+		StreamableMimePart mp = getSelectedMimePart();
+		return mp.getAddress();
 	}
 
 	/**
@@ -379,6 +370,11 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 			return icon;
 		}
+	}
+
+	public JComponent add(Icon image, String text, String tooltip) {
+		JComponent comp = super.add(image, text, tooltip);
+		return comp;
 	}
 
 }

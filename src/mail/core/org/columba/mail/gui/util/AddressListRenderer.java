@@ -16,6 +16,8 @@
 
 package org.columba.mail.gui.util;
 
+import java.util.Vector;
+
 import org.columba.ristretto.message.Address;
 
 /**
@@ -45,19 +47,36 @@ public class AddressListRenderer {
 	 *            addresses to render as HTML links.
 	 * @return a String buffer.
 	 */
-	public static StringBuffer renderToHTMLWithLinks(Address[] addresses) {
+	public static String renderToHTMLWithLinks(Address[] addresses) {
 		StringBuffer result = new StringBuffer();
 
 		if ((addresses != null) && (addresses.length > 0)) {
-			appendAddress(addresses[0], result);
+			result.append(createAddressHTMLString(addresses[0]));
 
 			for (int i = 1; i < addresses.length; i++) {
-				result.append(", ");
-				appendAddress(addresses[i], result);
+				// result.append(", ");
+				result.append(createAddressHTMLString(addresses[i]));
 			}
 		}
 
-		return result;
+		return result.toString();
+	}
+
+	public static String[] renderToHTMLWithLinksStringArray(Address[] addresses) {
+		Vector vector = new Vector();
+
+		if ((addresses != null) && (addresses.length > 0)) {
+			String str = createAddressString(addresses[0]);
+			vector.add(str);
+
+			for (int i = 1; i < addresses.length; i++) {
+				// result.append(", ");
+				str = createAddressString(addresses[i]);
+				vector.add(str);
+			}
+		}
+
+		return (String[]) vector.toArray(new String[0]);
 	}
 
 	/**
@@ -68,18 +87,19 @@ public class AddressListRenderer {
 	 * @param result
 	 *            the string buffer to add the HTML link to.
 	 */
-	private static void appendAddress(Address address, StringBuffer result) {
-		result.append("<A HREF=\"mailto:");
+	private static String createAddressHTMLString(Address address) {
+		StringBuffer result = new StringBuffer();
+		result.append("<html><A HREF=\"mailto:");
 		if (address.getDisplayName().length() != 0) {
 			result.append(address.getDisplayName());
 			result.append(" ");
 			result.append("<" + address.getMailAddress() + ">");
-			
+
 		} else
 			result.append(address.getMailAddress());
-		
+
 		result.append("\">");
-		
+
 		if (address.getDisplayName().length() != 0) {
 
 			result.append(address.getDisplayName());
@@ -89,6 +109,23 @@ public class AddressListRenderer {
 		} else
 			result.append(address.getShortAddress());
 
-		result.append("</A>");
+		result.append("</A></html>");
+
+		return result.toString();
 	}
+
+	private static String createAddressString(Address address) {
+		StringBuffer result = new StringBuffer();
+
+		if (address.getDisplayName().length() != 0) {
+			result.append(address.getDisplayName());
+			result.append(" ");
+			result.append("<" + address.getMailAddress() + ">");
+
+		} else
+			result.append(address.getMailAddress());
+
+		return result.toString();
+	}
+
 }

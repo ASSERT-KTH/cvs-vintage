@@ -19,45 +19,66 @@ package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Insets;
-import java.net.URL;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.border.Border;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
-import org.columba.core.io.DiskIO;
+import org.columba.core.gui.base.AscendingIcon;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
-import org.columba.mail.gui.message.filter.SecurityStatusEvent;
-import org.columba.mail.gui.message.filter.SecurityStatusListener;
+import org.columba.mail.gui.message.action.AddToAddressbookAction;
+import org.columba.mail.gui.message.action.ComposeMessageAction;
+import org.columba.mail.gui.message.action.OpenAttachmentAction;
+import org.columba.mail.gui.message.action.SaveAsAttachmentAction;
 import org.columba.mail.gui.util.AddressListRenderer;
 import org.columba.mail.parser.text.HtmlParser;
-import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.MimeType;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.frapuccino.dynamicitemlistpanel.DynamicItemListPanel;
+import org.frapuccino.swing.LinkButton;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Shows the headers of a RFC822 message in a lightgray box in the top of the
@@ -65,9 +86,9 @@ import org.columba.ristretto.message.Header;
  * 
  * @author fdietz
  */
-public class HeaderViewer extends JPanel implements ICustomViewer {
+public class HeaderViewer extends JPanel {
 
-	//  contains headerfields which are to be displayed
+	// contains headerfields which are to be displayed
 	private Map map;
 
 	private boolean visible;
@@ -76,43 +97,70 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.message.viewer");
 
-	private HeaderTextPane headerTextPane;
-
-	private StatusPanel statusPanel;
+	private HeaderPanel headerTextPane;
 
 	private boolean hasAttachment;
 
-	private MessageController mediator;
-	
-	private static DateFormat DATE_FORMATTER = DateFormat.getDateTimeInstance(DateFormat.LONG,
-			DateFormat.MEDIUM);
+	private AttachmentsViewer attachmentViewer;
 
-	public HeaderViewer(MessageController mediator) {
+	private MessageController mediator;
+
+	// TODO: this should be changed into a "real" window
+	private JPopupMenu attachmentViewerPopup = new JPopupMenu();
+
+	private static DateFormat DATE_FORMATTER = DateFormat.getDateTimeInstance(
+			DateFormat.LONG, DateFormat.MEDIUM);
+
+	private SecurityStatusViewer securityInfoViewer;
+
+	private SpamStatusViewer spamInfoViewer;
+
+	private JPopupMenu attachmentPopup;
+
+	public HeaderViewer(MessageController mediator,
+			SecurityStatusViewer securityInfoViewer,
+			SpamStatusViewer spamInfoViewer) {
 
 		this.mediator = mediator;
+		this.securityInfoViewer = securityInfoViewer;
+		this.spamInfoViewer = spamInfoViewer;
 
-		setLayout(new BorderLayout());
-		setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
+		setBorder(new HeaderSeparatorBorder(Color.LIGHT_GRAY));
 
-		JPanel panel = new JPanel();
+		setBackground(UIManager.getColor("TextField.background"));
 
-		add(panel, BorderLayout.CENTER);
+		headerTextPane = new HeaderPanel();
 
-		panel.setLayout(new BorderLayout());
+		attachmentViewer = new AttachmentsViewer(mediator);
 
-		panel.setBorder(BorderFactory.createLineBorder(Color.gray));
+		attachmentViewerPopup.setBorder(new MessageBorder(Color.LIGHT_GRAY, 1,
+				true));
 
-		headerTextPane = new HeaderTextPane();
-
-		statusPanel = new StatusPanel();
-
-		panel.add(headerTextPane, BorderLayout.CENTER);
-
-		panel.add(statusPanel, BorderLayout.EAST);
+		layoutComponents();
 
 		visible = false;
+	}
 
-		mediator.addMouseListener(headerTextPane);
+	private void layoutComponents() {
+		removeAll();
+
+		setLayout(new BorderLayout());
+
+		JPanel top = new JPanel();
+		top.setBackground(UIManager.getColor("TextField.background"));
+		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
+		if (securityInfoViewer.isVisible()) {
+			top.add(securityInfoViewer);
+		}
+		if (spamInfoViewer.isVisible()) {
+			top.add(spamInfoViewer);
+		}
+
+		if (securityInfoViewer.isVisible() || spamInfoViewer.isVisible())
+			add(top, BorderLayout.NORTH);
+
+		add(headerTextPane, BorderLayout.CENTER);
+
 	}
 
 	/**
@@ -133,8 +181,7 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 		switch (style) {
 		case 0:
 			// default
-			headers = new String[] { "Subject", "Date", "From", "To",
-					 "Cc" };
+			headers = new String[] { "Subject", "Date", "From", "To", "Cc" };
 
 			// get header from folder
 			header = folder.getHeaderFields(uid, headers);
@@ -142,8 +189,9 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 			// transform headers if necessary
 			for (int i = 0; i < headers.length; i++) {
 				String key = headers[i];
-				Object value = transformHeaderField(header, key);
-				if (value != null)
+				JComponent[] value = transformHeaderField(header, key);
+
+				if (value.length > 0)
 					map.put(key, value);
 			}
 
@@ -165,8 +213,9 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 			// transform headers if necessary
 			for (int i = 0; i < headers.length; i++) {
 				String key = headers[i];
-				Object value = transformHeaderField(header, key);
-				if (value != null)
+				JComponent[] value = transformHeaderField(header, key);
+
+				if (value.length > 0)
 					map.put(key, value);
 			}
 
@@ -180,19 +229,330 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 			map = new LinkedHashMap();
 			while (enumeration.hasMoreElements()) {
 				String key = (String) enumeration.nextElement();
-				Object value = transformHeaderField(header, key);
-				if (value != null)
+				JComponent[] value = transformHeaderField(header, key);
+
+				if (value.length > 0)
 					map.put(key, value);
 			}
 
 			break;
 		}
 
+		headerTextPane.setHeader(map);
+
 		hasAttachment = ((Boolean) folder.getAttribute(uid,
 				"columba.attachment")).booleanValue();
 
+		if (hasAttachment) {
+			JComponent[] comps = createAttachmentComponentArray(folder, uid);
+
+			// TODO i18n "attachments" label
+			if (comps.length > 0)
+				map.put("Attachments", comps);
+
+		}
+
+		attachmentViewer.view(folder, uid, mediator);
+
 		visible = true;
 
+	}
+
+	private JComponent[] createAttachmentComponentArray(final IMailbox folder,
+			final Object uid) throws Exception {
+		Vector vector = new Vector();
+
+		MimeTree model = folder.getMimePartTree(uid);
+		List displayedMimeParts = model.getAllLeafs();
+
+		// remove body part if already shown in text viewer
+		removeBodyParts(model, displayedMimeParts);
+
+		// Display resulting MimeParts
+		for (int i = 0; i < displayedMimeParts.size(); i++) {
+			final StreamableMimePart mp = (StreamableMimePart) displayedMimeParts
+					.get(i);
+
+			// create attachment component with text, icon
+			// tooltip, context menu and double-click action
+			JButton button = createAttachmentItem(mp);
+
+			vector.add(button);
+		}
+
+		// create a view more button, responsible for
+		// opening the attachment viewer popup
+		JButton moreButton = createAttachmentMoreButton();
+
+		vector.add(moreButton);
+
+		return (JComponent[]) vector.toArray(new JComponent[0]);
+	}
+
+	/**
+	 * create a view more button, responsible for opening the attachment viewer
+	 * popup
+	 */
+	private JButton createAttachmentMoreButton() {
+		ImageIcon icon = new AscendingIcon();
+		final JButton moreButton = new JButton(icon);
+		moreButton.setMargin(new Insets(0, 1, 0, 0));
+
+		moreButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				toggleAttachmentPopupVisibility();
+			}
+
+		});
+
+		return moreButton;
+	}
+
+	/**
+	 * Create attachment component with name, icon, tooltip description, context
+	 * menu and double-click action.
+	 */
+	private JButton createAttachmentItem(final StreamableMimePart mp) {
+		MimeHeader header = mp.getHeader();
+		MimeType type = header.getMimeType();
+
+		String contentType = type.getType();
+		String contentSubtype = type.getSubtype();
+
+		String text = null;
+
+		// Get Text for Icon
+		if (header.getFileName() != null) {
+			text = header.getFileName();
+		} else {
+			text = contentType + "/" + contentSubtype;
+		}
+
+		// Get Tooltip for Icon
+		StringBuffer tooltip = new StringBuffer();
+		tooltip.append("<html><body>");
+
+		if (header.getFileName() != null) {
+			tooltip.append(header.getFileName());
+			tooltip.append(" - ");
+		}
+
+		tooltip.append("<i>");
+
+		if (header.getContentDescription() != null) {
+			tooltip.append(header.getContentDescription());
+		} else {
+			tooltip.append(contentType);
+			tooltip.append("/");
+			tooltip.append(contentSubtype);
+		}
+
+		tooltip.append("</i></body></html>");
+
+		ImageIcon image = null;
+
+		image = new AttachmentImageIconLoader().getImageIcon(type.getType(),
+				type.getSubtype());
+
+		// scale image
+		image = new ImageIcon(image.getImage().getScaledInstance(16, 16,
+				Image.SCALE_SMOOTH));
+
+		JButton button = new JButton(text, image);
+		button = LinkButton.createLabelButton(button);
+		// button.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
+		button.setToolTipText(tooltip.toString());
+
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				new OpenAttachmentAction(mediator.getFrameController(), mp
+						.getAddress()).actionPerformed(event);
+
+			}
+		});
+
+		button.addMouseListener(new PopupListener(createAttachmentPopupMenu(mp
+				.getAddress())));
+
+		return button;
+	}
+
+	/**
+	 * Remove the first mimepart of contentype "text", as it is already shown in
+	 * text viewer and should not appear in the attachment list again.
+	 */
+	private void removeBodyParts(MimeTree model, List displayedMimeParts) {
+		// Remove the BodyPart(s) if any
+		StreamableMimePart bodyPart = (StreamableMimePart) model
+				.getFirstTextPart("plain");
+
+		if (bodyPart != null) {
+			MimePart bodyParent = bodyPart.getParent();
+
+			if (bodyParent != null) {
+				if (bodyParent.getHeader().getMimeType().getSubtype().equals(
+						"alternative")) {
+					List bodyParts = bodyParent.getChilds();
+					displayedMimeParts.removeAll(bodyParts);
+				} else {
+					displayedMimeParts.remove(bodyPart);
+				}
+			} else {
+				displayedMimeParts.remove(bodyPart);
+			}
+		}
+	}
+
+	private void toggleAttachmentPopupVisibility() {
+		if (attachmentPopup == null) {
+			JFrame parent = mediator.getFrameController().getContainer()
+					.getFrame();
+			attachmentPopup = new JPopupMenu();
+
+			JPanel panel = createAttachmentViewerPanel();
+
+			attachmentPopup.add(panel);
+		}
+
+		if (attachmentPopup.isVisible())
+			attachmentPopup.setVisible(false);
+		else {
+			attachmentPopup.show(this, 0, getHeight() - 1);
+		}
+	}
+
+	private JPanel createAttachmentViewerPanel() {
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(HeaderViewer.this.getWidth() - 1,
+				(int) mediator.getHeight() / 2));
+		panel.setLayout(new BorderLayout());
+
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BorderLayout());
+		centerPanel.setBorder(new HeaderSeparatorBorder(Color.LIGHT_GRAY));
+
+		// TODO i18n "Close" button
+		JButton closeButton = new JButton("Close");
+		closeButton.setDefaultCapable(true);
+		closeButton.setMnemonic('C');
+		closeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				toggleAttachmentPopupVisibility();
+			}
+		});
+
+		// TODO i18n "Help" button
+		JButton helpButton = new JButton("Help");
+		helpButton.setMnemonic('h');
+
+		centerPanel.add(attachmentViewer, BorderLayout.CENTER);
+
+		panel.add(centerPanel, BorderLayout.CENTER);
+
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setBackground(UIManager.getColor("TextField.background"));
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+
+		ButtonBarBuilder builder = new ButtonBarBuilder(bottomPanel);
+		// builder.setDefaultButtonBarGapBorder();
+		builder.addGlue();
+		builder.addGriddedButtons(new JButton[] { closeButton, helpButton });
+
+		panel.add(bottomPanel, BorderLayout.SOUTH);
+
+		add(panel, BorderLayout.CENTER);
+
+		return panel;
+	}
+
+	/**
+	 * Generic Popup listener.
+	 */
+	class PopupListener extends MouseAdapter {
+		private JPopupMenu menu;
+
+		public PopupListener(JPopupMenu menu) {
+			this.menu = menu;
+		}
+
+		public void mousePressed(MouseEvent e) {
+			maybeShowPopup(e);
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			maybeShowPopup(e);
+		}
+
+		private void maybeShowPopup(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				menu.show(e.getComponent(), e.getX(), e.getY());
+			}
+		}
+	}
+
+	private JPopupMenu createAttachmentPopupMenu(Integer[] address) {
+		JPopupMenu popup = new JPopupMenu();
+		popup.add(new OpenAttachmentAction(mediator.getFrameController(),
+				address));
+		popup.add(new SaveAsAttachmentAction(mediator.getFrameController(),
+				address));
+
+		return popup;
+	}
+
+	private JPopupMenu createAddressPopupMenu(String emailAddress) {
+		JPopupMenu popup = new JPopupMenu();
+		popup.add(new ComposeMessageAction(mediator.getFrameController(),
+				emailAddress));
+		popup.add(new AddToAddressbookAction(mediator.getFrameController(),
+				emailAddress));
+
+		return popup;
+	}
+
+	/**
+	 * Imageloader using a content-type and subtype to determine the image name.
+	 * <p>
+	 * Automatically falls back to the default icon.
+	 */
+	class AttachmentImageIconLoader {
+
+		/**
+		 * Utility constructor.
+		 */
+		private AttachmentImageIconLoader() {
+		}
+
+		/**
+		 * Returns the image icon for the content type.
+		 * 
+		 * @param contentType
+		 *            content type
+		 * @param contentSubtype
+		 *            content sub type
+		 * @return an Image Icon for the content type.
+		 */
+		public ImageIcon getImageIcon(String contentType, String contentSubtype) {
+			StringBuffer buf = new StringBuffer();
+			buf.append("mime/gnome-");
+			buf.append(contentType);
+			buf.append("-");
+			buf.append(contentSubtype);
+			buf.append(".png");
+
+			ImageIcon icon = ImageLoader.getUnsafeImageIcon(buf.toString());
+
+			if (icon == null) {
+				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-"
+						+ contentType + ".png");
+			}
+
+			if (icon == null) {
+				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-text.png");
+			}
+
+			return icon;
+		}
 	}
 
 	/**
@@ -202,56 +562,100 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 		return this;
 	}
 
-	protected Object transformHeaderField(Header header, String key) {
+	protected JComponent[] transformHeaderField(Header header, String key) {
+		if (header == null)
+			throw new IllegalArgumentException("header == null");
+		if (key == null)
+			throw new IllegalArgumentException("key == null");
 		BasicHeader bHeader = new BasicHeader(header);
-		String str = null;
+		Vector vector = new Vector();
 
-		//          message doesn't contain this headerfield
+		// message doesn't contain this headerfield
 		if (header.get(key) == null) {
-			return null;
+			return new JComponent[0];
 		}
 
 		// headerfield is empty
 		if (((String) header.get(key)).length() == 0) {
-			return null;
+			return new JComponent[0];
 		}
 
 		if (key.equals("Subject")) {
-			str = bHeader.getSubject();
+			String str = bHeader.getSubject();
 
 			// substitute special characters like:
-			//  <,>,&,\t,\n,"
+			// <,>,&,\t,\n,"
 			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			return new JComponent[] { new JLabel(str) };
 		} else if (key.equals("To")) {
-			str = AddressListRenderer.renderToHTMLWithLinks(bHeader.getTo())
-					.toString();
+			String[] str = AddressListRenderer
+					.renderToHTMLWithLinksStringArray(bHeader.getTo());
+			return createRecipientComponentArray(str);
 		} else if (key.equals("Reply-To")) {
-			str = AddressListRenderer.renderToHTMLWithLinks(
-					bHeader.getReplyTo()).toString();
+			String[] str = AddressListRenderer
+					.renderToHTMLWithLinksStringArray(bHeader.getReplyTo());
+
+			return createRecipientComponentArray(str);
 		} else if (key.equals("Cc")) {
-			str = AddressListRenderer.renderToHTMLWithLinks(bHeader.getCc())
-					.toString();
+			String[] str = AddressListRenderer
+					.renderToHTMLWithLinksStringArray(bHeader.getCc());
+			return createRecipientComponentArray(str);
 		} else if (key.equals("Bcc")) {
-			str = AddressListRenderer.renderToHTMLWithLinks(bHeader.getBcc())
-					.toString();
+			String[] str = AddressListRenderer
+					.renderToHTMLWithLinksStringArray(bHeader.getBcc());
+
+			return createRecipientComponentArray(str);
 		} else if (key.equals("From")) {
-			str = AddressListRenderer.renderToHTMLWithLinks(
-					new Address[] { (Address) bHeader.getFrom() }).toString();
+			String[] str = AddressListRenderer
+					.renderToHTMLWithLinksStringArray(new Address[] { (Address) bHeader
+							.getFrom() });
+			return createRecipientComponentArray(str);
 		} else if (key.equals("Date")) {
-			str = DATE_FORMATTER.format(bHeader.getDate());
+			String str = DATE_FORMATTER.format(bHeader.getDate());
 
 			// substitute special characters like:
-			//  <,>,&,\t,\n,"
+			// <,>,&,\t,\n,"
 			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			return new JComponent[] { new JLabel(str) };
 		} else {
-			str = (String) header.get(key);
+			String str = (String) header.get(key);
 
 			// substitute special characters like:
-			//  <,>,&,\t,\n,"
+			// <,>,&,\t,\n,"
 			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			return new JComponent[] { new JLabel(str) };
 		}
+	}
 
-		return str;
+	private JComponent[] createRecipientComponentArray(String[] str) {
+		final Color LINK_COLOR = Color.blue;
+
+		final Border LINK_BORDER = BorderFactory.createEmptyBorder(0, 0, 1, 0);
+
+		Vector v = new Vector();
+		for (int j = 0; j < str.length; j++) {
+			final String label = str[j];
+
+			if (label.length() == 0)
+				continue;
+
+			JButton button = new JButton(label);
+			button = LinkButton.createLinkButton(button);
+
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {
+					new ComposeMessageAction(mediator.getFrameController(),
+							label).actionPerformed(event);
+
+				}
+			});
+
+			button.addMouseListener(new PopupListener(
+					createAddressPopupMenu(label)));
+
+			v.add(button);
+		}
+		return (JComponent[]) v.toArray(new JComponent[0]);
 	}
 
 	/**
@@ -265,250 +669,116 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		getHeaderTextPane().setHeader(map);
-		getStatusPanel().setStatus(hasAttachment);
+
+		headerTextPane.updateGUI();
+
+		layoutComponents();
+
+		revalidate();
+
+		repaint();
+
+		attachmentViewer.updateGUI();
+	}
+
+	private void showAddressListDialog() {
+		AddressListDialog dialog = new AddressListDialog(mediator
+				.getFrameController().getContainer().getFrame());
+
 	}
 
 	/**
-	 * @return Returns the headerTextPane.
+	 * Shows Subject, From, Date, To message headers and list of attachments.
 	 */
-	public HeaderTextPane getHeaderTextPane() {
-		return headerTextPane;
-	}
+	class HeaderPanel extends JPanel {
 
-	/**
-	 * @see javax.swing.JComponent#updateUI()
-	 */
-	public void updateUI() {
-		super.updateUI();
+		private Map keys;
 
-		setBackground(Color.white);
-	}
+		public HeaderPanel() {
+			super();
 
-	/**
-	 * @return Returns the statusPanel.
-	 */
-	public StatusPanel getStatusPanel() {
-		return statusPanel;
-	}
-
-	/**
-	 * IViewer displays the message headers, including From:, To:, Subject:,
-	 * etc.
-	 * 
-	 * @author fdietz
-	 */
-	public class HeaderTextPane extends JTextPane {
-
-		/*
-		 * *20030720, karlpeder* Adjusted layout of header table to avoid lines
-		 * extending the right margin (bug #774117)
-		 */
-
-		// background: ebebeb
-		// frame: d5d5d5
-		private static final String LEFT_COLUMN_PROPERTIES = "border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\" width=\"5%\"";
-
-		//width=\"65\"";
-		private static final String RIGHT_COLUMN_PROPERTIES = "border=\"0\" align=\"left\" valign=\"top\" width=\"90%\"";
-
-		private static final String RIGHT_STATUS_COLUMN_PROPERTIES = "border=\"0\" align=\"right\" valign=\"top\" width=\"90%\"";
-
-		private static final String OUTTER_TABLE_PROPERTIES = "border=\"0\" cellspacing=\"1\" cellpadding=\"1\" "
-				+ "align=\"left\" width=\"100%\"";
-
-		// stylesheet is created dynamically because
-		// user configurable fonts are used
-		private String css = "";
-
-		public HeaderTextPane() {
-			setMargin(new Insets(5, 5, 5, 5));
-			setEditable(false);
-
-			HTMLEditorKit editorKit = new HTMLEditorKit();
-
-			setEditorKit(editorKit);
-
-			// setup base url in order to be able to display images
-			// in html-component
-			URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-			LOG.info(baseUrl.toString());
-			((HTMLDocument) getDocument()).setBase(baseUrl);
-
-			initStyleSheet();
 		}
 
 		/**
 		 * @see javax.swing.JComponent#updateUI()
 		 */
 		public void updateUI() {
-			super.updateUI();
+			setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
 
-			// lightgray background
-			setBackground(new Color(235, 235, 235));
-		}
-
-		/**
-		 * 
-		 * read text-properties from configuration and create a stylesheet for
-		 * the html-document
-		 *  
-		 */
-		protected void initStyleSheet() {
-
-			Font font = UIManager.getFont("Label.font");
-			String name = font.getName();
-			int size = font.getSize();
-
-			// create css-stylesheet string
-			// set font of html-element <TD>
-			css = "<style type=\"text/css\"><!--td {font-family:\"" + name
-					+ "\"; font-size:\"" + size + "pt\"}--></style>";
+			setBackground(UIManager.getColor("TextField.background"));
 		}
 
 		public void setHeader(Map keys) {
 			if (keys == null)
 				throw new IllegalArgumentException("keys == null");
 
-			//      border #949494
-			// background #989898
-			// #a0a0a0
-			// bright #d5d5d5
-			StringBuffer buf = new StringBuffer();
+			this.keys = keys;
+		}
 
-			// prepend HTML-code
-			//        buf.append("<HTML><HEAD>" + css + "</HEAD><BODY ><TABLE "
-			//                + OUTTER_TABLE_PROPERTIES + ">");
+		public void updateGUI() {
+			if (keys == null)
+				return;
 
-			buf.append("<HTML><HEAD>" + css + "</HEAD><BODY >");
+			removeAll();
 
-			buf.append("<TABLE " + OUTTER_TABLE_PROPERTIES + ">");
+			Color backgroundColor = UIManager.getColor("TextField.background");
+
+			FormLayout layout = new FormLayout(
+					"right:pref, 3dlu, pref, 3dlu, fill:pref:grow", "");
+			DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
+
+			CellConstraints c = new CellConstraints();
 
 			// for every existing headerfield
+
 			for (Iterator it = keys.keySet().iterator(); it.hasNext();) {
 				String key = (String) it.next();
 
-				//          create left column
-				buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
+				JComponent[] value = (JComponent[]) keys.get(key);
 
-				// set left column text
-				buf.append("<B>" + key + " : </B></TD>");
+				JLabel keyLabel = new JLabel("<html><b>" + key + "</b></html>");
+				keyLabel.setBackground(backgroundColor);
 
-				// create right column
-				buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
+				JLabel separator = new JLabel(":");
+				separator.setBackground(backgroundColor);
 
-				String value = (String) keys.get(key);
+				JButton trailingItem = new JButton("more...");
+				trailingItem.setBackground(backgroundColor);
+				trailingItem = LinkButton.createLinkButton(trailingItem);
+				trailingItem.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						showAddressListDialog();
+					}
 
-				buf.append(" " + value + "</TD>");
+				});
 
-				buf.append("</TR>");
+				DynamicItemListPanel p = new DynamicItemListPanel(2,
+						trailingItem, true);
+				p.setBackground(backgroundColor);
+				p.setOpaque(true);
+
+				for (int i = 0; i < value.length; i++) {
+					value[i].setBackground(backgroundColor);
+					value[i].setOpaque(true);
+					p.addItem(value[i]);
+				}
+
+				builder.append(keyLabel);
+				builder.append(separator);
+				builder.append(p);
+
+				builder.appendRow(new RowSpec("top:pref:grow"));
 
 			}
 
-			// close HTML document
-			buf.append("</TABLE></BODY></HTML>");
-
-			// display html-text
-			setText(buf.toString());
+			validate();
 		}
+
 	}
 
-	public class StatusPanel extends JPanel implements SecurityStatusListener {
-
-		private ImageIcon attachment = ImageLoader
-				.getImageIcon("stock_attach.png");
-
-		private JLabel attachmentLabel;
-
-		private JLabel decryptionLabel;
-
-		private JPanel leftPanel;
-
-		public StatusPanel() {
-
-			setLayout(new FlowLayout());
-
-			attachmentLabel = new JLabel();
-			decryptionLabel = new JLabel();
-			add(attachmentLabel);
-			add(decryptionLabel);
-		}
-
-		public void updateUI() {
-			super.updateUI();
-
-			//      lightgray background
-			setBackground(new Color(235, 235, 235));
-		}
-
-		public void setStatus(boolean hasAttachment) {
-			if (hasAttachment) {
-				attachmentLabel.setIcon(attachment);
-
-			} else {
-				attachmentLabel.setIcon(null);
-
-			}
-		}
-
-		/**
-		 * @see org.columba.mail.gui.message.filter.SecurityStatusListener#statusUpdate(org.columba.mail.gui.message.filter.SecurityStatusEvent)
-		 */
-		public void statusUpdate(SecurityStatusEvent event) {
-
-			int status = event.getStatus();
-
-			switch (status) {
-			case EncryptionStatusViewer.DECRYPTION_SUCCESS: {
-				decryptionLabel.setIcon(ImageLoader
-						.getImageIcon("pgp-signature-ok-24.png"));
-				decryptionLabel.setToolTipText(MailResourceLoader.getString(
-						"menu", "mainframe", "security_decrypt_success"));
-
-				break;
-			}
-
-			case EncryptionStatusViewer.DECRYPTION_FAILURE: {
-				decryptionLabel.setIcon(ImageLoader
-						.getImageIcon("pgp-signature-bad-24.png"));
-				decryptionLabel.setToolTipText(MailResourceLoader.getString(
-						"menu", "mainframe", "security_encrypt_fail"));
-
-				break;
-			}
-
-			case EncryptionStatusViewer.VERIFICATION_SUCCESS: {
-				decryptionLabel.setIcon(ImageLoader
-						.getImageIcon("pgp-signature-ok-24.png"));
-				decryptionLabel.setToolTipText(MailResourceLoader.getString(
-						"menu", "mainframe", "security_verify_success"));
-
-				break;
-			}
-
-			case EncryptionStatusViewer.VERIFICATION_FAILURE: {
-				decryptionLabel.setIcon(ImageLoader
-						.getImageIcon("pgp-signature-bad-24.png"));
-				decryptionLabel.setToolTipText(MailResourceLoader.getString(
-						"menu", "mainframe", "security_verify_fail"));
-
-				break;
-			}
-
-			case EncryptionStatusViewer.NO_KEY: {
-				decryptionLabel.setIcon(ImageLoader
-						.getImageIcon("pgp-signature-nokey-24.png"));
-				decryptionLabel.setToolTipText(MailResourceLoader.getString(
-						"menu", "mainframe", "security_verify_nokey"));
-
-				break;
-			}
-			case EncryptionStatusViewer.NOOP: {
-				decryptionLabel.setIcon(null);
-				decryptionLabel.setToolTipText("");
-				break;
-			}
-			}
-		}
+	private class ListItem {
+		String name;
+		JComponent component;
+		ImageIcon icon;
 	}
 }

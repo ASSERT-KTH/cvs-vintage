@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JPopupMenu;
 import javax.swing.RepaintManager;
 
 import org.apache.commons.cli.CommandLine;
@@ -246,6 +247,8 @@ public class Main {
 		if (Logging.DEBUG)
 			RepaintManager.setCurrentManager(new DebugRepaintManager());
 
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		
 		// show splash screen
 		StartUpFrame frame = null;
 		if (showSplashScreen) {

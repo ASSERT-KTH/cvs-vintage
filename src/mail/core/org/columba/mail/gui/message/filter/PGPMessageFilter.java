@@ -34,8 +34,8 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SecurityItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.viewer.EncryptionStatusViewer;
-import org.columba.mail.gui.message.viewer.Rfc822MessageViewer;
+import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.viewer.SecurityStatusViewer;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.JSCFController;
 import org.columba.mail.pgp.PGPPassChecker;
@@ -61,7 +61,7 @@ import org.waffel.jscf.JSCFStatement;
  * <p>
  * A {@link SecurityStatusEvent}is used to notify all listeners.
  * <p>
- * {@link EncryptionStatusViewer}is currently the only listener. In the
+ * {@link SecurityStatusViewer}is currently the only listener. In the
  * future a status icon will be added to the message header, too.
  * <p>
  * 
@@ -75,7 +75,7 @@ public class PGPMessageFilter extends AbstractFilter {
 
 	private MimeTree mimePartTree;
 
-	private int pgpMode = EncryptionStatusViewer.NOOP;
+	private int pgpMode = SecurityStatusViewer.NOOP;
 
 	// true if we view an encrypted message
 	private boolean encryptedMessage = false;
@@ -88,7 +88,7 @@ public class PGPMessageFilter extends AbstractFilter {
 
 	private List listeners;
 
-	public PGPMessageFilter(MailFrameMediator mediator, Rfc822MessageViewer messageController) {
+	public PGPMessageFilter(MailFrameMediator mediator, MessageController messageController) {
 		super(mediator, messageController);
 
 		listeners = new ArrayList();
@@ -161,7 +161,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			result = decrypt(folder, uid, pgpActive);
 
 		} else {
-			pgpMode = EncryptionStatusViewer.NOOP;
+			pgpMode = SecurityStatusViewer.NOOP;
 		}
 
 		//notify listeners
@@ -187,7 +187,7 @@ public class PGPMessageFilter extends AbstractFilter {
 		LOG.fine("start decrypting");
 		if (!pgpActive) {
 			pgpMessage = "";
-			pgpMode = EncryptionStatusViewer.NO_KEY;
+			pgpMode = SecurityStatusViewer.NO_KEY;
 		} else {
 			SecurityItem pgpItem = null;
 			// we need the pgpItem, to extract the path to gpg
@@ -219,7 +219,7 @@ public class PGPMessageFilter extends AbstractFilter {
 				boolean check = passCheck.checkPassphrase(con);
 				LOG.fine("after pass check, check is " + check);
 				if (!check) {
-					pgpMode = EncryptionStatusViewer.DECRYPTION_FAILURE;
+					pgpMode = SecurityStatusViewer.DECRYPTION_FAILURE;
 					// TODO (@author fdietz): make i18n!
 					pgpMessage = "wrong passphrase";
 					return null;
@@ -229,7 +229,7 @@ public class PGPMessageFilter extends AbstractFilter {
 				LOG.fine("after calling decrypting");
 				if (res.isError()) {
 					LOG.fine("the result set contains errors ");
-					pgpMode = EncryptionStatusViewer.DECRYPTION_FAILURE;
+					pgpMode = SecurityStatusViewer.DECRYPTION_FAILURE;
 					pgpMessage = StreamUtils.readCharacterStream(res.getErrorStream())
 							.toString();
 					LOG.fine("error message: " + pgpMessage);
@@ -237,12 +237,12 @@ public class PGPMessageFilter extends AbstractFilter {
 					//return null;
 				} else {
 					decryptedStream = res.getResultStream();
-					pgpMode = EncryptionStatusViewer.DECRYPTION_SUCCESS;
+					pgpMode = SecurityStatusViewer.DECRYPTION_SUCCESS;
 				}
 			} catch (JSCFException e) {
 				e.printStackTrace();
 				LOG.severe(e.getMessage());
-				pgpMode = EncryptionStatusViewer.DECRYPTION_FAILURE;
+				pgpMode = SecurityStatusViewer.DECRYPTION_FAILURE;
 				pgpMessage = e.getMessage();
 
 				// just show the encrypted raw message
@@ -323,7 +323,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			boolean pgpActive) throws Exception, IOException {
 		if (!pgpActive) {
 			pgpMessage = "";
-			pgpMode = EncryptionStatusViewer.NO_KEY;
+			pgpMode = SecurityStatusViewer.NO_KEY;
 			return null;
 		}
 		MimePart signedMultipart = mimePartTree.getRootMimeNode();
@@ -347,11 +347,11 @@ public class PGPMessageFilter extends AbstractFilter {
 			JSCFResultSet res = stmt.executeVerify(signedPart, signature,
 					micalg);
 			if (res.isError()) {
-				pgpMode = EncryptionStatusViewer.VERIFICATION_FAILURE;
+				pgpMode = SecurityStatusViewer.VERIFICATION_FAILURE;
 				pgpMessage = StreamUtils.readCharacterStream(res.getErrorStream())
 						.toString();
 			} else {
-				pgpMode = EncryptionStatusViewer.VERIFICATION_SUCCESS;
+				pgpMode = SecurityStatusViewer.VERIFICATION_SUCCESS;
 				pgpMessage = StreamUtils.readCharacterStream(res.getResultStream())
 						.toString();
 			}
@@ -361,12 +361,12 @@ public class PGPMessageFilter extends AbstractFilter {
 			if (Logging.DEBUG)
 				e.printStackTrace();
 
-			pgpMode = EncryptionStatusViewer.VERIFICATION_FAILURE;
+			pgpMode = SecurityStatusViewer.VERIFICATION_FAILURE;
 			pgpMessage = e.getMessage();
 			// something really got wrong here -> show error dialog
 			//JOptionPane.showMessageDialog(null, e.getMessage());
 
-			pgpMode = EncryptionStatusViewer.VERIFICATION_FAILURE;
+			pgpMode = SecurityStatusViewer.VERIFICATION_FAILURE;
 		}
 
 		signedPart.close();

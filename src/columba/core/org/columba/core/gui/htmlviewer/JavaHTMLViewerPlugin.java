@@ -1,5 +1,6 @@
 package org.columba.core.gui.htmlviewer;
 
+import java.awt.Color;
 import java.awt.Insets;
 import java.io.IOException;
 import java.io.Reader;
@@ -7,7 +8,9 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -16,11 +19,10 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 
 import org.columba.core.io.DiskIO;
 
-public class JavaHTMLViewerPlugin extends JTextPane implements
+public class JavaHTMLViewerPlugin extends JScrollPane implements
 		IHTMLViewerPlugin {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -31,18 +33,23 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 
 	private AsynchronousHTMLDocument doc;
 	
+	private JTextPane textPane;
 	
 	public JavaHTMLViewerPlugin() {
 		super();
 
-		setMargin(new Insets(5, 5, 5, 5));
-		setEditable(false);
+		textPane = new JTextPane();
+		
+		setViewportView(textPane);
+		//textPane.setMargin(new Insets(5, 5, 5, 5));
+		textPane.setEditable(false);
 
 		htmlEditorKit = new HTMLEditorKit();
-		setEditorKit(htmlEditorKit);
+		textPane.setEditorKit(htmlEditorKit);
 
-		setContentType("text/html");
+		textPane.setContentType("text/html");
 
+		setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 	}
 
 	/*
@@ -58,10 +65,10 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 		// in html-component
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
 
-		((HTMLDocument) getDocument()).setBase(baseUrl);
+		((HTMLDocument) textPane.getDocument()).setBase(baseUrl);
 
 		// scroll window to the beginning
-		setCaretPosition(0);
+		textPane.setCaretPosition(0);
 	}
 
 	public void view(String text) {
@@ -79,7 +86,7 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setDocument(doc);
+		textPane.setDocument(doc);
 		
 		postView();		
 	}
@@ -158,7 +165,7 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 	 */
 	public String getSelectedText() {
 		try {
-			return doc.getTextWithLineBreaks(getSelectionStart(),getSelectionEnd());
+			return doc.getTextWithLineBreaks(textPane.getSelectionStart(),textPane.getSelectionEnd());
 		} catch (BadLocationException e) {
 			return "";
 		}

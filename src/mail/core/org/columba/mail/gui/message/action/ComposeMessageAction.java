@@ -36,18 +36,30 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ComposeMessageAction extends AbstractColumbaAction implements
 		Observer {
-	ColumbaURL url = null;
+
+	private String emailAddress;
+
+	private ColumbaURL url = null;
 
 	/**
-	 *  
+	 * 
 	 */
+	public ComposeMessageAction(IFrameMediator controller, String emailAddress) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"viewer_compose"));
+
+		this.emailAddress = emailAddress;
+
+		setEnabled(true);
+	}
+
 	public ComposeMessageAction(IFrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"viewer_compose"));
 
 		setEnabled(false);
 
-		//    	listen for URL changes
+		// listen for URL changes
 		((MessageViewOwner) controller).getMessageController().addURLObserver(
 				this);
 	}
@@ -62,13 +74,16 @@ public class ComposeMessageAction extends AbstractColumbaAction implements
 		new DefaultContainer(controller);
 
 		ComposerModel model = new ComposerModel();
-		model.setTo(url.getEmailAddress());
-		
-        // apply model
-        controller.setComposerModel(model);
-        
-        controller.updateComponents(true);
- 
+		if (emailAddress != null)
+			model.setTo(emailAddress);
+		else
+			model.setTo(url.getEmailAddress());
+
+		// apply model
+		controller.setComposerModel(model);
+
+		controller.updateComponents(true);
+
 	}
 
 	/*
@@ -78,7 +93,7 @@ public class ComposeMessageAction extends AbstractColumbaAction implements
 	 */
 	public void update(Observable arg0, Object arg1) {
 		URLObservable o = (URLObservable) arg0;
-
+		
 		// only enable this action, if this is a mailto: URL
 		url = o.getUrl();
 		if (url == null)

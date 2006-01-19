@@ -313,7 +313,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		messageViewerPanel = new DockingPanel("mail_messageviewer",
 				"Message Viewer");
 
-		messageViewerPanel.add(messageController);
+		messageViewerPanel.add(messageController.getView());
 		try {
 			is = DiskIO
 					.getResourceStream("org/columba/mail/action/message_dockmenu.xml");
@@ -668,4 +668,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			e.printStackTrace();
 		}
 	}
+	
+	
 }
