@@ -71,7 +71,7 @@ import org.gjt.sp.util.ProgressObserver;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.84 2005/07/27 21:30:21 kpouer Exp $
+ * @version $Id: MiscUtilities.java,v 1.85 2006/01/20 22:41:31 kpouer Exp $
  */
 public class MiscUtilities
 {
@@ -638,10 +638,6 @@ public class MiscUtilities
 		InputStream in, OutputStream out, boolean canStop)
 	throws IOException
 	{
-		if (progress != null)
-		{
-			progress.setStatus("Copying");
-		}
 		byte[] buffer = new byte[bufferSize];
 		int n;
 		long copied = 0;
