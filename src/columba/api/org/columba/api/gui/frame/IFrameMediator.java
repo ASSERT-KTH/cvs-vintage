@@ -17,8 +17,14 @@
 //All Rights Reserved.
 package org.columba.api.gui.frame;
 
+import java.awt.event.MouseListener;
+
+import javax.swing.JPanel;
+
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.api.selection.ISelectionManager;
+import org.columba.core.gui.frame.event.IFrameMediatorListener;
+import org.flexdock.docking.Dockable;
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -42,14 +48,15 @@ import org.columba.api.selection.ISelectionManager;
  * 
  * @author fdietz
  */
-public interface IFrameMediator extends IExtensionInterface{
+public interface IFrameMediator extends IExtensionInterface {
 
 	public ISelectionManager getSelectionManager();
 
 	public IContainer getContainer();
 
 	/**
-	 * TODO (@author fdietz): adapter only --> will be removed! 
+	 * TODO (@author fdietz): adapter only --> will be removed!
+	 * 
 	 * @return
 	 */
 	public IContainer getView();
@@ -57,12 +64,48 @@ public interface IFrameMediator extends IExtensionInterface{
 	public void setContainer(IContainer c);
 
 	String getString(String sPath, String sName, String sID);
+
+	public JPanel getContentPane();
+
 	
-	public IContentPane getContentPane();
-	
-	public void close();
-	
+
 	public void savePositions();
+
 	public void loadPositions();
+	
+	public String getId();
+	
+	
+	/************************* container callbacks **************/
+	
+	public abstract void extendMenu(IContainer container);
+	public abstract void extendToolBar(IContainer container);
+	public abstract void close(IContainer container);
+	public abstract void initFrame(IContainer container);
+	
+	/************************* frame eventing *******************/
+	
+	public abstract void addListener(IFrameMediatorListener l) ;
+
+	public abstract void removeListener(IFrameMediatorListener l);
+	
+	public abstract void fireTitleChanged(String title);
+	public abstract void fireStatusMessageChanged(String statusMessage);
+	public abstract void fireTaskStatusChanged();
+	public abstract void fireVisibilityChanged(boolean visible);
+	public abstract void fireLayoutChanged();
+	public abstract void fireClosed();
+	public abstract void fireToolBarVisibilityChanged(boolean visible);
+	
+	/************************************************************/
+	
+	/**
+	 * Get mouse tooltip handler. This is a MouseAdapter which is used by the
+	 * menu to display menuitem tooltips on the statusbar when moving the mouse
+	 * of an menuitem.
+	 */
+	public abstract MouseListener getMouseTooltipHandler();
+	
+	public abstract void registerDockable(Dockable dockable);
 
 }

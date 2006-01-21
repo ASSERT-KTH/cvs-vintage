@@ -35,7 +35,7 @@ import org.columba.core.pluginhandler.FrameExtensionHandler;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
@@ -60,9 +60,11 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 	 * @param caption
 	 */
 	public SwitchPerspectiveSubmenu(IFrameMediator controller) {
-		super(controller, "Show View",((DefaultFrameController)controller).getViewItem().get("id"));
+		super(controller, "Show View", ((DefaultFrameController) controller)
+				.getViewItem().get("id"));
 
-		String id = ((DefaultFrameController)getFrameMediator()).getViewItem().get("id");
+		String id = ((DefaultFrameController) getFrameMediator()).getViewItem()
+				.get("id");
 
 		// check if this is a management frame instance
 		// -> if so create submenu to switch perspectives
@@ -75,7 +77,7 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		String[] managedFrames = null;
 		if (id != null) {
 			managedFrames = handler.getManagedFrames();
@@ -116,17 +118,25 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		String action = arg0.getActionCommand();
+		final String action = arg0.getActionCommand();
 
-		IFrameMediator mediator = getFrameMediator();
+		// awt-event-thread
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
 
-		IContainer container = mediator.getContainer();
+				IFrameMediator mediator = getFrameMediator();
 
-		try {
-			FrameManager.getInstance().switchView(container, action);
-		} catch (PluginLoadingFailedException e) {
-			e.printStackTrace();
-		}
+				IContainer container = mediator.getContainer();
+
+				try {
+					FrameManager.getInstance().switchView(container, action);
+				} catch (PluginLoadingFailedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		
 	}
 
 }

@@ -119,7 +119,7 @@ public class DeleteMessageAction extends AbstractColumbaAction implements
 		// the window should be closed, too
 		if (getFrameMediator() instanceof MessageFrameController) {
 			// close window
-			getFrameMediator().getContainer().close();
+			getFrameMediator().fireClosed();
 		}
 	}
 

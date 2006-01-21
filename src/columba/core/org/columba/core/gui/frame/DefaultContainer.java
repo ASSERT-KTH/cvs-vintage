@@ -22,7 +22,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -31,19 +30,16 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.text.View;
 
 import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IContainer;
-import org.columba.api.gui.frame.IContentPane;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
@@ -51,6 +47,8 @@ import org.columba.api.statusbar.IStatusBar;
 import org.columba.core.command.TaskManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.event.FrameEvent;
+import org.columba.core.gui.frame.event.IFrameMediatorListener;
 import org.columba.core.gui.menu.ExtendableMenuBar;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.statusbar.StatusBar;
@@ -61,17 +59,18 @@ import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.resourceloader.ImageLoader;
+import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.drag.effects.EffectsManager;
+import org.flexdock.docking.drag.preview.GhostPreview;
+import org.flexdock.event.EventManager;
+import org.flexdock.perspective.event.LayoutEvent;
 
 /**
  * @author fdietz
  * 
  */
-/**
- * @author Frederik Dietz
- * 
- */
 public class DefaultContainer extends JFrame implements IContainer,
-		WindowListener {
+		WindowListener, IFrameMediatorListener {
 
 	protected static final int DEFAULT_WIDTH = (int) Math.round(Toolkit
 			.getDefaultToolkit().getScreenSize().width * .66);
@@ -100,21 +99,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	protected ExtendableToolBar toolbar;
 
-	/**
-	 * in order to support multiple toolbars we use a panel as parent container
-	 */
-	protected JPanel toolbarPane;
-
 	protected StatusBar statusBar;
 
-	/**
-	 * Menuitems use this to display a string in the statusbar
-	 */
-	protected MouseAdapter mouseTooltipHandler;
-
 	protected JPanel contentPane;
-
-	protected JComponent infoPanel;
 
 	protected boolean switchedFrameMediator = false;
 
@@ -131,16 +118,20 @@ public class DefaultContainer extends JFrame implements IContainer,
 		this.viewItem = mediator.getViewItem();
 		this.mediator = mediator;
 
-		mediator.setContainer(this);
+		String id = new Double(Math.random()).toString();
+
+		// dockingPort.setPersistentId(id);
 
 		defaultCloseOperation = true;
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
+		mediator.setContainer(this);
 		initComponents();
-
+		createMenuBar();
 		setFrameMediator(mediator);
 
+		mediator.addListener(this);
 	}
 
 	/**
@@ -157,9 +148,13 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// create new default frame controller
 		mediator = new DefaultFrameController(viewItem);
-		mediator.setContainer(this);
 
 		initComponents();
+
+		mediator.setContainer(this);
+		createMenuBar();
+
+		mediator.addListener(this);
 	}
 
 	/**
@@ -176,25 +171,51 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// register statusbar at global taskmanager
 		statusBar = new StatusBar(TaskManager.getInstance());
 
-		// add tooltip handler
-		mouseTooltipHandler = new TooltipMouseHandler(statusBar);
-
-		JPanel panel = (JPanel) this.getContentPane();
-		panel.setLayout(new BorderLayout());
+		// JPanel panel = (JPanel) this.getContentPane();
+		this.getContentPane().setLayout(new BorderLayout());
 
 		// add statusbar
-		panel.add(statusBar, BorderLayout.SOUTH);
 
 		// add toolbar
-		toolbarPane = new JPanel();
-		toolbarPane.setLayout(new BoxLayout(toolbarPane, BoxLayout.Y_AXIS));
-		panel.add(toolbarPane, BorderLayout.NORTH);
+		// panel.add(toolbar, BorderLayout.NORTH);
 
 		contentPane = new JPanel();
+		// contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout());
 
-		panel.add(contentPane, BorderLayout.CENTER);
+		contentPane.add(statusBar, BorderLayout.SOUTH);
 
+		this.getContentPane().add(contentPane, BorderLayout.CENTER);
+
+		initDockingConfiguration();
+
+		// contentPane.add(dockingPort, BorderLayout.CENTER);
+
+		// createMenuBar();
+
+		// create toolbar
+		toolbar = new ExtendableToolBar();
+		setToolBar(toolbar);
+
+		// add window listener
+		addWindowListener(this);
+
+	}
+
+	private void initDockingConfiguration() {
+		// turn on floating support
+		DockingManager.setFloatingEnabled(true);
+		// PerspectiveManager.setRestoreFloatingOnLoad(true);
+
+		// enable flexdock ghost preview
+		EffectsManager.setPreview(new GhostPreview());
+
+		// TODO should we use drop shadows
+		// portCenter.setBorderManager(new StandardBorderManager(
+		// new ShadowBorder()));
+	}
+
+	private void createMenuBar() {
 		try {
 			InputStream is = DiskIO
 					.getResourceStream("org/columba/core/action/menu.xml");
@@ -208,16 +229,6 @@ public class DefaultContainer extends JFrame implements IContainer,
 		} catch (IOException e) {
 			LOG.severe(e.getMessage());
 		}
-
-		// create toolbar
-		toolbar = new ExtendableToolBar();
-		setToolBar(toolbar);
-
-		setInfoPanel(new ContainerInfoPanel());
-
-		// add window listener
-		addWindowListener(this);
-
 	}
 
 	/**
@@ -229,19 +240,13 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	/**
-	 * Returns the mouseTooltipHandler.
-	 * 
-	 * @return MouseAdapter
-	 */
-	public MouseAdapter getMouseTooltipHandler() {
-		return mouseTooltipHandler;
-	}
-
-	/**
 	 * @see org.columba.api.gui.frame.IContainer#setFrameMediator(org.columba.api.gui.frame.IFrameMediator)
 	 */
 	public void setFrameMediator(final IFrameMediator m) {
 		LOG.fine("set framemediator to " + m.getClass());
+
+		// remove from old mediator's listener list
+		this.mediator.removeListener(this);
 
 		this.mediator = (DefaultFrameController) m;
 
@@ -252,13 +257,20 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		switchedFrameMediator = false;
 
+		mediator.extendMenu(this);
+		mediator.extendToolBar(this);
+		mediator.initFrame(this);
+
 		// update content-pane
 		setContentPane(m.getContentPane());
+
 		/*
 		 * // awt-event-thread javax.swing.SwingUtilities.invokeLater(new
 		 * Runnable() { public void run() { } });
 		 */
 
+		// add to new mediator's listener list
+		mediator.addListener(this);
 	}
 
 	/**
@@ -266,6 +278,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 */
 	public void switchFrameMediator(IFrameMediator m) {
 		LOG.fine("switching framemediator to " + m.getClass());
+
+		// remove from old mediator's listener list
+		this.mediator.removeListener(this);
 
 		this.mediator = (DefaultFrameController) m;
 
@@ -283,20 +298,27 @@ public class DefaultContainer extends JFrame implements IContainer,
 			// default core menu
 			menubar = new MenuXMLDecoder(mediator).createMenuBar(is);
 
-			setJMenuBar(menubar);
+			// setJMenuBar(menubar);
+
 		} catch (IOException e) {
 			LOG.severe(e.getMessage());
 		}
+
+		mediator.extendMenu(this);
+
+		mediator.initFrame(this);
+
 		// default toolbar
 		toolbar = new ExtendableToolBar();
-		setToolBar(toolbar);
+		mediator.extendToolBar(this);
 
-		// default infopanel
-		setInfoPanel(new ContainerInfoPanel());
+		setToolBar(toolbar);
 
 		// update content-pane
 		setContentPane(m.getContentPane());
 
+		// add to new mediator's listener list
+		mediator.addListener(this);
 	}
 
 	/**
@@ -325,23 +347,21 @@ public class DefaultContainer extends JFrame implements IContainer,
 	public void enableToolBar(String id, boolean enable) {
 		getViewItem().setBoolean("toolbars", id, enable);
 
-		toolbarPane.removeAll();
+		getToolBar().setVisible(enable);
 
-		if (enable) {
-			toolbarPane.add(getToolBar());
-			if (isInfoPanelEnabled())
-				toolbarPane.add(getInfoPanel());
-		} else {
-			if (isInfoPanelEnabled())
-				toolbarPane.add(getInfoPanel());
-		}
+		// toolbarPane.removeAll();
+		//
+		// if (enable) {
+		// toolbarPane.add(getToolBar());
+		//
+		// }
 
 		// awt-event-thread
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				validate();
-			}
-		});
+		// javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		// public void run() {
+		// validate();
+		// }
+		// });
 	}
 
 	/**
@@ -397,11 +417,11 @@ public class DefaultContainer extends JFrame implements IContainer,
 				if (maximized) {
 					WindowMaximizer.maximize(frame);
 				}
-				
+
 				mediator.loadPositions();
 			}
 		});
-		
+
 	}
 
 	/**
@@ -427,11 +447,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 			item.setInteger(ViewItem.WINDOW, ViewItem.HEIGHT_INT, d.height);
 		}
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				mediator.savePositions();
-			}
-		});
+		mediator.savePositions();
 
 	}
 
@@ -482,7 +498,6 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 * @see org.columba.api.gui.frame.View#getToolBar()
 	 */
 	public JToolBar getToolBar() {
-
 		return toolbar;
 	}
 
@@ -532,38 +547,54 @@ public class DefaultContainer extends JFrame implements IContainer,
 	/**
 	 * @see org.columba.api.gui.frame.View#setContentPane(org.columba.api.gui.frame.neu.FrameView)
 	 */
-	public void setContentPane(IContentPane view) {
+	public void setContentPane(JPanel view) {
 
 		LOG.finest("setting content-pane");
 
-		// remove all components from content pane
-		contentPane.removeAll();
+		getContentPane().removeAll();
 
-		// add new componnet
-		contentPane.add(view.getComponent(), BorderLayout.CENTER);
+		// remove old content pane
+		contentPane.removeAll();
+		//contentPane.remove(mediator.getContentPane());
+		
+		setJMenuBar(menubar);
+
+		// // add new componnet
+		contentPane.add(view, BorderLayout.CENTER);
+
+		getContentPane().add(toolbar, BorderLayout.NORTH);
+
+		contentPane.add(statusBar, BorderLayout.SOUTH);
+
+		getContentPane().add(contentPane, BorderLayout.CENTER);
 
 		// show/hide new toolbar
 		enableToolBar(IContainer.MAIN_TOOLBAR,
 				isToolBarEnabled(IContainer.MAIN_TOOLBAR));
 
-		// show/hide new infopanel
-		enableInfoPanel(isInfoPanelEnabled());
-
-		// make window visible
-		LOG.finest("setVisible()");
-
-		setVisible(true);
+		// getContentPane().validate();
 
 		if (!switchedFrameMediator) {
 			// load window position
 			loadPositions(getViewItem());
 
-			// awt-event-thread
-			javax.swing.SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					validate();
-				}
-			});
+			// // awt-event-thread
+			// javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			// public void run() {
+			//
+			// validate();
+			// }
+			// });
+	
+			// make window visible
+			LOG.finest("setVisible()");
+
+			setVisible(true);
+
+		} else {
+			validateTree();
+
+			view.repaint();
 		}
 
 		switchedFrameMediator = false;
@@ -603,7 +634,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// save window position
 		savePositions();
 
-		getFrameMediator().close();
+		getFrameMediator().close(this);
 
 		if (defaultCloseOperation == false)
 			return;
@@ -627,27 +658,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 * @see org.columba.api.gui.frame.IContainer#addToolBar(javax.swing.JComponent)
 	 */
 	public void addToolBar(JComponent c) {
-		toolbarPane.add(c);
-	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IContainer#getInfoPanel()
-	 */
-	public JComponent getInfoPanel() {
-		return infoPanel;
-	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IContainer#setInfoPanel(org.columba.core.gui.frame.ContainerInfoPanel)
-	 */
-	public void setInfoPanel(JComponent panel) {
-		this.infoPanel = panel;
-
-		toolbarPane.removeAll();
-		if (getToolBar() != null)
-			toolbarPane.add(getToolBar());
-		toolbarPane.add(panel);
-
+		// FIXME remove method
+		// toolbarPane.add(c);
 	}
 
 	/**
@@ -656,49 +668,15 @@ public class DefaultContainer extends JFrame implements IContainer,
 	public void setToolBar(JToolBar toolbar) {
 		if ((toolbar instanceof ExtendableToolBar) == false)
 			throw new IllegalArgumentException(
-					"only instance of ExtendableToolBar allowed");
+					"only instances of ExtendableToolBar allowed");
+
+		// getContentPane().remove(this.toolbar);
 
 		this.toolbar = (ExtendableToolBar) toolbar;
 
-		toolbarPane.removeAll();
-		toolbarPane.add(toolbar);
-		if (getInfoPanel() != null)
-			toolbarPane.add(getInfoPanel());
+		//
+		// getContentPane().validate();
 
-	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IContainer#enableInfoPanel(boolean)
-	 */
-	public void enableInfoPanel(boolean enable) {
-		getViewItem().setBoolean("toolbars", "infopanel", enable);
-
-		toolbarPane.removeAll();
-
-		if (enable) {
-			if (isToolBarEnabled(IContainer.MAIN_TOOLBAR)) {
-				toolbarPane.add(getToolBar());
-			}
-			toolbarPane.add(getInfoPanel());
-		} else {
-			if (isToolBarEnabled(IContainer.MAIN_TOOLBAR)) {
-				toolbarPane.add(getToolBar());
-			}
-		}
-		// awt-event-thread
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				validate();
-			}
-		});
-	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IContainer#isInfoPanelEnabled()
-	 */
-	public boolean isInfoPanelEnabled() {
-		return getViewItem().getBooleanWithDefault("toolbars", "infopanel",
-				true);
 	}
 
 	/**
@@ -731,5 +709,42 @@ public class DefaultContainer extends JFrame implements IContainer,
 	 */
 	public void setCloseOperation(boolean close) {
 		this.defaultCloseOperation = close;
+	}
+
+	public JPanel getContentPanel() {
+		return contentPane;
+	}
+
+	/** ********************* frame eventing ******************** */
+
+	public void titleChanged(FrameEvent event) {
+		setTitle(event.getText());
+	}
+
+	public void statusMessageChanged(FrameEvent event) {
+		getStatusBar().displayTooltipMessage(event.getText());
+	}
+
+	public void taskStatusChanged(FrameEvent event) {
+		getStatusBar().getDisplayedWorker().cancel();
+	}
+
+	public void visibilityChanged(FrameEvent event) {
+		if (event.isVisible())
+			setVisible(true);
+		else
+			setVisible(false);
+	}
+
+	public void layoutChanged(FrameEvent event) {
+		validate();
+	}
+
+	public void closed(FrameEvent event) {
+		close();
+	}
+
+	public void toolBarVisibilityChanged(FrameEvent event) {
+		enableToolBar(IContainer.MAIN_TOOLBAR, event.isVisible());
 	}
 }

@@ -19,16 +19,13 @@
 package org.columba.addressbook.gui.frame;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -39,28 +36,32 @@ import org.columba.addressbook.gui.table.FilterToolbar;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.api.gui.frame.IContentPane;
+import org.columba.api.gui.frame.IContainer;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.base.UIFSplitPane;
-import org.columba.core.gui.frame.ContainerInfoPanel;
-import org.columba.core.gui.frame.DefaultFrameController;
+import org.columba.core.gui.docking.DockableView;
+import org.columba.core.gui.frame.DockFrameController;
 import org.columba.core.io.DiskIO;
-import org.columba.mail.config.MailConfig;
+import org.flexdock.docking.DockingConstants;
+import org.flexdock.perspective.LayoutSequence;
+import org.flexdock.perspective.Perspective;
 
 /**
  * 
  * 
  * @author fdietz
  */
-public class AddressbookFrameController extends DefaultFrameController
-		implements IContentPane, AddressbookFrameMediator,
-		TreeSelectionListener {
+public class AddressbookFrameController extends DockFrameController implements
+		AddressbookFrameMediator, TreeSelectionListener {
 
 	protected TreeController tree;
 
 	protected TableController table;
 
 	protected FilterToolbar filterToolbar;
+
+	private DockableView contactListPanel;
+
+	private DockableView treePanel;
 
 	/**
 	 * Constructor for AddressbookController.
@@ -79,6 +80,25 @@ public class AddressbookFrameController extends DefaultFrameController
 		tree.getView().addTreeSelectionListener(this);
 
 		// getContainer().setContentPane(this);
+
+		registerDockables();
+
+		//initPerspective(this.perspective);
+	}
+
+	public void registerDockables() {
+		treePanel = new DockableView("addressbook_foldertree", "Folder Tree");
+		JScrollPane treeScrollPane = new JScrollPane(tree.getView());
+		treePanel.setContentPane(treeScrollPane);
+
+		contactListPanel = new DockableView("addressbook_contactlist",
+				"Contact List");
+		JPanel p = new JPanel();
+		p.setLayout(new BorderLayout());
+		p.add(new JScrollPane(table.getView()), BorderLayout.CENTER);
+		p.add(filterToolbar, BorderLayout.NORTH);
+		contactListPanel.setContentPane(p);
+
 	}
 
 	/**
@@ -111,57 +131,11 @@ public class AddressbookFrameController extends DefaultFrameController
 	}
 
 	/**
-	 * @see org.columba.api.gui.frame.IContentPane#getComponent()
-	 */
-	public JComponent getComponent() {
-		JScrollPane treeScrollPane = new JScrollPane(tree.getView());
-		// treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2,
-		// 2));
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		panel.add(filterToolbar, BorderLayout.NORTH);
-		JScrollPane tableScrollPane = new JScrollPane(table.getView());
-		tableScrollPane.getViewport().setBackground(Color.white);
-		panel.add(tableScrollPane, BorderLayout.CENTER);
-
-		JSplitPane splitPane = new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				treeScrollPane, panel);
-		splitPane.setBorder(null);
-
-		try {
-			InputStream is = DiskIO
-					.getResourceStream("org/columba/addressbook/action/menu.xml");
-			getContainer().extendMenu(this, is);
-
-			File configDirectory = AddressbookConfig.getInstance()
-					.getConfigDirectory();
-			InputStream is2 = new FileInputStream(new File(configDirectory,
-					"main_toolbar.xml"));
-			getContainer().extendToolbar(this, is2);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		getContainer().setInfoPanel(new ContainerInfoPanel());
-
-		return splitPane;
-	}
-
-	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#getString(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
 		return AddressbookResourceLoader.getString(sPath, sName, sID);
-	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IFrameMediator#getContentPane()
-	 */
-	public IContentPane getContentPane() {
-		return this;
 	}
 
 	/**
@@ -172,7 +146,48 @@ public class AddressbookFrameController extends DefaultFrameController
 				.getPath().getLastPathComponent();
 
 		if (selectedFolder != null) {
-			getContainer().getFrame().setTitle(selectedFolder.getName());
+			fireTitleChanged(selectedFolder.getName());
 		}
 	}
+
+	public void loadDefaultPosition() {
+		 super.dock(contactListPanel, DockingConstants.CENTER_REGION);
+		 contactListPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
+		
+		 super.setSplitProportion(treePanel, 0.3f);
+		 super.setSplitProportion(contactListPanel, 0.35f);
+	}
+
+//	public void initPerspective(Perspective p) {
+//		LayoutSequence sequence = p.getInitialSequence(true);
+//		sequence.add(treePanel);
+//		sequence.add(contactListPanel, treePanel, DockingConstants.EAST_REGION,
+//				0.7f);
+//	}
+
+	/** *********************** container callbacks ************* */
+
+	public void extendMenu(IContainer container) {
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/addressbook/action/menu.xml");
+			container.extendMenu(this, is);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void extendToolBar(IContainer container) {
+		try {
+			File configDirectory = AddressbookConfig.getInstance()
+					.getConfigDirectory();
+			InputStream is2 = new FileInputStream(new File(configDirectory,
+					"main_toolbar.xml"));
+			container.extendToolbar(this, is2);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

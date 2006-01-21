@@ -49,15 +49,11 @@ public class AccountController implements ItemListener {
 			AccountItem accountItem = config.get(i);
 			view.addItem(accountItem);
 
-			if ( accountItem.isDefault() ) {
+			if (accountItem.isDefault()) {
 				view.setSelectedItem(accountItem);
 				controller.getModel().setAccountItem(accountItem);
 			}
 		}
-
-		AccountItem item = controller.getModel().getAccountItem();
-
-		controller.getIdentityInfoPanel().set(item);
 
 		view.addItemListener(this);
 	}
@@ -80,20 +76,6 @@ public class AccountController implements ItemListener {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			updateComponents(false);
 
-			AccountItem item = (AccountItem) view.getSelectedItem();
-			controller.getIdentityInfoPanel().set(item);
-
-			/*
-			 * AccountItem item = (AccountItem) view.getSelectedItem();
-			 * composerInterface.identityInfoPanel.set(item);
-			 * 
-			 * SecurityItem pgpItem = item.getPGPItem();
-			 * signMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
-			 * signMenuItem.setSelected(pgpItem.getBoolean("always_sign"));
-			 * 
-			 * encryptMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
-			 * encryptMenuItem.setSelected(pgpItem.getBoolean("always_encrypt"));
-			 */
 		}
 	}
 

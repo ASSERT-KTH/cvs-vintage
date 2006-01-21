@@ -35,8 +35,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -53,7 +51,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import org.columba.api.gui.frame.IContentPane;
+import org.columba.api.gui.frame.IContainer;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
@@ -69,7 +67,6 @@ import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.HtmlToolbar;
 import org.columba.mail.gui.composer.text.TextEditorController;
-import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.swing.MultipleTransferHandler;
@@ -90,14 +87,11 @@ import com.jgoodies.forms.layout.Sizes;
  * @author frd
  */
 public class ComposerController extends DefaultFrameController implements
-		CharsetOwnerInterface, IContentPane, DocumentListener,
-		ItemListener {
+		CharsetOwnerInterface, DocumentListener, ItemListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.composer");
-
-	private IdentityInfoPanel identityInfoPanel;
 
 	private AttachmentController attachmentController;
 
@@ -158,7 +152,6 @@ public class ComposerController extends DefaultFrameController implements
 		composerModel = model;
 
 		// init controllers for different parts of the composer
-		identityInfoPanel = new IdentityInfoPanel();
 		attachmentController = new AttachmentController(this);
 		headerController = new HeaderController(this);
 		subjectController = new SubjectController(this);
@@ -262,11 +255,6 @@ public class ComposerController extends DefaultFrameController implements
 
 	}
 
-	public IdentityInfoPanel getAccountInfoPanel() {
-
-		return getIdentityInfoPanel();
-	}
-
 	/**
 	 * Show attachment panel
 	 * <p>
@@ -302,11 +290,11 @@ public class ComposerController extends DefaultFrameController implements
 			// add splitpane to the center
 			centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
-			
-			//ViewItem viewItem = getViewItem();
+			// ViewItem viewItem = getViewItem();
 
 			// default value is 200 pixel
-			//int pos = viewItem.getIntegerWithDefault("splitpanes","attachment", 200);
+			// int pos =
+			// viewItem.getIntegerWithDefault("splitpanes","attachment", 200);
 			attachmentSplitPane.setDividerLocation(200);
 
 			attachmentPanelShown = true;
@@ -321,8 +309,7 @@ public class ComposerController extends DefaultFrameController implements
 		// re-paint composer-view
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				if (getContainer() != null)
-					getContainer().getFrame().validate();
+				fireLayoutChanged();
 			}
 		});
 
@@ -556,13 +543,6 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @return IdentityInfoPanel
-	 */
-	public IdentityInfoPanel getIdentityInfoPanel() {
-		return identityInfoPanel;
-	}
-
-	/**
 	 * @return PriorityController
 	 */
 	public PriorityController getPriorityController() {
@@ -739,64 +719,64 @@ public class ComposerController extends DefaultFrameController implements
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void toggleHtmlMode() {
-        XmlElement optionsElement = MailConfig.getInstance().get("composer_options")
-        .getElement("/options");
-        
-        XmlElement htmlElement = optionsElement.getElement("html");
+		XmlElement optionsElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options");
 
-        // switch btw. html and text if necessary
-			String enableHtml = htmlElement.getAttribute("enable", "false");
-			boolean html = Boolean.valueOf(enableHtml).booleanValue();
-			boolean wasHtml = composerModel.isHtml();
+		XmlElement htmlElement = optionsElement.getElement("html");
 
-			if (html != wasHtml) {
-				composerModel.setHtml(html);
+		// switch btw. html and text if necessary
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		boolean html = Boolean.valueOf(enableHtml).booleanValue();
+		boolean wasHtml = composerModel.isHtml();
 
-				// sync model with the current (old) view
-				updateComponents(false);
+		if (html != wasHtml) {
+			composerModel.setHtml(html);
 
-				// convert body text to comply with new editor format
-				String oldBody = composerModel.getBodyText();
-				String newBody;
+			// sync model with the current (old) view
+			updateComponents(false);
 
-				if (html) {
-					LOG.fine("Converting body text to html");
-					newBody = HtmlParser.textToHtml(oldBody, "", null, getCharset().toString());
-				} else {
-					LOG.fine("Converting body text to text");
-					newBody = HtmlParser.htmlToText(oldBody);
-				}
-
-				composerModel.setBodyText(newBody);
-
-				// switch editor and resync view with model
-				switchEditor(composerModel.isHtml());
-
-				updateComponents(true);
-			}
+			// convert body text to comply with new editor format
+			String oldBody = composerModel.getBodyText();
+			String newBody;
 
 			if (html) {
-				editorPanel.getContentPane().add(htmlToolbar,
-						BorderLayout.NORTH);
+				LOG.fine("Converting body text to html");
+				newBody = HtmlParser.textToHtml(oldBody, "", null, getCharset()
+						.toString());
 			} else {
-				editorPanel.getContentPane().remove(htmlToolbar);
+				LOG.fine("Converting body text to text");
+				newBody = HtmlParser.htmlToText(oldBody);
 			}
 
-			editorPanel.validate();
-		
+			composerModel.setBodyText(newBody);
+
+			// switch editor and resync view with model
+			switchEditor(composerModel.isHtml());
+
+			updateComponents(true);
+		}
+
+		if (html) {
+			editorPanel.getContentPane().add(htmlToolbar, BorderLayout.NORTH);
+		} else {
+			editorPanel.getContentPane().remove(htmlToolbar);
+		}
+
+		editorPanel.validate();
+
 	}
 
-//	public void savePositions(ViewItem viewItem) {
-//		super.savePositions(viewItem);
-//
-//		viewItem = getViewItem();
-//
-//		// splitpanes
-//		if (attachmentSplitPane != null)
-//			viewItem.setInteger("splitpanes", "attachment", attachmentSplitPane
-//					.getDividerLocation());
-//
-//	}
+	// public void savePositions(ViewItem viewItem) {
+	// super.savePositions(viewItem);
+	//
+	// viewItem = getViewItem();
+	//
+	// // splitpanes
+	// if (attachmentSplitPane != null)
+	// viewItem.setInteger("splitpanes", "attachment", attachmentSplitPane
+	// .getDividerLocation());
+	//
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -841,7 +821,7 @@ public class ComposerController extends DefaultFrameController implements
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#close()
 	 */
-	public void close() {
+	public void close(IContainer container) {
 
 		// don't prompt user if composer should be closed
 		if (isPromptOnDialogClosing() == false)
@@ -849,7 +829,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		// only prompt user, if composer contains some text
 		if (editorController.getViewText().length() == 0) {
-			getContainer().getFrame().setVisible(false);
+			fireVisibilityChanged(false);
 
 			// close Columba, if composer is only visible frame
 			FrameManager.getInstance().close(null);
@@ -858,7 +838,7 @@ public class ComposerController extends DefaultFrameController implements
 		}
 
 		Object[] options = { "Close", "Cancel", "Save" };
-		int n = JOptionPane.showOptionDialog(getContainer().getFrame(),
+		int n = JOptionPane.showOptionDialog(container.getFrame(),
 				"Message wasn't sent. Would you like to save your changes?",
 				"Warning: Message was modified",
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -870,7 +850,7 @@ public class ComposerController extends DefaultFrameController implements
 					.actionPerformed(null);
 
 			// close composer
-			getContainer().getFrame().setVisible(false);
+			fireVisibilityChanged(false);
 
 			// close Columba, if composer is only visible frame
 			FrameManager.getInstance().close(null);
@@ -878,7 +858,7 @@ public class ComposerController extends DefaultFrameController implements
 			// cancel question dialog and don't close composer
 		} else {
 			// close composer
-			getContainer().getFrame().setVisible(false);
+			fireVisibilityChanged(false);
 
 			// close Columba, if composer is only visible frame
 			FrameManager.getInstance().close(null);
@@ -952,33 +932,6 @@ public class ComposerController extends DefaultFrameController implements
 
 		panel.add(centerPanel, BorderLayout.CENTER);
 
-		try {
-			InputStream is = DiskIO
-					.getResourceStream("org/columba/mail/action/composer_menu.xml");
-			getContainer().extendMenu(this, is);
-
-			File configDirectory = MailConfig.getInstance()
-					.getConfigDirectory();
-			InputStream is2 = new FileInputStream(new File(configDirectory,
-					"composer_toolbar.xml"));
-			getContainer().extendToolbar(this, is2);
-
-		} catch (IOException e) {
-			LOG.severe(e.getMessage());
-		}
-
-		// @author: fdietz
-		// disabled identity infopanel because it contains
-		// only duplicate information
-		// getContainer().setInfoPanel(getIdentityInfoPanel());
-
-		getContainer().getFrame().setFocusTraversalPolicy(
-				new ComposerFocusTraversalPolicy());
-
-		// make sure that JFrame is not closed automatically
-		// -> we want to prompt the user to save his work
-		getContainer().setCloseOperation(false);
-
 		return panel;
 	}
 
@@ -991,13 +944,6 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.api.gui.frame.IFrameMediator#getContentPane()
-	 */
-	public IContentPane getContentPane() {
-		return this;
-	}
-
-	/**
 	 * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
 	 */
 	public void changedUpdate(DocumentEvent arg0) {
@@ -1005,7 +951,7 @@ public class ComposerController extends DefaultFrameController implements
 		try {
 			String subject = doc.getText(0, doc.getLength());
 
-			getContainer().getFrame().setTitle(subject);
+			fireTitleChanged(subject);
 		} catch (BadLocationException e) {
 		}
 	}
@@ -1018,7 +964,7 @@ public class ComposerController extends DefaultFrameController implements
 		try {
 			String subject = doc.getText(0, doc.getLength());
 
-			getContainer().getFrame().setTitle(subject);
+			fireTitleChanged(subject);
 		} catch (BadLocationException e) {
 		}
 	}
@@ -1031,7 +977,7 @@ public class ComposerController extends DefaultFrameController implements
 		try {
 			String subject = doc.getText(0, doc.getLength());
 
-			getContainer().getFrame().setTitle(subject);
+			fireTitleChanged(subject);
 		} catch (BadLocationException e) {
 		}
 	}
@@ -1069,4 +1015,43 @@ public class ComposerController extends DefaultFrameController implements
 		}
 
 	}
+
+	public JPanel getContentPane() {
+		return (JPanel) getComponent();
+	}
+
+	/** *********************** container callbacks ************* */
+
+	public void extendMenu(IContainer container) {
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/mail/action/composer_menu.xml");
+			container.extendMenu(this, is);
+
+		} catch (IOException e) {
+			LOG.severe(e.getMessage());
+		}
+	}
+
+	public void extendToolBar(IContainer container) {
+		try {
+			File configDirectory = MailConfig.getInstance()
+					.getConfigDirectory();
+			InputStream is2 = new FileInputStream(new File(configDirectory,
+					"composer_toolbar.xml"));
+			container.extendToolbar(this, is2);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void initFrame(IContainer container) {
+		container.getFrame().setFocusTraversalPolicy(
+				new ComposerFocusTraversalPolicy());
+
+		// make sure that JFrame is not closed automatically
+		// -> we want to prompt the user to save his work
+		container.setCloseOperation(false);
+	}
+
 }

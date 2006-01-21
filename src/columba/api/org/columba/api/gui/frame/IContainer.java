@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.api.gui.frame;
 
-import java.awt.event.MouseAdapter;
 import java.io.InputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.columba.api.statusbar.IStatusBar;
@@ -70,15 +70,6 @@ public interface IContainer {
 	 * @return current container
 	 */
 	IFrameMediator getFrameMediator();
-
-	/**
-	 * Get mouse tooltip handler. This is a MouseAdapter which is used by the
-	 * menu to display menuitem tooltips on the statusbar when moving the mouse
-	 * of an menuitem.
-	 * 
-	 * @return tooltip handler
-	 */
-	public MouseAdapter getMouseTooltipHandler();
 
 	/**
 	 * Get statusbar.
@@ -129,38 +120,6 @@ public interface IContainer {
 	JToolBar getToolBar();
 
 	/**
-	 * Check if infopanel is visible.
-	 * 
-	 * @return true, if visible. Otherwise, false.
-	 */
-	public boolean isInfoPanelEnabled();
-
-	/**
-	 * Hide/Show current infopanel.
-	 * 
-	 * @param enable
-	 *            If true, show infopanel. Otherwise, hide infopanel.
-	 */
-	public void enableInfoPanel(boolean enable);
-
-	/**
-	 * Get the current infopanel. This is the darkgray panel right below the
-	 * toolbar.
-	 * 
-	 * @return current infopanel
-	 */
-	JComponent getInfoPanel();
-
-	/**
-	 * Set infopanel of this container. This is the darkgray panel right below
-	 * the toolbar.
-	 * 
-	 * @param panel
-	 *            new infopanel
-	 */
-	void setInfoPanel(JComponent panel);
-
-	/**
 	 * Save window properties and close the window. This includes telling the
 	 * frame model that this window/frame is closing, so it can be
 	 * "unregistered" correctly
@@ -174,7 +133,7 @@ public interface IContainer {
 	 * @param view
 	 *            new content pane
 	 */
-	void setContentPane(IContentPane view);
+	void setContentPane(JPanel view);
 
 	/**
 	 * Get current swing JFrame. This could become handy when directly accessing
@@ -246,4 +205,5 @@ public interface IContainer {
 	 *            automatically.
 	 */
 	void setCloseOperation(boolean close);
+
 }

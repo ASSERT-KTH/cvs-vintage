@@ -11,6 +11,7 @@
  <extension id="OpenExternalToolsDialog" class="org.columba.core.gui.globalactions.OpenExternalToolsDialogAction"/>
  <extension id="OpenProfileManagerDialog" class="org.columba.core.gui.globalactions.OpenProfileManagerDialogAction"/>
  <extension id="ChoosePerspectiveSubmenu" class="org.columba.core.gui.globalactions.SwitchPerspectiveSubmenu"/>
+ <extension id="ShowHideViewSubmenu" class="org.columba.core.gui.globalactions.ShowHideViewSubmenu"/>
  <extension id="ViewFolderInfoPanel" class="org.columba.core.gui.globalactions.ViewFolderInfoPanelAction"/>
  <extension id="ViewLog" class="org.columba.core.gui.globalactions.ViewLogAction"/>
  <extension id="Macro" class="org.columba.core.gui.globalactions.BeanshellManagerAction"/>

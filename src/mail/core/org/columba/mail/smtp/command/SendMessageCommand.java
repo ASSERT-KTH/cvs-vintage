@@ -297,7 +297,7 @@ public class SendMessageCommand extends Command {
 			// do not prompt user if composer should be really closed
 			composerController.setPromptOnDialogClosing(false);
 			// save composer window state
-			composerController.getContainer().close();
+			composerController.fireClosed();
 		}
 	}
 }

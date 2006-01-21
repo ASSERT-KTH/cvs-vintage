@@ -16,7 +16,7 @@ import javax.swing.border.LineBorder;
 /**
  */
 class TitlePanel extends JPanel {
-	protected TitleBar titlebar;
+	protected DefaultTitleBar titlebar;
 	private JComponent contentPane;
 
 	public TitlePanel(String title) {
@@ -36,12 +36,12 @@ class TitlePanel extends JPanel {
 		titlebar.setTitle(title);
 	}
 
-	public JPanel getTitlebar() {
+	public JPanel getTitleBar() {
 		return titlebar;
 	}
 
-	protected TitleBar createTitlebar(String title) {
-		return new TitleBar(title);
+	protected DefaultTitleBar createTitlebar(String title) {
+		return new DefaultTitleBar(title);
 	}
 
 	public void setContentPane(JComponent comp) {
@@ -54,8 +54,8 @@ class TitlePanel extends JPanel {
 
 	protected JComponent createContentPane() {
 		JPanel pane = new JPanel();
-		pane.setBorder(new LineBorder(Color.DARK_GRAY));
-		pane.setBackground(Color.WHITE);
+//		pane.setBorder(new LineBorder(Color.DARK_GRAY));
+//		pane.setBackground(Color.WHITE);
 		return pane;
 	}
 

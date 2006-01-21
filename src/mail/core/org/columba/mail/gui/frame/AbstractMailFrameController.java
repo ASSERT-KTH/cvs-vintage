@@ -26,7 +26,7 @@ import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.DefaultFrameController;
+import org.columba.core.gui.frame.DockFrameController;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
@@ -40,7 +40,7 @@ import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
  * @author fdietz
  * 
  */
-public class AbstractMailFrameController extends DefaultFrameController
+public abstract class AbstractMailFrameController extends DockFrameController
 		implements MailFrameMediator, MessageViewOwner, CharsetOwnerInterface {
 
 	public MessageController messageController;

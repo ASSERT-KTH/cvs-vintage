@@ -18,13 +18,14 @@
 package org.columba.chat.frame;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import org.columba.api.gui.frame.IContentPane;
+import org.columba.api.gui.frame.IContainer;
 import org.columba.chat.api.IAlturaFrameMediator;
 import org.columba.chat.api.IConversationController;
 import org.columba.chat.api.IPresenceController;
@@ -40,7 +41,7 @@ import org.columba.core.gui.frame.DefaultFrameController;
  * 
  */
 public class AlturaFrameController extends DefaultFrameController implements
-		IAlturaFrameMediator, IContentPane {
+		IAlturaFrameMediator {
 
 	private RoasterTree tree;
 
@@ -81,14 +82,6 @@ public class AlturaFrameController extends DefaultFrameController implements
 
 		splitPane.add(conversation, JSplitPane.RIGHT);
 
-		InputStream is = this.getClass().getResourceAsStream(
-				"/org/columba/chat/action/menu.xml");
-		getContainer().extendMenu(this, is);
-
-		InputStream is2 = this.getClass().getResourceAsStream(
-				"/org/columba/chat/action/toolbar.xml");
-		getContainer().extendToolbar(this, is2);
-
 		return splitPane;
 	}
 
@@ -107,16 +100,28 @@ public class AlturaFrameController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @see org.columba.api.gui.frame.IFrameMediator#getContentPane()
-	 */
-	public IContentPane getContentPane() {
-		return this;
-	}
-
-	/**
 	 * @see org.columba.chat.api.IAlturaFrameMediator#getConversationController()
 	 */
 	public IConversationController getConversationController() {
 		return conversation;
 	}
+
+	/** *********************** container callbacks ************* */
+
+	public void extendMenu(IContainer container) {
+
+		InputStream is = this.getClass().getResourceAsStream(
+				"/org/columba/chat/action/menu.xml");
+		container.extendMenu(this, is);
+
+	}
+
+	public void extendToolBar(IContainer container) {
+
+		InputStream is2 = this.getClass().getResourceAsStream(
+				"/org/columba/chat/action/toolbar.xml");
+		container.extendToolbar(this, is2);
+
+	}
+
 }

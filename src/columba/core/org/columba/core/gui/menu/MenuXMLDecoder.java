@@ -229,8 +229,8 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				// TODO
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.CHECKBOXMENUITEM)) {
@@ -238,16 +238,16 @@ public class MenuXMLDecoder {
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				// TODO
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				// TODO
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.SEPARATOR)) {
 				parentMenu.addSeparator();
@@ -290,8 +290,8 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				// TODO
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.CHECKBOXMENUITEM)) {
@@ -299,16 +299,16 @@ public class MenuXMLDecoder {
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				// TODO
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				// TODO
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.SEPARATOR)) {
 				parentMenu.addSeparator();
@@ -404,8 +404,7 @@ public class MenuXMLDecoder {
 
 				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.insert(menuItem, placeholderId);
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.CHECKBOXMENUITEM)) {
@@ -413,16 +412,14 @@ public class MenuXMLDecoder {
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.insert(menuItem, placeholderId);
 			} else if (menuElement.getName().equals(
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
-				menuItem.addMouseListener(mediator.getContainer()
-						.getMouseTooltipHandler());
+				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.insert(menuItem, placeholderId);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.SEPARATOR)) {
 				parentMenu.insertSeparator(placeholderId);

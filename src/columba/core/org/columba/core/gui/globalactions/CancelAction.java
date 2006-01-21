@@ -57,8 +57,7 @@ public class CancelAction extends AbstractColumbaAction implements
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		getFrameMediator().getContainer().getStatusBar().getDisplayedWorker()
-				.cancel();
+		getFrameMediator().fireTaskStatusChanged();
 	}
 
 	public void workerAdded(TaskManagerEvent e) {

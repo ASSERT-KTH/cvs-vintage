@@ -48,7 +48,7 @@ public class CloseAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		frameMediator.getContainer().close();
+		frameMediator.fireClosed();
 
 	}
 }

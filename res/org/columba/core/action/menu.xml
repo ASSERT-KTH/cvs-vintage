@@ -52,9 +52,10 @@
 		
 		<menu id="menu_view_show_hide">
 			<checkboxmenuitem id="ViewToolbar"/>
-			<checkboxmenuitem id="ViewFolderInfoPanel" />	
 			<placeholder id="show_hide"/>
 		</menu>
+		
+		<imenu id="ShowHideViewSubmenu"/>
 		<placeholder id="top"/>
 		<placeholder id="bottom"/>
 	</menu>

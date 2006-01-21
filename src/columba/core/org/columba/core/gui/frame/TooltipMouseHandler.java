@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 
+import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.statusbar.IStatusBar;
 
 
@@ -29,14 +30,14 @@ import org.columba.api.statusbar.IStatusBar;
  *
  */
 public class TooltipMouseHandler extends MouseAdapter {
-    private IStatusBar statusBar;
+    private IFrameMediator frameMediator;
 
     /**
      * Constructor for MouseHandler.
      */
-    public TooltipMouseHandler(IStatusBar statusBar) {
+    public TooltipMouseHandler(IFrameMediator frameMediator) {
         super();
-        this.statusBar = statusBar;
+        this.frameMediator = frameMediator;
     }
 
     /**
@@ -52,7 +53,7 @@ public class TooltipMouseHandler extends MouseAdapter {
 
             if (action != null) {
                 String message = (String) action.getValue(Action.SHORT_DESCRIPTION);
-                statusBar.displayTooltipMessage(message);
+                frameMediator.fireStatusMessageChanged(message);
             }
         }
     }
@@ -63,7 +64,7 @@ public class TooltipMouseHandler extends MouseAdapter {
      */
     public void mouseExited(MouseEvent e) {
         // clear the tooltip message previously displayed in the status bar
-        statusBar.displayTooltipMessage("");
+    	frameMediator.fireStatusMessageChanged("");
     }
 
     /**
@@ -72,6 +73,6 @@ public class TooltipMouseHandler extends MouseAdapter {
      */
     public void mousePressed(MouseEvent e) {
         // clear the tooltip message previously displayed in the status bar
-        statusBar.displayTooltipMessage("");
+    	frameMediator.fireStatusMessageChanged("");
     }
 }

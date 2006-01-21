@@ -198,17 +198,18 @@ public class TableViewTransferHandler extends TransferHandler {
 		boolean dataWasImported = false;
 
 		/*
-		TreeController treeController = (TreeController) ((TreeViewOwner) frameController)
-				.getTreeController();
-
-		TreeView treeView = treeController.getView();
-		*/
-		IMailbox destFolder = (IMailbox)((MailFrameMediator)frameController).getTableSelection().getSourceFolder();
+		 * TreeController treeController = (TreeController) ((TreeViewOwner)
+		 * frameController) .getTreeController();
+		 * 
+		 * TreeView treeView = treeController.getView();
+		 */
+		IMailbox destFolder = (IMailbox) ((MailFrameMediator) frameController)
+				.getTableSelection().getSourceFolder();
 		/*
-		AbstractMessageFolder destFolder = (AbstractMessageFolder) treeView
-				.getDropTargetFolder();
-				*/
-		
+		 * AbstractMessageFolder destFolder = (AbstractMessageFolder) treeView
+		 * .getDropTargetFolder();
+		 */
+
 		IMailFolderCommandReference result = transferable.getFolderReferences();
 		result.setDestinationFolder(destFolder);
 
@@ -256,18 +257,12 @@ public class TableViewTransferHandler extends TransferHandler {
 			LOG
 					.info("Selected messages will be moved, when selecting \"Paste\"");
 			frameController
-					.getContainer()
-					.getStatusBar()
-					.displayTooltipMessage(
-							"Selected messages will be moved, when selecting \"Paste\"");
+					.fireStatusMessageChanged("Selected messages will be moved, when selecting \"Paste\"");
 		} else if (action == TransferHandler.COPY) {
 			LOG
 					.info("Selected messages will be copied, when selecting \"Paste\"");
 			frameController
-					.getContainer()
-					.getStatusBar()
-					.displayTooltipMessage(
-							"Selected messages will be copied, when selecting \"Paste\"");
+					.fireStatusMessageChanged("Selected messages will be copied, when selecting \"Paste\"");
 		}
 
 		super.exportToClipboard(comp, clip, action);
