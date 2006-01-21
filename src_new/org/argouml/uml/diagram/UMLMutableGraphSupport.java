@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.37 2005/11/20 01:15:08 bobtarling Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.38 2006/01/21 22:01:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -537,4 +537,13 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
         return diDiagram;
     }
 
+    /**
+     * Return true if the current targets may be removed from the diagram.
+     *
+     * @param figs a collection with the selected figs
+     * @return true if the targets may be removed
+     */
+    public boolean isRemoveFromDiagramAllowed(Collection figs) {
+        return !figs.isEmpty();
+    }
 }

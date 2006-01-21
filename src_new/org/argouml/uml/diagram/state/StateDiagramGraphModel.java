@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.70 2005/11/19 13:45:14 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.71 2006/01/21 22:01:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.VetoableChangeListener;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -35,6 +36,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
+import org.tigris.gef.presentation.Fig;
 
 /**
  * This class defines a bridge between the UML meta-model representation of the
@@ -444,5 +446,25 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         }
 
     }
+
+    /**
+     * @see org.argouml.uml.diagram.UMLMutableGraphSupport#isRemoveFromDiagramAllowed()
+     */
+    public boolean isRemoveFromDiagramAllowed(Collection figs) {
+        /* If nothing is selected, then not allowed to remove it. */
+        if (figs.isEmpty()) return false;
+        Iterator i = figs.iterator();
+        while (i.hasNext()) {
+            Object obj = i.next();
+            if (!(obj instanceof Fig)) return false;
+            Object uml = ((Fig) obj).getOwner();
+            /* If a UML object is found, you can not remove selected elms. */
+            if (uml != null) return false;
+        }
+        /* If only Figs without owner are selected, then you can remove them! */
+        return true;
+    }
+    
+    
 
 } /* end class StateDiagramGraphModel */
