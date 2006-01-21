@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.130 2006/01/09 21:48:04 thn Exp $
+// $Id: Modeller.java,v 1.131 2006/01/21 07:54:55 thn Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1548,13 +1548,14 @@ public class Modeller {
     private void addJavadocTagContents(Object me,
 				       String sTagName,
 				       String sTagData) {
-	if ((sTagName.equals("invariant"))
-	    || (sTagName.equals("pre-condition"))
-	    || (sTagName.equals("post-condition"))) {
+        int colonPos = (sTagData != null) ? sTagData.indexOf(':') : -1;
+        if (colonPos != -1 && (("invariant".equals(sTagName))
+	    || ("pre-condition".equals(sTagName))
+	    || ("post-condition".equals(sTagName)))) {
 
 	    // add as OCL constraint
 	    String sContext = OCLUtil.getContextString(me);
-	    String name = sTagData.substring(0, sTagData.indexOf(':'));
+	    String name = sTagData.substring(0, colonPos);
 	    String body = null;
 	    if (sTagName.equals ("invariant")) {
 		// add as invariant constraint Note that no checking
