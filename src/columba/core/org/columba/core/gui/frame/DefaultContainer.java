@@ -62,8 +62,6 @@ import org.columba.core.resourceloader.ImageLoader;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.docking.drag.preview.GhostPreview;
-import org.flexdock.event.EventManager;
-import org.flexdock.perspective.event.LayoutEvent;
 
 /**
  * @author fdietz
@@ -210,9 +208,6 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// enable flexdock ghost preview
 		EffectsManager.setPreview(new GhostPreview());
 
-		// TODO should we use drop shadows
-		// portCenter.setBorderManager(new StandardBorderManager(
-		// new ShadowBorder()));
 	}
 
 	private void createMenuBar() {

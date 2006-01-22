@@ -55,7 +55,9 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 			WebBrowser.setDebug(true);
 			
 			browser = new WebBrowser();
-			browser.setSize(500,500);
+		
+			// turn of focus stealing (workaround should be removed in the future!)
+			browser.setFocusable(false);
 			
 			setLayout(new BorderLayout());
 			add(browser, BorderLayout.CENTER);

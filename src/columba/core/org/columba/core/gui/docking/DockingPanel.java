@@ -3,6 +3,8 @@ package org.columba.core.gui.docking;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,6 +19,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import org.columba.core.gui.base.AscendingIcon;
+import org.columba.core.gui.base.ShadowBorder;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingStub;
@@ -46,22 +49,18 @@ class DockingPanel extends JPanel implements DockingStub {
 			.getColor("controlHighlight");
 
 	public static Color INACTIVE_LABEL_COLOR = UIManager
-			.getColor("controlText");
+			.getColor("Menu.selectionForeground");
 
 	public static Color ACTIVE_LABEL_COLOR = UIManager
 			.getColor("Menu.selectionForeground");
 
-	protected GradientTitleBar titlebar;
+	protected TitleBar titlebar;
 
 	private JPanel contentPanel;
 
 	private Dockable dockable;
 
 	private String dockingId;
-
-	private JPopupMenu menu;
-
-	protected JButton menuButton;
 
 	private boolean active = false;
 
@@ -70,29 +69,30 @@ class DockingPanel extends JPanel implements DockingStub {
 
 		this.dockingId = id;
 
-		this.titlebar = new GradientTitleBar(title, INACTIVE_MID_COLOR,
+		this.titlebar = new TitleBar(title, INACTIVE_MID_COLOR,
 				INACTIVE_START_COLOR, INACTIVE_FILL_COLOR);
-
-		ImageIcon icon = new AscendingIcon();
-		menuButton = new JButton(icon);
-
-		titlebar.addButton(menuButton);
 
 		setLayout(new BorderLayout());
 
 		add(this.titlebar, BorderLayout.NORTH);
-		
+
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
 		Border border = BorderFactory.createCompoundBorder(new LineBorder(
-				INACTIVE_BORDER_COLOR), BorderFactory.createEmptyBorder(1,
-				1, 1, 1));
+				INACTIVE_BORDER_COLOR), BorderFactory.createEmptyBorder(1, 1,
+				1, 1));
 
-		contentPanel.setBorder(border);
-		
 		add(contentPanel, BorderLayout.CENTER);
-		
+
 		setContentPane(createContentPane());
+
+		setBorder(new ShadowBorder());
+
+		titlebar.setMidColor(INACTIVE_MID_COLOR);
+		titlebar.setFillColor(INACTIVE_FILL_COLOR);
+		titlebar.setStartColor(INACTIVE_START_COLOR);
+
+		titlebar.setActiveTitleColor(INACTIVE_LABEL_COLOR, INACTIVE_MID_COLOR);
 
 	}
 
@@ -100,25 +100,26 @@ class DockingPanel extends JPanel implements DockingStub {
 		this.active = active;
 
 		if (active) {
-			contentPanel.setBorder(new LineBorder(ACTIVE_BORDER_COLOR, 2));
+			// contentPanel.setBorder(new LineBorder(ACTIVE_BORDER_COLOR, 1));
 
 			titlebar.setMidColor(ACTIVE_MID_COLOR);
 			titlebar.setFillColor(ACTIVE_FILL_COLOR);
 			titlebar.setStartColor(ACTIVE_START_COLOR);
 
-			titlebar.setActiveTitleColor(ACTIVE_LABEL_COLOR);
+			titlebar.setActiveTitleColor(ACTIVE_LABEL_COLOR, ACTIVE_FILL_COLOR);
 		} else {
 			Border border = BorderFactory.createCompoundBorder(new LineBorder(
 					INACTIVE_BORDER_COLOR), BorderFactory.createEmptyBorder(1,
 					1, 1, 1));
 
-			contentPanel.setBorder(border);
+			// contentPanel.setBorder(border);
 
 			titlebar.setMidColor(INACTIVE_MID_COLOR);
 			titlebar.setFillColor(INACTIVE_FILL_COLOR);
 			titlebar.setStartColor(INACTIVE_START_COLOR);
 
-			titlebar.setActiveTitleColor(INACTIVE_LABEL_COLOR);
+			titlebar.setActiveTitleColor(INACTIVE_LABEL_COLOR,
+					INACTIVE_MID_COLOR);
 		}
 
 		contentPanel.repaint();
@@ -150,7 +151,7 @@ class DockingPanel extends JPanel implements DockingStub {
 		titlebar.setTitle(title);
 	}
 
-	public DefaultTitleBar getTitleBar() {
+	public TitleBar getTitleBar() {
 		return titlebar;
 	}
 
@@ -160,12 +161,12 @@ class DockingPanel extends JPanel implements DockingStub {
 		if (comp != null)
 			contentPanel.add(comp, BorderLayout.CENTER);
 
-		//this.contentPane = comp;
+		// this.contentPane = comp;
 
-//		Color color = UIManager.getColor("controlDkShadow");
-//
-//		if (comp != null)
-//			contentPane.setBorder(new LineBorder(color));
+		// Color color = UIManager.getColor("controlDkShadow");
+		//
+		// if (comp != null)
+		// contentPane.setBorder(new LineBorder(color));
 	}
 
 	public void setTitleBar(JPanel panel) {
@@ -188,21 +189,6 @@ class DockingPanel extends JPanel implements DockingStub {
 		return getTitle();
 	}
 
-	public void setPopupMenu(final JPopupMenu menu) {
-		if (menu == null)
-			throw new IllegalArgumentException("menu == null");
-
-		this.menu = menu;
-
-		menuButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// FIXME: should we align the menu to the left instead?
-				// menu.show(b, b.getWidth() - menu.getWidth(), b.getHeight());
-				menu.show(menuButton, 0, menuButton.getHeight());
-			}
-		});
-	}
-
 	public void updateUI() {
 		super.updateUI();
 
@@ -210,23 +196,47 @@ class DockingPanel extends JPanel implements DockingStub {
 
 		ACTIVE_BORDER_COLOR = UIManager.getColor("Menu.selectionBackground");
 
-		ACTIVE_MID_COLOR = UIManager.getColor("Menu.selectionBackground");
+		ACTIVE_MID_COLOR = alpha(
+				UIManager.getColor("Menu.selectionBackground"), 200);
 
-		ACTIVE_FILL_COLOR = UIManager.getColor("Menu.selectionBackground");
+		ACTIVE_FILL_COLOR = alpha(UIManager
+				.getColor("Menu.selectionBackground"), 125);
 
-		ACTIVE_START_COLOR = UIManager.getColor("Menu.selectionBackground")
-				.brighter();
+		ACTIVE_START_COLOR = brighter(UIManager
+				.getColor("Menu.selectionBackground"));
 
-		INACTIVE_FILL_COLOR = UIManager.getColor("control");
+		INACTIVE_FILL_COLOR = brighter(UIManager.getColor("controlDkShadow"));
 
-		INACTIVE_MID_COLOR = UIManager.getColor("control");
+		INACTIVE_MID_COLOR = UIManager.getColor("controlDkShadow");
 
-		INACTIVE_START_COLOR = UIManager.getColor("controlHighlight");
+		INACTIVE_START_COLOR = UIManager.getColor("control");
 
-		INACTIVE_LABEL_COLOR = UIManager.getColor("controlText");
+		INACTIVE_LABEL_COLOR = UIManager.getColor("Menu.selectionForeground");
 
 		ACTIVE_LABEL_COLOR = UIManager.getColor("Menu.selectionForeground");
 
+	}
+
+	public Color alpha(Color c, int alpha) {
+		return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
+
+	}
+
+	private final static double FACTOR = 0.75;
+
+	public Color darker(Color c) {
+		return new Color(Math.max((int) (c.getRed() * FACTOR), 0), Math.max(
+				(int) (c.getGreen() * FACTOR), 0), Math.max(
+				(int) (c.getBlue() * FACTOR), 0));
+	}
+
+	private Color brighter(Color c) {
+		int r = c.getRed();
+		int g = c.getGreen();
+		int b = c.getBlue();
+
+		return new Color(Math.min((int) (r / FACTOR), 255), Math.min(
+				(int) (g / FACTOR), 255), Math.min((int) (b / FACTOR), 255));
 	}
 
 }

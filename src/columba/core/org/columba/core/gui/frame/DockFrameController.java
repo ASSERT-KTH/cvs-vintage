@@ -1,6 +1,5 @@
 package org.columba.core.gui.frame;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,15 +8,16 @@ import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import org.columba.api.gui.frame.IContainer;
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.docking.XMLPersister;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.DefaultDockingPort;
+import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.perspective.Perspective;
+import org.flexdock.plaf.common.border.ShadowBorder;
 
 public abstract class DockFrameController extends DefaultFrameController
 		//implements IDock
@@ -53,6 +53,8 @@ public abstract class DockFrameController extends DefaultFrameController
 		
 		dockingPort = new DefaultDockingPort();
 		dockingPort.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		
+		
 		//contentPanePanel.add(dockingPort, BorderLayout.CENTER);
 		
 		//perspective = new Perspective(getId(), getId()+" Perspective");

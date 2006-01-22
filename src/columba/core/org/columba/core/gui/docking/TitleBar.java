@@ -3,21 +3,43 @@
  */
 package org.columba.core.gui.docking;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.util.Vector;
 
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+
+import org.columba.core.gui.base.RoundedBorder;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.layout.Sizes;
 
 /**
  */
-class GradientTitleBar extends DefaultTitleBar {
+class TitleBar extends JPanel {
+
+	protected JLabel label;
+
+	private Vector vector = new Vector();
 
 	private Color startColor;
 
@@ -29,9 +51,13 @@ class GradientTitleBar extends DefaultTitleBar {
 
 	private Color inactiveTitleColor;
 
-	public GradientTitleBar(String text, Color midColor, Color startColor,
+	private Color buttonBackground;
+
+	private boolean active = false;
+
+	public TitleBar(String text, Color midColor, Color startColor,
 			Color fillColor) {
-		super(text);
+		super();
 
 		this.midColor = midColor;
 		this.startColor = startColor;
@@ -39,19 +65,79 @@ class GradientTitleBar extends DefaultTitleBar {
 
 		setOpaque(false);
 
+		label = new JLabel(text);
+
 		label.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN));
+
+		setLayout(new BorderLayout());
+
+		layoutComponents();
+
+		setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 0));
 	}
 
-	public void setActiveTitleColor(Color activeTitleColor) {
+	private void layoutComponents() {
+		removeAll();
+
+		add(label, BorderLayout.CENTER);
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setOpaque(false);
+		ButtonBarBuilder builder = new ButtonBarBuilder(buttonPanel);
+
+		builder.addGlue();
+
+		for (int i = 0; i < vector.size(); i++) {
+			builder.addFixedNarrow((JButton) vector.get(i));
+			builder.addStrut(Sizes.pixel(2));
+			// builder.addRelatedGap();
+		}
+
+		add(buttonPanel, BorderLayout.EAST);
+
+	}
+
+	public JButton addButton(ImageIcon icon, Action action) {
+
+		JButton b = new TitleBarButton(icon);
+		b.setAction(action);
+		vector.add(b);
+		layoutComponents();
+
+		return b;
+	}
+
+	public void setTitle(String title) {
+		if (title == null)
+			title = "";
+
+		label.setText(title);
+	}
+
+	public String getTitle() {
+		return label.getText();
+	}
+
+	public void setActiveTitleColor(Color activeTitleColor,
+			Color activeButtonBackground) {
 		this.activeTitleColor = activeTitleColor;
 
 		label.setForeground(activeTitleColor);
+
+		buttonBackground = activeButtonBackground;
+
+		active = true;
 	}
 
-	public void setInactiveTitleColor(Color inactiveTitleColor) {
+	public void setInactiveTitleColor(Color inactiveTitleColor,
+			Color inactiveButtonBackground) {
 		this.inactiveTitleColor = inactiveTitleColor;
 
 		label.setForeground(inactiveTitleColor);
+
+		buttonBackground = inactiveButtonBackground;
+
+		active = false;
 	}
 
 	public void setStartColor(Color color) {
@@ -73,27 +159,47 @@ class GradientTitleBar extends DefaultTitleBar {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
-		int h = getHeight() + 1;
+		int h = getHeight();
 		int w = getWidth();
 
 		int mid = w;
 
 		Graphics2D g2 = (Graphics2D) g;
 
-		GeneralPath path = generatePath(h, w);
-		g2.setColor(fillColor);
-		g2.fill(path);
+		// g2.setColor(fillColor);
+		// g2.fillRect(0,0,w,h);
 
-		path = generateTopPath(w);
-		GradientPaint painter = new GradientPaint(0, 0, startColor, 0, 5,
+		GradientPaint firstHalf = new GradientPaint(0, 0, fillColor, 0, h,
 				midColor);
-		g2.setPaint(painter);
-		g2.fill(path);
 
-		path = generatePath(h, w);
-		g2.setColor(UIManager.getColor("controlDkShadow"));
-		g2.draw(path);
-		
+		g2.setPaint(firstHalf);
+		g2.fillRect(0, 0, w, h);
+
+		// GradientPaint painter = new GradientPaint(0, 0, midColor.brighter(),
+		// 0, 5, midColor);
+		// g2.setPaint(painter);
+		//		
+		// g2.fillRect(0,0,w,5);
+		//		
+		// new GradientPaint(0, h-1, midColor, 0, h-1-5, Color.red);
+		// g2.setPaint(painter);
+		//		
+		// g2.fillRect(0,h-5,w,5);
+
+		// GeneralPath path = generatePath(h, w);
+		// g2.setColor(fillColor);
+		// g2.fill(path);
+		//
+		// path = generateTopPath(w);
+		// GradientPaint painter = new GradientPaint(0, 0, startColor, 0, 5,
+		// midColor);
+		// g2.setPaint(painter);
+		// g2.fill(path);
+		//
+		// path = generatePath(h, w);
+		// g2.setColor(UIManager.getColor("controlDkShadow"));
+		// g2.draw(path);
+
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_DEFAULT);
 	}
@@ -250,4 +356,63 @@ class GradientTitleBar extends DefaultTitleBar {
 	// }
 	// }
 
+	class TitleBarButton extends JButton implements MouseListener {
+
+		private final Border LINK_BORDER = BorderFactory.createEmptyBorder(1,
+				1, 1, 1);
+
+		boolean entered = false;
+
+		private ImageIcon icon;
+
+		TitleBarButton(ImageIcon icon) {
+			super();
+
+			this.icon = icon;
+
+			setOpaque(false);
+			setBorder(LINK_BORDER);
+
+			setPreferredSize(new Dimension(12, 12));
+
+			// setMargin(new Insets(2,2,2,2));
+
+			addMouseListener(this);
+		}
+
+		public void paintComponent(Graphics g) {
+			if (entered) {
+				g.setColor(buttonBackground);
+				g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 1, 1);
+			}
+
+			icon.paintIcon(this, g, 0, 0);
+		}
+
+		public void mouseClicked(MouseEvent e) {
+		}
+
+		public void mousePressed(MouseEvent e) {
+		}
+
+		public void mouseReleased(MouseEvent e) {
+		}
+
+		public void mouseEntered(MouseEvent e) {
+			entered = true;
+
+			((JComponent) e.getComponent()).setBorder(new RoundedBorder(
+					buttonBackground));
+
+			repaint();
+		}
+
+		public void mouseExited(MouseEvent e) {
+			entered = false;
+
+			((JComponent) e.getComponent()).setBorder(LINK_BORDER);
+
+			repaint();
+		}
+	}
 }

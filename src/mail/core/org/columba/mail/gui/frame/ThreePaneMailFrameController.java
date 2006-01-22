@@ -544,7 +544,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		treePanel.setPopupMenu(new SortFoldersMenu(this));
 
-		treePanel.setContentPane(new JScrollPane(treeController.getView()));
+		JScrollPane treeScrollPane = new JScrollPane(treeController.getView());
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		treePanel.setContentPane(treeScrollPane);
 
 		messageListPanel = new DockableView("mail_messagelist", "Message List");
 		JPanel p = new JPanel();

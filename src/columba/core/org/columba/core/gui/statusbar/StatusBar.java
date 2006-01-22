@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -44,6 +43,7 @@ import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
 import org.columba.core.command.Worker;
 import org.columba.core.connectionstate.ConnectionStateImpl;
+import org.columba.core.gui.base.JStatusBar;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -75,7 +75,7 @@ import org.columba.core.resourceloader.ImageLoader;
  * There's yet another Timer ;-), clearTextTimer which automatically clears the
  * statusbar after a delay of 2000 ms.
  */
-public class StatusBar extends JComponent implements TaskManagerListener,
+public class StatusBar extends JStatusBar implements TaskManagerListener,
 		ActionListener, ChangeListener, IStatusBar {
 
 	private static final Logger LOG = Logger
@@ -156,15 +156,17 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 	private TaskManagerEvent currentEvent;
 
 	public StatusBar(TaskManager tm) {
+		super();
+
 		taskManager = tm;
 		tm.addTaskManagerListener(this);
 		ConnectionStateImpl.getInstance().addChangeListener(this);
 
-		setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
+		// setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
 
 		initComponents();
 
-		layoutComponents();
+		// layoutComponents();
 
 		// update connection state
 		stateChanged(null);
@@ -207,68 +209,72 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 		taskButton.addActionListener(this);
 
 		taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+		setMainLeftComponent(label);
+
+		addRightComponent(progressBar, 100);
+		//addRightComponent(taskButton, 30);
+		addRightComponent(onlineButton, 30);
 	}
 
 	/**
 	 * layout components
 	 */
-	protected void layoutComponents() {
-		setLayout(new BorderLayout());
-
-		leftMainPanel = new JPanel();
-		leftMainPanel.setLayout(new BorderLayout());
-
-		JPanel taskPanel = new JPanel();
-		taskPanel.setLayout(new BorderLayout());
-
-		Border border = getDefaultBorder();
-		Border margin = new EmptyBorder(0, 0, 0, 2);
-
-		taskPanel.setBorder(new CompoundBorder(border, margin));
-
-		taskPanel.add(taskButton, BorderLayout.CENTER);
-
-		leftMainPanel.add(taskPanel, BorderLayout.WEST);
-		JPanel labelPanel = new JPanel();
-		labelPanel.setLayout(new BorderLayout());
-		margin = new EmptyBorder(0, 10, 0, 10);
-		labelPanel.setBorder(new CompoundBorder(border, margin));
-
-		margin = new EmptyBorder(0, 0, 0, 2);
-		labelPanel.add(label, BorderLayout.CENTER);
-
-		leftMainPanel.add(labelPanel, BorderLayout.CENTER);
-
-		add(leftMainPanel, BorderLayout.CENTER);
-
-		mainRightPanel = new JPanel();
-		mainRightPanel.setLayout(new BorderLayout());
-
-		JPanel progressPanel = new JPanel();
-		progressPanel.setLayout(new BorderLayout());
-		progressPanel.setBorder(new CompoundBorder(border, margin));
-
-		progressPanel.add(progressBar, BorderLayout.CENTER);
-
-		JPanel rightPanel = new JPanel();
-		rightPanel.setLayout(new BorderLayout());
-
-		rightPanel.add(progressPanel, BorderLayout.CENTER);
-
-		JPanel onlinePanel = new JPanel();
-		onlinePanel.setLayout(new BorderLayout());
-		onlinePanel.setBorder(new CompoundBorder(border, margin));
-
-		onlinePanel.add(onlineButton, BorderLayout.CENTER);
-
-		rightPanel.add(onlinePanel, BorderLayout.EAST);
-		add(rightPanel, BorderLayout.EAST);
-	}
-
-	public Border getDefaultBorder() {
-		return UIManager.getBorder("TableHeader.cellBorder");
-	}
-
+	// protected void layoutComponents() {
+	// setLayout(new BorderLayout());
+	//
+	// leftMainPanel = new JPanel();
+	// leftMainPanel.setLayout(new BorderLayout());
+	//
+	// JPanel taskPanel = new JPanel();
+	// taskPanel.setLayout(new BorderLayout());
+	//
+	// // Border border = getDefaultBorder();
+	// //Border margin = new EmptyBorder(0, 0, 0, 2);
+	//
+	// // taskPanel.setBorder(new CompoundBorder(border, margin));
+	//
+	// taskPanel.add(taskButton, BorderLayout.CENTER);
+	//
+	// leftMainPanel.add(taskPanel, BorderLayout.WEST);
+	// JPanel labelPanel = new JPanel();
+	// labelPanel.setLayout(new BorderLayout());
+	// // margin = new EmptyBorder(0, 10, 0, 10);
+	// // labelPanel.setBorder(new CompoundBorder(border, margin));
+	//
+	// // margin = new EmptyBorder(0, 0, 0, 2);
+	// labelPanel.add(label, BorderLayout.CENTER);
+	//
+	// leftMainPanel.add(labelPanel, BorderLayout.CENTER);
+	//
+	// add(leftMainPanel, BorderLayout.CENTER);
+	//
+	// mainRightPanel = new JPanel();
+	// mainRightPanel.setLayout(new BorderLayout());
+	//
+	// JPanel progressPanel = new JPanel();
+	// progressPanel.setLayout(new BorderLayout());
+	// // progressPanel.setBorder(new CompoundBorder(border, margin));
+	//
+	// progressPanel.add(progressBar, BorderLayout.CENTER);
+	//
+	// JPanel rightPanel = new JPanel();
+	// rightPanel.setLayout(new BorderLayout());
+	//
+	// rightPanel.add(progressPanel, BorderLayout.CENTER);
+	//
+	// JPanel onlinePanel = new JPanel();
+	// onlinePanel.setLayout(new BorderLayout());
+	// // onlinePanel.setBorder(new CompoundBorder(border, margin));
+	//
+	// onlinePanel.add(onlineButton, BorderLayout.CENTER);
+	//
+	// rightPanel.add(onlinePanel, BorderLayout.EAST);
+	// add(rightPanel, BorderLayout.EAST);
+	// }
+	// public Border getDefaultBorder() {
+	// return UIManager.getBorder("TableHeader.cellBorder");
+	// }
 	/**
 	 * @see org.columba.api.statusbar.IStatusBar#displayTooltipMessage(java.lang.String)
 	 */
