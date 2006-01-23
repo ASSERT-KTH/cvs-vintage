@@ -32,10 +32,11 @@ import org.gjt.sp.util.Log;
 //}}}
 
 /**
- * Manages low-level text display tasks.
+ * Manages low-level text display tasks, such as folding.
+ * 
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.123 2005/07/13 20:46:01 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.124 2006/01/23 23:04:25 ezust Exp $
  */
 public class DisplayManager
 {

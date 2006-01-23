@@ -30,9 +30,11 @@ import org.gjt.sp.util.Log;
 //}}}
 
 /**
+ * Performs the Mapping between physical lines and screen lines.
+ * 
  * @since jEdit 4.3pre1
  * @author Slava Pestov
- * @version $Id: ScreenLineManager.java,v 1.4 2005/07/13 20:46:02 spestov Exp $
+ * @version $Id: ScreenLineManager.java,v 1.5 2006/01/23 23:04:25 ezust Exp $
  */
 class ScreenLineManager
 {

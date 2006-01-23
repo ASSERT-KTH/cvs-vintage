@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.53 2005/12/31 22:54:10 ezust Exp $
+ * @version $Id: TextUtilities.java,v 1.54 2006/01/23 23:04:24 ezust Exp $
  */
 public class TextUtilities
 {
@@ -258,6 +258,8 @@ public class TextUtilities
 	 * @param c An iterable collection of Objects
 	 * @param delim a string to put between each object
 	 * @return a joined toString() representation of the collection
+	 * 
+	 * @since jedit 4.3pre3
 	 */
 	public static String join(Collection c, String delim) {
 		StringBuffer retval = new StringBuffer();

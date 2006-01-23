@@ -24,7 +24,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when an edit pane-related change occurs.
  * @author Slava Pestov
- * @version $Id: EditPaneUpdate.java,v 1.5 2005/12/28 15:55:37 ezust Exp $
+ * @version $Id: EditPaneUpdate.java,v 1.6 2006/01/23 23:04:25 ezust Exp $
  *
  * @since jEdit 2.5pre1
  */
@@ -51,6 +51,7 @@ public class EditPaneUpdate extends EBMessage
 	 */
 	public static final Object BUFFER_CHANGING = "BUFFER_CHANGING";
 
+
 	
 	/**
 	 * Creates a new edit pane update message.
@@ -60,7 +61,6 @@ public class EditPaneUpdate extends EBMessage
 	public EditPaneUpdate(EditPane editPane, Object what)
 	{
 		super(editPane);
-
 		if(what == null)
 			throw new NullPointerException("What must be non-null");
 
@@ -87,7 +87,8 @@ public class EditPaneUpdate extends EBMessage
 	{
 		return "what=" + what + "," + super.paramString();
 	}
-
+	
 	// private members
 	private Object what;
+
 }

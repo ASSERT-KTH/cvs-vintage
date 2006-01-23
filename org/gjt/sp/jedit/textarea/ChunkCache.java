@@ -32,10 +32,12 @@ import org.gjt.sp.util.Log;
 //}}}
 
 /**
- * Manages low-level text display tasks.
+ * Manages low-level text display tasks - the visible lines in the TextArea.
+ * 
+ * 
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.106 2005/12/16 07:26:16 ezust Exp $
+ * @version $Id: ChunkCache.java,v 1.107 2006/01/23 23:04:25 ezust Exp $
  */
 class ChunkCache
 {
