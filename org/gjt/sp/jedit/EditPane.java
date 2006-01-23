@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.60 2005/12/28 15:55:37 ezust Exp $
+ * @version $Id: EditPane.java,v 1.61 2006/01/23 20:58:05 ezust Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -96,9 +96,7 @@ public class EditPane extends JPanel implements EBComponent
 
 		//if(buffer.insideCompoundEdit())
 		//	buffer.endCompoundEdit();
-
-		EditBus.send(new EditPaneUpdate(this,EditPaneUpdate
-			.BUFFER_CHANGING));
+		EditBus.send(new BufferChanging(this, buffer));
 		recentBuffer = this.buffer;
 		if(recentBuffer != null)
 			saveCaretInfo();
