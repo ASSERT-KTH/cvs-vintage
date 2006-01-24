@@ -276,12 +276,13 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"sync_messages"));
 
-		/*
-		 * largestRemoteUid = getServer().fetchUid( new
-		 * SequenceSet(SequenceEntry.STAR), this); if (largestRemoteUid == -1) {
-		 * largestRemoteUid = getServer().fetchUid( new
-		 * SequenceSet(status.getMessages()), this); }
-		 */
+		largestRemoteUid = getServer().fetchUid(
+				new SequenceSet(SequenceEntry.STAR), this);
+		
+		if (largestRemoteUid == -1) {
+			largestRemoteUid = getServer().fetchUid(
+					new SequenceSet(status.getMessages()), this);
+		}
 
 		int largestLocalUidIndex = findLargestLocalUidIndex(localUids);
 
