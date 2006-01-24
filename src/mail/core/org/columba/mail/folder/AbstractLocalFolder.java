@@ -19,6 +19,7 @@ package org.columba.mail.folder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -197,7 +198,12 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	protected Object generateNextMessageUid() {
 		if( nextMessageUid == -1) {
 			if( headerList.count() > 0) {			
-				Integer maxUid = (Integer) Collections.max(Arrays.asList(headerList.getUids()));
+        List _headerList = new ArrayList();
+        Object[] _uidList = headerList.getUids();
+        for (int i=0; i < _uidList.length; i++ ) {
+          _headerList.add(_uidList[i]);
+        }
+				Integer maxUid = (Integer) Collections.max(_headerList);
 				nextMessageUid = maxUid.intValue() + 1;
 			} else {
 				nextMessageUid = 0;
