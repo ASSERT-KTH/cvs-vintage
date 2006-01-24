@@ -1,4 +1,4 @@
-// $Id: TestModelManagementHelper.java,v 1.2 2006/01/23 22:48:36 tfmorris Exp $
+// $Id: TestModelManagementHelper.java,v 1.3 2006/01/24 20:34:28 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,6 +126,18 @@ public class TestModelManagementHelper extends TestCase {
         elements = Model.getModelManagementHelper().getAllModelElementsOfKind(
                 theBadPackage, Model.getMetaTypes().getUMLClass());
         assertTrue("Elements not in namespace returned", elements.isEmpty());
+    }
+    
+    /**
+     * Test to make sure that we can get UmlClass since its name is different
+     */
+    public void testGetUmlClassModelElements() {
+        setUpTestsOfTagDefinitionContainedInStereotype();
+        Collection col = Model.getModelManagementHelper()
+                .getAllModelElementsOfKind(theGoodPackage,
+                        Model.getMetaTypes().getUMLClass());
+        assertTrue("Failed to get UmlClass ModelElement", col
+                .contains(theClass));
     }
     
     /**
