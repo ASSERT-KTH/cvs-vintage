@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -15,9 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
-import javax.swing.border.LineBorder;
 
-import org.columba.core.resourceloader.ImageLoader;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.AbstractDockable;
 import org.flexdock.util.DockingUtility;

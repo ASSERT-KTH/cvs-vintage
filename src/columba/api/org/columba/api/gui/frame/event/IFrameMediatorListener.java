@@ -1,4 +1,4 @@
-package org.columba.core.gui.frame.event;
+package org.columba.api.gui.frame.event;
 
 import java.util.EventListener;
 

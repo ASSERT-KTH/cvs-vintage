@@ -21,9 +21,9 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
+import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.api.selection.ISelectionManager;
-import org.columba.core.gui.frame.event.IFrameMediatorListener;
 import org.flexdock.docking.Dockable;
 
 /**

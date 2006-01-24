@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.columba.addressbook.facade.IContactFacade;
@@ -263,14 +267,46 @@ public class MessageBuilderHelper {
 			model.setHeaderField("In-Reply-To", messageId);
 
 			String references = (String) header.get("References");
-
+			
 			if (references != null) {
 				references = references + " " + messageId;
+				references = removeDoubleEntries(references);
+				
 				model.setHeaderField("References", references);
 			}
 		}
 	}
 
+	private static String removeDoubleEntries(String input) {
+		Pattern separatorPattern = Pattern.compile("\\s*(<[^\\s<>]+>)\\s*");
+		ArrayList entries = new ArrayList();
+		Matcher matcher = separatorPattern.matcher(input);
+		while(matcher.find()) {
+			entries.add(matcher.group(1));
+		}
+		
+		Collections.sort(entries);
+		
+		Iterator it = entries.iterator();		
+		StringBuffer result = new StringBuffer();
+		
+		String last = (String)it.next();
+		result.append(last);
+		
+		while(it.hasNext()) {
+			String next = (String)it.next();
+			if( !next.equals(last)) {
+				last = next;
+				result.append(' ');
+				result.append(last);
+			}
+		}
+		
+		return result.toString();
+	}
+	
+	
+	
 	/**
 	 * 
 	 * Search the correct Identity for replying to someone

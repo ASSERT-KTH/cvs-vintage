@@ -66,12 +66,10 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 	}
 
 	public HeaderTableModel(String[] c) {
-
 		// add array to vector
 		for (int i = 0; i < c.length; i++) {
 			columns.add(c[i]);
 		}
-
 	}
 	
 	public void registerVisitor(ModelVisitor visitor) {

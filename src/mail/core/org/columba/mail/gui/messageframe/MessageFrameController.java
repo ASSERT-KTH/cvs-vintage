@@ -19,8 +19,6 @@
 package org.columba.mail.gui.messageframe;
 
 import java.awt.BorderLayout;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -28,13 +26,11 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;

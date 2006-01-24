@@ -26,10 +26,10 @@ import javax.swing.event.EventListenerList;
 
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.gui.frame.event.FrameEvent;
+import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.selection.ISelectionManager;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.event.FrameEvent;
-import org.columba.core.gui.frame.event.IFrameMediatorListener;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.selection.SelectionManager;
 import org.flexdock.docking.Dockable;

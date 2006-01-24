@@ -7,8 +7,6 @@ import javax.swing.event.EventListenerList;
 
 import org.columba.core.gui.docking.event.DockableEvent;
 import org.columba.core.gui.docking.event.IDockableListener;
-import org.columba.mail.folder.event.FolderEvent;
-import org.columba.mail.folder.event.IFolderListener;
 import org.flexdock.docking.Dockable;
 
 public class DockableRegistry {
