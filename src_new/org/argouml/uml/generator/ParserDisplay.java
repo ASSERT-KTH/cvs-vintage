@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.185 2005/12/30 13:48:31 mvw Exp $
+// $Id: ParserDisplay.java,v 1.186 2006/01/25 23:23:14 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1459,6 +1459,8 @@ public final class ParserDisplay {
             return Model.getVisibilityKind().getPublic();
         } else if ("#".equals(name) || "protected".equals(name)) {
             return Model.getVisibilityKind().getProtected();
+        } else if ("~".equals(name) || "package".equals(name)) {
+            return Model.getVisibilityKind().getPackage();
         } else {
             /* if ("-".equals(name) || "private".equals(name)) */
             return Model.getVisibilityKind().getPrivate();

@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.131 2006/01/21 07:54:55 thn Exp $
+// $Id: Modeller.java,v 1.132 2006/01/25 23:23:16 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1476,10 +1476,10 @@ public class Modeller {
 	            element,
 	            Model.getVisibilityKind().getPublic());
 	} else {
-            Model.getCoreHelper().setTaggedValue(
+            // Default Java visibility is "package"
+            Model.getCoreHelper().setVisibility(
                     element,
-                    "src_visibility",
-                    "default");
+                    Model.getVisibilityKind().getPackage());
 	}
     }
 

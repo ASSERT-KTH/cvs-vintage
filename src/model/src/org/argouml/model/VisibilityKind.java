@@ -1,4 +1,4 @@
-// $Id: VisibilityKind.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: VisibilityKind.java,v 1.2 2006/01/25 23:23:15 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,4 +42,9 @@ public interface VisibilityKind {
      * @return Returns the Public VisibilityKind.
      */
     Object getPublic();
+    
+    /**
+     * @return Returns the Package VisibilityKind.
+     */
+    Object getPackage();
 }

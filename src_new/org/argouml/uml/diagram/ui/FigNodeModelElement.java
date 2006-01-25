@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.223 2006/01/07 10:48:20 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.224 2006/01/25 23:23:14 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -515,7 +515,8 @@ public abstract class FigNodeModelElement
         visibilityMenu.addRadioItem(new ActionVisibilityPublic(getOwner()));
         visibilityMenu.addRadioItem(new ActionVisibilityPrivate(getOwner()));
         visibilityMenu.addRadioItem(new ActionVisibilityProtected(getOwner()));
-
+        visibilityMenu.addRadioItem(new ActionVisibilityPackage(getOwner()));
+        
         return visibilityMenu;
     }
 

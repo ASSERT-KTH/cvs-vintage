@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationUml.java,v 1.9 2005/12/30 13:48:30 mvw Exp $
+// $Id: ModelElementNameNotationUml.java,v 1.10 2006/01/25 23:23:14 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -255,7 +255,11 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
             Model.getCoreHelper().setVisibility(me,
                             Model.getVisibilityKind().getProtected());
         }
-
+        if (name != null && name.startsWith("~")) {
+            name = name.substring(1).trim();
+            Model.getCoreHelper().setVisibility(me,
+                            Model.getVisibilityKind().getPackage());
+        }
         if (name != null) {
             Model.getCoreHelper().setName(me, name);
         }

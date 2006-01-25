@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.69 2005/11/10 04:20:35 tfmorris Exp $
+// $Id: GeneratorCpp.java,v 1.70 2006/01/25 23:23:14 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2557,7 +2557,9 @@ public class GeneratorCpp extends Generator2
                 String tagged = (String) Model.getFacade().getValue(tv);
                 if (tagged != null) {
                     if (tagged.trim().equals("")
-                            || tagged.trim().toLowerCase().equals("default")) {
+                            || tagged.trim().toLowerCase().equals("default")
+                            // We should never get "package", but just in case
+                            || tagged.trim().toLowerCase().equals("package")) {
                         return "";
                     } 
                     return tagged + ": ";
@@ -2571,6 +2573,9 @@ public class GeneratorCpp extends Generator2
                 return "private: ";
             if (Model.getFacade().isProtected(o))
                 return "protected: ";
+            if (Model.getFacade().isPackage(o))
+                // TODO: is default visibility the right thing here?
+                return "";
         }
         if (Model.getFacade().isAVisibilityKind(o)) {
             if (Model.getVisibilityKind().getPublic().equals(o))
@@ -2579,6 +2584,9 @@ public class GeneratorCpp extends Generator2
                 return "private: ";
             if (Model.getVisibilityKind().getProtected().equals(o))
                 return "protected: ";
+            if (Model.getVisibilityKind().getPackage().equals(o))
+                // TODO: is default visibility the right thing here?
+                return "";
         }
         return "";
     }

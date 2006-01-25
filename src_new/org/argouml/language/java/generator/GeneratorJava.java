@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.128 2005/12/19 20:15:59 thn Exp $
+// $Id: GeneratorJava.java,v 1.129 2006/01/25 23:23:15 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,6 @@ import org.argouml.ocl.ArgoFacade;
 import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
-import org.argouml.util.CollectionUtil;
 
 import tudresden.ocl.OclTree;
 import tudresden.ocl.parser.analysis.DepthFirstAdapter;
@@ -1489,6 +1488,9 @@ public class GeneratorJava
             if (Model.getFacade().isProtected(o)) {
                 return "protected ";
             }
+            if (Model.getFacade().isPackage(o)) {
+                return "";
+            }
         }
         if (Model.getFacade().isAVisibilityKind(o)) {
             if (Model.getVisibilityKind().getPublic().equals(o)) {
@@ -1499,6 +1501,9 @@ public class GeneratorJava
             }
             if (Model.getVisibilityKind().getProtected().equals(o)) {
                 return "protected ";
+            }
+            if (Model.getVisibilityKind().getPackage().equals(o)) {
+                return "";
             }
         }
         return "";

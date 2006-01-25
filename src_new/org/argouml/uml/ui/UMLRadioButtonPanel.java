@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.20 2005/11/10 04:20:36 tfmorris Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.21 2006/01/25 23:23:16 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,6 +133,10 @@ public abstract class UMLRadioButtonPanel
      * that permits the setAction to logically recognize the button.
      * @param setAction the action that should be registred with the
      * buttons and that's executed when one of the buttons is pressed
+     * 
+     * TODO: This forces the buttons to be ordered in key map order,
+     * an order which is arbitrary for a HashMap.  This should be
+     * changed to allow the UI designer to specify the order. - tfm
      */
     private void setButtons(Map labeltextsActioncommands, Action setAction) {
         Enumeration en = buttonGroup.getElements();

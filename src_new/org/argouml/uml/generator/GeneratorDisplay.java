@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.103 2005/11/13 11:01:09 linus Exp $
+// $Id: GeneratorDisplay.java,v 1.104 2006/01/25 23:23:14 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -870,6 +870,9 @@ public class GeneratorDisplay extends Generator2 {
             if (Model.getFacade().isProtected(o)) {
                 return "#";
             }
+            if (Model.getFacade().isPackage(o)) {
+                return "~";
+            }
         }
         if (Model.getFacade().isAVisibilityKind(o)) {
             if (Model.getVisibilityKind().getPublic().equals(o)) {
@@ -880,6 +883,9 @@ public class GeneratorDisplay extends Generator2 {
             }
             if (Model.getVisibilityKind().getProtected().equals(o)) {
                 return "#";
+            }
+            if (Model.getVisibilityKind().getPackage().equals(o)) {
+                return "~";
             }
         }
         return "";

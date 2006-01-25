@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementVisibility.java,v 1.16 2005/06/05 13:07:30 linus Exp $
+// $Id: ActionSetModelElementVisibility.java,v 1.17 2006/01/25 23:23:15 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,6 +60,11 @@ public class ActionSetModelElementVisibility extends UMLAction {
     public static final String PRIVATE_COMMAND = "private";
 
     /**
+     * PACKAGE_COMMAND determines the visibility.
+     */
+    public static final String PACKAGE_COMMAND = "package";
+
+    /**
      * Constructor for ActionSetElementOwnershipSpecification.
      */
     protected ActionSetModelElementVisibility() {
@@ -82,6 +87,8 @@ public class ActionSetModelElementVisibility extends UMLAction {
                     kind = Model.getVisibilityKind().getPublic();
                 } else if (actionCommand.equals(PROTECTED_COMMAND)) {
                     kind = Model.getVisibilityKind().getProtected();
+                } else if (actionCommand.equals(PACKAGE_COMMAND)) {
+                    kind = Model.getVisibilityKind().getPackage();
                 } else {
                     kind = Model.getVisibilityKind().getPrivate();
                 }

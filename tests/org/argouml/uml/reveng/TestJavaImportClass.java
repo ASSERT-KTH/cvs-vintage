@@ -1,4 +1,4 @@
-// $Id: TestJavaImportClass.java,v 1.3 2006/01/12 08:02:15 tfmorris Exp $
+// $Id: TestJavaImportClass.java,v 1.4 2006/01/25 23:23:15 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -397,8 +397,8 @@ public class TestJavaImportClass extends TestCase {
             getBody(operation_getString));
         assertTrue("Operation x should be abstract.", 
                 Model.getFacade().isAbstract(operation_x));
-        assertTrue("Operation x should be public.", 
-                Model.getFacade().isPublic(operation_x));
+        assertTrue("Operation x should have package visibility.", 
+                Model.getFacade().isPackage(operation_x));
     }
 
     /**
@@ -448,8 +448,12 @@ public class TestJavaImportClass extends TestCase {
             + "    }\n" 
             + "    /** Another Javadoc comment */\n"
             + "    private static String getString() {\n"
-            + "        // A static method\n" + "        return s;\n"
-            + "    }\n" + "    abstract void x();\n" 
+            + "        // A static method\n" 
+            + "        return s;\n"
+            + "    }\n" 
+            + "    abstract void x();\n" 
             + "    /* A multiline\n"
-            + "       comment\n" + "    */\n" + "}";
+            + "       comment\n" 
+            + "    */\n" 
+            + "}";
 }

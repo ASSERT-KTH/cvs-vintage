@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.29 2006/01/12 07:07:33 tfmorris Exp $
+// $Id: Facade.java,v 1.30 2006/01/25 23:23:15 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1101,6 +1101,18 @@ public interface Facade {
      */
     boolean isPrimaryObject(Object handle);
 
+    /**
+     * Recognizer for attributes with package visibility.
+     *
+     * TODO: This method name was chosen for compatibility with
+     * the existing naming scheme, but has the potential of 
+     * clashing with some future use.
+     * 
+     * @param handle candidate
+     * @return true if handle has package visibility
+     */
+    boolean isPackage(Object handle);
+    
     /**
      * Recognizer for attributes with private.
      *
