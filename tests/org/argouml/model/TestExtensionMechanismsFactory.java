@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.1 2005/08/20 09:31:08 linus Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.2 2006/01/25 18:42:35 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.model;
 
+import java.util.Collection;
+
 import junit.framework.TestCase;
 
 /**
@@ -36,6 +38,7 @@ public class TestExtensionMechanismsFactory extends TestCase {
      */
     private static String[] allModelElements = {
 	"Stereotype",
+        "TagDefinition",
 	"TaggedValue",
     };
 
@@ -63,6 +66,7 @@ public class TestExtensionMechanismsFactory extends TestCase {
     public void testCreates() {
 
 	String[] objs = {
+            "TagDefinition",
 	    "TaggedValue",
 	    null,
 	};
@@ -71,6 +75,55 @@ public class TestExtensionMechanismsFactory extends TestCase {
 		     Model.getExtensionMechanismsFactory(),
 		     objs);
 
+
+        ExtensionMechanismsFactory emFactory = Model
+                .getExtensionMechanismsFactory();
+        Object model = Model.getModelManagementFactory().createModel();
+        Object stereo = emFactory.buildStereotype("mystereo", model);
+        try {
+            emFactory.buildTagDefinition("myTD", stereo, model);
+            fail("Illegal buildTagDefinition with both sterotype" 
+                    + " and model didn't throw exception.");
+        } catch (IllegalArgumentException e) {
+            // Expected
+        }
+    }
+    
+    /**
+     * Test cascading delete to make sure dependent
+     * elements disappear.
+     */
+    public void testDelete() {
+        ExtensionMechanismsFactory emFactory = Model
+                .getExtensionMechanismsFactory();
+        ExtensionMechanismsHelper emHelper = Model
+                .getExtensionMechanismsHelper();
+        Object model = Model.getModelManagementFactory().createModel();
+        Object stereo = emFactory.buildStereotype("mystereo", model);
+        Object td = emFactory.buildTagDefinition("myTD", stereo, null);
+        Object tv = emFactory.buildTaggedValue("myTD", "the tag value");
+        Object clazz = Model.getCoreFactory().buildClass("MyClass", model);
+        emHelper.addTaggedValue(clazz, tv);
+        
+        Collection tvs = Model.getFacade().getTaggedValuesCollection(clazz);
+        assertEquals("Wrong number of TaggedValues returned", 1, tvs.size());
+        assertTrue("TaggedValue not found", tvs.contains(tv));
+        Collection tds = Model.getModelManagementHelper()
+                .getAllModelElementsOfKind(model,
+                        Model.getMetaTypes().getTagDefinition());
+        assertEquals("TagDefinition not found", 1, tds.size());        
+        
+        // Deleting the stereotype should cascade to the TagDefinition, 
+        // then the TaggedValue
+        Model.getUmlFactory().delete(stereo);
+        Model.getPump().flushModelEvents();
+        
+        tvs = Model.getFacade().getTaggedValuesCollection(clazz);
+        assertEquals("TaggedValue not deleted", 0, tvs.size());
+        tds = Model.getModelManagementHelper()
+                .getAllModelElementsOfKind(model,
+                        Model.getMetaTypes().getTagDefinition());
+        assertEquals("TagDefinition not deleted", 0, tds.size());
     }
 
     /**
