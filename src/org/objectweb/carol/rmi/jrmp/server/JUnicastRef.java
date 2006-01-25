@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2006 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JUnicastRef.java,v 1.11 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JUnicastRef.java,v 1.12 2006/01/25 16:01:01 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.server;
@@ -31,6 +31,7 @@ package org.objectweb.carol.rmi.jrmp.server;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.MarshalException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -133,9 +134,21 @@ public class JUnicastRef extends UnicastRef {
      */
     public Object invoke(Remote obj, java.lang.reflect.Method method, Object[] params, long opnum) throws Exception {
         if ((localRef) && (localId != -2)) {
-            // local call on the object
             //System.out.println("local call on object id:"+localId);
-            return method.invoke(JLocalObjectStore.getObject(localId), params);
+
+            // local call on the object
+            try {
+                return method.invoke(JLocalObjectStore.getObject(localId), params);
+            } catch (InvocationTargetException e) {
+                // The application exceptions are embedded into a, InvocationTargetException
+                // The code below aims to unwrap them before returning to the upper layer
+                Throwable t = e.getCause();
+                if (t instanceof Exception) {
+                    throw (Exception) e.getCause();
+                } else {
+                    throw new Exception("Unsupported exception", t);
+                }
+            }
         } else {
             //System.out.println("remote (local ref="+localRef+") call on
             // object id:"+localId);
