@@ -23,12 +23,11 @@
 package org.gjt.sp.jedit.buffer;
 
 import javax.swing.text.Segment;
-import org.gjt.sp.jedit.Buffer;
 
 /**
  * A fold handler that does nothing.
  * @author Slava Pestov
- * @version $Id: DummyFoldHandler.java,v 1.4 2005/07/04 05:53:02 spestov Exp $
+ * @version $Id: DummyFoldHandler.java,v 1.5 2006/01/25 23:12:07 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class DummyFoldHandler extends FoldHandler

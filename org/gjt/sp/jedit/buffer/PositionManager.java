@@ -25,7 +25,6 @@ package org.gjt.sp.jedit.buffer;
 //{{{ Imports
 import javax.swing.text.Position;
 import java.util.*;
-import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -34,7 +33,7 @@ import org.gjt.sp.util.Log;
  * directly.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.37 2005/07/04 05:53:02 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.38 2006/01/25 23:12:07 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager

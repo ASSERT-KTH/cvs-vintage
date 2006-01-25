@@ -23,12 +23,11 @@
 package org.gjt.sp.jedit.buffer;
 
 import javax.swing.text.Segment;
-import org.gjt.sp.jedit.Buffer;
 
 /**
  * A fold handler that folds lines based on their indent level.
  * @author Slava Pestov
- * @version $Id: IndentFoldHandler.java,v 1.6 2005/07/04 05:53:02 spestov Exp $
+ * @version $Id: IndentFoldHandler.java,v 1.7 2006/01/25 23:12:07 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class IndentFoldHandler extends FoldHandler

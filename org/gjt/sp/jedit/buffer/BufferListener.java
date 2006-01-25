@@ -22,8 +22,6 @@
 
 package org.gjt.sp.jedit.buffer;
 
-import org.gjt.sp.jedit.Buffer;
-
 /**
  * A interface for notification of changes to buffer text.<p>
  *
@@ -41,7 +39,7 @@ import org.gjt.sp.jedit.Buffer;
  * implementing it directly.
  *
  * @author Slava Pestov
- * @version $Id: BufferListener.java,v 1.1 2005/07/04 05:53:02 spestov Exp $
+ * @version $Id: BufferListener.java,v 1.2 2006/01/25 23:12:07 spestov Exp $
  * @since jEdit 4.3pre3
  */
 public interface BufferListener

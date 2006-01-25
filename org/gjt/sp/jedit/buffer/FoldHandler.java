@@ -24,7 +24,6 @@ package org.gjt.sp.jedit.buffer;
 
 import java.util.*;
 import javax.swing.text.Segment;
-import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.MiscUtilities;
 import org.gjt.sp.jedit.ServiceManager;
 import org.gjt.sp.util.Log;
@@ -42,7 +41,7 @@ import org.gjt.sp.util.Log;
  * See {@link org.gjt.sp.jedit.ServiceManager} for details.
  *
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.16 2005/07/04 05:53:02 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.17 2006/01/25 23:12:07 spestov Exp $
  * @since jEdit 4.3pre3
  */
 public abstract class FoldHandler

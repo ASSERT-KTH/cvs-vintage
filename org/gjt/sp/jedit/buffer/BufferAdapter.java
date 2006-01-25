@@ -22,13 +22,11 @@
 
 package org.gjt.sp.jedit.buffer;
 
-import org.gjt.sp.jedit.Buffer;
-
 /**
  * An adapter you can subclass to avoid having to implement all the methods
  * of the {@link BufferListener} interface.
  * @author Slava Pestov
- * @version $Id: BufferAdapter.java,v 1.1 2005/07/04 05:53:02 spestov Exp $
+ * @version $Id: BufferAdapter.java,v 1.2 2006/01/25 23:12:07 spestov Exp $
  * @since jEdit 4.3pre3
  */
 public abstract class BufferAdapter implements BufferListener
