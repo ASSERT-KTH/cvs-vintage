@@ -45,12 +45,27 @@ public class CheckForNewMessagesCommand extends Command {
 	public CheckForNewMessagesCommand(ICommandReference reference) {
 		super(reference);
 		triggerNotification = false;
+
+		// get references
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
+
+		imapFolder = (IMAPFolder) r.getSourceFolder();
+
+		imapFolder.setMailboxSyncEnabled(false);
+		
 	}
 
 	public CheckForNewMessagesCommand(Action action, ICommandReference reference) {
 		super(reference);
 		this.action = action;
 		triggerNotification = true;
+		
+		// get references
+		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
+
+		imapFolder = (IMAPFolder) r.getSourceFolder();
+		
+		imapFolder.setMailboxSyncEnabled(false);
 	}
 
 	/*
@@ -59,10 +74,6 @@ public class CheckForNewMessagesCommand extends Command {
 	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		// get references
-		IMailFolderCommandReference r = (IMailFolderCommandReference) getReference();
-
-		imapFolder = (IMAPFolder) r.getSourceFolder();
 		
 		// register for status events
 		((StatusObservableImpl) imapFolder.getObservable()).setWorker(worker);
@@ -75,6 +86,7 @@ public class CheckForNewMessagesCommand extends Command {
 		try {
 			imapFolder.synchronizeHeaderlist();
 		} catch (IOException e) {
+			imapFolder.setMailboxSyncEnabled(true);
 			worker.cancel();
 			throw new CommandCancelledException(e);
 		} 

@@ -105,6 +105,8 @@ public class CommandProcessor implements Runnable {
 		try {
 			oneMutex.lock();
 
+			LOG.finest("Command " + op.toString() + " added");
+			
 			int p = operationQueue.size() - 1;
 			OperationItem nextOp;
 

@@ -91,6 +91,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 	private boolean firstSync = true;
 
+	private boolean mailboxSyncEnabled;
+
 	/**
 	 * @see org.columba.mail.folder.IMailbox#isReadOnly()
 	 */
@@ -192,7 +194,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.api.command.IWorkerStatusController)
 	 */
 	public IHeaderList getHeaderList() throws Exception {
-		if (!getServer().isSelected(this)) {
+		if (mailboxSyncEnabled && !getServer().isSelected(this)) {
 			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
 					new CheckForNewMessagesCommand(
@@ -899,10 +901,12 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 			fireMessageAdded(uid, cHeader.getFlags());
 		} else {
-			// Trigger Synchronization
-			CommandProcessor.getInstance().addOp(
-					new CheckForNewMessagesCommand(
-							new MailFolderCommandReference(this)));
+			if( mailboxSyncEnabled ) {			
+				// Trigger Synchronization
+				CommandProcessor.getInstance().addOp(
+						new CheckForNewMessagesCommand(
+								new MailFolderCommandReference(this)));
+				}
 		}
 
 		return uid;
@@ -1023,10 +1027,12 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 			fireMessageAdded(uid, h.getFlags());
 		} else {
+			if( mailboxSyncEnabled ) {			
 			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
 					new CheckForNewMessagesCommand(
 							new MailFolderCommandReference(this)));
+			}
 		}
 
 		return uid;
@@ -1146,6 +1152,22 @@ public class IMAPFolder extends AbstractRemoteFolder {
 									new MailFolderCommandReference(this)));
 		}
 
+		// Reenable Updating the mailbox
+		mailboxSyncEnabled = true;
+	}
+
+	/**
+	 * @return Returns the mailboxSyncEnabled.
+	 */
+	public boolean isMailboxSyncEnabled() {
+		return mailboxSyncEnabled;
+	}
+
+	/**
+	 * @param mailboxSyncEnabled The mailboxSyncEnabled to set.
+	 */
+	public void setMailboxSyncEnabled(boolean mailboxSyncEnabled) {
+		this.mailboxSyncEnabled = mailboxSyncEnabled;
 	}
 
 }
