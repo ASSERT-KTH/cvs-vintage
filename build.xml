@@ -184,7 +184,7 @@
     </target>
 
     <target name="update" description="Updates the source when checked out via CVS">
-        <cvs command="update -d"/>
+        <cvs command="update -d" failonerror="true"/>
 
         <!-- Run clean to ensure that everything is built correctly after the update! (tstich) -->
         <ant target="clean"/>
