@@ -1,6 +1,6 @@
 /**
  * IIOPCosNaming.java 1.0 02/07/15 Copyright (C) 2002 - INRIA
- * * Copyright (C) 2003 - Simon Nieuviarts
+ * * Copyright (C) 2003-2006 - Simon Nieuviarts
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -25,6 +25,7 @@
  */
 package org.objectweb.carol.jndi.ns;
 
+import org.objectweb.carol.cmi.Naming;
 import org.objectweb.carol.cmi.Registry;
 import org.objectweb.carol.cmi.RegistryImpl;
 import org.objectweb.carol.cmi.RegistryKiller;
@@ -41,12 +42,12 @@ public class CmiRegistry extends AbsRegistry implements NameService {
     /**
      * Cluster equivalence system
      */
-    private DistributedEquiv de = null;
+    private static DistributedEquiv de = null;
 
     /**
      * To kill the registry server
      */
-    private RegistryKiller cregk = null;
+    private static RegistryKiller cregk = null;
 
     /**
      * Default constructor
@@ -128,5 +129,25 @@ public class CmiRegistry extends AbsRegistry implements NameService {
         }
         return false;
     }
+
+    /**
+     * @return the current registry
+     */
+    public static Registry getRegistry() {
+        try {
+            return Naming.getRegistry();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * isLocal Method, check if a name service is local
+     * @return boolean true if the name service is local
+     */
+    public static boolean isLocal() {
+        return (cregk != null);
+    }
+
 
 }

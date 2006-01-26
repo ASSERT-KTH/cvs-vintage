@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002-2005 - INRIA (www.inria.fr)
+ * Copyright (C) 2002-2006 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,12 +22,15 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiContextWrapperFactory.java,v 1.1 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: CmiContextWrapperFactory.java,v 1.2 2006/01/26 16:28:55 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
 import javax.naming.spi.InitialContextFactory;
+
+import org.objectweb.carol.jndi.ns.CmiRegistry;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 /**
  * Class <code> CmiContextWrapperFactory </code> is the CAROL
@@ -55,7 +58,12 @@ public class CmiContextWrapperFactory extends AbsInitialContextFactory implement
      * @return class of the wrapper (to be instantiated + pool).
      */
     protected Class getWrapperClass() {
-        return CmiContext.class;
+        boolean localreg = new Boolean(System.getProperty(CarolDefaultValues.LOCALREG_JRMP_PROPERTY, "false")).booleanValue();
+        if ((localreg) && CmiRegistry.isLocal()) {
+            return CmiLocalContext.class;
+        } else {
+            return CmiContext.class;
+        }
     }
 
 }

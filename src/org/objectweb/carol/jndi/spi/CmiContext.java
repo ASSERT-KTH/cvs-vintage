@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002-2005 - INRIA (www.inria.fr)
+ * Copyright (C) 2002-2006 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiContext.java,v 1.1 2005/07/27 11:49:23 pelletib Exp $
+ * $Id: CmiContext.java,v 1.2 2006/01/26 16:28:55 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -38,6 +38,7 @@ import javax.naming.Referenceable;
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
+import org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
@@ -82,8 +83,12 @@ public class CmiContext extends AbsContext implements Context {
     protected Object wrapObject(Object o, Name name, boolean replace) throws NamingException {
             try {
                 // Add wrapper for the two first cases. Then it will use PortableRemoteObject instead of UnicastRemoteObject
-                // and when fixing Cmi exported objects port, it use CmiProdelegate which is OK.
-                if ((!(o instanceof Remote)) && (!(o instanceof Referenceable)) && (!(o instanceof Reference))
+                // and when fixing JRMP exported objects port, it use JRMPProdelegate which is OK.
+                if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
+                    return new UnicastJNDIReferenceWrapper(((Referenceable) o).getReference(), getObjectPort());
+                } else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
+                    return new UnicastJNDIReferenceWrapper((Reference) o, getObjectPort());
+                } else if ((!(o instanceof Remote)) && (!(o instanceof Referenceable)) && (!(o instanceof Reference))
                         && (o instanceof Serializable)) {
                     // Only Serializable (not implementing Remote or Referenceable or
                     // Reference)
