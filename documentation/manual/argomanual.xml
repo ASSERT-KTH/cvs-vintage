@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "../docbook-setup/docbookx/docbookx.dtd">
-<!-- $Id: argomanual.xml,v 1.37 2006/01/26 07:52:27 tfmorris Exp $ -->
+<!-- $Id: argomanual.xml,v 1.38 2006/01/26 08:13:08 tfmorris Exp $ -->
 <!--
 Copyright (c) 1996-2005 The Regents of the University of California. All
 Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -23101,9 +23101,11 @@ UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
         </blockquote>
 
         <para><emphasis>visibility</emphasis> is <literal>+</literal>, 
-        <literal>#</literal> or <literal>-</literal> corresponding to 
-        <literal>public</literal>, <literal>protected</literal> or 
-        <literal>private</literal> visibility respectively.</para>
+        <literal>#</literal>, <literal>-</literal> or 
+        <literal>~</literal> corresponding to 
+        <literal>public</literal>, <literal>protected</literal>, 
+        <literal>private</literal>, or <literal>package</literal> 
+        visibility respectively.</para>
 
         <para><emphasis>attributeName</emphasis> is the actual name of 
         the attribute being declared.</para>
