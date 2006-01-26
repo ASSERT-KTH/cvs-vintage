@@ -1,4 +1,4 @@
-// $Id: CheckUMLModelHelper.java,v 1.6 2006/01/25 22:53:25 tfmorris Exp $
+// $Id: CheckUMLModelHelper.java,v 1.7 2006/01/26 00:00:03 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -266,10 +266,10 @@ public final class CheckUMLModelHelper {
                             Model.getExtensionMechanismsHelper()
                                 .isValidStereoType(base, stereo2));
                         if (!(Model.getFacade().isAClass(base))) {
-                            TestCase.assertFalse(
+                            TestCase.assertTrue(
                                 "Stereotype with base class of Class" 
                                     + " incorrectly allowed for this metaclass",
-                                Model.getExtensionMechanismsHelper()
+                                !Model.getExtensionMechanismsHelper()
                                     .isValidStereoType(base, stereo1));
                         } else {
                             Object inter =
