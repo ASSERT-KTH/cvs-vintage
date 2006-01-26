@@ -643,19 +643,18 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		}
 		headerIterator.close();
 
+		
 		if (remoteJunkUids.size() != junk || remoteRecentUids.size() != recent
 				|| remoteFlaggedUids.size() != flagged
 				|| remoteDeletedUids.size() != deleted
 				|| remoteUnseenUids.size() != unseen) {
-			// Something is awfully wrong
-			LOG.severe("Headerlist of " + this.getName()
-					+ " is corrupted. Recreating...");
-			purgeHeaderList();
-
+			// Something is wrong
+			// Sync again
+			
 			synchronizeHeaderlist();
 			return;
 		}
-
+		
 		syncMailboxInfo(flagStatus);
 	}
 
