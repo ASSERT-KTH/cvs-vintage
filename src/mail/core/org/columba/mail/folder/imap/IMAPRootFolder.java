@@ -25,6 +25,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.connectionstate.ConnectionStateImpl;
 import org.columba.core.filter.Filter;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -349,7 +350,9 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		
 		server.setFirstLoginAction( new IFirstLoginAction() {
 			public void actionPerformed() {
-			ICommand c = new FetchSubFolderListCommand(
+				// If we are online sync the subscribed folders on first connection
+				if ( ConnectionStateImpl.getInstance().isOnline() ) {
+				ICommand c = new FetchSubFolderListCommand(
 					new MailFolderCommandReference(thisFolder));
 			try {
 				// MainInterface.processor.addOp(c);
@@ -357,7 +360,8 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 				c.updateGUI();
 			} catch (Exception e) {
 				e.printStackTrace();
-			}			
+			}	
+				}
 		}
 			
 		});

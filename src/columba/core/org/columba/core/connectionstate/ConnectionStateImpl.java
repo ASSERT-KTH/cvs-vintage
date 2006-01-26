@@ -52,19 +52,9 @@ public class ConnectionStateImpl implements ConnectionState {
 			try {
 				Socket testSocket = new Socket(connectionName, connectionPort);
 				testSocket.close();
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						setOnline(true);
-					}
-				});
-
+				setOnline(true);
 			} catch (Exception e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						setOnline(false);
-					}
-				});
+				setOnline(false);
 			}
 		}
 	}
@@ -91,7 +81,17 @@ public class ConnectionStateImpl implements ConnectionState {
 	public synchronized void setOnline(boolean b) {
 		if (online != b) {
 			online = b;
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					notifyListener();
+				}
+			 });
+		}
+	}
+
+		private void notifyListener() {
 			Object[] listeners = listenerList.getListenerList();
+			
 			// Process the listeners last to first, notifying
 			// those that are interested in this event
 			for (int i = listeners.length - 2; i >= 0; i -= 2) {
@@ -99,9 +99,10 @@ public class ConnectionStateImpl implements ConnectionState {
 					((ChangeListener) listeners[i + 1]).stateChanged(e);
 				}
 			}
+			
+			
 		}
-	}
-
+		
 	public void setTestConnection(String name, int port) {
 		connectionName = name;
 		connectionPort = port;

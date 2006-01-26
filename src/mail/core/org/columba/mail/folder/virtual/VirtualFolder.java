@@ -375,7 +375,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	/**
 	 * @return
 	 */
-	private AbstractMessageFolder getSourceFolder() {
+	AbstractMessageFolder getSourceFolder() {
 		int uid = getConfiguration().getInteger("property", "source_uid");
 		AbstractMessageFolder srcFolder = (AbstractMessageFolder) FolderTreeModel
 				.getInstance().getFolder(uid);

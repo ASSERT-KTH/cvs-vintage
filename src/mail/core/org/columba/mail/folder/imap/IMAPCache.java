@@ -18,13 +18,18 @@
 
 package org.columba.mail.folder.imap;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import org.columba.core.config.Config;
 import org.columba.core.io.StreamCache;
 import org.columba.core.shutdown.ShutdownManager;
+import org.columba.ristretto.message.MimeTree;
 
 public class IMAPCache implements Runnable {
 
@@ -44,7 +49,35 @@ public class IMAPCache implements Runnable {
 		return instance;
 	}
 	
+	public void addMimeTree(IMAPFolder folder, Object uid, MimeTree mimeTree) throws IOException {
+		cache.activeAdd(createMimeTreeKey(folder, uid), convertToStream(mimeTree));
+	}
+	
+	public MimeTree getMimeTree(IMAPFolder folder, Object uid) throws IOException {
+		InputStream in = cache.get(createMimeTreeKey(folder, uid));
+		if( in != null ) {			
+			try {
+				return (MimeTree) new ObjectInputStream(in).readObject();
+			} catch (ClassNotFoundException e) {
+				return null;
+			}
+			
+		} else {
+			return null;
+		}
+	}
+
+	private InputStream convertToStream(Object o) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+		new ObjectOutputStream(out).writeObject(o);
+		
+		return new ByteArrayInputStream(out.toByteArray());
+		
+	}
+	
+	
 	public InputStream addMimeBody(IMAPFolder folder, Object uid, Integer[] address, InputStream data ) throws IOException {
+
 		return cache.passiveAdd(createMimeBodyKey(folder, uid, address), data);
 	}
 	
@@ -54,6 +87,10 @@ public class IMAPCache implements Runnable {
 	
 	protected String createMimeBodyKey(IMAPFolder folder, Object uid, Integer[] address) {
 		return Integer.toString(folder.getUid()) + uid.toString() +  addressToString(address);
+	}
+
+	protected String createMimeTreeKey(IMAPFolder folder, Object uid) {
+		return Integer.toString(folder.getUid()) + uid.toString();
 	}
 	
 	protected String addressToString(Integer[] address) {
@@ -66,6 +103,11 @@ public class IMAPCache implements Runnable {
 	}
 
 	public void run() {
-		cache.clear();
+		//cache.clear();
+		try {
+			cache.persist();
+		} catch (IOException e) {
+			cache.clear();
+		}
 	}
 }

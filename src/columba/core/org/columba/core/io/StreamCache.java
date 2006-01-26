@@ -3,22 +3,26 @@ package org.columba.core.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class StreamCache {
 	
 	public static final long DEFAULT_SIZE = 10 * 1024 * 1024;//Byte
+	public static final String FIFO_FILE = ".fifo";
+	
 	
 	private File dir;
-	private Map contents;
 	private List fifo;
 	
 	private long actSize;
@@ -35,18 +39,34 @@ public class StreamCache {
 			if( !dir.mkdirs()) {
 				throw new RuntimeException(dir.toString() + " could not be created!");
 			}
-		}		
+		} else {
+			// try to restore from previous session
+			try {
+				restore();
+			} catch (IOException e) {
+				//Never mind
+			}
+		}
 		actSize = 0;
-		fifo = new ArrayList(100);
+
+		// If the fifo could not be restored initialize it
+		if( fifo == null ) fifo = new ArrayList(100);
 		
 		this.maxSize = maxSize;
 	}
+	
 	
 	public InputStream passiveAdd(Object key, InputStream in ) throws IOException {
 		File streamFile = new File(dir.getAbsoluteFile() + File.separator + key.toString() + ".cache");
 		return new StreamCacheCopyStream(in, key, streamFile, this);		
 	}
 
+	public void activeAdd(Object key, InputStream in) throws IOException {
+		File streamFile = new File(dir.getAbsoluteFile() + File.separator + key.toString() + ".cache");
+		StreamUtils.streamCopy(in, new FileOutputStream(streamFile));
+		add(key, streamFile);		
+	}
+	
 	void add(Object key, File out) {
 		fifo.add(new CacheEntry(key, out));
 		
@@ -114,6 +134,21 @@ public class StreamCache {
 		
 		actSize = 0;
 	}
+	
+	public void persist() throws IOException {
+		File file = new File( dir.getAbsoluteFile() + File.separator + FIFO_FILE);
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+		out.writeObject(fifo);
+		out.close();
+	}
+	
+	public void restore() throws IOException {
+		File file = new File( dir.getAbsoluteFile() + File.separator + FIFO_FILE);
+		try {
+			fifo = (List) new ObjectInputStream(new FileInputStream(file)).readObject();
+		}  catch (ClassNotFoundException e) {
+		}
+	}
 
 	public long getMaxSize() {
 		return maxSize;
@@ -126,7 +161,7 @@ public class StreamCache {
 }
 
 
-class CacheEntry {
+class CacheEntry implements Serializable {
 	Date lastAccess;
 	Object key;
 	File file;
@@ -140,5 +175,47 @@ class CacheEntry {
 	public InputStream createStream() throws FileNotFoundException {
 		this.lastAccess = new Date();
 		return new FileInputStream(file);
+	}
+
+	/**
+	 * @return Returns the file.
+	 */
+	public File getFile() {
+		return file;
+	}
+
+	/**
+	 * @param file The file to set.
+	 */
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	/**
+	 * @return Returns the key.
+	 */
+	public Object getKey() {
+		return key;
+	}
+
+	/**
+	 * @param key The key to set.
+	 */
+	public void setKey(Object key) {
+		this.key = key;
+	}
+
+	/**
+	 * @return Returns the lastAccess.
+	 */
+	public Date getLastAccess() {
+		return lastAccess;
+	}
+
+	/**
+	 * @param lastAccess The lastAccess to set.
+	 */
+	public void setLastAccess(Date lastAccess) {
+		this.lastAccess = lastAccess;
 	}
 }

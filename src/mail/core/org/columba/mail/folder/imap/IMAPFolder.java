@@ -32,6 +32,7 @@ import org.columba.api.command.IStatusObservable;
 import org.columba.core.base.ListTools;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
+import org.columba.core.connectionstate.ConnectionStateImpl;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -194,7 +195,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.api.command.IWorkerStatusController)
 	 */
 	public IHeaderList getHeaderList() throws Exception {
-		if (mailboxSyncEnabled && !getServer().isSelected(this)) {
+		if (mailboxSyncEnabled  && ConnectionStateImpl.getInstance().isOnline() && !getServer().isSelected(this)) {
 			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
 					new CheckForNewMessagesCommand(
@@ -688,7 +689,13 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 *      IMAPFolder)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
-		return getServer().getMimeTree(uid, this);
+		MimeTree tree = IMAPCache.getInstance().getMimeTree(this, uid);
+		if ( tree == null ) {
+			tree = getServer().getMimeTree(uid, this);
+			IMAPCache.getInstance().addMimeTree(this, uid, tree);
+		} 
+		
+		return tree;
 	}
 
 	/**

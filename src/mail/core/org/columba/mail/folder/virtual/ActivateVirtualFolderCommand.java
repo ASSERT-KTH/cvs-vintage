@@ -23,8 +23,10 @@ import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
+import org.columba.core.connectionstate.ConnectionStateImpl;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.folder.AbstractRemoteFolder;
 import org.columba.mail.folder.FolderChildrenIterator;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.util.MailResourceLoader;
@@ -56,6 +58,13 @@ public class ActivateVirtualFolderCommand extends Command {
 		while (it.hasMoreChildren()) {
 			IMailFolder f = it.nextChild();
 			if (f instanceof VirtualFolder && f.getUid() != 106 && ((IMailFolder)f.getParent()).getUid() != 106) {
+				VirtualFolder vFolder = (VirtualFolder)f;
+				
+				// Check if the parentfolder is remote & we are online				
+				if( vFolder.getSourceFolder() instanceof AbstractRemoteFolder && !ConnectionStateImpl.getInstance().isOnline()) {
+					continue;
+				}
+					
 				CommandProcessor.getInstance().addOp(
 						new ActivateVirtualFolderCommand(
 								new MailFolderCommandReference(f)));
