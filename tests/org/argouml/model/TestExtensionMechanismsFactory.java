@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.2 2006/01/25 18:42:35 tfmorris Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.3 2006/01/26 16:39:06 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ public class TestExtensionMechanismsFactory extends TestCase {
      */
     private static String[] allModelElements = {
 	"Stereotype",
-        "TagDefinition",
+//        "TagDefinition",
 	"TaggedValue",
     };
 
