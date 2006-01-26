@@ -91,7 +91,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 	private boolean firstSync = true;
 
-	private boolean mailboxSyncEnabled;
+	private boolean mailboxSyncEnabled = true;
 
 	/**
 	 * @see org.columba.mail.folder.IMailbox#isReadOnly()
