@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.186 2006/01/25 23:23:14 tfmorris Exp $
+// $Id: ParserDisplay.java,v 1.187 2006/01/26 01:41:26 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -192,7 +192,7 @@ public final class ParserDisplay {
      * The character with a meaning as a visibility at the start
      * of an attribute.
      */
-    private static final String VISIBILITYCHARS = "+#-";
+    private static final String VISIBILITYCHARS = "+#-~";
 
     /**
      * Constructs the object contained in SINGLETON and initializes some
