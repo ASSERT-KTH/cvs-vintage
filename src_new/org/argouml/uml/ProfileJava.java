@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.44 2005/11/13 11:01:10 linus Exp $
+// $Id: ProfileJava.java,v 1.45 2006/01/27 19:52:49 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.api.Configuration;
 import org.argouml.model.Model;
 import org.argouml.model.UmlException;
 import org.argouml.model.XmiReader;
@@ -301,11 +302,14 @@ public class ProfileJava extends Profile {
         //
         //    get a file name for the default model
         //
-        String modelFileName = System.getProperty("argo.defaultModel");
+        String configModel = Configuration.getString(
+                Configuration.makeKey("defaultModel"),
+                    "/org/argouml/model/mdr/mof/default-uml14.xmi");
+        
+        LOG.debug("Config Model:" + configModel);
+        
+        String modelFileName = System.getProperty("argo.defaultModel",configModel);
 
-        if (modelFileName == null) {
-            modelFileName = "/org/argouml/model/mdr/mof/default-uml14.xmi";
-        }
         //
         //   if there is a default model
         //
