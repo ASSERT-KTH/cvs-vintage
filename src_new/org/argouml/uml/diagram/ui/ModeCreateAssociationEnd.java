@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociationEnd.java,v 1.7 2006/01/28 18:36:26 bobtarling Exp $
+// $Id: ModeCreateAssociationEnd.java,v 1.8 2006/01/28 19:35:41 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,7 @@ import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.argouml.model.Model;
-import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
-import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.FigClassifierBox;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -334,6 +331,11 @@ public class ModeCreateAssociationEnd extends ModeCreatePolyEdge {
             newFigNodeAssociation.removeFromDiagram();
             oldFigAssociation.setOwner(association);
         }
+    }
+
+    public void leave() {
+        abort();
+        super.leave();
     }
 
 } /* end class ModeCreateAssociation */
