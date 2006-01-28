@@ -54,9 +54,11 @@
 	<classpathentry kind="lib" path="plugins/org.columba.core.WinLAFLookAndFeel/lib/winlaf-0.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/bsh-2.0b2.jar"/>
 	<classpathentry kind="lib" path="lib/jython.jar"/>
-	<classpathentry kind="lib" path="lib/flexdock-0.4.0.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-1.4.3.jar"/>
 	<classpathentry kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.2_RC1-all.jar"/>
+	<classpathentry kind="lib" path="lib/core-renderer.jar"/>
+	<classpathentry kind="lib" path="lib/cssparser-0-9-4-fs.jar"/>
+	<classpathentry kind="lib" path="lib/flexdock-0.4.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
