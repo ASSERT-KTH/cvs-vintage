@@ -39,9 +39,16 @@ public interface IHTMLViewerPlugin extends IExtensionInterface{
 	boolean initialized();
 	
 	/**
-	 * Get view.
+	 * Return embedded view.
 	 * 
 	 * @return	view
 	 */
-	JComponent getView();
+	JComponent getComponent();
+	
+	/**
+	 * Return container.
+	 * 
+	 * @return
+	 */
+	JComponent getContainer();
 }

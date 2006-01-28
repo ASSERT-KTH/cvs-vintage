@@ -94,6 +94,8 @@ public abstract class DockFrameController extends DefaultFrameController
 	 */
 	public void setSplitProportion(Dockable component, float propertion) {
 		DockingManager.setSplitProportion(component, propertion);
+		
+		System.out.println("------> setSplitPropertion()");
 	}
 
 	/**

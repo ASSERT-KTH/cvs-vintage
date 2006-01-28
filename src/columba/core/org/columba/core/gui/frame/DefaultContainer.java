@@ -404,18 +404,20 @@ public class DefaultContainer extends JFrame implements IContainer,
 		final Point p = new Point(x, y);
 		final Frame frame = this;
 
-		// awt-event-thread
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				frame.setLocation(p);
-				frame.setSize(dim);
-				if (maximized) {
-					WindowMaximizer.maximize(frame);
-				}
+		frame.setLocation(p);
+		frame.setSize(dim);
+		if (maximized) {
+			WindowMaximizer.maximize(frame);
+		}
 
-				mediator.loadPositions();
-			}
-		});
+		mediator.loadPositions();
+		
+		// awt-event-thread
+//		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//			public void run() {
+//				
+//			}
+//		});
 
 	}
 
@@ -574,12 +576,12 @@ public class DefaultContainer extends JFrame implements IContainer,
 			loadPositions(getViewItem());
 
 			// // awt-event-thread
-			// javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			// public void run() {
-			//
-			// validate();
-			// }
-			// });
+//			 javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//			 public void run() {
+//			
+//			 validate();
+//			 }
+//			 });
 	
 			// make window visible
 			LOG.finest("setVisible()");

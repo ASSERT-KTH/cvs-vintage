@@ -1,5 +1,6 @@
 package org.columba.core.gui.docking;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -43,13 +44,13 @@ public class DockableView extends AbstractDockable implements
 		titleBar = panel.getTitleBar();
 
 		menuButton = titleBar.addButton(new MenuIcon(), new MenuAction(this
-				.getPersistentId()));
+				.getPersistentId()), BorderLayout.WEST);
 		titleBar.addButton(new PinIcon(), new PinAction(this
-				.getPersistentId()));
+				.getPersistentId()), BorderLayout.EAST);
 		titleBar.addButton(new MaximizeIcon(), new MaximizeAction(this
-				.getPersistentId()));
+				.getPersistentId()), BorderLayout.EAST);
 		titleBar.addButton(new CloseIcon(), new CloseAction(this
-				.getPersistentId()));
+				.getPersistentId()), BorderLayout.EAST);
 
 		dragInitiator = panel.getTitleBar();
 		setTabText(panel.getTitle());

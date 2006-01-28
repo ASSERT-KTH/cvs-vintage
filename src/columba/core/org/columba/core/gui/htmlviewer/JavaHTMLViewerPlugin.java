@@ -91,8 +91,8 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 		postView();		
 	}
 	
-	public JComponent getView() {
-		return this;
+	public JComponent getComponent() {
+		return textPane;
 	}
 
 	/**
@@ -169,6 +169,10 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 		} catch (BadLocationException e) {
 			return "";
 		}
+	}
+
+	public JComponent getContainer() {
+		return this;
 	}
 
 }

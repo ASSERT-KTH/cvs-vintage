@@ -118,6 +118,8 @@ public class MessageController extends JPanel implements CharsetListener,
 				try {
 					updateGUI();
 					repaint();
+					
+					System.out.println("--------> message controller resize");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}

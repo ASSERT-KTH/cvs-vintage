@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -39,7 +40,9 @@ class TitleBar extends JPanel {
 
 	protected JLabel label;
 
-	private Vector vector = new Vector();
+	private Vector rightButtonVector = new Vector();
+
+	private Vector leftButtonVector = new Vector();
 
 	private Color startColor;
 
@@ -67,13 +70,13 @@ class TitleBar extends JPanel {
 
 		label = new JLabel(text);
 
-		label.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN));
+		//label.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN));
 
 		setLayout(new BorderLayout());
 
 		layoutComponents();
 
-		setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 0));
+		setBorder(BorderFactory.createEmptyBorder(2, 5, 3, 0));
 	}
 
 	private void layoutComponents() {
@@ -81,27 +84,52 @@ class TitleBar extends JPanel {
 
 		add(label, BorderLayout.CENTER);
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setOpaque(false);
-		ButtonBarBuilder builder = new ButtonBarBuilder(buttonPanel);
+		JPanel buttonEastPanel = new JPanel();
+		buttonEastPanel.setOpaque(false);
+		ButtonBarBuilder builder = new ButtonBarBuilder(buttonEastPanel);
 
 		builder.addGlue();
 
-		for (int i = 0; i < vector.size(); i++) {
-			builder.addFixedNarrow((JButton) vector.get(i));
+		for (int i = 0; i < rightButtonVector.size(); i++) {
+			builder.addFixedNarrow((JButton) rightButtonVector.get(i));
 			builder.addStrut(Sizes.pixel(2));
-			// builder.addRelatedGap();
 		}
 
-		add(buttonPanel, BorderLayout.EAST);
+		add(buttonEastPanel, BorderLayout.EAST);
+
+		JPanel buttonWestPanel = new JPanel();
+		buttonWestPanel.setOpaque(false);
+		ButtonBarBuilder builder2 = new ButtonBarBuilder(buttonWestPanel);
+
+		builder2.addGlue();
+
+		for (int i = 0; i < leftButtonVector.size(); i++) {
+			builder2.addFixedNarrow((JButton) leftButtonVector.get(i));
+			builder2.addStrut(Sizes.pixel(2));
+		}
+		
+		builder2.addStrut(Sizes.pixel(4));
+		
+		add(buttonWestPanel, BorderLayout.WEST);
 
 	}
 
-	public JButton addButton(ImageIcon icon, Action action) {
+	public JButton addButton(ImageIcon icon, Action action, String border) {
+		if (icon == null)
+			throw new IllegalArgumentException("icon == null");
+		if (action == null)
+			throw new IllegalArgumentException("action == null");
+		if (border == null)
+			throw new IllegalArgumentException("border == null");
 
 		JButton b = new TitleBarButton(icon);
 		b.setAction(action);
-		vector.add(b);
+
+		if (border.equals(BorderLayout.EAST))
+			rightButtonVector.add(b);
+		else if (border.equals(BorderLayout.WEST))
+			leftButtonVector.add(b);
+
 		layoutComponents();
 
 		return b;
@@ -375,7 +403,7 @@ class TitleBar extends JPanel {
 
 			setPreferredSize(new Dimension(12, 12));
 
-			// setMargin(new Insets(2,2,2,2));
+			//setMargin(new Insets(5,0,0,0));
 
 			addMouseListener(this);
 		}

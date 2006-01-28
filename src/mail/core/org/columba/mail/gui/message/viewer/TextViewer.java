@@ -151,7 +151,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		setLayout(new BorderLayout());
 
-		add(viewerPlugin.getView(), BorderLayout.CENTER);
+		add(viewerPlugin.getContainer(), BorderLayout.CENTER);
 
 		initConfiguration();
 
@@ -160,8 +160,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		// FocusManager.getInstance().registerComponent(new MyFocusOwner());
 
 		if (!usingJDIC)
-			((JTextPane) ((JScrollPane) viewerPlugin.getView()).getViewport()
-					.getView()).addMouseListener(new URLMouseListener());
+			viewerPlugin.getComponent().addMouseListener(new URLMouseListener());
 
 		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 	}
@@ -173,18 +172,18 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 				OptionsItem.USE_SYSTEM_DEFAULT_BROWSER, false);
 
 		if (useSystemDefaultBrowser) {
-			viewerPlugin = createHTMLViewerPluginInstance("JDICHTMLViewerPlugin");
+			viewerPlugin = createHTMLViewerPluginInstance("JDIC");
 			// in case of an error -> fall-back to Swing's built-in JTextPane
 			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false)) {
 				LOG
 						.severe("Error while trying to load JDIC based html viewer -> falling back to Swing's JTextPane instead");
 
-				viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
+				viewerPlugin = createHTMLViewerPluginInstance("Java");
 				usingJDIC = false;
 			} else
 				usingJDIC = true;
 		} else {
-			viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
+			viewerPlugin = createHTMLViewerPluginInstance("Java");
 			usingJDIC = false;
 		}
 

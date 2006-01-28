@@ -105,7 +105,7 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 	}
 
 
-	public JComponent getView() {
+	public JComponent getComponent() {
 		return this;
 	}
 
@@ -115,5 +115,9 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 
 	public boolean initialized() {
 		return true;
+	}
+	
+	public JComponent getContainer() {
+		return this;
 	}
 }
