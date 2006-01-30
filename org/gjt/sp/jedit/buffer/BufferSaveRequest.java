@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit.buffer;
 
 //{{{ Imports
-import javax.swing.*;
 import java.io.*;
 import java.util.zip.*;
 import java.util.Vector;
@@ -35,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer save request.
  * @author Slava Pestov
- * @version $Id: BufferSaveRequest.java,v 1.4 2005/08/19 04:51:41 spestov Exp $
+ * @version $Id: BufferSaveRequest.java,v 1.5 2006/01/30 23:15:54 kpouer Exp $
  */
 public class BufferSaveRequest extends BufferIORequest
 {
@@ -74,7 +73,7 @@ public class BufferSaveRequest extends BufferIORequest
 			boolean vfsRenameCap = (vfs.getCapabilities() & 
 				VFS.RENAME_CAP) != 0;
 
-			boolean overwriteReadOnly = false;
+			boolean overwriteReadOnly = buffer.getBooleanProperty("overwriteReadonly");
 
 			// Only backup once per session
 			if(buffer.getProperty(Buffer.BACKED_UP) == null
