@@ -172,18 +172,18 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 				OptionsItem.USE_SYSTEM_DEFAULT_BROWSER, false);
 
 		if (useSystemDefaultBrowser) {
-			viewerPlugin = createHTMLViewerPluginInstance("JDIC");
+			viewerPlugin = createHTMLViewerPluginInstance("JDICHTMLViewerPlugin");
 			// in case of an error -> fall-back to Swing's built-in JTextPane
 			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false)) {
 				LOG
 						.severe("Error while trying to load JDIC based html viewer -> falling back to Swing's JTextPane instead");
 
-				viewerPlugin = createHTMLViewerPluginInstance("Java");
+				viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
 				usingJDIC = false;
 			} else
 				usingJDIC = true;
 		} else {
-			viewerPlugin = createHTMLViewerPluginInstance("Java");
+			viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
 			usingJDIC = false;
 		}
 
