@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer save request.
  * @author Slava Pestov
- * @version $Id: BufferSaveRequest.java,v 1.5 2006/01/30 23:15:54 kpouer Exp $
+ * @version $Id: BufferSaveRequest.java,v 1.6 2006/01/30 23:18:08 kpouer Exp $
  */
 public class BufferSaveRequest extends BufferIORequest
 {
@@ -95,8 +95,8 @@ public class BufferSaveRequest extends BufferIORequest
 			String savePath;
 
 			boolean twoStageSave = overwriteReadOnly ||
-                             (vfsRenameCap && 
-				     jEdit.getBooleanProperty("twoStageSave"));
+				(vfsRenameCap && 
+				jEdit.getBooleanProperty("twoStageSave"));
 			if(twoStageSave)
 			{
 				savePath = vfs.getTwoStageSaveName(path);
