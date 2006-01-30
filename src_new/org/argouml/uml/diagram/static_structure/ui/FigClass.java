@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.203 2006/01/13 21:58:30 mvw Exp $
+// $Id: FigClass.java,v 1.204 2006/01/30 10:47:12 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -831,6 +831,7 @@ public class FigClass extends FigClassifierBox
 
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
+     * TODO: Refactor into FigClassifierBox
      */
     protected void updateStereotypeText() {
 
@@ -848,6 +849,11 @@ public class FigClass extends FigClassifierBox
         stereotypeHeight = 0;
         if (getStereotypeFig().isVisible()) {
             stereotypeHeight = getStereotypeFig().getHeight();
+        }
+        
+        int minWidth = this.getMinimumSize().width;
+        if (minWidth > rect.width) {
+            rect.width = minWidth;
         }
 
         setBounds(

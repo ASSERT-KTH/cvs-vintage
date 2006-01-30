@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.138 2006/01/13 22:10:14 mvw Exp $
+// $Id: FigInterface.java,v 1.139 2006/01/30 10:47:12 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -716,6 +716,7 @@ public class FigInterface extends FigClassifierBox {
     /**
      * @see
      * org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
+     * TODO: Refactor into FigClassifierBox
      */
     protected void updateStereotypeText() {
         Rectangle rect = getBounds();
@@ -734,6 +735,11 @@ public class FigInterface extends FigClassifierBox {
             stereotypeHeight = getStereotypeFig().getHeight();
         }
 
+        int minWidth = this.getMinimumSize().width;
+        if (minWidth > rect.width) {
+            rect.width = minWidth;
+        }
+        
         setBounds(
                 rect.x,
                 rect.y,
