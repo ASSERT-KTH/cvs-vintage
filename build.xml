@@ -220,7 +220,7 @@
         <echo message="the classes are going to ${dest} "/>
 
         <!-- compile columba APIs -->
-        <javac destdir="${dest}" target="1.4" source="1.4">
+        <javac destdir="${dest}" target="1.5" source="1.5">
             <src path="${src.columba.api}"/>
             <classpath refid="compile.classpath"/>
         </javac>
@@ -229,7 +229,7 @@
         <ant dir="${src.columba.core}" target="compile" inheritrefs="true"/>
 
         <!-- compile mail/addressbook APIs -->
-        <javac destdir="${dest}" target="1.4" source="1.4">
+        <javac destdir="${dest}" target="1.5" source="1.5">
             <src path="${src.columba.api}"/>
             <src path="${src.mail.api}"/>
             <src path="${src.addressbook.api}"/>
