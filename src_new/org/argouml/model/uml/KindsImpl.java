@@ -1,4 +1,4 @@
-// $Id: KindsImpl.java,v 1.4 2005/11/13 11:01:17 linus Exp $
+// $Id: KindsImpl.java,v 1.5 2006/02/01 17:32:24 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -279,6 +279,11 @@ public class KindsImpl
      */
     public Object getUnordered() {
         return MOrderingKind.UNORDERED;
+    }
+
+    public Object getPackage() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
