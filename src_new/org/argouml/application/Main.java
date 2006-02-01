@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.137 2005/12/13 00:47:28 bobtarling Exp $
+// $Id: Main.java,v 1.138 2006/02/01 23:10:25 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -279,6 +279,7 @@ public class Main {
         Designer.disableCritiquing();
         Designer.clearCritiquing();
 
+        boolean projectLoaded = false;
         if (urlToOpen != null) {
             String filename = urlToOpen.getFile();
             File file = new File(filename);
@@ -286,10 +287,12 @@ public class Main {
             System.err.println("The filename is " + filename);
             System.err.println("The file is " + file);
             System.err.println("File.exists = " + file.exists());
-            pb.loadProject(file, true);
+            projectLoaded = pb.loadProject(file, true);
         }
-
-        ProjectManager.getManager().makeEmptyProject();
+        
+        if (!projectLoaded) {
+            ProjectManager.getManager().makeEmptyProject();
+        }
 
         st.mark("set project");
 
