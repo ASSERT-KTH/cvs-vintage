@@ -1,4 +1,4 @@
-// $Id: PropPanelMethod.java,v 1.2 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelMethod.java,v 1.3 2006/02/01 21:17:21 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,7 @@ public class PropPanelMethod extends PropPanelFeature {
          * Constructor for UMLModelElementNameDocument.
          */
         public UMLModelElementLanguageDocument() {
-             super("name");
+             super("language");
         }
 
         /**
@@ -105,10 +105,11 @@ public class PropPanelMethod extends PropPanelFeature {
             if (Model.getFacade().isAMethod(meth)) {
                 Object expr = Model.getFacade().getBody(meth);
                 if (expr != null) {
-                    String body = (String)Model.getFacade().getBody(expr);
+                    Model.getDataTypesHelper().setLanguage(expr, text);
+                } else {
                     Model.getCoreHelper().setBody(meth,
                             Model.getDataTypesFactory()
-                                .createProcedureExpression(text, body));
+                            .createProcedureExpression(text, null));
                 }
             }
         }
@@ -118,7 +119,11 @@ public class PropPanelMethod extends PropPanelFeature {
          */
         protected String getProperty() {
             Object expr = Model.getFacade().getBody(getTarget());
-            return Model.getDataTypesHelper().getLanguage(expr);
+            if (expr == null) {
+                return null;
+            } else {
+                return Model.getDataTypesHelper().getLanguage(expr);
+            }
         }
 
     }
@@ -149,10 +154,11 @@ public class PropPanelMethod extends PropPanelFeature {
             if (Model.getFacade().isAMethod(meth)) {
                 Object expr = Model.getFacade().getBody(meth);
                 if (expr != null) {
-                    String lang = Model.getDataTypesHelper().getLanguage(expr);
+                    Model.getDataTypesHelper().setBody(expr, text);
+                } else {
                     Model.getCoreHelper().setBody(text,
                             Model.getDataTypesFactory()
-                                .createProcedureExpression(lang, text));
+                            .createProcedureExpression(null, text));
                 }
             }
         }
@@ -162,7 +168,11 @@ public class PropPanelMethod extends PropPanelFeature {
          */
         protected String getProperty() {
             Object expr = Model.getFacade().getBody(getTarget());
-            return (String)Model.getFacade().getBody(expr);
+            if (expr == null) {
+                return null;
+            } else {
+                return (String) Model.getFacade().getBody(expr);
+            }
         }
     }
 } /* end class PropPanelMethod */
