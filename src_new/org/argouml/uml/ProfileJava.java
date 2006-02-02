@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.45 2006/01/27 19:52:49 rastaman Exp $
+// $Id: ProfileJava.java,v 1.46 2006/02/02 09:53:25 rastaman Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -303,8 +303,9 @@ public class ProfileJava extends Profile {
         //    get a file name for the default model
         //
         String configModel = Configuration.getString(
-                Configuration.makeKey("defaultModel"),
-                    "/org/argouml/model/mdr/mof/default-uml14.xmi");
+                Configuration.makeKey("defaultModel"));
+        if (configModel==null || "".equals(configModel))
+            configModel = "/org/argouml/model/mdr/mof/default-uml14.xmi";
         
         LOG.debug("Config Model:" + configModel);
         
