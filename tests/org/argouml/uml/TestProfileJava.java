@@ -1,4 +1,4 @@
-// $Id: TestProfileJava.java,v 1.1 2006/02/02 20:31:22 tfmorris Exp $
+// $Id: TestProfileJava.java,v 1.2 2006/02/02 21:05:47 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,10 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 package org.argouml.uml;
 
+import java.util.Collection;
+
+import org.argouml.model.Model;
+
 import junit.framework.TestCase;
 
 /**
@@ -34,12 +38,21 @@ import junit.framework.TestCase;
 public class TestProfileJava extends TestCase {
     
     /**
-     * Test whether we can load default model (profile)
+     * Test whether we can load default model (profile). ProfileJava will throw
+     * an exception for an invalid profile model, but just create and return an
+     * empty model to return if the file for the profile doesn't exist. Check
+     * for both failure modes.
+     * 
      * @throws ProfileException
+     *             exception thrown by ProfileJava for invalid profile file.
      */
     public void testLoadProfileModel() throws ProfileException {
         ProfileJava profile = new ProfileJava();
         Object model = profile.loadProfileModel();
         assertNotNull("Can't load profile model", model);
+        Collection stereos = Model.getModelManagementHelper()
+                .getAllModelElementsOfKind(model,
+                        Model.getMetaTypes().getStereotype());
+        assertTrue("No stereotypes found in profile model", stereos.size() > 0);
     }
 }
