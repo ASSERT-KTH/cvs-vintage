@@ -8,19 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ui.menus;
+package org.eclipse.ui.internal.menus;
 
 import java.util.Collection;
 
 import org.eclipse.core.expressions.Expression;
-import org.eclipse.jface.menus.MenuElement;
-import org.eclipse.jface.menus.SActionSet;
-import org.eclipse.jface.menus.SGroup;
-import org.eclipse.jface.menus.SItem;
-import org.eclipse.jface.menus.SMenu;
-import org.eclipse.jface.menus.SMenuLayout;
-import org.eclipse.jface.menus.SWidget;
-import org.eclipse.ui.internal.services.IServiceWithSources;
+import org.eclipse.ui.services.IServiceWithSources;
 
 /**
  * <p>
@@ -33,10 +26,14 @@ import org.eclipse.ui.internal.services.IServiceWithSources;
  * This interface should not be implemented or extended by clients.
  * </p>
  * <p>
- * <strong>EXPERIMENTAL</strong>. This class or interface has been added as
- * part of a work in progress. There is a guarantee neither that this API will
- * work nor that it will remain the same. Please do not use this API without
+ * <strong>PROVISIONAL</strong>. This class or interface has been added as part
+ * of a work in progress. There is a guarantee neither that this API will work
+ * nor that it will remain the same. Please do not use this API without
  * consulting with the Platform/UI team.
+ * </p>
+ * <p>
+ * This class is meant to exist in the <code>org.eclipse.ui.menus</code>
+ * package.
  * </p>
  * 
  * @since 3.2

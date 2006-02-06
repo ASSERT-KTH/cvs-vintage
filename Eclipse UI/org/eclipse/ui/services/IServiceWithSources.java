@@ -8,10 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ui.internal.services;
+package org.eclipse.ui.services;
 
 import org.eclipse.ui.ISourceProvider;
-import org.eclipse.ui.services.IDisposable;
 
 /**
  * <p>
@@ -20,13 +19,7 @@ import org.eclipse.ui.services.IDisposable;
  * services.
  * </p>
  * <p>
- * This interface may be implemented or extended by clients.
- * </p>
- * <p>
- * <strong>EXPERIMENTAL</strong>. This class or interface has been added as
- * part of a work in progress. There is a guarantee neither that this API will
- * work nor that it will remain the same. Please do not use this API without
- * consulting with the Platform/UI team.
+ * Clients must not extend or implement.
  * </p>
  * 
  * @since 3.2

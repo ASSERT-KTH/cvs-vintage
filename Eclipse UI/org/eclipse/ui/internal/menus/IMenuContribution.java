@@ -9,9 +9,8 @@
  *     IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.ui.menus;
+package org.eclipse.ui.internal.menus;
 
-import org.eclipse.jface.menus.MenuElement;
 import org.eclipse.ui.internal.services.IEvaluationResultCache;
 
 /**
@@ -24,8 +23,18 @@ import org.eclipse.ui.internal.services.IEvaluationResultCache;
  * <p>
  * This interface is not intended to be implemented or extended by clients.
  * </p>
+ * <p>
+ * <strong>PROVISIONAL</strong>. This class or interface has been added as part
+ * of a work in progress. There is a guarantee neither that this API will work
+ * nor that it will remain the same. Please do not use this API without
+ * consulting with the Platform/UI team.
+ * </p>
+ * <p>
+ * This class is meant to exist in the <code>org.eclipse.ui.menus</code>
+ * package.
+ * </p>
  * 
- * @since 3.1
+ * @since 3.2
  * @see org.eclipse.ui.ISources
  * @see org.eclipse.ui.ISourceProvider
  */

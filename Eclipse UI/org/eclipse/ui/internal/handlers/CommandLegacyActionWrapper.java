@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.ui.handlers;
+package org.eclipse.ui.internal.handlers;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.CommandEvent;
@@ -27,7 +27,6 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.bindings.keys.KeySequence;
 import org.eclipse.jface.bindings.keys.KeyStroke;
-import org.eclipse.jface.commands.CommandImageManager;
 import org.eclipse.jface.commands.RadioState;
 import org.eclipse.jface.commands.ToggleState;
 import org.eclipse.jface.menus.IMenuStateIds;
@@ -36,8 +35,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.internal.commands.CommandImageManager;
+import org.eclipse.ui.internal.commands.ICommandImageService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.services.IServiceLocator;
 
@@ -50,10 +50,14 @@ import org.eclipse.ui.services.IServiceLocator;
  * Clients may instantiate this class, but must not extend.
  * </p>
  * <p>
- * <strong>EXPERIMENTAL</strong>. This class or interface has been added as
+ * <strong>PROVISIONAL</strong>. This class or interface has been added as
  * part of a work in progress. There is a guarantee neither that this API will
  * work nor that it will remain the same. Please do not use this API without
  * consulting with the Platform/UI team.
+ * </p>
+ * <p>
+ * This class is eventually intended to exist in
+ * <code>org.eclipse.ui.handlers</code>.
  * </p>
  * 
  * @since 3.2
