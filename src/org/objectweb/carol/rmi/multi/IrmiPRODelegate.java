@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IrmiPRODelegate.java,v 1.2 2005/10/19 14:45:01 benoitf Exp $
+ * $Id: IrmiPRODelegate.java,v 1.3 2006/02/07 17:07:31 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -146,7 +146,7 @@ public class IrmiPRODelegate extends PRO {
         int port = 0;
         Properties prop = ConfigurationRepository.getProperties();
         if (!usingCmi && prop != null) {
-            String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+            String propertyName = CarolDefaultValues.SERVER_IRMI_PORT;
             port = PortNumber.strToint(prop.getProperty(propertyName, "0"), propertyName);
         }
         return new Server(port, new ClientInterceptorImpl(JInterceptorStore.getLocalClientInterceptors()),
