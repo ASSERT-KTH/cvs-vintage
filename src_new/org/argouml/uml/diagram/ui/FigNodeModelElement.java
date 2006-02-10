@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.224 2006/01/25 23:23:14 tfmorris Exp $
+// $Id: FigNodeModelElement.java,v 1.225 2006/02/10 15:01:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1059,18 +1059,40 @@ public abstract class FigNodeModelElement
 
     /**
      * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-     *
-     * not used, do nothing.
      */
     public void keyReleased(KeyEvent ke) {
+        if (!readyToEdit) {
+            if (Model.getFacade().isAModelElement(getOwner())) {
+                Model.getCoreHelper().setName(getOwner(), "");
+                readyToEdit = true;
+            } else {
+                LOG.debug("not ready to edit name");
+                return;
+            }
+        }
+        if (ke.isConsumed() || getOwner() == null) {
+            return;
+        }
+        nameFig.keyReleased(ke);
     }
 
     /**
      * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
-     *
-     * not used, do nothing.
      */
     public void keyTyped(KeyEvent ke) {
+        if (!readyToEdit) {
+            if (Model.getFacade().isAModelElement(getOwner())) {
+                Model.getCoreHelper().setName(getOwner(), "");
+                readyToEdit = true;
+            } else {
+                LOG.debug("not ready to edit name");
+                return;
+            }
+        }
+        if (ke.isConsumed() || getOwner() == null) {
+            return;
+        }
+        nameFig.keyTyped(ke);
     }
 
     ////////////////////////////////////////////////////////////////
