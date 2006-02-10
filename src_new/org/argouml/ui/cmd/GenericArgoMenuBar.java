@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.33 2005/12/02 00:58:18 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.34 2006/02/10 06:37:41 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -645,7 +645,7 @@ public class GenericArgoMenuBar extends JMenuBar
 
         JMenuItem stateDiagram =
             createDiagrams.add(new ActionStateDiagram());
-        setMnemonic(stateDiagram, "State Diagram");
+        setMnemonic(stateDiagram, "Statechart Diagram");
         createDiagramToolbar.add((new ActionStateDiagram()));
 
         JMenuItem activityDiagram =
