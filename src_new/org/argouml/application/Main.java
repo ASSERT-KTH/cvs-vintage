@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.138 2006/02/01 23:10:25 tfmorris Exp $
+// $Id: Main.java,v 1.139 2006/02/10 06:21:41 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -291,7 +291,9 @@ public class Main {
         }
         
         if (!projectLoaded) {
-            ProjectManager.getManager().makeEmptyProject();
+            // The following will create an empty project as a side effect
+            // if none exists
+            ProjectManager.getManager().getCurrentProject();
         }
 
         st.mark("set project");
