@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.139 2006/02/10 06:21:41 tfmorris Exp $
+// $Id: Main.java,v 1.140 2006/02/10 23:08:03 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -291,9 +291,12 @@ public class Main {
         }
         
         if (!projectLoaded) {
-            // The following will create an empty project as a side effect
-            // if none exists
-            ProjectManager.getManager().getCurrentProject();
+            // Although this looks redundant, it's needed to get all
+            // the initialization state set correctly.  
+            // Too many side effects as part of initialization!
+            ProjectManager.getManager().setCurrentProject(
+                    ProjectManager.getManager().getCurrentProject());
+            ProjectManager.getManager().setNeedsSave(false);
         }
 
         st.mark("set project");
