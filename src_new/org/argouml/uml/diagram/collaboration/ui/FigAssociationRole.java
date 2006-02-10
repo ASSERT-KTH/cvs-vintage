@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.28 2005/11/02 13:28:15 mvw Exp $
+// $Id: FigAssociationRole.java,v 1.29 2006/02/10 14:52:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,7 +131,7 @@ class FigMessageGroup extends FigGroup {
         super(figs);
     }
 
-    protected void updateFigPositions() {
+    private void updateFigPositions() {
     	Collection figs = getFigs(); // the figs that make up this group
         Iterator it = figs.iterator();
     	if (!figs.isEmpty()) {
