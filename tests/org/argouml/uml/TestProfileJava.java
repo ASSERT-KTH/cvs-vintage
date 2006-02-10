@@ -1,4 +1,4 @@
-// $Id: TestProfileJava.java,v 1.3 2006/02/02 21:34:56 tfmorris Exp $
+// $Id: TestProfileJava.java,v 1.4 2006/02/10 06:05:49 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class TestProfileJava extends TestCase {
     /**
      * Test whether we can load default model (profile). ProfileJava will throw
      * an exception for an invalid profile model, but just create and return an
-     * empty model to return if the file for the profile doesn't exist. Check
+     * empty model if the file for the profile doesn't exist. Check
      * for both failure modes.
      * 
      * @throws ProfileException
