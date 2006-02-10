@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.72 2005/11/10 04:22:44 tfmorris Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.73 2006/02/10 06:10:51 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,7 +169,6 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         changeabilityRadioButtonpanel =
             new UMLAssociationEndChangeabilityRadioButtonPanel(
                 Translator.localize("label.changeability"), true);
-        // TODO: Should this be UMLAssociationEndVisibilityRadioButtonPanel?
         visibilityRadioButtonPanel =
             new UMLModelElementVisibilityRadioButtonPanel(
                 Translator.localize("label.visibility"), true);
