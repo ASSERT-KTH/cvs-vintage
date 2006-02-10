@@ -1,4 +1,4 @@
-// $Id: ActionRemoveArgument.java,v 1.3 2005/11/14 03:55:52 tfmorris Exp $
+// $Id: ActionRemoveArgument.java,v 1.4 2006/02/10 18:31:45 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionRemoveElement;
 
 /**
- * Action to remove a actualArgument from a Action.
+ * Action to delete an actualArgument from a Action.
  * 
  * @since aug 10, 2003
  * @author Decki, Endi, Yayan. Polytechnic of Bandung Indonesia, Computer
@@ -44,7 +44,7 @@ public class ActionRemoveArgument extends AbstractActionRemoveElement {
      * Constructor for ActionRemoveArgument.
      */
     protected ActionRemoveArgument() {
-        super(Translator.localize("menu.popup.remove"));
+        super(Translator.localize("menu.popup.delete"));
     }
 
     /**
