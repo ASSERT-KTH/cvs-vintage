@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.13 2005/11/13 11:01:09 linus Exp $
+// $Id: FigNodeAssociation.java,v 1.14 2006/02/10 18:27:10 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -290,6 +290,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
      *
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
+    // TODO: Review - should be keyTyped()??? - Bob
     public void keyPressed(KeyEvent ke) { }
 
 } /* end class FigNodeAssociation */

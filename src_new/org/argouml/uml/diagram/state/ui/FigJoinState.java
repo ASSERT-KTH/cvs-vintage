@@ -1,4 +1,4 @@
-// $Id: FigJoinState.java,v 1.18 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigJoinState.java,v 1.19 2006/02/10 18:27:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigJoinState.java,v 1.18 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigJoinState.java,v 1.19 2006/02/10 18:27:10 bobtarling Exp $
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
@@ -180,6 +180,8 @@ public class FigJoinState extends FigStateVertex {
     /**
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
+    // TODO: Review - should be keyTyped()or do we need this at all?
+    // Could we set readyToEdit=false?? - Bob
     public void keyPressed(KeyEvent ke) {
     }
 

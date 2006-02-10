@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.81 2006/01/13 20:03:59 mvw Exp $
+// $Id: FigUseCase.java,v 1.82 2006/02/10 18:27:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1049,7 +1049,7 @@ public class FigUseCase extends FigNodeModelElement
      *
      * @param ke  The key event that caused us to be invoked.
      */
-
+    // TODO: Review - should be keyTyped()??? - Bob
     public void keyPressed(KeyEvent ke) {
         int key = ke.getKeyCode();
 

@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.23 2005/11/02 13:28:16 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.24 2006/02/10 18:27:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -334,6 +334,7 @@ public class FigObjectFlowState extends FigNodeModelElement {
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
     public void keyPressed(KeyEvent ke) {
+        // TODO: Review - should be keyTyped()??? - Bob
         if (!isReadyToEdit()) {
             if (Model.getFacade().isAModelElement(getOwner())) {
                 updateClassifierText();
