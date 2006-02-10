@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: create-chunked.xsl,v 1.7 2005/01/07 13:20:10 linus Exp $ -->
+<!-- $Id: create-chunked.xsl,v 1.8 2006/02/10 06:29:18 tfmorris Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -32,7 +32,7 @@
 	exclude-result-prefixes="doc"
 	extension-element-prefixes="saxon xalanredirect lxslt">
 
-	<xsl:import href="docbook-xsl-1.66.1/html/chunk.xsl"/>
+	<xsl:import href="docbook-xsl/html/chunk.xsl"/>
 	<xsl:import href="commonsettings.xsl"/>
 
 	<xsl:variable name="using.chunker" select="1"/>

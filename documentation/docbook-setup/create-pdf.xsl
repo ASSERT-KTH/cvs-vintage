@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: create-pdf.xsl,v 1.8 2005/01/07 13:20:10 linus Exp $ -->
+<!-- $Id: create-pdf.xsl,v 1.9 2006/02/10 06:29:18 tfmorris Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -32,7 +32,7 @@
 	exclude-result-prefixes="doc"
 	extension-element-prefixes="saxon xalanredirect lxslt">
 
-	<xsl:import href="docbook-xsl-1.66.1/fo/docbook.xsl"/>
+	<xsl:import href="docbook-xsl/fo/docbook.xsl"/>
 	<xsl:import href="commonsettings.xsl"/>
 
         <!-- Added by Jeremy Bennett for 1.49 XSL stylesheets -->
@@ -42,7 +42,7 @@
         <xsl:variable name="paper.type" select="A4"/>
         <xsl:variable name="default.table.width" select="'15cm'"/>
         <xsl:variable name="draft.watermark.image"
-                      select="docbook-xsl-1.66.1/images/draft.png"/>
+                      select="docbook-xsl/images/draft.png"/>
                       
   <!-- Added by MVW -->
 
@@ -51,5 +51,10 @@ book toc
 part nop
 chapter nop
   </xsl:variable>
+
+  <!-- variablelist is used with long "variables" consisting
+    of methods and their parameters - lay them out stacked instead of
+    side-by-side so that they don't overlap -->
+  <xsl:variable name="variablelist.as.blocks" select="1"/>
 
 </xsl:stylesheet>
