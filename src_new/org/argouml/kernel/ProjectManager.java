@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.67 2005/12/18 09:16:40 mvw Exp $
+// $Id: ProjectManager.java,v 1.68 2006/02/11 03:34:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,7 +259,7 @@ public final class ProjectManager
         creatingCurrentProject = false;
 
         UndoManager.getInstance().empty();
-        if (!UndoEnabler.ENABLED) {
+        if (!UndoEnabler.enabled) {
             UndoManager.getInstance().setUndoMax(0);
         }
         Model.getPump().startPumpingEvents();

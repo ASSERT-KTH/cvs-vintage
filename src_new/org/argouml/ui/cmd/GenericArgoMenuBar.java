@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.34 2006/02/10 06:37:41 tfmorris Exp $
+// $Id: GenericArgoMenuBar.java,v 1.35 2006/02/11 03:34:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -485,17 +485,19 @@ public class GenericArgoMenuBar extends JMenuBar
         edit = add(new JMenu(menuLocalize("Edit")));
         setMnemonic(edit, "Edit");
 
-        if (UndoEnabler.ENABLED) {
-            JMenuItem undoItem =
-                edit.add(ProjectBrowser.getInstance().getUndoAction());
-            setMnemonic(undoItem, "Undo");
-            setAccelerator(undoItem, ctrlZ);
+        JMenuItem undoItem =
+            edit.add(ProjectBrowser.getInstance().getUndoAction());
+        setMnemonic(undoItem, "Undo");
+        setAccelerator(undoItem, ctrlZ);
+        undoItem.setVisible(UndoEnabler.enabled);
 
-            JMenuItem redoItem =
-                edit.add(ProjectBrowser.getInstance().getRedoAction());
-            setMnemonic(redoItem, "Redo");
-            setAccelerator(redoItem, ctrlY);
+        JMenuItem redoItem =
+            edit.add(ProjectBrowser.getInstance().getRedoAction());
+        setMnemonic(redoItem, "Redo");
+        setAccelerator(redoItem, ctrlY);
+        redoItem.setVisible(UndoEnabler.enabled);
 
+        if (UndoEnabler.enabled) {
             edit.addSeparator();
         }
 

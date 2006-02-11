@@ -1,4 +1,4 @@
-// $Id: UndoEnabler.java,v 1.3 2005/11/13 11:01:27 linus Exp $
+// $Id: UndoEnabler.java,v 1.4 2006/02/11 03:34:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public final class UndoEnabler {
      * Do not commit to CVS in this state.
      * TODO: Implement!
      */
-    public static final boolean ENABLED = false;
+    public static boolean enabled = false;
 
     /**
      * The constructor.
