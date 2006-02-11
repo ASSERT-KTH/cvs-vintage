@@ -11,4 +11,6 @@ public interface IFrameMediatorListener extends EventListener {
 	public abstract void layoutChanged(FrameEvent event);
 	public abstract void closed(FrameEvent event);
 	public abstract void toolBarVisibilityChanged(FrameEvent event);
+	public abstract void switchedComponent(FrameEvent event);
 }
+

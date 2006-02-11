@@ -8,20 +8,18 @@ import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import org.columba.api.gui.frame.IDock;
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.docking.XMLPersister;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.DefaultDockingPort;
-import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.perspective.Perspective;
-import org.flexdock.plaf.common.border.ShadowBorder;
 
 public abstract class DockFrameController extends DefaultFrameController
-		//implements IDock
-		{
+		implements IDock {
 
 	private DefaultDockingPort dockingPort = new DefaultDockingPort();
 
@@ -29,54 +27,43 @@ public abstract class DockFrameController extends DefaultFrameController
 		super(viewItem);
 
 		initComponents();
-		
-		
-		
-		
-	}
 
-	
+	}
 
 	public DockFrameController(String id) {
 		super(id);
 
 		initComponents();
-		
-		
+
 	}
 
 	private void initComponents() {
-//		contentPanePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-//
-//		contentPanePanel.setLayout(new BorderLayout());
+		// contentPanePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5,
+		// 5));
+		//
+		// contentPanePanel.setLayout(new BorderLayout());
 
-		
 		dockingPort = new DefaultDockingPort();
 		dockingPort.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		
-		
-		//contentPanePanel.add(dockingPort, BorderLayout.CENTER);
-		
-		//perspective = new Perspective(getId(), getId()+" Perspective");
-		
-		//PerspectiveManager.getInstance().add(perspective);
-		//initPerspective(perspective);
+
+		// contentPanePanel.add(dockingPort, BorderLayout.CENTER);
+
+		// perspective = new Perspective(getId(), getId()+" Perspective");
+
+		// PerspectiveManager.getInstance().add(perspective);
+		// initPerspective(perspective);
 
 	}
 
-	
-	
 	public JPanel getContentPane() {
-		System.out.println();
-		System.out.println("----->> comp count="
-				+ dockingPort.getDockables().size());
-		System.out.println();
+		// System.out.println();
+		// System.out.println("----->> comp count="
+		// + dockingPort.getDockables().size());
+		// System.out.println();
 
-		if (dockingPort.getComponentCount() == 0)
-			loadDefaultPosition();
+		// if (dockingPort.getComponentCount() == 0)
+		// loadDefaultPosition();
 
-		
-		
 		return dockingPort;
 	}
 
@@ -94,7 +81,7 @@ public abstract class DockFrameController extends DefaultFrameController
 	 */
 	public void setSplitProportion(Dockable component, float propertion) {
 		DockingManager.setSplitProportion(component, propertion);
-		
+
 		System.out.println("------> setSplitPropertion()");
 	}
 
@@ -118,8 +105,9 @@ public abstract class DockFrameController extends DefaultFrameController
 			File file = new File(dockDirectory, filename);
 			if (file.exists()) {
 				new XMLPersister().load(new FileInputStream(file), dockingPort);
+				restoreSuccess = true;
 			}
-			restoreSuccess = true;
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} catch (PersistenceException e1) {
@@ -132,6 +120,7 @@ public abstract class DockFrameController extends DefaultFrameController
 
 			loadDefaultPosition();
 		}
+
 	}
 
 	public void savePositions() {
@@ -144,9 +133,8 @@ public abstract class DockFrameController extends DefaultFrameController
 				dockDirectory.mkdir();
 			String filename = getId() + ".xml";
 			File file = new File(dockDirectory, filename);
-			
+
 			new XMLPersister().store(new FileOutputStream(file), dockingPort);
-		
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -157,8 +145,15 @@ public abstract class DockFrameController extends DefaultFrameController
 	}
 
 	public void initPerspective(Perspective p) {
-		
+
 	}
 
-	
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#isInitialized()
+	 */
+	public boolean isInitialized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

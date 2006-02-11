@@ -83,7 +83,12 @@ public class AddressbookFrameController extends DockFrameController implements
 
 		registerDockables();
 
-		//initPerspective(this.perspective);
+		// initPerspective(this.perspective);
+	}
+
+	public String[] getDockableIds() {
+		return new String[] { "addressbook_foldertree",
+				"addressbook_contactlist" };
 	}
 
 	public void registerDockables() {
@@ -151,19 +156,19 @@ public class AddressbookFrameController extends DockFrameController implements
 	}
 
 	public void loadDefaultPosition() {
-		 super.dock(contactListPanel, DockingConstants.CENTER_REGION);
-		 contactListPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
-		
-		 super.setSplitProportion(treePanel, 0.3f);
-		 super.setSplitProportion(contactListPanel, 0.35f);
+		super.dock(contactListPanel, DockingConstants.CENTER_REGION);
+		contactListPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
+
+		super.setSplitProportion(treePanel, 0.3f);
+		super.setSplitProportion(contactListPanel, 0.35f);
 	}
 
-//	public void initPerspective(Perspective p) {
-//		LayoutSequence sequence = p.getInitialSequence(true);
-//		sequence.add(treePanel);
-//		sequence.add(contactListPanel, treePanel, DockingConstants.EAST_REGION,
-//				0.7f);
-//	}
+	// public void initPerspective(Perspective p) {
+	// LayoutSequence sequence = p.getInitialSequence(true);
+	// sequence.add(treePanel);
+	// sequence.add(contactListPanel, treePanel, DockingConstants.EAST_REGION,
+	// 0.7f);
+	// }
 
 	/** *********************** container callbacks ************* */
 

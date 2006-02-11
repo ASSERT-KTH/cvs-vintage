@@ -83,7 +83,7 @@ public class OptionsItem extends DefaultItem {
 	
 	public final static String INLINE_ATTACHMENTS_BOOL = "inline_attachments";
 	
-	public final static String USE_SYSTEM_DEFAULT_BROWSER = "use_system_default_browser";
+	public final static String SELECTED_BROWSER = "selected_browser";
 	
 	/**
 	 * @param root

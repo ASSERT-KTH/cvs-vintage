@@ -160,31 +160,32 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		// FocusManager.getInstance().registerComponent(new MyFocusOwner());
 
 		if (!usingJDIC)
-			viewerPlugin.getComponent().addMouseListener(new URLMouseListener());
+			viewerPlugin.getComponent()
+					.addMouseListener(new URLMouseListener());
 
 		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 	}
 
 	private void initHTMLViewerPlugin() {
 		OptionsItem optionsItem = MailConfig.getInstance().getOptionsItem();
-		boolean useSystemDefaultBrowser = optionsItem.getBooleanWithDefault(
-				OptionsItem.MESSAGEVIEWER,
-				OptionsItem.USE_SYSTEM_DEFAULT_BROWSER, false);
+		String selectedBrowser = optionsItem.getStringWithDefault(
+				OptionsItem.MESSAGEVIEWER, OptionsItem.SELECTED_BROWSER,
+				"Default");
 
-		if (useSystemDefaultBrowser) {
-			viewerPlugin = createHTMLViewerPluginInstance("JDICHTMLViewerPlugin");
+		try {
+			viewerPlugin = createHTMLViewerPluginInstance(selectedBrowser);
 			// in case of an error -> fall-back to Swing's built-in JTextPane
 			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false)) {
-				LOG
-						.severe("Error while trying to load JDIC based html viewer -> falling back to Swing's JTextPane instead");
+				LOG.severe("Error while trying to load html viewer -> falling back to default");
 
-				viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
-				usingJDIC = false;
-			} else
-				usingJDIC = true;
-		} else {
-			viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
-			usingJDIC = false;
+				viewerPlugin = createHTMLViewerPluginInstance("Default");
+				// usingJDIC = false;
+			} // else
+			// usingJDIC = true;
+		} catch (RuntimeException e) {
+			viewerPlugin = createHTMLViewerPluginInstance("Default");
+			// usingJDIC = false;
+			e.printStackTrace();
 		}
 
 	}
@@ -197,9 +198,10 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 					.getInstance().getHandler(HTMLViewerExtensionHandler.NAME);
 
 			IExtension extension = handler.getExtension(pluginId);
-
+			if ( extension == null ) return null;
+			
 			plugin = (IHTMLViewerPlugin) extension.instanciateExtension(null);
-
+			
 			return plugin;
 		} catch (PluginHandlerNotFoundException e) {
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());

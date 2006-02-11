@@ -125,6 +125,9 @@ public class ExtendableMenu extends CMenu {
 	}
 
 	public void insert(JMenuItem menuItem, String placeholderId) {
+		if ( menuItem == null ) throw new IllegalArgumentException("menuItem == null");
+		if ( placeholderId == null ) throw new IllegalArgumentException("placeholderId == null");
+		
 		int index = model.insert(menuItem, placeholderId);
 		if (index != -1)
 			super.insert(menuItem, index);

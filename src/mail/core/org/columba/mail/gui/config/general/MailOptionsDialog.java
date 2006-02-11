@@ -21,6 +21,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -30,6 +32,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
@@ -38,11 +41,16 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.HTMLViewerExtensionHandler;
 import org.columba.mail.config.ComposerItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OptionsItem;
@@ -85,7 +93,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 	protected CheckBoxWithMnemonic showAttachmentsInlineCheckBox;
 
-	protected CheckBoxWithMnemonic useSystemDefaultBrowserCheckBox;
+	private JLabel selectedBrowserLabel;
+	
+	protected JComboBox selectedBrowserComboBox;
 	
 	protected LabelWithMnemonic forwardLabel;
 
@@ -116,9 +126,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 					.getBooleanWithDefault(OptionsItem.MESSAGEVIEWER,
 							OptionsItem.INLINE_ATTACHMENTS_BOOL, false));
 
-			useSystemDefaultBrowserCheckBox.setSelected(optionsItem
-					.getBooleanWithDefault(OptionsItem.MESSAGEVIEWER,
-							OptionsItem.USE_SYSTEM_DEFAULT_BROWSER, false));
+			selectedBrowserComboBox.setSelectedItem(optionsItem
+					.getStringWithDefault(OptionsItem.MESSAGEVIEWER,
+							OptionsItem.SELECTED_BROWSER, "Default"));
 			
 			int delay = optionsItem.getIntegerWithDefault(
 					OptionsItem.MARKASREAD, OptionsItem.DELAY_INT, 2);
@@ -179,10 +189,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			optionsItem.setBoolean(OptionsItem.MESSAGEVIEWER,
 					OptionsItem.INLINE_ATTACHMENTS_BOOL,
 					showAttachmentsInlineCheckBox.isSelected());
-			
-			optionsItem.setBoolean(OptionsItem.MESSAGEVIEWER,
-					OptionsItem.USE_SYSTEM_DEFAULT_BROWSER,
-					useSystemDefaultBrowserCheckBox.isSelected());
+				
+			optionsItem.setString(OptionsItem.MESSAGEVIEWER,
+					OptionsItem.SELECTED_BROWSER,
+					(String) selectedBrowserComboBox.getSelectedItem());
 
 			// send notification event
 			// @see org.columba.mail.gui.message.TextViewer
@@ -266,9 +276,23 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		showAttachmentsInlineCheckBox.setActionCommand("ATTACHMENTS_INLINE");
 		showAttachmentsInlineCheckBox.addActionListener(this);
 
-		useSystemDefaultBrowserCheckBox = new CheckBoxWithMnemonic("Use System Default Browser");
-		useSystemDefaultBrowserCheckBox.setActionCommand("USE_DEFAULT_BROWSER");
-		useSystemDefaultBrowserCheckBox.addActionListener(this);
+		selectedBrowserLabel = new JLabel("Message Renderer");
+		Vector<String> v = new Vector<String>();
+		try {
+			IExtensionHandler handler = PluginManager.getInstance().getHandler(HTMLViewerExtensionHandler.NAME);
+			Enumeration e = handler.getExtensionEnumeration();
+			while (e.hasMoreElements()) {
+				IExtension ext = (IExtension) e.nextElement();
+				String id = ext.getMetadata().getId();
+				v.add(id);
+			}
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
+		selectedBrowserComboBox = new JComboBox(v.toArray(new String[0]));
+		selectedBrowserComboBox.setSelectedIndex(0);
+		selectedBrowserComboBox.setActionCommand("USE_DEFAULT_BROWSER");
+		selectedBrowserComboBox.addActionListener(this);
 		
 		// button panel
 		okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
@@ -326,8 +350,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		builder.append(showAttachmentsInlineCheckBox, 4);
 		builder.nextLine();
 
-		builder.append(useSystemDefaultBrowserCheckBox, 4);
-		builder.nextLine();
+		
 
 		
 		// its maybe better to leave this option out of the dialog
@@ -337,8 +360,11 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		 * builder.nextLine();
 		 */
 		builder.append(markCheckBox, markSpinner);
-
 		builder.nextLine();
+		builder.append(selectedBrowserLabel, selectedBrowserComboBox);
+		builder.nextLine();
+
+		//builder.nextLine();
 
 		builder.appendSeparator(MailResourceLoader.getString("dialog",
 				"general", "composing_messages"));

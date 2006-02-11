@@ -62,16 +62,16 @@ public class AddressListRenderer {
 		return result.toString();
 	}
 
-	public static String[] renderToHTMLWithLinksStringArray(Address[] addresses) {
+	public static String[] convertToStringArray(Address[] addresses) {
 		Vector vector = new Vector();
 
 		if ((addresses != null) && (addresses.length > 0)) {
-			String str = createAddressString(addresses[0]);
-			vector.add(str);
+			//String str = createAddressString(addresses[0]);
+			//vector.add(str);
 
-			for (int i = 1; i < addresses.length; i++) {
+			for (int i = 0; i < addresses.length; i++) {
 				// result.append(", ");
-				str = createAddressString(addresses[i]);
+				String str = createAddressString(addresses[i]);
 				vector.add(str);
 			}
 		}

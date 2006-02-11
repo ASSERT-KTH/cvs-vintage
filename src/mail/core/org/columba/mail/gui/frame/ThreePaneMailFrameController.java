@@ -346,10 +346,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			// messagelist table selection event
 			TableSelectionChangedEvent event = (TableSelectionChangedEvent) e;
 
-			if (event.getUids() != null && event.getUids().length > 0) {
-				// update message viewer view panel title
-				messageViewerPanel.setTitle("Subject: not implemented yet");
-			}
+//			if (event.getUids() != null && event.getUids().length > 0) {
+//				// update message viewer view panel title
+//				messageViewerPanel.setTitle("Subject: not implemented yet");
+//			}
 
 			if (isTablePopupEvent == false)
 				// show message content
@@ -522,8 +522,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		 super.dock(messageListPanel, DockingConstants.CENTER_REGION);
 		 messageListPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
-		 messageListPanel.dock(messageViewerPanel,
-		 DockingConstants.SOUTH_REGION, 0.3f);
+		 messageListPanel.dock(messageViewerPanel,DockingConstants.SOUTH_REGION, 0.3f);
 		
 		 super.setSplitProportion(treePanel, 0.3f);
 		 super.setSplitProportion(messageListPanel, 0.35f);
@@ -538,6 +537,12 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 //				DockingConstants.SOUTH_REGION, 0.5f);
 //	}
 
+	
+	public String[] getDockableIds() {
+		
+		return new String[] {"mail_foldertree", "mail_messagelist","mail_messageviewer"};
+	}
+	
 	public void registerDockables() {
 		// init dockable panels
 		treePanel = new DockableView("mail_foldertree", "Folder Tree");
@@ -632,4 +637,13 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * @return Returns the messageViewerPanel.
+	 */
+	public DockableView getMessageViewerPanel() {
+		return messageViewerPanel;
+	}
+
+	
 }

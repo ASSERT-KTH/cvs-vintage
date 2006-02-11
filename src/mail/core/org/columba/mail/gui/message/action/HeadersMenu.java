@@ -49,7 +49,7 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 	private JRadioButtonMenuItem customMenuItem;
 
 	private JRadioButtonMenuItem allMenuItem;
-
+	
 	/**
 	 * @param controller
 	 * @param caption
@@ -59,20 +59,20 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 
 		ButtonGroup group = new ButtonGroup();
 
-		defaultMenuItem = new JRadioButtonMenuItem("Default Headers");
+		defaultMenuItem = new JRadioButtonMenuItem("Default");
 		defaultMenuItem.setActionCommand("DEFAULT");
 		defaultMenuItem.addActionListener(this);
 		group.add(defaultMenuItem);
 
 		add(defaultMenuItem);
 
-		customMenuItem = new JRadioButtonMenuItem("Custom Headers");
+		customMenuItem = new JRadioButtonMenuItem("Custom");
 		customMenuItem.setActionCommand("CUSTOM");
 		customMenuItem.addActionListener(this);
 		group.add(customMenuItem);
 		add(customMenuItem);
 
-		allMenuItem = new JRadioButtonMenuItem("All Headers");
+		allMenuItem = new JRadioButtonMenuItem("Compact");
 		allMenuItem.setActionCommand("ALL");
 		allMenuItem.addActionListener(this);
 		group.add(allMenuItem);

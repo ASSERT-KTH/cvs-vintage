@@ -16,7 +16,7 @@ public interface IDock {
 	 * @param str
 	 *            <code>DockingConstants</code>
 	 */
-	public abstract void dock(Dockable component, String str);
+	//public abstract void dock(Dockable component, String str);
 
 	/**
 	 * Set split proportion for component.
@@ -26,7 +26,8 @@ public interface IDock {
 	 * @param propertion
 	 *            percentage value
 	 */
-	public abstract void setSplitProportion(Dockable component,
-			float propertion);
+	//public abstract void setSplitProportion(Dockable component,
+			//float propertion);
 	
+	public String[] getDockableIds();
 }

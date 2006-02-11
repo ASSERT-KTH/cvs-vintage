@@ -73,6 +73,9 @@ public interface IFrameMediator extends IExtensionInterface {
 
 	public void loadPositions();
 	
+	
+	public boolean isInitialized();
+	
 	public String getId();
 	
 	
@@ -96,6 +99,7 @@ public interface IFrameMediator extends IExtensionInterface {
 	public abstract void fireLayoutChanged();
 	public abstract void fireClosed();
 	public abstract void fireToolBarVisibilityChanged(boolean visible);
+	public abstract void fireComponentChanged();
 	
 	/************************************************************/
 	

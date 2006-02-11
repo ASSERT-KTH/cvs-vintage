@@ -91,7 +91,7 @@ public class MessageController extends JPanel implements CharsetListener,
 		this.frameController = frameMediator;
 
 		Border outterBorder = BorderFactory.createCompoundBorder(BorderFactory
-				.createEmptyBorder(10, 10, 10, 10), new MessageBorder(
+				.createEmptyBorder(5,5,5,5), new MessageBorder(
 				Color.LIGHT_GRAY, 1, true));
 		Border innerBorder = BorderFactory.createCompoundBorder(outterBorder,
 				new LineBorder(Color.WHITE, 5, true));
@@ -119,7 +119,6 @@ public class MessageController extends JPanel implements CharsetListener,
 					updateGUI();
 					repaint();
 					
-					System.out.println("--------> message controller resize");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -166,7 +165,7 @@ public class MessageController extends JPanel implements CharsetListener,
 		bottom.setLayout(new BorderLayout());
 
 		JComponent c = bodytextViewer.getView();
-		c.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		c.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		c.setBackground(backgroundColor);
 		bottom.add(c, BorderLayout.CENTER);
 

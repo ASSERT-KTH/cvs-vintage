@@ -358,9 +358,12 @@ public class MenuXMLDecoder {
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
 
+				LOG.finest("menu:"+menuId);
+				
 				// TODO: fix menu id
 				ExtendableMenu menu = menubar.getMenu(menuId);
 				if (menu == null) {
+					LOG.finest("--> creating new menu");
 					// create new menu
 					menu = new ExtendableMenu(menuId, menuName);
 					menubar.insert(menu);
@@ -377,6 +380,8 @@ public class MenuXMLDecoder {
 	public void extendMenu(ExtendableMenuBar menubar,
 			ExtendableMenu parentMenu, Element parentElement,
 			String placeholderId) {
+		LOG.finest("current placeholder="+placeholderId);
+		
 		Iterator it = parentElement.getChildren().listIterator();
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
@@ -387,6 +392,8 @@ public class MenuXMLDecoder {
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
 
+				LOG.finest("menu="+menuId);
+				
 				// TODO: fix menu id
 				ExtendableMenu menu = menubar.getMenu(menuId);
 				if (menu == null) {
@@ -401,7 +408,7 @@ public class MenuXMLDecoder {
 
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
-
+				LOG.finest("menuitem="+id);
 				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());

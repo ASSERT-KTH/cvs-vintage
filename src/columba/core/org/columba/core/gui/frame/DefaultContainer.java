@@ -35,6 +35,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
+import javax.swing.event.EventListenerList;
 import javax.swing.text.View;
 
 import org.columba.api.exception.PluginException;
@@ -42,6 +43,7 @@ import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.gui.frame.event.FrameEvent;
+import org.columba.api.gui.frame.event.IContainerListener;
 import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
@@ -62,6 +64,7 @@ import org.columba.core.resourceloader.ImageLoader;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.docking.drag.preview.GhostPreview;
+import org.flexdock.perspective.PerspectiveManager;
 
 /**
  * @author fdietz
@@ -106,6 +109,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 	private String windowname;
 
 	private boolean defaultCloseOperation;
+	
+	protected EventListenerList listenerList = new EventListenerList();
 
 	public DefaultContainer(DefaultFrameController mediator) {
 		super();
@@ -203,7 +208,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	private void initDockingConfiguration() {
 		// turn on floating support
 		DockingManager.setFloatingEnabled(true);
-		// PerspectiveManager.setRestoreFloatingOnLoad(true);
+		PerspectiveManager.setRestoreFloatingOnLoad(true);
 
 		// enable flexdock ghost preview
 		EffectsManager.setPreview(new GhostPreview());
@@ -266,6 +271,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// add to new mediator's listener list
 		mediator.addListener(this);
+		
+		mediator.fireComponentChanged();
 	}
 
 	/**
@@ -314,6 +321,10 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// add to new mediator's listener list
 		mediator.addListener(this);
+		
+		fireComponentChanged(mediator);
+		
+		mediator.fireComponentChanged();
 	}
 
 	/**
@@ -389,9 +400,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		final boolean maximized = viewItem.getBooleanWithDefault(
 				ViewItem.WINDOW, ViewItem.MAXIMIZED_BOOL, false);
 
-		// if (WindowMaximizer.isWindowMaximized(this) == false) {
-		// if window is maximized -> ignore the window size
-		// properties
+		// if window is maximized -> ignore the window size properties
 		// otherwise, use window size property
 		// but ensure that the window is completly visible on the
 		// desktop
@@ -404,20 +413,24 @@ public class DefaultContainer extends JFrame implements IContainer,
 		final Point p = new Point(x, y);
 		final Frame frame = this;
 
-		frame.setLocation(p);
-		frame.setSize(dim);
 		if (maximized) {
 			WindowMaximizer.maximize(frame);
+		} else {
+			frame.setLocation(p);
+			frame.setSize(dim);
 		}
 
 		mediator.loadPositions();
-		
+
 		// awt-event-thread
-//		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//				
-//			}
-//		});
+		// javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		// public void run() {
+		//				
+		//				
+		//				
+		//				
+		// }
+		// });
 
 	}
 
@@ -552,8 +565,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// remove old content pane
 		contentPane.removeAll();
-		//contentPane.remove(mediator.getContentPane());
-		
+		// contentPane.remove(mediator.getContentPane());
+
 		setJMenuBar(menubar);
 
 		// // add new componnet
@@ -572,23 +585,65 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// getContentPane().validate();
 
 		if (!switchedFrameMediator) {
-			// load window position
-			loadPositions(getViewItem());
 
-			// // awt-event-thread
-//			 javax.swing.SwingUtilities.invokeLater(new Runnable() {
-//			 public void run() {
-//			
-//			 validate();
-//			 }
-//			 });
-	
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+			// *20030831, karlpeder* Also location is restored
+			int x = viewItem.getIntegerWithDefault(ViewItem.WINDOW,
+					ViewItem.POSITION_X_INT, DEFAULT_X);
+			int y = viewItem.getIntegerWithDefault(ViewItem.WINDOW,
+					ViewItem.POSITION_Y_INT, DEFAULT_Y);
+			int w = viewItem.getIntegerWithDefault(ViewItem.WINDOW,
+					ViewItem.WIDTH_INT, DEFAULT_WIDTH);
+			int h = viewItem.getIntegerWithDefault(ViewItem.WINDOW,
+					ViewItem.HEIGHT_INT, DEFAULT_HEIGHT);
+			final boolean maximized = viewItem.getBooleanWithDefault(
+					ViewItem.WINDOW, ViewItem.MAXIMIZED_BOOL, false);
+
+			// if window is maximized -> ignore the window size properties
+			// otherwise, use window size property
+			// but ensure that the window is completly visible on the
+			// desktop
+			x = Math.max(x, 0);
+			y = Math.max(y, 0);
+
+			final Dimension dim = new Dimension(Math.min(w, screenSize.width
+					- x), Math.min(h, screenSize.height - y));
+
+			final Point p = new Point(x, y);
+			final Frame frame = this;
+
+			if (maximized) {
+
+				frame.setVisible(true);
+
+				WindowMaximizer.maximize(frame);
+
+				// awt-event-thread
+				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						mediator.loadPositions();
+					}
+				});
+
+			} else {
+				frame.setLocation(p);
+				frame.setSize(dim);
+
+				mediator.loadPositions();
+
+				setVisible(true);
+			}
 			// make window visible
-			LOG.finest("setVisible()");
+			// LOG.finest("setVisible()");
 
-			setVisible(true);
+			// load window position
+			// loadPositions(getViewItem());
 
 		} else {
+			if ( !mediator.isInitialized() )
+				mediator.loadPositions();
+				
 			validateTree();
 
 			view.repaint();
@@ -744,4 +799,37 @@ public class DefaultContainer extends JFrame implements IContainer,
 	public void toolBarVisibilityChanged(FrameEvent event) {
 		enableToolBar(IContainer.MAIN_TOOLBAR, event.isVisible());
 	}
+
+	public void switchedComponent(FrameEvent event) {
+	   // don't do anything	
+	}
+	
+	/********************** event listener *******************************/
+	
+	public void addListener(IContainerListener l) {
+		listenerList.add(IContainerListener.class, l);
+	}
+
+	public void removeListener(IContainerListener l) {
+		listenerList.remove(IContainerListener.class, l);
+	}
+	
+	public void fireComponentChanged(IFrameMediator mediator) {
+		FrameEvent e = new FrameEvent(this, mediator);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IContainerListener.class) {
+				((IContainerListener) listeners[i + 1]).switchedComponent(e);
+			}
+		}
+		
+	}
+
+	
+	
+	
 }

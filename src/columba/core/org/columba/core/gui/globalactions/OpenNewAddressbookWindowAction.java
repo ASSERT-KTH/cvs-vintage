@@ -27,37 +27,34 @@ import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
-
 /**
  * Opens a new addressbook window.
- *
+ * 
  * @author frd
  */
 public class OpenNewAddressbookWindowAction extends AbstractColumbaAction {
-    public OpenNewAddressbookWindowAction(IFrameMediator controller) {
-        super(controller,
-            GlobalResourceLoader.getString(null, null,
-                "menu_file_new_addressbook"));
+	public OpenNewAddressbookWindowAction(IFrameMediator controller) {
+		super(controller, GlobalResourceLoader.getString(null, null,
+				"menu_file_new_addressbook"));
 
-        putValue(SHORT_DESCRIPTION,
-            GlobalResourceLoader.getString(null, null,
-                "menu_file_new_addressbook_tooltip").replaceAll("&", ""));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+				"menu_file_new_addressbook_tooltip").replaceAll("&", ""));
 
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_book-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_book.png"));
-    }
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_book-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_book.png"));
+	}
 
-    /*
-     * Uses the FrameManager instance in MainInterface to open a new
-     * addressbook window.
-     */
-    public void actionPerformed(ActionEvent evt) {
-   
+	/*
+	 * Uses the FrameManager instance in MainInterface to open a new addressbook
+	 * window.
+	 */
+	public void actionPerformed(ActionEvent evt) {
 
 		try {
-			FrameManager.getInstance().openView( "Addressbook");
+			FrameManager.getInstance().openView("Addressbook");
 		} catch (PluginLoadingFailedException e) {
 			e.printStackTrace();
 		}
-    }
+
+	}
 }

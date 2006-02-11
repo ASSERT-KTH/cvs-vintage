@@ -5,9 +5,9 @@
 	
 	<menu id="menu_file" placeholderid="top">
 		<seperator/>
-		<menuitem id="Print" />		
+		<menuitem id="Print"/>
 		<seperator/>
-		<menuitem id="SaveMessageSourceAs" />
+		<menuitem id="SaveMessageSourceAs"/>
 	</menu>
 	
 	

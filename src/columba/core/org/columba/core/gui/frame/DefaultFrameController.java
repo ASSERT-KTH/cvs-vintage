@@ -61,10 +61,12 @@ public class DefaultFrameController implements IFrameMediator {
 	private IContainer container;
 
 	protected EventListenerList listenerList = new EventListenerList();
-	
+
 	// Menuitems use this to display a string in the statusbar
 	protected TooltipMouseHandler tooltipMouseHandler;
-	
+
+	private boolean initialized = false;
+
 	/**
 	 * 
 	 */
@@ -78,7 +80,7 @@ public class DefaultFrameController implements IFrameMediator {
 
 		// init selection handler
 		selectionManager = new SelectionManager();
-		
+
 		tooltipMouseHandler = new TooltipMouseHandler(this);
 
 	}
@@ -87,9 +89,9 @@ public class DefaultFrameController implements IFrameMediator {
 	 * @see org.columba.api.gui.frame.IFrameMediator#registerDockables()
 	 */
 	public void registerDockables() {
-		
+
 	}
-	
+
 	public DefaultFrameController(String id) {
 		this(ViewItem.createDefault(id));
 
@@ -192,20 +194,20 @@ public class DefaultFrameController implements IFrameMediator {
 	public void loadPositions() {
 		// overwrite this method
 
+		initialized = true;
+
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	
-	
 	class MyMouseAdapter extends MouseAdapter {
-	
+
 	}
-	
-	/************************ frame eventing **********************/
-	
+
+	/** ********************** frame eventing ********************* */
+
 	public void addListener(IFrameMediatorListener l) {
 		listenerList.add(IFrameMediatorListener.class, l);
 	}
@@ -226,7 +228,7 @@ public class DefaultFrameController implements IFrameMediator {
 				((IFrameMediatorListener) listeners[i + 1]).titleChanged(e);
 			}
 		}
-		
+
 	}
 
 	public void fireStatusMessageChanged(String statusMessage) {
@@ -238,10 +240,11 @@ public class DefaultFrameController implements IFrameMediator {
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == IFrameMediatorListener.class) {
-				((IFrameMediatorListener) listeners[i + 1]).statusMessageChanged(e);
+				((IFrameMediatorListener) listeners[i + 1])
+						.statusMessageChanged(e);
 			}
 		}
-		
+
 	}
 
 	public void fireTaskStatusChanged() {
@@ -253,10 +256,11 @@ public class DefaultFrameController implements IFrameMediator {
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == IFrameMediatorListener.class) {
-				((IFrameMediatorListener) listeners[i + 1]).taskStatusChanged(e);
+				((IFrameMediatorListener) listeners[i + 1])
+						.taskStatusChanged(e);
 			}
 		}
-		
+
 	}
 
 	public void fireVisibilityChanged(boolean visible) {
@@ -268,10 +272,11 @@ public class DefaultFrameController implements IFrameMediator {
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == IFrameMediatorListener.class) {
-				((IFrameMediatorListener) listeners[i + 1]).visibilityChanged(e);
+				((IFrameMediatorListener) listeners[i + 1])
+						.visibilityChanged(e);
 			}
 		}
-		
+
 	}
 
 	public void fireLayoutChanged() {
@@ -286,9 +291,9 @@ public class DefaultFrameController implements IFrameMediator {
 				((IFrameMediatorListener) listeners[i + 1]).layoutChanged(e);
 			}
 		}
-		
+
 	}
-	
+
 	public void fireClosed() {
 		FrameEvent e = new FrameEvent(this);
 		// Guaranteed to return a non-null array
@@ -301,9 +306,9 @@ public class DefaultFrameController implements IFrameMediator {
 				((IFrameMediatorListener) listeners[i + 1]).closed(e);
 			}
 		}
-		
+
 	}
-	
+
 	public void fireToolBarVisibilityChanged(boolean visible) {
 		FrameEvent e = new FrameEvent(this, visible);
 		// Guaranteed to return a non-null array
@@ -313,13 +318,28 @@ public class DefaultFrameController implements IFrameMediator {
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == IFrameMediatorListener.class) {
-				((IFrameMediatorListener) listeners[i + 1]).toolBarVisibilityChanged(e);
+				((IFrameMediatorListener) listeners[i + 1])
+						.toolBarVisibilityChanged(e);
 			}
 		}
 	}
-	
-	
-	/************************* container callbacks **************/
+
+	public void fireComponentChanged() {
+		FrameEvent e = new FrameEvent(this);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IFrameMediatorListener.class) {
+				((IFrameMediatorListener) listeners[i + 1])
+						.switchedComponent(e);
+			}
+		}
+	}
+
+	/** *********************** container callbacks ************* */
 
 	public void extendMenu(IContainer container) {
 		// overwrite this method
@@ -328,20 +348,32 @@ public class DefaultFrameController implements IFrameMediator {
 	public void extendToolBar(IContainer container) {
 		// overwrite this method
 	}
-	
+
 	public void initFrame(IContainer container) {
 		// overwrite this method
 	}
-	/************************************************************/
-	
+
+	/** ********************************************************* */
+
 	public MouseListener getMouseTooltipHandler() {
 		return tooltipMouseHandler;
 	}
 
 	public void registerDockable(Dockable dockable) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#isInitialized()
+	 */
+	public boolean isInitialized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public String[] getDockableIds() {
+		return new String[0];
+	}
+
 }

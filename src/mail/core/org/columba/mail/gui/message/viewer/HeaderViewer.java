@@ -19,6 +19,7 @@ package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Insets;
@@ -27,7 +28,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,6 +56,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.action.AddToAddressbookAction;
 import org.columba.mail.gui.message.action.ComposeMessageAction;
@@ -72,7 +73,6 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.frapuccino.dynamicitemlistpanel.DynamicItemListPanel;
-import org.frapuccino.swing.LinkButton;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -127,8 +127,9 @@ public class HeaderViewer extends JPanel {
 
 		setBorder(new HeaderSeparatorBorder(Color.LIGHT_GRAY));
 
-		setBackground(UIManager.getColor("TextField.background"));
+		// setBackground(UIManager.getColor("TextField.background"));
 
+		setOpaque(false);
 		headerTextPane = new HeaderPanel();
 
 		attachmentViewer = new AttachmentsViewer(mediator);
@@ -147,7 +148,7 @@ public class HeaderViewer extends JPanel {
 		setLayout(new BorderLayout());
 
 		JPanel top = new JPanel();
-		top.setBackground(UIManager.getColor("TextField.background"));
+		// top.setBackground(UIManager.getColor("TextField.background"));
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		if (securityInfoViewer.isVisible()) {
 			top.add(securityInfoViewer);
@@ -191,8 +192,25 @@ public class HeaderViewer extends JPanel {
 				String key = headers[i];
 				JComponent[] value = transformHeaderField(header, key);
 
+				JButton trailingItem = new JButton("more...");
+				trailingItem = createLinkButton(trailingItem);
+				trailingItem.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						showAddressListDialog();
+					}
+
+				});
+
+				DynamicItemListPanel p = new DynamicItemListPanel(2,
+						trailingItem, true);
+				p.setOpaque(false);
+
+				for (int j = 0; j < value.length; j++) {
+					p.addItem(value[j]);
+				}
+
 				if (value.length > 0)
-					map.put(key, value);
+					map.put(key, p);
 			}
 
 			break;
@@ -221,38 +239,88 @@ public class HeaderViewer extends JPanel {
 
 			break;
 		case 2:
-			// show all headers
-			header = folder.getAllHeaderFields(uid);
+			// default
+			headers = new String[] { "From" };
+
+			// get header from folder
+			header = folder.getHeaderFields(uid, headers);
 
 			// transform headers if necessary
-			Enumeration enumeration = header.getKeys();
-			map = new LinkedHashMap();
-			while (enumeration.hasMoreElements()) {
-				String key = (String) enumeration.nextElement();
+			for (int i = 0; i < headers.length; i++) {
+				String key = headers[i];
 				JComponent[] value = transformHeaderField(header, key);
 
+				JButton trailingItem = new JButton("more...");
+				trailingItem = createLinkButton(trailingItem);
+				trailingItem.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						showAddressListDialog();
+					}
+
+				});
+
+				DynamicItemListPanel p = new DynamicItemListPanel(2,
+						trailingItem, true);
+				p.setOpaque(false);
+
+				for (int j = 0; j < value.length; j++) {
+					p.addItem(value[j]);
+				}
+
 				if (value.length > 0)
-					map.put(key, value);
+					map.put(key, p);
 			}
 
 			break;
 		}
 
-		headerTextPane.setHeader(map);
-
 		hasAttachment = ((Boolean) folder.getAttribute(uid,
 				"columba.attachment")).booleanValue();
 
 		if (hasAttachment) {
-			JComponent[] comps = createAttachmentComponentArray(folder, uid);
+			JComponent[] value = createAttachmentComponentArray(folder, uid);
+
+			// create a view more button, responsible for
+			// opening the attachment viewer popup
+			JButton moreButton = createAttachmentMoreButton();
+
+			DynamicItemListPanel p = new DynamicItemListPanel(2, null, true);
+			p.setShowLastSeparator(false);
+			p.setOpaque(false);
+
+			for (int j = 0; j < value.length; j++) {
+				p.addItem(value[j]);
+			}
+
+			p.addItem(moreButton);
 
 			// TODO i18n "attachments" label
-			if (comps.length > 0)
-				map.put("Attachments", comps);
+			if (value.length > 0)
+				map.put("Attachments", p);
 
 		}
 
+		headerTextPane.setHeader(map);
+
 		attachmentViewer.view(folder, uid, mediator);
+
+		// hack to support dockable view title update
+		// TODO replace with listener pattern
+		if (mediator instanceof ThreePaneMailFrameController) {
+			final ThreePaneMailFrameController c = (ThreePaneMailFrameController) mediator;
+			// get header from folder
+			Header header2 = folder.getHeaderFields(uid,
+					new String[] { "Subject" });
+
+			final String title = header2.get("Subject");
+			// awt-event-thread
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					c.getMessageViewerPanel().setTitle(title);
+				}
+			});
+
+		}
 
 		visible = true;
 
@@ -280,11 +348,11 @@ public class HeaderViewer extends JPanel {
 			vector.add(button);
 		}
 
-		// create a view more button, responsible for
-		// opening the attachment viewer popup
-		JButton moreButton = createAttachmentMoreButton();
+		// // create a view more button, responsible for
+		// // opening the attachment viewer popup
+		// JButton moreButton = createAttachmentMoreButton();
 
-		vector.add(moreButton);
+		// vector.add(moreButton);
 
 		return (JComponent[]) vector.toArray(new JComponent[0]);
 	}
@@ -359,7 +427,7 @@ public class HeaderViewer extends JPanel {
 				Image.SCALE_SMOOTH));
 
 		JButton button = new JButton(text, image);
-		button = LinkButton.createLabelButton(button);
+		button = createLabelButton(button);
 		// button.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 		button.setToolTipText(tooltip.toString());
 
@@ -588,28 +656,29 @@ public class HeaderViewer extends JPanel {
 			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
 			return new JComponent[] { new JLabel(str) };
 		} else if (key.equals("To")) {
-			String[] str = AddressListRenderer
-					.renderToHTMLWithLinksStringArray(bHeader.getTo());
-			return createRecipientComponentArray(str);
+			String[] str = AddressListRenderer.convertToStringArray(bHeader
+					.getTo());
+			return createRecipientComponentArray(bHeader.getTo());
 		} else if (key.equals("Reply-To")) {
-			String[] str = AddressListRenderer
-					.renderToHTMLWithLinksStringArray(bHeader.getReplyTo());
+			String[] str = AddressListRenderer.convertToStringArray(bHeader
+					.getReplyTo());
 
-			return createRecipientComponentArray(str);
+			return createRecipientComponentArray(bHeader.getReplyTo());
 		} else if (key.equals("Cc")) {
-			String[] str = AddressListRenderer
-					.renderToHTMLWithLinksStringArray(bHeader.getCc());
-			return createRecipientComponentArray(str);
+			String[] str = AddressListRenderer.convertToStringArray(bHeader
+					.getCc());
+			return createRecipientComponentArray(bHeader.getCc());
 		} else if (key.equals("Bcc")) {
-			String[] str = AddressListRenderer
-					.renderToHTMLWithLinksStringArray(bHeader.getBcc());
+			String[] str = AddressListRenderer.convertToStringArray(bHeader
+					.getBcc());
 
-			return createRecipientComponentArray(str);
+			return createRecipientComponentArray(bHeader.getBcc());
 		} else if (key.equals("From")) {
 			String[] str = AddressListRenderer
-					.renderToHTMLWithLinksStringArray(new Address[] { (Address) bHeader
+					.convertToStringArray(new Address[] { (Address) bHeader
 							.getFrom() });
-			return createRecipientComponentArray(str);
+			return createRecipientComponentArray(new Address[] { (Address) bHeader
+					.getFrom() });
 		} else if (key.equals("Date")) {
 			String str = DATE_FORMATTER.format(bHeader.getDate());
 
@@ -627,20 +696,37 @@ public class HeaderViewer extends JPanel {
 		}
 	}
 
-	private JComponent[] createRecipientComponentArray(String[] str) {
+	private JComponent[] createRecipientComponentArray(Address[] addressArray) {
 		final Color LINK_COLOR = Color.blue;
 
 		final Border LINK_BORDER = BorderFactory.createEmptyBorder(0, 0, 1, 0);
 
 		Vector v = new Vector();
-		for (int j = 0; j < str.length; j++) {
-			final String label = str[j];
+		for (int j = 0; j < addressArray.length; j++) {
+			final Address adr = addressArray[j];
 
-			if (label.length() == 0)
-				continue;
+			JButton button = new JButton();
 
-			JButton button = new JButton(label);
-			button = LinkButton.createLinkButton(button);
+			StringBuffer result = new StringBuffer();
+			String displayName = adr.getDisplayName();
+
+			if ((displayName != null) && (displayName.length() != 0)) {
+				result.append(displayName);
+				result.append(" ");
+				result.append("<" + adr.getMailAddress() + ">");
+
+				button.setText(adr.getDisplayName());
+
+			} else {
+				result.append(adr.getMailAddress());
+				button.setText(adr.getMailAddress());
+			}
+
+			final String label = result.toString();
+			button.setToolTipText(label);
+
+			// button.setOpaque(false);
+			button = createLinkButton(button);
 
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
@@ -696,16 +782,15 @@ public class HeaderViewer extends JPanel {
 
 		public HeaderPanel() {
 			super();
-
+			setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
 		}
 
 		/**
 		 * @see javax.swing.JComponent#updateUI()
 		 */
 		public void updateUI() {
-			setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
 
-			setBackground(UIManager.getColor("TextField.background"));
+			// setBackground(UIManager.getColor("TextField.background"));
 		}
 
 		public void setHeader(Map keys) {
@@ -721,10 +806,12 @@ public class HeaderViewer extends JPanel {
 
 			removeAll();
 
-			Color backgroundColor = UIManager.getColor("TextField.background");
+			// Color backgroundColor =
+			// UIManager.getColor("TextField.background");
 
 			FormLayout layout = new FormLayout(
-					"right:pref, 3dlu, pref, 3dlu, fill:pref:grow", "");
+					"right:pref, 3dlu, pref, 3dlu, fill:pref:grow",
+					"top:pref:grow");
 			DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
 			CellConstraints c = new CellConstraints();
@@ -734,38 +821,35 @@ public class HeaderViewer extends JPanel {
 			for (Iterator it = keys.keySet().iterator(); it.hasNext();) {
 				String key = (String) it.next();
 
-				JComponent[] value = (JComponent[]) keys.get(key);
+				DynamicItemListPanel value = (DynamicItemListPanel) keys
+						.get(key);
 
 				JLabel keyLabel = new JLabel("<html><b>" + key + "</b></html>");
-				keyLabel.setBackground(backgroundColor);
 
 				JLabel separator = new JLabel(":");
-				separator.setBackground(backgroundColor);
 
-				JButton trailingItem = new JButton("more...");
-				trailingItem.setBackground(backgroundColor);
-				trailingItem = LinkButton.createLinkButton(trailingItem);
-				trailingItem.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent event) {
-						showAddressListDialog();
-					}
-
-				});
-
-				DynamicItemListPanel p = new DynamicItemListPanel(2,
-						trailingItem, true);
-				p.setBackground(backgroundColor);
-				p.setOpaque(true);
-
-				for (int i = 0; i < value.length; i++) {
-					value[i].setBackground(backgroundColor);
-					value[i].setOpaque(true);
-					p.addItem(value[i]);
-				}
+				// JButton trailingItem = new JButton("more...");
+				//			
+				// trailingItem = LinkButton.createLinkButton(trailingItem);
+				// trailingItem.addActionListener(new ActionListener() {
+				// public void actionPerformed(ActionEvent event) {
+				// showAddressListDialog();
+				// }
+				//
+				// });
+				//
+				// DynamicItemListPanel p = new DynamicItemListPanel(2,
+				// trailingItem, true);
+				// p.setOpaque(false);
+				//
+				// for (int i = 0; i < value.length; i++) {
+				//					
+				// p.addItem(value[i]);
+				// }
 
 				builder.append(keyLabel);
 				builder.append(separator);
-				builder.append(p);
+				builder.append(value);
 
 				builder.appendRow(new RowSpec("top:pref:grow"));
 
@@ -778,7 +862,42 @@ public class HeaderViewer extends JPanel {
 
 	private class ListItem {
 		String name;
+
 		JComponent component;
+
 		ImageIcon icon;
 	}
+
+	private static final Color LINK_COLOR = Color.blue;
+
+	private static final Color LABEL_COLOR = UIManager
+			.getColor("Label.foreground");
+
+	private static final Border LINK_BORDER = BorderFactory.createEmptyBorder(
+			0, 0, 1, 0);
+
+	public static JButton createLinkButton(JButton button) {
+		button.setBorder(LINK_BORDER);
+		button.setForeground(LINK_COLOR);
+		button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		button.setFocusPainted(false);
+		button.setRequestFocusEnabled(false);
+		button.setText("<html><u>" + button.getText() + "</u></html>");
+		button.setContentAreaFilled(false);
+		// button.addMouseListener(new LinkMouseListener());
+		return button;
+	}
+
+	public static JButton createLabelButton(JButton button) {
+		button.setBorder(LINK_BORDER);
+		button.setForeground(LABEL_COLOR);
+		button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		button.setFocusPainted(false);
+		button.setRequestFocusEnabled(false);
+		button.setContentAreaFilled(false);
+		button.setText("<html><u>" + button.getText() + "</u></html>");
+		// button.addMouseListener(new LabelMouseListener());
+		return button;
+	}
+
 }

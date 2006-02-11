@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <extensionlist>
- <extension id="JavaHTMLViewerPlugin" class="org.columba.core.gui.htmlviewer.JavaHTMLViewerPlugin" />
- <extension id="JDICHTMLViewerPlugin" class="org.columba.core.gui.htmlviewer.JDICHTMLViewerPlugin" /> 
+ <extension id="Default" class="org.columba.core.gui.htmlviewer.JavaHTMLViewerPlugin" />
+ <extension id="JDIC" class="org.columba.core.gui.htmlviewer.JDICHTMLViewerPlugin" /> 
 </extensionlist>

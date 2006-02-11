@@ -276,9 +276,10 @@ public class DefaultItem implements Cloneable, IDefaultItem {
 
 		if (value == null) {
 			setString(pathToElement, key, value);
+			return defaultValue;
 		}
 		
-		return defaultValue;
+		return value;
 	}
 	
 	public void notifyObservers(String path) {

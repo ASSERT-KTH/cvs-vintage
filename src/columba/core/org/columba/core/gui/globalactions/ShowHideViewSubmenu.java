@@ -1,39 +1,27 @@
 package org.columba.core.gui.globalactions;
 
 import java.awt.event.ActionEvent;
-import java.util.Enumeration;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
+import org.columba.api.gui.frame.IDock;
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.gui.docking.DockableView;
-import org.columba.core.gui.docking.DockableRegistry;
-import org.columba.core.gui.docking.event.DockableEvent;
-import org.columba.core.gui.docking.event.IDockableListener;
+import org.columba.api.gui.frame.event.FrameEvent;
+import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.core.gui.frame.DefaultFrameController;
+import org.columba.core.gui.frame.FrameMediatorAdapter;
 import org.columba.core.gui.menu.IMenu;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.perspective.PerspectiveManager;
 
-public class ShowHideViewSubmenu extends IMenu implements IDockableListener {
+public class ShowHideViewSubmenu extends IMenu {
 
 	public ShowHideViewSubmenu(IFrameMediator controller) {
 		super(controller, "Show/Hide View",
 				((DefaultFrameController) controller).getViewItem().get("id"));
 
-		Enumeration e = DockableRegistry.getInstance().getDockableEnumeration();
-
-		while (e.hasMoreElements()) {
-			Dockable dockable = (Dockable) e.nextElement();
-			DockableView impl = (DockableView) dockable;
-
-			add(new JMenuItem(new DisplayAction(dockable.getPersistentId(),
-					impl.getTitle())));
-		}
-
-		DockableRegistry.getInstance().addListener(this);
+		controller.addListener(new MyListener());
 	}
 
 	class DisplayAction extends AbstractAction {
@@ -47,7 +35,7 @@ public class ShowHideViewSubmenu extends IMenu implements IDockableListener {
 
 		public void actionPerformed(ActionEvent e) {
 			Dockable dockable = DockingManager.getDockable(id);
-			PerspectiveManager.getInstance().display(dockable);
+			DockingManager.display(dockable);
 		}
 	}
 
@@ -58,12 +46,31 @@ public class ShowHideViewSubmenu extends IMenu implements IDockableListener {
 
 	}
 
-	public void dockableAdded(DockableEvent event) {
-		Dockable dockable = event.getDockable();
-		DockableView impl = (DockableView) dockable;
 
-		add(new JMenuItem(new DisplayAction(dockable.getPersistentId(), impl
-				.getTitle())));
+	class MyListener extends FrameMediatorAdapter {
+
+		MyListener() {
+
+		}
+
+		/**
+		 * @see org.columba.core.gui.frame.FrameMediatorAdapter#switchedComponent(org.columba.api.gui.frame.event.FrameEvent)
+		 */
+		@Override
+		public void switchedComponent(FrameEvent event) {
+			IFrameMediator mediator = getFrameMediator();
+
+			if (mediator instanceof IDock) {
+				String[] ids = ((IDock) mediator).getDockableIds();
+
+				removeAll();
+				for (int i = 0; i < ids.length; i++) {
+					// i18n
+					add(new JMenuItem(new DisplayAction(ids[i], ids[i])));
+				}
+
+			}
+		}
 	}
 
 }

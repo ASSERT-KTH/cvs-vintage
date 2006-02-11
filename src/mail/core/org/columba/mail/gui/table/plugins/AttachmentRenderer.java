@@ -16,6 +16,7 @@
 package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
@@ -36,6 +37,7 @@ public class AttachmentRenderer extends DefaultLabelRenderer {
         setHorizontalAlignment(SwingConstants.CENTER);
 
         image1 = ImageLoader.getSmallImageIcon("attachment.png");
+
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
