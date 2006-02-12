@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/columba/core"/>
+	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/api"/>
+	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/res"/>
+	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.mail.ZippedMHFolder/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.chat.altura/api"/>
 	<classpathentry kind="src" path="src/columba/api"/>
@@ -59,5 +62,6 @@
 	<classpathentry kind="lib" path="lib/tagsoup-1.0rc3.jar"/>
 	<classpathentry kind="lib" path="lib/flexdock-0.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/migcalendar-5.21.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
