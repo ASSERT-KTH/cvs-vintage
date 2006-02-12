@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.9 2005/11/12 23:56:07 linus Exp $
+// $Id: SettingsTabModules.java,v 1.10 2006/02/12 15:11:33 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -210,6 +210,8 @@ public class SettingsTabModules extends SettingsTabHelper {
 		public void actionPerformed(ActionEvent event) {
 		    try {
 		        getClass().getClassLoader().loadClass(classname);
+                ModuleLoader2.addClass(classname);
+                handleSettingsTabRefresh();
 		    } catch (ClassNotFoundException e) {
 			JOptionPane.showMessageDialog(
 				notYetLoadedPanel,
@@ -219,9 +221,6 @@ public class SettingsTabModules extends SettingsTabHelper {
 				JOptionPane.ERROR_MESSAGE);
 			return;
 		    }
-
-		    ModuleLoader2.addClass(classname);
-		    handleSettingsTabRefresh();
 		}
 	    });
 
