@@ -1,4 +1,4 @@
-// $Id: UMLActionArgumentListModel.java,v 1.4 2005/11/14 03:55:52 tfmorris Exp $
+// $Id: UMLActionArgumentListModel.java,v 1.5 2006/02/12 16:26:31 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
 public class UMLActionArgumentListModel extends UMLModelElementListModel2 {
 
     public UMLActionArgumentListModel() {
-        super("arguments");
+        super("actualArgument");
     }
 
     protected void buildModelList() {
