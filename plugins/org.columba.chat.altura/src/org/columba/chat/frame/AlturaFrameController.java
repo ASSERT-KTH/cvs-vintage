@@ -18,12 +18,11 @@
 package org.columba.chat.frame;
 
 import java.awt.BorderLayout;
-import java.io.IOException;
 import java.io.InputStream;
 
-import javax.swing.JComponent;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
+import javax.swing.JScrollPane;
 
 import org.columba.api.gui.frame.IContainer;
 import org.columba.chat.api.IAlturaFrameMediator;
@@ -34,13 +33,15 @@ import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.DefaultFrameController;
+import org.columba.core.gui.docking.DockableView;
+import org.columba.core.gui.frame.DockFrameController;
+import org.flexdock.docking.DockingConstants;
 
 /**
  * @author fdietz
  * 
  */
-public class AlturaFrameController extends DefaultFrameController implements
+public class AlturaFrameController extends DockFrameController implements
 		IAlturaFrameMediator {
 
 	private RoasterTree tree;
@@ -48,6 +49,10 @@ public class AlturaFrameController extends DefaultFrameController implements
 	private PresenceComboBox presence;
 
 	private ConversationController conversation;
+
+	private DockableView treePanel;
+
+	private DockableView conversationPanel;
 
 	/**
 	 * @param c
@@ -60,31 +65,48 @@ public class AlturaFrameController extends DefaultFrameController implements
 		presence = new PresenceComboBox();
 		conversation = new ConversationController(this);
 
+		registerDockables();
 		// connect to server
 		// new ConnectAction(this).actionPerformed(null);
 
 	}
 
-	/**
-	 * @see org.columba.api.gui.frame.IContentPane#getComponent()
-	 */
-	public JComponent getComponent() {
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		splitPane.setDividerLocation(200);
+	public String[] getDockableIds() {
+		return new String[] { "roaster_tree", "conversation_view" };
+	}
+
+	public void registerDockables() {
+		// init dockable panels
+		treePanel = new DockableView("roaster_tree", "Roaster");
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
 
-		splitPane.add(leftPanel, JSplitPane.LEFT);
-
-		leftPanel.add(tree, BorderLayout.CENTER);
+		JScrollPane treeScrollPane = new JScrollPane(tree);
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		leftPanel.add(treeScrollPane, BorderLayout.CENTER);
 		leftPanel.add(presence, BorderLayout.SOUTH);
+		
+		treePanel.setContentPane(leftPanel);
 
-		splitPane.add(conversation, JSplitPane.RIGHT);
+		conversationPanel = new DockableView("conversation_view", "Conversation");
 
-		return splitPane;
+		conversationPanel.setContentPane(conversation);
+
 	}
 
+
+	/**
+	 * @see org.columba.core.gui.frame.DockFrameController#loadDefaultPosition()
+	 */
+	public void loadDefaultPosition() {
+
+		 super.dock(conversationPanel, DockingConstants.CENTER_REGION);
+		 conversationPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
+		
+		 super.setSplitProportion(conversationPanel, 0.35f);
+	}
+	
 	/**
 	 * @see org.columba.chat.api.IAlturaFrameMediator#getRoasterTree()
 	 */
