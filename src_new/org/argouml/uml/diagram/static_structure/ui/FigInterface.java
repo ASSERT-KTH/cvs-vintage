@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.140 2006/02/10 18:27:10 bobtarling Exp $
+// $Id: FigInterface.java,v 1.141 2006/02/12 14:56:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -374,44 +374,6 @@ public class FigInterface extends FigClassifierBox {
         if (sel instanceof SelectionClass) {
             ((SelectionClass) sel).hideButtons();
         }
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // user interaction methods
-
-    /**
-     * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-     */
-    // TODO: Review - should be keyTyped()??? - Bob
-    public void keyPressed(KeyEvent ke) {
-        int key = ke.getKeyCode();
-        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN) {
-            CompartmentFigText ft = unhighlight();
-            if (ft != null) {
-                int i = operationsFig.getFigs().indexOf(ft);
-                if (i != -1) {
-                    if (key == KeyEvent.VK_UP) {
-                        ft =
-                                (CompartmentFigText)
-                                getPreviousVisibleFeature(ft, i);
-                    } else {
-                        ft =
-                                (CompartmentFigText)
-                                getNextVisibleFeature(ft, i);
-                    }
-                    if (ft != null) {
-                        ft.setHighlighted(true);
-                        highlightedFigText = ft;
-                        return;
-                    }
-                }
-            }
-        } else if (key == KeyEvent.VK_ENTER && highlightedFigText != null) {
-            highlightedFigText.startTextEditor(ke);
-            ke.consume();
-            return;
-        }
-        super.keyPressed(ke);
     }
 
     /**

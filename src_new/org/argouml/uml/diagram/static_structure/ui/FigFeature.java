@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.17 2006/02/10 18:27:10 bobtarling Exp $
+// $Id: FigFeature.java,v 1.18 2006/02/12 14:56:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,42 +71,6 @@ public class FigFeature extends CompartmentFigText {
          */
         public void hitHandle(Rectangle r, Handle h) {
         }
-
-        /**
-         * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-         */
-        // TODO: Review - should be keyTyped()??? - Bob
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_DOWN
-                || e.getKeyCode() == KeyEvent.VK_UP) {
-
-                Fig fig = getGroup().getGroup();
-                if (fig instanceof FigClass) {
-                    FigGroup group = (FigGroup) getGroup();
-                // TODO: in future version of GEF call getFigs returning array
-                    Object[] figs = group.getFigs().toArray();
-                    for (int i = 1; i < figs.length; i++) {
-			// the first element is no attr or oper
-                        if (figs[i].equals(getContent())) {
-                            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                                if (i < figs.length - 1) {
-                                    TargetManager.getInstance().setTarget(
-                                        figs[i + 1]);
-                                }
-                            } else if (i > 1) {
-                                TargetManager.getInstance().setTarget(
-                                    figs[i - 1]);
-
-                            }
-                            e.consume();
-                            return;
-                        }
-                    }
-                }
-
-            }
-        }
-
     }
 
     /**

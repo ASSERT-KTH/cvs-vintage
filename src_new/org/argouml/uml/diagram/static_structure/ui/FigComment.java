@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.66 2006/02/10 18:27:10 bobtarling Exp $
+// $Id: FigComment.java,v 1.67 2006/02/12 14:56:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -309,8 +309,24 @@ public class FigComment
     /**
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
-    // TODO: Review - should be keyTyped()? - Bob
     public void keyPressed(KeyEvent ke) {
+    }
+
+    /**
+     * Not used, do nothing.
+     *
+     * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+     */
+    public void keyReleased(KeyEvent ke) {
+    }
+
+    /**
+     * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+     */
+    public void keyTyped(KeyEvent ke) {
+        if (Character.isISOControl(ke.getKeyChar())) {
+            return;
+        }
         if (!readyToEdit) {
             if (Model.getFacade().isAModelElement(getOwner())) {
                 storeBody("");
@@ -326,21 +342,7 @@ public class FigComment
         if (getOwner() == null) {
             return;
         }
-        bodyTextFig.keyPressed(ke);
-    }
-
-    /**
-     * Not used, do nothing.
-     *
-     * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-     */
-    public void keyReleased(KeyEvent ke) {
-    }
-
-    /**
-     * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
-     */
-    public void keyTyped(KeyEvent ke) {
+        bodyTextFig.keyTyped(ke);
     }
 
     ////////////////////////////////////////////////////////////////

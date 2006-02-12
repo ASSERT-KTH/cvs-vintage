@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.14 2006/02/10 18:27:10 bobtarling Exp $
+// $Id: FigNodeAssociation.java,v 1.15 2006/02/12 14:56:31 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,6 +70,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
      * The constructor.
      */
     public FigNodeAssociation() {
+        setEditable(false);
         setBigPort(new FigDiamond(0, 0, 70, 70, Color.cyan, Color.cyan));
         head = new FigDiamond(0, 0, 70, 70, Color.black, Color.white);
         // Add the following to allow name editing on the diagram
@@ -282,17 +283,6 @@ public class FigNodeAssociation extends FigNodeModelElement {
             mutableGraphModel.removeEdge(owner);
         }
     }
-    ////////////////////////////////////////////////////////////////
-    // Event handlers
-
-    /**
-     * Block any textentry on the diagram - there is nothing to edit!
-     *
-     * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-     */
-    // TODO: Review - should be keyTyped()??? - Bob
-    public void keyPressed(KeyEvent ke) { }
-
 } /* end class FigNodeAssociation */
 
 

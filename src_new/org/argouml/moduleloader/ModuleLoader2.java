@@ -1,4 +1,4 @@
-// $Id: ModuleLoader2.java,v 1.7 2005/10/10 21:06:32 linus Exp $
+// $Id: ModuleLoader2.java,v 1.8 2006/02/12 14:56:29 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,6 +60,8 @@ import org.argouml.i18n.Translator;
  * @since 0.15.4
  */
 public final class ModuleLoader2 {
+    
+    
     /**
      * Logger.
      */
@@ -433,6 +435,7 @@ public final class ModuleLoader2 {
         // TODO: huntForInternalModules();
 	huntForModulesFromExtensionDir();
 	// TODO: huntForModulesFromJavaWebStart();
+    addClass("org.argouml.ui.DeveloperModule");
     }
 
     /**
@@ -596,10 +599,11 @@ public final class ModuleLoader2 {
      */
     private void addClass(ClassLoader classLoader, String classname) {
         Class moduleClass;
+        LOG.info("Loading module " + classname);
         try {
             moduleClass = classLoader.loadClass(classname);
         } catch (ClassNotFoundException e) {
-            LOG.debug("The class " + classname + " is not found.", e);
+            LOG.error("The class " + classname + " is not found.", e);
             return;
         }
 

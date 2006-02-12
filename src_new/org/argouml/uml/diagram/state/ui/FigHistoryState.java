@@ -1,4 +1,4 @@
-// $Id: FigHistoryState.java,v 1.18 2006/02/10 18:27:10 bobtarling Exp $
+// $Id: FigHistoryState.java,v 1.19 2006/02/12 14:56:30 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,7 @@ public abstract class FigHistoryState extends FigStateVertex {
      * Main constructor
      */
     public FigHistoryState() {
+        setEditable(false);
         setBigPort(new FigCircle(X, Y, WIDTH, HEIGHT, Color.cyan, Color.cyan));
         head = new FigCircle(X, Y, WIDTH, HEIGHT, Color.black, Color.white);
         h = new FigText(X, Y, WIDTH - 10, HEIGHT - 10);
@@ -192,16 +193,6 @@ public abstract class FigHistoryState extends FigStateVertex {
      * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
      */
     public void mouseClicked(MouseEvent me) {
-    }
-
-    /**
-     * Block any textentry on the diagram - there is nothing to edit!
-     *
-     * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-     */
-    // TODO: Review - should be keyTyped()or do we need this at all?
-    // Could we set readyToEdit=false?? - Bob
-    public void keyPressed(KeyEvent ke) {
     }
 
     static final long serialVersionUID = 6572261327347541373L;
