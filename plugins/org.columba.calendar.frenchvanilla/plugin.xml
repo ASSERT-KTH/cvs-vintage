@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="French Vanilla Calendar" 
+        description="French Vanilla Calendar Component" 
+        id="org.columba.calendar.frenchvanilla" 
+        version="1.0" 
+        category="Application" 
+        enabled="true">
+        
+  <extensionlist id="org.columba.core.component">
+    <extension id="FrenchVanillaCalendar" class="org.columba.calendar.CalendarComponent" />
+  </extensionlist>
+  <extensionlist id="org.columba.core.frame">
+    <extension id="CalendarFrame" class="org.columba.calendar.ui.frame.CalendarFrameMediator" >
+      <properties managed="true" /> 
+    </extension>
+  </extensionlist>
+  <extensionlist id="org.columba.core.action">
+    <extension id="GoBack" class="org.columba.calendar.ui.action.GoBackAction"/>
+    <extension id="Today" class="org.columba.calendar.ui.action.TodayAction"/>
+    <extension id="GoNext" class="org.columba.calendar.ui.action.GoNextAction"/>
+    <extension id="DayView" class="org.columba.calendar.ui.action.DayViewSelectableAction"/>
+    <extension id="WorkWeekView" class="org.columba.calendar.ui.action.WorkWeekViewSelectableAction"/>
+    <extension id="WeekView" class="org.columba.calendar.ui.action.WeekViewSelectableAction"/>
+    <extension id="MonthView" class="org.columba.calendar.ui.action.MonthViewSelectableAction"/>
+    <extension id="NewAppointment" class="org.columba.calendar.ui.action.NewAppointmentAction"/>
+    <extension id="NewAllDayAppointment" class="org.columba.calendar.ui.action.NewAllDayAppointmentAction"/>
+  </extensionlist>
+  
+</plugin>

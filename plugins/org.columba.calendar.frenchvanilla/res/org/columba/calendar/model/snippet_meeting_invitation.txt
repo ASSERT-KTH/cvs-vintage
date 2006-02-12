@@ -1,0 +1,25 @@
+The following is a snippet of an iCalendar XML document that
+specifies an invitation for a meeting.  The meeting occurs on the
+first Monday of each year for five years.
+
+  <iCalendar>
+   <vcalendar>
+   <method>REQUEST</method>
+   <version>2.0</version>
+   <prodid>-//hacksw/handcal//NONSGML 1.0//EN</prodid>
+   <vevent>
+    <uid>19981220T130000Z-123403@host.com</uid>
+    <dtstamp>19981220T130050Z</dtstamp>
+    <organizer>MAILTO:corprel@host.com</organizer>
+    <dtstart>19990104T140000Z</dtstart>
+    <dtend>19990104T220000Z</dtend>
+    <summary>Annual Stockholders Meeting</summary>
+    <location>One Corporate Drive, Wilmington, DL</location>
+    <attendee role="CHAIR">MAILTO:mrbig@host.com</attendee>
+    <attendee cutype="GROUP"
+              rsvp="TRUE">CAP:host.com/stockholders</attendee>
+    <categories>Business,Meeting,Special Occasion</categories>
+    <rrule>FREQ=YEARLY;COUNT=5;BYDAY=1MO</rrule>
+    </vevent>
+   </vcalendar>
+  </iCalendar>

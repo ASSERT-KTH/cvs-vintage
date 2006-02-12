@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menubar>
+
+	<menu id="menu_file" placeholderid="open">
+	 <menuitem id="NewAppointment" />
+	 <menuitem id="NewAllDayAppointment" />	
+	</menu>
+	
+	<menu id="menu_view" placeholderid="top">
+		<menuitem id="GoBack" />
+		<menuitem id="Today" />
+		<menuitem id="GoNext" />
+		<menu id="Show">
+			<checkboxmenuitem id="DayView" />
+			<checkboxmenuitem id="WorkWeekView" />
+			<checkboxmenuitem id="WeekView" />
+			<checkboxmenuitem id="MonthView" />
+		</menu>
+	</menu>
+	
+	<menu id="menu_utilities" placeholderid="bottom">
+	</menu>
+	
+</menubar>

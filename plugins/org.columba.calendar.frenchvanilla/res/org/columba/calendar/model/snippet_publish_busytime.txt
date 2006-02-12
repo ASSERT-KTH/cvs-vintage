@@ -1,0 +1,23 @@
+The following is an iCalendar XML document that publishes busy time
+information.  The default value for the "method" attribute is
+"PUBLISH" and does	not need to be specified in this example.
+
+
+
+  <iCalendar>
+   <vcalendar>
+    <version>2.0</version>
+    <prodid>-//hacksw/handcal//NONSGML 1.0//EN</prodid>
+    <vfreebusy>
+     <uid>19980313T133000@ical1.host.com</uid>
+     <dtstamp>19990104T133010Z</dtstamp>
+     <organizer>CAP:host.com/jsmith</organizer>
+     <dtstart>19980313T141711Z</dtstart>
+     <dtend>19980410T141711Z</dtend>
+     <url>jsmith.ifb</url>
+     <freebusy>19980314T233000Z/19980315T003000Z</freebusy>
+     <freebusy>19980316T153000Z/19980316T163000Z</freebusy>
+     <freebusy>19980318T030000Z/19980318T040000Z</freebusy>
+    </vfreebusy>
+   </vcalendar>
+  </iCalendar>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<toolbar visible="true">
+    <button action="NewAppointment"/>
+    <separator/>
+	<button action="GoBack"/>
+	<button action="Today"/>
+	<button action="GoNext"/>
+    <separator/>
+    <button action="DayView"/>
+    <button action="WorkWeekView"/>
+    <button action="WeekView"/>
+    <button action="MonthView"/>
+</toolbar>

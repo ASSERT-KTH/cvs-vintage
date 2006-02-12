@@ -1,0 +1,22 @@
+The following is a snippet of an iCalendar XML document for a to-do.
+
+<iCalendar>
+   <vcalendar>
+    <method>REQUEST</method>
+    <version>2.0</version>
+    <prodid>-//hacksw/handcal//NONSGML 1.0//EN</prodid>
+    <vtodo>
+     <uid>19990104T133402@ical1.host.com</uid>
+     <dtstamp>19990104T133410Z</dtstamp>
+     <dtstart value="DATE">19990104</dtstart>
+     <due value="DATE">19990129</due>
+     <organizer>MAILTO:dboss@host.com</organizer>
+     <summary>Periodic Self Review</summary>
+     <description>Complete your self review.
+     Contact me if you questions.</description>
+     <priority>1</priority>
+     <class>CONFIDENTIAL</class>
+     <attendee>CAP:dilbert@host.com</attendee>
+    </vtodo>
+   </vcalendar>
+  </iCalendar>
