@@ -1,9 +1,9 @@
 #!/bin/sh
-# $Id: build-release.sh,v 1.13 2005/09/20 20:49:18 linus Exp $
+# $Id: build-release.sh,v 1.14 2006/02/12 00:34:08 linus Exp $
 
 # The purpose of this shellscript is to make all the release work.
 
-CHILDPROJECTS="argouml-mdr argouml-csharp argouml-nb argouml-i18n-zh"
+CHILDPROJECTS="argouml-mdr argouml-csharp argouml-es argouml-nb argouml-i18n-zh"
 
 # Check that JAVA_HOME is set.
 if test ! -x $JAVA_HOME/bin/javac
