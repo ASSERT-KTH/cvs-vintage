@@ -24,6 +24,9 @@ public class DockableView extends AbstractDockable implements
 		PropertyChangeListener {
 
 	public static Color INACTIVE_LABEL_COLOR = UIManager
+			.getColor("Menu.foreground");
+
+	public static Color ACTIVE_LABEL_COLOR = UIManager
 			.getColor("Menu.selectionForeground");
 
 	private DockingPanel panel;
@@ -45,8 +48,8 @@ public class DockableView extends AbstractDockable implements
 
 		menuButton = titleBar.addButton(new MenuIcon(), new MenuAction(this
 				.getPersistentId()), BorderLayout.WEST);
-		titleBar.addButton(new PinIcon(), new PinAction(this
-				.getPersistentId()), BorderLayout.EAST);
+		titleBar.addButton(new PinIcon(),
+				new PinAction(this.getPersistentId()), BorderLayout.EAST);
 		titleBar.addButton(new MaximizeIcon(), new MaximizeAction(this
 				.getPersistentId()), BorderLayout.EAST);
 		titleBar.addButton(new CloseIcon(), new CloseAction(this
@@ -125,7 +128,7 @@ public class DockableView extends AbstractDockable implements
 			DockingManager.close(DockableView.this);
 		}
 	}
-	
+
 	class MaximizeAction extends AbstractAction {
 		String id;
 
@@ -136,7 +139,7 @@ public class DockableView extends AbstractDockable implements
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			//DockingManager.(DockableView.this);
+			// DockingManager.(DockableView.this);
 		}
 	}
 
@@ -178,7 +181,11 @@ public class DockableView extends AbstractDockable implements
 			int w = c.getWidth();
 			int h = c.getHeight();
 
-			g2.setColor(INACTIVE_LABEL_COLOR);
+			if (isActive())
+				g2.setColor(ACTIVE_LABEL_COLOR);
+			else
+				g2.setColor(INACTIVE_LABEL_COLOR);
+
 			g2.drawLine(x + 2, y + 2, w - 4, h - 4);
 			g2.drawLine(w - 4, y + 2, x + 2, h - 4);
 
@@ -199,7 +206,7 @@ public class DockableView extends AbstractDockable implements
 		}
 
 	}
-	
+
 	class PinIcon extends ImageIcon {
 
 		private PinIcon() {
@@ -209,11 +216,14 @@ public class DockableView extends AbstractDockable implements
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			Graphics2D g2 = (Graphics2D) g;
 
-			g2.setColor(INACTIVE_LABEL_COLOR);
-			g2.drawRect(3,2,4,4);
-			
-			g2.drawLine(2,2+4,2+4+2,2+4);
-			g2.drawLine(5,6,5,8);
+			if (isActive())
+				g2.setColor(ACTIVE_LABEL_COLOR);
+			else
+				g2.setColor(INACTIVE_LABEL_COLOR);
+			g2.drawRect(3, 2, 4, 4);
+
+			g2.drawLine(2, 2 + 4, 2 + 4 + 2, 2 + 4);
+			g2.drawLine(5, 6, 5, 8);
 
 		}
 
@@ -232,7 +242,6 @@ public class DockableView extends AbstractDockable implements
 		}
 
 	}
-	
 
 	class MaximizeIcon extends ImageIcon {
 
@@ -248,12 +257,14 @@ public class DockableView extends AbstractDockable implements
 			int w = c.getWidth();
 			int h = c.getHeight();
 
-			g2.setColor(INACTIVE_LABEL_COLOR);
-			g2.drawRect(2,3,5,5);
-			
-			g2.drawLine(3+1,1,3+6,1);
-			g2.drawLine(3+6,1,3+6,1+6-1);
-			
+			if (isActive())
+				g2.setColor(ACTIVE_LABEL_COLOR);
+			else
+				g2.setColor(INACTIVE_LABEL_COLOR);
+			g2.drawRect(2, 3, 5, 5);
+
+			g2.drawLine(3 + 1, 1, 3 + 6, 1);
+			g2.drawLine(3 + 6, 1, 3 + 6, 1 + 6 - 1);
 
 		}
 
@@ -272,7 +283,7 @@ public class DockableView extends AbstractDockable implements
 		}
 
 	}
-	
+
 	class MenuIcon extends ImageIcon {
 
 		private MenuIcon() {
@@ -296,7 +307,10 @@ public class DockableView extends AbstractDockable implements
 			yp[1] = y + 3;
 			yp[2] = y + 3 + (int) (h - 1) / 2 - 1;
 
-			g2.setColor(INACTIVE_LABEL_COLOR);
+			if (isActive())
+				g2.setColor(ACTIVE_LABEL_COLOR);
+			else
+				g2.setColor(INACTIVE_LABEL_COLOR);
 			g2.drawPolygon(xp, yp, 3);
 
 		}

@@ -54,7 +54,7 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 
 		Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
 		Options.setDefaultIconSize(new Dimension(16, 16));
-		Options.setPopupDropShadowEnabled(true);
+		//Options.setPopupDropShadowEnabled(true);
 		Options.setUseSystemFonts(true);
 
 		// UIManager
@@ -90,6 +90,10 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 				PlasticTheme t = PlasticLookAndFeel.createMyDefaultTheme();
 				LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
 			}
+			
+			
+			
+			
 		} catch (Exception e) {
 			System.err.println("Can't set look & feel:" + e);
 		}

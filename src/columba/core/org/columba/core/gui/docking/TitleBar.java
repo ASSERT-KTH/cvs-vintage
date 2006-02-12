@@ -235,11 +235,11 @@ class TitleBar extends JPanel {
 	public void updateUI() {
 		super.updateUI();
 
-		if (label != null) {
-			label.setForeground(UIManager.getColor("Menu.selectionForeground"));
-			label.setFont(UIManager.getFont("Label.font")
-					.deriveFont(Font.PLAIN));
-		}
+//		if (label != null) {
+//			label.setForeground(UIManager.getColor("Menu.selectionForeground"));
+//			label.setFont(UIManager.getFont("Label.font")
+//					.deriveFont(Font.PLAIN));
+//		}
 		//
 		// gradient = new GradientPainter(ACTIVE_START_COLOR, ACTIVE_MID_COLOR);
 		//

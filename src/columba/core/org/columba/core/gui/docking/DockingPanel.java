@@ -205,13 +205,13 @@ class DockingPanel extends JPanel implements DockingStub {
 		ACTIVE_START_COLOR = brighter(UIManager
 				.getColor("Menu.selectionBackground"));
 
-		INACTIVE_FILL_COLOR = brighter(UIManager.getColor("controlDkShadow"));
+		INACTIVE_FILL_COLOR = brighter(UIManager.getColor("controlShadow"));
 
-		INACTIVE_MID_COLOR = UIManager.getColor("controlDkShadow");
+		INACTIVE_MID_COLOR = UIManager.getColor("controlShadow");
 
 		INACTIVE_START_COLOR = UIManager.getColor("control");
 
-		INACTIVE_LABEL_COLOR = UIManager.getColor("Menu.selectionForeground");
+		INACTIVE_LABEL_COLOR = UIManager.getColor("Menu.foreground");
 
 		ACTIVE_LABEL_COLOR = UIManager.getColor("Menu.selectionForeground");
 
