@@ -55,6 +55,8 @@ public class Extension implements IExtension {
 	private IExtensionInterface cachedInstance;
 
 	/**
+	 * Constructor used by internal extensions
+	 * 
 	 * @param metadata
 	 */
 	public Extension(ExtensionMetadata metadata) {
@@ -64,6 +66,8 @@ public class Extension implements IExtension {
 	}
 
 	/**
+	 * Constructor used by external extensions.
+	 * 
 	 * @param pluginMetadata
 	 * @param metadata
 	 */
@@ -118,6 +122,23 @@ public class Extension implements IExtension {
 								className, arguments);
 					}
 				else {
+					// just in case that someone who developers on a plugin adds
+					// the plugin files to his classpath, we try to load them
+					// with
+					// the default classloader
+
+					// use default Java classlodaer
+					try {
+						plugin = new DefaultPluginLoader().loadPlugin(id,
+								className, arguments);
+						if ( plugin != null ) return plugin;
+						
+					} catch (Exception e) {
+						handleException(e);
+					} catch (Error e) {
+						handleException(e);
+					}
+
 					// external plugin
 					// -> use external classloader
 					if (className.endsWith(".groovy")) {
@@ -271,6 +292,11 @@ public class Extension implements IExtension {
 	 */
 	private URL[] getURLs(File file, String jarFile)
 			throws MalformedURLException {
+		if (file == null)
+			throw new IllegalArgumentException("file == null");
+		if (jarFile == null)
+			throw new IllegalArgumentException("jarFile == null");
+
 		List urlList = new Vector();
 
 		// plugin-directory
