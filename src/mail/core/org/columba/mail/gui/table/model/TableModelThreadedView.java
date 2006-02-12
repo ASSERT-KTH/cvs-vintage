@@ -114,7 +114,8 @@ public class TableModelThreadedView implements ModelVisitor {
 			if (hashtable.containsKey(inReply)) {
 
 				MessageNode parent = (MessageNode) hashtable.get(inReply);
-				parent.add(node);
+				if ( !parent.isNodeAncestor(node))
+					parent.add(node);
 
 				return true;
 			}
