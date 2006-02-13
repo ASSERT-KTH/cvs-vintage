@@ -1,4 +1,4 @@
-// $Id: TabResults.java,v 1.28 2006/02/12 14:56:29 bobtarling Exp $
+// $Id: TabResults.java,v 1.29 2006/02/13 09:10:09 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -300,6 +300,10 @@ public class TabResults
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
     public void keyPressed(KeyEvent e) {
+        if (!e.isConsumed() && e.getKeyChar() == KeyEvent.VK_ENTER) {
+            e.consume();
+            myDoubleClick(e.getSource());
+        }
     }
 
     /**
@@ -312,10 +316,6 @@ public class TabResults
      * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
      */
     public void keyTyped(KeyEvent e) {
-        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-            e.consume();
-            myDoubleClick(e.getSource());
-        }
     }
 
     ////////////////////////////////////////////////////////////////
