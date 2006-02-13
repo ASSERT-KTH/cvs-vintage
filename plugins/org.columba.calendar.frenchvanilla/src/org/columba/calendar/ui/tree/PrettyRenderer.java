@@ -58,6 +58,7 @@ import com.miginfocom.calendar.category.Category;
 import com.miginfocom.calendar.category.CategoryInteractionBroker;
 import com.miginfocom.calendar.category.CategoryStaticInteractor;
 import com.miginfocom.util.MigUtil;
+import com.miginfocom.util.PropertyKey;
 import com.miginfocom.util.gfx.GfxUtil;
 import com.miginfocom.util.gfx.RoundRectangle;
 import com.miginfocom.util.gfx.ShapeGradientPaint;
@@ -239,7 +240,7 @@ public class PrettyRenderer extends DefaultTreeCellRenderer {
 		catSelectedShape.setAttribute(AShape.A_IMAGE, check);
 
 		boolean isCatCateg = MigUtil.isTrue(category
-				.getProperty(CalendarTreeController.PROP_FILTERED));
+				.getProperty(PropertyKey.getKey(CalendarTreeController.PROP_FILTERED)));
 		textAShape.setAttribute(AShape.A_FONT, isCatCateg ? labelFontCateg
 				: labelFontNoCateg);
 

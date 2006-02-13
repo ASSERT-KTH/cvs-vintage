@@ -18,9 +18,7 @@
 package org.columba.calendar.ui.tree;
 
 import java.awt.AWTEvent;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -34,7 +32,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.tree.TreeCellRenderer;
@@ -44,7 +41,6 @@ import javax.swing.tree.TreePath;
 import org.columba.calendar.config.Config;
 import org.columba.calendar.ui.frame.CalendarFrameMediator;
 
-import com.miginfocom.ashape.AShapeComponent;
 import com.miginfocom.ashape.interaction.InteractionEvent;
 import com.miginfocom.ashape.interaction.InteractionListener;
 import com.miginfocom.ashape.interaction.Interactor;
@@ -55,6 +51,7 @@ import com.miginfocom.ashape.shapes.TextAShape;
 import com.miginfocom.calendar.category.Category;
 import com.miginfocom.calendar.category.CategoryDepository;
 import com.miginfocom.util.MigUtil;
+import com.miginfocom.util.PropertyKey;
 import com.miginfocom.util.gfx.GfxUtil;
 import com.miginfocom.util.gfx.RoundRectangle;
 import com.miginfocom.util.gfx.ShapeGradientPaint;
@@ -84,16 +81,17 @@ public class CalendarTreeController implements InteractionListener {
 
 		this.frameMediator = frameMediator;
 
-//		view = new JPanel();
-//		view.setLayout(new BorderLayout());
+		// view = new JPanel();
+		// view.setLayout(new BorderLayout());
 
 		// create north label component
-//		AShapeComponent labelAShape = new AShapeComponent();
-//		labelAShape.setShape(createLabelShape(), true);
-//		labelAShape.setPreferredSize(new Dimension(1, 20));
-//		labelAShape
-//				.setToolTipText("<html>Check the calendars that should be visible.</html>");
-//		view.add(labelAShape, BorderLayout.NORTH);
+		// AShapeComponent labelAShape = new AShapeComponent();
+		// labelAShape.setShape(createLabelShape(), true);
+		// labelAShape.setPreferredSize(new Dimension(1, 20));
+		// labelAShape
+		// .setToolTipText("<html>Check the calendars that should be
+		// visible.</html>");
+		// view.add(labelAShape, BorderLayout.NORTH);
 
 		// create default root nodes <Local> and <Web>
 		Category rootCategory = CategoryDepository.getRoot();
@@ -150,9 +148,9 @@ public class CalendarTreeController implements InteractionListener {
 
 		tree.setCellRenderer(new PrettyRenderer(this));
 
-//		JScrollPane treeScrollPane = new JScrollPane(tree);
-//		treeScrollPane.setBorder(null);
-//		view.add(treeScrollPane, BorderLayout.CENTER);
+		// JScrollPane treeScrollPane = new JScrollPane(tree);
+		// treeScrollPane.setBorder(null);
+		// view.add(treeScrollPane, BorderLayout.CENTER);
 
 	}
 
@@ -181,7 +179,7 @@ public class CalendarTreeController implements InteractionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -281,15 +279,17 @@ public class CalendarTreeController implements InteractionListener {
 				for (Iterator it = cats.iterator(); it.hasNext();) {
 					Category tmpCat = (Category) it.next();
 					if (tmpCat != category)
-						tmpCat.setProperty(CalendarFrameMediator.PROP_FILTERED,
+						tmpCat.setProperty(PropertyKey
+								.getKey(CalendarFrameMediator.PROP_FILTERED),
 								null, null);
 				}
 			}
 
 			// Toggle selection
-			boolean catOn = MigUtil.isTrue(category
-					.getProperty(CalendarFrameMediator.PROP_FILTERED));
-			category.setProperty(CalendarFrameMediator.PROP_FILTERED, Boolean
+			boolean catOn = MigUtil.isTrue(category.getProperty(PropertyKey
+					.getKey(CalendarFrameMediator.PROP_FILTERED)));
+			category.setProperty(PropertyKey
+					.getKey(CalendarFrameMediator.PROP_FILTERED), Boolean
 					.valueOf(!catOn), Boolean.TRUE);
 
 			frameMediator.getMainCalendarController().recreateFilterRows();

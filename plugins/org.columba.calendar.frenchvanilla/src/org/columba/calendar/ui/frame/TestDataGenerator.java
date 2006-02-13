@@ -160,7 +160,7 @@ public class TestDataGenerator {
 
 		ArrayList acts = ActivityHelper.createActivities(dr, TITLES, null,
 				CATEGORIES, null, 15 * 60000, 60 * 60000, 24 * 60 * 60000,
-				15 * 60000, 4 * 60 * 60000);
+				15 * 60000, 4 * 60 * 60000, 10000);
 		ActivityDepository.getInstance().addBrokedActivities(acts,
 				TestDataGenerator.class);
 

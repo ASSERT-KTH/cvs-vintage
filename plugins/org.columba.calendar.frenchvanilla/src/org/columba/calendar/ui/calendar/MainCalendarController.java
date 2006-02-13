@@ -37,6 +37,8 @@ import org.columba.calendar.model.ColumbaDateRange;
 
 import com.miginfocom.ashape.AShapeUtil;
 import com.miginfocom.ashape.DefaultAShapeProvider;
+import com.miginfocom.ashape.interaction.InteractionEvent;
+import com.miginfocom.ashape.interaction.InteractionListener;
 import com.miginfocom.ashape.interaction.MouseKeyInteractor;
 import com.miginfocom.ashape.layout.CutEdgeAShapeLayout;
 import com.miginfocom.ashape.shapes.AShape;
@@ -45,21 +47,25 @@ import com.miginfocom.ashape.shapes.DrawAShape;
 import com.miginfocom.ashape.shapes.FillAShape;
 import com.miginfocom.ashape.shapes.RootAShape;
 import com.miginfocom.ashape.shapes.TextAShape;
+import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.renderer.AShapeRenderer;
+import com.miginfocom.calendar.activity.view.ActivityView;
 import com.miginfocom.calendar.category.Category;
 import com.miginfocom.calendar.category.CategoryDepository;
 import com.miginfocom.calendar.category.CategoryFilter;
+import com.miginfocom.calendar.datearea.ActivityMoveEvent;
+import com.miginfocom.calendar.datearea.ActivityMoveListener;
 import com.miginfocom.calendar.datearea.DateArea;
 import com.miginfocom.calendar.datearea.DefaultDateArea;
 import com.miginfocom.calendar.datearea.ThemeDateArea;
 import com.miginfocom.calendar.datearea.ThemeDateAreaContainer;
 import com.miginfocom.calendar.grid.GridSegment;
 import com.miginfocom.calendar.header.CellDecorationRow;
-import com.miginfocom.calendar.layout.TimeBoundsLayout;
 import com.miginfocom.calendar.theme.CalendarTheme;
 import com.miginfocom.theme.Theme;
 import com.miginfocom.theme.Themes;
 import com.miginfocom.util.MigUtil;
+import com.miginfocom.util.PropertyKey;
 import com.miginfocom.util.dates.DateFormatList;
 import com.miginfocom.util.dates.DateRange;
 import com.miginfocom.util.dates.DateRangeI;
@@ -81,7 +87,8 @@ import com.miginfocom.util.repetition.DefaultRepetition;
  * @author fdietz
  * 
  */
-public class MainCalendarController {
+public class MainCalendarController implements InteractionListener,
+		ActivityMoveListener {
 
 	public static final int VIEW_MODE_DAY = 0;
 
@@ -95,7 +102,8 @@ public class MainCalendarController {
 
 	public static final String MAIN_DAYS_CONTEXT = "mainDays";
 
-	public static final RootAShape VERSHAPE = AShapeUtil.createDefault();
+	public static final RootAShape VERSHAPE = AShapeUtil
+			.createDefault(SwingConstants.VERTICAL);
 
 	public static final RootAShape HORSHAPE = MainCalendarController
 			.createTraslucentShapeHorizontal();
@@ -122,6 +130,10 @@ public class MainCalendarController {
 		}
 
 		setViewMode(currentViewMode);
+
+		((DefaultDateArea) view.getDateArea()).addInteractionListener(this);
+
+		((DefaultDateArea) view.getDateArea()).addActivityMoveListener(this);
 
 		// view.getDateArea().setActivitiesSupported(true);
 
@@ -160,12 +172,12 @@ public class MainCalendarController {
 
 		// activity should have 5pixel padding
 		/*
-		TimeBoundsLayout layout = new TimeBoundsLayout(new AtFixed(5),
-				new AtStart(5), new AtEnd(-5), 5);
-		theme.removeAllFromList(CalendarTheme.KEY_LAYOUTS_AUTO_INSTALL);
-		theme.addToList(CalendarTheme.KEY_LAYOUTS_AUTO_INSTALL, layout);
-		*/
-		
+		 * TimeBoundsLayout layout = new TimeBoundsLayout(new AtFixed(5), new
+		 * AtStart(5), new AtEnd(-5), 5);
+		 * theme.removeAllFromList(CalendarTheme.KEY_LAYOUTS_AUTO_INSTALL);
+		 * theme.addToList(CalendarTheme.KEY_LAYOUTS_AUTO_INSTALL, layout);
+		 */
+
 		/*
 		 * theme.putValue(CalendarTheme.KEY_DECORATORS_CELL_LABEL_FONT_DEFAULT,
 		 * defaultFont.deriveFont(Font.PLAIN, defaultFont.getSize() + 0));
@@ -193,16 +205,20 @@ public class MainCalendarController {
 		 * CellDecorationRow(DateRange.RANGE_TYPE_MINUTE, new
 		 * DateFormatList("mm"), null, defaultFont));
 		 */
-		
+
 		// gridlines
 		AtFixed min = new AtFixed(1);
-		AtFraction preferred = new AtFraction(0.1f); // Preferred can be absolute or relative
+		AtFraction preferred = new AtFraction(0.1f); // Preferred can be
+		// absolute or relative
 		AtFixed max = new AtFixed(4);
 		GridSegment segment = new GridSegment(0, min, preferred, max);
-		theme.addToList(CalendarTheme.KEY_GRID_SEGMENTS_ + "PrimaryDim#", 0, segment);
-		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_ + "PrimaryDim#");
-		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_ + "SecondaryDim#");
-		
+		theme.addToList(CalendarTheme.KEY_GRID_SEGMENTS_ + "PrimaryDim#", 0,
+				segment);
+		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_
+				+ "PrimaryDim#");
+		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_
+				+ "SecondaryDim#");
+
 		view.setThemeContext(MAIN_DAYS_CONTEXT);
 	}
 
@@ -401,17 +417,16 @@ public class MainCalendarController {
 		AShapeUtil.enableMouseOverCursor(root);
 		AShapeUtil.enableMouseOverState(outlineAShape);
 
-		AShapeUtil.addResizeBoxes(root, SwingConstants.HORIZONTAL, 4);
-
-		// addEnterExitOverride(outlineAShape, outlineAShape, AShape.A_PAINT,
-		// moOutlinePaint, false, true);
+		// AShapeUtil.addResizeBoxes(root, SwingConstants.HORIZONTAL, 4);
 
 		// Drag, resize interactions
-		String trigger = MouseKeyInteractor.MOUSE_PRESS;
+
 		Integer button = new Integer(MouseEvent.BUTTON1);
-		AShapeUtil.addMouseFireEvent(outlineAShape, trigger,
+		AShapeUtil.addMouseFireEvent(outlineAShape,
+				MouseKeyInteractor.MOUSE_PRESS,
 				DefaultDateArea.AE_SELECTED_PRESSED, true, false, button);
-		AShapeUtil.addMouseFireEvent(outlineAShape, trigger,
+		AShapeUtil.addMouseFireEvent(outlineAShape,
+				MouseKeyInteractor.MOUSE_PRESS,
 				DefaultDateArea.AE_DRAG_PRESSED, true, true, button);
 
 		AShapeUtil.addMouseEventBlock(outlineAShape, false, new Integer(
@@ -458,7 +473,8 @@ public class MainCalendarController {
 
 		for (Iterator it = cats.iterator(); it.hasNext();) {
 			Category cat = (Category) it.next();
-			if (MigUtil.isTrue(cat.getProperty(PROP_FILTERED)) == false)
+			if (MigUtil.isTrue(cat.getProperty(PropertyKey
+					.getKey(PROP_FILTERED))) == false)
 				it.remove();
 		}
 
@@ -486,4 +502,42 @@ public class MainCalendarController {
 		view.revalidate();
 		view.repaint();
 	}
+
+	public void interactionOccured(InteractionEvent e) {
+		Object value = e.getCommand().getValue();
+
+		if (MigUtil.equals(value, "MouseOver")) {
+			// mouse hovers over activity
+			Activity activity = ((ActivityView) e.getInteractor()
+					.getInteracted()).getModel();
+			System.out.println("MouseOver - activity=" + activity.getID());
+			System.out.println("summary=" + activity.getSummary());
+			System.out.println("description=" + activity.getDescription());
+
+		} else if (MigUtil.equals(value, "selectedPressed")) {
+			// left mouse click selected activity
+			Activity activity = ((ActivityView) e.getInteractor()
+					.getInteracted()).getModel();
+			System.out.println("Selected Pressed -  activity="
+					+ activity.getID());
+			System.out.println("summary=" + activity.getSummary());
+			System.out.println("description=" + activity.getDescription());
+
+			// TODO store selected activity to open edit dialog
+		}
+
+	}
+
+	// trigged if activity is moved or daterange is modified
+	public void activityMoved(ActivityMoveEvent e) {
+		Activity activity = e.getActivity();
+		System.out.println("Moved -  activity=" + activity.getID());
+		System.out.println("summary=" + activity.getSummary());
+		System.out.println("description=" + activity.getDescription());
+		ImmutableDateRange dateRange = activity.getBaseDateRange();
+		System.out.println("dateRange=" + dateRange);
+
+		// TODO update activity in backend
+	}
+
 }
