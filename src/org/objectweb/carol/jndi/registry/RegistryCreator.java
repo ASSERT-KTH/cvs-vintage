@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2004,2005 - INRIA (www.inria.fr)
+ * Copyright (C) 2004-2006 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryCreator.java,v 1.1 2005/10/19 13:40:36 benoitf Exp $
+ * $Id: RegistryCreator.java,v 1.2 2006/02/13 15:18:43 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -52,13 +52,14 @@ public class RegistryCreator {
      * @param port registry port
      * @param objectPort exported objects port
      * @param inetAddress ip to use for the bind (instead of using all interfaces)
+     * @param protocol associated protocol
      * @return a new Registry object
      * @throws RemoteException if registry cannot be built
      */
-    public static Registry createRegistry(int port, int objectPort, InetAddress inetAddress) throws RemoteException {
+    public static Registry createRegistry(int port, int objectPort, InetAddress inetAddress, String protocol) throws RemoteException {
         // used fixed port factory only if user want set the port
         if (objectPort > 0 || inetAddress != null) {
-            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(objectPort, inetAddress);
+            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(objectPort, inetAddress, protocol);
             return LocateRegistry.createRegistry(port, socketFactory, socketFactory);
         } else {
             return LocateRegistry.createRegistry(port);
@@ -75,7 +76,7 @@ public class RegistryCreator {
             if (args.length >= 1) {
                 regPort = Integer.parseInt(args[0]);
             }
-            createRegistry(regPort, 0, null);
+            createRegistry(regPort, 0, null, "irmi");
             System.out.println("Registry started on port " + regPort);
         } catch (Exception e) {
             e.printStackTrace();

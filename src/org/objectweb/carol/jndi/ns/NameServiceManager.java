@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
+ * Copyright (C) 2002-2006 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NameServiceManager.java,v 1.11 2005/04/07 15:07:07 benoitf Exp $
+ * $Id: NameServiceManager.java,v 1.12 2006/02/13 15:18:33 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -131,6 +131,9 @@ public class NameServiceManager {
             String k = (String) e.nextElement();
             NameService currentNS = (NameService) nsTable.get(k);
 
+            // Set the current configuration
+            ProtocolConfiguration pc = ConfigurationRepository.getConfiguration(k);
+            ConfigurationRepository.setCurrentConfiguration(pc);
             try {
                 currentNS.start();
                 if (TraceCarol.isInfoCarol()) {

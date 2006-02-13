@@ -25,11 +25,17 @@
  */
 package org.objectweb.carol.jndi.ns;
 
+import java.net.InetAddress;
+
 import org.objectweb.carol.cmi.Naming;
 import org.objectweb.carol.cmi.Registry;
 import org.objectweb.carol.cmi.RegistryImpl;
 import org.objectweb.carol.cmi.RegistryKiller;
 import org.objectweb.carol.cmi.DistributedEquiv;
+import org.objectweb.carol.jndi.registry.RMIManageableSocketFactory;
+import org.objectweb.carol.rmi.util.PortNumber;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.ConfigurationUtil;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -50,6 +56,17 @@ public class CmiRegistry extends AbsRegistry implements NameService {
     private static RegistryKiller cregk = null;
 
     /**
+     * Instance port number (firewall)
+     */
+    private static int objectPort = 0;
+
+    /**
+     * InetAddress to use for creating registry (by default use all interfaces)
+     */
+    private InetAddress registryInetAddress = null;
+
+
+    /**
      * Default constructor
      */
     public CmiRegistry() {
@@ -67,8 +84,39 @@ public class CmiRegistry extends AbsRegistry implements NameService {
             TraceCarol.debugJndiCarol("CmiRegistry.start() on port:" + getPort());
         }
         try {
+
+            // Set factory which allow to fix rmi port if defined and if running inside a server
+            if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
+                if (getConfigProperties() != null) {
+                    String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+                    objectPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName, "0"),
+                            propertyName);
+
+                    // Read if regstry should use a single interface
+                    propertyName = CarolDefaultValues.SERVER_JRMP_SINGLE_ITF;
+                    boolean useSingleItf = Boolean.valueOf(getConfigProperties().getProperty(propertyName, "false")).booleanValue();
+                    if (useSingleItf) {
+                        String url = getConfigProperties().getProperty(CarolDefaultValues.CAROL_PREFIX + ".jrmp." + CarolDefaultValues.URL_PREFIX);
+                        registryInetAddress = InetAddress.getByName(ConfigurationUtil.getHostOfUrl(url));
+                    }
+                } else {
+                    TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_JRMP_PORT
+                            + "' defined in carol.properties file.");
+                }
+            }
+
             if (!isStarted()) {
+
+                if (objectPort > 0) {
+                    TraceCarol.infoCarol("Using JRMP fixed server port number '" + objectPort + "'.");
+                }
+
+                if (registryInetAddress != null) {
+                    TraceCarol.infoCarol("Using Specific address to bind registry '" + registryInetAddress + "'.");
+                }
+
                 if (getPort() >= 0) {
+                    RMIManageableSocketFactory.register(objectPort, registryInetAddress, "cmi");
                     de = DistributedEquiv.start();
                     cregk = RegistryImpl.start(getPort());
                     // add a shudown hook for this process

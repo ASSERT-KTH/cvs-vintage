@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2005 - Bull S.A.
+ * Copyright (C) 2005-2006 - Bull S.A.
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RMIManageableSocketFactory.java,v 1.1 2005/10/19 13:40:36 benoitf Exp $
+ * $Id: RMIManageableSocketFactory.java,v 1.2 2006/02/13 15:18:33 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -30,12 +30,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.RMISocketFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Socket factory allowing to :
  *    - use a fixed port instead of a random port (when port is 0).
  *        (This is useful for firewall issues)
  *    - Bind on a specific IP address
+ *    - Supporting multiprotocol with a multi entries socket cache
  * @author Florent Benoit
  */
 public class RMIManageableSocketFactory extends RMISocketFactory {
@@ -46,19 +49,24 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
     private static RMISocketFactory factory = null;
 
     /**
-     * Server socket used for exported objects
+     * Server socket used for exported objects [one entry per protocol]
      */
-    private static ServerSocket exportedObjectfixedSocket = null;
+    private Map exportedObjectfixedSocket = new HashMap();
 
     /**
-     * port number for exporting Objects
+     * port number for exporting Objects [one entry per protocol]
      */
-    private int exportedObjectsPort;
+    private Map exportedObjectsPort = new HashMap();
 
     /**
-     * InetAddress used for bind on a specific IP
+     * Get the protocol from the port number
      */
-    private InetAddress inetAddress = null;
+    private Map mapPortProtocol = new HashMap();
+
+    /**
+     * InetAddress used for bind on a specific IP [one entry per protocol]
+     */
+    private Map inetAddress = new HashMap();
 
     /**
      * Constructor
@@ -68,8 +76,6 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
      */
     private RMIManageableSocketFactory(int port, InetAddress inetAddress) {
         super();
-        this.exportedObjectsPort = port;
-        this.inetAddress = inetAddress;
     }
 
     /**
@@ -82,20 +88,36 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
      * @see java.rmi.server.RMISocketFactory#createServerSocket(int)
      */
     public ServerSocket createServerSocket(int port) throws IOException {
-        if (port == 0 && exportedObjectfixedSocket != null) {
-            return exportedObjectfixedSocket;
+
+        // get the protocol from the port number
+        String protocol = (String) this.mapPortProtocol.get(Integer.toString(port));
+
+        // the Socket cache is indexed thru the key <protocol><port>
+        String key = null;
+        if (protocol != null && port > 0) {
+            key = protocol + port;
+            ServerSocket expss = (ServerSocket) exportedObjectfixedSocket.get(key);
+            if (expss != null) {
+                return expss;
+            }
         }
+
         ServerSocket ss = null;
 
-        if (inetAddress == null) {
+        if (inetAddress.get(protocol) == null) {
             ss = new ServerSocket(port);
         } else {
             // 0 value will be replaced by a default value
-            ss = new ServerSocket(port, 0, inetAddress);
+            ss = new ServerSocket(port, 0, (InetAddress) inetAddress.get(protocol));
         }
-        // Keep the socket for the exported object port
-        if (port == exportedObjectsPort && exportedObjectsPort > 0) {
-            exportedObjectfixedSocket = ss;
+        String strExpPort = (String) exportedObjectsPort.get(protocol);
+        int expPort = 0;
+        if (strExpPort != null) {
+            expPort = Integer.parseInt(strExpPort);
+        }
+        // Keep the socket in the cache for the exported object port
+        if (protocol != null && port > 0 && expPort == port) {
+            exportedObjectfixedSocket.put(key, ss);
         }
         return ss;
     }
@@ -118,12 +140,14 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
      * @param port given port number for exporting objects
      * @param inetAddress ip to use for the bind (instead of all),
      *                    if null take default 0.0.0.0 listener
+     * @param protocol protocol associated with the [port, inetAddress]
      * @throws RemoteException if the registration is not possible
      */
-    public static RMISocketFactory register(int port, InetAddress inetAddress) throws RemoteException {
+    public static RMISocketFactory register(int port, InetAddress inetAddress, String protocol) throws RemoteException {
+        // The factory is a singleton and supports multiprotocol by being able to register
+        // parameters for each protocol
         if (factory == null) {
             factory = new RMIManageableSocketFactory(port, inetAddress);
-
             // Registring as default socket factory
             try {
                 RMISocketFactory.setSocketFactory(factory);
@@ -131,10 +155,49 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
             } catch (IOException ioe) {
                 throw new RemoteException("Cannot set the default registry factory :", ioe);
             }
-
-
         }
+        ((RMIManageableSocketFactory) factory).setPort(protocol, port);
+        ((RMIManageableSocketFactory) factory).setInetAddress(protocol, inetAddress);
         return factory;
     }
+
+    /**
+     * Get the factory instance, null if not created
+     * @return the factory
+     */
+    public static RMISocketFactory getFactory() {
+        return factory;
+    }
+
+    /**
+     * Set the port for exporting the object
+     * @param protocol protocol under RMI
+     * @param port port number
+     * @throws RemoteException if the port is already set
+     */
+    private void setPort(String protocol, int  port) throws RemoteException  {
+        if (this.exportedObjectsPort.get(protocol) != null) {
+            throw new RemoteException("Port already set for the protocol : " + port + " " + protocol);
+        }
+        this.exportedObjectsPort.put(protocol, Integer.toString(port));
+        if (port > 0) {
+            this.mapPortProtocol.put(Integer.toString(port), protocol);
+        }
+    }
+
+    /**
+     * Set the InetAddress for exporting the object
+     * @param protocol protocol under RMI
+     * @param inetAddress inetAddress
+     * @throws RemoteException if the inetAddress is already set
+     */
+    private void setInetAddress(String protocol, InetAddress inetAddress) throws RemoteException  {
+        if (this.inetAddress.get(protocol) != null) {
+            throw new RemoteException("Port already set for the protocol : " + inetAddress + " " + protocol);
+        }
+        this.inetAddress.put(protocol, inetAddress);
+    }
+
+
 
 }

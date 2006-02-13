@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2004,2005 - INRIA (www.inria.fr)
+ * Copyright (C) 2004-2006 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ManageableRegistry.java,v 1.1 2005/10/19 13:40:36 benoitf Exp $
+ * $Id: ManageableRegistry.java,v 1.2 2006/02/13 15:18:33 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry.jrmp;
@@ -42,6 +42,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.objectweb.carol.jndi.registry.RMIManageableSocketFactory;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 import sun.rmi.registry.RegistryImpl;
 
@@ -234,7 +236,19 @@ public class ManageableRegistry extends RegistryImpl {
     public static Registry createManagableRegistry(int port, int objectPort, InetAddress inetAddress) throws RemoteException {
         // used fixed port factory only if user want set the port
         if (objectPort > 0 || inetAddress != null) {
-            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(objectPort, inetAddress);
+
+            String protocol = null;
+            try {
+                protocol = ConfigurationRepository.getCurrentConfiguration().getProtocol().getName();
+            } catch (Exception e) {
+                protocol = null;
+            }
+            if (protocol == null || protocol.equals("")) {
+                TraceCarol.infoCarol("Unknown protocol - setting jrmp");
+                protocol = "jrmp";
+            }
+
+            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(objectPort, inetAddress, protocol);
             return new ManageableRegistry(port, socketFactory, socketFactory);
         } else {
             return new ManageableRegistry(port);

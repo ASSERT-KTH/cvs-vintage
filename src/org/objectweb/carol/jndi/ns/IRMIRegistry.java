@@ -1,3 +1,27 @@
+/**
+ * Copyright (C) 2006 - INRIA
+ *
+ * CAROL: Common Architecture for RMI ObjectWeb Layer
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ * USA
+ *
+ * --------------------------------------------------------------------------
+ * $Id: IRMIRegistry.java,v 1.4 2006/02/13 15:18:33 pelletib Exp $
+ * --------------------------------------------------------------------------
+ */
 package org.objectweb.carol.jndi.ns;
 
 import java.net.InetAddress;
@@ -9,6 +33,7 @@ import java.rmi.server.UnicastRemoteObject;
 import org.objectweb.carol.jndi.registry.RegistryCreator;
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 import org.objectweb.carol.util.configuration.ConfigurationUtil;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
@@ -89,7 +114,17 @@ public class IRMIRegistry extends AbsRegistry implements NameService {
                 }
 
                 if (getPort() >= 0) {
-                    registry = RegistryCreator.createRegistry(getPort(), objectPort, registryInetAddress);
+                    String protocol = null;
+                    try {
+                        protocol = ConfigurationRepository.getCurrentConfiguration().getProtocol().getName();
+                    } catch (Exception e) {
+                        protocol = null;
+                    }
+                    if (protocol == null || protocol.equals("")) {
+                        TraceCarol.infoCarol("Unknown protocol - setting irmi");
+                        protocol = "irmi";
+                    }
+                    registry = RegistryCreator.createRegistry(getPort(), objectPort, registryInetAddress, protocol);
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
 
