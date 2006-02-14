@@ -1,4 +1,4 @@
-// $Id: StylePanelFigText.java,v 1.13 2005/11/13 11:01:12 linus Exp $
+// $Id: StylePanelFigText.java,v 1.14 2006/02/14 15:53:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,7 +139,7 @@ public class StylePanelFigText extends StylePanelFig {
     }
 
     /**
-     * Refresh the text element with all selected values.
+     * Refresh the style panel when the Fig has been altered.
      *
      * @see org.argouml.ui.TabTarget#refresh()
      */
@@ -177,11 +177,15 @@ public class StylePanelFigText extends StylePanelFig {
             textColorField.setSelectedItem(c);
         }
 
-        c = ft.getFillColor();
-        getFillField().setSelectedItem(c);
-        if (c != null && !getFillField().getSelectedItem().equals(c)) {
-            getFillField().insertItemAt(c, getFillField().getItemCount() - 1);
-            getFillField().setSelectedItem(c);
+        if (ft.getFilled()) {
+            Color fc = ft.getFillColor();
+            getFillField().setSelectedItem(fc);
+            if (fc != null && !getFillField().getSelectedItem().equals(fc)) {
+                getFillField().insertItemAt(fc, getFillField().getItemCount() - 1);
+                getFillField().setSelectedItem(fc);
+            }
+        } else {
+            getFillField().setSelectedIndex(0);
         }
     }
 
