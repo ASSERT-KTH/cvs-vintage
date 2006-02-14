@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.36 2005/12/09 17:24:14 mvw Exp $
+// $Id: FigState.java,v 1.37 2006/02/14 22:38:09 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,21 +145,17 @@ public abstract class FigState extends FigStateVertex {
             // transitions since that doesn't change the fig.
         } else if (getOwner() != null)
             if (Model.getFacade().getInternalTransitions(getOwner())
-                .contains(mee.getSource())
-                || // the internal transitions
-                (mee.getSource() == Model.getFacade().getEntry(getOwner()))
-                || // the entry
-                (mee.getSource() == Model.getFacade().getExit(getOwner()))
-                || // the exit
-                (mee.getSource() == Model.getFacade().getDoActivity(getOwner()))
-                || // the doacitivity
-                Model.getFacade().getDeferrableEvents(getOwner()).contains(
-                        mee.getSource())) {
-            // the defered events
-            updateInternal();
-            updateListeners(getOwner());
-            damage();
-        }
+                    .contains(mee.getSource())
+                    || (mee.getSource() == Model.getFacade().getEntry(getOwner()))
+                    || (mee.getSource() == Model.getFacade().getExit(getOwner()))
+                    || (mee.getSource() 
+                            == Model.getFacade().getDoActivity(getOwner()))
+                    || Model.getFacade().getDeferrableEvents(getOwner()).contains(
+                            mee.getSource())) {
+                updateInternal();
+                updateListeners(getOwner());
+                damage();
+            }
 
     }
 
@@ -228,7 +224,7 @@ public abstract class FigState extends FigStateVertex {
         if (state == null) {
             return;
         }
-        if(notationProviderBody != null)
+        if (notationProviderBody != null)
             internal.setText(notationProviderBody.toString());
         calcBounds();
         setBounds(getBounds());
