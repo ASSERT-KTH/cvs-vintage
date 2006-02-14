@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.4 2005/12/20 07:54:43 tfmorris Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.5 2006/02/14 21:42:54 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -154,6 +154,7 @@ public interface ExtensionMechanismsHelper {
     /**
      * Set the baseclass of some stereotype.
      *
+     * @deprecated use addBaseClass
      * @param handle the stereotype
      * @param baseClass the baseclass
      */
@@ -178,6 +179,7 @@ public interface ExtensionMechanismsHelper {
     /**
      * Sets a value of some taggedValue.
      *
+     * @deprecated use addTaggedValue
      * @param handle is the tagged value
      * @param value is the value
      */
