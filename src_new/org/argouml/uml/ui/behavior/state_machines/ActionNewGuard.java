@@ -1,4 +1,4 @@
-// $Id: ActionNewGuard.java,v 1.9 2005/07/24 20:14:47 mvw Exp $
+// $Id: ActionNewGuard.java,v 1.10 2006/02/14 11:35:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,12 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
+ * The action to create a new Guard for a Transition. <p>
+ * 
+ * This action is (currently) not fit to create a guard for a transition 
+ * that already has one! If this functionality is needed, then 
+ * the old guard should be deleted before making a new one.
+ * 
  * @since Dec 15, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -60,6 +66,15 @@ public class ActionNewGuard extends AbstractActionNewModelElement {
      */
     public static ActionNewGuard getSingleton() {
         return singleton;
+    }
+
+    /**
+     * @see javax.swing.Action#isEnabled()
+     */
+    public boolean isEnabled() {
+        Object t = getTarget();
+        return t != null
+            && Model.getFacade().getGuard(t) == null;
     }
 
 }
