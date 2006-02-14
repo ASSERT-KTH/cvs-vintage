@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.36 2006/02/11 07:51:40 tfmorris Exp $
+// $Id: GenericArgoMenuBar.java,v 1.37 2006/02/14 01:58:32 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -424,7 +424,7 @@ public class GenericArgoMenuBar extends JMenuBar
         setMnemonic(saveProjectItem, "Save");
         setAccelerator(saveProjectItem, ctrlS);
         fileToolbar.add((ActionSaveProject.getInstance()));
-        JMenuItem saveProjectAsItem = file.add(ActionSaveProjectAs.SINGLETON);
+        JMenuItem saveProjectAsItem = file.add(new ActionSaveProjectAs());
         setMnemonic(saveProjectAsItem, "SaveAs");
         JMenuItem revertToSavedItem = file.add(new ActionRevertToSaved());
         setMnemonic(revertToSavedItem, "Revert To Saved");

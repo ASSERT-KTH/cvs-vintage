@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.49 2005/12/19 18:53:16 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.50 2006/02/14 01:58:32 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,18 +54,9 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         Logger.getLogger(ActionSaveProjectAs.class);
 
     /**
-     * The singleton.
-     */
-    public static final ActionSaveProjectAs SINGLETON =
-        new ActionSaveProjectAs();
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
-
-    /**
      * The constructor.
      */
-    protected ActionSaveProjectAs() {
+    public ActionSaveProjectAs() {
         super(Translator.localize("action.save-project-as"),
                 ResourceLoaderWrapper.lookupIcon("action.save-project-as"));
     }
@@ -78,81 +69,6 @@ public class ActionSaveProjectAs extends ActionSaveProject {
      */
     public void actionPerformed(ActionEvent e) {
         LOG.info("Performing saveas action");
-        trySave(false);
+        ProjectBrowser.getInstance().trySaveAs(false);
     }
-
-    /**
-     * @see org.argouml.uml.ui.ActionSaveProject#trySave(boolean)
-     */
-    public boolean trySave(boolean overwrite) {
-        File f = getNewFile();
-        if (f == null) {
-            return false;
-        }
-
-        boolean success = ProjectBrowser.getInstance().trySave(overwrite, f);
-        if (success) {
-            ProjectBrowser.getInstance().buildTitle(
-                ProjectManager.getManager().getCurrentProject().getName());
-        }
-        return success;
-    }
-
-    /**
-     * @return the File to save to
-     */
-    protected File getNewFile() {
-        ProjectBrowser pb = ProjectBrowser.getInstance();
-        Project p = ProjectManager.getManager().getCurrentProject();
-
-        JFileChooser chooser = null;
-        URL url = p.getURL();
-        if ((url != null) && (url.getFile().length() > 0)) {
-            chooser = new JFileChooser(url.getFile());
-        }
-        if (chooser == null) {
-            chooser = new JFileChooser();
-        }
-
-        if (url != null) {
-            chooser.setSelectedFile(new File(url.getFile()));
-        }
-
-        String sChooserTitle =
-	    Translator.localize("filechooser.save-as-project");
-        chooser.setDialogTitle(sChooserTitle + " " + p.getName());
-
-        chooser.setAcceptAllFileFilterUsed(false);
-        PersistenceManager.getInstance().setSaveFileChooserFilters(chooser);
-
-        String fn = Configuration.getString(
-                PersistenceManager.KEY_PROJECT_NAME_PATH);
-        if (fn.length() > 0) {
-            fn = PersistenceManager.getInstance().getBaseName(fn);
-            chooser.setSelectedFile(new File(fn));
-        }
-
-        int retval = chooser.showSaveDialog(pb);
-        if (retval == JFileChooser.APPROVE_OPTION) {
-            File theFile = chooser.getSelectedFile();
-            AbstractFilePersister filter =
-                (AbstractFilePersister) chooser.getFileFilter();
-            if (theFile != null) {
-                Configuration.setString(
-                        PersistenceManager.KEY_PROJECT_NAME_PATH,
-                        PersistenceManager.getInstance().getBaseName(
-                                theFile.getPath()));
-                String name = theFile.getName();
-                if (!name.endsWith("." + filter.getExtension())) {
-                    theFile =
-                        new File(
-                            theFile.getParent(),
-                            name + "." + filter.getExtension());
-                }
-            }
-            return theFile;
-        }
-        return null;
-    }
-
 } /* end class ActionSaveProjectAs */

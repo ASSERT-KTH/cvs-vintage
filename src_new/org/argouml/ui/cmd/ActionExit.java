@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.3 2005/12/06 02:09:54 bobtarling Exp $
+// $Id: ActionExit.java,v 1.4 2006/02/14 01:58:32 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,8 +62,8 @@ public class ActionExit extends UMLAction
      * The constructor.
      */
     public ActionExit() {
-	super ("action.exit", NO_ICON);
-	active = false;
+        super ("action.exit", NO_ICON);
+        active = false;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -75,44 +75,7 @@ public class ActionExit extends UMLAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed (ActionEvent ae) {
-	ProjectBrowser pb = ProjectBrowser.getInstance();
-	Project p = ProjectManager.getManager().getCurrentProject();
-
-	if (p != null && ActionSaveProject.getInstance().isEnabled() && !active) {
-	    active = true;
-	    String t =
-		MessageFormat.format(Translator.localize(
-			"optionpane.exit-save-changes-to"),
-			new Object[] {p.getName()});
-	    int response =
-		JOptionPane.showConfirmDialog(pb, t, t,
-					      JOptionPane.YES_NO_CANCEL_OPTION);
-
-	    if (response == JOptionPane.CANCEL_OPTION
-            	|| response == JOptionPane.CLOSED_OPTION) {
-		active = false;
-		return;
-	    }
-	    if (response == JOptionPane.YES_OPTION) {
-		boolean safe = false;
-
-		if (ActionSaveProject.getInstance().isEnabled()) {
-		    safe = ProjectBrowser.getInstance().trySave (true);
-		}
-		if (!safe) {
-		    safe = ActionSaveProjectAs.SINGLETON.trySave (false);
-		}
-		if (!safe) {
-		    active = false;
-		    return;
-		}
-	    }
-	    active = false;
-	}
-	if (!active) {
-	    Configuration.save();
-	    doCommand(null);
-	}
+	    ProjectBrowser.getInstance().tryExit();
     }
 
 
@@ -125,8 +88,8 @@ public class ActionExit extends UMLAction
      * @see org.argouml.application.api.CommandLineInterface#doCommand(java.lang.String)
      */
     public boolean doCommand(String argument) {
-        System.exit (0);
-	return true;
+        System.exit(0);
+        return true;
     }
 
     /**

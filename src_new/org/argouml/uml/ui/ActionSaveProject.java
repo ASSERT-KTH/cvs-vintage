@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.53 2005/12/13 12:49:14 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.54 2006/02/14 01:58:32 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,7 @@ public class ActionSaveProject extends AbstractAction {
             ProjectManager.getManager().getCurrentProject() != null
             ? ProjectManager.getManager().getCurrentProject().getURL() : null;
         if (url == null) {
-            ActionSaveProjectAs.SINGLETON.actionPerformed(e);
+            ProjectBrowser.getInstance().trySaveAs(true);
         } else {
             ProjectBrowser.getInstance().trySave(true);
         }
