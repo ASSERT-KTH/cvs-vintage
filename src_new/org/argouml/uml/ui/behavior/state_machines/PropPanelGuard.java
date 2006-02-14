@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.41 2005/09/08 18:23:59 mkl Exp $
+// $Id: PropPanelGuard.java,v 1.42 2006/02/14 12:52:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,10 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextArea;
 
 import org.argouml.i18n.Translator;
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateTransition;
 import org.argouml.uml.ui.UMLExpressionBodyField;
@@ -44,6 +45,7 @@ import org.argouml.util.ConfigLoader;
  * A property panel for Guards. Rewrote this class to comply to
  * Bob Tarling's layout mechanism and to include all valid
  * properties as defined in the UML 1.3 spec.
+ * 
  * @since Dec 14, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -72,10 +74,11 @@ public class PropPanelGuard extends PropPanelModelElement {
 
         UMLExpressionModel2 expressionModel =
             new UMLExpressionExpressionModel(this, "expression");
+        JTextArea ebf = new UMLExpressionBodyField(expressionModel, true);
+        ebf.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        ebf.setRows(3); // make it take up all remaining height
         addField(Translator.localize("label.expression"),
-            new JScrollPane(new UMLExpressionBodyField(expressionModel, true),
-            ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+            new JScrollPane(ebf));
         addField(Translator.localize("label.language"),
                 new UMLExpressionLanguageField(expressionModel, true));
 
