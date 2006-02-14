@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.7 2005/11/13 11:01:15 linus Exp $
+// $Id: ActionBaseDelete.java,v 1.8 2006/02/14 16:26:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.diagram.ui.ActionDeleteConcurrentRegion;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.Diagram;
@@ -178,6 +179,8 @@ public abstract class ActionBaseDelete extends UMLAction {
                     newTarget = p.getRoot();
                 }
             }
+        } else if (target instanceof CommentEdge) {
+            newTarget = ((CommentEdge)target).getSource();
         } else {
             newTarget = p.getRoot();
         }
@@ -230,6 +233,9 @@ public abstract class ActionBaseDelete extends UMLAction {
             } else {
                 sure = true;
             }
+        } else if (target instanceof CommentEdge) {
+            // we can delete CommentEdge now too thanks to issue 3643.
+            sure = true;
         }
         return sure;
     }
