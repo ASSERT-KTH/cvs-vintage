@@ -309,10 +309,8 @@ public class HeaderViewer extends JPanel {
 		if (mediator instanceof ThreePaneMailFrameController) {
 			final ThreePaneMailFrameController c = (ThreePaneMailFrameController) mediator;
 			// get header from folder
-			Header header2 = folder.getHeaderFields(uid,
-					new String[] { "Subject" });
+			final String title = (String) folder.getAttribute(uid, "columba.subject");
 
-			final String title = header2.get("Subject");
 			// awt-event-thread
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
