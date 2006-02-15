@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.35 2005/11/13 11:01:16 linus Exp $
+// $Id: PropPanelReception.java,v 1.36 2006/02/15 20:00:58 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLTextArea2;
@@ -87,9 +88,8 @@ public class PropPanelReception extends PropPanelModelElement {
                 new UMLReceptionSpecificationDocument());
         specText.setLineWrap(true);
         specText.setRows(5);
-        JScrollPane specificationScroll = new JScrollPane(specText,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        specText.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        JScrollPane specificationScroll = new JScrollPane(specText);
         addField(Translator.localize("label.specification"),
                 specificationScroll);
 
