@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.206 2006/02/12 14:56:31 bobtarling Exp $
+// $Id: FigClass.java,v 1.207 2006/02/16 23:57:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -464,80 +464,6 @@ public class FigClass extends FigClassifierBox
             Dimension operMin = getOperationsFig().getMinimumSize();
             aSize.width = Math.max(aSize.width, operMin.width);
             aSize.height += operMin.height;
-        }
-
-        // we want to maintain a minimum width for the class
-        aSize.width = Math.max(60, aSize.width);
-
-        // And now aSize has the answer
-
-        return aSize;
-    }
-    /**
-     * Gets the minimum size permitted for a class on the diagram.<p>
-     *
-     * @return  the size of the minimum bounding box.
-     */
-    public Dimension getMinimumSizeSingleStereotype() {
-
-        // Use "aSize" to build up the minimum size. Start with the size of the
-        // name compartment and build up.
-
-        Dimension aSize = getNameFig().getMinimumSize();
-
-        // If we have a stereotype displayed, then allow some space for that
-        // (width and height)
-
-        if (getStereotypeFig().isVisible()) {
-            aSize.width =
-		Math.max(aSize.width,
-			 getStereotypeFig().getMinimumSize().width);
-            aSize.height += STEREOHEIGHT;
-        }
-
-        // Allow space for each of the attributes we have
-
-        if (getAttributesFig().isVisible()) {
-
-            // Loop through all the attributes, to find the widest (remember
-            // the first fig is the box for the whole lot, so ignore it).
-
-            Iterator it = getAttributesFig().getFigs().iterator();
-            it.next(); // Ignore first element
-
-            while (it.hasNext()) {
-                int elemWidth =
-		    ((FigText) it.next()).getMinimumSize().width + 2;
-                aSize.width = Math.max(aSize.width, elemWidth);
-            }
-
-            // Height allows one row for each attribute (remember to ignore the
-            // first element.
-
-            aSize.height +=
-		ROWHEIGHT * Math.max(1,
-		        getAttributesFig().getFigs().size() - 1) + 1;
-        }
-
-        // Allow space for each of the operations we have
-
-        if (isOperationsVisible()) {
-
-            // Loop through all the operations, to find the widest (remember
-            // the first fig is the box for the whole lot, so ignore it).
-
-            Iterator it = getOperationsFig().getFigs().iterator();
-            it.next(); // ignore
-
-            while (it.hasNext()) {
-                int elemWidth =
-		    ((FigText) it.next()).getMinimumSize().width + 2;
-                aSize.width = Math.max(aSize.width, elemWidth);
-            }
-
-            aSize.height +=
-		ROWHEIGHT * Math.max(1,
-		        getOperationsFig().getFigs().size() - 1) + 1;
         }
 
         // we want to maintain a minimum width for the class
