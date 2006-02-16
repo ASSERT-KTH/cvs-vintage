@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.128 2005/11/13 11:01:15 linus Exp $
+// $Id: PropPanel.java,v 1.129 2006/02/16 18:44:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,7 +104,6 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
         super(title);
         setOrientation(orientation);
         buttonPanel = new ToolBar();
-        buttonPanel.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
         buttonPanel.setFloatable(false);
 
         setLayout(new LabelledLayout(orientation == Vertical.getInstance()));
