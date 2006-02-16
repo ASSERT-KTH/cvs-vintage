@@ -1,4 +1,4 @@
-// $Id: DeveloperModule.java,v 1.2 2006/02/12 15:42:03 bobtarling Exp $
+// $Id: DeveloperModule.java,v 1.3 2006/02/16 18:45:47 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,15 @@ public final class DeveloperModule implements ModuleInterface {
     public boolean disable() {
         GenericArgoMenuBar menubar =
             (GenericArgoMenuBar) ProjectBrowser.getInstance().getJMenuBar();
-        UndoEnabler.enabled = false;
+        JMenu editMenu = ProjectBrowser.getInstance().getJMenuBar().getMenu(1);
+        
+        editMenu.getMenuComponent(0).setVisible(false);
+        editMenu.getMenuComponent(1).setVisible(false);
+        UndoManager.getInstance().empty();
+        UndoManager.getInstance().setUndoMax(0);
+        
+        JComponent undoLogPanel = UndoLogPanel.getInstance();
+        ProjectBrowser.getInstance().removePanel(undoLogPanel);
         return true;
     }
 
