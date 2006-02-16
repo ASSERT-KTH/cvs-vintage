@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.43 2005/08/13 08:49:17 mvw Exp $
+// $Id: ToDoPane.java,v 1.44 2006/02/16 18:44:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,7 +134,6 @@ public class ToDoPane extends JPanel
         combo = new JComboBox();
         tree = new DisplayTextTree();
         toolbar = new ToolBar();
-        toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
 
         perspectives = new Vector();
 

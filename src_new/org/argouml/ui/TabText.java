@@ -1,4 +1,4 @@
-// $Id: TabText.java,v 1.26 2005/11/30 00:36:47 tfmorris Exp $
+// $Id: TabText.java,v 1.27 2006/02/16 18:44:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,6 @@ public class TabText
         // If a toolbar was requested, create an empty one.
         if (withToolbar) {
             toolbar = new ToolBar();
-            toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
             toolbar.setOrientation(SwingConstants.HORIZONTAL);
             add(toolbar, BorderLayout.NORTH);
         }

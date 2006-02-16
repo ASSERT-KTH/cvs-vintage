@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.51 2006/01/09 21:16:26 tfmorris Exp $
+// $Id: TabConstraints.java,v 1.52 2006/02/16 18:44:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.ocl.OCLUtil;
 import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.toolbar.ToolBarManager;
 
 import tudresden.ocl.OclException;
 import tudresden.ocl.OclTree;
@@ -103,7 +104,9 @@ public class TabConstraints extends AbstractArgoJPanel
      * until mouse rolls over button.
      */
     private void setToolbarRollover(boolean enable) {
-        getOclToolbar().putClientProperty("JToolBar.isRollover", Boolean.TRUE);
+        if (!ToolBarManager.alwaysUseStandardRollover()) {
+            getOclToolbar().putClientProperty("JToolBar.isRollover", Boolean.TRUE);
+        }
     }
 
     /**

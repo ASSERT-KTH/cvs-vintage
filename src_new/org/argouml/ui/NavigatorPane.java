@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.80 2005/05/17 21:05:19 mvw Exp $
+// $Id: NavigatorPane.java,v 1.81 2006/02/16 18:44:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,14 +75,12 @@ class NavigatorPane
         ExplorerTree tree = new DnDExplorerTree();
         ToolBar toolbar = new ToolBar();
 
-        toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         toolbar.setFloatable(false);
         toolbar.add(new ActionPerspectiveConfig());
         toolbar.add(perspectiveCombo);
 
         ToolBar toolbar2 = new ToolBar();
 
-        toolbar2.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         toolbar2.setFloatable(false);
 
         orderByCombo.addItem(new TypeThenNameOrder());

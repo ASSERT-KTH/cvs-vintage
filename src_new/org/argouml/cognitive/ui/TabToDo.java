@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.31 2005/11/13 11:01:12 linus Exp $
+// $Id: TabToDo.java,v 1.32 2006/02/16 18:44:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,6 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
         setLayout(new BorderLayout());
 
         JToolBar toolBar = new ToolBar(SwingConstants.VERTICAL);
-        toolBar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         toolBar.add(actionNewToDoItem);
         toolBar.add(actionResolve);
         toolBar.add(actionEmailExpert);

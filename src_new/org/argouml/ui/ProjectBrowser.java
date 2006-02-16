@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.175 2006/02/14 01:58:32 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.176 2006/02/16 18:44:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -428,6 +428,16 @@ public final class ProjectBrowser
      */
     void addPanel(Component comp, Object obj) {
         workAreaPane.add(comp, obj);
+    }
+
+    /**
+     * Remove a panel from a split pane area
+     * @param comp the panel to remove
+     */
+    void removePanel(Component comp) {
+        workAreaPane.remove(comp);
+        workAreaPane.validate();
+        workAreaPane.repaint();
     }
 
     /**

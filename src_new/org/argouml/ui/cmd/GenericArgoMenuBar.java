@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.38 2006/02/16 01:44:18 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.39 2006/02/16 18:44:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -409,7 +409,6 @@ public class GenericArgoMenuBar extends JMenuBar
         add(file);
         setMnemonic(file, "File");
         fileToolbar = new ToolBar("File Toolbar");
-        fileToolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         JMenuItem newItem = file.add(new ActionNew());
         setMnemonic(newItem, "New");
         setAccelerator(newItem, ctrlN);
@@ -624,8 +623,6 @@ public class GenericArgoMenuBar extends JMenuBar
         createDiagrams = add(new JMenu(menuLocalize("Create Diagram")));
         setMnemonic(createDiagrams, "Create Diagram");
         createDiagramToolbar = new ToolBar("Create Diagram Toolbar");
-        createDiagramToolbar.putClientProperty("JToolBar.isRollover",
-                                               Boolean.TRUE);
         JMenuItem usecaseDiagram =
             createDiagrams.add(new ActionUseCaseDiagram());
         setMnemonic(usecaseDiagram, "Usecase Diagram");
@@ -802,8 +799,6 @@ public class GenericArgoMenuBar extends JMenuBar
     public JToolBar getEditToolbar() {
         if (editToolbar == null) {
             editToolbar = new ToolBar("Edit Toolbar");
-            editToolbar.putClientProperty("JToolBar.isRollover",
-					   Boolean.TRUE);
 //            editToolbar.add(ActionCut.getInstance());
 //            editToolbar.add(ActionCopy.getInstance());
 //            editToolbar.add(ActionPaste.getInstance());
@@ -832,8 +827,6 @@ public class GenericArgoMenuBar extends JMenuBar
     public JToolBar getViewToolbar() {
         if (viewToolbar == null) {
             viewToolbar = new ToolBar("View Toolbar");
-            viewToolbar.putClientProperty("JToolBar.isRollover",
-					   Boolean.TRUE);
             viewToolbar.add(new ActionFind());
             viewToolbar.add(new ZoomSliderButton());
         }
