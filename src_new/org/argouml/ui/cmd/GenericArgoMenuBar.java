@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.37 2006/02/14 01:58:32 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.38 2006/02/16 01:44:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -465,8 +465,6 @@ public class GenericArgoMenuBar extends JMenuBar
         JMenuItem exitItem = file.add(new ActionExit());
         setMnemonic(exitItem, "Exit");
         setAccelerator(exitItem, altF4);
-        
-        makeButtonsTransparent(fileToolbar);
     }
 
     /**
@@ -665,8 +663,6 @@ public class GenericArgoMenuBar extends JMenuBar
 
         appendPluggableMenus(createDiagrams,
 			     PluggableMenu.KEY_CREATE_DIAGRAMS);
-        
-        makeButtonsTransparent(createDiagramToolbar);
     }
 
     /**
@@ -816,7 +812,6 @@ public class GenericArgoMenuBar extends JMenuBar
                     ProjectBrowser.getInstance().getRemoveFromDiagramAction());
             editToolbar.add(NavigateTargetBackAction.getInstance());
             editToolbar.add(NavigateTargetForwardAction.getInstance());
-            makeButtonsTransparent(editToolbar);
         }
         return editToolbar;
     }
@@ -841,7 +836,6 @@ public class GenericArgoMenuBar extends JMenuBar
 					   Boolean.TRUE);
             viewToolbar.add(new ActionFind());
             viewToolbar.add(new ZoomSliderButton());
-            makeButtonsTransparent(viewToolbar);
         }
         return viewToolbar;
     }
@@ -885,18 +879,6 @@ public class GenericArgoMenuBar extends JMenuBar
 	return tools;
     }
 
-    /*
-     * Make buttons of a toolbar transparent so the gradient background
-     * shows through
-     */
-    private void makeButtonsTransparent(JToolBar toolbar) {
-        // Make the buttons transparent so gradient backgrounds show through
-        for (int i = 0; i < toolbar.getComponentCount(); i++) {
-            JButton b = (JButton) toolbar.getComponent(i);
-            b.setOpaque(false);
-        }
-    }
-    
     /**
      * The UID.
      */
