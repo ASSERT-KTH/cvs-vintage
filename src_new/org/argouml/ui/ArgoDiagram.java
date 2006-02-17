@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.42 2005/12/19 19:20:15 mvw Exp $
+// $Id: ArgoDiagram.java,v 1.43 2006/02/17 18:31:53 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,9 @@ import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.cognitive.ItemUID;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
@@ -82,7 +85,7 @@ public class ArgoDiagram extends Diagram {
      */
     public void setName(String n) throws PropertyVetoException {
         super.setName(n);
-        ProjectManager.getManager().setNeedsSave(true);
+        ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
     }
 
     /**

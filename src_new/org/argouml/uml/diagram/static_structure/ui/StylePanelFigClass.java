@@ -1,4 +1,4 @@
-// $Id: StylePanelFigClass.java,v 1.18 2005/11/13 11:01:17 linus Exp $
+// $Id: StylePanelFigClass.java,v 1.19 2006/02/17 18:35:20 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,9 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.JCheckBox;
 
-import org.argouml.kernel.ProjectManager;
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.ui.StylePanelFigNodeModelElement;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
@@ -115,11 +117,11 @@ public class StylePanelFigClass extends StylePanelFigNodeModelElement {
             if (src == attrCheckBox) {
                 ((AttributesCompartmentContainer) getPanelTarget())
                     .setAttributesVisible(attrCheckBox.isSelected());
-                ProjectManager.getManager().setNeedsSave(true);
+                ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
             } else if (src == operCheckBox) {
                 ((OperationsCompartmentContainer) getPanelTarget())
                     .setOperationsVisible(operCheckBox.isSelected());
-                ProjectManager.getManager().setNeedsSave(true);
+                ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
             } else
                 super.itemStateChanged(e);
         }

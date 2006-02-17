@@ -1,4 +1,4 @@
-// $Id: StylePanelFigUseCase.java,v 1.13 2005/05/26 21:35:14 mvw Exp $
+// $Id: StylePanelFigUseCase.java,v 1.14 2006/02/17 18:36:02 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,9 @@ import java.awt.event.ItemEvent;
 
 import javax.swing.JCheckBox;
 
-import org.argouml.kernel.ProjectManager;
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.ui.StylePanelFigNodeModelElement;
 
 /**
@@ -104,8 +106,7 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
                 FigUseCase target = (FigUseCase) getTarget();
 
                 target.setExtensionPointVisible(epCheckBox.isSelected());
-
-                ProjectManager.getManager().setNeedsSave(true);
+                ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
             } else {
                 super.itemStateChanged(e);
             }
