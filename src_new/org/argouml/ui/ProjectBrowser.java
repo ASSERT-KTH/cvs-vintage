@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.176 2006/02/16 18:44:11 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.177 2006/02/17 14:11:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -510,11 +510,15 @@ public final class ProjectBrowser
     // accessors
 
     /**
+     * The ArgoUML application should not call this method directly from
+     * outside of ProjectBrowser. The title should be set instead by
+     * calling buildTitle. (TODO: but I think it does).
+     * The setTitle method is overridden here only to extend the standard
+     * setTitle method by displaying an asterisk to signify save status
      * @see java.awt.Frame#setTitle(java.lang.String)
      */
     final public void setTitle(final String title) {
         this.title = title;
-        // ask the Project if we are "dirty" - i.e. need to save
         String changeIndicator = "";
         if (ActionSaveProject.getInstance().isEnabled()) {
             changeIndicator = " *";
