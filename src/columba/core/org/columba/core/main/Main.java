@@ -161,7 +161,6 @@ public class Main {
 		// through reflection
 		URLClassLoader sysloader = (URLClassLoader) ClassLoader
 				.getSystemClassLoader();
-		Class sysclass = URLClassLoader.class;
 
 		Field ucp = URLClassLoader.class.getDeclaredField("ucp");
 		ucp.setAccessible(true);
@@ -169,7 +168,7 @@ public class Main {
 		URL[] currentURLs = currentCP.getURLs();
 
 		// add all native jars
-		List urlList = new ArrayList();
+		List<URL> urlList = new ArrayList<URL>();
 		for (int i = 0; i < nativeJars.length; i++) {
 			urlList.add(nativeJars[i].toURL());
 		}
@@ -381,10 +380,7 @@ public class Main {
 		parser.addOption(new Option("help", GlobalResourceLoader.getString(
 				RESOURCE_PATH, "global", "cmdline_help")));
 
-		parser.addOption(OptionBuilder.withArgName("name_or_path").hasArg()
-				.withDescription(
-						GlobalResourceLoader.getString(RESOURCE_PATH, "global",
-								"cmdline_profile")).create("profile"));
+		parser.addOption(OptionBuilder.create("profile"));
 
 		parser.addOption(new Option("debug", GlobalResourceLoader.getString(
 				RESOURCE_PATH, "global", "cmdline_debug")));

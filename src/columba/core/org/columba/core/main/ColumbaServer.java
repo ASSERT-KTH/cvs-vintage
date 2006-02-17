@@ -212,7 +212,7 @@ public class ColumbaServer {
 
 			line = reader.readLine();
 			// do something with the arguments..
-			List list = new LinkedList();
+			List<String> list = new LinkedList<String>();
 			StringTokenizer st = new StringTokenizer(line, "%");
 			while (st.hasMoreTokens()) {
 				String tok = (String) st.nextToken();
