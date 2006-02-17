@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.35 2005/11/16 17:35:13 thn Exp $
+// $Id: DiagramInterface.java,v 1.36 2006/02/17 18:40:47 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,11 @@
 package org.argouml.uml.reveng;
 
 import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
@@ -391,12 +390,13 @@ public class DiagramInterface {
      */
     public ProjectMember findDiagramMemberByUniqueName(Project project,
             String name) {
-        ArrayList diagramMembers =
-            project.getMembers().getMembers(ProjectMemberDiagram.class);
-        for (int i = 0; i < diagramMembers.size(); i++) {
-            ProjectMember pm = (ProjectMember) diagramMembers.get(i);
-            if (name.equals(pm.getUniqueDiagramName())) {
-                return pm;
+        Iterator iter = project.getMembers().iterator();
+        while (iter.hasNext()) {
+            ProjectMember element = (ProjectMember) iter.next();
+            if (element instanceof ProjectMemberDiagram) {
+                if (name.equals(element.getUniqueDiagramName())) {
+                    return element;
+                }
             }
         }
         return null;
