@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.49 2005/11/13 11:01:22 linus Exp $
+// $Id: Designer.java,v 1.50 2006/02/17 18:44:10 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,9 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.ui.ActionGoToCritique;
@@ -445,10 +448,16 @@ public final class Designer
      * @param oldValue the old value
      * @param newValue the new value
      */
-    public static void firePropertyChange(String property,
-            Object oldValue, Object newValue) {
+    public static void firePropertyChange(String property, Object oldValue,
+            Object newValue) {
         if (pcs != null) {
             pcs.firePropertyChange(property, oldValue, newValue);
+        }
+        if (MODEL_TODOITEM_ADDED.equals(property)
+                || MODEL_TODOITEM_DISMISSED.equals(property)) {
+            ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(
+                    ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, Designer
+                            .theDesigner()));
         }
     }
 
