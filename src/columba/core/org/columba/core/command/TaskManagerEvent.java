@@ -18,28 +18,32 @@ package org.columba.core.command;
 
 import java.util.EventObject;
 
-
-
-
 /**
  * Encapsulates an event from a worker list.
  */
-public class TaskManagerEvent extends EventObject {
-    protected Worker worker;
-    
-    /**
-     * Creates a new event from the given source with the given
-     * worker that has changed.
-     */
-    public TaskManagerEvent(Object source, Worker worker) {
-        super(source);
-        this.worker = worker;
-    }
-    
-    /**
-     * Returns the worker that has been added or removed.
-     */
-    public Worker getWorker() {
-        return worker;
-    }
+public class TaskManagerEvent extends EventObject
+{
+  /**
+   * The <code>serialVersionUID</code> which was generated from the compiler.
+   */
+  private static final long serialVersionUID = 4738977594206080618L;
+
+  protected Worker worker;
+
+  /**
+   * Creates a new event from the given source with the given worker that has changed.
+   */
+  public TaskManagerEvent(Object source, Worker worker)
+  {
+    super(source);
+    this.worker = worker;
+  }
+
+  /**
+   * Returns the worker that has been added or removed.
+   */
+  public Worker getWorker()
+  {
+    return worker;
+  }
 }

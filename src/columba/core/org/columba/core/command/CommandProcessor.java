@@ -26,275 +26,307 @@ import org.columba.core.gui.exception.ExceptionHandler;
 /**
  * Scheduler for background threads
  * <p>
- * DefaultProcessor keeps a pool of {@link Worker}instances, which are assigned
- * to {@link Command}, when executed.
+ * DefaultProcessor keeps a pool of {@link Worker}instances, which are assigned to {@link Command}, when executed.
  * 
  * @author tstich
  */
-public class CommandProcessor implements Runnable {
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.api.command");
+public class CommandProcessor implements Runnable
+{
+  /** JDK 1.4+ logging framework logger, used for logging. */
+  private static final Logger LOG = Logger.getLogger("org.columba.api.command");
 
-	public final static int MAX_WORKERS = 5;
+  public final static int MAX_WORKERS = 5;
 
-	List operationQueue;
+  List<OperationItem> operationQueue;
 
-	List worker;
+  List<Worker> worker;
 
-	private Mutex oneMutex;
+  private Mutex oneMutex;
 
-	private int timeStamp;
+  private int timeStamp;
 
-	private boolean stopped = false;
+  private boolean stopped = false;
 
-	private static CommandProcessor instance = new CommandProcessor();
+  private static CommandProcessor instance = new CommandProcessor();
 
-	public CommandProcessor() {
-		this(true);
-	}
+  public CommandProcessor()
+  {
+    this(true);
+  }
 
-	public static CommandProcessor getInstance() {
-		return instance;
-	}
+  public static CommandProcessor getInstance()
+  {
+    return instance;
+  }
 
-	/**
-	 * Constructs a DefaultProcessor.
-	 */
-	public CommandProcessor(boolean start) {
-		operationQueue = new ArrayList(10);
+  /**
+   * Constructs a DefaultProcessor.
+   */
+  public CommandProcessor(boolean start)
+  {
+    operationQueue = new ArrayList<OperationItem>(10);
 
-		worker = new ArrayList(MAX_WORKERS);
+    worker = new ArrayList<Worker>(MAX_WORKERS);
 
-		// Create the workers
-		for (int i = 0; i < MAX_WORKERS; i++) {
-			Worker w = new Worker(this);
-			w.addExceptionListener(new ExceptionHandler());
-			worker.add(w);
-			
-		}
+    // Create the workers
+    for (int i = 0; i < MAX_WORKERS; i++)
+    {
+      Worker w = new Worker(this);
+      w.addExceptionListener(new ExceptionHandler());
+      worker.add(w);
 
-		oneMutex = new Mutex();
+    }
 
-		timeStamp = 0;
+    oneMutex = new Mutex();
 
-		if (start)
-			new Thread(this).start();
-	}
+    timeStamp = 0;
 
-	/**
-	 * Add a Command to the Queue. Calls {@link #addOp(Command, int)}with
-	 * Command.FIRST_EXECUTION.
-	 * 
-	 * @param op
-	 *            the command to add
-	 */
-	public void addOp(final Command op) {
-		addOp(op, Command.FIRST_EXECUTION);
-	}
+    if (start)
+      new Thread(this).start();
+  }
 
-	/**
-	 * Adds a Command to the queue.
-	 * 
-	 * @param op
-	 *            the command
-	 * @param operationMode
-	 *            the mode in wich the command should be processed
-	 */
-	public void addOp(final Command op, final int operationMode) {
-		try {
-			oneMutex.lock();
+  /**
+   * Add a Command to the Queue. Calls {@link #addOp(Command, int)}with Command.FIRST_EXECUTION.
+   * 
+   * @param op the command to add
+   */
+  public void addOp(final Command op)
+  {
+    addOp(op, Command.FIRST_EXECUTION);
+  }
 
-			LOG.finest("Command " + op.toString() + " added");
-			
-			int p = operationQueue.size() - 1;
-			OperationItem nextOp;
+  /**
+   * Adds a Command to the queue.
+   * 
+   * @param op the command
+   * @param operationMode the mode in wich the command should be processed
+   */
+  public void addOp(final Command op, final int operationMode)
+  {
+    try
+    {
+      oneMutex.lock();
 
-			// Sort in with respect to priority and synchronize:
-			// Commands with higher priority will be processed
-			// before commands with lower priority.
-			// If there is a command that is of type synchronize
-			// don't put this command in front.
-			while (p != -1) {
-				nextOp = (OperationItem) operationQueue.get(p);
+      LOG.finest("Command " + op.toString() + " added");
 
-				if ((nextOp.getOperation().getPriority() < op.getPriority())
-						&& !nextOp.getOperation().isSynchronize()) {
-					p--;
-				} else {
-					break;
-				}
-			}
+      int p = operationQueue.size() - 1;
+      OperationItem nextOp;
 
-			operationQueue.add(p + 1, new OperationItem(op, operationMode));
-		} finally {
-			oneMutex.release();
-		}
+      // Sort in with respect to priority and synchronize:
+      // Commands with higher priority will be processed
+      // before commands with lower priority.
+      // If there is a command that is of type synchronize
+      // don't put this command in front.
+      while (p != -1)
+      {
+        nextOp = (OperationItem) operationQueue.get(p);
 
-		wakeUp();
-	}
+        if ((nextOp.getOperation().getPriority() < op.getPriority()) && !nextOp.getOperation().isSynchronize())
+        {
+          p--;
+        }
+        else
+        {
+          break;
+        }
+      }
 
-	/**
-	 * Checks if the command can be processed. This is true if all references
-	 * are not blocked.
-	 * 
-	 * @param opItem
-	 *            the internal command structure
-	 * @return true if the operation will not be blocked
-	 */
-	private boolean canBeProcessed(final OperationItem opItem) {
-		return opItem.getOperation().canBeProcessed();
-	}
+      operationQueue.add(p + 1, new OperationItem(op, operationMode));
+    }
+    finally
+    {
+      oneMutex.release();
+    }
 
-	/**
-	 * Get the next Operation from the queue.
-	 * 
-	 * @return the next non-blocking operation or null if none found.
-	 */
-	private OperationItem nextOpItem() {
-		OperationItem nextOp = null;
-		boolean needToRelease = false;
+    wakeUp();
+  }
 
-		for (int i = 0; i < operationQueue.size() && nextOp == null; i++) {
-			nextOp = (OperationItem) operationQueue.get(i);
+  /**
+   * Checks if the command can be processed. This is true if all references are not blocked.
+   * 
+   * @param opItem the internal command structure
+   * @return true if the operation will not be blocked
+   */
+  private boolean canBeProcessed(final OperationItem opItem)
+  {
+    return opItem.getOperation().canBeProcessed();
+  }
 
-			if ((i != 0) && (nextOp.getOperation().isSynchronize())) {
-				nextOp = null;
+  /**
+   * Get the next Operation from the queue.
+   * 
+   * @return the next non-blocking operation or null if none found.
+   */
+  private OperationItem nextOpItem()
+  {
+    OperationItem nextOp = null;
 
-				// We have to process this command first
-				// -> break here!
-				break;
-			} else {
-				try {
-					if (!canBeProcessed(nextOp)) {
-						nextOp = null;
-					}
-				} catch (RuntimeException e) {
-					// Remove bogus Operation
-					operationQueue.remove(nextOp);
-					nextOp = null;
+    for (int i = 0; i < operationQueue.size() && nextOp == null; i++)
+    {
+      nextOp = (OperationItem) operationQueue.get(i);
 
-					LOG.warning("Operation failed: " + e.getMessage());
-				}
-			}
-		}
+      if ((i != 0) && (nextOp.getOperation().isSynchronize()))
+      {
+        nextOp = null;
 
-		return nextOp;
-	}
+        // We have to process this command first
+        // -> break here!
+        break;
+      }
+      else
+      {
+        try
+        {
+          if (!canBeProcessed(nextOp))
+          {
+            nextOp = null;
+          }
+        }
+        catch (RuntimeException e)
+        {
+          // Remove bogus Operation
+          operationQueue.remove(nextOp);
+          nextOp = null;
 
-	/**
-	 * Called by the worker to signal that his operation has finished.
-	 * 
-	 * @param op
-	 *            the command the worker has processed
-	 * @param w
-	 *            the worker himself
-	 */
-	public void operationFinished(final ICommand op, final Worker w) {
-		boolean needToRelease = false;
+          LOG.warning("Operation failed: " + e.getMessage());
+        }
+      }
+    }
 
-		try {
-			oneMutex.lock();
+    return nextOp;
+  }
 
-			worker.add(w);
-		} finally {
-			oneMutex.release();
-		}
+  /**
+   * Called by the worker to signal that his operation has finished.
+   * 
+   * @param op the command the worker has processed
+   * @param w the worker himself
+   */
+  public void operationFinished(final ICommand op, final Worker w)
+  {
 
-		// notify that a new worker is available
-		wakeUp();
-	}
+    try
+    {
+      oneMutex.lock();
 
-	/**
-	 * Get an available Worker from the workerpool. Reserve one worker for
-	 * Real-Time Priority tasks
-	 * 
-	 * @param priority
-	 * 
-	 * @return an available worker or null if none available.
-	 */
-	Worker getWorker(int priority) {
-		Worker result = null;
-		if (worker.size() > 1) {
-			result = (Worker) worker.remove(0);
-		} else if (worker.size() > 0 && priority >= Command.REALTIME_PRIORITY) {
-			result = (Worker) worker.remove(0);
-		}
+      worker.add(w);
+    }
+    finally
+    {
+      oneMutex.release();
+    }
 
-		return result;
-	}
+    // notify that a new worker is available
+    wakeUp();
+  }
 
-	/**
-	 * Wait until a worker is available or a new command is added.
-	 */
-	private synchronized void waitForNotify() {
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * Get an available Worker from the workerpool. Reserve one worker for Real-Time Priority tasks
+   * 
+   * @param priority
+   * @return an available worker or null if none available.
+   */
+  Worker getWorker(int priority)
+  {
+    Worker result = null;
+    if (worker.size() > 1)
+    {
+      result = (Worker) worker.remove(0);
+    }
+    else if (worker.size() > 0 && priority >= Command.REALTIME_PRIORITY)
+    {
+      result = (Worker) worker.remove(0);
+    }
 
-	private synchronized void wakeUp() {
-		notifyAll();
-	}
+    return result;
+  }
 
-	/**
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run() {
-		OperationItem opItem = null;
-		Worker worker = null;
-		boolean sleep;
+  /**
+   * Wait until a worker is available or a new command is added.
+   */
+  private synchronized void waitForNotify()
+  {
+    try
+    {
+      wait();
+    }
+    catch (InterruptedException e)
+    {
+      e.printStackTrace();
+    }
+  }
 
-		while (true && !stopped ) {
-			sleep = startOperation();
+  private synchronized void wakeUp()
+  {
+    notifyAll();
+  }
 
-			if (sleep) {
-				waitForNotify();
-				sleep = false;
-			}
-		}
+  /**
+   * @see java.lang.Runnable#run()
+   */
+  public void run()
+  {
+    boolean sleep;
 
-	}
+    while (true && !stopped)
+    {
+      sleep = startOperation();
 
-	/**
-	 * @param sleep
-	 * @return
-	 */
-	boolean startOperation() {
-		boolean sleep = false;
-		try {
-			oneMutex.lock();
-			OperationItem opItem;
-			Worker worker;
-			opItem = nextOpItem();
-			if (opItem != null && !stopped) {
-				worker = getWorker(opItem.getOperation().getPriority());
-				if (worker != null && !stopped) {
-					operationQueue.remove(opItem);
+      if (sleep)
+      {
+        waitForNotify();
+        sleep = false;
+      }
+    }
 
-					worker.process(opItem.getOperation(), opItem
-							.getOperationMode(), timeStamp++);
+  }
 
-					worker.start();
-				} else {
-					sleep = true;
-				}
-			} else {
-				sleep = true;
-			}
-		} finally {
-			oneMutex.release();
-		}
-		return sleep;
-	}
+  /**
+   * @param sleep
+   * @return
+   */
+  boolean startOperation()
+  {
+    boolean sleep = false;
+    try
+    {
+      oneMutex.lock();
+      OperationItem opItem;
+      Worker worker;
+      opItem = nextOpItem();
+      if (opItem != null && !stopped)
+      {
+        worker = getWorker(opItem.getOperation().getPriority());
+        if (worker != null && !stopped)
+        {
+          operationQueue.remove(opItem);
 
-	public synchronized void stop() {
-		stopped = true;
-		notify();
-	}
+          worker.process(opItem.getOperation(), opItem.getOperationMode(), timeStamp++);
+
+          worker.start();
+        }
+        else
+        {
+          sleep = true;
+        }
+      }
+      else
+      {
+        sleep = true;
+      }
+    }
+    finally
+    {
+      oneMutex.release();
+    }
+    return sleep;
+  }
+
+  public synchronized void stop()
+  {
+    stopped = true;
+    notify();
+  }
 
 }
 
@@ -304,21 +336,25 @@ public class CommandProcessor implements Runnable {
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 
-class OperationItem {
-	private Command operation;
+class OperationItem
+{
+  private Command operation;
 
-	private int operationMode;
+  private int operationMode;
 
-	public OperationItem(Command op, int opMode) {
-		operation = op;
-		operationMode = opMode;
-	}
+  public OperationItem(Command op, int opMode)
+  {
+    operation = op;
+    operationMode = opMode;
+  }
 
-	public Command getOperation() {
-		return operation;
-	}
+  public Command getOperation()
+  {
+    return operation;
+  }
 
-	public int getOperationMode() {
-		return operationMode;
-	}
+  public int getOperationMode()
+  {
+    return operationMode;
+  }
 }

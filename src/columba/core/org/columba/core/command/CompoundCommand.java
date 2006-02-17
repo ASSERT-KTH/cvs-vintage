@@ -31,7 +31,7 @@ import org.columba.api.command.IWorkerStatusController;
  * @author tstich, fdietz
  */
 public class CompoundCommand extends Command {
-	protected List commandList;
+	protected List<ICommand> commandList;
 
 	/**
 	 * Constructor for CompoundCommand. Caution : Never use this command with
@@ -42,7 +42,7 @@ public class CompoundCommand extends Command {
 	 */
 	public CompoundCommand() {
 		super(null);
-		commandList = new Vector();
+		commandList = new Vector<ICommand>();
 
 		priority = Command.NORMAL_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
