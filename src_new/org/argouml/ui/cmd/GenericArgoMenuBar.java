@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.39 2006/02/16 18:44:11 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.40 2006/02/17 00:08:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
