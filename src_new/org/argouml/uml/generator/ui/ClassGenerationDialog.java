@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.54 2005/11/13 11:01:26 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.55 2006/02/17 18:37:58 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -367,7 +370,7 @@ public class ClassGenerationDialog
                                     .equals(savedLang)) {
                                 Model.getCoreHelper().setTaggedValue(node,
                                         "src_lang", language.getName());
-                                ProjectManager.getManager().setNeedsSave(true);
+                                ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
                             }
                         }
                     } // end for (all nodes)
