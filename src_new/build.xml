@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.204 2006/02/18 09:19:57 linus Exp $
+<!-- $Id: build.xml,v 1.205 2006/02/18 17:06:37 linus Exp $
 This requires ANT 1.6.2
 
 if you get a message like:
@@ -276,45 +276,12 @@ Property files to be searched:
     </copy>
   </target>
 
-  <target name="copy-i18n-en_GB" if="has.i18n.en_GB">
-    <copy todir="${argo.build.classes}/org/argouml/i18n">
-      <fileset dir="${argo.src.dir}/../src/i18n/en_GB/src/org/argouml/i18n" includes="*.properties"/>
-    </copy>
-  </target>
-
-  <target name="copy-i18n-fr" if="has.i18n.fr">
-    <copy todir="${argo.build.classes}/org/argouml/i18n">
-      <fileset dir="${argo.src.dir}/../src/i18n/fr/src/org/argouml/i18n" includes="*.properties"/>
-    </copy>
-  </target>
-
-  <target name="copy-i18n-ru" if="has.i18n.ru">
-    <copy todir="${argo.build.classes}/org/argouml/i18n">
-      <fileset dir="${argo.src.dir}/../src/i18n/ru/src/org/argouml/i18n" includes="*.properties"/>
-    </copy>
-  </target>
-
   <target name="copy-i18n">
     <!-- Go through all languages: -->
     <available file="${argo.src.dir}/../src/i18n/de/src/org/argouml/i18n"
                type="dir" 
                property="has.i18n.de"/>
     <antcall target="copy-i18n-de"/>
-
-    <available file="${argo.src.dir}/../src/i18n/en_GB/src/org/argouml/i18n"
-               type="dir" 
-               property="has.i18n.en_GB"/>
-    <antcall target="copy-i18n-en_GB"/>
-
-    <available file="${argo.src.dir}/../src/i18n/fr/src/org/argouml/i18n"
-               type="dir" 
-               property="has.i18n.fr"/>
-    <antcall target="copy-i18n-fr"/>
-
-    <available file="${argo.src.dir}/../src/i18n/ru/src/org/argouml/i18n"
-               type="dir" 
-               property="has.i18n.ru"/>
-    <antcall target="copy-i18n-ru"/>
   </target>
 
 
