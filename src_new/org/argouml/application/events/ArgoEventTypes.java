@@ -1,5 +1,5 @@
-// $Id: ArgoEventTypes.java,v 1.15 2006/02/17 11:59:25 mkl Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ArgoEventTypes.java,v 1.16 2006/02/19 09:22:34 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -127,22 +127,22 @@ public interface ArgoEventTypes {
      * Last generation event.
      */
     int LAST_GENERATOR_EVENT       =  1399;
-    
-    /** 
-     * Any change event
+
+    /**
+     * Any change event.
      */
     int ANY_PROJECTSAVE_EVENT            = 1400;
-    
+
     /**
-     * project needs to be saved
+     * Project needs to be saved.
      */
     int NEEDS_PROJECTSAVE_EVENT          = 1401;
-    
+
     /**
-     * project is saved
+     * Project is saved.
      */
     int ISSAVED_PROJECTSAVE_EVENT          = 1402;
-    
+
     /**
      * last project save event.
      */

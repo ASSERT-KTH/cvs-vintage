@@ -1,5 +1,5 @@
-// $Id: ArgoProjectSaveListener.java,v 1.1 2006/02/17 11:59:25 mkl Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ArgoProjectSaveListener.java,v 1.2 2006/02/19 09:22:34 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,14 +29,14 @@ import org.argouml.application.api.ArgoEventListener;
 /**
  * Classes interested in displaying information about the change status of the
  * application should register as ArgoProjectSaveListeners, e.g. ProjectManager
- * 
+ *
  * @author MarkusK
  */
 public interface ArgoProjectSaveListener extends ArgoEventListener {
 
     /**
      * Method to invoke when notifying the listeners.
-     * 
+     *
      * @param apse
      *            type to distinguish whether sender wants the project to be
      *            marked as changed or whether the sender wants it be me marked
