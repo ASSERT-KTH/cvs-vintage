@@ -23,15 +23,17 @@ import java.util.Iterator;
 import org.apache.commons.cli.CommandLine;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.calendar.config.Config;
-import org.columba.calendar.model.IHeaderItem;
-import org.columba.calendar.model.IHeaderItemList;
+import org.columba.calendar.model.api.IComponent;
+import org.columba.calendar.model.api.IComponentInfo;
+import org.columba.calendar.model.api.IComponentInfoList;
+import org.columba.calendar.model.api.IEventInfo;
 import org.columba.calendar.store.CalendarStoreFactory;
-import org.columba.calendar.store.ICalendarStore;
+import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.store.api.StoreException;
 import org.columba.calendar.ui.calendar.CalendarHelper;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
-import org.columba.core.util.InternalException;
 
 import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.ActivityDepository;
@@ -65,16 +67,16 @@ public class CalendarComponent implements IComponentPlugin {
 	 */
 	public void init() {
 
-//		try {
-//			InputStream is = this.getClass().getResourceAsStream(
-//					"/org/columba/calendar/action/action.xml");
-//
-//			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
-//					ActionExtensionHandler.NAME)).loadExtensionsFromStream(is, false);
-//
-//		} catch (PluginHandlerNotFoundException ex) {
-//		}
-		
+		try {
+			InputStream is = this.getClass().getResourceAsStream(
+					"/org/columba/calendar/action/action.xml");
+
+			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
+					ActionExtensionHandler.NAME)).loadExtensionsFromStream(is);
+
+		} catch (PluginHandlerNotFoundException ex) {
+		}
+
 	}
 
 	/**
@@ -87,22 +89,21 @@ public class CalendarComponent implements IComponentPlugin {
 
 		try {
 
-			IHeaderItemList list = store.getHeaderItemList();
-			Iterator it = list.iterator();
+			IComponentInfoList list = store.getComponentInfoList();
+			Iterator<IComponentInfo> it = list.iterator();
 			while (it.hasNext()) {
-				IHeaderItem item = (IHeaderItem) it.next();
+				IComponentInfo item = (IComponentInfo) it.next();
 
-				Activity act = CalendarHelper.createEvent(item);
-				act.setCategoryIDs(new Object[] { Config.PERSONAL_NODE_ID });
-				
-				ActivityDepository.getInstance().addBrokedActivity(act,
-						CalendarComponent.class);
+				if (item.getType() == IComponent.TYPE.EVENT) {
+					IEventInfo event = (IEventInfo) item;
+					Activity act = CalendarHelper.createActivity(event);
+
+					ActivityDepository.getInstance().addBrokedActivity(act,
+							CalendarComponent.class);
+				}
 			}
 
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InternalException e) {
+		} catch (StoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

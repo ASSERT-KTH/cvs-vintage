@@ -50,7 +50,7 @@ public class TodayAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent e) {
 		CalendarFrameMediator calendarFrame = (CalendarFrameMediator) frameMediator;
 		
-		calendarFrame.goToday();
+		calendarFrame.getCalendarView().viewToday();
 
 	}
 

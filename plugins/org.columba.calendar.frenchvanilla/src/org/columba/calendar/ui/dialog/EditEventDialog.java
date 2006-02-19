@@ -41,10 +41,10 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.calendar.model.VEventModel;
-import org.columba.calendar.ui.widgets.CalendarPicker;
-import org.columba.calendar.ui.widgets.DatePicker;
-import org.columba.calendar.ui.widgets.TimePicker;
+import org.columba.calendar.model.api.IEvent;
+import org.columba.calendar.ui.comp.CalendarPicker;
+import org.columba.calendar.ui.comp.DatePicker;
+import org.columba.calendar.ui.comp.TimePicker;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
@@ -89,9 +89,9 @@ public class EditEventDialog extends JDialog implements ActionListener {
 
 	boolean success = false;
 
-	private VEventModel model;
+	private IEvent model;
 
-	public EditEventDialog(JFrame parentFrame, VEventModel model) {
+	public EditEventDialog(JFrame parentFrame, IEvent model) {
 		super(parentFrame, true);
 
 		this.model = model;
@@ -108,9 +108,18 @@ public class EditEventDialog extends JDialog implements ActionListener {
 		classComboBox.addItem("Public");
 		classComboBox.addItem("Confidential");
 
+		locationTextField.setEnabled(false);
+		descriptionTextArea.setEnabled(false);
+		categoriesButton.setEnabled(false);
+		categoriesTextField.setEnabled(false);
+		allDayCheckBox.setEnabled(false);
+		classComboBox.setEnabled(false);
+		
 		categoriesButton.setEnabled(false);
 		alarmButton.setEnabled(false);
-
+		alarmCheckBox.setEnabled(false);
+		alarmComboBox.setEnabled(false);
+		
 		setLayout(new BorderLayout());
 		getContentPane().add(
 				new DialogHeaderPanel("New Appointment",
@@ -124,7 +133,7 @@ public class EditEventDialog extends JDialog implements ActionListener {
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-		updateComponents(false);
+		updateComponents(true);
 
 		pack();
 		setLocationRelativeTo(null);
@@ -323,15 +332,25 @@ public class EditEventDialog extends JDialog implements ActionListener {
 			categoriesTextField.setText(model.getCategories());
 			descriptionTextArea.setText(model.getDescription());
 
-			startDayDatePicker.setDate(Calendar.getInstance());
-			endDayDatePicker.setDate(Calendar.getInstance());
+			Calendar start = model.getDtStart();
+			startDayDatePicker.setDate(start);
+			startTimePicker.setTime(start.get(Calendar.HOUR_OF_DAY), start.get(Calendar.MINUTE));
+			Calendar end = model.getDtEnt();
+			endDayDatePicker.setDate(end);
+			endTimePicker.setTime(end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE));
+			
+			String calendar = model.getCalendar();
+			if ( calendar != null )
+				calendarPicker.setSelectedItem(model.getCalendar());
+			else
+				calendarPicker.setSelectedIndex(0);
 			
 		} else {
 			model.setSummary(summaryTextField.getText());
 			model.setLocation(locationTextField.getText());
 			model.setCategories(categoriesTextField.getText());
 			model.setDescription(descriptionTextArea.getText());
-			
+
 			Calendar start = startDayDatePicker.getDate();
 			int hour = startTimePicker.getHour();
 			int minutes = startTimePicker.getMinutes();
@@ -345,6 +364,10 @@ public class EditEventDialog extends JDialog implements ActionListener {
 			end.set(Calendar.HOUR_OF_DAY, hour);
 			end.set(Calendar.MINUTE, minutes);
 			model.setDtEnt(end);
+
+			
+			String calendar = (String) calendarPicker.getSelectedItem();
+			model.setCalendar(calendar);
 			
 			// update modification timestamp
 			model.setDtStamp(Calendar.getInstance());
@@ -371,7 +394,7 @@ public class EditEventDialog extends JDialog implements ActionListener {
 	/**
 	 * @return Returns the model.
 	 */
-	public VEventModel getModel() {
+	public IEvent getModel() {
 		return model;
 	}
 

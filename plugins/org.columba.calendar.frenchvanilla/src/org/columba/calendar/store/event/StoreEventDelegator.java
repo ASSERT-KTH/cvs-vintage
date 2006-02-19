@@ -28,11 +28,12 @@ import javax.swing.Timer;
 
 import org.columba.calendar.CalendarComponent;
 import org.columba.calendar.config.Config;
-import org.columba.calendar.model.ICalendarModel;
-import org.columba.calendar.store.ICalendarStore;
+import org.columba.calendar.model.api.IComponent;
+import org.columba.calendar.model.api.IEvent;
+import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.store.api.StoreException;
 import org.columba.calendar.ui.calendar.CalendarHelper;
 import org.columba.core.base.Mutex;
-import org.columba.core.util.InternalException;
 
 import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.ActivityDepository;
@@ -100,18 +101,16 @@ public class StoreEventDelegator implements StoreListener, ActionListener {
 
 				ICalendarStore store = (ICalendarStore) next.getSource();
 				try {
-					ICalendarModel model = store.get(next.getChanges());
-					Activity act = CalendarHelper.createEvent(model);
+					IComponent model = store.get(next.getChanges());
+					// we only update changes for events currently
+					if (model.getType() == IComponent.TYPE.EVENT) {
+						Activity act = CalendarHelper
+								.createActivity((IEvent) model);
 
-					act
-							.setCategoryIDs(new Object[] { Config.PERSONAL_NODE_ID });
-					ActivityDepository.getInstance().addBrokedActivity(act,
-							CalendarComponent.class);
-
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InternalException e) {
+						ActivityDepository.getInstance().addBrokedActivity(act,
+								CalendarComponent.class);
+					}
+				} catch (StoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -127,11 +126,14 @@ public class StoreEventDelegator implements StoreListener, ActionListener {
 					.get(0)).getSource();
 
 			// Process the events
-			for (int i = 1; i < itemRemovedList[swap].size(); i++) {
+			for (int i = 0; i < itemRemovedList[swap].size(); i++) {
 				StoreEvent next = (StoreEvent) itemRemovedList[swap].get(i);
 				ICalendarStore store = (ICalendarStore) next.getSource();
-				// TODO item removed process event
-				// 
+				String activityId = (String) next.getChanges();
+
+				// remove old activity
+				ActivityDepository.getInstance().removeBrokedActivityById(
+						activityId);
 
 			}
 		}
@@ -143,12 +145,30 @@ public class StoreEventDelegator implements StoreListener, ActionListener {
 					.get(0)).getSource();
 
 			// Process the events
-			for (int i = 1; i < itemChangedList[swap].size(); i++) {
+			for (int i = 0; i < itemChangedList[swap].size(); i++) {
 				StoreEvent next = (StoreEvent) itemChangedList[swap].get(i);
 
 				ICalendarStore store = (ICalendarStore) next.getSource();
-				// TODO item changed process event
-				// 
+				try {
+					IComponent model = store.get(next.getChanges());
+					// we only update changes for events currently
+					if (model.getType() == IComponent.TYPE.EVENT) {
+
+						String activityId = model.getId();
+						// remove old activity
+						ActivityDepository.getInstance()
+								.removeBrokedActivityById(activityId);
+
+						// create new activity
+						Activity act = CalendarHelper
+								.createActivity((IEvent) model);
+						ActivityDepository.getInstance().addBrokedActivity(act,
+								CalendarComponent.class);
+					}
+				} catch (StoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 		}

@@ -21,8 +21,9 @@ import java.util.logging.Logger;
 
 import javax.swing.event.EventListenerList;
 
-import org.columba.calendar.model.ICalendarModel;
-import org.columba.calendar.model.IHeaderItemList;
+import org.columba.calendar.model.api.IComponent;
+import org.columba.calendar.model.api.IComponentInfoList;
+import org.columba.calendar.store.api.StoreException;
 import org.columba.calendar.store.event.StoreEvent;
 import org.columba.calendar.store.event.StoreEventDelegator;
 import org.columba.calendar.store.event.StoreListener;
@@ -44,14 +45,11 @@ public abstract class AbstractCalendarStore {
 
 	}
 
-	public abstract ICalendarModel get(Object id) throws IllegalArgumentException,
-			InternalException;
+	public abstract IComponent get(Object id) throws StoreException;
 
-	public abstract void add(ICalendarModel basicModel) throws IllegalArgumentException,
-			InternalException;
+	public abstract void add(IComponent basicModel) throws StoreException;
 
-	public void modify(Object id, ICalendarModel basicModel)
-			throws IllegalArgumentException, InternalException {
+	public void modify(Object id, IComponent basicModel) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		if (basicModel == null)
@@ -60,17 +58,16 @@ public abstract class AbstractCalendarStore {
 		fireItemChanged(id);
 	}
 
-	public void remove(Object id) throws IllegalArgumentException, InternalException {
+	public void remove(Object id) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		fireItemRemoved(id);
 	}
 
-	public abstract IHeaderItemList getHeaderItemList()
-			throws IllegalArgumentException, InternalException;
+	public abstract IComponentInfoList getComponentInfoList()
+			throws StoreException;
 
-	public abstract boolean exists(Object id) throws IllegalArgumentException,
-			InternalException;
+	public abstract boolean exists(Object id) throws StoreException;
 
 	/** ********************** event ****************************** */
 

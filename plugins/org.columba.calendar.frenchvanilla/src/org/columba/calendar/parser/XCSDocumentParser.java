@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.columba.calendar.base.UUIDGenerator;
-import org.columba.calendar.model.ICALENDAR;
+import org.columba.calendar.model.api.ICALENDAR;
+import org.columba.calendar.model.api.IComponent.TYPE;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -47,9 +48,9 @@ public class XCSDocumentParser {
 
 	protected Element componentElement;
 
-	public XCSDocumentParser(String component) throws IllegalArgumentException {
-		if (component == null)
-			throw new IllegalArgumentException("component == null");
+	public XCSDocumentParser(TYPE type) throws IllegalArgumentException {
+		if (type == null)
+			throw new IllegalArgumentException("type == null");
 
 		doc = new Document();
 		root = new Element(ICALENDAR.ICALENDAR);
@@ -71,16 +72,16 @@ public class XCSDocumentParser {
 		vcalendarElement.setAttribute(ICALENDAR.VCALENDAR_PRODID,
 				"-//fdietz //NONSGML Columba v1.0//EN");
 
-		if (component.equalsIgnoreCase(ICALENDAR.VEVENT)) {
+		if (type == TYPE.EVENT) {
 			componentElement = new Element(ICALENDAR.VEVENT);
 			vcalendarElement.addContent(componentElement);
 
-		} else if (component.equalsIgnoreCase(ICALENDAR.VTODO)) {
+		} else if (type == TYPE.TODO) {
 			componentElement = new Element(ICALENDAR.VTODO);
 			vcalendarElement.addContent(componentElement);
 		} else
 			throw new IllegalArgumentException("invalid component specified: "
-					+ component);
+					+ type);
 
 		String uuid = new UUIDGenerator().newUUID();
 		Element uuidElement = new Element(ICALENDAR.UID);
@@ -91,8 +92,8 @@ public class XCSDocumentParser {
 		parentElement = componentElement;
 	}
 
-	public XCSDocumentParser(Document document) throws IllegalArgumentException,
-			SyntaxException {
+	public XCSDocumentParser(Document document)
+			throws IllegalArgumentException, SyntaxException {
 		if (document == null)
 			throw new IllegalArgumentException("document == null");
 
@@ -125,14 +126,14 @@ public class XCSDocumentParser {
 	}
 
 	/**
-	 * @see org.columba.calendar.model.IBasicDocumentModel#getRootElement()
+	 * @see org.columba.calendar.model.api.IBasicDocumentModel#getRootElement()
 	 */
 	public Element getRootElement() {
 		return root;
 	}
 
 	/**
-	 * @see org.columba.calendar.model.IBasicModel#set(java.lang.String,
+	 * @see org.columba.calendar.model.api.IBasicModel#set(java.lang.String,
 	 *      java.lang.String)
 	 */
 	protected void set(String key, String value) {
@@ -145,7 +146,7 @@ public class XCSDocumentParser {
 	}
 
 	/**
-	 * @see org.columba.calendar.model.IBasicModel#set(java.lang.String,
+	 * @see org.columba.calendar.model.api.IBasicModel#set(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
 	protected void set(String key, String prefix, String value) {
@@ -163,7 +164,7 @@ public class XCSDocumentParser {
 	}
 
 	/**
-	 * @see org.columba.calendar.model.IBasicModel#get(java.lang.String)
+	 * @see org.columba.calendar.model.api.IBasicModel#get(java.lang.String)
 	 */
 	protected String get(String key) {
 		Element child = getParentElement().getChild(key);
@@ -175,7 +176,7 @@ public class XCSDocumentParser {
 	}
 
 	/**
-	 * @see org.columba.calendar.model.IBasicModel#get(java.lang.String,
+	 * @see org.columba.calendar.model.api.IBasicModel#get(java.lang.String,
 	 *      java.lang.String)
 	 */
 	protected String get(String key, String prefix) {
@@ -194,7 +195,7 @@ public class XCSDocumentParser {
 	}
 
 	/**
-	 * @see org.columba.calendar.model.IBasicModel#getDocument()
+	 * @see org.columba.calendar.model.api.IBasicModel#getDocument()
 	 */
 	public Document getDocument() {
 		return doc;
@@ -232,6 +233,14 @@ public class XCSDocumentParser {
 
 	public String getDescription() {
 		return get(ICALENDAR.DESCRIPTION);
+	}
+	
+	public void setCalendar(String s) {
+		set(ICALENDAR.X_COLUMBA_CALENDAR, s);
+	}
+
+	public String getCalendar() {
+		return get(ICALENDAR.X_COLUMBA_CALENDAR);
 	}
 
 	public void setPriority(String s) {

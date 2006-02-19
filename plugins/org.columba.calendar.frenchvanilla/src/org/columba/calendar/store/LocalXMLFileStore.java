@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+import org.columba.calendar.store.api.StoreException;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.InternalException;
 import org.jdom.Document;
@@ -39,8 +40,7 @@ public class LocalXMLFileStore {
 
 	private File directory;
 
-	public LocalXMLFileStore(File directory) throws IllegalArgumentException,
-			InternalException {
+	public LocalXMLFileStore(File directory) throws StoreException {
 		super();
 
 		if (directory == null)
@@ -52,8 +52,7 @@ public class LocalXMLFileStore {
 
 	}
 
-	public Document load(Object id) throws IllegalArgumentException,
-			InternalException {
+	public Document load(Object id) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("uuid == null");
 
@@ -77,8 +76,7 @@ public class LocalXMLFileStore {
 		return doc;
 	}
 
-	public void save(Object id, Document document)
-			throws IllegalArgumentException, InternalException {
+	public void save(Object id, Document document) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		if (document == null)
@@ -99,18 +97,17 @@ public class LocalXMLFileStore {
 		}
 	}
 
-	public void modify(Object id, Document document)
-			throws IllegalArgumentException, InternalException {
+	public void modify(Object id, Document document) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		if (document == null)
 			throw new IllegalArgumentException("document == null");
-		
+
 		save(id, document);
 
 	}
 
-	public void remove(Object id) throws IllegalArgumentException, InternalException {
+	public void remove(Object id) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 
@@ -122,8 +119,7 @@ public class LocalXMLFileStore {
 	 * @param uid
 	 * @return
 	 */
-	private File getFile(Object id) throws IllegalArgumentException,
-			InternalException {
+	private File getFile(Object id) throws StoreException {
 
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
@@ -134,8 +130,7 @@ public class LocalXMLFileStore {
 		return file;
 	}
 
-	public boolean exists(Object uid) throws IllegalArgumentException,
-			InternalException {
+	public boolean exists(Object uid) throws StoreException {
 
 		if (uid == null)
 			throw new IllegalArgumentException("uid == null");
@@ -143,7 +138,7 @@ public class LocalXMLFileStore {
 		return (getFile(uid) != null);
 	}
 
-	public Iterator iterator() throws InternalException {
+	public Iterator iterator() throws StoreException {
 		return new StoreIterator();
 	}
 
@@ -174,10 +169,7 @@ public class LocalXMLFileStore {
 			Document document = null;
 			try {
 				document = load(uid);
-			} catch (IllegalArgumentException e) {
-				LOG.severe(e.getMessage());
-				e.printStackTrace();
-			} catch (InternalException e) {
+			} catch (StoreException e) {
 				LOG.severe(e.getMessage());
 				e.printStackTrace();
 			}
@@ -192,10 +184,7 @@ public class LocalXMLFileStore {
 
 			try {
 				LocalXMLFileStore.this.remove(uid);
-			} catch (IllegalArgumentException e) {
-				LOG.severe(e.getMessage());
-				e.printStackTrace();
-			} catch (InternalException e) {
+			} catch (StoreException e) {
 				LOG.severe(e.getMessage());
 				e.printStackTrace();
 			}

@@ -21,6 +21,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.io.IOException;
@@ -30,10 +31,18 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.JToolTip;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-import org.columba.calendar.model.ColumbaDateRange;
+import org.columba.calendar.model.api.IDateRange;
+import org.columba.calendar.ui.action.ActionFactory;
+import org.columba.calendar.ui.action.ActivityMovedAction;
+import org.columba.calendar.ui.action.EditActivityAction;
+import org.columba.calendar.ui.base.Activity;
+import org.columba.calendar.ui.base.api.IActivity;
+import org.columba.calendar.ui.calendar.api.ICalendarView;
 
 import com.miginfocom.ashape.AShapeUtil;
 import com.miginfocom.ashape.DefaultAShapeProvider;
@@ -47,7 +56,6 @@ import com.miginfocom.ashape.shapes.DrawAShape;
 import com.miginfocom.ashape.shapes.FillAShape;
 import com.miginfocom.ashape.shapes.RootAShape;
 import com.miginfocom.ashape.shapes.TextAShape;
-import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.renderer.AShapeRenderer;
 import com.miginfocom.calendar.activity.view.ActivityView;
 import com.miginfocom.calendar.category.Category;
@@ -82,13 +90,14 @@ import com.miginfocom.util.gfx.geometry.numbers.AtFixed;
 import com.miginfocom.util.gfx.geometry.numbers.AtFraction;
 import com.miginfocom.util.gfx.geometry.numbers.AtStart;
 import com.miginfocom.util.repetition.DefaultRepetition;
+import com.miginfocom.util.states.ToolTipProvider;
 
 /**
  * @author fdietz
  * 
  */
 public class MainCalendarController implements InteractionListener,
-		ActivityMoveListener {
+		ActivityMoveListener, ICalendarView {
 
 	public static final int VIEW_MODE_DAY = 0;
 
@@ -114,11 +123,17 @@ public class MainCalendarController implements InteractionListener,
 
 	public static final String PROP_FILTERED = "filterRow";
 
+	private IActivity selectedActivity;
+
+	private ActionFactory actionFactory;
+
 	/**
 	 * 
 	 */
-	public MainCalendarController() {
+	public MainCalendarController(ActionFactory actionFactory) {
 		super();
+
+		this.actionFactory = actionFactory;
 
 		view = new ThemeDateAreaContainer();
 
@@ -131,12 +146,33 @@ public class MainCalendarController implements InteractionListener,
 
 		setViewMode(currentViewMode);
 
+		ToolTipProvider ttp = new ToolTipProvider() {
+			public int configureToolTip(JToolTip toolTip, MouseEvent e,
+					Object source) {
+				if (e.getID() == MouseEvent.MOUSE_MOVED
+						&& source instanceof ActivityView) {
+					// toolTip.setForeground(Color.DARK_GRAY);
+					toolTip.setTipText(((ActivityView) source).getModel()
+							.getSummary());
+					return ToolTipProvider.SHOW_TOOLTIP;
+				} else {
+					return ToolTipProvider.HIDE_TOOLTIP;
+				}
+			}
+		};
+
+		view.getDateArea().setToolTipProvider(ttp);
+
 		((DefaultDateArea) view.getDateArea()).addInteractionListener(this);
 
 		((DefaultDateArea) view.getDateArea()).addActivityMoveListener(this);
 
 		// view.getDateArea().setActivitiesSupported(true);
 
+	}
+
+	public IActivity getSelectedActivity() {
+		return selectedActivity;
 	}
 
 	public JComponent getView() {
@@ -163,61 +199,40 @@ public class MainCalendarController implements InteractionListener,
 			e1.printStackTrace();
 		}
 
-		Font defaultFont = UIManager.getFont("Label.font");
-		Color foreground = UIManager.getColor("Label.foreground");
-		Color background = UIManager.getColor("Table.background");
-		Color gridColor = UIManager.getColor("Button.darkShadow");
-
-		Theme theme = Themes.getTheme(MAIN_DAYS_CONTEXT);
-
-		// activity should have 5pixel padding
-		/*
-		 * TimeBoundsLayout layout = new TimeBoundsLayout(new AtFixed(5), new
-		 * AtStart(5), new AtEnd(-5), 5);
-		 * theme.removeAllFromList(CalendarTheme.KEY_LAYOUTS_AUTO_INSTALL);
-		 * theme.addToList(CalendarTheme.KEY_LAYOUTS_AUTO_INSTALL, layout);
-		 */
-
-		/*
-		 * theme.putValue(CalendarTheme.KEY_DECORATORS_CELL_LABEL_FONT_DEFAULT,
-		 * defaultFont.deriveFont(Font.PLAIN, defaultFont.getSize() + 0));
-		 * theme.putValue(CalendarTheme.KEY_DECORATORS_CELL_LABEL_FONT_,
-		 * defaultFont.deriveFont(Font.PLAIN, defaultFont.getSize() + 0));
-		 * theme.putValue(CalendarTheme.KEY_DECORATORS_CELL_LABEL_ANTI_ALIAS,
-		 * Boolean.TRUE);
-		 */
-
-		// main background color
-		theme.putValue(CalendarTheme.KEY_GENERIC_BACKGROUND, background);
-
-		String mainKey = CalendarTheme.KEY_HEADER_;
-		theme.putValue(mainKey + "West/antiAlias", Boolean.TRUE);
-
-		theme.setInList(mainKey + "West/CellDecorationRows#", 0,
-				new CellDecorationRow(DateRange.RANGE_TYPE_HOUR,
-						new DateFormatList("HH"), null, null, background,
-						foreground, new DefaultRepetition(0, 2), defaultFont));
-
-		theme.removeFromList(mainKey + "West/CellDecorationRows#", 1);
-
-		/*
-		 * theme.setInList(mainKey + "West/CellDecorationRows#", 1, new
-		 * CellDecorationRow(DateRange.RANGE_TYPE_MINUTE, new
-		 * DateFormatList("mm"), null, defaultFont));
-		 */
-
-		// gridlines
-		AtFixed min = new AtFixed(1);
-		AtFraction preferred = new AtFraction(0.1f); // Preferred can be
-		// absolute or relative
-		AtFixed max = new AtFixed(4);
-		GridSegment segment = new GridSegment(0, min, preferred, max);
-		theme.addToList(CalendarTheme.KEY_GRID_SEGMENTS_ + "PrimaryDim#", 0,
-				segment);
-		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_
-				+ "PrimaryDim#");
-		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_
-				+ "SecondaryDim#");
+//		Font defaultFont = UIManager.getFont("Label.font");
+//		Color foreground = UIManager.getColor("Label.foreground");
+//		Color background = UIManager.getColor("Table.background");
+//		Color gridColor = UIManager.getColor("Button.darkShadow");
+//
+//		Theme theme = Themes.getTheme(MAIN_DAYS_CONTEXT);
+//
+//
+//		// main background color
+//		theme.putValue(CalendarTheme.KEY_GENERIC_BACKGROUND, background);
+//
+//		String mainKey = CalendarTheme.KEY_HEADER_;
+//		theme.putValue(mainKey + "West/antiAlias", Boolean.TRUE);
+//
+//		theme.setInList(mainKey + "West/CellDecorationRows#", 0,
+//				new CellDecorationRow(DateRange.RANGE_TYPE_HOUR,
+//						new DateFormatList("HH"), null, null, background,
+//						foreground, new DefaultRepetition(0, 2), defaultFont));
+//
+//		theme.removeFromList(mainKey + "West/CellDecorationRows#", 1);
+//
+//
+//		// gridlines
+//		AtFixed min = new AtFixed(1);
+//		AtFraction preferred = new AtFraction(0.1f); // Preferred can be
+//		// absolute or relative
+//		AtFixed max = new AtFixed(4);
+//		GridSegment segment = new GridSegment(0, min, preferred, max);
+//		theme.addToList(CalendarTheme.KEY_GRID_SEGMENTS_ + "PrimaryDim#", 0,
+//				segment);
+//		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_
+//				+ "PrimaryDim#");
+//		theme.removeAllFromList(CalendarTheme.KEY_GRID_SEGMENTS_
+//				+ "SecondaryDim#");
 
 		view.setThemeContext(MAIN_DAYS_CONTEXT);
 	}
@@ -282,88 +297,6 @@ public class MainCalendarController implements InteractionListener,
 		 * 
 		 * defaultShapeFactory.setShape(VERSHAPE, null);
 		 */
-	}
-
-	public void goToday() {
-		DateRange newVisRange = new DateRange(view.getDateArea()
-				.getVisibleDateRange());
-		printDebug(newVisRange);
-
-		Calendar todayCalendar = Calendar.getInstance();
-		int today = todayCalendar.get(java.util.Calendar.DAY_OF_YEAR);
-
-		int selectedStartDay = newVisRange.getStart().get(
-				java.util.Calendar.DAY_OF_YEAR);
-		int selectedEndDay = newVisRange.getStart().get(
-				java.util.Calendar.DAY_OF_YEAR);
-
-		int diff = selectedStartDay - today;
-
-		newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -diff);
-
-		view.getDateArea().setVisibleDateRange(newVisRange);
-
-		view.revalidate();
-		view.repaint();
-
-	}
-
-	public void goBack() {
-		DateRange newVisRange = new DateRange(view.getDateArea()
-				.getVisibleDateRange());
-
-		switch (currentViewMode) {
-		case VIEW_MODE_DAY:
-			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -1);
-
-			break;
-		case VIEW_MODE_WEEK:
-			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -7);
-
-			break;
-		case VIEW_MODE_WORK_WEEK:
-			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -7);
-
-			break;
-		case VIEW_MODE_MONTH:
-			newVisRange.roll(java.util.Calendar.WEEK_OF_YEAR, -1);
-
-			break;
-		}
-
-		view.getDateArea().setVisibleDateRange(newVisRange);
-
-		view.revalidate();
-		view.repaint();
-	}
-
-	public void goNext() {
-		DateRange newVisRange = new DateRange(view.getDateArea()
-				.getVisibleDateRange());
-
-		switch (currentViewMode) {
-		case VIEW_MODE_DAY:
-			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, 1);
-
-			break;
-		case VIEW_MODE_WEEK:
-			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, 7);
-
-			break;
-		case VIEW_MODE_WORK_WEEK:
-			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, 7);
-
-			break;
-		case VIEW_MODE_MONTH:
-			newVisRange.roll(java.util.Calendar.WEEK_OF_YEAR, 1);
-
-			break;
-		}
-
-		view.getDateArea().setVisibleDateRange(newVisRange);
-
-		view.revalidate();
-		view.repaint();
 	}
 
 	/**
@@ -455,17 +388,6 @@ public class MainCalendarController implements InteractionListener,
 
 	}
 
-	public void setVisibleDateRange(ColumbaDateRange dateRange) {
-		ImmutableDateRange newRange = new ImmutableDateRange(dateRange
-				.getStartTime().getTimeInMillis(), dateRange.getEndTime()
-				.getTimeInMillis(), false, null, null);
-
-		view.getDateArea().setVisibleDateRange(newRange);
-
-		view.revalidate();
-		view.repaint();
-	}
-
 	public void recreateFilterRows() {
 		Collection cats = CategoryDepository.getRoot().getChildrenDeep();
 
@@ -500,44 +422,169 @@ public class MainCalendarController implements InteractionListener,
 		}
 
 		view.revalidate();
-		view.repaint();
+		//view.repaint();
 	}
 
 	public void interactionOccured(InteractionEvent e) {
 		Object value = e.getCommand().getValue();
 
-		if (MigUtil.equals(value, "MouseOver")) {
+		if (MigUtil.equals(value, DefaultDateArea.AE_MOUSE_ENTERED)) {
 			// mouse hovers over activity
-			Activity activity = ((ActivityView) e.getInteractor()
-					.getInteracted()).getModel();
+			com.miginfocom.calendar.activity.Activity activity = ((ActivityView) e
+					.getInteractor().getInteracted()).getModel();
 			System.out.println("MouseOver - activity=" + activity.getID());
 			System.out.println("summary=" + activity.getSummary());
 			System.out.println("description=" + activity.getDescription());
 
-		} else if (MigUtil.equals(value, "selectedPressed")) {
-			// left mouse click selected activity
-			Activity activity = ((ActivityView) e.getInteractor()
-					.getInteracted()).getModel();
-			System.out.println("Selected Pressed -  activity="
-					+ activity.getID());
-			System.out.println("summary=" + activity.getSummary());
-			System.out.println("description=" + activity.getDescription());
-
-			// TODO store selected activity to open edit dialog
 		}
+
+		final Object o = e.getInteractor().getInteracted();
+
+		if (o instanceof ActivityView
+				&& e.getSourceEvent() instanceof MouseEvent) {
+
+			final Point p = ((MouseEvent) e.getSourceEvent()).getPoint();
+			Object commandValue = e.getCommand().getValue();
+
+			com.miginfocom.calendar.activity.Activity act = ((ActivityView) o)
+					.getModel();
+
+			// remember selected activity
+			selectedActivity = new Activity(act);
+
+			if (DefaultDateArea.AE_POPUP_TRIGGER.equals(commandValue)) {
+
+				JPopupMenu pop = new JPopupMenu();
+				pop.add(actionFactory.createEditAction());
+				pop.add(actionFactory.createDeleteAction());
+
+				pop.show(getView(), p.x, p.y);
+
+			} else if (DefaultDateArea.AE_DOUBLE_CLICKED.equals(commandValue)) {
+				actionFactory.createEditAction().actionPerformed(null);
+			}
+		}
+
+		// else if (MigUtil.equals(value, "selectedPressed")) {
+		// // left mouse click selected activity
+		// com.miginfocom.calendar.activity.Activity activity = ((ActivityView)
+		// e
+		// .getInteractor().getInteracted()).getModel();
+		// System.out.println("Selected Pressed - activity="
+		// + activity.getID());
+		// System.out.println("summary=" + activity.getSummary());
+		// System.out.println("description=" + activity.getDescription());
+		//
+		// selectedActivity = new Activity(activity);
+		// }
 
 	}
 
 	// trigged if activity is moved or daterange is modified
 	public void activityMoved(ActivityMoveEvent e) {
-		Activity activity = e.getActivity();
+
+		com.miginfocom.calendar.activity.Activity activity = e.getActivity();
 		System.out.println("Moved -  activity=" + activity.getID());
 		System.out.println("summary=" + activity.getSummary());
 		System.out.println("description=" + activity.getDescription());
 		ImmutableDateRange dateRange = activity.getBaseDateRange();
 		System.out.println("dateRange=" + dateRange);
 
-		// TODO update activity in backend
+//		actionFactory.createActivityMovedAction(dateRange.getStart(), dateRange
+//				.getEnd(true)).actionPerformed(null);
+
+	}
+
+	public void viewToday() {
+		DateRange newVisRange = new DateRange(view.getDateArea()
+				.getVisibleDateRange());
+		printDebug(newVisRange);
+
+		Calendar todayCalendar = Calendar.getInstance();
+		int today = todayCalendar.get(java.util.Calendar.DAY_OF_YEAR);
+
+		int selectedStartDay = newVisRange.getStart().get(
+				java.util.Calendar.DAY_OF_YEAR);
+		int selectedEndDay = newVisRange.getStart().get(
+				java.util.Calendar.DAY_OF_YEAR);
+
+		int diff = selectedStartDay - today;
+
+		newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -diff);
+
+		view.getDateArea().setVisibleDateRange(newVisRange);
+
+		view.revalidate();
+		//view.repaint();
+	}
+
+	public void viewNext() {
+		DateRange newVisRange = new DateRange(view.getDateArea()
+				.getVisibleDateRange());
+
+		switch (currentViewMode) {
+		case VIEW_MODE_DAY:
+			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, 1);
+
+			break;
+		case VIEW_MODE_WEEK:
+			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, 7);
+
+			break;
+		case VIEW_MODE_WORK_WEEK:
+			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, 7);
+
+			break;
+		case VIEW_MODE_MONTH:
+			newVisRange.roll(java.util.Calendar.WEEK_OF_YEAR, 1);
+
+			break;
+		}
+
+		view.getDateArea().setVisibleDateRange(newVisRange);
+
+		view.revalidate();
+		//view.repaint();
+	}
+
+	public void viewPrevious() {
+		DateRange newVisRange = new DateRange(view.getDateArea()
+				.getVisibleDateRange());
+
+		switch (currentViewMode) {
+		case VIEW_MODE_DAY:
+			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -1);
+
+			break;
+		case VIEW_MODE_WEEK:
+			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -7);
+
+			break;
+		case VIEW_MODE_WORK_WEEK:
+			newVisRange.roll(java.util.Calendar.DAY_OF_YEAR, -7);
+
+			break;
+		case VIEW_MODE_MONTH:
+			newVisRange.roll(java.util.Calendar.WEEK_OF_YEAR, -1);
+
+			break;
+		}
+
+		view.getDateArea().setVisibleDateRange(newVisRange);
+
+		view.revalidate();
+	//	view.repaint();
+	}
+
+	public void setVisibleDateRange(IDateRange dateRange) {
+		ImmutableDateRange newRange = new ImmutableDateRange(dateRange
+				.getStartTime().getTimeInMillis(), dateRange.getEndTime()
+				.getTimeInMillis(), false, null, null);
+
+		view.getDateArea().setVisibleDateRange(newRange);
+
+		view.revalidate();
+		//view.repaint();
 	}
 
 }

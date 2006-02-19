@@ -22,14 +22,17 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 import org.columba.calendar.base.UUIDGenerator;
-import org.columba.calendar.model.HeaderItem;
-import org.columba.calendar.model.HeaderItemList;
-import org.columba.calendar.model.ICalendarModel;
-import org.columba.calendar.model.IHeaderItemList;
-import org.columba.calendar.model.VCalendarModelFactory;
+import org.columba.calendar.model.ComponentInfoList;
+import org.columba.calendar.model.EventInfo;
+import org.columba.calendar.model.api.IComponent;
+import org.columba.calendar.model.api.IComponentInfoList;
+import org.columba.calendar.model.api.IEvent;
+import org.columba.calendar.model.api.IEventInfo;
 import org.columba.calendar.parser.SyntaxException;
+import org.columba.calendar.parser.VCalendarModelFactory;
+import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.store.api.StoreException;
 import org.columba.core.io.DiskIO;
-import org.columba.core.util.InternalException;
 import org.jdom.Document;
 
 public class LocalCalendarStore extends AbstractCalendarStore implements
@@ -46,8 +49,7 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 
 	private LocalXMLFileStore dataStorage;
 
-	public LocalCalendarStore(File directory) throws IllegalArgumentException,
-			InternalException {
+	public LocalCalendarStore(File directory) throws StoreException {
 		super();
 
 		if (directory == null)
@@ -61,15 +63,15 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 	}
 
 	/**
-	 * @see org.columba.calendar.store.AbstractCalendarStore#add(org.columba.calendar.model.ICalendarModel)
+	 * @see org.columba.calendar.store.AbstractCalendarStore#add(org.columba.calendar.model.api.IComponent)
 	 */
-	public void add(ICalendarModel basicModel) throws IllegalArgumentException,
-			InternalException {
+	public void add(IComponent basicModel) throws StoreException {
 
 		if (basicModel == null)
 			throw new IllegalArgumentException("basicModel == null");
 
 		String id = basicModel.getId();
+		// generate new UUID if it does not exist yet
 		if (id == null)
 			id = new UUIDGenerator().newUUID();
 
@@ -92,8 +94,7 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 	/**
 	 * @see org.columba.calendar.store.AbstractCalendarStore#exists(java.lang.Object)
 	 */
-	public boolean exists(Object id) throws IllegalArgumentException,
-			InternalException {
+	public boolean exists(Object id) throws StoreException {
 
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
@@ -104,16 +105,16 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 	/**
 	 * @see org.columba.calendar.store.AbstractCalendarStore#get(java.lang.Object)
 	 */
-	public ICalendarModel get(Object id) throws IllegalArgumentException,
-			InternalException {
+	public IComponent get(Object id) throws StoreException {
 
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
-		
-		Document document = dataStorage.load(id);
-		if ( document == null ) throw new InternalException("document == null, id="+id);
 
-		ICalendarModel basicModel = null;
+		Document document = dataStorage.load(id);
+		if (document == null)
+			throw new StoreException("document == null, id=" + id);
+
+		IComponent basicModel = null;
 		try {
 			basicModel = VCalendarModelFactory.unmarshall(document);
 		} catch (SyntaxException e) {
@@ -129,18 +130,19 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 
 	/**
 	 * @see org.columba.calendar.store.AbstractCalendarStore#modify(java.lang.Object,
-	 *      org.columba.calendar.model.ICalendarModel)
+	 *      org.columba.calendar.model.api.IComponent)
 	 */
-	public void modify(Object id, ICalendarModel basicModel)
-			throws IllegalArgumentException, InternalException {
+	public void modify(Object id, IComponent basicModel) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 
 		if (basicModel == null)
 			throw new IllegalArgumentException("basicModel == null");
 
+		// remove old data
 		dataStorage.remove(id);
 
+		// generate xml document
 		Document document = null;
 		try {
 			document = VCalendarModelFactory.marshall(basicModel);
@@ -152,13 +154,16 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 			e.printStackTrace();
 		}
 
+		// add new data to local store
+		dataStorage.save(id, document);
+
 		super.modify(id, basicModel);
 	}
 
 	/**
 	 * @see org.columba.calendar.store.AbstractCalendarStore#remove(java.lang.Object)
 	 */
-	public void remove(Object id) throws IllegalArgumentException, InternalException {
+	public void remove(Object id) throws StoreException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 
@@ -168,18 +173,17 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 	}
 
 	/**
-	 * @see org.columba.calendar.store.AbstractCalendarStore#getHeaderItemList()
+	 * @see org.columba.calendar.store.AbstractCalendarStore#getComponentInfoList()
 	 */
-	public IHeaderItemList getHeaderItemList() throws IllegalArgumentException,
-			InternalException {
+	public IComponentInfoList getComponentInfoList() throws StoreException {
 
-		HeaderItemList list = new HeaderItemList();
+		IComponentInfoList list = new ComponentInfoList();
 
 		Iterator it = dataStorage.iterator();
 		while (it.hasNext()) {
 			Document document = (Document) it.next();
 
-			ICalendarModel basicModel = null;
+			IComponent basicModel = null;
 			try {
 				basicModel = VCalendarModelFactory.unmarshall(document);
 			} catch (SyntaxException e) {
@@ -190,9 +194,12 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 				e.printStackTrace();
 			}
 
-			HeaderItem item = new HeaderItem(basicModel.getId(), basicModel.getSummary(),
-					basicModel.getDtStart(), basicModel.getDtEnt());
-			list.add(item);
+			if (basicModel.getType() == IComponent.TYPE.EVENT) {
+				IEvent event = (IEvent) basicModel;
+				IEventInfo item = new EventInfo(event.getId(), event
+						.getDtStart(), event.getDtEnt(), event.getSummary(), event.getCalendar());
+				list.add(item);
+			}
 		}
 
 		return list;

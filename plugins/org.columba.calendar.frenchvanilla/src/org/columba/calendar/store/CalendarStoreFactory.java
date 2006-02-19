@@ -20,6 +20,9 @@ package org.columba.calendar.store;
 import java.io.File;
 
 import org.columba.calendar.config.Config;
+import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.store.api.ICalendarStoreFactory;
+import org.columba.calendar.store.api.StoreException;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.InternalException;
 
@@ -37,7 +40,7 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 		super();
 
 		parentDirectory = Config.getInstance().getCalendarDirectory();
-		
+
 		storeDirectory = new File(parentDirectory, "store");
 		DiskIO.ensureDirectory(storeDirectory);
 	}
@@ -51,9 +54,7 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 		if (store == null)
 			try {
 				store = new LocalCalendarStore(storeDirectory);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (InternalException e) {
+			} catch (StoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

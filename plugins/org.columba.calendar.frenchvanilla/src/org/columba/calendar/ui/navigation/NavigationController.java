@@ -24,7 +24,10 @@ import java.util.GregorianCalendar;
 import javax.swing.JComponent;
 import javax.swing.event.EventListenerList;
 
-import org.columba.calendar.model.ColumbaDateRange;
+import org.columba.calendar.model.DateRange;
+import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
+import org.columba.calendar.ui.navigation.api.SelectionChangedEvent;
+import org.columba.calendar.ui.navigation.api.SelectionChangedListener;
 
 import com.miginfocom.calendar.datearea.ThemeDateAreaContainer;
 import com.miginfocom.calendar.theme.CalendarTheme;
@@ -32,7 +35,6 @@ import com.miginfocom.theme.Theme;
 import com.miginfocom.theme.Themes;
 import com.miginfocom.util.dates.DateChangeEvent;
 import com.miginfocom.util.dates.DateChangeListener;
-import com.miginfocom.util.dates.DateRange;
 import com.miginfocom.util.dates.DateRangeI;
 import com.miginfocom.util.dates.ImmutableDateRange;
 
@@ -40,7 +42,7 @@ import com.miginfocom.util.dates.ImmutableDateRange;
  * @author fdietz
  * 
  */
-public class NavigationController {
+public class NavigationController implements ICalendarNavigationView {
 
 	public static final String MINI_CONTEXT = "mini";
 
@@ -51,9 +53,6 @@ public class NavigationController {
 	public static final int SELECTION_MODE_WORK_WEEK = 2;
 
 	public static final int SELECTION_MODE_MONTH = 3;
-
-	private DateRange scrollToRangeNextTime = new DateRange(System
-			.currentTimeMillis(), null, null);
 
 	private EventListenerList listenerList = new EventListenerList();
 
@@ -79,9 +78,9 @@ public class NavigationController {
 			public void dateRangeChanged(DateChangeEvent e) {
 				if (e.getType() == DateChangeEvent.SELECTED) {
 
-					fireSelectionChanged(new ColumbaDateRange(
-							e.getNewRange().getStartMillis(), e.getNewRange()
-									.getEndMillis(false)));
+					fireSelectionChanged(new DateRange(e.getNewRange()
+							.getStartMillis(), e.getNewRange().getEndMillis(
+							false)));
 
 				}
 			}
@@ -110,8 +109,7 @@ public class NavigationController {
 	 * Propagates an event to all registered listeners notifying them that this
 	 * folder has been renamed.
 	 */
-	public void fireSelectionChanged(
-			ColumbaDateRange dateRange) {
+	public void fireSelectionChanged(DateRange dateRange) {
 		SelectionChangedEvent e = new SelectionChangedEvent(this, dateRange);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
@@ -173,12 +171,11 @@ public class NavigationController {
 		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_BOUNDARY, new Integer(
 				selectionBoundary));
 
-		
 		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MIN_COUNT, new Integer(
 				unitCount));
 		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MAX_COUNT, new Integer(
 				unitCount));
-				
+
 	}
 
 }

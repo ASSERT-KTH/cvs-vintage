@@ -56,11 +56,13 @@ public class Config {
 
 	public static final String CALENDAR_NAME = "name";
 
-	public static final Integer LOCAL_ROOT_NODE_ID = new Integer(100);
+	public static final String NODE_ID_LOCAL_ROOT = "root_local";
 
-	public static final Integer WEB_ROOT_NODE_ID = new Integer(1000);
+	public static final String NODE_ID_WEB_ROOT = "root_web";
 
-	public static final Integer PERSONAL_NODE_ID = new Integer(101);
+	public static final String NODE_ID_PRIVATE = "private";
+	public static final String NODE_ID_WORK = "work";
+
 
 	private Preferences prefs;
 
@@ -176,12 +178,20 @@ public class Config {
 			// creating default calendar "Personal"
 			LOG.info("creating default calendar <Personal>");
 
-			String calendarId = Config.PERSONAL_NODE_ID.toString();
+			String calendarId = Config.NODE_ID_PRIVATE;
 			Preferences node = prefs.node(calendarId);
-			node.put(Config.CALENDAR_NAME, "Personal");
+			node.put(Config.CALENDAR_NAME, "Private");
 			node.putInt(Config.CALENDAR_COLOR, new Color(255, 180, 180)
 					.getRGB());
 			node.put(Config.CALENDAR_TYPE, "local");
+			
+			String calendarId2 = Config.NODE_ID_WORK;
+			Preferences node2 = prefs.node(calendarId2);
+			node2.put(Config.CALENDAR_NAME, "Work");
+			node2.putInt(Config.CALENDAR_COLOR, new Color(180, 255, 180)
+					.getRGB());
+			node2.put(Config.CALENDAR_TYPE, "local");
+			
 		}
 	}
 

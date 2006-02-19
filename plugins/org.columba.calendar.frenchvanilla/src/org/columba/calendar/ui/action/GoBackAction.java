@@ -49,7 +49,7 @@ public class GoBackAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent e) {
 		CalendarFrameMediator calendarFrame = (CalendarFrameMediator) frameMediator;
 		
-		calendarFrame.goBack();
+		calendarFrame.getCalendarView().viewPrevious();
 	}
 
 }

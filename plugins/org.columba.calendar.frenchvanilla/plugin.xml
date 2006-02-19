@@ -14,16 +14,6 @@
       <properties managed="true" /> 
     </extension>
   </extensionlist>
-  <extensionlist id="org.columba.core.action">
-    <extension id="GoBack" class="org.columba.calendar.ui.action.GoBackAction"/>
-    <extension id="Today" class="org.columba.calendar.ui.action.TodayAction"/>
-    <extension id="GoNext" class="org.columba.calendar.ui.action.GoNextAction"/>
-    <extension id="DayView" class="org.columba.calendar.ui.action.DayViewSelectableAction"/>
-    <extension id="WorkWeekView" class="org.columba.calendar.ui.action.WorkWeekViewSelectableAction"/>
-    <extension id="WeekView" class="org.columba.calendar.ui.action.WeekViewSelectableAction"/>
-    <extension id="MonthView" class="org.columba.calendar.ui.action.MonthViewSelectableAction"/>
-    <extension id="NewAppointment" class="org.columba.calendar.ui.action.NewAppointmentAction"/>
-    <extension id="NewAllDayAppointment" class="org.columba.calendar.ui.action.NewAllDayAppointmentAction"/>
-  </extensionlist>
+  
   
 </plugin>

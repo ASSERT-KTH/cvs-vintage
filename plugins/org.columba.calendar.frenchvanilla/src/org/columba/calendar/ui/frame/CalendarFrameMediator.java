@@ -23,12 +23,16 @@ import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 
 import org.columba.api.gui.frame.IContainer;
-import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.calendar.ui.action.ActionFactory;
 import org.columba.calendar.ui.calendar.MainCalendarController;
+import org.columba.calendar.ui.calendar.api.ICalendarView;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
+import org.columba.calendar.ui.list.CalendarTreeController;
+import org.columba.calendar.ui.list.api.ICalendarListView;
 import org.columba.calendar.ui.navigation.NavigationController;
-import org.columba.calendar.ui.navigation.SelectionChangedEvent;
-import org.columba.calendar.ui.navigation.SelectionChangedListener;
-import org.columba.calendar.ui.tree.CalendarTreeController;
+import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
+import org.columba.calendar.ui.navigation.api.SelectionChangedEvent;
+import org.columba.calendar.ui.navigation.api.SelectionChangedListener;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.frame.DockFrameController;
@@ -39,21 +43,21 @@ import org.flexdock.docking.DockingConstants;
  * 
  */
 public class CalendarFrameMediator extends DockFrameController implements
-		IFrameMediator {
+		ICalendarMediator {
 
 	public static final String PROP_FILTERED = "filterRow";
 
-	private CalendarTreeController treeController;
+	private ICalendarListView listController;
 
-	public MainCalendarController mainCalendarController;
+	public ICalendarView calendarController;
 
-	private NavigationController navigationCalendarController;
+	private ICalendarNavigationView navigationController;
 
-	private DockableView treePanel;
+	private DockableView listPanel;
 
-	private DockableView mainCalendarPanel;
+	private DockableView calendarPanel;
 
-	private DockableView navigationCalendarPanel;
+	private DockableView navigationPanel;
 
 	/**
 	 * @param viewItem
@@ -63,20 +67,20 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 		// TestDataGenerator.generateTestData();
 
-		mainCalendarController = new MainCalendarController();
+		calendarController = new MainCalendarController(new ActionFactory(this));
 
-		navigationCalendarController = new NavigationController();
+		navigationController = new NavigationController();
 
-		navigationCalendarController
+		navigationController
 				.addSelectionChangedListener(new SelectionChangedListener() {
 					public void selectionChanged(SelectionChangedEvent object) {
-						mainCalendarController.setVisibleDateRange(object
+						calendarController.setVisibleDateRange(object
 								.getDateRange());
 
 					}
 				});
 
-		treeController = new CalendarTreeController(this);
+		listController = new CalendarTreeController(this);
 
 		registerDockables();
 
@@ -84,20 +88,20 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	public void registerDockables() {
 		// init dockable panels
-		treePanel = new DockableView("calendar_tree", "Calendar");
-		JScrollPane treeScrollPane = new JScrollPane(treeController.getView());
+		listPanel = new DockableView("calendar_tree", "Calendar");
+		JScrollPane treeScrollPane = new JScrollPane(listController.getView());
 		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		treePanel.setContentPane(treeScrollPane);
+		listPanel.setContentPane(treeScrollPane);
 
-		navigationCalendarPanel = new DockableView("navigation", "Navigation");
-		JScrollPane tableScrollPane = new JScrollPane(
-				navigationCalendarController.getView());
+		navigationPanel = new DockableView("navigation", "Navigation");
+		JScrollPane tableScrollPane = new JScrollPane(navigationController
+				.getView());
 		tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		navigationCalendarPanel.setContentPane(tableScrollPane);
+		navigationPanel.setContentPane(tableScrollPane);
 
-		mainCalendarPanel = new DockableView("main_calendar", "Main Calendar");
+		calendarPanel = new DockableView("main_calendar", "Main Calendar");
 
-		mainCalendarPanel.setContentPane(mainCalendarController.getView());
+		calendarPanel.setContentPane(calendarController.getView());
 
 	}
 
@@ -106,13 +110,12 @@ public class CalendarFrameMediator extends DockFrameController implements
 	 */
 	public void loadDefaultPosition() {
 
-		super.dock(mainCalendarPanel, DockingConstants.CENTER_REGION);
-		mainCalendarPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.2f);
-		treePanel.dock(navigationCalendarPanel,
-				DockingConstants.SOUTH_REGION, 0.2f);
+		super.dock(calendarPanel, DockingConstants.CENTER_REGION);
+		calendarPanel.dock(listPanel, DockingConstants.WEST_REGION, 0.2f);
+		listPanel.dock(navigationPanel, DockingConstants.SOUTH_REGION, 0.2f);
 
-		super.setSplitProportion(treePanel, 0.2f);
-		super.setSplitProportion(mainCalendarPanel, 0.2f);
+		super.setSplitProportion(listPanel, 0.2f);
+		super.setSplitProportion(calendarPanel, 0.2f);
 	}
 
 	public String[] getDockableIds() {
@@ -135,118 +138,50 @@ public class CalendarFrameMediator extends DockFrameController implements
 		getContainer().extendToolbar(this, is2);
 	}
 
-	/**
-	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
-	 */
-	// public JComponent getComponent() {
-	// JSplitPane mainSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-	// mainSplitPane.setDividerLocation(200);
-	// // mainSplitPane.setBorder(null);
-	//
-	// JPanel leftPanel = new JPanel();
-	// leftPanel.setLayout(new BorderLayout());
-	// mainSplitPane.setLeftComponent(leftPanel);
-	//
-	// JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-	// leftSplitPane.setBorder(null);
-	// leftSplitPane.setDividerLocation(200);
-	//
-	// leftSplitPane.setTopComponent(treeController.getView());
-	//
-	// leftSplitPane
-	// .setBottomComponent(navigationCalendarController.getView());
-	//
-	// leftPanel.add(leftSplitPane, BorderLayout.CENTER);
-	//
-	// mainSplitPane.setRightComponent(mainCalendarController.getView());
-	//
-	// InputStream is = this.getClass().getResourceAsStream(
-	// "/org/columba/calendar/action/menu.xml");
-	// getContainer().extendMenu(this, is);
-	//
-	// InputStream is2 = this.getClass().getResourceAsStream(
-	// "/org/columba/calendar/action/toolbar.xml");
-	// getContainer().extendToolbar(this, is2);
-	//
-	// return mainSplitPane;
-	// }
-	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
-	 */
-	// public IContentPane getContentPane() {
-	// return this;
-	// }
-	/**
-	 * @return Returns the mainCalendarController.
-	 */
-	public MainCalendarController getMainCalendarController() {
-		return mainCalendarController;
-	}
-
-	/**
-	 * @return Returns the tree.
-	 */
-	public CalendarTreeController getTreeController() {
-		return treeController;
-	}
-
-	/**
-	 * @return Returns the navigationCalendarController.
-	 */
-	public NavigationController getNavigationCalendarController() {
-		return navigationCalendarController;
-	}
-
-	public void goToday() {
-		mainCalendarController.goToday();
-
-	}
-
-	public void goBack() {
-		mainCalendarController.goBack();
-
-	}
-
-	public void goNext() {
-		mainCalendarController.goNext();
-
-	}
-
 	public void showDayView() {
 
-		mainCalendarController
-				.setViewMode(MainCalendarController.VIEW_MODE_DAY);
+		calendarController.setViewMode(MainCalendarController.VIEW_MODE_DAY);
 
-		navigationCalendarController
+		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_DAY);
 
 	}
 
 	public void showWeekView() {
-		mainCalendarController
-				.setViewMode(MainCalendarController.VIEW_MODE_WEEK);
+		calendarController.setViewMode(MainCalendarController.VIEW_MODE_WEEK);
 
-		navigationCalendarController
+		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_WEEK);
 
 	}
 
 	public void showWorkWeekView() {
-		mainCalendarController
+		calendarController
 				.setViewMode(MainCalendarController.VIEW_MODE_WORK_WEEK);
 
-		navigationCalendarController
+		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_WORK_WEEK);
 
 	}
 
 	public void showMonthView() {
-		mainCalendarController
-				.setViewMode(MainCalendarController.VIEW_MODE_MONTH);
+		calendarController.setViewMode(MainCalendarController.VIEW_MODE_MONTH);
 
-		navigationCalendarController
+		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_MONTH);
 
+	}
+
+	public ICalendarView getCalendarView() {
+		return calendarController;
+	}
+
+	public ICalendarListView getListView() {
+		return listController;
+	}
+
+	public ICalendarNavigationView getNavigationView() {
+		return navigationController;
 	}
 
 }

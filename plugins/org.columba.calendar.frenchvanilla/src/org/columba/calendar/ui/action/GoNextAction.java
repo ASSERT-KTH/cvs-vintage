@@ -48,7 +48,7 @@ public class GoNextAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent e) {
 		CalendarFrameMediator calendarFrame = (CalendarFrameMediator) frameMediator;
 		
-		calendarFrame.goNext();
+		calendarFrame.getCalendarView().viewNext();
 	}
 
 }

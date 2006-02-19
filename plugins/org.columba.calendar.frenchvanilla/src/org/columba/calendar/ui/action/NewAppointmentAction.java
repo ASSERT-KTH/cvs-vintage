@@ -20,13 +20,14 @@ package org.columba.calendar.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.calendar.model.VEventModel;
+import org.columba.calendar.model.Event;
+import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.CalendarStoreFactory;
-import org.columba.calendar.store.ICalendarStore;
+import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.store.api.StoreException;
 import org.columba.calendar.ui.dialog.EditEventDialog;
 import org.columba.calendar.ui.util.ResourceLoader;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.util.InternalException;
 
 /**
  * @author fdietz
@@ -54,7 +55,7 @@ public class NewAppointmentAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
-		VEventModel model = new VEventModel();
+		IEvent model = new Event();
 
 		EditEventDialog dialog = new EditEventDialog(null, model);
 
@@ -65,10 +66,7 @@ public class NewAppointmentAction extends AbstractColumbaAction {
 
 			try {
 				store.add(model);
-			} catch (IllegalArgumentException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (InternalException e1) {
+			} catch (StoreException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
