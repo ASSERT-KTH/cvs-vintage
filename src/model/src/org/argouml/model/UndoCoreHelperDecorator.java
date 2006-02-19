@@ -1,4 +1,4 @@
-// $Id: UndoCoreHelperDecorator.java,v 1.3 2005/10/07 15:03:38 bobtarling Exp $
+// $Id: UndoCoreHelperDecorator.java,v 1.4 2006/02/19 10:45:42 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -391,6 +391,14 @@ class UndoCoreHelperDecorator extends AbstractCoreHelperDecorator {
                 getComponent().setSpecification(handle, value);
             }
         }, specification, Model.getFacade().isSpecification(handle));
+    }
+
+    public void setSpecification(final Object handle, Object specification) {
+        createMemento(new ObjectSetter() {
+            public void set(Object value) {
+                getComponent().setSpecification(handle, value);
+            }
+        }, specification, Model.getFacade().getSpecification(handle));
     }
 
     /**

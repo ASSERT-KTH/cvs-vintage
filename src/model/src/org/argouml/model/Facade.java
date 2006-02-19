@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.31 2006/02/14 22:07:43 tfmorris Exp $
+// $Id: Facade.java,v 1.32 2006/02/19 10:45:42 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2492,8 +2492,16 @@ public interface Facade {
      * @param handle the Reception
      * @return String the Specification
      */
-    String getSpecification(Object handle);
+    String getSpecificationString(Object handle);
 
+    /**
+     * Returns the Specification of a given Method, i.e. its operation.
+     *
+     * @param handle the Method
+     * @return String the Specification Operation
+     */
+    Object getSpecification(Object handle);
+    
     /**
      * Returns all Interfaces of which this class is a realization.
      *

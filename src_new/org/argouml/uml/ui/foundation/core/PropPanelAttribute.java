@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.60 2005/12/13 18:59:53 mvw Exp $
+// $Id: PropPanelAttribute.java,v 1.61 2006/02/19 10:45:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,6 +61,8 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         addField(Translator.localize("label.multiplicity"),
                 getMultiplicityComboBox());
 
+        add(getVisibilityPanel());
+        
         addSeperator();
 
         addField(Translator.localize("label.type"),
@@ -79,7 +81,6 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         addField(Translator.localize("label.initial-value"),
                 new UMLInitialValueComboBox(this));
 
-        add(getVisibilityPanel());
         add(getChangeabilityRadioButtonPanel());
 
         JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 3,

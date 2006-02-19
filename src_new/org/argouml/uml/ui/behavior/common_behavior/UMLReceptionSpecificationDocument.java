@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSpecificationDocument.java,v 1.5 2005/01/30 20:47:59 linus Exp $
+// $Id: UMLReceptionSpecificationDocument.java,v 1.6 2006/02/19 10:45:43 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class UMLReceptionSpecificationDocument extends UMLPlainTextDocument {
      */
     protected String getProperty() {
         if (Model.getFacade().isAReception(getTarget())) {
-            return Model.getFacade().getSpecification(getTarget());
+            return Model.getFacade().getSpecificationString(getTarget());
         }
         return null;
     }
