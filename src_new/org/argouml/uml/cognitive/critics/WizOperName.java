@@ -1,5 +1,5 @@
-// $Id: WizOperName.java,v 1.33 2005/12/20 07:54:44 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: WizOperName.java,v 1.34 2006/02/19 18:13:37 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.cognitive.ui.WizStepCue;
 import org.argouml.model.Model;
-import org.argouml.util.CollectionUtil;
 
 /**
  * A wizard to help the user change the name of an operation to a better name.
@@ -144,6 +143,8 @@ public class WizOperName extends WizMEName {
                 return step2;
             }
             return super.makePanel(1);
+
+        default:
         }
         return null;
     }
