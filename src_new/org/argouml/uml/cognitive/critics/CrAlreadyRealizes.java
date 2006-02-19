@@ -1,5 +1,5 @@
-// $Id: CrAlreadyRealizes.java,v 1.16 2006/02/10 06:07:19 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: CrAlreadyRealizes.java,v 1.17 2006/02/19 10:33:10 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -70,5 +70,9 @@ public class CrAlreadyRealizes extends CrUML {
 	return problem;
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -8264991005828634274L;
 } /* end class CrAlreadyRealizes */
 
