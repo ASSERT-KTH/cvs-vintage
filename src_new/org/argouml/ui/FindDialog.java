@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.40 2006/02/15 19:08:38 tfmorris Exp $
+// $Id: FindDialog.java,v 1.41 2006/02/19 10:17:59 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ import org.tigris.gef.util.PredicateType;
 
 /**
  * Main dialog for Find function.
- * 
+ *
  * This is one of the few dialog boxes in Argo that is
  * non-modal (so that the user can keep the results on
  * the screen while they work with them).<p>
@@ -77,7 +77,7 @@ public class FindDialog extends ArgoDialog
     private static FindDialog instance;
     private static int nextResultNum = 1;
 
-    private static int numFinds = 0;
+    private static int numFinds;
 
     /**
      * Insets in pixels.
@@ -602,6 +602,10 @@ public class FindDialog extends ArgoDialog
         }
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 9209251878896557216L;
 } /* end class FindDialog */
 
 
@@ -612,24 +616,53 @@ public class FindDialog extends ArgoDialog
  * name of the class is somewhat of a misnomer.
  */
 class PredicateMType extends PredicateType {
+    /**
+     * The constructor.
+     *
+     * @param pats The classes.
+     */
     protected PredicateMType(Class[] pats) {
         super(pats, pats.length);
     }
 
+    /**
+     * The constructor.
+     *
+     * @param pats The classes (or <code>null</code> if numPats is 0.
+     * @param numPats The count of classes.
+     */
     protected PredicateMType(Class[] pats, int numPats) {
         super(pats, numPats);
     }
 
+    /**
+     * Create without classes.
+     *
+     * @return A newly created PredicateType.
+     */
     public static PredicateType create() {
         return new PredicateMType(null, 0);
     }
 
+    /**
+     * Create with one class.
+     *
+     * @param c0 First class.
+     * @return A newly created PredicateType.
+     */
     public static PredicateType create(Object c0) {
         Class[] classes = new Class[1];
         classes[0] = (Class) c0;
         return new PredicateMType(classes);
     }
 
+    /**
+     * Create with two classes.
+     *
+     * @param c0 First class.
+     * @param c1 Second class.
+     * @return A newly created PredicateType.
+     */
     public static PredicateType create(Object c0, Object c1) {
         Class[] classes = new Class[2];
         classes[0] = (Class) c0;
@@ -637,6 +670,14 @@ class PredicateMType extends PredicateType {
         return new PredicateMType(classes);
     }
 
+    /**
+     * Create with three classes.
+     *
+     * @param c0 First class.
+     * @param c1 Second class.
+     * @param c2 Third class.
+     * @return A newly created PredicateType.
+     */
     public static PredicateType create(Object c0, Object c1, Object c2) {
         Class[] classes = new Class[3];
         classes[0] = (Class) c0;
@@ -659,4 +700,9 @@ class PredicateMType extends PredicateType {
         }
         return result;
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 901828109709882796L;
 } /* end class PredicateMType */
