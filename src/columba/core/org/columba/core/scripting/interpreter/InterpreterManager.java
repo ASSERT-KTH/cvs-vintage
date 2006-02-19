@@ -25,104 +25,100 @@ import java.util.logging.Logger;
 
 import org.columba.core.scripting.config.BeanshellConfig;
 import org.columba.core.scripting.model.ColumbaScript;
+import org.columba.core.scripting.ScriptLogger;
 
 
 /**
- * 
- * This class manages and registers all available script interpreters,
- * which must implement the ScriptInterpreter interface.
- * The registration has to be hardcoded so, if you create an new 
- * ScriptInterpreter class, do not forget to add it here.
- * 
- * @author Celso Pinto <cpinto@yimports.com>
- */
+ This class manages and registers all available script interpreters,
+ which must implement the ScriptInterpreter interface.
+ The registration has to be hardcoded so, if you create an new
+ ScriptInterpreter class, do not forget to add it here.
+
+ @author Celso Pinto (cpinto@yimports.com) 
+*/
 public class InterpreterManager
 {
 
-  private static final Logger LOG = 
-    Logger.getLogger(InterpreterManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(InterpreterManager.class.getName());
 
-  /**
+    /**
+     The interpreters Map has the format
+     key(script_extension) => value(ScriptInterpreter instance)
+     */
+    private final Map<String, ScriptInterpreter> interpreters;
 
-    The interpreters Map has the format 
-      key(script_extension) => value(ScriptInterpreter instance)
+    public InterpreterManager()
+    {
+        interpreters = new HashMap<String, ScriptInterpreter>();
 
-  */
-  private final Map interpreters;
-  
-  public InterpreterManager()
-  {
-    interpreters = new HashMap();
-    
-    registerInterpreter(new BshInterpreter());
-    registerInterpreter(new JythonInterpreter());
-    /*registerInterpreter(new GroovyInterperter());*/
-  }
-  
-  public void registerInterpreter(ScriptInterpreter interpreter)
-  {
-  
-    LOG.entering("registerInterpreter",interpreter.getName());
-    
-    /* find out if the interpreter is already registered */
-    /* if so, remove it */
-    /*XXX this is not thread-safe, though luck. It isn't supposed to be. */
-    for(Iterator it = interpreters.entrySet().iterator();it.hasNext();)
-    {
-      Map.Entry entry = (Map.Entry)it.next();
-      if (entry.getValue().getClass().isInstance(interpreter))
-        it.remove();
+        registerInterpreter(new BshInterpreter());
+        registerInterpreter(new JythonInterpreter());
+        registerInterpreter(new GroovyInterpreter());
     }
-    
-    String[] extensions = interpreter.getSupportedExtensions();
-    for(int i=0;i<extensions.length;i++)
-    {
-      Object previous = interpreters.put(extensions[i],interpreter); 
-      if (previous != null)
-        LOG.warning(previous.getClass().getName() +  " doesn't handle " +
-                            extensions[i] + " anymore");
-    }
-    
-    LOG.exiting("registerInterpreter",interpreter.getName());
-    
-  }
-  
-  public void executeScript(ColumbaScript script)
-  {
-    LOG.entering("executeScript",script.getPath());
-    
-    ScriptInterpreter interpreter = 
-      (ScriptInterpreter)interpreters.get(script.getExtension());
-      
-    if (interpreter == null)
-    {
-      LOG.warning("No interpreter found for " + script.getPath() );
-      return;
-    }   
-    
-    Map vars = new HashMap();
-    vars.put( ScriptInterpreter.SCRIPT_PATH, 
-        BeanshellConfig.getInstance().getPath().getPath());
 
-    vars.put(ScriptInterpreter.SCRIPT_OBJ, script);
-    
-    try
+    public void registerInterpreter(ScriptInterpreter interpreter)
     {
-      interpreter.execute(script,vars);
+
+        LOG.entering("registerInterpreter", interpreter.getName());
+
+        /* find out if the interpreter is already registered */
+        /* if so, remove it */
+        /*XXX this is not thread-safe, though luck. It isn't supposed to be. */
+        for (Iterator it = interpreters.entrySet().iterator(); it.hasNext();)
+        {
+
+            Map.Entry entry = (Map.Entry) it.next();
+
+            if (entry.getValue().getClass().isInstance(interpreter)) it.remove();
+
+        }
+
+        String[] extensions = interpreter.getSupportedExtensions();
+        for (int i = 0; i < extensions.length; i++)
+        {
+            ScriptInterpreter previous = interpreters.put(extensions[i], interpreter);
+            if (previous != null)
+                LOG.warning(previous.getClass().getName() + " doesn't handle " + extensions[i] + " anymore");
+        }
+
+        LOG.exiting("registerInterpreter", interpreter.getName());
+
     }
-    catch(Exception ex)
+
+    public void executeScript(ColumbaScript script)
     {
-      /* any errors that may occur cannot stop other scripts from running */
-      LOG.log(Level.SEVERE,"Exception caught in script:" + script.getPath() ,ex);
-      ex.printStackTrace();
-      
+        LOG.entering("executeScript", script.getPath());
+
+        ScriptInterpreter interpreter = interpreters.get(script.getExtension());
+
+        if (interpreter == null)
+        {
+            LOG.warning("No interpreter found for " + script.getPath());
+            return;
+        }
+
+        Map vars = new HashMap();
+        vars.put(ScriptInterpreter.SCRIPT_PATH, BeanshellConfig.getInstance().getPath().getPath());
+
+        vars.put(ScriptInterpreter.SCRIPT_OBJ, script);
+
+        try
+        {
+            interpreter.execute(script, vars);
+        }
+        catch (Exception ex)
+        {
+            /* any errors that may occur cannot stop other scripts from running */
+            LOG.log(Level.SEVERE, "Exception caught in script:" + script.getPath(), ex);
+            ex.printStackTrace();
+
+        }
+
+        LOG.exiting("executeScript", script.getPath());
     }
-    
-    LOG.exiting("executeScript",script.getPath());
-  }
-  
-  public String[] getSupportedExtensions()
-  {
-    return (String[])interpreters.keySet().toArray(new String[]{});
-  }
+
+    public String[] getSupportedExtensions()
+    {
+        return (String[]) interpreters.keySet().toArray(new String[]{});
+    }
 }
