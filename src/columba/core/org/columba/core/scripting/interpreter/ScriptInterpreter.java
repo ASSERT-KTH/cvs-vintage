@@ -20,17 +20,23 @@ package org.columba.core.scripting.interpreter;
 import java.util.Map;
 
 import org.columba.core.scripting.model.ColumbaScript;
+import org.columba.core.scripting.ScriptLogger;
 
 /**
- * @author Celso Pinto <cpinto@yimports.com>
+    @author Celso Pinto (cpinto@yimports.com)
  */
-public interface ScriptInterpreter
+public abstract class ScriptInterpreter
 {
-  public static final String
-    SCRIPT_PATH = "scriptPath",
-    SCRIPT_OBJ = "scriptObj";
-    
-  public String getName();
-  public String[] getSupportedExtensions();
-  public void execute(ColumbaScript script, Map vars);
+    public static final String
+        SCRIPT_PATH = "scriptPath",
+        SCRIPT_OBJ = "scriptObj";
+
+    protected ScriptLogger logger = ScriptLogger.getInstance();
+
+    public abstract String getName();
+
+    public abstract String[] getSupportedExtensions();
+
+    public abstract void execute(ColumbaScript script, Map vars);
+
 }

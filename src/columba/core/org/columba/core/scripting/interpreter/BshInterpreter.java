@@ -21,60 +21,66 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.columba.core.scripting.model.ColumbaScript;
+import org.columba.core.scripting.ScriptLogger;
 
 import bsh.EvalError;
 import bsh.Interpreter;
 
 /**
- * @author Celso Pinto <cpinto@yimports.com>
+    @author Celso Pinto (cpinto@yimports.com)
  */
 public class BshInterpreter
-    implements ScriptInterpreter
+    extends ScriptInterpreter
 {
-  private static final Logger LOG = 
-    Logger.getLogger(BshInterpreter.class.getName());
+    private final static String[] EXTENSIONS = new String[]{"bsh", "beanshell"};
 
-  private final static String[] EXTENSIONS = new String[]{"bsh","beanshell"};
-  
-  
-  public String getName()
-  {
-    return "Beanshell Interpreter";
-  }
 
-  public String[] getSupportedExtensions()
-  {
-    return EXTENSIONS;
-  }
-
-  public void execute(ColumbaScript script, Map vars)
-  {
-    /*
-     * it's the script responsability to define the "metadata" by invoking
-     * .setName(), .setAuthor() and .setDescription()
-     */
-    
-    LOG.finer("Executing bsh: " + script.getPath());
-    Interpreter bsh = new Interpreter();
-    
-    try {
-      for(Iterator it = vars.entrySet().iterator();it.hasNext();)
-      {
-        Map.Entry entry = (Map.Entry)it.next();
-        bsh.set(entry.getKey().toString(),entry.getValue());      
-      }
-      
-      bsh.source(script.getPath());
-    } catch (FileNotFoundException ex) {
-      ex.printStackTrace();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    } catch (EvalError ex) {
-      ex.printStackTrace();
+    public String getName()
+    {
+        return "Beanshell Interpreter";
     }
-  }
+
+    public String[] getSupportedExtensions()
+    {
+        return EXTENSIONS;
+    }
+
+    public void execute(ColumbaScript script, Map vars)
+    {
+        /*
+        * it's the script responsability to define the "metadata" by invoking
+        * .setName(), .setAuthor() and .setDescription()
+        */
+
+        logger.append("Executing bsh: " + script.getPath());
+
+        Interpreter bsh = new Interpreter();
+        bsh.setClassLoader(getClass().getClassLoader());
+
+        try
+        {
+            for (Iterator it = vars.entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry) it.next();
+                bsh.set(entry.getKey().toString(), entry.getValue());
+            }
+
+            bsh.source(script.getPath());
+        }
+        catch (FileNotFoundException ex)
+        {
+            logger.append(String.format("File %s not found", script.getPath()), ex);
+        }
+        catch (IOException ex)
+        {
+            logger.append(String.format("IOException in %s", script.getPath()), ex);
+        }
+        catch (EvalError ex)
+        {
+            logger.append(String.format("Failed to process script %s", script.getPath()), ex);
+        }
+    }
 
 }

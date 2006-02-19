@@ -19,10 +19,14 @@ package org.columba.core.scripting;
 
 import java.util.List;
 
-public interface IScriptsObserver {
-	public void scriptsAdded(List scripts);
+/**
+    @author Celso Pinto (cpinto@yimports.com)
+ */
+public interface IScriptsObserver
+{
+    public void scriptsAdded(List scripts);
 
-	public void scriptsRemoved(List scripts);
+    public void scriptsRemoved(List scripts);
 
-	public void scriptsChanged(List scripts);
+    public void scriptsChanged(List scripts);
 }

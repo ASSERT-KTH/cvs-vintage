@@ -17,8 +17,12 @@
 */
 package org.columba.core.scripting.config;
 
-public interface OptionsObserver {
-	public void pollingIntervalChanged(int interval);
+/**
+    @author Celso Pinto (cpinto@yimports.com)
+ */
+public interface OptionsObserver
+{
+    public void pollingIntervalChanged(int interval);
 
-	public void pollingStateChanged(boolean enabled);
+    public void pollingStateChanged(boolean enabled);
 }

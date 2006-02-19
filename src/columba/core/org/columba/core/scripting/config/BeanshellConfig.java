@@ -24,60 +24,66 @@ import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.io.DiskIO;
 
 /**
- * Service configuration class. To access the service options use the getOptions
- * accessor.
- * 
- * @author Celso Pinto (cpinto@yimports.com)
- */
-public class BeanshellConfig {
+ Service configuration class. To access the service options use the getOptions
+ accessor.
 
-	private static final String COLUMBA_SCRIPT_DIRECTORY = "scripts",
-			OPTIONS_FILE = "options.xml";
+ @author Celso Pinto (cpinto@yimports.com)
+*/
+public class BeanshellConfig
+{
 
-	protected Config config;
+    private static final String COLUMBA_SCRIPT_DIRECTORY = "scripts", OPTIONS_FILE = "options.xml";
 
-	protected File path;
+    protected Config config;
 
-	protected File optionsFile;
+    protected File path;
 
-	private static BeanshellConfig instance;
+    protected File optionsFile;
 
-	private BeanshellConfig(Config config) {
+    private static BeanshellConfig instance;
 
-		this.config = config;
-		path = new File(config.getConfigDirectory(), COLUMBA_SCRIPT_DIRECTORY);
-		DiskIO.ensureDirectory(path);
+    private BeanshellConfig(Config config)
+    {
 
-		optionsFile = new File(path, OPTIONS_FILE);
-		registerPlugin(optionsFile.getName(), new OptionsXmlConfig(optionsFile));
+        this.config = config;
+        path = new File(config.getConfigDirectory(), COLUMBA_SCRIPT_DIRECTORY);
+        DiskIO.ensureDirectory(path);
 
-	}
+        optionsFile = new File(path, OPTIONS_FILE);
+        registerPlugin(optionsFile.getName(), new OptionsXmlConfig(optionsFile));
 
-	public String getModuleName() {
-		return COLUMBA_SCRIPT_DIRECTORY;
-	}
+    }
 
-	public File getPath() {
-		return path;
-	}
+    public String getModuleName()
+    {
+        return COLUMBA_SCRIPT_DIRECTORY;
+    }
 
-	public Options getOptions() {
-		return ((OptionsXmlConfig) getPlugin(optionsFile.getName()))
-				.getOptions();
-	}
+    public File getPath()
+    {
+        return path;
+    }
 
-	private void registerPlugin(String id, DefaultXmlConfig plugin) {
-		config.registerPlugin(getModuleName(), id, plugin);
-	}
+    public Options getOptions()
+    {
+        return ((OptionsXmlConfig) getPlugin(optionsFile.getName()))
+            .getOptions();
+    }
 
-	private DefaultXmlConfig getPlugin(String id) {
-		return config.getPlugin(getModuleName(), id);
-	}
+    private void registerPlugin(String id, DefaultXmlConfig plugin)
+    {
+        config.registerPlugin(getModuleName(), id, plugin);
+    }
 
-	public static BeanshellConfig getInstance() {
-		if (instance == null)
-			instance = new BeanshellConfig(Config.getInstance());
+    private DefaultXmlConfig getPlugin(String id)
+    {
+        return config.getPlugin(getModuleName(), id);
+    }
 
-		return instance;
-	}
+    public static BeanshellConfig getInstance()
+    {
+        if (instance == null) instance = new BeanshellConfig(Config.getInstance());
+
+        return instance;
+    }
 }

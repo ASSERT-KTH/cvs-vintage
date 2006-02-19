@@ -25,44 +25,43 @@ import org.columba.core.scripting.model.ColumbaScript;
 import org.python.util.PythonInterpreter;
 
 /**
- * @author Celso Pinto <cpinto@yimports.com>
+    @author Celso Pinto (cpinto@yimports.com)
  */
 public class JythonInterpreter
-    implements ScriptInterpreter
+    extends ScriptInterpreter
 {
-  private static final Logger LOG = 
-    Logger.getLogger(JythonInterpreter.class.getName());
 
-  private final static String[] EXTENSIONS = new String[]{"py","jython"};
-  
-  public String getName()
-  {
-    return "Jython Interpreter";
-  }
+    private final static String[] EXTENSIONS = new String[]{"py", "jython"};
 
-  public String[] getSupportedExtensions()
-  {
-    return EXTENSIONS;
-  }
-
-  public void execute(ColumbaScript script, Map vars)
-  {
-    /*
-     * it's the script responsability to define the "metadata" by invoking
-     * .setName(), .setAuthor() and .setDescription()
-     */
-    LOG.finer("Executing jython: " + script.getPath());
-    PythonInterpreter jython = new PythonInterpreter();
-
-    for(Iterator it = vars.entrySet().iterator();it.hasNext();)
+    public String getName()
     {
-      Map.Entry entry = (Map.Entry)it.next();
-      jython.set(entry.getKey().toString(),entry.getValue());      
+        return "Jython Interpreter";
     }
-    
-    jython.execfile(script.getPath());
-    jython.cleanup();
-    
-  }
+
+    public String[] getSupportedExtensions()
+    {
+        return EXTENSIONS;
+    }
+
+    public void execute(ColumbaScript script, Map vars)
+    {
+        /*
+        * it's the script responsability to define the "metadata" by invoking
+        * .setName(), .setAuthor() and .setDescription()
+        */
+        logger.append("Executing jython: " + script.getPath());
+
+        PythonInterpreter jython = new PythonInterpreter();
+
+        for (Iterator it = vars.entrySet().iterator(); it.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry) it.next();
+            jython.set(entry.getKey().toString(), entry.getValue());
+        }
+
+        jython.execfile(script.getPath());
+        jython.cleanup();
+
+    }
 
 }

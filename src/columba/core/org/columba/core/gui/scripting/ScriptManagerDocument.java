@@ -21,21 +21,27 @@ All Rights Reserved.
 package org.columba.core.gui.scripting;
 
 
-import java.util.List;
-
 import org.columba.core.scripting.IScriptsObserver;
 import org.columba.core.scripting.model.ColumbaScript;
 
+import java.util.List;
 
+/**
+    @author Celso Pinto (cpinto@yimports.com)
+ */
 public interface ScriptManagerDocument
 {
 
-  public void removeScript(ColumbaScript[] scripts);
-  public void refreshScriptList();
-  public ColumbaScript getScript(String path);
-  public List getScripts();
-  
-  public void addObserver(IScriptsObserver obs);
-  public void removeObserver(IScriptsObserver obs);
-  
+    public void removeScript(ColumbaScript[] scripts);
+
+    public void refreshScriptList();
+
+    public ColumbaScript getScript(String path);
+
+    public List getScripts();
+
+    public void addObserver(IScriptsObserver obs);
+
+    public void removeObserver(IScriptsObserver obs);
+
 }

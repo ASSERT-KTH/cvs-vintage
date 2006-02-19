@@ -22,36 +22,41 @@ import java.io.File;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.xml.XmlElement;
 
-public class OptionsXmlConfig extends DefaultXmlConfig {
+/**
+    @author Celso Pinto (cpinto@yimports.com)
+ */
+public class OptionsXmlConfig
+    extends DefaultXmlConfig
+{
 
-	private static final String OPTIONS_KEY = "options", OPTIONS_PATH = "/"
-			+ OPTIONS_KEY;
+    private static final String OPTIONS_KEY = "options", OPTIONS_PATH = "/" + OPTIONS_KEY;
 
-	private Options options;
+    private Options options;
 
-	public OptionsXmlConfig(File file) {
-		super(file);
-	}
+    public OptionsXmlConfig(File file)
+    {
+        super(file);
+    }
 
-	public Options getOptions() {
-		if (options == null)
-			options = new Options(getRoot().getElement(OPTIONS_PATH));
+    public Options getOptions()
+    {
+        if (options == null) options = new Options(getRoot().getElement(OPTIONS_PATH));
 
-		return options;
-	}
+        return options;
+    }
 
-	public boolean load() {
-		boolean superRes = super.load();
-		if (getRoot().getElement(OPTIONS_PATH) == null) {
-			XmlElement optionsElement = new XmlElement(OPTIONS_KEY);
-			getRoot().addElement(optionsElement);
-			optionsElement.addElement(new XmlElement(
-					Options.POLLING_INTERVAL_KEY));
-			optionsElement.addElement(new XmlElement(
-					Options.POLLING_ENABLED_KEY));
-			getOptions().setDefaultData();
-		}
+    public boolean load()
+    {
+        boolean superRes = super.load();
+        if (getRoot().getElement(OPTIONS_PATH) == null)
+        {
+            XmlElement optionsElement = new XmlElement(OPTIONS_KEY);
+            getRoot().addElement(optionsElement);
+            optionsElement.addElement(new XmlElement(Options.POLLING_INTERVAL_KEY));
+            optionsElement.addElement(new XmlElement(Options.POLLING_ENABLED_KEY));
+            getOptions().setDefaultData();
+        }
 
-		return superRes;
-	}
+        return superRes;
+    }
 }

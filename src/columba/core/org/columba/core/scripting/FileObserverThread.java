@@ -36,254 +36,287 @@ import org.columba.core.scripting.interpreter.InterpreterManager;
 import org.columba.core.scripting.model.ColumbaScript;
 
 /**
- * The FileObserverThread is a timer that polls the file system to check if any
- * new .bsh scripts were created or existing scripts modified, since the last
- * time it was run.<br>
- * <br>
- * The polling behaviour can be enabled or disabled in the &lt;columba
- * dir&gt;/scripts/config.xml, as well as the polling interval. <br>
- * <br>
- * The default polling interval is of 5 seconds.
- * 
- * @author Celso Pinto (cpinto@yimports.com)
- */
-public class FileObserverThread extends Thread implements OptionsObserver,
-		ScriptManagerDocument {
+ The FileObserverThread is a timer that polls the file system to check if any
+ new .bsh scripts were created or existing scripts modified, since the last
+ time it was run.<br>
+ <br>
+ The polling behaviour can be enabled or disabled in the &lt;columba
+ dir&gt;/scripts/config.xml, as well as the polling interval. <br>
+ <br>
+ The default polling interval is of 5 seconds.
 
-	private static final Logger LOG = Logger.getLogger(FileObserverThread.class
-			.getName());
+ @author Celso Pinto (cpinto@yimports.com) 
+*/
+public class FileObserverThread
+    extends Thread
+    implements  OptionsObserver,
+                ScriptManagerDocument
+{
 
-	private final BeanshellConfig config;
-	private final ScriptFileFilter fileFilter;
-  private final InterpreterManager interpreterManager;
-  private final List observers;
-  private Map scriptList;
-  
-	private long lastExecution;
-  private int pollingInterval = -1;
-	private boolean finish = false;
-  
-	private static FileObserverThread instance = null;
+    private static final Logger LOG = Logger.getLogger(FileObserverThread.class.getName());
 
-	private FileObserverThread() {
-    
-    config = BeanshellConfig.getInstance();
-    fileFilter = new ScriptFileFilter();
-    interpreterManager = new InterpreterManager();
-    
-    scriptList = new HashMap();
-    observers = new Vector();
-    lastExecution = System.currentTimeMillis();
-    
-    pollingInterval = config.getOptions().getInternalPollingInterval();
-    fileFilter.compileFilter(interpreterManager.getSupportedExtensions());
-    
-	}
+    private final BeanshellConfig config;
+    private final ScriptFileFilter fileFilter;
+    private final InterpreterManager interpreterManager;
+    private final List observers;
+    private Map scriptList;
 
-	public void setScriptList(Map scripts) {
-		scriptList = scripts;
-	}
+    private long lastExecution;
+    private int pollingInterval = -1;
+    private boolean finish = false;
 
-	public void finish() {
-		finish = true;
-	}
+    private static FileObserverThread self = null;
 
-	private synchronized void executeRefresh(boolean force) {
-
-		List changedFiles = checkFiles();
-
-		if (changedFiles.size() > 0)
-			execChangedFiles(changedFiles);
-
-		lastExecution = System.currentTimeMillis();
-
-	}
-
-	public void run() {
-		config.getOptions().addObserver(this);
-
-		while (!finish) {
-
-			executeRefresh(false);
-
-			try {
-				sleep(pollingInterval);
-			} catch (InterruptedException ex) {
-			}
-
-		}
-
-		config.getOptions().removeObserver(this);
-		instance = null;
-	}
-
-	private List checkFiles() {
-
-		List changedFiles = new ArrayList(), removedScripts = new ArrayList(), addedScripts = new ArrayList();
-
-		// check current file list for changes
-		ColumbaScript script = null;
-		Map.Entry entry = null;
-
-		synchronized (scriptList) {
-
-			for (Iterator itCurrent = scriptList.entrySet().iterator(); itCurrent
-					.hasNext();) {
-				entry = (Map.Entry) itCurrent.next();
-				script = (ColumbaScript) entry.getValue();
-				if (!script.exists()) {
-					// it isn't possible to undo whatever the script did
-					removedScripts.add(script);
-					itCurrent.remove();
-					continue;
-				}
-
-				if (script.getLastModified() > lastExecution)
-					changedFiles.add(script);
-
-			}
-
-			/* check for new files in the scripts directory */
-			File[] scripts = getNewScripts();
-			for (int i = 0; i < scripts.length; i++) {
-				if (!scriptList.containsKey(scripts[i].getPath())) {
-					script = new ColumbaScript(scripts[i]);
-					changedFiles.add(script);
-					scriptList.put(scripts[i].getPath(), script);
-					addedScripts.add(script);
-				}
-			}
-
-		}
-
-		for (Iterator it = observers.iterator(); it.hasNext();) {
-
-			IScriptsObserver obs = (IScriptsObserver) it.next();
-			if (removedScripts.size() > 0)
-				obs.scriptsRemoved(removedScripts);
-
-			if (addedScripts.size() > 0)
-				obs.scriptsAdded(addedScripts);
-
-			if (changedFiles.size() > 0)
-				obs.scriptsChanged(changedFiles);
-
-		}
-
-		return changedFiles;
-
-	}
-
-	private File[] getNewScripts() {
-		/*
-		 * I specifically want this here to ensure that the directory exists and
-		 * this method never returns null.
-		 * 
-		 * Any files that were in the observation list have already been
-		 * previously removed by checkFiles().
-		 */
-		File configPath = config.getPath();
-		if (!configPath.exists() || !configPath.isDirectory()) {
-			LOG.warning("Scripts directory doesn't exist:"
-					+ configPath.getPath());
-			return new File[] {};
-		}
-
-		return configPath.listFiles(fileFilter);
-	}
-
-	private void execChangedFiles(List files) {
-		for (Iterator it = files.iterator(); it.hasNext();)
-      interpreterManager.executeScript( (ColumbaScript)it.next() );
-	}
-
-	private class ScriptFileFilter implements FileFilter {
-
-		private Pattern extensionPattern = null;
-
-    private String join(String[] values, char separator)
+    private FileObserverThread()
     {
-    
-      StringBuffer bf = new StringBuffer(256);
-      for(int i=0;i<values.length;i++)
-        bf = bf.append(values[i] + separator);
 
-      if (bf.length() > 0)
-        bf = bf.deleteCharAt(bf.length()-1);
-               
-      return bf.toString();
-       
+        config = BeanshellConfig.getInstance();
+        fileFilter = new ScriptFileFilter();
+        interpreterManager = new InterpreterManager();
+
+        scriptList = new HashMap();
+        observers = new Vector();
+        lastExecution = System.currentTimeMillis();
+
+        pollingInterval = config.getOptions().getInternalPollingInterval();
+        fileFilter.compileFilter(interpreterManager.getSupportedExtensions());
+
     }
-    
-    public void compileFilter(String[] validExtensions)
+
+    public void setScriptList(Map scripts)
     {
-      extensionPattern = Pattern.compile(".*\\.(" + join(validExtensions,'|') + ")$");
+        scriptList = scripts;
     }
-    
-		public boolean accept(File aPathname) {
-			return extensionPattern.matcher(aPathname.getPath()).matches();
-		}
 
-	}
+    public void finish()
+    {
+        finish = true;
+    }
 
-	public void pollingIntervalChanged(int interval) {
-		pollingInterval = interval;
-	}
+    private synchronized void executeRefresh(boolean force)
+    {
 
-	public void pollingStateChanged(boolean enabled) {
-	}
+        List changedFiles = checkFiles();
 
-	public static FileObserverThread getInstance() {
-		if (instance == null)
-			instance = new FileObserverThread();
+        if (changedFiles.size() > 0)
+            execChangedFiles(changedFiles);
 
-		return instance;
-	}
+        lastExecution = System.currentTimeMillis();
 
-	public void addObserver(IScriptsObserver observer) {
-		if (!observers.contains(observer))
-			observers.add(observer);
-	}
+    }
 
-	public void removeObserver(IScriptsObserver observer) {
-		observers.remove(observer);
-	}
+    public void run()
+    {
+        config.getOptions().addObserver(this);
 
-	public List getScripts() {
-		return new ArrayList(scriptList.values());
-	}
+        while (!finish)
+        {
 
-	public void refreshScriptList() {
-		executeRefresh(true);
-	}
+            executeRefresh(false);
 
-	public ColumbaScript getScript(String path) {
-		return (ColumbaScript) scriptList.get(path);
-	}
+            try
+            {
+                sleep(pollingInterval);
+            }
+            catch (InterruptedException ex)
+            {}
 
-	public void removeScript(ColumbaScript[] scripts) {
+        }
 
-		synchronized (scriptList) {
+        config.getOptions().removeObserver(this);
+        self = null;
+    }
 
-			for (int i = 0; i < scripts.length; i++) {
+    private List checkFiles()
+    {
 
-				/* really delete file */
-				LOG.fine("Removing script: " + scripts[i].getPath());
+        List changedFiles = new ArrayList(),
+            removedScripts = new ArrayList(),
+            addedScripts = new ArrayList();
 
-				if (scripts[i].exists())
-					scripts[i].deleteFromDisk();
+        // check current file list for changes
+        ColumbaScript script = null;
+        Map.Entry entry = null;
 
-				/* remove from script list */
-				scriptList.remove(scripts[i].getPath());
+        synchronized (scriptList)
+        {
 
-			}
+            for (Iterator itCurrent = scriptList.entrySet().iterator(); itCurrent.hasNext();)
+            {
+                entry = (Map.Entry) itCurrent.next();
+                script = (ColumbaScript) entry.getValue();
+                if (!script.exists())
+                {
+                    // it isn't possible to undo whatever the script did
+                    removedScripts.add(script);
+                    itCurrent.remove();
+                    continue;
+                }
 
-		}
+                if (script.getLastModified() > lastExecution)
+                    changedFiles.add(script);
 
-		List removed = Arrays.asList(scripts);
-		for (Iterator it = observers.iterator(); it.hasNext();)
-			((IScriptsObserver) it.next()).scriptsRemoved(removed);
+            }
 
-	}
+            /* check for new files in the scripts directory */
+            File[] scripts = getNewScripts();
+            for (int i = 0; i < scripts.length; i++)
+            {
+                if (!scriptList.containsKey(scripts[i].getPath()))
+                {
+                    script = new ColumbaScript(scripts[i]);
+                    changedFiles.add(script);
+                    scriptList.put(scripts[i].getPath(), script);
+                    addedScripts.add(script);
+                }
+            }
+
+        }
+
+        for (Iterator it = observers.iterator(); it.hasNext();)
+        {
+
+            IScriptsObserver obs = (IScriptsObserver) it.next();
+            if (removedScripts.size() > 0)
+                obs.scriptsRemoved(removedScripts);
+
+            if (addedScripts.size() > 0)
+                obs.scriptsAdded(addedScripts);
+
+            if (changedFiles.size() > 0)
+                obs.scriptsChanged(changedFiles);
+
+        }
+
+        return changedFiles;
+
+    }
+
+    private File[] getNewScripts()
+    {
+        /*
+           * I specifically want this here to ensure that the directory exists and
+           * this method never returns null.
+           *
+           * Any files that were in the observation list have already been
+           * previously removed by checkFiles().
+           */
+        File configPath = config.getPath();
+        if (!configPath.exists() || !configPath.isDirectory())
+        {
+            LOG.warning("Scripts directory doesn't exist:" + configPath.getPath());
+            return new File[]{};
+        }
+
+        return configPath.listFiles(fileFilter);
+    }
+
+    private void execChangedFiles(List files)
+    {
+        for (Iterator it = files.iterator(); it.hasNext();)
+            interpreterManager.executeScript((ColumbaScript) it.next());
+    }
+
+    private class ScriptFileFilter
+        implements FileFilter
+    {
+
+        private Pattern extensionPattern = null;
+
+        private String join(String[] values, char separator)
+        {
+
+            StringBuffer bf = new StringBuffer(256);
+            for (int i = 0; i < values.length; i++)
+                bf = bf.append(values[i] + separator);
+
+            if (bf.length() > 0) bf = bf.deleteCharAt(bf.length() - 1);
+
+            return bf.toString();
+
+        }
+
+        public void compileFilter(String[] validExtensions)
+        {
+            extensionPattern =
+                Pattern.compile(".*\\.(".concat(join(validExtensions, '|')).concat(")$"));
+        }
+
+        public boolean accept(File aPathname)
+        {
+            return extensionPattern.matcher(aPathname.getPath()).matches();
+        }
+
+    }
+
+    public void pollingIntervalChanged(int interval)
+    {
+        pollingInterval = interval;
+    }
+
+    public void pollingStateChanged(boolean enabled)
+    {
+        /*TODO stop polling thread?! */
+    }
+
+    public static FileObserverThread getInstance()
+    {
+        if (self == null)
+            self = new FileObserverThread();
+
+        return self;
+    }
+
+    public void addObserver(IScriptsObserver observer)
+    {
+        if (!observers.contains(observer)) observers.add(observer);
+    }
+
+    public void removeObserver(IScriptsObserver observer)
+    {
+        observers.remove(observer);
+    }
+
+    public List getScripts()
+    {
+        return new ArrayList(scriptList.values());
+    }
+
+    public void refreshScriptList()
+    {
+        executeRefresh(true);
+    }
+
+    public ColumbaScript getScript(String path)
+    {
+        return (ColumbaScript) scriptList.get(path);
+    }
+
+    public void removeScript(ColumbaScript[] scripts)
+    {
+
+        synchronized (scriptList)
+        {
+
+            for (int i = 0; i < scripts.length; i++)
+            {
+
+                /* really delete file */
+                LOG.fine("Removing script: " + scripts[i].getPath());
+
+                if (scripts[i].exists()) scripts[i].deleteFromDisk();
+
+                /* remove from script list */
+                scriptList.remove(scripts[i].getPath());
+
+            }
+
+        }
+
+        List removed = Arrays.asList(scripts);
+        for (Iterator it = observers.iterator(); it.hasNext();)
+            ((IScriptsObserver) it.next()).scriptsRemoved(removed);
+
+    }
 
 }

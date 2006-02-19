@@ -19,69 +19,83 @@ package org.columba.core.scripting.model;
 
 import java.io.File;
 
-public class ColumbaScript {
+/**
+    @author Celso Pinto (cpinto@yimports.com)
+ */
+public class ColumbaScript
+{
 
-	private final File scriptFile;
+    private final File scriptFile;
 
-	private String name = "", author = "", description = "", extension = "";
+    private String
+        name = "",
+        author = "",
+        description = "",
+        extension = "";
 
-	public ColumbaScript(File file) {
-		scriptFile = file;
-    extension = extractExtensionFromFilename();
-	}
+    public ColumbaScript(File file)
+    {
+        scriptFile = file;
+        extension = extractExtensionFromFilename();
+    }
 
-  private String extractExtensionFromFilename()
-  {
+    private String extractExtensionFromFilename()
+    {
 
-    String name = scriptFile.getName();
-    int pos = name.lastIndexOf('.');
-    if (pos == -1 || pos+1 == name.length())
-      return null;
-      
-    return name.substring(pos+1);
-    
-  }
-  
-  public String getExtension()
-  {
-    return extension;
-  }
-  
-	public void setMetadata(String name, String author, String desc) {
-		this.name = name;
-		this.author = author;
-		this.description = desc;
-	}
+        String name = scriptFile.getName();
+        int pos = name.lastIndexOf('.');
+        if (pos == -1 || pos + 1 == name.length()) return null;
 
-	public String getName() {
-		if (name.equals(""))
-			return scriptFile.getName();
-		else
-			return name;
+        return name.substring(pos + 1);
 
-	}
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public String getExtension()
+    {
+        return extension;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setMetadata(String name, String author, String desc)
+    {
+        this.name = name;
+        this.author = author;
+        this.description = desc;
+    }
 
-	public long getLastModified() {
-		return scriptFile.lastModified();
-	}
+    public String getName()
+    {
+        if (name.equals("")) return scriptFile.getName();
+        else return name;
 
-	public String getPath() {
-		return scriptFile.getPath();
-	}
+    }
 
-	public boolean exists() {
-		return scriptFile.exists();
-	}
+    public String getAuthor()
+    {
+        return author;
+    }
 
-	public boolean deleteFromDisk() {
-		return scriptFile.delete();
-	}
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public long getLastModified()
+    {
+        return scriptFile.lastModified();
+    }
+
+    public String getPath()
+    {
+        return scriptFile.getPath();
+    }
+
+    public boolean exists()
+    {
+        return scriptFile.exists();
+    }
+
+    public boolean deleteFromDisk()
+    {
+        return scriptFile.delete();
+    }
 }

@@ -24,68 +24,81 @@ import java.util.List;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
-public class Options extends DefaultItem {
+/**
+    @author Celso Pinto (cpinto@yimports.com)
+ */
+public class Options
+    extends DefaultItem
+{
 
-	public static final int DEFAULT_POOLING_INTERVAL = 5,
-			INTERVAL_TIME_UNIT = 1000; // seconds
+    public static final int DEFAULT_POOLING_INTERVAL = 5, INTERVAL_TIME_UNIT = 1000; // seconds
 
-	static final String POLLING_INTERVAL_KEY = "poll_interval",
-			POLLING_ENABLED_KEY = "polling_enabled";
+    static final String POLLING_INTERVAL_KEY = "poll_interval", POLLING_ENABLED_KEY = "polling_enabled";
 
-	private static final String POLLING_INTERVAL_PATH = "/"
-			+ POLLING_INTERVAL_KEY, POLLING_ENABLED_PATH = "/"
-			+ POLLING_ENABLED_KEY;
+    private static final String POLLING_INTERVAL_PATH = "/" + POLLING_INTERVAL_KEY, POLLING_ENABLED_PATH = "/" + POLLING_ENABLED_KEY;
 
-	private List observers = new ArrayList();
+    private List observers = new ArrayList();
 
-	public Options(XmlElement aRoot) {
-		super(aRoot);
-	}
+    public Options(XmlElement aRoot)
+    {
+        super(aRoot);
+    }
 
-	public int getPollInterval() {
-		// TODO: key can't be null
-		return getIntegerWithDefault(POLLING_INTERVAL_PATH, null,
-				DEFAULT_POOLING_INTERVAL);
-	}
+    public int getPollInterval()
+    {
+        // TODO: key can't be null
+        return getIntegerWithDefault(POLLING_INTERVAL_PATH, null, DEFAULT_POOLING_INTERVAL);
+    }
 
-	public boolean isPollingEnabled() {
-		// TODO: key can't be null
-		return getBooleanWithDefault(POLLING_ENABLED_PATH, null, true);
-	}
+    public boolean isPollingEnabled()
+    {
+        // TODO: key can't be null
+        return getBooleanWithDefault(POLLING_ENABLED_PATH, null, true);
+    }
 
-	public void setPollInterval(int interval) {
-		int old = getPollInterval();
-		setInteger(POLLING_INTERVAL_PATH, null, interval);
-		if (old != interval) {
-			for (Iterator it = observers.iterator(); it.hasNext();)
-				((OptionsObserver) it.next()).pollingIntervalChanged(interval);
-		}
-	}
+    public void setPollInterval(int interval)
+    {
+        int old = getPollInterval();
 
-	public void setPollingEnabled(boolean poll) {
-		boolean old = isPollingEnabled();
-		setBoolean(POLLING_ENABLED_PATH, null, poll);
-		if (old != poll) {
-			for (Iterator it = observers.iterator(); it.hasNext();)
-				((OptionsObserver) it.next()).pollingStateChanged(poll);
-		}
-	}
+        setInteger(POLLING_INTERVAL_PATH, null, interval);
 
-	public void addObserver(OptionsObserver observer) {
-		if (!observers.contains(observer))
-			observers.add(observer);
-	}
+        if (old != interval)
+        {
+            for (Iterator it = observers.iterator(); it.hasNext();)
+                ((OptionsObserver) it.next()).pollingIntervalChanged(interval);
+        }
 
-	public void removeObserver(OptionsObserver observer) {
-		observers.remove(observer);
-	}
+    }
 
-	void setDefaultData() {
-		setPollInterval(DEFAULT_POOLING_INTERVAL);
-		setPollingEnabled(true);
-	}
+    public void setPollingEnabled(boolean poll)
+    {
+        boolean old = isPollingEnabled();
+        setBoolean(POLLING_ENABLED_PATH, null, poll);
+        if (old != poll)
+        {
+            for (Iterator it = observers.iterator(); it.hasNext();)
+                ((OptionsObserver) it.next()).pollingStateChanged(poll);
+        }
+    }
 
-	public int getInternalPollingInterval() {
-		return getPollInterval() * INTERVAL_TIME_UNIT;
-	}
+    public void addObserver(OptionsObserver observer)
+    {
+        if (!observers.contains(observer)) observers.add(observer);
+    }
+
+    public void removeObserver(OptionsObserver observer)
+    {
+        observers.remove(observer);
+    }
+
+    void setDefaultData()
+    {
+        setPollInterval(DEFAULT_POOLING_INTERVAL);
+        setPollingEnabled(true);
+    }
+
+    public int getInternalPollingInterval()
+    {
+        return getPollInterval() * INTERVAL_TIME_UNIT;
+    }
 }
