@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.208 2006/02/19 11:43:15 linus Exp $
+// $Id: FigClass.java,v 1.209 2006/02/19 19:46:58 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -959,6 +959,7 @@ public class FigClass extends FigClassifierBox
                 Object feat = it.next();
                 Collection c =
                     new ArrayList(Model.getFacade().getStereotypes(feat));
+                c.add(feat);
                 if (Model.getFacade().isAOperation(feat)) {
                     c.addAll(Model.getFacade().getParameters(feat));
                 }
