@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.82 2005/12/10 18:40:12 mvw Exp $
+// $Id: TabProps.java,v 1.83 2006/02/19 15:59:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,7 @@ import org.argouml.uml.ui.behavior.state_machines.PropPanelFinalState;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelGuard;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelPseudostate;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelSignalEvent;
-import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
+import org.argouml.uml.ui.behavior.state_machines.PropPanelSimpleState;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelStateMachine;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelStubState;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelSubmachineState;
@@ -575,7 +575,7 @@ public class TabProps
             return new PropPanelSignal();
         }
         if (Model.getFacade().isAState(modelElement)) {
-            return new PropPanelState();
+            return new PropPanelSimpleState(); //TODO: Check!
         }
         if (Model.getFacade().isAStateMachine(modelElement)) {
             return new PropPanelStateMachine();

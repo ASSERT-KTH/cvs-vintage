@@ -1,4 +1,4 @@
-// $Id: PropPanelState.java,v 1.25 2005/11/13 11:01:20 linus Exp $
+// $Id$
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,12 +38,12 @@ import org.tigris.swidgets.Orientation;
  *
  * @author 5heyden
  */
-public class PropPanelState extends AbstractPropPanelState {
+public class PropPanelSimpleState extends AbstractPropPanelState {
 
     /**
      * Constructor.
      */
-    public PropPanelState() {
+    public PropPanelSimpleState() {
         this("Simple State", lookupIcon("SimpleState"),
                 ConfigLoader.getTabPropsOrientation());
     }
@@ -55,7 +55,7 @@ public class PropPanelState extends AbstractPropPanelState {
      * @param icon the icon shown at the top
      * @param orientation the orientation of the panel
      */
-    public PropPanelState(String name, ImageIcon icon,
+    public PropPanelSimpleState(String name, ImageIcon icon,
             Orientation orientation) {
         super(name, icon, ConfigLoader.getTabPropsOrientation());
 
@@ -85,5 +85,5 @@ public class PropPanelState extends AbstractPropPanelState {
 
     }
 
-} /* end class PropPanelState */
+} /* end class PropPanelSimpleState */
 

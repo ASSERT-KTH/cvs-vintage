@@ -1,4 +1,4 @@
-// $Id: AbstractPropPanelState.java,v 1.4 2005/11/13 11:01:20 linus Exp $
+// $Id: AbstractPropPanelState.java,v 1.5 2006/02/19 15:59:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,14 @@
 
 package org.argouml.uml.ui.behavior.state_machines;
 
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.tigris.swidgets.Orientation;
 
@@ -72,7 +76,7 @@ public abstract class AbstractPropPanelState extends PropPanelStateVertex {
         exitScroll = new JScrollPane(exitList);
         internalTransitionList = new UMLMutableLinkedList(
                 new UMLStateInternalTransition(), null,
-                ActionNewTransition.getInstance());
+                new ActionNewTransition());
         internalTransitionsScroll = new JScrollPane(internalTransitionList);
         doList = new UMLStateDoActivityList(
                 new UMLStateDoActivityListModel());
@@ -80,6 +84,19 @@ public abstract class AbstractPropPanelState extends PropPanelStateVertex {
         doScroll = new JScrollPane(doList);
     }
 
+    /**
+     * @see org.argouml.uml.ui.behavior.state_machines.PropPanelStateVertex#addExtraButtons()
+     */
+    protected void addExtraButtons() {
+        super.addExtraButtons();
+        
+        Action a = new ActionNewTransition(); 
+        a.putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("button.new-internal-transition"));
+        Icon icon = ResourceLoaderWrapper.lookupIcon("Transition");
+        a.putValue(Action.SMALL_ICON, icon);
+        addAction(a);
+    }
 
     /**
      * @return Returns the entryScroll.

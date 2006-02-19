@@ -1,4 +1,4 @@
-// $Id: ActionNewTransition.java,v 1.7 2005/01/09 14:59:07 linus Exp $
+// $Id: ActionNewTransition.java,v 1.8 2006/02/19 15:59:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ package org.argouml.uml.ui.behavior.state_machines;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.Model;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
@@ -54,13 +55,10 @@ public class ActionNewTransition extends AbstractActionNewModelElement {
     public static final String DESTINATION = "destination";
 
 
-    private static final ActionNewTransition SINGLETON =
-        new ActionNewTransition();
-
     /**
      * Constructor for ActionNewTransition.
      */
-    protected ActionNewTransition() {
+    public ActionNewTransition() {
         super();
     }
 
@@ -70,19 +68,13 @@ public class ActionNewTransition extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if (getValue(SOURCE) == null || getValue(DESTINATION) == null) {
+            Object target = TargetManager.getInstance().getModelTarget();
             Model.getStateMachinesFactory()
-                .buildInternalTransition(getTarget());
+                .buildInternalTransition(target);
         } else {
             Model.getStateMachinesFactory()
                 .buildTransition(getValue(SOURCE), getValue(DESTINATION));
         }
-    }
-
-    /**
-     * @return Returns the SINGLETON.
-     */
-    public static ActionNewTransition getInstance() {
-        return SINGLETON;
     }
 
 }
