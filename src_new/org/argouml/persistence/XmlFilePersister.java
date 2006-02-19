@@ -1,5 +1,5 @@
-// $Id: XmlFilePersister.java,v 1.1 2006/01/13 07:59:44 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: XmlFilePersister.java,v 1.2 2006/02/19 09:42:15 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +26,7 @@ package org.argouml.persistence;
 
 
 /**
- * XMI file persister which allows .xml extension
+ * XMI file persister which allows .xml extension.
  *
  * @author tfmorris
  */
