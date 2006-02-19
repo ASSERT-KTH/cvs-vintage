@@ -1,5 +1,5 @@
-// $Id: StylePanelFigInterface.java,v 1.18 2006/02/17 18:35:21 mkl Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: StylePanelFigInterface.java,v 1.19 2006/02/19 11:43:15 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -47,7 +47,7 @@ public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
     /**
      * Flag to indicate that a refresh is going on.
      */
-    private boolean refreshTransaction = false;
+    private boolean refreshTransaction;
 
     /**
      * The constructor.
@@ -87,11 +87,19 @@ public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
             if (src == operCheckBox) {
                 ((FigInterface) getPanelTarget())
                     .setOperationsVisible(operCheckBox.isSelected());
-                ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
-            } else
+                ArgoEventPump.fireEvent(
+                        new ArgoProjectSaveEvent(
+                                ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
+                                this));
+            } else {
                 super.itemStateChanged(e);
+            }
         }
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -5908351031706234211L;
 } /* end class StylePanelFigInterface */
 
