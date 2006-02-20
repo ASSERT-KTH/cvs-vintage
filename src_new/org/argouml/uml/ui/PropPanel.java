@@ -1,5 +1,5 @@
-// $Id: PropPanel.java,v 1.129 2006/02/16 18:44:28 bobtarling Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PropPanel.java,v 1.130 2006/02/20 08:19:10 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -242,9 +242,9 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
      * @param label
      *            the label for the component
      * @param component
-     *            the component
+     *            the to be added component
      * @param beforeComponent
-     *            the component
+     *            the component before its label we add
      * @return the newly added component
      */
     public JLabel addFieldBefore(String label, Component component,
@@ -256,8 +256,8 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
                 jlabel.setFont(smallFont);
                 component.setFont(smallFont);
                 jlabel.setLabelFor(component);
-                add(jlabel, i);
-                add(component, ++i);
+                add(jlabel, i - 1);
+                add(component, i++);
                 return jlabel;
             }
         }
