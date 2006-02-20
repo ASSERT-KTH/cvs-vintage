@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.52 2006/02/19 10:53:12 linus Exp $
+// $Id: FigTransition.java,v 1.53 2006/02/20 16:41:28 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,19 +214,16 @@ public class FigTransition extends FigEdgeModelElement {
             } else if (Model.getFacade().isAEvent(e.getSource())
                     && Model.getFacade().getTransitions(e.getSource()).contains(
                             getOwner())) {
-                // handle events send by the event
-//                if (e.getPropertyName().equals("parameter")) {
-//                    // TODO: When does this ever get used? How to replace?
-//                    if (e.getAddedValue() != null) {
-//                        Model.getPump().addModelEventListener(
-//                                this,
-//                                e.getAddedValue());
-//                    } else if (e.getRemovedValue() != null) {
-//                        Model.getPump().removeModelEventListener(
-//                                this,
-//                                e.getRemovedValue());
-//                    }
-//                }
+                // handle events send by the event for its parameter
+                if (e.getPropertyName().equals("parameter")) {
+                    if (e.getOldValue() != null) {
+                        Model.getPump().removeModelEventListener(
+                                this, e.getOldValue());
+                    } else if (e.getNewValue() != null) {
+                        Model.getPump().addModelEventListener(
+                                this, e.getNewValue());
+                    }
+                }
                 updateNameText();
                 damage();
             } else if (Model.getFacade().isAGuard(e.getSource())) {
