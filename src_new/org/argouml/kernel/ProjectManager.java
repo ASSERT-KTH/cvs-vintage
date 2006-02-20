@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.70 2006/02/17 18:25:24 mkl Exp $
+// $Id: ProjectManager.java,v 1.71 2006/02/20 18:04:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,11 +133,6 @@ public final class ProjectManager
      */
     private ProjectManager() {
         super();
-        // Register with the save action with other subsystems so that
-        // any changes in those subsystems will enable the
-        // save button/menu item etc.
-        Model.getPump().setSaveAction(ActionSaveProject.getInstance());
-        MutableGraphSupport.setSaveAction(ActionSaveProject.getInstance());
         Model.setMementoCreationObserver(this);
     }
 
@@ -272,6 +267,11 @@ public final class ProjectManager
     
     public void setSaveAction(Action saveAction) {
         this.saveAction = saveAction;
+        // Register with the save action with other subsystems so that
+        // any changes in those subsystems will enable the
+        // save button/menu item etc.
+        Model.getPump().setSaveAction(saveAction);
+        MutableGraphSupport.setSaveAction(saveAction);
     }
 
     /**

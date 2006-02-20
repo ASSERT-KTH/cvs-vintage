@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.54 2006/02/14 01:58:32 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.55 2006/02/20 18:04:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,28 +47,10 @@ public class ActionSaveProject extends AbstractAction {
      */
     private static final Logger LOG = Logger.getLogger(ActionSaveProject.class);
 
-    ////////////////////////////////////////////////////////////////
-    // static variables
-
-    /**
-     * The singleton.
-     */
-    private static final ActionSaveProject INSTANCE = new ActionSaveProject();
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
-
-    /**
-     * @return the singleton
-     */
-    public static ActionSaveProject getInstance() {
-        return INSTANCE;
-    }
-
     /**
      * The constructor.
      */
-    protected ActionSaveProject() {
+    public ActionSaveProject() {
         super(Translator.localize("action.save-project"),
                 ResourceLoaderWrapper.lookupIcon("action.save-project"));
         super.setEnabled(false);
