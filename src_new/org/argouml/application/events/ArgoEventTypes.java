@@ -1,4 +1,4 @@
-// $Id: ArgoEventTypes.java,v 1.16 2006/02/19 09:22:34 linus Exp $
+// $Id: ArgoEventTypes.java,v 1.17 2006/02/20 16:38:38 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,6 +130,9 @@ public interface ArgoEventTypes {
 
     /**
      * Any change event.
+     * @deprecated this event type isn't used (exept for start/end
+     * event id's - what are they please explain) document further
+     * or remove
      */
     int ANY_PROJECTSAVE_EVENT            = 1400;
 
@@ -140,11 +143,16 @@ public interface ArgoEventTypes {
 
     /**
      * Project is saved.
+     * @deprecated this event type is fired but never listened for
+     * please document further or remove
      */
     int ISSAVED_PROJECTSAVE_EVENT          = 1402;
 
     /**
      * last project save event.
+     * @deprecated this event type isn't used (exept for start/end
+     * event id's - what are they please explain) document further
+     * or remove
      */
     int LAST_PROJECTSAVE_EVENT          = 1499;
 
