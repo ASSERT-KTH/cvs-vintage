@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.37 2005/09/08 18:23:59 mkl Exp $
+// $Id: PropPanelCallEvent.java,v 1.38 2006/02/20 12:41:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
+import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.foundation.core.ActionNewParameter;
@@ -86,11 +87,18 @@ class UMLCallEventOperationComboBox2 extends UMLSearchableComboBox {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        Object target = TargetManager.getInstance().getModelTarget();
-        if (Model.getFacade().isACallEvent(target)) {
-            Model.getCommonBehaviorHelper().setOperation(
-                    target,
-                    getSelectedItem());
+        super.actionPerformed(e);
+        Object source = e.getSource();
+        if (source instanceof UMLComboBox2) {
+            Object selected = ((UMLComboBox2) source).getSelectedItem();
+            Object target = ((UMLComboBox2) source).getTarget();
+            if (Model.getFacade().isACallEvent(target) 
+                && Model.getFacade().isAOperation(selected)) {
+                if (Model.getFacade().getOperation(target) != selected) {
+                    Model.getCommonBehaviorHelper()
+                        .setOperation(target, selected);
+                }
+            }
         }
     }
 }
