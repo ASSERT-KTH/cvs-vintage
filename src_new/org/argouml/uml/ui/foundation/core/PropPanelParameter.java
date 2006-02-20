@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.67 2005/12/13 18:59:53 mvw Exp $
+// $Id: PropPanelParameter.java,v 1.68 2006/02/20 17:59:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class PropPanelParameter extends PropPanelModelElement {
                 Translator.localize("label.parameter.kind"), true));
 
         addAction(new ActionNavigateContainerElement());
-        addAction(new ActionAddParameter());
+        addAction(new ActionNewParameter());
         addAction(new ActionAddDataType());
         addAction(new ActionAddEnumeration());
         addAction(new ActionNewStereotype());
