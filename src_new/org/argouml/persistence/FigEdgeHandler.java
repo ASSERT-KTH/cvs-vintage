@@ -1,4 +1,4 @@
-// $Id: FigEdgeHandler.java,v 1.5 2006/02/19 18:08:18 linus Exp $
+// $Id: FigEdgeHandler.java,v 1.6 2006/02/20 17:56:33 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,6 +145,9 @@ public class FigEdgeHandler
         // the FigNode.
         figId = figId.substring(0, figId.indexOf('.'));
         FigEdgeModelElement edge = (FigEdgeModelElement) parser.findFig(figId);
+        if (edge == null) {
+            throw new IllegalStateException("Can't find a FigNode with id " + figId);
+        }
         edge.makeCommentPort();
         return edge.getCommentPort();
     }
