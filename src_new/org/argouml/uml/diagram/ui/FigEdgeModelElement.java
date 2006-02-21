@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.141 2006/02/15 20:39:00 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.142 2006/02/21 13:39:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -505,7 +505,7 @@ public abstract class FigEdgeModelElement
             super.propertyChange(pve);
         }
 
-        if (Model.getFacade().isABase(src)) {
+        if (Model.getFacade().isAModelElement(src)) {
             /* If the source of the event is an UML object,
              * then the UML model has been changed.*/
             modelChanged(pve);
