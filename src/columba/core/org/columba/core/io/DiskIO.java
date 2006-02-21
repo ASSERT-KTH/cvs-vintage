@@ -42,6 +42,7 @@ public final class DiskIO {
 	 * Private constructor for utility class.
 	 */
 	private DiskIO() {
+		// don't instantiate this
 	}
 
 	/**
@@ -85,7 +86,6 @@ public final class DiskIO {
 
 	public static void saveStringInFile(File toFile, String insertString)
 			throws IOException {
-		int lineNumber = 0;
 		BufferedWriter out;
 
 		out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
@@ -97,7 +97,7 @@ public final class DiskIO {
 
 	public static void saveStreamInFile(File toFile, InputStream is)
 			throws IOException {
-		
+
 		BufferedOutputStream out = new BufferedOutputStream(
 				new FileOutputStream(toFile));
 
@@ -232,9 +232,8 @@ public final class DiskIO {
 
 		if ((url = getResourceURL(path)) == null) {
 			return null;
-		} else {
-			return url.openStream();
 		}
+		return url.openStream();
 	}
 
 	// getResourceStream
@@ -251,7 +250,8 @@ public final class DiskIO {
 	 * @throws java.io.IOException
 	 *             if there was an error opening the input stream
 	 */
-	public static URL getResourceURL(String path) //throws java.io.IOException
+	public static URL getResourceURL(String path) // throws
+	// java.io.IOException
 	{
 		URL url;
 
@@ -262,17 +262,15 @@ public final class DiskIO {
 		if (path.startsWith("#")) {
 			path = resourceFolder + path.substring(1);
 		}
-		
-		//url = ClassLoader.getSystemResource(path);
+
+		// url = ClassLoader.getSystemResource(path);
 		url = DiskIO.class.getResource("/" + path);
 
-		
-		
 		if (url == null) {
 			LOG.info("*** failed locating resource: " + path);
 
 			return null;
-		} 
+		}
 
 		return url;
 	}
@@ -384,8 +382,6 @@ public final class DiskIO {
 			throws java.io.IOException {
 		InputStream in;
 
-		byte[] buffer = new byte[512];
-		int len;
 		StringBuffer result = new StringBuffer();
 
 		// attempt

@@ -18,57 +18,66 @@ package org.columba.core.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 /**
  * The CloneInputStream from a master.
+ * 
  * @see CloneStreamMaster
- *
+ * 
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public class CloneInputStream extends InputStream {
-    private CloneStreamMaster model;
-    private int id;
+	private CloneStreamMaster model;
 
-    /**
- * Constructs a new CloneInputStream.
- * @see CloneStreamMaster#getClone()
- *
- * @param master
- */
-    protected CloneInputStream(CloneStreamMaster model, int id) {
-        super();
-        this.model = model;
-        this.id = id;
-    }
+	private int id;
 
-    /* (non-Javadoc)
- * @see java.io.InputStream#read()
- */
-    public int read() throws IOException {
-        return model.read(id);
-    }
+	/**
+	 * Constructs a new CloneInputStream.
+	 * 
+	 * @see CloneStreamMaster#getClone()
+	 * 
+	 * @param master
+	 */
+	protected CloneInputStream(CloneStreamMaster model, int id) {
+		super();
+		this.model = model;
+		this.id = id;
+	}
 
-    /* (non-Javadoc)
- * @see java.io.InputStream#read(byte[], int, int)
- */
-    public int read(byte[] arg0, int arg1, int arg2) throws IOException {
-        return model.read(id, arg0, arg1, arg2);
-    }
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int read() throws IOException {
+		return model.read(id);
+	}
 
-    /* (non-Javadoc)
- * @see java.io.InputStream#available()
- */
-    public int available() throws IOException {
-        return model.available();
-    }
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int read(byte[] arg0, int arg1, int arg2) throws IOException {
+		return model.read(id, arg0, arg1, arg2);
+	}
 
-    /* (non-Javadoc)
- * @see java.io.InputStream#close()
- */
-    public void close() throws IOException {
-        if (model != null) {
-            model.close(id);
-            model = null;
-        }
-    }
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int available() throws IOException {
+		return model.available();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void close() throws IOException {
+		if (model != null) {
+			model.close(id);
+			model = null;
+		}
+	}
 }

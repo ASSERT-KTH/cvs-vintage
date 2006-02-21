@@ -23,40 +23,45 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DefaultMimeTypeTable {
-	
+
 	private static Map mimeTable = loadTable();
-	
-	private static Map loadTable() {
-		Hashtable result = new Hashtable();
-		
+
+	private static Map<String, String> loadTable() {
+		Map<String, String> result = new Hashtable<String, String>();
+
 		try {
-			String table = DiskIO.readStringFromResource("org/columba/core/config/mime_table");
+			String table = DiskIO
+					.readStringFromResource("org/columba/core/config/mime_table");
 			Pattern listPattern = Pattern.compile("(\\w+) (\\w+/\\w+)");
-			Matcher matcher = listPattern.matcher(table); 
-			while( matcher.find()) {
+			Matcher matcher = listPattern.matcher(table);
+			while (matcher.find()) {
 				result.put(matcher.group(1), matcher.group(2));
 			}
 		} catch (IOException e) {
+			// do nothing here
 		}
-		
-		return result; 
+
+		return result;
 	}
-	
-	public static String lookup(File file ) {
-		int dotPos =  file.getName().lastIndexOf('.');
-		
-		if( dotPos == -1 || dotPos == file.getName().length()-1) {
-			return "application/octet-stream";
-		} else {
-			return lookup(file.getName().substring(dotPos + 1)); 
+
+	public static String lookup(File file) {
+		int dotPos = file.getName().lastIndexOf('.');
+		String _return = lookup(file.getName().substring(dotPos + 1));
+		if (dotPos == -1 || dotPos == file.getName().length() - 1) {
+			_return = "application/octet-stream";
 		}
-		
+		return _return;
+
 	}
 
 	public static String lookup(String string) {
 		String lookupResult = (String) mimeTable.get(string);
-		if( lookupResult == null) return "application/octet-stream";
-		else return lookupResult;
+
+		if (lookupResult == null) {
+			lookupResult = "application/octet-stream";
+		}
+
+		return lookupResult;
 	}
-	
+
 }

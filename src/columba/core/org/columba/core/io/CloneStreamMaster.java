@@ -26,118 +26,127 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * The model that needs to be instanciated if you want to create CloneInputStreams from a master.
- *
+ * The model that needs to be instanciated if you want to create
+ * CloneInputStreams from a master.
+ * 
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public class CloneStreamMaster {
-    private static int uid = 0;
-    private InputStream master;
-    private int nextId;
-    private List streamList;
-    private File tempFile;
-    private byte[] buffer;
-    private int openClones;
-    private boolean usesFile;
-    private int size;
+	private static int uid = 0;
 
-    /**
- * Constructs a CloneStreamMaster. Note that the master must NOT be read from after
- * the construction!
- *
- * @param master
- */
-    public CloneStreamMaster(InputStream master) throws IOException {
-        super();
-        this.master = master;
+	private InputStream master;
 
-        streamList = new ArrayList(2);
+	private int nextId;
 
-        if (master.available() > 51200) {
-            tempFile = File.createTempFile("columba-stream-clone" + (uid++),
-                    ".tmp");
+	private List<InputStream> streamList;
 
-            // make sure file is deleted automatically when closing VM
-            tempFile.deleteOnExit();
+	private File tempFile;
 
-            FileOutputStream tempOut = new FileOutputStream(tempFile);
+	private byte[] buffer;
 
-            size = (int) StreamUtils.streamCopy(master, tempOut);
+	private int openClones;
 
-            tempOut.close();
+	private boolean usesFile;
 
-            usesFile = true;
-        } else {
-            ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+	private int size;
 
-            size = (int) StreamUtils.streamCopy(master, tempOut);
-            tempOut.close();
+	/**
+	 * Constructs a CloneStreamMaster. Note that the master must NOT be read
+	 * from after the construction!
+	 * 
+	 * @param master
+	 */
+	public CloneStreamMaster(InputStream master) throws IOException {
+		super();
+		this.master = master;
 
-            buffer = tempOut.toByteArray();
-            usesFile = false;
-        }
+		streamList = new ArrayList<InputStream>(2);
 
-        master.close();
-    }
+		if (this.master.available() > 51200) {
+			tempFile = File.createTempFile("columba-stream-clone" + (uid++),
+					".tmp");
 
-    /**
- * Gets a new clone of the master.
- *
- * @return Clone of the master
- */
-    public CloneInputStream getClone() {
-        if (usesFile) {
-            try {
-                // add a new inputstream to read from
-                streamList.add(new FileInputStream(tempFile));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+			// make sure file is deleted automatically when closing VM
+			tempFile.deleteOnExit();
 
-                // only if tempfile was corrupted
-            }
-        } else {
-            streamList.add(new ByteArrayInputStream(buffer));
-        }
+			FileOutputStream tempOut = new FileOutputStream(tempFile);
 
-        openClones++;
+			size = (int) StreamUtils.streamCopy(master, tempOut);
 
-        return new CloneInputStream(this, nextId++);
-    }
+			tempOut.close();
 
-    public int read(int id) throws IOException {
-        return ((InputStream) streamList.get(id)).read();
-    }
+			usesFile = true;
+		} else {
+			ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
 
-    public int read(int id, byte[] out, int offset, int length)
-        throws IOException {
-        return ((InputStream) streamList.get(id)).read(out, offset, length);
-    }
+			size = (int) StreamUtils.streamCopy(master, tempOut);
+			tempOut.close();
 
-    /**
- * @return
- */
-    public int available() throws IOException {
-        return size;
-    }
+			buffer = tempOut.toByteArray();
+			usesFile = false;
+		}
 
-    /* (non-Javadoc)
- * @see java.lang.Object#finalize()
- */
-    protected void finalize() throws Throwable {
-        super.finalize();
+		this.master.close();
+	}
 
-        if (usesFile) {
-            // Delete the tempfile immedietly
-            tempFile.delete();
-        }
-    }
+	/**
+	 * Gets a new clone of the master.
+	 * 
+	 * @return Clone of the master
+	 */
+	public CloneInputStream getClone() {
+		if (usesFile) {
+			try {
+				// add a new inputstream to read from
+				streamList.add(new FileInputStream(tempFile));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 
-    /**
- * @param id
- */
-    public void close(int id) throws IOException {
-        ((InputStream) streamList.get(id)).close();
-    }
+				// only if tempfile was corrupted
+			}
+		} else {
+			streamList.add(new ByteArrayInputStream(buffer));
+		}
+
+		openClones++;
+
+		return new CloneInputStream(this, nextId++);
+	}
+
+	public int read(int id) throws IOException {
+		return streamList.get(id).read();
+	}
+
+	public int read(int id, byte[] out, int offset, int length)
+			throws IOException {
+		return streamList.get(id).read(out, offset, length);
+	}
+
+	/**
+	 * @return
+	 */
+	public int available() throws IOException {
+		return size;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+
+		if (usesFile) {
+			// Delete the tempfile immedietly
+			tempFile.delete();
+		}
+	}
+
+	/**
+	 * @param id
+	 */
+	public void close(int id) throws IOException {
+		streamList.get(id).close();
+	}
 }

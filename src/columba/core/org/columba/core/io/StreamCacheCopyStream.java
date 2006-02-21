@@ -9,24 +9,35 @@ import java.io.InputStream;
 public class StreamCacheCopyStream extends PassiveCopyStream {
 
 	StreamCache cache;
-	Object key;
-	File out;
 
-	
-	public StreamCacheCopyStream(InputStream in, Object key, File out, StreamCache cache) throws FileNotFoundException {
+	Object key;
+
+	File fileOut;
+
+	/**
+	 * @param in
+	 * @param key
+	 * @param out
+	 * @param cache
+	 * @throws FileNotFoundException
+	 */
+	public StreamCacheCopyStream(InputStream in, Object key, File out,
+			StreamCache cache) throws FileNotFoundException {
 		super(in, new FileOutputStream(out));
-		
+
 		this.key = key;
 		this.cache = cache;
-		this.out = out;
+		this.fileOut = out;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void close() throws IOException {
 		super.close();
-		
-		cache.add(key, out);
+
+		cache.add(key, fileOut);
 	}
 
-	
-	
 }

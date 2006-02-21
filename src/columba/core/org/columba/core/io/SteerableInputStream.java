@@ -7,12 +7,12 @@ import java.io.InputStream;
 public class SteerableInputStream extends FilterInputStream {
 
 	private long lengthLeft;
+
 	private long position;
-	
-	
+
 	public SteerableInputStream(InputStream in) {
 		super(in);
-		
+
 		try {
 			lengthLeft = in.available();
 		} catch (IOException e) {
@@ -21,37 +21,38 @@ public class SteerableInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * @see java.io.FilterInputStream#read()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int read() throws IOException {
-		if( lengthLeft > 0 ) {
-			int read =  super.read();
-			if( read != -1) lengthLeft--;
+		if (lengthLeft > 0) {
+			int read = super.read();
+			if (read != -1) {
+				lengthLeft--;
+			}
 			position++;
 			return read;
-		} else {
-			return -1;
 		}
+		return -1;
 	}
 
 	/**
-	 * @see java.io.FilterInputStream#read(byte[], int, int)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
-		if( len > lengthLeft ) {
-			int correctedLen = (int)lengthLeft;
-			int read = super.read(b,off,correctedLen);
-			
-			lengthLeft -= read;
-			position += read;
-			return read;
-		} else {
-			int read = super.read(b, off, len);
+		if (len > lengthLeft) {
+			int correctedLen = (int) lengthLeft;
+			int read = super.read(b, off, correctedLen);
 			lengthLeft -= read;
 			position += read;
 			return read;
 		}
-			
+		int read = super.read(b, off, len);
+		lengthLeft -= read;
+		position += read;
+		return read;
+
 	}
 
 	/**
@@ -62,7 +63,8 @@ public class SteerableInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * @param lengthLeft The lengthLeft to set.
+	 * @param lengthLeft
+	 *            The lengthLeft to set.
 	 */
 	public void setLengthLeft(long lengthLeft) throws IOException {
 		this.lengthLeft = Math.min(lengthLeft, in.available());
@@ -76,36 +78,39 @@ public class SteerableInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * @param position The position to set.
+	 * @param position
+	 *            The position to set.
 	 */
-	public void setPosition(long newposition) throws IOException{
+	public void setPosition(long newposition) throws IOException {
 		long skipped = in.skip(newposition - position);
 		lengthLeft = Math.max(0, lengthLeft - skipped);
 		position = newposition;
 	}
 
+	
 	/**
-	 * @see java.io.FilterInputStream#available()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int available() throws IOException {
-		return (int)lengthLeft;
+		return (int) lengthLeft;
 	}
 
+	
 	/**
-	 * 
-	 * @see java.io.FilterInputStream#close()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws IOException {
+		// do nothinh here ... use finalClose
 	}
-	
+
 	
 	/**
-	 * 
-	 * @see java.io.FilterInputStream#close()
+	 * @throws IOException
 	 */
 	public void finalClose() throws IOException {
 		super.close();
 	}
-	
 
 }

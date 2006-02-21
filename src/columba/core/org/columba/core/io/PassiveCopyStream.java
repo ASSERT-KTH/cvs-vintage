@@ -15,6 +15,10 @@ public class PassiveCopyStream extends FilterInputStream {
 		this.out = out;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int read(byte[] b, int off, int len) throws IOException {		
 		int read =  super.read(b, off, len);
 		
@@ -25,12 +29,20 @@ public class PassiveCopyStream extends FilterInputStream {
 		return read;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void close() throws IOException {
 		super.close();
 		
 		out.close();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int read() throws IOException {
 		int result = super.read();
 		
