@@ -1,5 +1,5 @@
-// $Id: PropPanelSendAction.java,v 1.6 2005/01/09 14:59:07 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PropPanelSendAction.java,v 1.7 2006/02/22 21:55:16 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -28,8 +28,8 @@ package org.argouml.uml.ui.behavior.common_behavior;
 /**
  * The properties panel for a SendAction.
  *
- * TODO: this property panel needs refactoring to remove dependency on
- *       old gui components.
+ * TODO: this property panel needs a field to select the Signal, 
+ * similar to the one on the PropPanelCreateAction.
  */
 public class PropPanelSendAction extends PropPanelAction {
 
