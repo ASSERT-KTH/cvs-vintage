@@ -1,4 +1,4 @@
-// $Id: UMLCreateActionClassifierListModel.java,v 1.3 2005/11/14 03:55:52 tfmorris Exp $
+// $Id: UMLCreateActionClassifierListModel.java,v 1.4 2006/02/22 21:40:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ public class UMLCreateActionClassifierListModel extends
      * Constructor for ClassifierCreateActionListModel.
      */
     public UMLCreateActionClassifierListModel() {
-        super("classifier");
+        super("instantiation");
     }
 
     /**
