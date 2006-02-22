@@ -1,4 +1,4 @@
-// $Id: PropPanelCreateAction.java,v 1.9 2006/02/22 20:18:59 mvw Exp $
+// $Id: PropPanelCreateAction.java,v 1.10 2006/02/22 21:44:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,24 +42,15 @@ public class PropPanelCreateAction extends PropPanelAction {
     public PropPanelCreateAction() {
         super("CreateAction", lookupIcon("CreateAction"));
 
-        // addField(Translator.localize( "label.recurrence"),
-        // getRecurrenceScroll());
-
-        UMLMutableLinkedList list = new UMLMutableLinkedList(
-                new UMLCreateActionClassifierListModel(), null, null);
-        list.setVisibleRowCount(1);
-
-        addSeperator();
-        
         AbstractActionAddModelElement action = 
             new ActionAddCreateActionInstantiation();
-        JScrollPane instantiationScroll = new JScrollPane(
-                new UMLMutableLinkedList(
-                        new UMLCreateActionClassifierListModel(), action, null,
-                        null, true));
-
-        addField(Translator.localize("label.instantiation"),
-                instantiationScroll);
+        UMLMutableLinkedList list = new UMLMutableLinkedList(
+                new UMLCreateActionClassifierListModel(), action, null, null, true);
+        list.setVisibleRowCount(1);
+        JScrollPane instantiationScroll = new JScrollPane(list);
+        addFieldBefore(Translator.localize("label.instantiation"),
+                instantiationScroll,
+                argumentsScroll);
 
     }
 
