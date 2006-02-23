@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.179 2006/02/20 18:04:50 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.180 2006/02/23 00:49:34 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1301,6 +1301,7 @@ public final class ProjectBrowser
                         LOG.info("There are " + p.getMembers().size()
                                 + " members in the new project");
                         ProjectManager.getManager().removeProject(oldProject);
+                        saveAction.setEnabled(false);
                     }
                 }
                 ProjectManager.getManager().setCurrentProject(p);

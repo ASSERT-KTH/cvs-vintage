@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.55 2006/02/20 18:04:49 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.56 2006/02/23 00:49:33 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,9 @@ import org.argouml.ui.ProjectBrowser;
  * @see ActionOpenProject
  */
 public class ActionSaveProject extends AbstractAction {
-    /**
+	
+	private static final long serialVersionUID = -5579548202585774293L;
+	/**
      * Logger.
      */
     private static final Logger LOG = Logger.getLogger(ActionSaveProject.class);

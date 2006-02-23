@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.71 2006/02/20 18:04:50 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.72 2006/02/23 00:49:34 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.application.events.ArgoProjectSaveListener;
+import org.argouml.cognitive.Designer;
 import org.argouml.model.MementoCreationObserver;
 import org.argouml.model.Model;
 import org.argouml.model.ModelMemento;
@@ -270,6 +271,7 @@ public final class ProjectManager
         // Register with the save action with other subsystems so that
         // any changes in those subsystems will enable the
         // save button/menu item etc.
+        Designer.setSaveAction(saveAction);
         Model.getPump().setSaveAction(saveAction);
         MutableGraphSupport.setSaveAction(saveAction);
     }
