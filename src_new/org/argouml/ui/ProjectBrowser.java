@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.180 2006/02/23 00:49:34 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.181 2006/02/23 19:19:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -525,7 +525,6 @@ public final class ProjectBrowser
      * The setTitle method is overridden here only to extend the standard
      * setTitle method by displaying an asterisk to signify save status
      * @see java.awt.Frame#setTitle(java.lang.String)
-     * @deprecated
      */
     public void setTitle(final String titleArg) {
         title = titleArg;
@@ -1090,6 +1089,7 @@ public final class ProjectBrowser
             /*
              * notification of menu bar
              */
+            saveAction.setEnabled(false);
             GenericArgoMenuBar menu = (GenericArgoMenuBar) getJMenuBar();
             menu.addFileSaved(file.getCanonicalPath());
 
