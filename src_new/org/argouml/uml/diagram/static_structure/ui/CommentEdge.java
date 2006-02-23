@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.13 2005/11/13 11:01:17 linus Exp $
+// $Id: CommentEdge.java,v 1.14 2006/02/23 18:17:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,9 +104,14 @@ public class CommentEdge {
      * @param destination The destination to set.
      */
     public void setDestination(Object destination) {
+        if (destination == null) {
+            throw new IllegalArgumentException(
+                    "The destination of a comment edge cannot be null");
+        }
         if (!(Model.getFacade().isAModelElement(destination))) {
             throw new IllegalArgumentException(
-                    "The source of the CommentEdge must be a model element");
+                    "The destination of the CommentEdge cannot be a "
+                    + destination.getClass().getName());
         }
         dest = destination;
     }
@@ -115,9 +120,14 @@ public class CommentEdge {
      * @param source The source to set.
      */
     public void setSource(Object source) {
+        if (source == null) {
+            throw new IllegalArgumentException(
+                    "The source of a comment edge cannot be null");
+        }
         if (!(Model.getFacade().isAModelElement(source))) {
             throw new IllegalArgumentException(
-                    "The destination of the CommentEdge must be a model element");
+                    "The source of the CommentEdge cannot be a "
+                    + source.getClass().getName());
         }
         this.source = source;
     }
