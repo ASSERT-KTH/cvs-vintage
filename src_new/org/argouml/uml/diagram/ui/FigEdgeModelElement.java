@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.142 2006/02/21 13:39:09 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.143 2006/02/23 18:17:54 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -738,10 +738,10 @@ public abstract class FigEdgeModelElement
      */
     protected void updateListeners(Object newOwner) {
         Object oldOwner = getOwner();
-        if (oldOwner != null) {
+        if (oldOwner != null && Model.getFacade().isAModelElement(oldOwner)) {
             Model.getPump().removeModelEventListener(this, oldOwner);
         }
-        if (newOwner != null) {
+        if (newOwner != null && Model.getFacade().isAModelElement(newOwner)) {
             Model.getPump().addModelEventListener(this, newOwner);
         }
     }
