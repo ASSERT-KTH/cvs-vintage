@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.21 2006/02/20 08:32:03 mvw Exp $
+// $Id: PropPanelCallAction.java,v 1.22 2006/02/23 19:54:31 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,6 +119,12 @@ public class PropPanelCallAction extends PropPanelAction {
         }
         
         /**
+         * The list of operations shall contain 
+         * all operations of all classifiers 
+         * contained in the same package as the callaction itself. <p>
+         * 
+         * TODO: In fact, we also should include operations of imported clasifiers.
+         * 
          * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
          */
         protected void buildModelList() {
@@ -126,7 +132,7 @@ public class PropPanelCallAction extends PropPanelAction {
             Collection ops = new ArrayList();
             if (Model.getFacade().isACallAction(target)) {
                 Object ns = Model.getFacade().getModelElementContainer(target);
-                while (!Model.getFacade().isANamespace(ns)) {
+                while (!Model.getFacade().isAPackage(ns)) {
                     ns = Model.getFacade().getModelElementContainer(ns);
                     if (ns == null) break;
                 }
@@ -143,8 +149,8 @@ public class PropPanelCallAction extends PropPanelAction {
                 /* To be really sure, let's add the operation 
                  * that is linked to the action in the model, 
                  * too - if it is not listed yet.
-                 * With ArgoUML alone, you will never need this, but 
-                 * maybe with imported XMI... */
+                 * We need this, incase an operation is moved out of the package,  
+                 * or maybe with imported XMI... */
                 Object current = Model.getFacade().getOperation(target);
                 if (Model.getFacade().isAOperation(current)) {
                     if (!ops.contains(current)) {
