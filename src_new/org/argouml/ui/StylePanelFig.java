@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.34 2006/02/17 18:33:12 mkl Exp $
+// $Id: StylePanelFig.java,v 1.35 2006/02/23 23:48:05 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -278,7 +278,6 @@ public class StylePanelFig
             getPanelTarget().setBounds(bounds.x, bounds.y, bounds.width,
                     bounds.height);
             getPanelTarget().endTrans();
-            ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
         }
     }
 
@@ -394,9 +393,6 @@ public class StylePanelFig
         }
         getPanelTarget().setFilled(c instanceof Color);
         getPanelTarget().endTrans();
-        if (!c.equals(oldColor)) {
-            ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
-        }
     }
 
     /**
@@ -413,9 +409,6 @@ public class StylePanelFig
         }
         getPanelTarget().setLineWidth((c instanceof Color) ? 1 : 0);
         getPanelTarget().endTrans();
-        if (!c.equals(oldColor)) {
-            ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
-        }
     }
 
     /**

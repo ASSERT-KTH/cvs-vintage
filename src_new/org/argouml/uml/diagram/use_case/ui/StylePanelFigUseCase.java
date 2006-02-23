@@ -1,4 +1,4 @@
-// $Id: StylePanelFigUseCase.java,v 1.14 2006/02/17 18:36:02 mkl Exp $
+// $Id: StylePanelFigUseCase.java,v 1.15 2006/02/23 23:48:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,15 +98,9 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
      */
     public void itemStateChanged(ItemEvent e) {
         if (!refreshTransaction) {
-            Object src = e.getSource();
-
-            // If it was the check box, reset it, otherwise invoke the parent.
-
-            if (src == epCheckBox) {
+            if (e.getSource() == epCheckBox) {
                 FigUseCase target = (FigUseCase) getTarget();
-
                 target.setExtensionPointVisible(epCheckBox.isSelected());
-                ArgoEventPump.fireEvent(new ArgoProjectSaveEvent(ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT, this));
             } else {
                 super.itemStateChanged(e);
             }

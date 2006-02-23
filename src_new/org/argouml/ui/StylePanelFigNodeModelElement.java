@@ -1,4 +1,4 @@
-// $Id: StylePanelFigNodeModelElement.java,v 1.12 2006/02/19 10:17:59 linus Exp $
+// $Id: StylePanelFigNodeModelElement.java,v 1.13 2006/02/23 23:48:05 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -143,12 +143,6 @@ public class StylePanelFigNodeModelElement
         int oldShadowSize = nodeTarget.getShadowSize();
         nodeTarget.setShadowSize(i);
         getPanelTarget().endTrans();
-        if (i != oldShadowSize) {
-            ArgoEventPump.fireEvent(
-                    new ArgoProjectSaveEvent(
-                            ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
-                            this));
-        }
     }
 
     /**
@@ -162,10 +156,6 @@ public class StylePanelFigNodeModelElement
             } else if (src == pathCheckBox) {
                 PathContainer pc = (PathContainer) getPanelTarget();
                 pc.setPathVisible(pathCheckBox.isSelected());
-                ArgoEventPump.fireEvent(
-                        new ArgoProjectSaveEvent(
-                                ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
-                                this));
             } else {
                 super.itemStateChanged(e);
             }

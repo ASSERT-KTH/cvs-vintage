@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.228 2006/02/21 13:39:09 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.229 2006/02/23 23:48:05 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,6 +90,7 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
+import org.tigris.gef.graph.MutableGraphSupport;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigNode;
@@ -1304,6 +1305,10 @@ public abstract class FigNodeModelElement
      * @see org.argouml.uml.diagram.ui.PathContainer#setPathVisible(boolean)
      */
     public void setPathVisible(boolean visible) {
+        if (pathVisible == visible) {
+            return;
+        }
+        MutableGraphSupport.enableSaveAction();
         pathVisible = visible;
         if (notationProviderName != null)
             notationProviderName.putValue("pathVisible", new Boolean(visible));
@@ -1500,8 +1505,13 @@ public abstract class FigNodeModelElement
 
     /**
      * @param size the new shadow size
+     * TODO: Move the shadow stuff into GEF
      */
     public void setShadowSize(int size) {
+        if (size == shadowSize) {
+            return;
+        }
+        MutableGraphSupport.enableSaveAction();
         shadowSize = size;
     }
 

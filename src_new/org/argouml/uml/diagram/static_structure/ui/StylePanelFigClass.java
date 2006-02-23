@@ -1,4 +1,4 @@
-// $Id: StylePanelFigClass.java,v 1.20 2006/02/19 11:43:15 linus Exp $
+// $Id: StylePanelFigClass.java,v 1.21 2006/02/23 23:48:05 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,17 +117,9 @@ public class StylePanelFigClass extends StylePanelFigNodeModelElement {
             if (src == attrCheckBox) {
                 ((AttributesCompartmentContainer) getPanelTarget())
                     .setAttributesVisible(attrCheckBox.isSelected());
-                ArgoEventPump.fireEvent(
-                        new ArgoProjectSaveEvent(
-                                ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
-                                this));
             } else if (src == operCheckBox) {
                 ((OperationsCompartmentContainer) getPanelTarget())
                     .setOperationsVisible(operCheckBox.isSelected());
-                ArgoEventPump.fireEvent(
-                        new ArgoProjectSaveEvent(
-                                ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
-                                this));
             } else {
                 super.itemStateChanged(e);
             }

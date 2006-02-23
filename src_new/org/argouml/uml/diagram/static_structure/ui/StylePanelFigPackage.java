@@ -1,4 +1,4 @@
-// $Id: StylePanelFigPackage.java,v 1.6 2006/02/19 11:43:15 linus Exp $
+// $Id: StylePanelFigPackage.java,v 1.7 2006/02/23 23:48:05 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,17 +94,9 @@ public class StylePanelFigPackage extends StylePanelFigNodeModelElement {
             if (src == stereoCheckBox) {
                 ((StereotypeContainer) getPanelTarget())
                     .setStereotypeVisible(stereoCheckBox.isSelected());
-                ArgoEventPump.fireEvent(
-                        new ArgoProjectSaveEvent(
-                                ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
-                                this));
             } else if (src == visibilityCheckBox) {
                 ((VisibilityContainer) getPanelTarget())
                     .setVisibilityVisible(visibilityCheckBox.isSelected());
-                ArgoEventPump.fireEvent(
-                        new ArgoProjectSaveEvent(
-                                ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
-                                this));
             } else {
                 super.itemStateChanged(e);
             }
