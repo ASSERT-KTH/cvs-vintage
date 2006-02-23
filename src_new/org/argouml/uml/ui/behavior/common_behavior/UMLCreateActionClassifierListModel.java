@@ -1,4 +1,4 @@
-// $Id: UMLCreateActionClassifierListModel.java,v 1.4 2006/02/22 21:40:00 mvw Exp $
+// $Id: UMLCreateActionClassifierListModel.java,v 1.5 2006/02/23 16:45:50 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,6 @@
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
-import java.util.Iterator;
-
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
@@ -44,13 +42,6 @@ public class UMLCreateActionClassifierListModel extends
      */
     protected void buildModelList() {
         removeAllElements();
-        if (Model.getCommonBehaviorHelper().getInstantiation(getTarget()) == null) {
-            Object classifier = getClassifierReceiver();
-            if (classifier != null)
-                Model.getCommonBehaviorHelper().setInstantiation(getTarget(),
-                        classifier);
-        }
-
         addElement(Model.getCommonBehaviorHelper()
                 .getInstantiation(getTarget()));
     }
@@ -62,31 +53,5 @@ public class UMLCreateActionClassifierListModel extends
         return Model.getFacade().isAClassifier(elem)
                 && Model.getCommonBehaviorHelper()
                         .getInstantiation(getTarget()) == elem;
-    }
-
-    private Object getClassifierReceiver() {
-
-        Object me = Model.getCommonBehaviorHelper().getActionOwner(getTarget());
-
-        if ((Model.getFacade().isAMessage(me))
-                || (Model.getFacade().isAStimulus(me))) {
-            Object receiver = Model.getFacade().getReceiver(me);
-            if (Model.getFacade().isAInstance(receiver)) {
-                Iterator classifier = Model.getFacade()
-                        .getClassifiers(receiver).iterator();
-                if (classifier.hasNext()) {
-                    return classifier.next();
-                }
-            } else {
-                if (Model.getFacade().isAClassifierRole(receiver)) {
-                    Iterator classifier = Model.getFacade().getBases(receiver)
-                            .iterator();
-                    if (classifier.hasNext()) {
-                        return classifier.next();
-                    }
-                }
-            }
-        }
-        return null;
     }
 }
