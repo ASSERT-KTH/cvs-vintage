@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.32 2006/02/19 10:45:42 mvw Exp $
+// $Id: Facade.java,v 1.33 2006/02/23 16:14:20 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2207,9 +2207,7 @@ public interface Facade {
     Object getSender(Object handle);
 
     /**
-     * Returns the sender object of a stimulus or a message.
-     *
-     * TODO: Check if this javadoc comment is really correct?
+     * Returns the Signal of a SendAction, SignalEvent or Reception.
      *
      * @param handle is the object
      * @return the signal
