@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.9 2005/11/12 23:53:37 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.10 2006/02/24 21:58:04 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,11 +58,13 @@ public interface StateMachinesHelper {
      * untill the statemachine is reached.  To decouple ArgoUML as
      * much as possible from the model implementation, the parameter of the
      * method is of type Object, and the result, too.<p>
+     * 
+     * Only if the given handle is null, then an exception is thrown.
      *
-     * @param handle The state for which we want to know the
+     * @param handle The element for which we want to know the
      * statemachine
      * @return Object MStateMachine The statemachine the state belongs too or
-     * null if the given parameter is not a state or null itself.
+     * null if the given handle is not contained in this statemachine
      */
     Object getStateMachine(Object handle);
 
