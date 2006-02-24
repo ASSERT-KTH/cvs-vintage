@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: Protocol.java,v 1.3 2006/01/17 16:14:45 pelletib Exp $
+ * $Id: Protocol.java,v 1.4 2006/02/24 09:21:20 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -168,6 +168,10 @@ public class Protocol {
                 Method mMBean = clazz.getMethod(setterMethodMBean, new Class[] {String.class, String.class});
                 mMBean.invoke(null, new Object[] {domainName, serverName});
 
+            } catch (ClassNotFoundException cnfe) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(name + "is not available, don't configure it.");
+                }
             } catch (NoClassDefFoundError ncdfe) {
                 if (logger.isDebugEnabled()) {
                     logger.debug(name + "is not available, don't configure it.");
