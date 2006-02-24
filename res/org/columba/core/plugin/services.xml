@@ -2,5 +2,4 @@
 
 <extensionlist>
     <extension id="BeanshellService" singleton="true" class="org.columba.core.scripting.BeanshellService" />
-    <extension id="FileMonitorService" singleton="true" class="org.columba.core.filemonitor.FileMonitorService" />
 </extensionlist>
