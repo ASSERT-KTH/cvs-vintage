@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fileset-config file-format-version="1.0.0">
-    <fileset check-config-name="JOnAS" enabled="true" name="Carol">
-        <file-match-pattern include-pattern="true" match-pattern=".java$"/>
-        <file-match-pattern include-pattern="false" match-pattern="Foo.java$"/>
-        <file-match-pattern include-pattern="false" match-pattern="FooExplicit.java$"/>
-        <file-match-pattern include-pattern="false" match-pattern="doc/.*?.java$"/>
+<fileset-config file-format-version="1.2.0" simple-config="false">
+    <local-check-config name="Carol" location="/carol/.checkstyle_eclipse_config" type="project" description="">
+        <additional-data name="protect-config-file" value="false"/>
+    </local-check-config>
+    <fileset name="Carol" enabled="true" check-config-name="Carol" local="true">
+        <file-match-pattern match-pattern=".java$" include-pattern="true"/>
+        <file-match-pattern match-pattern="Foo.java$" include-pattern="false"/>
+        <file-match-pattern match-pattern="FooExplicit.java$" include-pattern="false"/>
+        <file-match-pattern match-pattern="doc/.*?.java$" include-pattern="false"/>
     </fileset>
 </fileset-config>
