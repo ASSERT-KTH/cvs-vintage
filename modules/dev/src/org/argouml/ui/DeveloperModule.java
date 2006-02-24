@@ -1,4 +1,4 @@
-// $Id: DeveloperModule.java,v 1.3 2006/02/16 18:45:47 bobtarling Exp $
+// $Id: DeveloperModule.java,v 1.4 2006/02/24 13:02:32 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,14 +28,12 @@ import java.awt.BorderLayout;
 
 import javax.swing.JComponent;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
-import org.argouml.kernel.UndoEnabler;
 import org.argouml.moduleloader.ModuleInterface;
 import org.tigris.gef.undo.UndoLogPanel;
 import org.tigris.gef.undo.UndoManager;
