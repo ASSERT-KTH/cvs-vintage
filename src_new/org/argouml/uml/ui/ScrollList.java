@@ -1,4 +1,4 @@
-// $Id: ScrollList.java,v 1.1 2005/10/24 22:57:47 bobtarling Exp $
+// $Id: ScrollList.java,v 1.2 2006/02/24 23:49:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * A scrollable list of items.
@@ -39,6 +40,7 @@ public class ScrollList extends JScrollPane {
      * @param listModel The model from which to build the list
      */
     public ScrollList(ListModel listModel) {
+        setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         setViewportView(new UMLLinkedList(listModel));
     }
 }

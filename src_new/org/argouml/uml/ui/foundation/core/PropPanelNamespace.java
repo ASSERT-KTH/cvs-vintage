@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.26 2005/01/30 20:47:33 linus Exp $
+// $Id: PropPanelNamespace.java,v 1.27 2006/02/24 23:49:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.ui.ScrollList;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.tigris.swidgets.Orientation;
 
@@ -115,8 +116,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
      */
     public JScrollPane getOwnedElementsScroll() {
         if (ownedElementsScroll == null) {
-	    JList ownedElementsList  = new UMLLinkedList(ownedElementListModel);
-            ownedElementsScroll = new JScrollPane(ownedElementsList);
+            ownedElementsScroll = new ScrollList(ownedElementListModel);
         }
         return ownedElementsScroll;
 
