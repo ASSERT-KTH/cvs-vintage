@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.82 2006/02/10 23:01:07 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.83 2006/02/24 15:27:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -244,9 +244,9 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 
         // TODO: This logic may well be worth moving into the model component.
         // Provide a similar grid to the connectionsGrid
+        if (Model.getFacade().isAModel(node)) return false; // issue 3774
         return Model.getFacade().isAClass(node)
             || Model.getFacade().isAInterface(node)
-            || Model.getFacade().isAModel(node)
             || Model.getFacade().isAPackage(node);
     }
 
