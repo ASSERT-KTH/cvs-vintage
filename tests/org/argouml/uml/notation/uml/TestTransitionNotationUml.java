@@ -1,4 +1,4 @@
-// $Id: TestTransitionNotationUml.java,v 1.2 2006/02/25 06:19:29 tfmorris Exp $
+// $Id: TestTransitionNotationUml.java,v 1.3 2006/02/25 09:46:22 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,8 +131,14 @@ public class TestTransitionNotationUml extends TestCase {
             boolean guard, boolean effect, boolean exception) {
         Object it = Model.getStateMachinesFactory()
             .buildInternalTransition(st);
-        NotationProvider4 notation = new TransitionNotationUml(it);
-        notation.parse(text);
+        TransitionNotationUml notation = new TransitionNotationUml(it);
+        try {
+            notation.parseTransition(it, text);
+            assertTrue("Expected exception did not happen.", !exception);
+        } catch (ParseException e) {
+            assertTrue("Unexpected exception: " + e.getMessage(), 
+                    exception);
+        }
         if (trigger) {
             assertTrue("Trigger was not generated for " + text,
                     Model.getFacade().getTrigger(it) != null);

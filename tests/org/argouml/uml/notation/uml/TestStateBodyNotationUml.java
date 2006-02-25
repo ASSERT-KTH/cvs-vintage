@@ -1,4 +1,4 @@
-// $Id: TestStateBodyNotationUml.java,v 1.1 2005/11/11 21:42:45 mvw Exp $
+// $Id: TestStateBodyNotationUml.java,v 1.2 2006/02/25 09:46:22 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,9 +204,9 @@ public class TestStateBodyNotationUml extends TestCase {
             boolean entryAction, boolean exitAction,
             boolean doAction, int internals, boolean exception) {
         try {
-//          ParserDisplay.SINGLETON.parseStateBody(sst, text);
             StateBodyNotationUml sbn = new StateBodyNotationUml(sst);
             sbn.parseStateBody(sst, text);
+            assertTrue("Expected exception did not happen.", !exception);
         } catch (ParseException e) {
             assertTrue("Unexpected exception for " + text, exception);
         }

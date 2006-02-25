@@ -1,4 +1,4 @@
-// $Id: StateBodyNotationUml.java,v 1.5 2006/02/22 16:14:43 mvw Exp $
+// $Id: StateBodyNotationUml.java,v 1.6 2006/02/25 09:46:27 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,8 +178,10 @@ public class StateBodyNotationUml extends StateBodyNotation {
                      * do we do with the remainder of the
                      * parsed/to be parsed lines?
                      */
-                    /* TODO: Is this a good way of handling nested notation? */
-                    new TransitionNotationUml(t).parse(line);
+                    /* TODO: Is this a good way of handling nested notation? 
+                     * The following fails the tests:
+                     * new TransitionNotationUml(t).parse(line);*/
+                    new TransitionNotationUml(t).parseTransition(t, line);
                     /* Add this new one, and mark it to be retained: */
                     internalsInfo.add(t, true);
                 }
