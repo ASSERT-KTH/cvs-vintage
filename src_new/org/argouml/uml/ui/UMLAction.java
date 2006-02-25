@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.41 2005/06/30 23:57:43 bobtarling Exp $
+// $Id: UMLAction.java,v 1.42 2006/02/25 16:35:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,8 @@ import org.tigris.gef.undo.UndoableAction;
 /**
  * The prototype of all actions within ArgoUML.
  *
+ * @deprecated since V0.20 by MVW, see issue 2325.
+ * Replaced by Action or Cmd or UndoableAction.
  */
 public class UMLAction extends UndoableAction {
     /**

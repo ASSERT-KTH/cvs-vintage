@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.81 2005/01/09 14:58:11 linus Exp $
+// $Id: Actions.java,v 1.82 2006/02/25 16:35:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,9 @@ import org.argouml.uml.ui.UMLAction;
  * Once UMLActions are enlisted, they can never be removed!<p>
  *
  * This class is a Singleton.
+ * 
+ *  @deprecated since V0.20 by MVW, see issue 2325.
+ *  The Actions registered here should listen themselves to the target changes.
  */
 public class Actions implements TargetListener {
 
