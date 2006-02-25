@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.16 2005/06/29 18:24:40 linus Exp $
+// $Id: ActionAddPackage.java,v 1.17 2006/02/25 16:36:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,38 +26,37 @@ package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * Action to add a package to the selected model element in the
- * nav pane. This is a shortcut that helps build model
+ * explorer. This is a shortcut that helps build model
  * structures quickly.
  *
  * @author alexb@tigris.org
  */
-public class ActionAddPackage  extends UMLAction {
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
+public class ActionAddPackage  extends UndoableAction {
 
     /**
      * Creates a new instance of ActionAddPackage.
      */
     public ActionAddPackage() {
-        super("action.add-package", NO_ICON);
+        super(Translator.localize("action.add-package"));
     }
 
     /**
-     * adds a package to the selected object in the nav pane.
+     * Adds a package to the selected object in the nav pane.
      *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
         Object namespace =
-	    TargetManager.getInstance().getModelTarget();
+            TargetManager.getInstance().getModelTarget();
         Model.getCoreHelper().addOwnedElement(namespace,
-            Model.getModelManagementFactory().createPackage());
+                Model.getModelManagementFactory().createPackage());
     }
 
 }
