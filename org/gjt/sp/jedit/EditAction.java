@@ -26,7 +26,6 @@ package org.gjt.sp.jedit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
-import org.gjt.sp.jedit.gui.InputHandler;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -38,7 +37,7 @@ import org.gjt.sp.util.Log;
  * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.23 2003/05/01 04:17:13 spestov Exp $
+ * @version $Id: EditAction.java,v 1.24 2006/02/25 03:00:39 ezust Exp $
  */
 public abstract class EditAction
 {
