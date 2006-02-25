@@ -1,5 +1,5 @@
-// $Id: ActionAddExistingEdge.java,v 1.15 2006/02/25 16:36:50 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ActionAddExistingEdge.java,v 1.16 2006/02/25 16:38:53 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
