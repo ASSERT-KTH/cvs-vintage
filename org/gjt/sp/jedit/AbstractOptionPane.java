@@ -55,7 +55,7 @@ import java.awt.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: AbstractOptionPane.java,v 1.18 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: AbstractOptionPane.java,v 1.19 2006/02/25 17:03:05 ezust Exp $
  */
 // even though this class is called AbstractOptionPane, it is not really
 // abstract, since BufferOptions uses an instance of it to lay out its
@@ -120,6 +120,17 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 			_save();
 	} //}}}
 
+	public JLabel newLabel(String label, Component comp) {
+		JLabel retval = new JLabel(label);
+		try {
+			JComponent jc = (JComponent) comp;
+			String tttext = jc.getToolTipText();
+			retval.setToolTipText(tttext);
+		}
+		catch (Exception e) {}
+		return retval;
+	}
+	
 	//{{{ addComponent() method
 	/**
 	 * Adds a labeled component to the option pane. Components are
@@ -130,7 +141,7 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 	 */
 	public void addComponent(String label, Component comp)
 	{
-		JLabel l = new JLabel(label);
+		JLabel l = newLabel(label, comp);
 		l.setBorder(new EmptyBorder(0,0,0,12));
 		addComponent(l,comp,GridBagConstraints.BOTH);
 	} //}}}
@@ -147,7 +158,7 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 	 */
 	public void addComponent(String label, Component comp, int fill)
 	{
-		JLabel l = new JLabel(label);
+		JLabel l = newLabel(label, comp);
 		l.setBorder(new EmptyBorder(0,0,0,12));
 		addComponent(l,comp,fill);
 	} //}}}

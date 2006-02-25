@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.63 2006/02/25 04:33:59 ezust Exp $
+ * @version $Id: EditPane.java,v 1.64 2006/02/25 17:03:05 ezust Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -589,7 +589,7 @@ public class EditPane extends JPanel implements EBComponent
 			"view.lineHighlight"));
 		painter.setLineHighlightColor(
 			jEdit.getColorProperty("view.lineHighlightColor"));
-		painter.setAntiAlias(new AntiAlias());
+		painter.setAntiAlias(AntiAlias.textArea());
 		painter.setFractionalFontMetricsEnabled(jEdit.getBooleanProperty(
 			"view.fracFontMetrics"));
 
