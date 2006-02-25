@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.25 2005/11/13 11:01:22 linus Exp $
+// $Id: ParseState.java,v 1.26 2006/02/25 07:19:57 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -314,15 +314,30 @@ class ParseState {
      * @return The found operation, null if not found.
      */
     public Object getOperation(String name) {
-        LOG.info("Searching through obsolete features for " + name);
 	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext();) {
 	    Object feature = i.next();
-            LOG.info("Checking feature " + feature);
 	    if (Model.getFacade().isAOperation(feature)
                     && name.equals(Model.getFacade().getName(feature))) {
 		return feature;
 	    }
 	}
 	return null;
+    }
+
+    /**
+     * Get a attribute from the current classifier not yet modeled.
+     *
+     * @param name The name of the attribute.
+     * @return The found attribute, null if not found.
+     */
+    public Object getAttribute(String name) {
+        for (Iterator i = obsoleteFeatures.iterator(); i.hasNext();) {
+            Object feature = i.next();
+            if (Model.getFacade().isAAttribute(feature)
+                    && name.equals(Model.getFacade().getName(feature))) {
+                return feature;
+            }
+        }
+        return null;
     }
 }
