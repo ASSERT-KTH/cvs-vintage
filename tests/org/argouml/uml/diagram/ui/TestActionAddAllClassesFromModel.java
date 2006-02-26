@@ -1,4 +1,4 @@
-// $Id: TestActionAddAllClassesFromModel.java,v 1.5 2005/01/09 14:59:17 linus Exp $
+// $Id: TestActionAddAllClassesFromModel.java,v 1.6 2006/02/26 09:21:36 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,7 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      * @since November 3, 2003
      */
     public void testShouldBeEnabled() {
-	assertTrue(action.shouldBeEnabled());
+	assertTrue(action.isEnabled());
     }
 
     /**
@@ -88,6 +88,6 @@ public class TestActionAddAllClassesFromModel extends TestCase {
     public void testShouldNotBeEnabled() {
 	action = new ActionAddAllClassesFromModel("Add all classes from model",
 						   new Object());
-	assertEquals(action.shouldBeEnabled(), false);
+	assertEquals(action.isEnabled(), false);
     }
 }
