@@ -55,7 +55,7 @@ import java.awt.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: AbstractOptionPane.java,v 1.19 2006/02/25 17:03:05 ezust Exp $
+ * @version $Id: AbstractOptionPane.java,v 1.20 2006/02/26 21:19:59 ezust Exp $
  */
 // even though this class is called AbstractOptionPane, it is not really
 // abstract, since BufferOptions uses an instance of it to lay out its
@@ -120,14 +120,25 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 			_save();
 	} //}}}
 
-	public JLabel newLabel(String label, Component comp) {
+	// {{{ newLabel()
+	/**
+	 *@return a label which has the same tooltiptext as the Component
+	 *    that it is a label for. This is used to create labels from inside
+	 *    AbstractOptionPane.
+	 *    @since jEdit 4.3pre4
+	 */
+	public JLabel newLabel(String label, Component comp) 
+	{
 		JLabel retval = new JLabel(label);
-		try {
+		try 
+		{
 			JComponent jc = (JComponent) comp;
 			String tttext = jc.getToolTipText();
 			retval.setToolTipText(tttext);
 		}
-		catch (Exception e) {}
+		catch (Exception e) 
+		{
+		}
 		return retval;
 	}
 	
