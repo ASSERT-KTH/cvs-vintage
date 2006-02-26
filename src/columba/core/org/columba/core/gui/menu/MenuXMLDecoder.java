@@ -17,11 +17,15 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+import javax.swing.Box;
+import javax.swing.JMenu;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.api.exception.PluginException;
@@ -32,6 +36,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.action.AbstractSelectableAction;
 import org.columba.core.gui.base.CCheckBoxMenuItem;
 import org.columba.core.gui.base.CMenuItem;
+import org.columba.core.gui.util.ThrobberIcon;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;

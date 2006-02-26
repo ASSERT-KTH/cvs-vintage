@@ -51,11 +51,13 @@ import org.columba.api.statusbar.IStatusBar;
 import org.columba.core.command.TaskManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.base.MenuThrobber;
 import org.columba.core.gui.menu.ExtendableMenuBar;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ExtendableToolBar;
 import org.columba.core.gui.toolbar.ToolBarXMLDecoder;
+import org.columba.core.gui.util.ThrobberIcon;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
@@ -109,7 +111,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	private String windowname;
 
 	private boolean defaultCloseOperation;
-	
+
 	protected EventListenerList listenerList = new EventListenerList();
 
 	public DefaultContainer(DefaultFrameController mediator) {
@@ -271,7 +273,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// add to new mediator's listener list
 		mediator.addListener(this);
-		
+
 		mediator.fireComponentChanged();
 	}
 
@@ -321,9 +323,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// add to new mediator's listener list
 		mediator.addListener(this);
-		
+
 		fireComponentChanged(mediator);
-		
+
 		mediator.fireComponentChanged();
 	}
 
@@ -568,7 +570,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// contentPane.remove(mediator.getContentPane());
 
 		setJMenuBar(menubar);
-
+		// add animated icon to right-hand side corner of menubar
+		MenuThrobber.setThrobber(menubar);
+		
 		// // add new componnet
 		contentPane.add(view, BorderLayout.CENTER);
 
@@ -641,9 +645,9 @@ public class DefaultContainer extends JFrame implements IContainer,
 			// loadPositions(getViewItem());
 
 		} else {
-			if ( !mediator.isInitialized() )
+			if (!mediator.isInitialized())
 				mediator.loadPositions();
-				
+
 			validateTree();
 
 			view.repaint();
@@ -801,11 +805,11 @@ public class DefaultContainer extends JFrame implements IContainer,
 	}
 
 	public void switchedComponent(FrameEvent event) {
-	   // don't do anything	
+		// don't do anything
 	}
-	
-	/********************** event listener *******************************/
-	
+
+	/** ******************** event listener ****************************** */
+
 	public void addListener(IContainerListener l) {
 		listenerList.add(IContainerListener.class, l);
 	}
@@ -813,7 +817,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	public void removeListener(IContainerListener l) {
 		listenerList.remove(IContainerListener.class, l);
 	}
-	
+
 	public void fireComponentChanged(IFrameMediator mediator) {
 		FrameEvent e = new FrameEvent(this, mediator);
 		// Guaranteed to return a non-null array
@@ -826,10 +830,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 				((IContainerListener) listeners[i + 1]).switchedComponent(e);
 			}
 		}
-		
+
 	}
 
-	
-	
-	
 }

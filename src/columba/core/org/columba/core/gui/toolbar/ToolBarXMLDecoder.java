@@ -81,11 +81,11 @@ public class ToolBarXMLDecoder {
 		JButton button = ToolBarButtonFactory.createButton(cancelAction);
 		toolBar.add(button);
 
-		toolBar.add(Box.createHorizontalGlue());
-
-		// add busy animated icon
-		ImageSequenceTimer image = new ImageSequenceTimer();
-		toolBar.add(image);
+//		toolBar.add(Box.createHorizontalGlue());
+//
+//		// add busy animated icon
+//		ImageSequenceTimer image = new ImageSequenceTimer();
+//		toolBar.add(image);
 
 		Document doc = retrieveDocument(is);
 

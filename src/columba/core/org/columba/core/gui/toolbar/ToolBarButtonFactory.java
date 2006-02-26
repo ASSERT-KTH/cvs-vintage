@@ -40,11 +40,11 @@ public class ToolBarButtonFactory {
 
 	protected static boolean ALIGNMENT = true;
 
-	public static JButton createAnimatedIconButton() {
-		ImageSequenceTimer button = new ImageSequenceTimer();
-
-		return button;
-	}
+//	public static JButton createAnimatedIconButton() {
+//		ImageSequenceTimer button = new ImageSequenceTimer();
+//
+//		return button;
+//	}
 
 	public static JButton createButton(AbstractColumbaAction action) {
 		JButton button = new ToolBarButton(action);

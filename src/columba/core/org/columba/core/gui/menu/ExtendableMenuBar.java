@@ -17,14 +17,19 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.util.ThrobberIcon;
 
 public class ExtendableMenuBar extends JMenuBar {
 
@@ -33,11 +38,13 @@ public class ExtendableMenuBar extends JMenuBar {
 
 	private Hashtable map = new Hashtable();
 
+	
 	public ExtendableMenuBar() {
 		super();
 	}
-
+	
 	public void add(ExtendableMenu menu) {
+		
 		Enumeration e = menu.getSubmenuEnumeration();
 		while (e.hasMoreElements()) {
 			ExtendableMenu submenu = (ExtendableMenu) e.nextElement();
@@ -48,14 +55,15 @@ public class ExtendableMenuBar extends JMenuBar {
 	}
 	
 	public void insert(ExtendableMenu menu) {
+		
 		Enumeration e = menu.getSubmenuEnumeration();
 		while (e.hasMoreElements()) {
 			ExtendableMenu submenu = (ExtendableMenu) e.nextElement();
 			map.put(submenu.getId(), submenu);
 		}
 		
+		// we insert new menus between the "Edit" and the "Utilities, Help" menu
 		super.add(menu, getMenuCount()-2);
-		
 	}
 
 	public ExtendableMenu getMenu(String menuId) {
