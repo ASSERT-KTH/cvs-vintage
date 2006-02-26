@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.5 2006/02/14 21:42:54 tfmorris Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.6 2006/02/26 03:15:00 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,6 +159,22 @@ public interface ExtensionMechanismsHelper {
      * @param baseClass the baseclass
      */
     void setBaseClass(Object handle, Object baseClass);
+
+    /**
+     * Add a baseclass to some stereotype.
+     *
+     * @param handle the stereotype
+     * @param baseClass the baseclass to add
+     */
+    void addBaseClass(Object handle, Object baseClass);
+
+    /**
+     * Remove baseclass from some stereotype.
+     *
+     * @param handle the stereotype
+     * @param baseClass the baseclass to remove
+     */
+    void removeBaseClass(Object handle, Object baseClass);
 
     /**
      * Set the icon for a stereotype.
