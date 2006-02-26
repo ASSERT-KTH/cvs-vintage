@@ -1,4 +1,4 @@
-// $Id: StylePanelFigClass.java,v 1.21 2006/02/23 23:48:05 bobtarling Exp $
+// $Id: StylePanelFigClass.java,v 1.22 2006/02/26 01:35:25 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,6 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.JCheckBox;
 
-import org.argouml.application.events.ArgoEventPump;
-import org.argouml.application.events.ArgoEventTypes;
-import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.ui.StylePanelFigNodeModelElement;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;

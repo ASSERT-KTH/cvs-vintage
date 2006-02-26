@@ -1,5 +1,5 @@
-// $Id: ClassDiagramRenderer.java,v 1.47 2005/12/10 19:18:24 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ClassDiagramRenderer.java,v 1.48 2006/02/26 01:35:25 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -195,16 +195,18 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
         } else if (Model.getFacade().isAAbstraction(edge)) {
             newEdge = new FigRealization(edge);
         } else if (Model.getFacade().isADependency(edge)) {
-            
+
             Collection c = Model.getFacade().getStereotypes(edge);
             Iterator i = c.iterator();
             String name = "";
             while (i.hasNext()) {
                 Object o = i.next();
                 name = Model.getFacade().getName(o);
-                if ("realize".equals(name)) break;
+                if ("realize".equals(name)) {
+                    break;
+                }
             }
-            if("realize".equals(name)) {
+            if ("realize".equals(name)) {
                 FigRealization realFig = new FigRealization(edge);
 
                 Object supplier =
@@ -278,6 +280,9 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
         edge.setDestFigNode(dest);
     }
 
+    /**
+     * The UID.
+     */
     static final long serialVersionUID = 675407719309039112L;
 
 } /* end class ClassDiagramRenderer */

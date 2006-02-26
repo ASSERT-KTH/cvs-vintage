@@ -1,5 +1,5 @@
-// $Id: SelectionClass.java,v 1.30 2005/09/15 14:28:40 mkl Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: SelectionClass.java,v 1.31 2006/02/26 01:35:25 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -52,6 +52,9 @@ import org.tigris.gef.presentation.Handle;
  */
 public class SelectionClass extends SelectionNodeClarifiers {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(SelectionClass.class);
 
@@ -73,7 +76,7 @@ public class SelectionClass extends SelectionNodeClarifiers {
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-    private boolean useComposite = false;
+    private boolean useComposite;
 
 
 
@@ -171,7 +174,7 @@ public class SelectionClass extends SelectionNodeClarifiers {
             paintButtonBelow(inherit, g, cx + cw / 2, cy + ch + 2, 11);
         }
         if (useComposite) {
-            paintButtonLeft(compos, g, cx + cw +2, cy + ch / 2, 12);
+            paintButtonLeft(compos, g, cx + cw + 2, cy + ch / 2, 12);
             paintButtonRight(compos, g, cx, cy + ch / 2, 13);
             paintButtonRight(selfassoc, g, cx, cy + ch, 14);
         } else {
@@ -308,4 +311,8 @@ public class SelectionClass extends SelectionNodeClarifiers {
 			   (Class) Model.getMetaTypes().getGeneralization());
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -5724040863222115747L;
 } /* end class SelectionClass */
