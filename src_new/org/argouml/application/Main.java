@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.141 2006/02/16 01:40:37 bobtarling Exp $
+// $Id: Main.java,v 1.142 2006/02/27 14:53:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -296,7 +296,7 @@ public class Main {
             // Too many side effects as part of initialization!
             ProjectManager.getManager().setCurrentProject(
                     ProjectManager.getManager().getCurrentProject());
-            ProjectManager.getManager().setNeedsSave(false);
+            ProjectManager.getManager().setSaveEnabled(false);
         }
 
         st.mark("set project");

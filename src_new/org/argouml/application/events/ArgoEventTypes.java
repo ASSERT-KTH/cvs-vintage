@@ -1,4 +1,4 @@
-// $Id: ArgoEventTypes.java,v 1.17 2006/02/20 16:38:38 bobtarling Exp $
+// $Id: ArgoEventTypes.java,v 1.18 2006/02/27 14:53:35 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,8 +138,9 @@ public interface ArgoEventTypes {
 
     /**
      * Project needs to be saved.
+     * @deprecated this is now unused - lets delete
      */
-    int NEEDS_PROJECTSAVE_EVENT          = 1401;
+//    int NEEDS_PROJECTSAVE_EVENT          = 1401;
 
     /**
      * Project is saved.
