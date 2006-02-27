@@ -1,5 +1,5 @@
-// $Id: TestUmlModelElement.java,v 1.5 2006/02/27 20:39:58 tfmorris Exp $
-// Copyright (c) 2003-2005 The Regents of the University of California. All
+// $Id: Factory.java,v 1.1 2006/02/27 20:39:57 tfmorris Exp $
+// Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,36 +24,12 @@
 
 package org.argouml.model;
 
-
-
 /**
- * @author Thierry Lach
+ * Marker interface that all Model factory interfaces extend.
+ * 
+ * @author Tom Morris
+ *
  */
-public class TestUmlModelElement extends GenericUmlObjectTestFixture {
-    /**
-     * Constructor.
-     *
-     * @param arg0 test name
-     */
-    public TestUmlModelElement(String arg0) {
-	super(arg0, Model.getMetaTypes().getModelElement());
-	validateTestClassIsGeneric(this);
-    }
-
-    /**
-     * Test Model Element
-     */
-    public void testModelElement() {
-        // ModelElement is abstract, so no create tests
-        // TODO: Add any other relevant tests        
-    }
-    
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        super.setUp();
-        setTruth(Model.getMetaTypes().getModelElement(), true);
-    }
+public interface Factory {
 
 }

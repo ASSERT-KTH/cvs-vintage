@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsFactory.java,v 1.3 2006/02/27 19:27:11 mvw Exp $
+// $Id: ActivityGraphsFactory.java,v 1.4 2006/02/27 20:39:57 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,10 @@ package org.argouml.model;
 
 import java.util.Collection;
 
-
 /**
- * The interface for the factory for ActivityGraphs.<p>
- *
- * Created from the old ActivityGraphsFactory.
+ * The interface for the factory for ActivityGraphs.
  */
-public interface ActivityGraphsFactory {
+public interface ActivityGraphsFactory extends Factory {
     /**
      * Create an empty but initialized instance of a UML ActionState.
      *
@@ -108,6 +105,7 @@ public interface ActivityGraphsFactory {
      * and the states.
      *
      * @param classifier the classifier (type)
+// TODO: Back out incompatible change to API
      * @param state the collection of states (inState)
      * @return the newly build classifierInState
      */

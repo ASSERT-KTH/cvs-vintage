@@ -1,4 +1,4 @@
-// $Id: TestUmlGeneralization.java,v 1.1 2005/12/12 14:59:09 mkl Exp $
+// $Id: TestUmlGeneralization.java,v 1.2 2006/02/27 20:39:58 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,31 +51,44 @@ public class TestUmlGeneralization extends GenericUmlObjectTestFixture {
     }
 
     
+    /**
+     * Make sure that the generalization can be retrieved and followed to the
+     * correct parent.
+     */
     public void testClasshasGeneralizations() {
         Collection gen = Model.getFacade().getGeneralizations(class2);
         assertNotNull(gen);
-        assertTrue(gen.size()==1);
+        assertTrue(gen.size() == 1);
         assertTrue(gen.contains(gen2));
+        assertTrue(Model.getFacade().getParent(gen2) == class3);
     }
-    
-   
+
+    /**
+     * Make sure that the specialization can be retrieved and followed to the
+     * correct child.
+     */
     public void testClasshasSpecializations() {
         Collection gen = Model.getFacade().getSpecializations(class2);
         assertNotNull(gen);
-        assertTrue(gen.size()==1);
+        assertTrue(gen.size() == 1);
         assertTrue(gen.contains(gen1));
+        assertTrue(Model.getFacade().getChild(gen1) == class1);
     }
     
+    /**
+     * Delete the middle class in a 3 level hierarchy and make sure the
+     * generalizations and specializations on both sides get deleted as well.
+     */
     public void testDeleteClass() {
         Model.getUmlFactory().delete(class2);
-        Collection gen1 = Model.getFacade().getGeneralizations(class1);
-        Collection spec1 = Model.getFacade().getSpecializations(class1);
-        assertTrue(gen1.isEmpty());
-        assertTrue(spec1.isEmpty());
-        Collection gen2 = Model.getFacade().getGeneralizations(class3);
-        Collection spec2 = Model.getFacade().getSpecializations(class3);
-        assertTrue(gen2.isEmpty());
-        assertTrue(spec2.isEmpty());
+        Collection gens1 = Model.getFacade().getGeneralizations(class1);
+        Collection specs1 = Model.getFacade().getSpecializations(class1);
+        assertTrue(gens1.isEmpty());
+        assertTrue(specs1.isEmpty());
+        Collection gens2 = Model.getFacade().getGeneralizations(class3);
+        Collection specs2 = Model.getFacade().getSpecializations(class3);
+        assertTrue(gens2.isEmpty());
+        assertTrue(specs2.isEmpty());
     }
     
     /**
@@ -88,7 +101,7 @@ public class TestUmlGeneralization extends GenericUmlObjectTestFixture {
         Model.getCoreHelper().setName(mmodel, "untitledModel");
         Model.getModelManagementFactory().setRootModel(mmodel);
         namespace = Model.getModelManagementFactory().createPackage();
-        class1 = Model.getCoreFactory().buildClass("Class3", namespace);
+        class1 = Model.getCoreFactory().buildClass("Class1", namespace);
         class2 = Model.getCoreFactory().buildClass("Class2", namespace);
         class3 = Model.getCoreFactory().buildClass("Class3", namespace);
         

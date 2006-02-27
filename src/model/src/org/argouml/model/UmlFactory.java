@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.5 2005/11/10 06:08:46 tfmorris Exp $
+// $Id: UmlFactory.java,v 1.6 2006/02/27 20:39:57 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,7 @@ package org.argouml.model;
 
 
 /**
- * The interface for the factory for Uml.<p>
- *
- * Created from the old UmlFactory.
+ * The interface for the UmlFactory.
  */
 public interface UmlFactory {
     /**

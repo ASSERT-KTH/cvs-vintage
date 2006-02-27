@@ -1,4 +1,4 @@
-// $Id: UseCasesFactory.java,v 1.4 2005/11/16 16:41:02 tfmorris Exp $
+// $Id: UseCasesFactory.java,v 1.5 2006/02/27 20:39:57 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,11 +26,9 @@ package org.argouml.model;
 
 
 /**
- * The interface for the factory for UseCases.<p>
- *
- * Created from the old UseCasesFactory.
+ * The interface for the factory for UseCases.
  */
-public interface UseCasesFactory {
+public interface UseCasesFactory extends Factory {
     /**
      * Create an empty but initialized instance of a Extend.
      *

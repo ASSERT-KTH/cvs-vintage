@@ -1,4 +1,4 @@
-// $Id: TestUmlActor.java,v 1.5 2005/10/21 05:05:06 tfmorris Exp $
+// $Id: TestUmlActor.java,v 1.6 2006/02/27 20:39:58 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,8 @@ public class TestUmlActor extends GenericUmlObjectTestFixture {
 	Object o =
 	    Model.getUmlFactory().buildNode(Model.getMetaTypes().getActor());
 	assertNotNull("Didn't create object", o);
-	assertTrue("Should be a base", Model.getFacade().isABase(o));
+	assertTrue("Should be a model element", Model.getFacade()
+                .isAModelElement(o));
 	assertTrue("Should be a actor", Model.getFacade().isAActor(o));
 	runTruthTests(o);
     }

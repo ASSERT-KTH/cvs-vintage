@@ -1,4 +1,4 @@
-// $Id: TestUmlUseCase.java,v 1.4 2005/08/20 09:31:08 linus Exp $
+// $Id: TestUmlUseCase.java,v 1.5 2006/02/27 20:39:58 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,8 @@ public class TestUmlUseCase extends GenericUmlObjectTestFixture {
 	Object o =
 	    Model.getUmlFactory().buildNode(Model.getMetaTypes().getUseCase());
 	assertNotNull("Didn't create object", o);
-	assertTrue("Should be a base", Model.getFacade().isABase(o));
+	assertTrue("Should be a model element", 
+                Model.getFacade().isAModelElement(o));
 	assertTrue("Should be a use case", Model.getFacade().isAUseCase(o));
 	runTruthTests(o);
     }

@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.14 2005/11/10 02:09:19 tfmorris Exp $
+// $Id: TestCoreFactory.java,v 1.15 2006/02/27 20:39:58 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -201,7 +201,7 @@ public class TestCoreFactory extends TestCase {
         Object model = Model.getModelManagementFactory().createModel();
         Object class1 = Model.getCoreFactory().buildClass(model);
         Object class2 = Model.getCoreFactory().buildClass(model);
-        Object dep = Model.getCoreFactory().buildDependency(class1, class2);
+        Model.getCoreFactory().buildDependency(class1, class2);
         assertEquals("client dependency invalid", 
                 1, Model.getFacade().getClientDependencies(class1).size());
         assertEquals("supplier dependency invalid", 

@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: CollaborationsFactory.java,v 1.2 2006/02/27 20:39:57 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,9 @@
 package org.argouml.model;
 
 /**
- * The interface for the factory of Collaboration.<p>
- *
- * Created from the old CollaborationsFactory.
+ * The interface for the factory of Collaboration.
  */
-public interface CollaborationsFactory {
+public interface CollaborationsFactory extends Factory {
     /**
      * Create an empty but initialized instance of a UML AssociationEndRole.
      *
@@ -59,11 +57,27 @@ public interface CollaborationsFactory {
     Object createCollaboration();
 
     /**
+     * Create an empty but initialized instance of a CollaborationInstanceSet.
+     *
+     * @since UML 1.4
+     * @return an initialized CollaborationInstanceSet instance.
+     */
+    Object createCollaborationInstanceSet();
+
+    /**
      * Create an empty but initialized instance of a UML Interaction.
      *
      * @return an initialized UML Interaction instance.
      */
     Object createInteraction();
+
+    /**
+     * Create an empty but initialized instance of an InteractionInstanceSet.
+     * 
+     * @since UML 1.4
+     * @return an initialized InteractionInstanceSet instance.
+     */
+    Object createInteractionInstanceSet();
 
     /**
      * Create an empty but initialized instance of a UML Message.

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.8 2006/02/14 21:41:27 tfmorris Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.9 2006/02/27 20:39:57 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,11 +27,9 @@ package org.argouml.model;
 import java.util.Collection;
 
 /**
- * The interface for the factory for ExstensionMechanisms.<p>
- *
- * Created from the old ExtensionMechanismsFactory.
+ * The interface for the factory for ExstensionMechanisms.
  */
-public interface ExtensionMechanismsFactory {
+public interface ExtensionMechanismsFactory extends Factory {
     /**
      * Create an empty but initialized instance of a UML Stereotype.
      *
