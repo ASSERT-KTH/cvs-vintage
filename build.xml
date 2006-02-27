@@ -273,7 +273,7 @@
             <manifest>
                 <attribute name="Main-Class" value="org.columba.core.main.Main"/>
                 <attribute name="Class-Path"
-                           value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc} ${lib.jython}"/>
+                           value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc} ${lib.jython} ${lib.bsh} ${lib.groovy}"/>
                 <attribute name="Sealed" value="false"/>
             </manifest>
         </jar>

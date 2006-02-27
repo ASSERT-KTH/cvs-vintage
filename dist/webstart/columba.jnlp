@@ -36,6 +36,7 @@
    <jar href="@flexdoc@"/>
    <jar href="@bsh@"/>
    <jar href="@jython@"/>
+   <jar href="@groovy@"/>
 
    <!-- JavaHelp is signed by SUN already -->
    <!-- it therefor can't be in the same jnlp file -->
