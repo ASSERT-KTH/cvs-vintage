@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.38 2006/02/19 18:08:19 linus Exp $
+// $Id: ArgoFacade.java,v 1.39 2006/02/27 20:44:54 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,7 +292,18 @@ class ArgoAny implements Any, Type2 {
 	    }
 	}
 
-	Object rp = Model.getCoreHelper().getReturnParameter(foundOp);
+        Collection returnParams = Model.getCoreHelper().getReturnParameters(foundOp);
+        Object rp;
+        if (returnParams.size() == 0) {
+            rp = null;
+        } else {
+            rp = returnParams.iterator().next();
+        } 
+        if (returnParams.size() > 1)  {
+            LOG.warn("OCL compiler only handles one return parameter"
+                    + " - Found " + returnParams.size()
+                    + " for " + Model.getFacade().getName(foundOp));
+        }
 
 	if (rp == null || Model.getFacade().getType(rp) == null) {
 	    LOG.warn("WARNING: supposing return type void!");

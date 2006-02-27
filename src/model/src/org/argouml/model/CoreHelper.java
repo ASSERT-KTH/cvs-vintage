@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.21 2006/02/25 07:15:32 tfmorris Exp $
+// $Id: CoreHelper.java,v 1.22 2006/02/27 20:44:55 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1234,11 +1234,14 @@ public interface CoreHelper {
 
     /**
      * Set the UUID of this element.
-     *
-     * @deprecated not supported by MDR - use Tagged Value 
-     * or other private mechanism.
-     * @param handle base element (MBase type)
-     * @param uuid is the UUID
+     * 
+     * @deprecated by tfm for 0.20 - getUUID is guaranteed to return a value but
+     *             it is not settable. If a settable ID is required, use a
+     *             TaggedValued or other private mechanism.
+     * @param handle
+     *            base element (MBase type)
+     * @param uuid
+     *            is the UUID
      */
     void setUUID(Object handle, String uuid);
 

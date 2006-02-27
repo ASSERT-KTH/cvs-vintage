@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.32 2005/11/02 13:28:16 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.33 2006/02/27 20:44:54 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1227,10 +1227,6 @@ public class GeneratorPHP4
     private String generateSection(Object modelElement, String sIndent,
                                    String sSuffix) {
         String uuid = UUIDHelper.getUUID(modelElement);
-        if (uuid == null) {
-            uuid = (new UID().toString());
-            Model.getCoreHelper().setUUID(modelElement, uuid);
-        }
 
         if (sSuffix != null && sSuffix.trim() != "") {
             return Section.generate(uuid + "-" + sSuffix.trim(), sIndent);

@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.29 2006/02/26 01:35:25 linus Exp $
+// $Id: FigEdgeNote.java,v 1.30 2006/02/27 20:44:55 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -186,9 +186,6 @@ public class FigEdgeNote
             newOwner = new CommentEdge();
         }
         owner = newOwner;
-        if (UUIDHelper.getUUID(newOwner) == null) {
-            Model.getCoreHelper().setUUID(newOwner, UUIDHelper.getNewUUID());
-        }
     }
 
     /**

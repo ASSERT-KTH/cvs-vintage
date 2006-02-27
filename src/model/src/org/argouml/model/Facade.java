@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.34 2006/02/25 07:15:32 tfmorris Exp $
+// $Id: Facade.java,v 1.35 2006/02/27 20:44:55 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2660,12 +2660,18 @@ public interface Facade {
     String getValueOfTag(Object handle);
 
     /**
-     * Return the UUID of this element.
+     * Return the ID of this element.
+     * 
+     * This is guaranteed to always return a value, but the
+     * uniqueness and stability of the ID may vary by implementation.
+     * The original implementation guaranteed universally unique
+     * (across time and space) identifiers which were also stable
+     * across reloads of an XMI file.
      *
-     * @param base base element (MBase type)
+     * @param element ModelElement to retrieve ID for.
      * @return UUID
      */
-    String getUUID(Object base);
+    String getUUID(Object element);
 
     /**
      * Return the visibility of this element.
