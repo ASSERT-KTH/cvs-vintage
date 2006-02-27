@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.86 2006/02/19 17:44:44 linus Exp $
+// $Id: Import.java,v 1.87 2006/02/27 14:27:20 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,9 +66,6 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.PluggableImport;
-import org.argouml.application.events.ArgoEventPump;
-import org.argouml.application.events.ArgoEventTypes;
-import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
@@ -714,15 +711,6 @@ public class Import {
 
                 // Do post load processings.
                 st.mark("postprocessings");
-
-                // Check if any diagrams where modified and the project
-                // should be saved before exiting.
-                if (diagramInterface != null && needsSave()) {
-                    ArgoEventPump.fireEvent(
-                            new ArgoProjectSaveEvent(
-                                    ArgoEventTypes.NEEDS_PROJECTSAVE_EVENT,
-                                    this));
-                }
 
                 ProjectBrowser.getInstance().showStatus("Import done");
 
