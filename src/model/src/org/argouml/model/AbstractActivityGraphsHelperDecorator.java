@@ -1,5 +1,5 @@
-// $Id: AbstractActivityGraphsHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: AbstractActivityGraphsHelperDecorator.java,v 1.2 2006/02/27 19:27:11 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model;
+
+import java.util.Collection;
 
 /**
  * The abstract Decorator for the {@link ActivityGraphsHelper}.
@@ -82,5 +84,12 @@ public abstract class AbstractActivityGraphsHelperDecorator
      */
     public void addInState(Object classifierInState, Object state) {
         impl.addInState(classifierInState, state);
+    }
+    
+    /**
+     * @see org.argouml.model.ActivityGraphsHelper#setInStates(java.lang.Object, java.util.Collection)
+     */
+    public void setInStates(Object classifierInState, Collection newStates) {
+        impl.setInStates(classifierInState, newStates);
     }
 }

@@ -1,5 +1,5 @@
-// $Id: ParserDisplay.java,v 1.188 2006/02/22 16:14:44 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ParserDisplay.java,v 1.189 2006/02/27 19:25:52 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -2896,7 +2896,7 @@ public final class ParserDisplay {
         if (c != null) {
             Model.getCoreHelper().setType(objectFlowState, c);
         } else {
-            throw new ParseException("Classifier not found", 0);
+            throw new ParseException("Classifier with name " + s + " not found", 0);
         }
     }
 
@@ -2945,20 +2945,24 @@ public final class ParserDisplay {
                 } else {
                     // no state named s is found, so we have to
                     // reject the user's input
-                    throw new ParseException("State not found", 0);
+                    throw new ParseException(
+                            "State with name " + s + " not found", 0);
                 }
             } else { // then c is a "normal" Classifier
                 // let's create a new ClassifierInState with the correct links
                 Object state =
                     Model.getActivityGraphsHelper().findStateByName(c, s);
                 if (state != null) {
+                    Collection states = new ArrayList();
+                    states.add(state);
                     Model.getActivityGraphsFactory()
-                                    .buildClassifierInState(c, state);
+                                    .buildClassifierInState(c, (states));
                     // the model is changed - our job is done
                 } else {
                     // no state named s is found, so we have to
                     // reject the user's input
-                    throw new ParseException("State not found", 0);
+                    throw new ParseException(
+                            "State with name " + s + " not found", 0);
                 }
             }
         } else {
