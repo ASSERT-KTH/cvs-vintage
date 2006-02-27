@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.8 2006/02/14 16:26:43 mvw Exp $
+// $Id: ActionBaseDelete.java,v 1.9 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -166,7 +166,7 @@ public abstract class ActionBaseDelete extends UMLAction {
         if (target instanceof Fig) {
             target = ((Fig) target).getOwner();
         }
-        if (Model.getFacade().isABase(target)) {
+        if (Model.getFacade().isAModelElement(target)) {
             newTarget = Model.getFacade().getModelElementContainer(target);
         } else if (target instanceof Diagram) {
             Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);

@@ -1,4 +1,4 @@
-// $Id: NameOrder.java,v 1.11 2005/05/10 20:19:08 linus Exp $
+// $Id: NameOrder.java,v 1.12 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,9 +73,9 @@ public class NameOrder
      *         A positive or negative int if the names differ.
      */
     protected int compareUserObjects(Object obj, Object obj1) {
-        if ((obj instanceof Diagram || Model.getFacade().isABase(obj))
+        if ((obj instanceof Diagram || Model.getFacade().isAModelElement(obj))
                 && (obj1 instanceof Diagram
-                        || Model.getFacade().isABase(obj1))) {
+                        || Model.getFacade().isAModelElement(obj1))) {
 	    String name = getName(obj);
 	    String name1 = getName(obj1);
             int ret = name.compareTo(name1);

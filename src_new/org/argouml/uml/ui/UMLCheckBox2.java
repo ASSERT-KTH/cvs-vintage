@@ -1,4 +1,4 @@
-// $Id: UMLCheckBox2.java,v 1.25 2005/11/13 11:01:15 linus Exp $
+// $Id: UMLCheckBox2.java,v 1.26 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,11 +93,11 @@ public abstract class UMLCheckBox2 extends JCheckBox
      */
     public void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (Model.getFacade().isABase(checkBoxTarget)) {
+        if (Model.getFacade().isAModelElement(checkBoxTarget)) {
             Model.getPump().removeModelEventListener(this, checkBoxTarget, propertySetName);
         }
 
-        if (Model.getFacade().isABase(target)) {
+        if (Model.getFacade().isAModelElement(target)) {
             checkBoxTarget = target;
             Model.getPump().addModelEventListener(this, checkBoxTarget, propertySetName);
             buildModel();

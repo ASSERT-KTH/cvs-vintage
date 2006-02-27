@@ -1,4 +1,4 @@
-// $Id: UMLSearchableComboBox.java,v 1.14 2005/01/30 20:47:48 linus Exp $
+// $Id: UMLSearchableComboBox.java,v 1.15 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
         ComboBoxModel model = getModel();
         for (int i = 0; i < model.getSize(); i++) {
             Object element = model.getElementAt(i);
-            if (Model.getFacade().isABase(element)) {
+            if (Model.getFacade().isAModelElement(element)) {
                 if (getRenderer() instanceof UMLListCellRenderer2) {
                     String labelText = ((UMLListCellRenderer2) getRenderer())
                         .makeText(element);

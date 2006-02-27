@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.21 2006/01/25 23:23:16 tfmorris Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.22 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,12 +183,12 @@ public abstract class UMLRadioButtonPanel
      */
     public void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (Model.getFacade().isABase(panelTarget)) {
+        if (Model.getFacade().isAModelElement(panelTarget)) {
             Model.getPump().removeModelEventListener(this, panelTarget,
                     propertySetName);
         }
         panelTarget = target;
-        if (Model.getFacade().isABase(panelTarget)) {
+        if (Model.getFacade().isAModelElement(panelTarget)) {
             Model.getPump().addModelEventListener(this, panelTarget,
                     propertySetName);
         }

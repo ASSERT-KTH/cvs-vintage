@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.57 2005/11/14 17:11:16 mvw Exp $
+// $Id: DetailsPane.java,v 1.58 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -465,7 +465,7 @@ public class DetailsPane
         }
 
         if (target != null
-            && Model.getFacade().isABase(target)
+            && Model.getFacade().isAModelElement(target)
             && topLevelTabbedPane.getSelectedIndex() > 0) {
             lastNonNullTab = topLevelTabbedPane.getSelectedIndex();
         }

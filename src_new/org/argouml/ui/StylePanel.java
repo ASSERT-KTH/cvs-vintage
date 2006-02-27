@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.26 2005/11/13 11:01:12 linus Exp $
+// $Id: StylePanel.java,v 1.27 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,7 @@ public class StylePanel
      */
     public void setTarget(Object t) {
 	if (!(t instanceof Fig)) {
-	    if (Model.getFacade().isABase(t)) {
+	    if (Model.getFacade().isAModelElement(t)) {
 		Project p =
                     ProjectManager.getManager()
                         .getCurrentProject();

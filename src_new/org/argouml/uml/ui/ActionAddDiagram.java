@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.38 2006/01/09 21:16:25 tfmorris Exp $
+// $Id: ActionAddDiagram.java,v 1.39 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public abstract class ActionAddDiagram extends UMLAction {
         Project p = ProjectManager.getManager().getCurrentProject();
         Object target = TargetManager.getInstance().getModelTarget();
         Object ns = null;
-        if (target == null || !Model.getFacade().isABase(target)) {
+        if (target == null || !Model.getFacade().isAModelElement(target)) {
             target = p.getRoot();
         }
         if (Model.getFacade().isANamespace(target)) {

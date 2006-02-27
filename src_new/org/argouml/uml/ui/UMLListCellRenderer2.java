@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.33 2005/12/28 13:54:37 mvw Exp $
+// $Id: UMLListCellRenderer2.java,v 1.34 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.33 2005/12/28 13:54:37 mvw Exp $
+// $Id: UMLListCellRenderer2.java,v 1.34 2006/02/27 20:41:55 tfmorris Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -78,7 +78,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
         // Leave logging commented out by default for efficiency
 //        LOG.debug("determine rendering for: " + value);
 //        LOG.debug("show icon: " + showIcon);
-        if (Model.getFacade().isABase(value)
+        if (Model.getFacade().isAModelElement(value)
                 || Model.getFacade().isAMultiplicity(value)) {
 
 //            LOG.debug("is a Base or Multiplicity");
@@ -170,7 +170,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
     }
 
     private String makeTypeName(Object elem) {
-        if (Model.getFacade().isABase(elem)) {
+        if (Model.getFacade().isAModelElement(elem)) {
             return Model.getFacade().getUMLClassName(elem);
         }
         return null;

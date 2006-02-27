@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.130 2006/02/20 08:19:10 mvw Exp $
+// $Id: PropPanel.java,v 1.131 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -438,7 +438,7 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
      */
     public void removeElement() {
         Object theTarget = getTarget();
-        if (Model.getFacade().isABase(theTarget)) {
+        if (Model.getFacade().isAModelElement(theTarget)) {
             Object newTarget = Model.getFacade().getModelElementContainer(
                     theTarget);
             Object base = theTarget;

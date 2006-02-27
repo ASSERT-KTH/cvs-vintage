@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.66 2005/11/18 05:17:13 tfmorris Exp $
+// $Id: UMLComboBoxModel2.java,v 1.67 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -303,14 +303,14 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
     protected void setTarget(Object target) {
         LOG.debug("setTarget target :  " + target);
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (Model.getFacade().isABase(target) || target instanceof Diagram) {
+        if (Model.getFacade().isAModelElement(target) || target instanceof Diagram) {
             ModelEventPump eventPump = Model.getPump();
-            if (Model.getFacade().isABase(comboBoxTarget)) {
+            if (Model.getFacade().isAModelElement(comboBoxTarget)) {
                 eventPump.removeModelEventListener(this, comboBoxTarget,
 						   propertySetName);
             }
 
-            if (Model.getFacade().isABase(target)) {
+            if (Model.getFacade().isAModelElement(target)) {
                 comboBoxTarget = target;
                 eventPump.addModelEventListener(this, comboBoxTarget,
 						propertySetName);
@@ -543,7 +543,7 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
             oldTarget = ((Fig) oldTarget).getOwner();
         }
         if (oldTarget == currentTarget) {
-            if (Model.getFacade().isABase(currentTarget)) {
+            if (Model.getFacade().isAModelElement(currentTarget)) {
                 Model.getPump().removeModelEventListener(this,
                         currentTarget, propertySetName);
             }

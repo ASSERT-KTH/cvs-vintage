@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.28 2005/11/13 11:01:16 linus Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.29 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public class UMLClassifierRoleAvailableContentsListModel
     public void setTarget(Object theNewTarget) {
         theNewTarget = theNewTarget instanceof Fig
             ? ((Fig) theNewTarget).getOwner() : theNewTarget;
-        if (Model.getFacade().isABase(theNewTarget)
+        if (Model.getFacade().isAModelElement(theNewTarget)
                 || theNewTarget instanceof Diagram) {
             if (getTarget() != null) {
                 Collection bases = Model.getFacade().getBases(getTarget());

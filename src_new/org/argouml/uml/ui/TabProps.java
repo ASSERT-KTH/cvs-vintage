@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.83 2006/02/19 15:59:38 mvw Exp $
+// $Id: TabProps.java,v 1.84 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -274,7 +274,7 @@ public class TabProps
     public void setTarget(Object t) {
         // targets ought to be modelelements or diagrams
         t = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
-        if (!(t == null || Model.getFacade().isABase(t)
+        if (!(t == null || Model.getFacade().isAModelElement(t)
                 || t instanceof ArgoDiagram)) {
             return;
         }
@@ -712,7 +712,7 @@ public class TabProps
      */
     public boolean shouldBeEnabled(Object t) {
         t = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
-        if (t instanceof Diagram || Model.getFacade().isABase(t)) {
+        if (t instanceof Diagram || Model.getFacade().isAModelElement(t)) {
             shouldBeEnabled = true;
         } else {
             shouldBeEnabled = false;

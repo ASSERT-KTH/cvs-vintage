@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.26 2005/11/13 11:01:16 linus Exp $
+// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.27 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
 		"base");
         }
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (!Model.getFacade().isABase(target))
+        if (!Model.getFacade().isAModelElement(target))
             return;
         setListTarget(target);
         if (getTarget() != null) {

@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.19 2005/07/12 13:59:25 bobtarling Exp $
+// $Id: ItemUID.java,v 1.20 2006/02/27 20:41:56 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,7 +157,7 @@ public class ItemUID {
      * @return	The ID of the object, or null.
      */
     protected static String readObjectID(Object obj) {
-        if (Model.getFacade().isABase(obj)) {
+        if (Model.getFacade().isAModelElement(obj)) {
             return UUIDHelper.getUUID(obj);
         }
 	/*
@@ -226,7 +226,7 @@ public class ItemUID {
      * @return	The new ID of the object, or null.
      */
     protected static String createObjectID(Object obj) {
-	if (Model.getFacade().isABase(obj)) {
+	if (Model.getFacade().isAModelElement(obj)) {
 	    return null;
 	}
 

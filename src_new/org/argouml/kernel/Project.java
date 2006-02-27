@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.174 2006/02/27 14:53:36 bobtarling Exp $
+// $Id: Project.java,v 1.175 2006/02/27 20:41:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -962,7 +962,7 @@ public class Project implements java.io.Serializable, TargetListener {
             TargetManager.getInstance().removeHistoryElement(obj);
             trashcan.add(obj);
         }
-        if (Model.getFacade().isABase(obj)) {
+        if (Model.getFacade().isAModelElement(obj)) {
             // an object that can be represented
             Collection allFigs = findAllPresentationsFor(obj, true);
             removeFigs(allFigs);
