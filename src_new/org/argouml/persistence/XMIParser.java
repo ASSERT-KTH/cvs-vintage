@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.14 2006/02/19 09:42:15 linus Exp $
+// $Id: XMIParser.java,v 1.15 2006/02/28 07:04:25 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
 import org.argouml.kernel.Project;
 import org.argouml.model.Facade;
 import org.argouml.model.Model;
@@ -109,7 +111,7 @@ public class XMIParser {
     // main parsing methods
 
     /**
-     * The main parsing method.
+     * Read an XMI file from the given URL.
      *
      * @param p the project
      * @param url the URL
@@ -117,9 +119,6 @@ public class XMIParser {
      */
     public synchronized void readModels(Project p, URL url)
         throws OpenException {
-
-        proj = p;
-
         LOG.info("=======================================");
         LOG.info("== READING MODEL " + url);
         try {
@@ -129,11 +128,6 @@ public class XMIParser {
         } catch (Exception ex) {
             throw new OpenException(ex);
         }
-        LOG.info("=======================================");
-    }
-
-    public void registerDiagrams(Project project) {
-        registerDiagrams(project, elementsRead, true);
     }
 
     /**
@@ -146,9 +140,18 @@ public class XMIParser {
         throws OpenException {
 
         proj = p;
+        
+
 
         try {
             XmiReader reader = Model.getXmiReader();
+            
+            if (Configuration.getBoolean(Argo.KEY_XMI_STRIP_DIAGRAMS, false)) {
+                reader.setIgnoredElements(new String[] {"UML:Diagram"});
+            } else {
+                reader.setIgnoredElements(null);
+            }
+            
             curModel = null;
             elementsRead = reader.parse(source);
             if (elementsRead != null && !elementsRead.isEmpty()) {
@@ -173,6 +176,19 @@ public class XMIParser {
         LOG.info("=======================================");
     }
 
+    /**
+     * Create and register diagrams for activity and statemachines in the
+     * model(s) of the project. If no other diagrams are created and atLeastOne
+     * is true, than a default Class Diagram will be created.  ArgoUML currently
+     * requires at least one diagram for proper operation.
+     *
+     * @param project
+     *            The project
+     */
+    public void registerDiagrams(Project project) {
+        registerDiagrams(project, elementsRead, true);
+    }
+    
     /**
      * Create and register diagrams for activity and statemachines in the
      * model(s) of the project. If no other diagrams are created and atLeastOne

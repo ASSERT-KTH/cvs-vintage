@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.6 2005/11/12 23:53:37 linus Exp $
+// $Id: XmiReader.java,v 1.7 2006/02/28 07:04:25 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,4 +64,32 @@ public interface XmiReader {
      * @return the map
      */
     Map getXMIUUIDToObjectMap();
+    
+    /**
+     * Set the list of element names for which errors should be ignored when
+     * reading the XMI file.  The common one is "UML:Diagram" but it can be
+     * any element which is not in the metamodel.<p>
+     * 
+     * This may not be supported by all implementations.  The method will
+     * return false if unsupported.
+     * 
+     * @param elementNames array of element names which reader should ignore
+     */
+    public boolean setIgnoredElements(String[] elementNames);
+    
+    /**
+     * Returns list of element names which will be ignored during XMI import
+     * if they cause an error.
+     * 
+     * @return array of names (Strings)
+     */
+    public String[] getIgnoredElements();
+    
+    /**
+     * Return the count of elements read during the last XMI read which were on
+     * the ignore list.
+     * 
+     * @return the count
+     */
+    public int getIgnoredElementCount();
 }

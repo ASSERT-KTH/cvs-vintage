@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.40 2005/11/13 11:01:22 linus Exp $
+// $Id: Argo.java,v 1.41 2006/02/28 07:04:25 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -225,6 +225,18 @@ public final class Argo {
      */
     public static final ConfigurationKey KEY_INPUT_SOURCE_ENCODING =
 	Configuration.makeKey("import", "file", "encoding");
+    
+    /**
+     * Key to store setting of stripping diagrams on XMI import.
+     */
+    public static final ConfigurationKey KEY_XMI_STRIP_DIAGRAMS =
+        Configuration.makeKey("import", "xmi", "stripDiagrams");
+
+    /**
+     * Key to store profile/default model.
+     */
+    public static final ConfigurationKey KEY_DEFAULT_MODEL =
+        Configuration.makeKey("defaultModel");
 
     /**
      * Key for user explorer perspectives.
