@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.14 2006/02/19 18:08:18 linus Exp $
+// $Id: PGMLStackParser.java,v 1.15 2006/02/28 23:34:09 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.ExtensionsCompartmentContainer;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
@@ -137,8 +138,29 @@ public class PGMLStackParser
                 setStyleAttributes(group, attributeMap);
             }
         }
-
-        super.setAttrs(f, attrList);
+        
+        // TODO Code within these comments should be removed and replaced with
+        // the commented out line once issue
+        // http://argouml.tigris.org/issues/show_bug.cgi?id=4020 and
+        // http://argouml.tigris.org/issues/show_bug.cgi?id=4021 have been resolved
+        
+        //super.setAttrs(f, attrList);
+        
+        String name = attrList.getValue("name");
+        if (name != null && !name.equals("")) {
+            registerFig(f, name);
+        }
+        
+        setCommonAttrs(f, attrList);
+        
+        String owner = attrList.getValue("href");
+        if (owner != null && !owner.equals("") && !(f instanceof FigEdgeNote)) {
+            Object modelElement = findOwner(owner);
+            if (modelElement == null) {
+                throw new SAXException("Found href of " + owner + " with no matching element in model");
+            }
+            f.setOwner(modelElement);
+        }
     }
 
     /**
