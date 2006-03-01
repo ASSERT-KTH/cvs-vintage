@@ -15,32 +15,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.calendar.ui.util;
+package org.columba.calendar.ui.action;
 
-import java.net.URL;
+import java.awt.event.ActionEvent;
 
-import javax.swing.ImageIcon;
+import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.core.gui.action.AbstractColumbaAction;
 
-import org.columba.core.io.DiskIO;
+public class ExportCalendarAction extends AbstractColumbaAction {
 
-public class ResourceLoader {
+	public ExportCalendarAction(IFrameMediator frameMediator) {
+		super(frameMediator, "Export Calendar");
+	}
 
-	private static String path = "/org/columba/calendar/images/";
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
 
-	public static ImageIcon getImageIcon(String filename) {
-		if (filename == null)
-			throw new IllegalArgumentException("filename == null");
-
-		URL url = ResourceLoader.class.getResource(path+filename);
-
-		//URL url = DiskIO.getResourceURL(path + filename);
-
-		if (url == null) {
-			return null;
-		}
-
-		ImageIcon icon = new ImageIcon(url);
-		return icon;
 	}
 
 }

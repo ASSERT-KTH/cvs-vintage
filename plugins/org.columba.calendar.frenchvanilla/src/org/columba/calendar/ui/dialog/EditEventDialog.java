@@ -108,7 +108,6 @@ public class EditEventDialog extends JDialog implements ActionListener {
 		classComboBox.addItem("Public");
 		classComboBox.addItem("Confidential");
 
-		locationTextField.setEnabled(false);
 		descriptionTextArea.setEnabled(false);
 		categoriesButton.setEnabled(false);
 		categoriesTextField.setEnabled(false);

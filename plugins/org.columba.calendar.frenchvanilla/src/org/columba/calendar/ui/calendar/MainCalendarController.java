@@ -38,8 +38,6 @@ import javax.swing.UIManager;
 
 import org.columba.calendar.model.api.IDateRange;
 import org.columba.calendar.ui.action.ActionFactory;
-import org.columba.calendar.ui.action.ActivityMovedAction;
-import org.columba.calendar.ui.action.EditActivityAction;
 import org.columba.calendar.ui.base.Activity;
 import org.columba.calendar.ui.base.api.IActivity;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
@@ -61,6 +59,8 @@ import com.miginfocom.calendar.activity.view.ActivityView;
 import com.miginfocom.calendar.category.Category;
 import com.miginfocom.calendar.category.CategoryDepository;
 import com.miginfocom.calendar.category.CategoryFilter;
+import com.miginfocom.calendar.datearea.ActivityDragResizeEvent;
+import com.miginfocom.calendar.datearea.ActivityDragResizeListener;
 import com.miginfocom.calendar.datearea.ActivityMoveEvent;
 import com.miginfocom.calendar.datearea.ActivityMoveListener;
 import com.miginfocom.calendar.datearea.DateArea;
@@ -97,7 +97,7 @@ import com.miginfocom.util.states.ToolTipProvider;
  * 
  */
 public class MainCalendarController implements InteractionListener,
-		ActivityMoveListener, ICalendarView {
+		ActivityMoveListener, ICalendarView, ActivityDragResizeListener {
 
 	public static final int VIEW_MODE_DAY = 0;
 
@@ -167,6 +167,9 @@ public class MainCalendarController implements InteractionListener,
 
 		((DefaultDateArea) view.getDateArea()).addActivityMoveListener(this);
 
+		((DefaultDateArea) view.getDateArea())
+				.addActivityDragResizeListener(this);
+
 		// view.getDateArea().setActivitiesSupported(true);
 
 	}
@@ -199,29 +202,76 @@ public class MainCalendarController implements InteractionListener,
 			e1.printStackTrace();
 		}
 
-//		Font defaultFont = UIManager.getFont("Label.font");
-//		Color foreground = UIManager.getColor("Label.foreground");
-//		Color background = UIManager.getColor("Table.background");
-//		Color gridColor = UIManager.getColor("Button.darkShadow");
+		Font defaultFont = UIManager.getFont("Label.font");
+		Color foreground = UIManager.getColor("Label.foreground");
+		Color background = UIManager.getColor("Table.background");
+		Color gridColor = UIManager.getColor("Button.darkShadow");
+
+		Theme theme = Themes.getTheme(MAIN_DAYS_CONTEXT);
+		//
+		//
+		// // main background color
+		// theme.putValue(CalendarTheme.KEY_GENERIC_BACKGROUND, background);
+		//
+		String mainKey = CalendarTheme.KEY_HEADER_;
+		theme.putValue(mainKey + "West/antiAlias", Boolean.TRUE);
+
+		// theme.removeFromList(mainKey + "West/CellDecorationRows#", 0);
+		// theme.removeFromList(mainKey + "West/CellDecorationRows#", 1);
+//		theme.removeAllFromList(mainKey + "West/CellDecorationRows#");
 //
-//		Theme theme = Themes.getTheme(MAIN_DAYS_CONTEXT);
-//
-//
-//		// main background color
-//		theme.putValue(CalendarTheme.KEY_GENERIC_BACKGROUND, background);
-//
-//		String mainKey = CalendarTheme.KEY_HEADER_;
-//		theme.putValue(mainKey + "West/antiAlias", Boolean.TRUE);
-//
-//		theme.setInList(mainKey + "West/CellDecorationRows#", 0,
-//				new CellDecorationRow(DateRange.RANGE_TYPE_HOUR,
-//						new DateFormatList("HH"), null, null, background,
-//						foreground, new DefaultRepetition(0, 2), defaultFont));
-//
-//		theme.removeFromList(mainKey + "West/CellDecorationRows#", 1);
-//
-//
-//		// gridlines
+//		theme
+//				.setInList(
+//						mainKey + "West/CellDecorationRows#",
+//						0,
+//						new com.miginfocom.calendar.header.CellDecorationRow(
+//								com.miginfocom.util.dates.DateRangeI.RANGE_TYPE_HOUR,
+//								new com.miginfocom.util.dates.DateFormatList(
+//										"HH", null),
+//								new com.miginfocom.util.gfx.geometry.numbers.AtFixed(
+//										20.0f),
+//								new com.miginfocom.util.gfx.geometry.AbsRect(
+//										new com.miginfocom.util.gfx.geometry.numbers.AtStart(
+//												0.0f),
+//										new com.miginfocom.util.gfx.geometry.numbers.AtStart(
+//												0.0f),
+//										new com.miginfocom.util.gfx.geometry.numbers.AtEnd(
+//												0.0f),
+//										new com.miginfocom.util.gfx.geometry.numbers.AtEnd(
+//												0.0f), null, null, null),
+//								(java.awt.Paint[]) null,
+//								new java.awt.Paint[] { new com.miginfocom.util.gfx.UIColor(
+//										"controlText", null, null) },
+//								new com.miginfocom.util.repetition.DefaultRepetition(
+//										0, 2, null, null),
+//								new java.awt.Font[] { new java.awt.Font(
+//										"Dialog", 1, 15) },
+//								new java.lang.Integer[] { null },
+//								new com.miginfocom.util.gfx.geometry.numbers.AtStart(
+//										3.0f),
+//								new com.miginfocom.util.gfx.geometry.numbers.AtStart(
+//										3.0f)));
+
+//		theme
+//				.setInList(
+//						mainKey + "West/CellDecorationRows#",
+//						1,
+//						new CellDecorationRow(
+//								com.miginfocom.util.dates.DateRangeI.RANGE_TYPE_MINUTE,
+//								new DateFormatList("mm", null), new AtFixed(
+//										20.0f), new AbsRect(new AtStart(0.0f),
+//										new AtStart(0.0f), new AtEnd(0.0f),
+//										new AtEnd(0.0f), null, null, null),
+//								(java.awt.Paint[]) null, null,
+//								new DefaultRepetition(0, 2, null, null),
+//								new java.awt.Font[] { new java.awt.Font(
+//										"Dialog", 0, 10) },
+//								new java.lang.Integer[] { null }, new AtStart(
+//										2.0f), new AtStart(0.0f)));
+
+		//
+		//
+		// // gridlines
 //		AtFixed min = new AtFixed(1);
 //		AtFraction preferred = new AtFraction(0.1f); // Preferred can be
 //		// absolute or relative
@@ -274,7 +324,8 @@ public class MainCalendarController implements InteractionListener,
 			viewMode = DateRangeI.RANGE_TYPE_MONTH;
 			theme = MainCalendarController.MAIN_WEEKS_CONTEXT;
 			days = 1;
-			defaultShapeFactory.setShape(HORSHAPE, null);
+			defaultShapeFactory.setShape(VERSHAPE, null);
+			// defaultShapeFactory.setShape(HORSHAPE, null);
 
 			break;
 		}
@@ -422,7 +473,7 @@ public class MainCalendarController implements InteractionListener,
 		}
 
 		view.revalidate();
-		//view.repaint();
+		// view.repaint();
 	}
 
 	public void interactionOccured(InteractionEvent e) {
@@ -484,14 +535,15 @@ public class MainCalendarController implements InteractionListener,
 	public void activityMoved(ActivityMoveEvent e) {
 
 		com.miginfocom.calendar.activity.Activity activity = e.getActivity();
-		System.out.println("Moved -  activity=" + activity.getID());
-		System.out.println("summary=" + activity.getSummary());
-		System.out.println("description=" + activity.getDescription());
+		// System.out.println("Moved - activity=" + activity.getID());
+		// System.out.println("summary=" + activity.getSummary());
+		// System.out.println("description=" + activity.getDescription());
 		ImmutableDateRange dateRange = activity.getBaseDateRange();
-		System.out.println("dateRange=" + dateRange);
+		// System.out.println("dateRange=" + dateRange);
 
-//		actionFactory.createActivityMovedAction(dateRange.getStart(), dateRange
-//				.getEnd(true)).actionPerformed(null);
+		// actionFactory.createActivityMovedAction(dateRange.getStart(),
+		// dateRange
+		// .getEnd(true)).actionPerformed(null);
 
 	}
 
@@ -515,7 +567,7 @@ public class MainCalendarController implements InteractionListener,
 		view.getDateArea().setVisibleDateRange(newVisRange);
 
 		view.revalidate();
-		//view.repaint();
+		// view.repaint();
 	}
 
 	public void viewNext() {
@@ -544,7 +596,7 @@ public class MainCalendarController implements InteractionListener,
 		view.getDateArea().setVisibleDateRange(newVisRange);
 
 		view.revalidate();
-		//view.repaint();
+		// view.repaint();
 	}
 
 	public void viewPrevious() {
@@ -573,7 +625,7 @@ public class MainCalendarController implements InteractionListener,
 		view.getDateArea().setVisibleDateRange(newVisRange);
 
 		view.revalidate();
-	//	view.repaint();
+		// view.repaint();
 	}
 
 	public void setVisibleDateRange(IDateRange dateRange) {
@@ -584,7 +636,15 @@ public class MainCalendarController implements InteractionListener,
 		view.getDateArea().setVisibleDateRange(newRange);
 
 		view.revalidate();
-		//view.repaint();
+		// view.repaint();
+	}
+
+	public void activityDragResized(ActivityDragResizeEvent e) {
+		System.out.println(e);
+
+		com.miginfocom.calendar.activity.ActivityList activityList = (com.miginfocom.calendar.activity.ActivityList) e
+				.getSource();
+
 	}
 
 }

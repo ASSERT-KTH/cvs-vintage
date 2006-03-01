@@ -85,7 +85,7 @@ public class LocalXMLFileStore {
 		File file = getFile(id);
 
 		XMLOutputter outp = new XMLOutputter();
-
+		
 		try {
 			outp.output(document, new FileOutputStream(file));
 		} catch (FileNotFoundException e) {

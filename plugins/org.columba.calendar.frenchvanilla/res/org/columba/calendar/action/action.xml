@@ -11,4 +11,7 @@
     <extension id="NewAllDayAppointment" class="org.columba.calendar.ui.action.NewAllDayAppointmentAction"/>
     <extension id="EditActivity" class="org.columba.calendar.ui.action.EditActivityAction"/>
     <extension id="DeleteActivity" class="org.columba.calendar.ui.action.DeleteActivityAction"/>
+    <extension id="ImportCalendar" class="org.columba.calendar.ui.action.ImportCalendarAction"/>
+    <extension id="ExportCalendar" class="org.columba.calendar.ui.action.ExportCalendarAction"/>
+    <extension id="SaveAs" class="org.columba.calendar.ui.action.SaveAsAction"/>
 </extensionlist>

@@ -63,5 +63,6 @@
 	<classpathentry kind="lib" path="lib/jhall-2.0_02.jar"/>
 	<classpathentry kind="lib" path="lib/jython-2.2a1.jar"/>
 	<classpathentry kind="lib" path="lib/looks-2.0-rc.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/ical4j-0.9.18.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

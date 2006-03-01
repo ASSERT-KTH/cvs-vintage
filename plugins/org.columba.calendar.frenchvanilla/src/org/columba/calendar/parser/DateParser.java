@@ -19,10 +19,33 @@ package org.columba.calendar.parser;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+
+import net.fortuna.ical4j.model.Time;
+import net.fortuna.ical4j.util.TimeZones;
 
 public class DateParser {
+
+	private static final String DEFAULT_PATTERN = "yyyyMMdd'T'HHmmss";
+
+	private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
+
+	/**
+	 * local date-time representation.
+	 */
+	private static DateFormat defaultFormat = new SimpleDateFormat(
+			DEFAULT_PATTERN);
+
+	/**
+	 * UTC date-time representation.
+	 */
+	private static DateFormat utcFormat = new SimpleDateFormat(UTC_PATTERN);
+	{
+		utcFormat.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+	}
 
 	public DateParser() {
 		super();
@@ -32,11 +55,53 @@ public class DateParser {
 		return DateFormat.getInstance().format(calendar.getTime());
 	}
 
-	public static Calendar createCalendarFromString(String str) throws IllegalArgumentException{
-		if ( str == null ) throw new IllegalArgumentException("str == null");
-		
-		if ( str.length() == 0 ) throw new IllegalArgumentException("str.length() == 0");
-		
+	public static String createDateStringFromCalendar(Calendar calendar) {
+		long millis = calendar.getTimeInMillis();
+		Date date = new Date(millis);
+		StringBuffer b = new StringBuffer(date.toString());
+        b.append('T');
+        // TODO fix timezone
+        Time time = new Time(millis, TimeZone.getDefault());
+        b.append(time.toString());
+        return b.toString();
+        
+	}
+	
+	public static Calendar createCalendarFromDateString(String dateString) {
+
+		if (dateString == null)
+			throw new IllegalArgumentException("dateString == null");
+
+		if (dateString.length() == 0)
+			throw new IllegalArgumentException("dateString.length() == 0");
+
+		long time = -1;
+		try {
+			time = utcFormat.parse(dateString).getTime();
+		} catch (ParseException pe) {
+			defaultFormat.setTimeZone(TimeZone.getDefault());
+			try {
+				time = defaultFormat.parse(dateString).getTime();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (time == -1)
+			return null;
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		return cal;
+
+	}
+
+	public static Calendar createCalendarFromString(String str) {
+		if (str == null)
+			throw new IllegalArgumentException("str == null");
+
+		if (str.length() == 0)
+			throw new IllegalArgumentException("str.length() == 0");
+
 		Calendar c = Calendar.getInstance();
 
 		try {
