@@ -9,6 +9,7 @@
 	
 	<menu id="menu_file" placeholderid="top">
 		<menuitem id="EditActivity"/>
+		<menuitem id="SaveAs"/>
 	</menu>
 	
 	<menu id="menu_view" placeholderid="bottom">
@@ -24,6 +25,8 @@
 	</menu>
 	
 	<menu id="menu_utilities" placeholderid="bottom">
+	 	<menuitem id="ImportCalendar" />
+		<menuitem id="ExportCalendar" />
 	</menu>
 	
 </menubar>
