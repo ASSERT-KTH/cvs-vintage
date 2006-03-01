@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 
 import org.columba.chat.AlturaComponent;
 import org.columba.chat.api.IPresenceController;
+import org.columba.chat.ui.util.ResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 import org.jivesoftware.smack.packet.Presence;
 
@@ -41,18 +42,18 @@ public class PresenceComboBox extends JPanel implements ItemListener, IPresenceC
 
 	private JLabel label;
 
-	private ImageIcon available = ImageLoader.getImageIcon("available.png");
+	private ImageIcon available = ResourceLoader.getImageIcon("available.png");
 
 	private ImageIcon extendedaway = ImageLoader
 			.getImageIcon("extended-away.png");
 
-	private ImageIcon away = ImageLoader.getImageIcon("away.png");
+	private ImageIcon away = ResourceLoader.getImageIcon("away.png");
 
-	private ImageIcon busy = ImageLoader.getImageIcon("busy.png");
+	private ImageIcon busy = ResourceLoader.getImageIcon("busy.png");
 
-	private ImageIcon message = ImageLoader.getImageIcon("message.png");
+	private ImageIcon message = ResourceLoader.getImageIcon("message.png");
 
-	private ImageIcon offline = ImageLoader.getImageIcon("offline.png");
+	private ImageIcon offline = ResourceLoader.getImageIcon("offline.png");
 
 	public PresenceComboBox() {
 

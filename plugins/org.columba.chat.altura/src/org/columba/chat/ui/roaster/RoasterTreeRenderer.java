@@ -27,7 +27,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.chat.api.IBuddyStatus;
 import org.columba.chat.jabber.BuddyStatus;
-import org.columba.core.resourceloader.ImageLoader;
+import org.columba.chat.ui.util.ResourceLoader;
 import org.jivesoftware.smack.RosterGroup;
 import org.jivesoftware.smack.packet.Presence;
 
@@ -37,18 +37,18 @@ import org.jivesoftware.smack.packet.Presence;
  */
 public class RoasterTreeRenderer extends DefaultTreeCellRenderer {
 
-    private ImageIcon available = ImageLoader.getImageIconResource("available.png");
+    private ImageIcon available = ResourceLoader.getImageIcon("available.png");
 
-    private ImageIcon extendedaway = ImageLoader
-            .getImageIconResource("extended-away.png");
+    private ImageIcon extendedaway = ResourceLoader
+            .getImageIcon("extended-away.png");
 
-    private ImageIcon away = ImageLoader.getImageIconResource("away.png");
+    private ImageIcon away = ResourceLoader.getImageIcon("away.png");
 
-    private ImageIcon busy = ImageLoader.getImageIconResource("busy.png");
+    private ImageIcon busy = ResourceLoader.getImageIcon("busy.png");
 
-    private ImageIcon message = ImageLoader.getImageIconResource("message.png");
+    private ImageIcon message = ResourceLoader.getImageIcon("message.png");
 
-    private ImageIcon offline = ImageLoader.getImageIconResource("offline.png");
+    private ImageIcon offline = ResourceLoader.getImageIcon("offline.png");
 
     /**
      *  

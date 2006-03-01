@@ -17,13 +17,22 @@
 //All Rights Reserved.
 package org.columba.chat.ui.util;
 
+import java.net.URL;
+
 import javax.swing.ImageIcon;
 
-public class ImageLoader {
+public class ResourceLoader {
 
 	public static ImageIcon getImageIcon(String resourceName) {
-		resourceName = "org/columba/chat/images/"+resourceName;
-		ImageIcon icon = new ImageIcon(ImageLoader.class.getResource(resourceName));
+		if (resourceName == null)
+			throw new IllegalArgumentException("resourceName == null");
+		
+		String path = "/org/columba/chat/images/"+resourceName;
+		
+		URL url = ResourceLoader.class.getResource(path);
+		if ( url ==  null) return null;
+		
+		ImageIcon icon = new ImageIcon(url);
 		
 		return icon;
 	}
