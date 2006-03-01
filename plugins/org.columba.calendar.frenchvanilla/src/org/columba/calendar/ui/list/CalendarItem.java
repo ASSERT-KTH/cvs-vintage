@@ -32,10 +32,11 @@ public class CalendarItem implements CheckableItem {
 
 	boolean selected;
 
-	public CalendarItem(String id, String name, Color color) {
+	public CalendarItem(String id, String name, Color color, boolean selected) {
 		this.id = id;
 		this.name = name;
 		this.color = color;
+		this.selected = selected;
 	}
 
 	/**

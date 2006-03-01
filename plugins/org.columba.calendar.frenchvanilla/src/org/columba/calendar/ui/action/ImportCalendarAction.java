@@ -22,11 +22,13 @@ import java.io.File;
 import java.util.Iterator;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.parser.CalendarImporter;
 import org.columba.calendar.store.CalendarStoreFactory;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 public class ImportCalendarAction extends AbstractColumbaAction {
@@ -36,6 +38,15 @@ public class ImportCalendarAction extends AbstractColumbaAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		ICalendarMediator m = (ICalendarMediator) frameMediator;
+		
+		// get selected calendar id
+		String calendarId = m.getListView().getSelectedId();
+		if ( calendarId == null ) {
+			JOptionPane.showMessageDialog(null, "No calendar selected");
+			return;
+		}
+		
 		JFileChooser fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(true);
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -45,13 +56,17 @@ public class ImportCalendarAction extends AbstractColumbaAction {
 			File[] sourceFiles = fc.getSelectedFiles();
 
 			if (sourceFiles.length >= 1) {
-				for ( int i=0; i<sourceFiles.length; i++) {
+				for (int i = 0; i < sourceFiles.length; i++) {
 					try {
-						Iterator<IEvent> it = new CalendarImporter().importCalendar(sourceFiles[i]);
-						
+						Iterator<IEvent> it = new CalendarImporter()
+								.importCalendar(sourceFiles[i]);
+
 						while (it.hasNext()) {
-							// TODO support multiple calendars
-							CalendarStoreFactory.getInstance().getLocaleStore().add(it.next());
+							IEvent event = it.next();
+							event.setCalendar(calendarId);
+
+							CalendarStoreFactory.getInstance().getLocaleStore()
+									.add(event);
 						}
 					} catch (Exception e1) {
 						e1.printStackTrace();

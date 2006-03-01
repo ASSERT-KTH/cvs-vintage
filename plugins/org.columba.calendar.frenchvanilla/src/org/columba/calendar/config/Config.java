@@ -55,6 +55,8 @@ public class Config {
 	public static final String CALENDAR_COLOR = "color";
 
 	public static final String CALENDAR_NAME = "name";
+	
+	public static final String CALENDAR_SELECTED = "selected";
 
 	public static final String NODE_ID_LOCAL_ROOT = "root_local";
 
@@ -184,6 +186,7 @@ public class Config {
 			node.putInt(Config.CALENDAR_COLOR, new Color(255, 180, 180)
 					.getRGB());
 			node.put(Config.CALENDAR_TYPE, "local");
+			node.putBoolean(Config.CALENDAR_SELECTED, true);
 			
 			String calendarId2 = Config.NODE_ID_WORK;
 			Preferences node2 = prefs.node(calendarId2);

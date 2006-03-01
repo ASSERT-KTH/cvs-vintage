@@ -22,4 +22,6 @@ import javax.swing.JComponent;
 public interface ICalendarListView {
 
 	public abstract JComponent getView();
+	
+	public abstract String getSelectedId();
 }

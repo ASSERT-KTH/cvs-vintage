@@ -27,7 +27,7 @@ import org.columba.calendar.ui.action.ActionFactory;
 import org.columba.calendar.ui.calendar.MainCalendarController;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
-import org.columba.calendar.ui.list.CalendarTreeController;
+import org.columba.calendar.ui.list.CalendarListController;
 import org.columba.calendar.ui.list.api.ICalendarListView;
 import org.columba.calendar.ui.navigation.NavigationController;
 import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
@@ -80,7 +80,7 @@ public class CalendarFrameMediator extends DockFrameController implements
 					}
 				});
 
-		listController = new CalendarTreeController(this);
+		listController = new CalendarListController(this);
 
 		registerDockables();
 

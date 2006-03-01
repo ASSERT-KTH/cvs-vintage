@@ -47,7 +47,7 @@ import com.miginfocom.util.gfx.GfxUtil;
  * @author fdietz
  * 
  */
-public class CalendarTreeController implements ICalendarListView,
+public class CalendarListController implements ICalendarListView,
 		ListSelectionListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -77,7 +77,7 @@ public class CalendarTreeController implements ICalendarListView,
 
 	private Category webCategory;
 
-	public CalendarTreeController(CalendarFrameMediator frameMediator) {
+	public CalendarListController(CalendarFrameMediator frameMediator) {
 		super();
 
 		this.frameMediator = frameMediator;
@@ -217,19 +217,13 @@ public class CalendarTreeController implements ICalendarListView,
 				String name = childNode.get(Config.CALENDAR_NAME, null);
 				int colorInt = childNode.getInt(Config.CALENDAR_COLOR, -1);
 				String type = childNode.get(Config.CALENDAR_TYPE, "local");
-
-				Category category = createCalendar(calendarId, name, colorInt,
-						type);
-
-				if (calendarId.equals("work"))
-					category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
-							.valueOf(false), Boolean.TRUE);
-				else
-					category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
-							.valueOf(true), Boolean.TRUE);
+				boolean selected = childNode.getBoolean(Config.CALENDAR_SELECTED, true);
+				
+				Category category = createCategory(calendarId, name, colorInt,
+						type, selected);
 
 				model.addElement(new CalendarItem(calendarId, name, new Color(
-						colorInt)));
+						colorInt), selected));
 
 				// if ( type.equals("local"))
 				// localNode.add(new CategoryTreeNode(calendarId, name, new
@@ -254,8 +248,8 @@ public class CalendarTreeController implements ICalendarListView,
 	 * @param colorInt
 	 * @param type
 	 */
-	public Category createCalendar(String calendarId, String name,
-			int colorInt, String type) {
+	public Category createCategory(String calendarId, String name,
+			int colorInt, String type, boolean selected) {
 
 		Category root = CategoryDepository.getRoot();
 		Category calendar = null;
@@ -264,6 +258,9 @@ public class CalendarTreeController implements ICalendarListView,
 		else if (type.equals("web"))
 			calendar = webCategory.addSubCategory(calendarId, name);
 
+		calendar.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
+				.valueOf(!selected), Boolean.TRUE);
+		
 		String bgName = AShapeUtil.DEFAULT_BACKGROUND_SHAPE_NAME;
 		String outlineName = AShapeUtil.DEFAULT_OUTLINE_SHAPE_NAME;
 		String titleName = AShapeUtil.DEFAULT_TITLE_TEXT_SHAPE_NAME;
@@ -281,6 +278,8 @@ public class CalendarTreeController implements ICalendarListView,
 		CategoryDepository.setOverride(calendarId, textName, AShape.A_PAINT,
 				outlineColor);
 
+		
+		
 		// CategoryDepository
 		// .setOverride(calendarId, "treeCheckBox", AShape.A_PAINT,
 		// new ShapeGradientPaint(color, 0.2f, 115, false));
@@ -428,5 +427,14 @@ public class CalendarTreeController implements ICalendarListView,
 			frameMediator.getCalendarView().recreateFilterRows();
 
 		}
+	}
+
+	/**
+	 * @see org.columba.calendar.ui.list.api.ICalendarListView#getSelectedId()
+	 */
+	public String getSelectedId() {
+		if ( selection == null ) return null;
+		
+		return selection.getId();
 	}
 }

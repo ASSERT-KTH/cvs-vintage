@@ -241,7 +241,7 @@ public class PrettyRenderer extends DefaultTreeCellRenderer {
 		catSelectedShape.setAttribute(AShape.A_IMAGE, check);
 
 		boolean isCatCateg = MigUtil.isTrue(category
-				.getProperty(PropertyKey.getKey(CalendarTreeController.PROP_FILTERED)));
+				.getProperty(PropertyKey.getKey(CalendarListController.PROP_FILTERED)));
 		textAShape.setAttribute(AShape.A_FONT, isCatCateg ? labelFontCateg
 				: labelFontNoCateg);
 
