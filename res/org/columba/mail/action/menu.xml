@@ -35,11 +35,19 @@
 		<separator/>
 	</menu>
 	
+	<!--
 	<menu id="menu_view_show_hide" placeholderid="show_hide">
 		<checkboxmenuitem id="ShowMessagePreview" />
 	</menu>
+	-->
 	
-	<menu id="menu_view" placeholderid="top">
+	<!--
+	<menu id="menu_view" placeholderid="show_hide">
+		<checkboxmenuitem id="ShowMessagePreview" />
+	</menu>
+		-->
+		
+	<menu id="menu_view" placeholderid="bottom">
 	    <!--<menuitem id="ColumnDialog"/>-->
 		<separator/>	    
 		<!--<imenu id="SortMessagesMenu"/>-->	

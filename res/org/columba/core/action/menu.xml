@@ -48,15 +48,29 @@
 		<menuitem id="Cancel"/>
 		<separator/>
 		
-		<imenu id="ChoosePerspectiveSubmenu"/>
+		<placeholder id="top"/>
 		
+		<checkboxmenuitem id="ViewToolbar"/>
+		<separator/>
+
+		<imenu id="ChoosePerspectiveSubmenu"/>
+		<imenu id="ShowHideViewSubmenu"/>
+
+	
+ 		
+
+		<placeholder id="show_hide"/>
+
+
+		<!--
 		<menu id="menu_view_show_hide">
 			<checkboxmenuitem id="ViewToolbar"/>
 			<placeholder id="show_hide"/>
 		</menu>
+		-->
+
 		
-		<imenu id="ShowHideViewSubmenu"/>
-		<placeholder id="top"/>
+		
 		<placeholder id="bottom"/>
 	</menu>
 	
