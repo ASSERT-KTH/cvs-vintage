@@ -1,4 +1,4 @@
-// $Id: InitNotationUml.java,v 1.7 2005/11/13 14:31:39 mvw Exp $
+// $Id: InitNotationUml.java,v 1.8 2006/03/01 22:38:48 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,10 @@ public class InitNotationUml {
                 name, ComponentInstanceNotationUml.class);
         npf.addNotationProvider(NotationProviderFactory2.TYPE_NODEINSTANCE,
                 name, NodeInstanceNotationUml.class);
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_OBJECTFLOWSTATE_TYPE,
+                name, ObjectFlowStateTypeNotationUml.class);
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_OBJECTFLOWSTATE_STATE,
+                name, ObjectFlowStateStateNotationUml.class);
 
 
         NotationProviderFactory2.getInstance().setDefaultNotation(name);
