@@ -18,12 +18,9 @@ package org.columba.core.gui.themes.plugin;
 import java.awt.Dimension;
 import java.util.List;
 
-import javax.swing.UIManager;
-
 import org.columba.core.config.Config;
 import org.columba.core.xml.XmlElement;
 
-import com.jgoodies.looks.FontSizeHints;
 import com.jgoodies.looks.LookUtils;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
@@ -31,10 +28,8 @@ import com.jgoodies.looks.plastic.PlasticTheme;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 
 /**
+ * JGoodies Looks L&F plugin
  * @author frd
- * 
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 	/**
@@ -44,36 +39,15 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
 	 */
 	public void setLookAndFeel() throws Exception {
-		UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
 
-		Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
 		Options.setDefaultIconSize(new Dimension(16, 16));
-		//Options.setPopupDropShadowEnabled(true);
-		Options.setUseSystemFonts(true);
 
-		// UIManager
-		// .put("WizardContentPaneUI",
-		// "org.columba.core.gui.themes.plugin.PlasticWizardContentPaneUI");
-
-		/*
-		 * ClearLookManager.setMode(ClearLookMode.ON);
-		 * ClearLookManager.setPolicy(
-		 * "com.jgoodies.clearlook.DefaultClearLookPolicy");
-		 */
-
-		// use this when using the cross-platform version of
-		// jGoodies, which contains also a windows-xp like theme
-		/*
-		 * String lafName = LookUtils.isWindowsXP() ?
-		 * Options.getCrossPlatformLookAndFeelClassName() :
-		 * Options.getSystemLookAndFeelClassName(); ;
-		 */
+		Options.setPopupDropShadowEnabled(true);
+		
 		XmlElement options = Config.getInstance().get("options").getElement(
 				"/options");
 		XmlElement gui = options.getElement("gui");
@@ -90,10 +64,7 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 				PlasticTheme t = PlasticLookAndFeel.createMyDefaultTheme();
 				LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), t);
 			}
-			
-			
-			
-			
+
 		} catch (Exception e) {
 			System.err.println("Can't set look & feel:" + e);
 		}
