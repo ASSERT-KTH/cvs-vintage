@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Flying Saucer Renderer" 
+        description="Flying Saucer Message Renderer" 
+        id="org.columba.core.FlyingSaucerRenderer" 
+        version="1.0" 
+        category="Renderer" 
+        enabled="true">
+        
+  <extensionlist id="org.columba.core.htmlviewer">
+    <extension id="FlyingSaucer" class="org.columba.core.htmlviewer.FlyingSaucerViewerPlugin" />
+  </extensionlist>
+  
+  
+</plugin>

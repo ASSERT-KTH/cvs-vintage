@@ -280,6 +280,10 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		// register interest on configuratin changes
 		fonts.addObserver(this);
+		
+		//XmlElement selectedBrowser = messageviewer.getElement(OptionsItem.SELECTED_BROWSER);
+		//selectedBrowser.addObserver(this);
+		
 	}
 
 	/**
@@ -351,6 +355,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			// setText(body);
 
 		}
+		
 	}
 
 	private boolean isHTMLStrippingEnabled() {
@@ -370,10 +375,17 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		// read configuration from options.xml file
 		// create css-stylesheet string
 		// set font of html-element <P>
-		css = "<style type=\"text/css\">\n" + "body {font-family:\"" + name
+		
+		/*css = "<style type=\"text/css\">\n" + "body {font-family:\"" + name
 				+ "\"; font-size:\"" + size + "pt; \"} \n"
 				+ "a { color: blue; text-decoration: underline }\n"
-				+ "font.quoting {color:#949494;} \n" + "</style>\n";
+				+ "font.quoting {color:#949494;} \n" + "</style>\n";*/
+				
+		css = "<style type=\"text/css\">\n" + "body {font-family:\"" + name
+		+ "\";} \n"
+		+ "a { color: blue; text-decoration: underline }\n"
+		+ "font.quoting {color:#949494;} \n" + "</style>\n";
+		
 	}
 
 	/*
@@ -391,6 +403,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		initStyleSheet();
 
 		initHTMLViewerPlugin();
+		
+		add(viewerPlugin.getContainer(), BorderLayout.CENTER);
 	}
 
 	public String getSelectedText() {

@@ -56,7 +56,7 @@ public class DebugRepaintManager extends RepaintManager {
     private void checkThread(JComponent c) {
         if (!SwingUtilities.isEventDispatchThread() && checkIsShowing(c)) {
         	System.err.println("----------Wrong Thread START"); //$NON-NLS-1$
-            LOG.info(getStracktraceAsString(new Exception()));
+            System.err.println(getStracktraceAsString(new Exception()));
             dumpComponentTree(c);
             System.err.println("----------Wrong Thread END"); //$NON-NLS-1$
         }

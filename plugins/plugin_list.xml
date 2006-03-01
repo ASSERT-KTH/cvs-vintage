@@ -42,6 +42,9 @@
 		<ant target="release" inheritall="false" antfile="build_plugin.xml">
 			<property name="plugin_dir" value="org.columba.core.LogDisplay" />
 		</ant>
+		<ant target="release" inheritall="false" antfile="build_plugin.xml">
+			<property name="plugin_dir" value="org.columba.core.FlyingSaucerRenderer" />
+		</ant>
 	</target>
 
 	<target name="examples" description="Builds all example plugins">

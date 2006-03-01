@@ -146,8 +146,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		try {
 			// get config plugin-handler
-			configHandler = (ConfigExtensionHandler) PluginManager.getInstance()
-					.getHandler(ConfigExtensionHandler.NAME);
+			configHandler = (ConfigExtensionHandler) PluginManager
+					.getInstance().getHandler(ConfigExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
@@ -163,7 +163,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 	public void updateComponents(boolean b) {
 
-		GuiItem item = ((Config)Config.getInstance()).getOptionsConfig().getGuiItem();
+		GuiItem item = ((Config) Config.getInstance()).getOptionsConfig()
+				.getGuiItem();
 
 		if (b) {
 			// look and feel
@@ -194,13 +195,11 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			overwriteCheckBox.setSelected(overwrite);
 
-			if (overwrite) {
-				// disable button, too
-				textFontButton.setEnabled(false);
-				textFontLabel.setEnabled(false);
-				mainFontButton.setEnabled(false);
-				mainFontLabel.setEnabled(false);
-			}
+			// enable/disable button, too
+			textFontButton.setEnabled(overwrite);
+			textFontLabel.setEnabled(overwrite);
+			mainFontButton.setEnabled(overwrite);
+			mainFontLabel.setEnabled(overwrite);
 
 			// language
 			Locale[] available = GlobalResourceLoader.getAvailableLocales();
@@ -312,8 +311,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 				// 3 columns
 				"");
-		
-		
+
 		// create a form builder
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
@@ -358,8 +356,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		builder.append(textFontButton, 3);
 		builder.nextLine();
 
-		
-		
 		contentPane.add(builder.getPanel(), BorderLayout.CENTER);
 
 		// init bottom panel with OK, Cancel buttons
@@ -498,8 +494,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			String theme = (String) lfComboBox.getSelectedItem();
 
 			IExtension extension = handler.getExtension(theme);
-			
-			configID = extension.getMetadata().getAttribute( "config");
+
+			configID = extension.getMetadata().getAttribute("config");
 
 			lfButton.setEnabled(configID != null);
 		} else if (action.equals("THEME_OPTIONS")) {

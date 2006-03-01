@@ -194,6 +194,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 					OptionsItem.SELECTED_BROWSER,
 					(String) selectedBrowserComboBox.getSelectedItem());
 
+			// notify configuration changes listeners
+			// @see org.columba.mail.gui.message.TextViewer
+			optionsItem.notifyObservers(OptionsItem.SELECTED_BROWSER);
+			
 			// send notification event
 			// @see org.columba.mail.gui.message.TextViewer
 			optionsItem.notifyObservers(OptionsItem.MESSAGEVIEWER_SMILIES);

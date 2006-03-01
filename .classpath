@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/columba/core"/>
+	<classpathentry kind="src" path="plugins/org.columba.core.FlyingSaucerRenderer/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/api"/>
 	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/res"/>
 	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/src"/>
@@ -64,5 +65,9 @@
 	<classpathentry kind="lib" path="lib/jython-2.2a1.jar"/>
 	<classpathentry kind="lib" path="lib/looks-2.0-rc.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/ical4j-0.9.18.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/cssparser-0-9-4-fs.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/xhtmltranscoder.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/jtidy-04aug2000r7.jar"/>
+	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/core-renderer.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
