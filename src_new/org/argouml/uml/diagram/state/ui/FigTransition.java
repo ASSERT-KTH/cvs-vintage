@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.53 2006/02/20 16:41:28 mvw Exp $
+// $Id: FigTransition.java,v 1.54 2006/03/01 17:22:04 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,11 +112,17 @@ public class FigTransition extends FigEdgeModelElement {
                         Model.getFacade().getSource(newOwner))
                     || Model.getFacade().isAObjectFlowState(
                             Model.getFacade().getTarget(newOwner));
-
-            notationProvider =
-                NotationProviderFactory2.getInstance().getNotationProvider(
-                    NotationProviderFactory2.TYPE_TRANSITION, this, newOwner);
         }
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#initNotationProviders(java.lang.Object)
+     */
+    protected void initNotationProviders(Object own) {
+        super.initNotationProviders(own);
+        notationProvider =
+            NotationProviderFactory2.getInstance().getNotationProvider(
+                NotationProviderFactory2.TYPE_TRANSITION, this, own);        
     }
 
     /**

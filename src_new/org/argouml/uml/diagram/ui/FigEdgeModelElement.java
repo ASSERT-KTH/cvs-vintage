@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.144 2006/02/27 19:16:42 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.145 2006/03/01 17:22:03 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -713,9 +713,19 @@ public abstract class FigEdgeModelElement
         if (newOwner != null && UUIDHelper.getUUID(newOwner) == null) {
             Model.getCoreHelper().setUUID(newOwner, UUIDHelper.getNewUUID());
         }
+        initNotationProviders(newOwner);
         modelChanged(null);
     }
 
+    /**
+     * Create the NotationProviders.
+     * 
+     * @param own the current owner
+     */
+    protected void initNotationProviders(Object own) {
+        /* Do nothing by default. */
+    }
+    
     /**
      * Implementations of this method should register/unregister the fig for all
      * (model)events. For FigEdgeModelElement only the fig itself is registered

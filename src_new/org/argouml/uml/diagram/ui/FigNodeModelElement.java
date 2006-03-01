@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.230 2006/02/26 16:25:03 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.231 2006/03/01 17:22:03 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1228,6 +1228,8 @@ public abstract class FigNodeModelElement
     }
 
     /**
+     * Create the NotationProviders.
+     * 
      * @param own the current owner
      */
     protected void initNotationProviders(Object own) {
