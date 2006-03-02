@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBox2.java,v 1.12 2005/10/31 01:51:03 tfmorris Exp $
+// $Id: UMLMultiplicityComboBox2.java,v 1.13 2006/03/02 15:33:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.uml.ui;
 
+import javax.swing.Action;
+
 import org.argouml.model.Model;
 
 /**
@@ -41,7 +43,7 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
      * @param selectAction the action
      */
     public UMLMultiplicityComboBox2(UMLComboBoxModel2 arg0,
-            UMLAction selectAction) {
+            Action selectAction) {
         super(arg0, selectAction);
     }
 

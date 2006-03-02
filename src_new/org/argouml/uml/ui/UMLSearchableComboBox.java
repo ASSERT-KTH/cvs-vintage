@@ -1,4 +1,4 @@
-// $Id: UMLSearchableComboBox.java,v 1.15 2006/02/27 20:41:55 tfmorris Exp $
+// $Id: UMLSearchableComboBox.java,v 1.16 2006/03/02 15:33:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui;
 
+import javax.swing.Action;
 import javax.swing.ComboBoxModel;
 
 import org.argouml.model.Model;
@@ -44,7 +45,7 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
      * @param showIcon true if we show an icon in the list
      */
     public UMLSearchableComboBox(UMLComboBoxModel2 model,
-            UMLAction selectAction, boolean showIcon) {
+            Action selectAction, boolean showIcon) {
         super(model, selectAction, showIcon);
     }
 
@@ -54,7 +55,7 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
      * @param selectAction the action for selection
      */
     public UMLSearchableComboBox(UMLComboBoxModel2 arg0,
-            UMLAction selectAction) {
+            Action selectAction) {
         this(arg0, selectAction, true);
     }
 

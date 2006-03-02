@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierInState.java,v 1.1 2006/03/02 15:00:48 mvw Exp $
+// $Id: PropPanelClassifierInState.java,v 1.2 2006/03/02 15:33:16 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,12 +38,12 @@ import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
 import org.argouml.util.ConfigLoader;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * The properties panel for a ClassifierInState.
@@ -90,7 +90,7 @@ public class PropPanelClassifierInState extends PropPanelClassifier {
 
 }
 
-class ActionSetClassifierInStateType extends UMLAction {
+class ActionSetClassifierInStateType extends UndoableAction {
 
     /**
      * Constructor for ActionSetClassifierInStateType.

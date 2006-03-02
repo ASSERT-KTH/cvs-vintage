@@ -1,4 +1,4 @@
-// $Id: UMLEditableComboBox.java,v 1.10 2006/01/05 20:15:09 mvw Exp $
+// $Id: UMLEditableComboBox.java,v 1.11 2006/03/02 15:33:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLEditableComboBox.java,v 1.10 2006/01/05 20:15:09 mvw Exp $
+// $Id: UMLEditableComboBox.java,v 1.11 2006/03/02 15:33:17 mvw Exp $
 
 package org.argouml.uml.ui;
 
@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxEditor;
 import javax.swing.Icon;
@@ -239,9 +240,9 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 implements FocusL
 
     /**
      * @see org.argouml.uml.ui.UMLComboBox2#UMLComboBox2(
-     * UMLComboBoxModel2, UMLAction, boolean)
+     * UMLComboBoxModel2, Action, boolean)
      */
-    public UMLEditableComboBox(UMLComboBoxModel2 model, UMLAction selectAction,
+    public UMLEditableComboBox(UMLComboBoxModel2 model, Action selectAction,
             boolean showIcon) {
         super(model, selectAction, showIcon);
         setEditable(true);
@@ -251,9 +252,9 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 implements FocusL
 
     /**
      * @see org.argouml.uml.ui.UMLComboBox2#UMLComboBox2(
-     * UMLComboBoxModel2, UMLAction)
+     * UMLComboBoxModel2, Action)
      */
-    public UMLEditableComboBox(UMLComboBoxModel2 arg0, UMLAction selectAction) {
+    public UMLEditableComboBox(UMLComboBoxModel2 arg0, Action selectAction) {
         this(arg0, selectAction, true);
     }
 
