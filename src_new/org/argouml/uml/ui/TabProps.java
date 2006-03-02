@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.84 2006/02/27 20:41:55 tfmorris Exp $
+// $Id: TabProps.java,v 1.85 2006/03/02 15:00:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,7 @@ import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.ui.behavior.activity_graphs.PropPanelActionState;
 import org.argouml.uml.ui.behavior.activity_graphs.PropPanelActivityGraph;
 import org.argouml.uml.ui.behavior.activity_graphs.PropPanelCallState;
+import org.argouml.uml.ui.behavior.activity_graphs.PropPanelClassifierInState;
 import org.argouml.uml.ui.behavior.activity_graphs.PropPanelObjectFlowState;
 import org.argouml.uml.ui.behavior.activity_graphs.PropPanelPartition;
 import org.argouml.uml.ui.behavior.activity_graphs.PropPanelSubactivityState;
@@ -456,6 +457,9 @@ public class TabProps
         }
         if (Model.getFacade().isACallState(modelElement)) {
             return new PropPanelCallState();
+        }
+        if (Model.getFacade().isAClassifierInState(modelElement)) {
+            return new PropPanelClassifierInState();
         }
         if (Model.getFacade().isAClass(modelElement)) {
             return new PropPanelClass();
