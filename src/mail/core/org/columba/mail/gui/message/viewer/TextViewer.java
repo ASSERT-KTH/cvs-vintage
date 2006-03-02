@@ -402,8 +402,13 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		initStyleSheet();
 
+		// remove old renderer
+		remove(viewerPlugin.getContainer());
+		
+		// init new renderer
 		initHTMLViewerPlugin();
 		
+		// add new renderer
 		add(viewerPlugin.getContainer(), BorderLayout.CENTER);
 	}
 
