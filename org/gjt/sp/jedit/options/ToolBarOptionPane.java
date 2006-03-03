@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.14 2004/06/28 06:45:27 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.15 2006/03/03 16:18:05 ezust Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -73,7 +73,7 @@ public class ToolBarOptionPane extends AbstractOptionPane
 		listModel = new DefaultListModel();
 		while(st.hasMoreTokens())
 		{
-			String actionName = (String)st.nextToken();
+			String actionName = st.nextToken();
 			if(actionName.equals("-"))
 				listModel.addElement(new ToolBarOptionPane.Button("-",null,null,"-"));
 			else

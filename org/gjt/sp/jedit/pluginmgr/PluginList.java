@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Plugin list downloaded from server.
  * @since jEdit 3.2pre2
- * @version $Id: PluginList.java,v 1.22 2005/08/01 22:27:23 kpouer Exp $
+ * @version $Id: PluginList.java,v 1.23 2006/03/03 16:18:05 ezust Exp $
  */
 class PluginList
 {
@@ -133,7 +133,7 @@ class PluginList
 	{
 		for(int i = 0; i < plugins.size(); i++)
 		{
-			System.err.println((Plugin)plugins.elementAt(i));
+			System.err.println(plugins.elementAt(i));
 			System.err.println();
 		}
 	} //}}}

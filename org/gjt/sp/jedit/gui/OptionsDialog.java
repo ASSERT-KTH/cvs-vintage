@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.41 2005/11/20 05:19:23 ezust Exp $
+ * @version $Id: OptionsDialog.java,v 1.42 2006/03/03 16:18:05 ezust Exp $
  * 
  */
 public abstract class OptionsDialog extends EnhancedDialog
@@ -178,7 +178,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 				label = jEdit.getProperty("options."
 					+ node + ".label");
 				optionPane = (OptionPane)deferredOptionPanes
-					.get((String)node);
+					.get(node);
 				if(optionPane == null)
 				{
 					String propName = "options." + node + ".code";

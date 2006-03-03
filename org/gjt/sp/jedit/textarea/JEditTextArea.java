@@ -61,7 +61,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.364 2005/12/31 22:03:39 ezust Exp $
+ * @version $Id: JEditTextArea.java,v 1.365 2006/03/03 16:18:06 ezust Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4643,7 +4643,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		for(int i = 0; i < foo.length; i++)
 			foo[i] = ' ';
 
-		tabSize = (float)painter.getStringWidth(new String(foo));
+		tabSize = painter.getStringWidth(new String(foo));
 
 		charWidth = (int)Math.round(
 			painter.getFont().getStringBounds(foo,0,1,

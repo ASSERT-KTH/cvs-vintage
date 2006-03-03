@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.18 2005/03/09 23:46:07 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.19 2006/03/03 16:18:05 ezust Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -130,10 +130,10 @@ public class OperatingSystem
 			choice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		
 		// Make adjustments for some OS's
-		int screenX = (int)choice.getBounds().x;
-		int screenY = (int)choice.getBounds().y;
-		int screenW = (int)choice.getBounds().width;
-		int screenH = (int)choice.getBounds().height;
+		int screenX = choice.getBounds().x;
+		int screenY = choice.getBounds().y;
+		int screenW = choice.getBounds().width;
+		int screenH = choice.getBounds().height;
 		int x, y, w, h;
 		
 		if (isMacOS())

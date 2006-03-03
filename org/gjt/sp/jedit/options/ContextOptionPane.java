@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Right-click context menu editor.
  * @author Slava Pestov
- * @version $Id: ContextOptionPane.java,v 1.11 2004/06/28 06:45:27 spestov Exp $
+ * @version $Id: ContextOptionPane.java,v 1.12 2006/03/03 16:18:05 ezust Exp $
  */
 public class ContextOptionPane extends AbstractOptionPane
 {
@@ -54,7 +54,7 @@ public class ContextOptionPane extends AbstractOptionPane
 		listModel = new DefaultListModel();
 		while(st.hasMoreTokens())
 		{
-			String actionName = (String)st.nextToken();
+			String actionName = st.nextToken();
 			if(actionName.equals("-"))
 				listModel.addElement(new ContextOptionPane.MenuItem("-","-"));
 			else

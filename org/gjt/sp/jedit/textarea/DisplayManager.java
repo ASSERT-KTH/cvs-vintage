@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * 
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.124 2006/01/23 23:04:25 ezust Exp $
+ * @version $Id: DisplayManager.java,v 1.125 2006/03/03 16:18:06 ezust Exp $
  */
 public class DisplayManager
 {
@@ -428,7 +428,7 @@ public class DisplayManager
 			return;
 		}
 		else
-			expandFolds((int)(digit - '1') + 1);
+			expandFolds((digit - '1') + 1);
 	} //}}}
 
 	//{{{ expandFolds() method

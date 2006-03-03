@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.127 2005/09/23 05:54:11 ezust Exp $
+ * @version $Id: View.java,v 1.128 2006/03/03 16:18:05 ezust Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -767,7 +767,7 @@ public class View extends JFrame implements EBComponent
 
 		int parentSize = (orientation == JSplitPane.VERTICAL_SPLIT
 			? oldEditPane.getHeight() : oldEditPane.getWidth());
-		final int dividerPosition = (int)((double)(parentSize
+		final int dividerPosition = (int)((parentSize
 			- newSplitPane.getDividerSize()) * 0.5);
 		newSplitPane.setDividerLocation(dividerPosition);
 
