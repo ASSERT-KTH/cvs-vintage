@@ -1,5 +1,5 @@
-// $Id: UMLStateDeferrableEventList.java,v 1.1 2005/10/23 20:06:51 rastaman Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UMLStateDeferrableEventList.java,v 1.2 2006/03/03 18:39:38 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -49,7 +49,9 @@ public class UMLStateDeferrableEventList extends UMLMutableLinkedList {
      * @see org.argouml.uml.ui.UMLMutableLinkedList#getPopupMenu()
      */
     public JPopupMenu getPopupMenu() {
-        return new PopupMenuNewEvent(ActionNewEvent.Roles.DEFERRABLE_EVENT, this);
+        JPopupMenu menu = new PopupMenuNewEvent(
+                ActionNewEvent.Roles.DEFERRABLE_EVENT, this); 
+        return menu;
     }
 
 
