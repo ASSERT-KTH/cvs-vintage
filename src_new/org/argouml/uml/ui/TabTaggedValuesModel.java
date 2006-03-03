@@ -1,4 +1,4 @@
-// $Id: TabTaggedValuesModel.java,v 1.9 2006/01/11 22:44:17 tfmorris Exp $
+// $Id: TabTaggedValuesModel.java,v 1.10 2006/03/03 02:37:29 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,11 +80,13 @@ public class TabTaggedValuesModel extends AbstractTableModel implements
             throw new IllegalArgumentException();
         }
         if (target != t) {
-            if (target != null)
+            if (target != null) {
                 Model.getPump().removeModelEventListener(this, target);
+            }
             target = t;
-            if (t != null)
+            if (t != null) {
                 Model.getPump().addModelEventListener(this, t);
+            }
         }
         // always fire changes in the case something has changed in the
         // composition of the taggedValues collection.
