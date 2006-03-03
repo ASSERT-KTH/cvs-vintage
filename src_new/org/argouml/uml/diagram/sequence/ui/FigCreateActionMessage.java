@@ -1,4 +1,4 @@
-// $Id: FigCreateActionMessage.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: FigCreateActionMessage.java,v 1.2 2006/03/03 23:44:05 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,14 +46,6 @@ public class FigCreateActionMessage extends FigMessage {
      */
     public FigCreateActionMessage() {
         this(null);
-    }
-
-    /**
-     * @see org.argouml.uml.diagram.sequence.ui.FigMessage#layoutActivations()
-     */
-    protected void layoutActivations() {
-        // TODO: Auto-generated method stub
-
     }
 
 }
