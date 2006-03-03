@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.88 2006/02/26 16:25:03 linus Exp $
+// $Id: UMLDiagram.java,v 1.89 2006/03/03 23:51:31 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -188,11 +188,9 @@ public abstract class UMLDiagram
      */
     public UMLDiagram(Object ns) {
         this();
-
         if (!Model.getFacade().isANamespace(ns)) {
             throw new IllegalArgumentException();
         }
-
         setNamespace(ns);
     }
 
@@ -252,6 +250,7 @@ public abstract class UMLDiagram
         // add the diagram as a listener to the namspace so
         // that when the namespace is removed the diagram is deleted also.
         /* Listening only to "remove" events does not work... */
+        // TODO: Check if this works now with new event pump - tfm
         Model.getPump().addModelEventListener(this, namespace);
     }
 
@@ -509,12 +508,6 @@ public abstract class UMLDiagram
                 ((FigEdgeModelElement) fig).updateListeners(null);
             }
         }
-        /* TODO: (MVW) I believe the presence of the following line is a bug.
-         * But if I remove it, then an exception occurs, when
-         * deleting a element that has a diagram, since
-         * the propertyChange() above starts to work...
-         */
-        Model.getPump().removeModelEventListener(this, getNamespace());
     }
 
     /**
