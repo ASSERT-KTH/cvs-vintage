@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.50 2005/11/26 08:44:36 mvw Exp $
+// $Id: UMLSequenceDiagram.java,v 1.51 2006/03/04 19:31:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,7 +220,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
      */
     public boolean relocate(Object base) {
-	return false;
+        return false;
     }
 
 } /* end class UMLSequenceDiagram */
