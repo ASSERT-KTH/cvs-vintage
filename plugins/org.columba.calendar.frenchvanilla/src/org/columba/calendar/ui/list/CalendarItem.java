@@ -21,9 +21,8 @@ import java.awt.Color;
 
 import javax.swing.Icon;
 
-import org.frapuccino.checkablelist.CheckableItem;
 
-public class CalendarItem implements CheckableItem {
+public class CalendarItem  {
 	private String name;
 
 	private String id;
@@ -32,11 +31,10 @@ public class CalendarItem implements CheckableItem {
 
 	boolean selected;
 
-	public CalendarItem(String id, String name, Color color, boolean selected) {
+	public CalendarItem(String id, String name, Color color) {
 		this.id = id;
 		this.name = name;
 		this.color = color;
-		this.selected = selected;
 	}
 
 	/**
@@ -71,7 +69,7 @@ public class CalendarItem implements CheckableItem {
 	public boolean isSelected() {
 		return selected;
 	}
-	
+
 	public String toString() {
 		return name;
 	}

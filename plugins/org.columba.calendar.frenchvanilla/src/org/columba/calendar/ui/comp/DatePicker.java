@@ -23,6 +23,7 @@ import java.util.Calendar;
 import org.columba.calendar.model.DateRange;
 
 import com.miginfocom.calendar.ThemeDatePicker;
+import com.miginfocom.calendar.datearea.DefaultDateArea;
 import com.miginfocom.theme.Themes;
 import com.miginfocom.util.dates.DateRangeI;
 import com.miginfocom.util.dates.ImmutableDateRange;
@@ -48,7 +49,7 @@ public class DatePicker extends ThemeDatePicker {
 
 		// setHomeButtonVisible(true);
 		setLeftRightButtonsVisible(true);
-
+		
 		setSelectedRange(new ImmutableDateRange());
 	}
 

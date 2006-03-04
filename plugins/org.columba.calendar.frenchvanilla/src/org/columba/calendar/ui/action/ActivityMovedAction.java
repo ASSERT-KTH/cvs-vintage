@@ -20,6 +20,8 @@ package org.columba.calendar.ui.action;
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
 
+import javax.swing.JOptionPane;
+
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.CalendarStoreFactory;
@@ -27,7 +29,6 @@ import org.columba.calendar.store.api.ICalendarStore;
 import org.columba.calendar.store.api.StoreException;
 import org.columba.calendar.ui.base.api.IActivity;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
-import org.columba.calendar.ui.dialog.EditEventDialog;
 import org.columba.calendar.ui.frame.CalendarFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
@@ -39,16 +40,9 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  */
 public class ActivityMovedAction extends AbstractColumbaAction {
 
-	private Calendar start;
-
-	private Calendar end;
-
-	public ActivityMovedAction(IFrameMediator frameMediator, Calendar start,
-			Calendar end) {
+	public ActivityMovedAction(IFrameMediator frameMediator) {
 		super(frameMediator, "Activity Moved");
 
-		this.start = start;
-		this.end = end;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -67,15 +61,20 @@ public class ActivityMovedAction extends AbstractColumbaAction {
 		try {
 			IEvent model = (IEvent) store.get(id);
 
+			Calendar start = activity.getDtStart();
+			Calendar end = activity.getDtEnd();
+
 			// update start/end time
 			model.setDtStart(start);
 			model.setDtEnt(end);
-
+			System.out.println("start="+start.toString());
+			System.out.println("end="+end.toString());
+			
 			// update store
 			store.modify(id, model);
 
 		} catch (StoreException e1) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, e1.getMessage());
 			e1.printStackTrace();
 		}
 	}

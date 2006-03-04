@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.calendar.store.event;
+package org.columba.calendar.store;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,16 +27,18 @@ import java.util.logging.Logger;
 import javax.swing.Timer;
 
 import org.columba.calendar.CalendarComponent;
-import org.columba.calendar.config.Config;
 import org.columba.calendar.model.api.IComponent;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.store.api.StoreEvent;
 import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.ui.calendar.CalendarHelper;
+import org.columba.calendar.store.api.StoreListener;
+import org.columba.calendar.ui.base.CalendarHelper;
 import org.columba.core.base.Mutex;
 
 import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.ActivityDepository;
+import com.miginfocom.calendar.category.CategoryStructureEvent;
 
 public class StoreEventDelegator implements StoreListener, ActionListener {
 
@@ -108,7 +110,7 @@ public class StoreEventDelegator implements StoreListener, ActionListener {
 								.createActivity((IEvent) model);
 
 						ActivityDepository.getInstance().addBrokedActivity(act,
-								CalendarComponent.class);
+								this, CategoryStructureEvent.ADDED_CREATED);
 					}
 				} catch (StoreException e) {
 					// TODO Auto-generated catch block
@@ -163,7 +165,7 @@ public class StoreEventDelegator implements StoreListener, ActionListener {
 						Activity act = CalendarHelper
 								.createActivity((IEvent) model);
 						ActivityDepository.getInstance().addBrokedActivity(act,
-								CalendarComponent.class);
+								this, CategoryStructureEvent.ADDED_CREATED);
 					}
 				} catch (StoreException e) {
 					// TODO Auto-generated catch block

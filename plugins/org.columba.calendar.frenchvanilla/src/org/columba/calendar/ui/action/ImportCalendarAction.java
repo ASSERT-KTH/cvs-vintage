@@ -28,9 +28,19 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.parser.CalendarImporter;
 import org.columba.calendar.store.CalendarStoreFactory;
-import org.columba.calendar.ui.frame.api.ICalendarMediator;
+import org.columba.calendar.ui.frame.CalendarFrameMediator;
+import org.columba.calendar.ui.list.api.ICalendarListView;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
+/**
+ * Import all calendar events into selected calendar.
+ * <p>
+ * User is prompted with an open file dialog to select one or
+ * multiple iCal file.
+ * 
+ * @author fdietz
+ *
+ */
 public class ImportCalendarAction extends AbstractColumbaAction {
 
 	public ImportCalendarAction(IFrameMediator frameMediator) {
@@ -38,12 +48,12 @@ public class ImportCalendarAction extends AbstractColumbaAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		ICalendarMediator m = (ICalendarMediator) frameMediator;
+		CalendarFrameMediator m = (CalendarFrameMediator) getFrameMediator();
+		ICalendarListView list = m.getListView();
+		String calendarId = list.getSelectedId();
 		
-		// get selected calendar id
-		String calendarId = m.getListView().getSelectedId();
 		if ( calendarId == null ) {
-			JOptionPane.showMessageDialog(null, "No calendar selected");
+			JOptionPane.showMessageDialog(null, "No calendar for import selected.");
 			return;
 		}
 		
@@ -56,17 +66,15 @@ public class ImportCalendarAction extends AbstractColumbaAction {
 			File[] sourceFiles = fc.getSelectedFiles();
 
 			if (sourceFiles.length >= 1) {
-				for (int i = 0; i < sourceFiles.length; i++) {
+				for ( int i=0; i<sourceFiles.length; i++) {
 					try {
-						Iterator<IEvent> it = new CalendarImporter()
-								.importCalendar(sourceFiles[i]);
-
+						Iterator<IEvent> it = new CalendarImporter().importCalendar(sourceFiles[i]);
+						
 						while (it.hasNext()) {
 							IEvent event = it.next();
 							event.setCalendar(calendarId);
-
-							CalendarStoreFactory.getInstance().getLocaleStore()
-									.add(event);
+							
+							CalendarStoreFactory.getInstance().getLocaleStore().add(event);
 						}
 					} catch (Exception e1) {
 						e1.printStackTrace();

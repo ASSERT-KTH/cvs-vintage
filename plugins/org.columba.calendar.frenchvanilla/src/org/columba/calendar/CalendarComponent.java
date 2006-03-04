@@ -18,25 +18,13 @@
 package org.columba.calendar;
 
 import java.io.InputStream;
-import java.util.Iterator;
 
 import org.apache.commons.cli.CommandLine;
 import org.columba.api.exception.PluginHandlerNotFoundException;
-import org.columba.calendar.config.Config;
-import org.columba.calendar.model.api.IComponent;
-import org.columba.calendar.model.api.IComponentInfo;
-import org.columba.calendar.model.api.IComponentInfoList;
-import org.columba.calendar.model.api.IEventInfo;
 import org.columba.calendar.store.CalendarStoreFactory;
-import org.columba.calendar.store.api.ICalendarStore;
-import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.ui.calendar.CalendarHelper;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
-
-import com.miginfocom.calendar.activity.Activity;
-import com.miginfocom.calendar.activity.ActivityDepository;
 
 /**
  * @author fdietz
@@ -83,30 +71,7 @@ public class CalendarComponent implements IComponentPlugin {
 	 * @see org.columba.core.main.IComponentPlugin#postStartup()
 	 */
 	public void postStartup() {
-		// read all events from calendar store
-		ICalendarStore store = CalendarStoreFactory.getInstance()
-				.getLocaleStore();
-
-		try {
-
-			IComponentInfoList list = store.getComponentInfoList();
-			Iterator<IComponentInfo> it = list.iterator();
-			while (it.hasNext()) {
-				IComponentInfo item = (IComponentInfo) it.next();
-
-				if (item.getType() == IComponent.TYPE.EVENT) {
-					IEventInfo event = (IEventInfo) item;
-					Activity act = CalendarHelper.createActivity(event);
-
-					ActivityDepository.getInstance().addBrokedActivity(act,
-							CalendarComponent.class);
-				}
-			}
-
-		} catch (StoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		CalendarStoreFactory.getInstance().getLocaleStore();
 	}
 
 	/**

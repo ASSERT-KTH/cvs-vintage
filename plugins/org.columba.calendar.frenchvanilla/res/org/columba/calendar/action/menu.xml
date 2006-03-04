@@ -13,11 +13,9 @@
 	</menu>
 	
 	<menu id="menu_view" placeholderid="bottom">
-		<separator />
 		<menuitem id="GoBack" />
 		<menuitem id="Today" />
 		<menuitem id="GoNext" />
-		<separator />
 		<menu id="Show">
 			<checkboxmenuitem id="DayView" />
 			<checkboxmenuitem id="WorkWeekView" />
@@ -27,7 +25,6 @@
 	</menu>
 	
 	<menu id="menu_utilities" placeholderid="bottom">
-		<separator />
 	 	<menuitem id="ImportCalendar" />
 		<menuitem id="ExportCalendar" />
 	</menu>

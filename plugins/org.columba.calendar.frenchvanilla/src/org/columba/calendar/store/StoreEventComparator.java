@@ -15,33 +15,32 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.calendar.store.event;
+package org.columba.calendar.store;
 
-import java.util.EventListener;
-/**
- * 
- * Clients can attach implementations of this interface to a storage in order to
- * get notified on storage changes.
- * 
- * @author fdietz
- */
-public interface StoreListener extends EventListener{
+import java.util.Comparator;
 
-	/**
-	 * Called when a item has been added to a storage.
-	 */
-	void itemAdded(StoreEvent e);
+import org.columba.calendar.store.api.StoreEvent;
 
-	/**
-	 * Called when a item has been removed from a storage.
-	 */
-	void itemRemoved(StoreEvent e);
+class StoreEventComparator implements Comparator {
+
+	private static StoreEventComparator instance = new StoreEventComparator();
+
+	private StoreEventComparator() {
+	}
+
+	public static StoreEventComparator getInstance() {
+		return instance;
+	}
 
 	/**
-	 * Called when a item has been changed.
-	 * 
-	 * @param e
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
-	void itemChanged(StoreEvent e);
+	public int compare(Object arg0, Object arg1) {
+
+		StoreEvent a = (StoreEvent) arg0;
+		StoreEvent b = (StoreEvent) arg1;
+
+		return (a.getSource() != b.getSource()) ? 0 : 1;
+	}
 
 }

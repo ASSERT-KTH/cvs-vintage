@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.calendar.ui.calendar;
+package org.columba.calendar.ui.base;
 
 import org.columba.calendar.config.Config;
 import org.columba.calendar.model.DateRange;

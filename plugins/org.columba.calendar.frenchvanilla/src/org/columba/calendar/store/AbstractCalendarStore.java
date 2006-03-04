@@ -23,11 +23,9 @@ import javax.swing.event.EventListenerList;
 
 import org.columba.calendar.model.api.IComponent;
 import org.columba.calendar.model.api.IComponentInfoList;
+import org.columba.calendar.store.api.StoreEvent;
 import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.store.event.StoreEvent;
-import org.columba.calendar.store.event.StoreEventDelegator;
-import org.columba.calendar.store.event.StoreListener;
-import org.columba.core.util.InternalException;
+import org.columba.calendar.store.api.StoreListener;
 
 public abstract class AbstractCalendarStore {
 

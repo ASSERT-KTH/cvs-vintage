@@ -19,10 +19,11 @@ package org.columba.calendar.ui.action;
 
 import java.util.Calendar;
 
+import org.columba.calendar.ui.action.api.IActionFactory;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
-public class ActionFactory {
+public class ActionFactory implements IActionFactory {
 
 	private ICalendarMediator mediator;
 
@@ -30,20 +31,31 @@ public class ActionFactory {
 		this.mediator = mediator;
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.action.api.IActionFactory#createEditAction()
+	 */
 	public AbstractColumbaAction createEditAction() {
 		return new EditActivityAction(mediator);
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.action.api.IActionFactory#createDeleteAction()
+	 */
 	public AbstractColumbaAction createDeleteAction() {
 		return new DeleteActivityAction(mediator);
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.action.api.IActionFactory#createNewAction()
+	 */
 	public AbstractColumbaAction createNewAction() {
 		return new NewAppointmentAction(mediator);
 	}
 
-	public AbstractColumbaAction createActivityMovedAction(Calendar start,
-			Calendar end) {
-		return new ActivityMovedAction(mediator, start, end);
+	/**
+	 * @see org.columba.calendar.ui.action.api.IActionFactory#createActivityMovedAction()
+	 */
+	public AbstractColumbaAction createActivityMovedAction() {
+		return new ActivityMovedAction(mediator);
 	}
 }

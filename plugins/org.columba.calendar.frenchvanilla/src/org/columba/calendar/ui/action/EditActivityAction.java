@@ -19,6 +19,8 @@ package org.columba.calendar.ui.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JOptionPane;
+
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.CalendarStoreFactory;
@@ -76,7 +78,7 @@ public class EditActivityAction extends AbstractColumbaAction {
 			}
 
 		} catch (StoreException e1) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, e1.getMessage());
 			e1.printStackTrace();
 		}
 

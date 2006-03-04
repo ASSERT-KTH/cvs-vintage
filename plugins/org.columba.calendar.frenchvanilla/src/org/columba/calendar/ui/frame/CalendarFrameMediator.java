@@ -90,7 +90,7 @@ public class CalendarFrameMediator extends DockFrameController implements
 		// init dockable panels
 		listPanel = new DockableView("calendar_tree", "Calendar");
 		JScrollPane treeScrollPane = new JScrollPane(listController.getView());
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 		listPanel.setContentPane(treeScrollPane);
 
 		navigationPanel = new DockableView("navigation", "Navigation");
@@ -140,7 +140,7 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	public void showDayView() {
 
-		calendarController.setViewMode(MainCalendarController.VIEW_MODE_DAY);
+		calendarController.setViewMode(ICalendarView.VIEW_MODE_DAY);
 
 		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_DAY);
@@ -148,7 +148,7 @@ public class CalendarFrameMediator extends DockFrameController implements
 	}
 
 	public void showWeekView() {
-		calendarController.setViewMode(MainCalendarController.VIEW_MODE_WEEK);
+		calendarController.setViewMode(ICalendarView.VIEW_MODE_WEEK);
 
 		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_WEEK);
@@ -157,7 +157,7 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	public void showWorkWeekView() {
 		calendarController
-				.setViewMode(MainCalendarController.VIEW_MODE_WORK_WEEK);
+				.setViewMode(ICalendarView.VIEW_MODE_WORK_WEEK);
 
 		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_WORK_WEEK);
@@ -165,11 +165,11 @@ public class CalendarFrameMediator extends DockFrameController implements
 	}
 
 	public void showMonthView() {
-		calendarController.setViewMode(MainCalendarController.VIEW_MODE_MONTH);
+		calendarController.setViewMode(ICalendarView.VIEW_MODE_MONTH);
 
 		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_MONTH);
-
+		
 	}
 
 	public ICalendarView getCalendarView() {

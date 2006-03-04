@@ -24,6 +24,11 @@ import org.columba.calendar.ui.base.api.IActivity;
 
 public interface ICalendarView {
 
+	public static final int VIEW_MODE_DAY = 0;
+	public static final int VIEW_MODE_WEEK = 1;
+	public static final int VIEW_MODE_WORK_WEEK = 2;
+	public static final int VIEW_MODE_MONTH = 3;
+
 	public abstract IActivity getSelectedActivity();
 	
 	public abstract JComponent getView();

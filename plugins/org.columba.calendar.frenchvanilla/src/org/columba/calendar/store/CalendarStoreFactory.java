@@ -18,13 +18,22 @@
 package org.columba.calendar.store;
 
 import java.io.File;
+import java.util.Iterator;
 
+import org.columba.calendar.CalendarComponent;
 import org.columba.calendar.config.Config;
+import org.columba.calendar.model.api.IComponent;
+import org.columba.calendar.model.api.IComponentInfo;
+import org.columba.calendar.model.api.IComponentInfoList;
+import org.columba.calendar.model.api.IEventInfo;
 import org.columba.calendar.store.api.ICalendarStore;
 import org.columba.calendar.store.api.ICalendarStoreFactory;
 import org.columba.calendar.store.api.StoreException;
+import org.columba.calendar.ui.base.CalendarHelper;
 import org.columba.core.io.DiskIO;
-import org.columba.core.util.InternalException;
+
+import com.miginfocom.calendar.activity.Activity;
+import com.miginfocom.calendar.activity.ActivityDepository;
 
 public class CalendarStoreFactory implements ICalendarStoreFactory {
 
@@ -54,6 +63,21 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 		if (store == null)
 			try {
 				store = new LocalCalendarStore(storeDirectory);
+
+				IComponentInfoList list = store.getComponentInfoList();
+				Iterator<IComponentInfo> it = list.iterator();
+				while (it.hasNext()) {
+					IComponentInfo item = (IComponentInfo) it.next();
+
+					if (item.getType() == IComponent.TYPE.EVENT) {
+						IEventInfo event = (IEventInfo) item;
+						Activity act = CalendarHelper.createActivity(event);
+
+						ActivityDepository.getInstance().addBrokedActivity(act,
+								CalendarComponent.class);
+					}
+				}
+
 			} catch (StoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

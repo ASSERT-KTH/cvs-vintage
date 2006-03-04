@@ -32,6 +32,7 @@ import org.columba.calendar.parser.SyntaxException;
 import org.columba.calendar.parser.VCalendarModelFactory;
 import org.columba.calendar.store.api.ICalendarStore;
 import org.columba.calendar.store.api.StoreException;
+import org.columba.calendar.store.local.LocalXMLFileStore;
 import org.columba.core.io.DiskIO;
 import org.jdom.Document;
 
