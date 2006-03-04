@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.209 2006/02/27 20:39:57 tfmorris Exp $
+<!-- $Id: build.xml,v 1.210 2006/03/04 00:51:31 tfmorris Exp $
 This requires ANT 1.6.2
 
 Introduction
@@ -353,12 +353,6 @@ Property files to be searched:
         <include name="JavaRecognizer.java"/>
         <include name="JavaTokenTypes.java"/>
         <include name="JavaTokenTypes.txt"/>
-      </fileset>
-      <fileset dir="../modules/cpp/src/org/argouml/language/cpp/reveng">
-        <include name="CPPLexer.java"/>
-        <include name="CPPParser.java"/>
-        <include name="STDCTokenTypes.java"/>
-        <include name="STDCTokenTypes.txt"/>
       </fileset>
     </delete>
   </target>
