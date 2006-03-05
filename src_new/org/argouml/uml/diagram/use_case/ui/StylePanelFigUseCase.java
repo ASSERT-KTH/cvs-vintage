@@ -1,4 +1,4 @@
-// $Id: StylePanelFigUseCase.java,v 1.15 2006/02/23 23:48:04 bobtarling Exp $
+// $Id: StylePanelFigUseCase.java,v 1.16 2006/03/05 19:37:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,6 @@ import java.awt.event.ItemEvent;
 
 import javax.swing.JCheckBox;
 
-import org.argouml.application.events.ArgoEventPump;
-import org.argouml.application.events.ArgoEventTypes;
-import org.argouml.application.events.ArgoProjectSaveEvent;
 import org.argouml.ui.StylePanelFigNodeModelElement;
 
 /**
