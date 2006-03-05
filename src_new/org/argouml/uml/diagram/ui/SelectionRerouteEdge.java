@@ -1,4 +1,4 @@
-// $Id: SelectionRerouteEdge.java,v 1.9 2005/09/07 21:03:52 linus Exp $
+// $Id: SelectionRerouteEdge.java,v 1.10 2006/03/05 18:37:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,7 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
      *
      * @param feme the given Fig
      */
-    public SelectionRerouteEdge(FigEdgeModelElement feme) {
+    public SelectionRerouteEdge(FigGraphEdge feme) {
 
         super(feme);
 
