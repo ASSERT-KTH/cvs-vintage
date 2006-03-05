@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.44 2006/02/27 14:25:00 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.45 2006/03/05 16:45:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,6 +94,7 @@ public class ArgoDiagram extends Diagram {
     }
 
     /**
+     * USED BY pgml.tee!!
      * @return the item UID
      */
     public ItemUID getItemUID() {
