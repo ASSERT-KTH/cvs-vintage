@@ -1,4 +1,4 @@
-// $Id: ModeCreateMessage.java,v 1.6 2006/02/26 01:10:04 linus Exp $
+// $Id: ModeCreateMessage.java,v 1.7 2006/03/05 17:33:05 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -207,8 +207,7 @@ public class ModeCreateMessage extends ModeCreate {
                 Fig destPortFig = destFigClassifierRole.getPortFig(foundPort);
                 Object edgeType = getArg("edgeClass");
                 if (edgeType != null) {
-                    message =
-                        mgm.connect(startPort, foundPort, edgeType);
+                    message = mgm.connect(startPort, foundPort, edgeType);
                 } else {
                     message = mgm.connect(startPort, foundPort);
                 }

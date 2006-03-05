@@ -1,4 +1,4 @@
-// $Id: FigMessagePort.java,v 1.6 2005/11/06 01:59:44 bobtarling Exp $
+// $Id: FigMessagePort.java,v 1.7 2006/03/05 17:33:05 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.sequence.ui;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import java.beans.PropertyChangeEvent;
@@ -54,8 +55,9 @@ public class FigMessagePort extends FigGroup {
      * @param y y coordinate.
      * @param x2 second x coordinate.
      */
-    public FigMessagePort(int x, int y, int x2) {
+    public FigMessagePort(Object owner, int x, int y, int x2) {
         super();
+        setOwner(owner);
         FigLine myLine = new FigLine(x, y, x2, y);
         addFig(myLine);
         setVisible(false);
@@ -67,11 +69,6 @@ public class FigMessagePort extends FigGroup {
     public void addFig(Fig toAdd) {
         if (toAdd instanceof FigLine && getFigs().size() == 0) {
             toAdd.setVisible(false);
-            toAdd.addPropertyChangeListener(new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent pce) {
-                    calcBounds();
-                }
-            });
             super.addFig(toAdd);
         }
     }
@@ -104,8 +101,9 @@ public class FigMessagePort extends FigGroup {
      * Creates a new FigMessagePort that's not displayed; used when loading
      * PGML.
      */
-    public FigMessagePort() {
+    public FigMessagePort(Object owner) {
         setVisible(false);
+        setOwner(owner);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: MessageNode.java,v 1.6 2006/02/19 18:31:32 linus Exp $
+// $Id: MessageNode.java,v 1.7 2006/03/05 17:33:06 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,7 @@ public class MessageNode extends Object {
 
     // TODO: Need to replace this with FigMessage
     private FigMessagePort figMessagePort;
-    private FigClassifierRole ownerObject;
+    private FigClassifierRole figClassifierRole;
     private int state;
     private List callers;
 
@@ -92,7 +92,7 @@ public class MessageNode extends Object {
      * @param owner the owner object
      */
     public MessageNode(FigClassifierRole owner) {
-        ownerObject = owner;
+        figClassifierRole = owner;
         figMessagePort = null;
         state = INITIAL;
     }
@@ -131,14 +131,14 @@ public class MessageNode extends Object {
      * @return the figclassifierrole that is the owner
      */
     public FigClassifierRole getFigClassifierRole() {
-        return ownerObject;
+        return figClassifierRole;
     }
 
     /**
      * @return the classifierrole
      */
     public Object getClassifierRole() {
-        return ownerObject.getOwner();
+        return figClassifierRole.getOwner();
     }
 
     /**
@@ -215,9 +215,9 @@ public class MessageNode extends Object {
                 || state == IMPLICIT_RETURNED
                 || state == IMPLICIT_CREATED));
         if (destroyableNode) {
-            for (int i = ownerObject.getIndexOf(this) + 1;
-                destroyableNode && i < ownerObject.getNodeCount(); ++i) {
-                MessageNode node = ownerObject.getNode(i);
+            for (int i = figClassifierRole.getIndexOf(this) + 1;
+                destroyableNode && i < figClassifierRole.getNodeCount(); ++i) {
+                MessageNode node = figClassifierRole.getNode(i);
                 if (node.getFigMessagePort() != null) {
                     destroyableNode = false;
                 }

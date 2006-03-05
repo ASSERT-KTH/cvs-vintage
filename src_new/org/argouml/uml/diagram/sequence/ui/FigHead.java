@@ -1,4 +1,4 @@
-// $Id: FigHead.java,v 1.1 2006/03/02 23:37:57 bobtarling Exp $
+// $Id: FigHead.java,v 1.2 2006/03/05 17:33:05 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,20 +31,25 @@ import java.util.List;
 
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
-class FigHead extends FigRect {
+class FigHead extends FigGroup {
 
     private final FigText nameFig;
     private final Fig stereotypeFig;
+    private final FigRect rectFig;
 
     FigHead(Fig stereotypeFig, FigText nameFig) {
-        super(0, 0, 
-                FigClassifierRole.MIN_HEAD_WIDTH, FigClassifierRole.MIN_HEAD_HEIGHT, 
-                Color.black, Color.white);
         this.stereotypeFig = stereotypeFig;
         this.nameFig = nameFig;
+        rectFig = new FigRect(0, 0, 
+                FigClassifierRole.MIN_HEAD_WIDTH, FigClassifierRole.MIN_HEAD_HEIGHT, 
+                Color.black, Color.white);
+        addFig(rectFig);
+        addFig(nameFig);
+        addFig(stereotypeFig);
     }
     
     public Dimension getMinimumSize() {
@@ -91,5 +96,31 @@ class FigHead extends FigRect {
             h = FigClassifierRole.MIN_HEAD_HEIGHT;
         }
         return h;
+    }
+    
+    public void setBoundsImpl(int x, int y, int w, int h) {
+        rectFig.setBounds(x, y, w, h);
+        int yy = y;
+        if (stereotypeFig.isVisible()) {
+            stereotypeFig.setBounds(x, yy, w, stereotypeFig.getMinimumSize().height);
+            yy += stereotypeFig.getMinimumSize().height;
+        }
+        nameFig.setFilled(false);
+        nameFig.setLineWidth(0);
+        nameFig.setTextColor(Color.black);
+        nameFig.setText("kjhkjh");
+        nameFig.setBounds(x, yy, w, nameFig.getHeight());
+        _x = x;
+        _y = y;
+        _w = w;
+        _h = h;
+    }
+    
+    public void setFilled(boolean b) {
+        
+    }
+    
+    public void setLineWidth(int i) {
+        
     }
 }
