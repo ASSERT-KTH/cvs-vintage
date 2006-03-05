@@ -1,4 +1,4 @@
-// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.13 2006/02/27 19:25:53 mvw Exp $
+// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.14 2006/03/05 10:57:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,8 +60,8 @@ public class UMLObjectFlowStateClassifierComboBoxModel
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object o) {
-        return Model.getFacade().isAClassifier(o) 
-            && !Model.getFacade().isAClassifierInState(o);
+        return Model.getFacade().isAClassifier(o) /* 
+            && !Model.getFacade().isAClassifierInState(o)*/;
     }
 
     /**
@@ -77,17 +77,17 @@ public class UMLObjectFlowStateClassifierComboBoxModel
         Iterator i = c.iterator();
         while (i.hasNext()) {
             Object classifier = i.next();
-            if (!Model.getFacade().isAClassifierInState(classifier)) {
+//            if (!Model.getFacade().isAClassifierInState(classifier)) {
                 newList.add(classifier);
-            }
+//            }
         }
         // get the current type - normally we won't need this, but who knows?
         if (getTarget() != null) {
             Object type = Model.getFacade().getType(getTarget());
-            if (Model.getFacade().isAClassifierInState(type)) {
-                // get the Classifier
-                type = Model.getFacade().getType(type);
-            }
+//            if (Model.getFacade().isAClassifierInState(type)) {
+//                // get the Classifier
+//                type = Model.getFacade().getType(type);
+//            }
             if (type != null)
                 if (!newList.contains(type)) newList.add(type);
         }
@@ -100,10 +100,10 @@ public class UMLObjectFlowStateClassifierComboBoxModel
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
             Object type = Model.getFacade().getType(getTarget());
-            if (Model.getFacade().isAClassifierInState(type)) {
-                // get the Classifier
-                type = Model.getFacade().getType(type);
-            }
+//            if (Model.getFacade().isAClassifierInState(type)) {
+//                // get the Classifier
+//                type = Model.getFacade().getType(type);
+//            }
             return type; // a Classifier that is not a ClassifierInState
         }
         return null;

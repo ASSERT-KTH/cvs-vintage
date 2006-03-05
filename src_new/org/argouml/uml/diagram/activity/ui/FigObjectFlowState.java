@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.27 2006/03/01 22:38:47 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.28 2006/03/05 10:57:02 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class FigObjectFlowState extends FigNodeModelElement {
     private static final int PADDING = 8;
     private static final int OFFSET = 10;
     private static final int WIDTH = 70;
-    private static final int HEIGHT = 40;
+    private static final int HEIGHT = 50;
 
     private NotationProvider4 notationProviderType;
     private NotationProvider4 notationProviderState;
@@ -134,12 +134,16 @@ public class FigObjectFlowState extends FigNodeModelElement {
      */
     protected void initNotationProviders(Object own) {
         super.initNotationProviders(own);
-        notationProviderType =
-            NotationProviderFactory2.getInstance().getNotationProvider(
-                NotationProviderFactory2.TYPE_OBJECTFLOWSTATE_TYPE, this, own);
-        notationProviderState =
-            NotationProviderFactory2.getInstance().getNotationProvider(
-                NotationProviderFactory2.TYPE_OBJECTFLOWSTATE_STATE, this, own);
+        if (Model.getFacade().isAModelElement(own)) {
+            notationProviderType =
+                NotationProviderFactory2.getInstance().getNotationProvider(
+                        NotationProviderFactory2.TYPE_OBJECTFLOWSTATE_TYPE, 
+                        this, own);
+            notationProviderState =
+                NotationProviderFactory2.getInstance().getNotationProvider(
+                        NotationProviderFactory2.TYPE_OBJECTFLOWSTATE_STATE,
+                        this, own);
+        }
     }
 
     /**
