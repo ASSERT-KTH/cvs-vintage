@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.39 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: FigCompositeState.java,v 1.40 2006/03/06 20:14:47 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,13 +98,6 @@ public class FigCompositeState extends FigState {
     public FigCompositeState(GraphModel gm, Object node) {
         this();
         setOwner(node);
-    }
-
-    /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#placeString()
-     */
-    public String placeString() {
-        return "new MCompositeState";
     }
 
     /**

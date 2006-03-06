@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.26 2005/12/28 09:30:11 mvw Exp $
+// $Id: FigSimpleState.java,v 1.27 2006/03/06 20:14:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,11 +96,6 @@ public class FigSimpleState extends FigState {
 	this();
 	setOwner(node);
     }
-
-    /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#placeString()
-     */
-    public String placeString() { return "new State"; }
 
     /**
      * @see java.lang.Object#clone()
