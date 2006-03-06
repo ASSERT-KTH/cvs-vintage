@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.29 2006/03/06 01:25:20 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.30 2006/03/06 22:55:47 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1175,6 +1175,22 @@ public class FigClassifierRole extends FigNodeModelElement
                 PGMLStackParser parser = (PGMLStackParser) stack;
                 FigClassifierRole fcr = (FigClassifierRole)((FigGroupHandler) container).getFigGroup();
                 result = new FigLifeLineHandler((PGMLStackParser) stack, fcr.getLifeLineFig());
+            } else if (qname.equals("group")
+                        && description != null
+                        && description.startsWith(FigMessagePort.class.getName())) {
+                // TODO This if-else-block exists in order to load sequence diagrams
+                // from 0.20. It must exist until -
+                // http://argouml.tigris.org/issues/show_bug.cgi?id=4039
+                PGMLStackParser parser = (PGMLStackParser) stack;
+                String ownerRef = attributes.getValue("href");
+                Object owner = parser.findOwner(ownerRef);
+                FigMessagePort fmp = new FigMessagePort(owner);
+                FigClassifierRole fcr =
+                    (FigClassifierRole)((FigGroupHandler) container).getFigGroup();
+                fcr.getLifeLineFig().addFig(fmp);
+                result = new FigGroupHandler((PGMLStackParser) stack, fmp);
+                PGMLStackParser.setCommonAttrs(fmp, attributes);
+                parser.registerFig(fmp, attributes.getValue("name"));
             } else {
                 result =
                     ((PGMLStackParser) stack).getHandler(stack,
