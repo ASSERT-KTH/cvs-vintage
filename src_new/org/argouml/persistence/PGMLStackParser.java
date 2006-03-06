@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.15 2006/02/28 23:34:09 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.16 2006/03/06 01:25:19 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,8 +109,9 @@ public class PGMLStackParser
     /**
      * @see org.argouml.gef.PGMLStackParser#setAttrs(
      *         org.tigris.gef.presentation.Fig, org.xml.sax.Attributes)
+     * TODO: Change to protected here and in GEF
      */
-    public void setAttrs(Fig f, Attributes attrList) throws SAXException {
+    final public void setAttrs(Fig f, Attributes attrList) throws SAXException {
         if (f instanceof FigGroup) {
             FigGroup group = (FigGroup) f;
             String clsNameBounds = attrList.getValue("description");

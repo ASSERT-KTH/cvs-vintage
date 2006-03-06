@@ -1,4 +1,4 @@
-// $Id: FigMessagePort.java,v 1.7 2006/03/05 17:33:05 bobtarling Exp $
+// $Id: FigMessagePort.java,v 1.8 2006/03/06 01:25:20 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,7 @@
 
 package org.argouml.uml.diagram.sequence.ui;
 
-import java.awt.Color;
 import java.awt.Point;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +73,9 @@ public class FigMessagePort extends FigGroup {
      * @see org.tigris.gef.presentation.Fig#setBoundsImpl(int, int, int, int)
      */
     protected void setBoundsImpl(int x, int y, int w, int h) {
+        if (w != 20) throw new IllegalArgumentException();
         if (getFigs().size() > 0) {
-            getMyLine().setShape(x, y, x + w, y + h);
+            getMyLine().setShape(x, y, x + w, y);
             calcBounds();
         }
     }
@@ -92,7 +89,7 @@ public class FigMessagePort extends FigGroup {
             _x = line.getX();
             _y = line.getY();
             _w = line.getWidth();
-            _h = line.getHeight();
+            _h = 1;
             firePropChange("bounds", null, null);
         }
     }
@@ -123,7 +120,7 @@ public class FigMessagePort extends FigGroup {
 
     MessageNode getNode() {
         if (node == null) {
-            ((FigClassifierRole) this.getGroup()).setMatchingNode(this);
+            ((FigClassifierRole) this.getGroup().getGroup()).setMatchingNode(this);
         }
         return node;
     }

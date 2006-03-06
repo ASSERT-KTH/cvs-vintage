@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.28 2006/03/05 17:33:05 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.29 2006/03/06 01:25:20 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.sequence.MessageNode;
+import org.argouml.uml.diagram.sequence.ui.FigLifeLine.FigLifeLineHandler;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigStereotypesCompartment;
 import org.tigris.gef.base.Globals;
@@ -199,6 +200,10 @@ public class FigClassifierRole extends FigNodeModelElement
         Fig fmp = lifeLine.createFigMessagePort(message, tempFig);
         updateNodeStates();
         return fmp;
+    }
+    
+    void addFigMessagePort(FigMessagePort messagePortFig) {
+        lifeLine.addFig(messagePortFig);
     }
 
     /**
@@ -400,18 +405,15 @@ public class FigClassifierRole extends FigNodeModelElement
         int lastState = MessageNode.INITIAL;
         ArrayList callers = null;
         int nodeCount = linkPositions.size();
-        Rectangle fmpBounds = new Rectangle();
 
         for (int i = 0; i < nodeCount; ++i) {
             MessageNode node = (MessageNode) linkPositions.get(i);
             FigMessagePort figMessagePort = node.getFigMessagePort();
             // If the node has a FigMessagePort
             if (figMessagePort != null) {
-                fmpBounds = figMessagePort.getBounds(fmpBounds);
                 int fmpY = lifeLine.getYCoordinate(i);
-                if (fmpBounds.y != fmpY) {
-                    fmpBounds.y = fmpY;
-                    figMessagePort.setBounds(fmpBounds);
+                if (figMessagePort.getY() != fmpY) {
+                    figMessagePort.setBounds(lifeLine.getX(), fmpY, WIDTH, 1);
                 }
                 Object message = figMessagePort.getOwner();
                 boolean selfMessage =
@@ -773,6 +775,10 @@ public class FigClassifierRole extends FigNodeModelElement
      */
     public int getLineWidth() {
         return headFig.getLineWidth();
+    }
+    
+    private FigLifeLine getLifeLineFig() {
+        return lifeLine;
     }
 
     /**
@@ -1153,29 +1159,22 @@ public class FigClassifierRole extends FigNodeModelElement
          *         java.lang.Object, java.lang.String, java.lang.String,
          *         java.lang.String, org.xml.sax.Attributes)
          */
-        protected DefaultHandler getElementHandler(HandlerStack stack,
-            Object container,
-            String uri,
-            String localname,
-            String qname,
-            Attributes attributes)
-	    throws SAXException {
+        protected DefaultHandler getElementHandler(
+                HandlerStack stack,
+                Object container,
+                String uri,
+                String localname,
+                String qname,
+                Attributes attributes) throws SAXException {
 
             DefaultHandler result = null;
-            String description;
-            // Handle stereotype groups in Figs
+            String description = attributes.getValue("description");
             if (qname.equals("group")
-                    && ((description = attributes.getValue("description"))
-                            != null)
-                    && description.startsWith(FigMessagePort.class.getName())) {
+                    && description != null
+                    && description.startsWith(FigLifeLine.class.getName())) {
                 PGMLStackParser parser = (PGMLStackParser) stack;
-                String ownerRef = attributes.getValue("href");
-                Object owner = parser.findOwner(ownerRef);
-                FigMessagePort fmp = new FigMessagePort(owner);
-                ((FigGroupHandler) container).getFigGroup().addFig(fmp);
-                result = new FigGroupHandler((PGMLStackParser) stack, fmp);
-                PGMLStackParser.setCommonAttrs(fmp, attributes);
-                parser.registerFig(fmp, attributes.getValue("name"));
+                FigClassifierRole fcr = (FigClassifierRole)((FigGroupHandler) container).getFigGroup();
+                result = new FigLifeLineHandler((PGMLStackParser) stack, fcr.getLifeLineFig());
             } else {
                 result =
                     ((PGMLStackParser) stack).getHandler(stack,
