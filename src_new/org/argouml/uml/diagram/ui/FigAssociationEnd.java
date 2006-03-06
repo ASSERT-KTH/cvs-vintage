@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.18 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: FigAssociationEnd.java,v 1.19 2006/03/06 20:03:07 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +121,6 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         if (Model.getFacade().isAAssociationEnd(edge)) {
             addElementListener(edge);
         }
-        modelChanged(null);
     }
 
     /** Returns the name of the OrderingKind.
