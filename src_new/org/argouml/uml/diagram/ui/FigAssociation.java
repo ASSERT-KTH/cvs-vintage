@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.106 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: FigAssociation.java,v 1.107 2006/03/07 17:26:29 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -404,33 +404,53 @@ public class FigAssociation extends FigEdgeModelElement {
             damage();
         }
 
-	//MAssociationEnd
-	Object ae0 =
-	    ((Model.getFacade().getConnections(association)).toArray())[0];
-	//MAssociationEnd
-	Object ae1 =
-	    ((Model.getFacade().getConnections(association)).toArray())[1];
-	updateEnd(srcMult, srcRole, srcOrdering, ae0);
-	updateEnd(destMult, destRole, destOrdering, ae1);
-
-	boolean srcNav = Model.getFacade().isNavigable(ae0);
-	boolean destNav = Model.getFacade().isNavigable(ae1);
-	if (srcNav && destNav && SUPPRESS_BIDIRECTIONAL_ARROWS) {
-	    srcNav = false;
-	    destNav = false;
-	}
-	sourceArrowHead =
-	    chooseArrowHead(Model.getFacade().getAggregation(ae0), srcNav);
-	destArrowHead =
-	    chooseArrowHead(Model.getFacade().getAggregation(ae1), destNav);
-	setSourceArrowHead(sourceArrowHead);
-	setDestArrowHead(destArrowHead);
+	updateEnds(association);
+        chooseArrowHeads(association);
 	srcGroup.calcBounds();
 	destGroup.calcBounds();
 	middleGroup.calcBounds();
 	this.computeRoute();
     }
 
+    /**
+     * Update the annotations on each end.
+     * 
+     * @param association
+     */
+    private void updateEnds(Object association) {
+        Object[] ends = 
+            Model.getFacade().getConnections(association).toArray(); 
+        Object ae0 = ends[0];
+        Object ae1 = ends[1];
+        updateEnd(srcMult, srcRole, srcOrdering, ae0);
+        updateEnd(destMult, destRole, destOrdering, ae1);
+    }
+
+    /**
+     * Choose the arrowhead style for each end.
+     * 
+     * @param association
+     */
+    private void chooseArrowHeads(Object association) {
+        Object[] ends = 
+            Model.getFacade().getConnections(association).toArray(); 
+        Object ae0 = ends[0];
+        Object ae1 = ends[1];
+
+        boolean srcNav = Model.getFacade().isNavigable(ae0);
+        boolean destNav = Model.getFacade().isNavigable(ae1);
+        if (srcNav && destNav && SUPPRESS_BIDIRECTIONAL_ARROWS) {
+            srcNav = false;
+            destNav = false;
+        }
+        sourceArrowHead =
+            chooseArrowHead(Model.getFacade().getAggregation(ae0), srcNav);
+        destArrowHead =
+            chooseArrowHead(Model.getFacade().getAggregation(ae1), destNav);
+        setSourceArrowHead(sourceArrowHead);
+        setDestArrowHead(destArrowHead);
+    }
+    
     private static final ArrowHead NAV_AGGREGATE =
 	new ArrowHeadComposite(ArrowHeadDiamond.WhiteDiamond,
 			       new ArrowHeadGreater());
@@ -590,19 +610,11 @@ public class FigAssociation extends FigEdgeModelElement {
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#renderingChanged()
      */
     public void renderingChanged() {
-        Object associationEnd = getOwner(); //MAssociation
-        if (associationEnd == null) {
+        Object association = getOwner(); //MAssociation
+        if (association == null) {
             return;
         }
-
-        //MAssociationEnd
-        Object ae0 =
-            ((Model.getFacade().getConnections(associationEnd)).toArray())[0];
-        //MAssociationEnd
-        Object ae1 =
-            ((Model.getFacade().getConnections(associationEnd)).toArray())[1];
-        updateEnd(srcMult, srcRole, srcOrdering, ae0);
-        updateEnd(destMult, destRole, destOrdering, ae1);
+        updateEnds(association);
         super.renderingChanged();
     }
 
@@ -646,14 +658,12 @@ public class FigAssociation extends FigEdgeModelElement {
         setBounds(rect.x, rect.y, rect.width, rect.height);
     }
 
-    static final long serialVersionUID = 9100125695919853919L;
-
     /**
      * @see org.tigris.gef.presentation.Fig#paint(java.awt.Graphics)
      */
     public void paint(Graphics g) {
         if (sourceArrowHead == null || destArrowHead == null) {
-	    renderingChanged();
+	    chooseArrowHeads(getOwner()); 
         }
         if (sourceArrowHead != null && destArrowHead != null) {
 	    sourceArrowHead.setLineColor(getLineColor());
@@ -668,5 +678,10 @@ public class FigAssociation extends FigEdgeModelElement {
     protected FigTextGroup getMiddleGroup() {
         return middleGroup;
     }
+
+    /**
+     * The serial version id.
+     */
+    static final long serialVersionUID = 9100125695919853919L;
 
 } /* end class FigAssociation */
