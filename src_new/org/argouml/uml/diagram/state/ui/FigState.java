@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.41 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: FigState.java,v 1.42 2006/03/07 22:01:59 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -228,6 +228,7 @@ public abstract class FigState extends FigStateVertex {
         if (notationProviderBody != null) {
             internal.setText(notationProviderBody.toString());
         }
+        super.renderingChanged();
         calcBounds();
         setBounds(getBounds());
     }
