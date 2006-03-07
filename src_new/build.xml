@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.216 2006/03/07 19:00:18 tfmorris Exp $
+<!-- $Id: build.xml,v 1.217 2006/03/07 22:05:44 tfmorris Exp $
 This requires ANT 1.6.2
 
 Introduction
@@ -336,8 +336,10 @@ Property files to be searched:
     </delete>
     <echo message="Antlr classpath is ${antlrall.jar.path}"/>
     <java classname="antlr.Tool" classpath="${antlrall.jar.path}" fork="yes"
-          maxmemory="32M">
-          <arg line="-o ${argo.src.dir}/org/argouml/uml/reveng/java  ${argo.src.dir}/org/argouml/uml/reveng/java/java.g"/>
+        maxmemory="32M">
+      <arg value="-o"/>
+      <arg file="${argo.src.dir}/org/argouml/uml/reveng/java"/>
+      <arg file="${argo.src.dir}/org/argouml/uml/reveng/java/java.g"/>
     </java>
   </target>
 
@@ -348,8 +350,10 @@ Property files to be searched:
       </fileset>
     </delete>
     <java classname="antlr.Tool" classpath="${antlrall.jar.path}" fork="yes"
-          maxmemory="32M">
-          <arg line="-o ${argo.src.dir}/org/argouml/language/java/generator  ${argo.src.dir}/org/argouml/language/java/generator/java.g"/>
+        maxmemory="32M">
+      <arg value="-o"/>
+      <arg file="${argo.src.dir}/org/argouml/language/java/generator"/>
+      <arg file="${argo.src.dir}/org/argouml/language/java/generator/java.g"/>
     </java>
   </target>
 
