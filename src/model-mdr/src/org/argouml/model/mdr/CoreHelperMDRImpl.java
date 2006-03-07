@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1241,7 +1241,8 @@ public class CoreHelperMDRImpl implements CoreHelper {
                     || ns instanceof UseCase) {
                 return false;
             } else if (ns instanceof Component) {
-                return (modelElement instanceof Component && modelElement != ns);
+                return (modelElement instanceof Component 
+                        && modelElement != ns);
             } else if (ns instanceof Collaboration) {
                 if (!(modelElement instanceof ClassifierRole
                         || modelElement instanceof AssociationRole
@@ -2364,7 +2365,6 @@ public class CoreHelperMDRImpl implements CoreHelper {
 
     /**
      * @see org.argouml.model.CoreHelper#setImplementationLocation(java.lang.Object, java.lang.Object)
-     * @deprecated UML 1.3 - use setContainer
      */
     public void setImplementationLocation(Object handle, Object component) {
         setContainer(handle, component);
@@ -3079,7 +3079,8 @@ public class CoreHelperMDRImpl implements CoreHelper {
         ArrayList names = new ArrayList();
         for (Iterator iter = modelImpl.getModelPackage().getMofClass()
                 .refAllOfClass().iterator(); iter.hasNext();) {
-            String name = ((javax.jmi.model.ModelElement) iter.next()).getName();
+            String name = 
+                ((javax.jmi.model.ModelElement) iter.next()).getName();
             if (names.contains(name)) {
                 LOG.error("Found duplicate class " + name + " in metamodel");
             } else {

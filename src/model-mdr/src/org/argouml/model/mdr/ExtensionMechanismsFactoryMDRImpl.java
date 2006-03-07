@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: ExtensionMechanismsFactoryMDRImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,6 +98,9 @@ public class ExtensionMechanismsFactoryMDRImpl extends
      * 
      * @param tagName The name of the TagDefinition to create/retrieve
      * @return an initialized UML TaggedValue instance.
+     * 
+     * TODO: This currently isn't part of the standard API.  Add it or reduce
+     * the visibility to match its usage/role.
      */
     public Object getTagDefinition(String tagName) {
         if (tagName == null) {

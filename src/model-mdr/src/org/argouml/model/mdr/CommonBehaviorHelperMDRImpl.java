@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelperMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: CommonBehaviorHelperMDRImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -551,7 +551,8 @@ public class CommonBehaviorHelperMDRImpl implements CommonBehaviorHelper {
     public void setInstantiation(Object createaction, Object instantiation) {
         if (createaction instanceof CreateAction) {
             if (instantiation instanceof Classifier) {
-                ((CreateAction) createaction).setInstantiation((Classifier) instantiation);
+                ((CreateAction) createaction).setInstantiation(
+                        (Classifier) instantiation);
                 return;
             }
             if (instantiation == null)

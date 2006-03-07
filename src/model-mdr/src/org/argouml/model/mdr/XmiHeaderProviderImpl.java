@@ -1,4 +1,4 @@
-// $Id: XmiHeaderProviderImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: XmiHeaderProviderImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class XmiHeaderProviderImpl implements XMIHeaderProvider {
         super();
     }
 
-    /*
+    /**
      * @see org.netbeans.lib.jmi.xmi.XMIHeaderProvider#writeHeader(java.io.Writer)
      */
     public void writeHeader (Writer ps) {

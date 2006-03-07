@@ -1,4 +1,4 @@
-// $Id: ModelEventPumpMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: ModelEventPumpMDRImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -929,7 +929,8 @@ class ModelEventPumpMDRImpl extends AbstractModelEventPump implements
                     LOG.error("Property '" + attributes[i]
                              + "' for class '"
                              + metaclass.getName()
-                     + "' doesn't exist in metamodel (possible false warning)");
+                             + "' doesn't exist in metamodel" 
+                             + " (possible false warning)");
 //                  throw new IllegalArgumentException("Property '"
 //                            + attributes[i] + "' doesn't exist in metamodel");
                 }

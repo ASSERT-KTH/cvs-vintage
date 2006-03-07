@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: CollaborationsHelperMDRImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -432,7 +432,8 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
             if (arole instanceof ClassifierRole) {
                 List returnList = new ArrayList();
                 ClassifierRole role = (ClassifierRole) arole;
-                Iterator it = Model.getFacade().getGeneralizations(role).iterator();
+                Iterator it = 
+                    Model.getFacade().getGeneralizations(role).iterator();
                 while (it.hasNext()) {
                     Object genElem = it.next();
                     if (genElem instanceof ClassifierRole) {
@@ -441,7 +442,8 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
                 }
                 it = role.getBase().iterator();
                 while (it.hasNext()) {
-                    returnList.addAll(((Classifier) it.next()).getOwnedElement());
+                    returnList.addAll(
+                            ((Classifier) it.next()).getOwnedElement());
                 }
                 return returnList;
             }

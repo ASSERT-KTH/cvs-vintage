@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactoryMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: CommonBehaviorFactoryMDRImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -227,8 +227,8 @@ public class CommonBehaviorFactoryMDRImpl extends AbstractUmlModelFactoryMDR
      * @see org.argouml.model.CommonBehaviorFactory#createObject()
      */
     public Object createObject() {
-        org.omg.uml.behavioralelements.commonbehavior.Object myObject = cbPackage
-                .getObject().createObject();
+        org.omg.uml.behavioralelements.commonbehavior.Object myObject = 
+                cbPackage.getObject().createObject();
         super.initialize(myObject);
         return myObject;
     }
