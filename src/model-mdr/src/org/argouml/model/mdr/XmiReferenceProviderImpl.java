@@ -1,4 +1,4 @@
-// $Id: XmiReferenceProviderImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: XmiReferenceProviderImpl.java,v 1.2 2006/03/07 15:44:31 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,14 +32,16 @@ import org.netbeans.api.xmi.XMIReferenceProvider;
 
 /**
  * Custom reference provider for MDR XMI Writer.
- * 
+ *
  * Returns our internal ID to be used when writing the xmi.id field
- * 
+ *
  * @author Tom Morris
- * 
  */
 public class XmiReferenceProviderImpl implements XMIReferenceProvider {
-    
+
+    /**
+     * The document for the objects.
+     */
     private final String systemId = null;
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: ActivityGraphsHelperMDRImpl.java,v 1.2 2006/03/07 15:44:31 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.omg.uml.modelmanagement.UmlPackage;
  * Class to implement ActivityGraphsHelper.
  * @since ARGO0.19.5
  * @author Ludovic Maître
- * Derived from NSUML implementation 
+ * Derived from NSUML implementation
  */
 class ActivityGraphsHelperMDRImpl implements ActivityGraphsHelper {
 
@@ -147,7 +147,7 @@ class ActivityGraphsHelperMDRImpl implements ActivityGraphsHelper {
             throw new IllegalArgumentException(
                     "classifierInState: " + classifierInState
                     + " or state: " + state);
-        }        
+        }
     }
 
     /**
@@ -183,7 +183,7 @@ class ActivityGraphsHelperMDRImpl implements ActivityGraphsHelper {
         } else {
             throw new IllegalArgumentException(
                     "classifierInState: " + classifierInState);
-        }        
+        }
     }
 
 }
