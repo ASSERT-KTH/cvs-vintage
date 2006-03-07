@@ -1,6 +1,8 @@
 #! /bin/sh
-# $Id: build2.sh,v 1.2 2006/03/07 17:51:02 tfmorris Exp $
+# $Id: build2.sh,v 1.3 2006/03/07 19:00:38 tfmorris Exp $
 #
+
+# This variant of the build is configured for the Eclipse project directories
 
 # OS specific support.
 darwin=false
