@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.215 2006/03/07 17:51:02 tfmorris Exp $
+<!-- $Id: build.xml,v 1.216 2006/03/07 19:00:18 tfmorris Exp $
 This requires ANT 1.6.2
 
 Introduction
@@ -815,7 +815,7 @@ Property files to be searched:
            fork="yes" haltonfailure="false"
            maxmemory="48M" printsummary="true">
         <sysproperty key="test.model.uml" 
-            value="${argo.model.dir}/src/org/argouml/model/mdr/mof/01-02-15.xml"/>
+            value="${argo.mdr.dir}/src/org/argouml/model/mdr/mof/01-02-15.xml"/>
 	<sysproperty key="log4j.configuration" value="org/argouml/resource/default.lcf"/>
 	<sysproperty key="java.awt.headless" value="true"/>
 	<sysproperty key="argouml.tests.dir" value="${argo.tests.src}"/>
