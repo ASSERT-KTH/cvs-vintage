@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactoryMDRImpl.java,v 1.1 2006/03/04 00:49:11 tfmorris Exp $
+// $Id: ModelManagementFactoryMDRImpl.java,v 1.2 2006/03/07 22:34:22 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.omg.uml.modelmanagement.UmlPackage;
  * The ModelManagementFactory.
  * <p>
  * @since ARGO0.19.5
- * @author Ludovic Maître
+ * @author Ludovic Ma&icirc;tre
  * @author Tom Morris
  * derived from NSUML implementation by:
  * @author Linus Tolke

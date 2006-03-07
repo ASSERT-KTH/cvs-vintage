@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperMDRImpl.java,v 1.2 2006/03/07 15:44:31 linus Exp $
+// $Id: ActivityGraphsHelperMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ import org.omg.uml.modelmanagement.UmlPackage;
 /**
  * Class to implement ActivityGraphsHelper.
  * @since ARGO0.19.5
- * @author Ludovic Maître
+ * @author Ludovic Ma&icirc;tre
  * Derived from NSUML implementation
  */
 class ActivityGraphsHelperMDRImpl implements ActivityGraphsHelper {

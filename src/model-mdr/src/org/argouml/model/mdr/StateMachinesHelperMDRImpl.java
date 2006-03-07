@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperMDRImpl.java,v 1.2 2006/03/06 22:29:35 linus Exp $
+// $Id: StateMachinesHelperMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ import org.omg.uml.foundation.datatypes.TimeExpression;
  * The State Machines Helper Implementation for MDR.
  *
  * @since ARGO0.19.5
- * @author Ludovic Maître
+ * @author Ludovic Ma&icirc;tre
  * @author Tom Morris
  */
 public class StateMachinesHelperMDRImpl implements StateMachinesHelper {

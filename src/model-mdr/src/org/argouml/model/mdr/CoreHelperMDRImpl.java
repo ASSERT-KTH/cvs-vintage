@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.3 2006/03/07 15:44:31 linus Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.4 2006/03/07 22:34:22 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,7 +123,7 @@ import org.omg.uml.modelmanagement.UmlPackage;
  * The Core Helper implementation for MDR.<p>
  *
  * @since ARGO0.19.5
- * @author Ludovic Maitre
+ * @author Ludovic Ma&icirc;tre
  * @author Tom Morris
  * derived from NSUML implementation by:
  * @author Linus Tolke
