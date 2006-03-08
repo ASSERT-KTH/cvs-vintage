@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.217 2006/03/07 22:05:44 tfmorris Exp $
+<!-- $Id: build.xml,v 1.218 2006/03/08 16:33:37 tfmorris Exp $
 This requires ANT 1.6.2
 
 Introduction
@@ -137,8 +137,7 @@ Property files to be searched:
     <!-- if it is set in a property file before now, it must be absolute -->
     <property name="argo.root.dir" value="${basedir}/.." />
     <property file="${override.build.properties}"/>
-    <property file="default.properties"/>
-    
+    <property file="${argo.src.dir}/default.properties"/>
 
     <path id="java.tools.classpath">
       <pathelement path="${JAVA_HOME}/lib/tools.jar"/>
