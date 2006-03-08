@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.37 2006/02/19 17:44:44 linus Exp $
+// $Id: DiagramInterface.java,v 1.38 2006/03/08 01:17:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -166,7 +166,7 @@ public class DiagramInterface {
 	if (currentDiagram == null) {
             return false;
         } else {
-            return currentDiagram.getNodes(null).contains(p);
+            return currentDiagram.getNodes().contains(p);
         }
     }
 

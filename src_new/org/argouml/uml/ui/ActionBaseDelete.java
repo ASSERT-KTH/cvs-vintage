@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.9 2006/02/27 20:41:55 tfmorris Exp $
+// $Id: ActionBaseDelete.java,v 1.10 2006/03/08 01:17:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Action;
@@ -203,8 +204,8 @@ public abstract class ActionBaseDelete extends UMLAction {
         } else if (target instanceof UMLDiagram) {
             // lets see if this diagram has some figs on it
             UMLDiagram diagram = (UMLDiagram) target;
-            Collection nodes = diagram.getNodes(new Vector());
-            Collection edges = diagram.getNodes(new Vector());
+            List nodes = diagram.getNodes();
+            List edges = diagram.getNodes();
             if ((nodes.size() + edges.size()) > 0) {
                 // the diagram contains figs so lets ask the user if
                 // he/she is sure

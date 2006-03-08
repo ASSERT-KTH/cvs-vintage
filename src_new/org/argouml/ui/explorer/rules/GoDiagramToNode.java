@@ -1,4 +1,4 @@
-// $Id: GoDiagramToNode.java,v 1.10 2005/01/09 14:58:32 linus Exp $
+// $Id: GoDiagramToNode.java,v 1.11 2006/03/08 01:17:30 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class GoDiagramToNode extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
 	if (parent instanceof Diagram) {
-	    return ((Diagram) parent).getNodes(null);
+	    return ((Diagram) parent).getNodes();
 	}
 	return null;
     }

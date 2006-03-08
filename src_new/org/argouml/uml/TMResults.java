@@ -1,4 +1,4 @@
-// $Id: TMResults.java,v 1.18 2006/02/19 10:29:38 linus Exp $
+// $Id: TMResults.java,v 1.19 2006/03/08 01:17:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,8 +204,8 @@ public class TMResults extends AbstractTableModel {
      * @return a string which says it all
      */
     private Object countNodesAndEdges(Diagram d) {
-        int numNodes = d.getNodes(null).size();
-        int numEdges = d.getEdges(null).size();
+        int numNodes = d.getNodes().size();
+        int numEdges = d.getEdges().size();
         Object[] msgArgs = {new Integer(numNodes),
                             new Integer(numEdges),
 	};

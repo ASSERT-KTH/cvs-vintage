@@ -1,4 +1,4 @@
-// $Id: ActionGenerateAll.java,v 1.29 2005/11/13 11:01:15 linus Exp $
+// $Id: ActionGenerateAll.java,v 1.30 2006/03/08 01:17:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.argouml.kernel.ProjectManager;
@@ -75,10 +75,10 @@ public class ActionGenerateAll extends UMLAction {
 
 	UMLClassDiagram d = (UMLClassDiagram) activeDiagram;
 	Vector classes = new Vector();
-	Vector nodes = (Vector) d.getNodes(new Vector());
-	Enumeration elems = nodes.elements();
-	while (elems.hasMoreElements()) {
-	    Object owner = elems.nextElement();
+	List nodes = d.getNodes();
+	Iterator elems = nodes.iterator();
+	while (elems.hasNext()) {
+	    Object owner = elems.next();
 	    if (!Model.getFacade().isAClass(owner)
 		&& !Model.getFacade().isAInterface(owner)) {
 
