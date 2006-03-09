@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.27 2006/03/09 18:45:57 mvw Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.28 2006/03/09 21:26:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,9 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
+ * The combo box model for the base of an association-role.
+ * The base is clearable, since the UML standard indicates multiplicity 0..1.
+ * 
  * @since Oct 4, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
