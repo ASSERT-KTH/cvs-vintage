@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryCreator.java,v 1.2 2006/02/13 15:18:43 pelletib Exp $
+ * $Id: RegistryCreator.java,v 1.3 2006/03/09 07:31:28 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -59,7 +59,8 @@ public class RegistryCreator {
     public static Registry createRegistry(int port, int objectPort, InetAddress inetAddress, String protocol) throws RemoteException {
         // used fixed port factory only if user want set the port
         if (objectPort > 0 || inetAddress != null) {
-            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(objectPort, inetAddress, protocol);
+            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(port, objectPort, inetAddress, protocol);
+
             return LocateRegistry.createRegistry(port, socketFactory, socketFactory);
         } else {
             return LocateRegistry.createRegistry(port);

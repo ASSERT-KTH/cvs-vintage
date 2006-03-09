@@ -116,7 +116,7 @@ public class CmiRegistry extends AbsRegistry implements NameService {
                 }
 
                 if (getPort() >= 0) {
-                    RMIManageableSocketFactory.register(objectPort, registryInetAddress, "cmi");
+                    RMIManageableSocketFactory.register(getPort(), objectPort, registryInetAddress, "cmi");
                     de = DistributedEquiv.start();
                     cregk = RegistryImpl.start(getPort());
                     // add a shudown hook for this process

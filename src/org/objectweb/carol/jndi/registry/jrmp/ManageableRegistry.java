@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ManageableRegistry.java,v 1.2 2006/02/13 15:18:33 pelletib Exp $
+ * $Id: ManageableRegistry.java,v 1.3 2006/03/09 07:31:28 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry.jrmp;
@@ -248,7 +248,7 @@ public class ManageableRegistry extends RegistryImpl {
                 protocol = "jrmp";
             }
 
-            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(objectPort, inetAddress, protocol);
+            RMISocketFactory socketFactory = RMIManageableSocketFactory.register(port, objectPort, inetAddress, protocol);
             return new ManageableRegistry(port, socketFactory, socketFactory);
         } else {
             return new ManageableRegistry(port);

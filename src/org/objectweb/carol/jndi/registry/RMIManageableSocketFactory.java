@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RMIManageableSocketFactory.java,v 1.2 2006/02/13 15:18:33 pelletib Exp $
+ * $Id: RMIManageableSocketFactory.java,v 1.3 2006/03/09 07:31:28 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -137,13 +137,14 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
     /**
      * Register the factory
      * @return the factory which was created
-     * @param port given port number for exporting objects
+     * @param port given port number for registry
+     * @param objectPort given port number for exporting objects
      * @param inetAddress ip to use for the bind (instead of all),
      *                    if null take default 0.0.0.0 listener
      * @param protocol protocol associated with the [port, inetAddress]
      * @throws RemoteException if the registration is not possible
      */
-    public static RMISocketFactory register(int port, InetAddress inetAddress, String protocol) throws RemoteException {
+    public static RMISocketFactory register(int port, int objectPort, InetAddress inetAddress, String protocol) throws RemoteException {
         // The factory is a singleton and supports multiprotocol by being able to register
         // parameters for each protocol
         if (factory == null) {
@@ -156,7 +157,7 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
                 throw new RemoteException("Cannot set the default registry factory :", ioe);
             }
         }
-        ((RMIManageableSocketFactory) factory).setPort(protocol, port);
+        ((RMIManageableSocketFactory) factory).setPort(protocol, port, objectPort);
         ((RMIManageableSocketFactory) factory).setInetAddress(protocol, inetAddress);
         return factory;
     }
@@ -172,16 +173,20 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
     /**
      * Set the port for exporting the object
      * @param protocol protocol under RMI
-     * @param port port number
+     * @param port port number for the registry
+     * @param objectPort port number for exporting object
      * @throws RemoteException if the port is already set
      */
-    private void setPort(String protocol, int  port) throws RemoteException  {
+    private void setPort(String protocol, int  port, int objectPort) throws RemoteException  {
         if (this.exportedObjectsPort.get(protocol) != null) {
-            throw new RemoteException("Port already set for the protocol : " + port + " " + protocol);
+            throw new RemoteException("Port already set for the protocol : " + objectPort + " " + protocol);
         }
-        this.exportedObjectsPort.put(protocol, Integer.toString(port));
+        this.exportedObjectsPort.put(protocol, Integer.toString(objectPort));
         if (port > 0) {
             this.mapPortProtocol.put(Integer.toString(port), protocol);
+        }
+        if (objectPort > 0) {
+            this.mapPortProtocol.put(Integer.toString(objectPort), protocol);
         }
     }
 
@@ -193,7 +198,7 @@ public class RMIManageableSocketFactory extends RMISocketFactory {
      */
     private void setInetAddress(String protocol, InetAddress inetAddress) throws RemoteException  {
         if (this.inetAddress.get(protocol) != null) {
-            throw new RemoteException("Port already set for the protocol : " + inetAddress + " " + protocol);
+            throw new RemoteException("Address already set for the protocol : " + inetAddress + " " + protocol);
         }
         this.inetAddress.put(protocol, inetAddress);
     }
