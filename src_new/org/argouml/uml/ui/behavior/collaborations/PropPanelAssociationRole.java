@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.39 2006/03/09 17:39:33 mvw Exp $
+// $Id: PropPanelAssociationRole.java,v 1.40 2006/03/09 18:47:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class PropPanelAssociationRole extends PropPanelAssociation {
 
         JComboBox baseComboBox =
 	    new UMLComboBox2(new UMLAssociationRoleBaseComboBoxModel(),
-                ActionSetAssociationRoleBase.getInstance());
+                new ActionSetAssociationRoleBase());
         addField(Translator.localize("label.base"), 
             new UMLComboBoxNavigator(
                 this,
