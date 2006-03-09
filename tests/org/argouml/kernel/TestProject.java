@@ -1,4 +1,4 @@
-// $Id: TestProject.java,v 1.16 2005/11/10 04:20:38 tfmorris Exp $
+// $Id: TestProject.java,v 1.17 2006/03/09 21:55:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -215,7 +215,7 @@ public class TestProject extends TestCase {
 
     /**
      * Test deleting a class that contains a Class.
-     * The class should be deleted, too.
+     * The inner class should be deleted, too.
      */
     public void testDeleteClassWithInnerClass() {
         Project p = ProjectManager.getManager().getCurrentProject();
