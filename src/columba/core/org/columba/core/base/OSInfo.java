@@ -24,7 +24,8 @@ package org.columba.core.base;
  */
 public class OSInfo {
     private static final String OS_NAME = "os.name";
-
+    private static final String OS_ARCH = "os.arch";
+    
     //Platform identifiers: Windows, Linux, Mac OS, ...
     
     /**
@@ -131,5 +132,9 @@ public class OSInfo {
      */
     public static boolean isMac() {
     	return System.getProperty(OS_NAME).toLowerCase().indexOf("mac") != -1;
+    }
+    
+    public static boolean isAMD64Bit() {
+    	return System.getProperty(OS_ARCH).toLowerCase().indexOf("amd64") != -1;
     }
 }

@@ -136,13 +136,20 @@ public class Main {
 	private static void addNativeJarsToClasspath() throws Exception {
 		File nativeDir;
 
+		String libDir;
+		if( OSInfo.isAMD64Bit() ) {
+			libDir = "amd64";
+		} else {
+			libDir = "lib";
+		}
+		
 		// Setup the path
 		// Platform maintainers: add your platform here
 		// see also initPlatformServices() method
 		if (OSInfo.isLinux()) {
-			nativeDir = new File("native/linux/lib");
+			nativeDir = new File("native/linux/" + libDir);
 		} else if (OSInfo.isWin32Platform()) {
-			nativeDir = new File("native/win32/lib");
+			nativeDir = new File("native/win32/" + libDir);
 		} else {
 			LOG.info("Native support for Platform not available.");
 			return;
