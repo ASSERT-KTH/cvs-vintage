@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.68 2006/03/03 23:44:05 tfmorris Exp $
+// $Id: UMLComboBoxModel2.java,v 1.69 2006/03/09 18:45:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -324,12 +324,14 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
             if (comboBoxTarget != null) {
                 buildingModel = true;
                 buildModelList();
-                buildingModel = false;
+                // Do not set buildingModel = false already here, 
+                // otherwise the action for selection is performed.
                 setSelectedItem(getSelectedModelElement());
+                buildingModel = false;
+
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
                 }
-
             }
             if (getSelectedItem() != null && isClearable) {
                 addElement(""); // makes sure we can select 'none'
