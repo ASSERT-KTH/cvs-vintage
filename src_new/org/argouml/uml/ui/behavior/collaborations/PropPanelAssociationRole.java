@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.38 2005/09/09 13:33:36 mkl Exp $
+// $Id: PropPanelAssociationRole.java,v 1.39 2006/03/09 17:39:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.uml.diagram.ui.ActionAddMessage;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelAssociation;
 import org.argouml.util.ConfigLoader;
@@ -60,7 +61,11 @@ public class PropPanelAssociationRole extends PropPanelAssociation {
         JComboBox baseComboBox =
 	    new UMLComboBox2(new UMLAssociationRoleBaseComboBoxModel(),
                 ActionSetAssociationRoleBase.getInstance());
-        addField(Translator.localize("label.base"), baseComboBox);
+        addField(Translator.localize("label.base"), 
+            new UMLComboBoxNavigator(
+                this,
+                Translator.localize("label.association.navigate.tooltip"), 
+                baseComboBox));
 
         addSeperator();
 
