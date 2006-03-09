@@ -58,7 +58,7 @@ public class IMAPCache implements Runnable {
 		if( in != null ) {			
 			try {
 				return (MimeTree) new ObjectInputStream(in).readObject();
-			} catch (ClassNotFoundException e) {
+			} catch (Exception e) {
 				return null;
 			}
 			
