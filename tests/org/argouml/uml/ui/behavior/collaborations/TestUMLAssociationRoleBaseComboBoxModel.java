@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.22 2005/11/10 02:09:19 tfmorris Exp $
+// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.23 2006/03/09 21:27:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
         elem =
 	    Model.getCollaborationsFactory().buildAssociationRole(role1, role2);
         model.targetSet(new TargetEvent(this,
-					"set",
+					TargetEvent.TARGET_SET,
 					new Object[0],
 					new Object[] {
 					    elem,
@@ -134,6 +134,14 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
      */
     public void testRemoveBase() {
         Model.getUmlFactory().delete(bases[9]);
+        // One can only delete a assoc by changing target, 
+        // so let's simulate that:
+        model.targetSet(new TargetEvent(this,
+                TargetEvent.TARGET_SET,
+                new Object[0],
+                new Object[] {
+                    elem,
+                }));
         // there is one extra element since removal of the base is allowed.
         Model.getPump().flushModelEvents();
         assertEquals(9 + 1, model.getSize());
