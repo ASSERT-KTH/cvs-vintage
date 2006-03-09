@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.26 2006/03/03 23:51:32 tfmorris Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.27 2006/03/09 18:45:57 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,10 +38,6 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLAssociationRoleBaseComboBoxModel() {
         super("base", true);
-        // TODO: This is listening to all namespace changes *everywhere*
-        // in the model - do we really need something so heavy? - tfm
-        Model.getPump().addClassModelEventListener(this,
-                Model.getMetaTypes().getNamespace(), "ownedElement");
     }
 
     /**
