@@ -22,13 +22,14 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiContext.java,v 1.2 2006/01/26 16:28:55 pelletib Exp $
+ * $Id: CmiContext.java,v 1.3 2006/03/09 09:23:37 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
 import java.io.Serializable;
 import java.rmi.Remote;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -40,6 +41,8 @@ import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
+import org.objectweb.carol.rmi.util.PortNumber;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
@@ -56,6 +59,17 @@ public class CmiContext extends AbsContext implements Context {
         super(cmiContext);
     }
 
+    /**
+     * @return the object port used for exporting object
+     */
+    protected int getObjectPort() {
+        Properties prop = ConfigurationRepository.getProperties();
+        if (prop != null) {
+            String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+            return PortNumber.strToint(prop.getProperty(propertyName, "0"), propertyName);
+        }
+        return 0;
+    }
 
     /**
      * If this object is a reference wrapper return the reference If this object
