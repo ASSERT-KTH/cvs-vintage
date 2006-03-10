@@ -20,12 +20,12 @@ package org.columba.mail.gui.config.subscribe;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.imap.IMAPServer;
+import org.columba.mail.imap.IImapServer;
 
 public class UnsubscribeFolderCommand extends Command {
 	private IMAPRootFolder root;
 
-	private IMAPServer store;
+	private IImapServer store;
 
 	/**
 	 * @param references

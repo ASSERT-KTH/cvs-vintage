@@ -101,7 +101,7 @@ import org.columba.ristretto.message.MimeTree;
  * 
  * @author fdietz
  */
-public class IMAPServer implements IMAPListener, Observer {
+public class IMAPServer implements IMAPListener, Observer, IImapServer {
 
 	private static final int STEP_SIZE = 50;
 
@@ -204,12 +204,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Get mailbox path delimiter
-	 * <p>
-	 * example: "/" (uw-imap), or "." (cyrus)
-	 * 
-	 * @return delimiter
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getDelimiter()
 	 */
 	public String getDelimiter() throws IOException, IMAPException,
 			CommandCancelledException {
@@ -221,10 +217,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		return delimiter;
 	}
 
-	/**
-	 * Logout cleanly.
-	 * 
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#logout()
 	 */
 	public void logout() throws Exception {
 		if (protocol.getState() != IMAPProtocol.NOT_CONNECTED) {
@@ -333,6 +327,9 @@ public class IMAPServer implements IMAPListener, Observer {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#checkSupportedAuthenticationMethods()
+	 */
 	public List checkSupportedAuthenticationMethods() throws IOException {
 
 		ArrayList supportedMechanisms = new ArrayList();
@@ -383,9 +380,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		return (String[]) list.toArray(new String[0]);
 	}
 
-	/**
-	 * @param command
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#isSupported(java.lang.String)
 	 */
 	public boolean isSupported(String command) throws IOException {
 		fetchCapas();
@@ -586,18 +582,15 @@ public class IMAPServer implements IMAPListener, Observer {
 		firstLogin = false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#setFirstLoginAction(org.columba.mail.imap.IFirstLoginAction)
+	 */
 	public void setFirstLoginAction( IFirstLoginAction action) {
 		this.firstLoginAction = action;		
 	}
 	
-	/**
-	 * Check if mailbox is already selected.
-	 * <p>
-	 * If its not selected -> select it.
-	 * 
-	 * @param path
-	 *            mailbox path
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#ensureSelectedState(org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public void ensureSelectedState(IMAPFolder folder) throws IOException,
 			IMAPException, CommandCancelledException {
@@ -631,6 +624,9 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getStatus(org.columba.mail.folder.imap.IMAPFolder)
+	 */
 	public MailboxStatus getStatus(IMAPFolder folder) throws IOException,
 			IMAPException, CommandCancelledException {
 		ensureLoginState();
@@ -683,13 +679,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * List available Mailboxes.
-	 * 
-	 * @param reference
-	 * @param pattern
-	 * @return
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#list(java.lang.String, java.lang.String)
 	 */
 	public ListInfo[] list(String reference, String pattern) throws Exception {
 		ensureLoginState();
@@ -701,15 +692,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Append message to mailbox.
-	 * 
-	 * @param messageSource
-	 *            message source
-	 * @param folder
-	 *            name of mailbox
-	 * 
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#append(java.io.InputStream, org.columba.ristretto.imap.IMAPFlags, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public Integer append(InputStream messageSource, IMAPFlags flags,
 			IMAPFolder folder) throws Exception {
@@ -736,29 +720,16 @@ public class IMAPServer implements IMAPListener, Observer {
 		return new Integer((int) status.getUidNext());
 	}
 
-	/**
-	 * Append message to mailbox.
-	 * 
-	 * @param messageSource
-	 *            message source
-	 * @param folder
-	 *            name of mailbox
-	 * 
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#append(java.io.InputStream, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public Integer append(InputStream messageSource, IMAPFolder folder)
 			throws Exception {
 		return append(messageSource, null, folder);
 	}
 
-	/**
-	 * Create new mailbox.
-	 * 
-	 * @param mailboxName
-	 *            name of new mailbox
-	 * 
-	 * @return
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#createMailbox(java.lang.String, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public void createMailbox(String mailboxName, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -784,13 +755,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		protocol.subscribe(fullName);
 	}
 
-	/**
-	 * Delete mailbox.
-	 * 
-	 * @param mailboxName
-	 *            name of mailbox
-	 * @return
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#deleteFolder(java.lang.String)
 	 */
 	public void deleteFolder(String path) throws Exception {
 		// make sure we are already logged in
@@ -806,15 +772,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		protocol.delete(path);
 	}
 
-	/**
-	 * Rename mailbox.
-	 * 
-	 * @param oldMailboxName
-	 *            old mailbox name
-	 * @param newMailboxName
-	 *            new mailbox name
-	 * @return
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#renameFolder(java.lang.String, java.lang.String)
 	 */
 	public void renameFolder(String oldMailboxName, String newMailboxName)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -825,13 +784,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		protocol.subscribe(newMailboxName);
 	}
 
-	/**
-	 * Subscribe to mailbox.
-	 * 
-	 * @param mailboxName
-	 *            name of mailbox
-	 * @return
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#subscribeFolder(java.lang.String)
 	 */
 	public void subscribeFolder(String mailboxName) throws IOException,
 			IMAPException, CommandCancelledException {
@@ -841,13 +795,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		protocol.subscribe(mailboxName);
 	}
 
-	/**
-	 * Unsubscribe to mailbox.
-	 * 
-	 * @param mailboxNamename
-	 *            of mailbox
-	 * @return
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#unsubscribeFolder(java.lang.String)
 	 */
 	public void unsubscribeFolder(String mailboxName) throws IOException,
 			IMAPException, CommandCancelledException {
@@ -857,15 +806,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		protocol.unsubscribe(mailboxName);
 	}
 
-	/**
-	 * Expunge folder.
-	 * <p>
-	 * Delete every message mark as expunged.
-	 * 
-	 * @param folder
-	 *            name of mailbox
-	 * @return
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#expunge(org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public void expunge(IMAPFolder folder) throws IOException, IMAPException,
 			CommandCancelledException {
@@ -877,21 +819,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		statusDirty = true;
 	}
 
-	/**
-	 * Copy a set of messages to another mailbox on the same IMAP server.
-	 * <p>
-	 * <p>
-	 * We copy messages in pieces of 100 headers. This means we tokenize the
-	 * <code>list</code> in sublists of the size of 100. Then we execute the
-	 * command and process those 100 results.
-	 * 
-	 * @param destFolder
-	 *            destination mailbox
-	 * @param uids
-	 *            UIDs of messages -> this array will get sorted!
-	 * @param path
-	 *            source mailbox
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#copy(org.columba.mail.folder.imap.IMAPFolder, java.lang.Object[], org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public Integer[] copy(IMAPFolder destFolder, Object[] uids,
 			IMAPFolder folder) throws Exception {
@@ -924,15 +853,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		return destUids;
 	}
 
-	/**
-	 * Fetch the uid for the index.
-	 * 
-	 * @param index of the message
-	 * @param folder the IMAP mailbox
-	 * @return uid of the message
-	 * @throws IOException
-	 * @throws IMAPException
-	 * @throws CommandCancelledException
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#fetchUid(org.columba.ristretto.imap.SequenceSet, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public int fetchUid( SequenceSet set, IMAPFolder folder ) throws IOException, IMAPException, CommandCancelledException {
 		ensureSelectedState(folder);
@@ -944,14 +866,8 @@ public class IMAPServer implements IMAPListener, Observer {
 				
 	}
 	
-	/**
-	 * Fetch list of UIDs.
-	 * 
-	 * @param folder
-	 *            mailbox name
-	 * 
-	 * @return list of flags
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#fetchUids(org.columba.ristretto.imap.SequenceSet, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public Integer[] fetchUids(SequenceSet set, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1018,14 +934,8 @@ public class IMAPServer implements IMAPListener, Observer {
 
 	}
 
-	/**
-	 * Fetch list of flags and parse it.
-	 * 
-	 * @param folder
-	 *            mailbox name
-	 * 
-	 * @return list of flags
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#fetchFlagsListStartFrom(int, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public IMAPFlags[] fetchFlagsListStartFrom(int startIdx, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1085,14 +995,8 @@ public class IMAPServer implements IMAPListener, Observer {
 	}
 
 	
-	/**
-	 * Fetch list of flags and parse it.
-	 * 
-	 * @param folder
-	 *            mailbox name
-	 * 
-	 * @return list of flags
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#fetchFlagsListStartFrom2(int, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public IMAPFlags[] fetchFlagsListStartFrom2(int startIdx, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1111,26 +1015,17 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#fetchNamespaces()
+	 */
 	public NamespaceCollection fetchNamespaces() throws IOException,
 			IMAPException, CommandCancelledException {
 		ensureLoginState();
 		return protocol.namespace();
 	}
 
-	/**
-	 * Fetch list of headers and parse them.
-	 * <p>
-	 * We fetch headers in pieces of 100 headers. This means we tokenize the
-	 * <code>list</code> in sublists of the size of 100. Then we execute the
-	 * command and process those 100 results.
-	 * 
-	 * @param headerList
-	 *            headerlist to add new headers
-	 * @param list
-	 *            list of UIDs to download
-	 * @param path
-	 *            mailbox name
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#fetchHeaderList(org.columba.mail.message.IHeaderList, java.util.List, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public void fetchHeaderList(IHeaderList headerList, List list,
 			IMAPFolder folder) throws Exception {
@@ -1240,15 +1135,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Get {@link MimeTree}.
-	 * 
-	 * @param uid
-	 *            message UID
-	 * @param folder
-	 *            mailbox name
-	 * @return mimetree
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getMimeTree(java.lang.Object, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public MimeTree getMimeTree(Object uid, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1268,20 +1156,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Get {@link MimePart}.
-	 * 
-	 * @param uid
-	 *            message UID
-	 * @param address
-	 *            address of MimePart in MimeTree
-	 * @param folder
-	 *            mailbox name
-	 * @return mimepart
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
-	 * @throws IOException
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getMimePartBodyStream(java.lang.Object, java.lang.Integer[], org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address,
 			IMAPFolder folder) throws IOException, IMAPException,
@@ -1295,20 +1171,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Get {@link MimePart}.
-	 * 
-	 * @param uid
-	 *            message UID
-	 * @param address
-	 *            address of MimePart in MimeTree
-	 * @param folder
-	 *            mailbox name
-	 * @return mimepart
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
-	 * @throws IOException
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getHeaders(java.lang.Object, java.lang.String[], org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public Header getHeaders(Object uid, String[] keys, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1324,18 +1188,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Get complete headers.
-	 * 
-	 * @param uid
-	 *            message uid
-	 * @param folder
-	 *            mailbox path
-	 * @return
-	 * @throws Exception
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getAllHeaders(java.lang.Object, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public Header getAllHeaders(Object uid, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1351,20 +1205,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Get {@link MimePart}.
-	 * 
-	 * @param uid
-	 *            message UID
-	 * @param address
-	 *            address of MimePart in MimeTree
-	 * @param folder
-	 *            mailbox name
-	 * @return mimepart
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
-	 * @throws IOException
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getMimePartSourceStream(java.lang.Object, java.lang.Integer[], org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address,
 			IMAPFolder folder) throws IOException, IMAPException,
@@ -1383,18 +1225,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Get complete message source.
-	 * 
-	 * @param uid
-	 *            message UID
-	 * @param path
-	 *            mailbox name
-	 * @return message source
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
-	 * @throws IOException
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getMessageSourceStream(java.lang.Object, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public InputStream getMessageSourceStream(Object uid, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1407,22 +1239,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Mark message as specified by variant.
-	 * <p>
-	 * See {@link MarkMessageCommand}for a list of variants.
-	 * <p>
-	 * We mark messages in pieces of 100 headers. This means we tokenize the
-	 * <code>list</code> in sublists of the size of 100. Then we execute the
-	 * command and process those 100 results.
-	 * 
-	 * @param uids
-	 *            message UID
-	 * @param variant
-	 *            variant (read/flagged/expunged/etc.)
-	 * @param folder
-	 *            mailbox name
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#markMessage(java.lang.Object[], int, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public void markMessage(Object[] uids, int variant, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1439,6 +1257,9 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#setFlags(java.lang.Object[], org.columba.ristretto.imap.IMAPFlags, org.columba.mail.folder.imap.IMAPFolder)
+	 */
 	public void setFlags(Object[] uids, IMAPFlags flags, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
 		try {
@@ -1451,17 +1272,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * Search messages.
-	 * 
-	 * @param uids
-	 *            message UIDs
-	 * @param filterRule
-	 *            filter rules
-	 * @param folder
-	 *            mailbox name
-	 * @return list of UIDs which match filter rules
-	 * @throws Exception
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#search(java.lang.Object[], org.columba.core.filter.FilterRule, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public List search(Object[] uids, FilterRule filterRule, IMAPFolder folder)
 			throws Exception {
@@ -1472,6 +1284,9 @@ public class IMAPServer implements IMAPListener, Observer {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getIndex(java.lang.Integer, org.columba.mail.folder.imap.IMAPFolder)
+	 */
 	public int getIndex(Integer uid, IMAPFolder folder) throws IOException,
 			IMAPException, CommandCancelledException {
 
@@ -1491,6 +1306,9 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#search(org.columba.ristretto.imap.SearchKey, org.columba.mail.folder.imap.IMAPFolder)
+	 */
 	public Integer[] search(SearchKey key, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
 		try {
@@ -1502,15 +1320,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * 
-	 * @param filterRule
-	 * @param folder
-	 * @return
-	 * @throws Exception
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#search(org.columba.core.filter.FilterRule, org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public List search(FilterRule filterRule, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1788,13 +1599,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		return result;
 	}
 
-	/**
-	 * @param folder
-	 *            TODO
-	 * @return
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getMessageFolderInfo(org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public MailboxInfo getMessageFolderInfo(IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
@@ -1803,8 +1609,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		return messageFolderInfo;
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#fetchSubscribedFolders()
 	 */
 	public ListInfo[] fetchSubscribedFolders() throws IOException,
 			IMAPException, CommandCancelledException {
@@ -1823,12 +1629,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * @param imapPath
-	 * @return
-	 * @throws IOException
-	 * @throws CommandCancelledException
-	 * @throws IMAPException
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#isSelected(org.columba.mail.folder.imap.IMAPFolder)
 	 */
 	public boolean isSelected(IMAPFolder folder) throws IOException,
 			IMAPException, CommandCancelledException {
@@ -1855,26 +1657,24 @@ public class IMAPServer implements IMAPListener, Observer {
 		return result;
 	}
 
-	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#alertMessage(java.lang.String)
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#alertMessage(java.lang.String)
 	 */
 	public void alertMessage(String arg0) {
 		// TODO: Show dialog
 		LOG.warning(arg0);
 	}
 
-	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#connectionClosed(java.lang.String,
-	 *      java.lang.String)
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#connectionClosed(java.lang.String, java.lang.String)
 	 */
 	public void connectionClosed(String arg0, String arg1) {
 		LOG.info(arg0);
 		selectedFolder = null;
 	}
 
-	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#existsChanged(java.lang.String,
-	 *      int)
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#existsChanged(java.lang.String, int)
 	 */
 	public void existsChanged(String arg0, int arg1) {
 		selectedStatus.setMessages(arg1);
@@ -1890,9 +1690,8 @@ public class IMAPServer implements IMAPListener, Observer {
 		}
 	}
 
-	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#flagsChanged(java.lang.String,
-	 *      org.columba.ristretto.imap.IMAPFlags)
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#flagsChanged(java.lang.String, org.columba.ristretto.imap.IMAPFlags)
 	 */
 	public void flagsChanged(String arg0, IMAPFlags arg1) {
 		LOG.fine("Flag changed -> triggering update");
@@ -1903,16 +1702,15 @@ public class IMAPServer implements IMAPListener, Observer {
 		
 	}
 
-	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#parseError(java.lang.String)
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#parseError(java.lang.String)
 	 */
 	public void parseError(String arg0) {
 		LOG.warning(arg0);
 	}
 
-	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#recentChanged(java.lang.String,
-	 *      int)
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#recentChanged(java.lang.String, int)
 	 */
 	public void recentChanged(String arg0, int arg1) {
 		selectedStatus.setRecent(arg1);
@@ -1922,40 +1720,43 @@ public class IMAPServer implements IMAPListener, Observer {
 		// which should be equal with a Recent change.
 	}
 
-	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#warningMessage(java.lang.String)
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#warningMessage(java.lang.String)
 	 */
 	public void warningMessage(String arg0) {
 		LOG.warning(arg0);
 	}
 
-	/**
-	 * @return Returns the item.
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#getItem()
 	 */
 	public ImapItem getItem() {
 		return item;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#update(java.util.Observable, java.lang.Object)
+	 */
 	public void update(Observable o, Object arg) {
 		protocol = new IMAPProtocol(item.get("host"), item.getInteger("port"));		
 	}
 
-	/**
-	 * @param existsChangedAction The existsChangedAction to set.
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#setExistsChangedAction(org.columba.mail.imap.IExistsChangedAction)
 	 */
 	public void setExistsChangedAction(IExistsChangedAction existsChangedAction) {
 		this.existsChangedAction = existsChangedAction;
 	}
 
-	/**
-	 * @param updateFlagAction The updateFlagAction to set.
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#setUpdateFlagAction(org.columba.mail.imap.IUpdateFlagAction)
 	 */
 	public void setUpdateFlagAction(IUpdateFlagAction updateFlagAction) {
 		this.updateFlagAction = updateFlagAction;
 	}
 
-	/**
-	 * @param observable The observable to set.
+	/* (non-Javadoc)
+	 * @see org.columba.mail.imap.IImapServer#setObservable(org.columba.api.command.IStatusObservable)
 	 */
 	public void setObservable(IStatusObservable observable) {
 		this.observable = observable;

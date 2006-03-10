@@ -33,7 +33,7 @@ import org.columba.core.base.ListTools;
 import org.columba.core.command.Command;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.imap.IMAPServer;
+import org.columba.mail.imap.IImapServer;
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.Namespace;
 import org.columba.ristretto.imap.NamespaceCollection;
@@ -44,7 +44,7 @@ public class SynchronizeFolderListCommand extends Command {
 
 	private IMAPRootFolder root;
 
-	private IMAPServer store;
+	private IImapServer store;
 
 	private TreeNode node;
 

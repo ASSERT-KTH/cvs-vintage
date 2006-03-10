@@ -39,7 +39,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.AbstractRemoteFolder;
 import org.columba.mail.folder.IHeaderListCorruptedListener;
 import org.columba.mail.folder.IMailFolder;
@@ -48,10 +47,10 @@ import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.headercache.BerkeleyDBHeaderList;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
-import org.columba.mail.folder.headercache.SyncHeaderList;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.IMAPQueryEngine;
-import org.columba.mail.imap.IMAPServer;
+import org.columba.mail.imap.DummyObservable;
+import org.columba.mail.imap.IImapServer;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ICloseableIterator;
 import org.columba.mail.message.IColumbaHeader;
@@ -79,8 +78,10 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	/**
 	 * 
 	 */
-	private IMAPServer store;
+	private IImapServer store;
 
+	private IStatusObservable observable;
+	
 	/**
 	 * 
 	 */
@@ -101,6 +102,19 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		return readOnly;
 	}
 
+	
+	/**
+	 * Constructor for testing purposes only!
+	 * 
+	 */
+	public IMAPFolder(IPersistantHeaderList headerList, IImapServer server) {
+		super("test","IMAPFolder","/tmp/");
+		this.headerList = headerList;
+		this.observable = new DummyObservable();
+		
+		store = server;
+	}
+	
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#FolderTreeNode(org.columba.mail.config.FolderItem)
 	 */
@@ -183,7 +197,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * 
 	 * @return IMAPStore
 	 */
-	public IMAPServer getServer() {
+	public IImapServer getServer() {
 		if (store == null) {
 			store = ((IMAPRootFolder) getRootFolder()).getServer();
 		}
@@ -869,7 +883,11 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getObservable()
 	 */
 	public IStatusObservable getObservable() {
-		return ((IMAPRootFolder) getRootFolder()).getObservable();
+		if( observable == null ){
+			observable = ((IMAPRootFolder) getRootFolder()).getObservable();
+		}
+		
+		return observable;
 	}
 
 	/*
@@ -1140,9 +1158,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		}
 
 		// Apply filter if enabled
-		IMAPRootFolder rootFolder = (IMAPRootFolder) getRootFolder();
-		AccountItem accountItem = rootFolder.getAccountItem();
-		ImapItem item = accountItem.getImapItem();
+		ImapItem item = getServer().getItem();
 
 		boolean applyFilter = item.getBooleanWithDefault(
 				"automatically_apply_filter", false);

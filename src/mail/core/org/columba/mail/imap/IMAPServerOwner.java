@@ -18,5 +18,5 @@ package org.columba.mail.imap;
 
 
 public interface IMAPServerOwner {
-    public IMAPServer getServer();
+    public IImapServer getServer();
 }

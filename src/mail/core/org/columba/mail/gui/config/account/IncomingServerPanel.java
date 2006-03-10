@@ -57,6 +57,7 @@ import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
+import org.columba.mail.imap.IImapServer;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.MailResourceLoader;
@@ -588,7 +589,7 @@ public class IncomingServerPanel extends DefaultPanel implements
                 new ExceptionHandler().processException(e);
             }
         } else {
-            IMAPServer server = new IMAPServer((ImapItem)serverItem);
+            IImapServer server = new IMAPServer((ImapItem)serverItem);
 
             try {
                 list = server.checkSupportedAuthenticationMethods();

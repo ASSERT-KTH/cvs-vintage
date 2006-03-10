@@ -40,6 +40,7 @@ import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.imap.FetchSubFolderListCommand;
 import org.columba.mail.imap.IExistsChangedAction;
 import org.columba.mail.imap.IFirstLoginAction;
+import org.columba.mail.imap.IImapServer;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.imap.IMAPServerOwner;
 import org.columba.mail.imap.IUpdateFlagAction;
@@ -77,7 +78,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	//    private ImapOperator operator;
 	private AccountItem accountItem;
 
-	private IMAPServer server;
+	private IImapServer server;
 
 	private IMAPRootFolder thisFolder = this;
 
@@ -335,7 +336,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		findSpecialFolders();
 	}
 
-	public IMAPServer getServer() {
+	public IImapServer getServer() {
 		return server;
 	}
 
