@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.46 2006/03/08 01:17:31 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.47 2006/03/10 22:04:24 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,6 +183,17 @@ public class ArgoDiagram extends Diagram {
         }
         return super.getEdges();
     }
+    
+    /**
+     * @see Diagram#getEdges(Collection)
+     * TODO: This method can be deleted after GEF 0.11.3M6
+     */
+    public Collection getEdges(Collection c) {
+        if (getGraphModel() != null) {
+            return getGraphModel().getEdges();
+        }
+        return getEdges();
+    }
 
     /**
      * Get all the model elements in this diagram that are represented
@@ -195,7 +206,18 @@ public class ArgoDiagram extends Diagram {
         }
         return super.getNodes();
     }
-
+    
+    /**
+     * @see Diagram#getEdges(Collection)
+     * TODO: This method can be deleted after GEF 0.11.3M6
+     */
+    public Collection getNodes(Collection c) {
+        if (getGraphModel() != null) {
+            return getGraphModel().getNodes();
+        }
+        return getNodes();
+    }
+    
     /**
      * @see java.lang.Object#toString()
      */
