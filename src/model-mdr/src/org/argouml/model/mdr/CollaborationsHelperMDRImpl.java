@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: CollaborationsHelperMDRImpl.java,v 1.4 2006/03/10 22:10:08 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -475,6 +475,8 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
      * Returns all possible bases for some AssociationRole taking into account
      * the wellformednessrules as defined in section 2.10.3 of the UML 1.3 spec.
      * <p>
+     * TODO: Beware: this function does not return the actual base! 
+     * Is that by design or a bug?
      * 
      * @param role
      *            the given associationrole

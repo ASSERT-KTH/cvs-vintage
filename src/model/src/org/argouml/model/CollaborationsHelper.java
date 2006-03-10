@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.5 2005/11/12 23:53:37 linus Exp $
+// $Id: CollaborationsHelper.java,v 1.6 2006/03/10 22:10:02 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -166,6 +166,10 @@ public interface CollaborationsHelper {
     Collection allAvailableContents(Object arole);
 
     /**
+     * Returns all possible bases for the given element. <p>
+     * TODO: Beware: this function does not return the actual base! 
+     * Is that by design or a bug?
+     * 
      * @param role the given classifierrole or associationrole
      * @return all available bases
      */
