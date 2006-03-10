@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.20 2006/03/09 18:47:14 mvw Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.21 2006/03/10 22:11:23 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,15 +52,18 @@ public class ActionSetAssociationRoleBase extends UndoableAction {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        Object selected = null;
         if (e.getSource() instanceof UMLComboBox2) {
             UMLComboBox2 source = (UMLComboBox2) e.getSource();
-            selected = source.getSelectedItem();
-            if (Model.getFacade().isAAssociation(selected)
-                    && Model.getFacade().isAAssociationRole(
-                            source.getTarget())) {
-                Model.getCollaborationsHelper()
-                    .setBase(source.getTarget(), selected);
+            Object assoc = source.getSelectedItem();
+            Object ar = source.getTarget();
+            if (Model.getFacade().getBase(ar) == assoc) {
+                return; // base is already set to this assoc...
+                /* This check is needed, otherwise the setbase()
+                 *  below gives an exception.*/
+            }
+            if (Model.getFacade().isAAssociation(assoc)
+                    && Model.getFacade().isAAssociationRole(ar)) {
+                Model.getCollaborationsHelper().setBase(ar, assoc);
             }
         }
     }
