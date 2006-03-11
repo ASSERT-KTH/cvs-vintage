@@ -1,5 +1,5 @@
-// $Id: DeveloperModule.java,v 1.5 2006/03/11 16:01:21 bobtarling Exp $
-// Copyright (c) 2004-2005 The Regents of the University of California. All
+// $Id: DeveloperModule.java,v 1.6 2006/03/11 19:36:01 mvw Exp $
+// Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -36,7 +36,8 @@ import org.tigris.gef.undo.UndoManager;
 import org.tigris.gef.undo.UndoManagerWrapper;
 
 /**
- * A module to provide debug windows for developers of ArgoUML
+ * A module to provide debug windows for developers of ArgoUML.
+ * 
  * @author Bob Tarling
  */
 public final class DeveloperModule implements ModuleInterface {
@@ -74,7 +75,10 @@ public final class DeveloperModule implements ModuleInterface {
         
         JComponent inspectorPanel = FigInspectorPanel.getInstance();
         devPanel.add("Fig Inspector", inspectorPanel);
-        
+
+        JComponent targetManagerPanel = TargetManagerPanel.getInstance();
+        devPanel.add("TargetManager", targetManagerPanel);
+
         ProjectBrowser.getInstance().addPanel(devPanel, BorderLayout.EAST);
         
         return true;
