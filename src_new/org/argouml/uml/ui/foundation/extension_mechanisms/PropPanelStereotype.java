@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.54 2005/11/13 11:01:21 linus Exp $
+// $Id: PropPanelStereotype.java,v 1.55 2006/03/11 23:49:58 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,16 +50,16 @@ import org.tigris.swidgets.FlexiGridLayout;
 public class PropPanelStereotype extends PropPanelModelElement {
 
     private static UMLGeneralizableElementSpecializationListModel
-    specializationListModel =
-        new UMLGeneralizableElementSpecializationListModel();
+        specializationListModel =
+            new UMLGeneralizableElementSpecializationListModel();
 
     private static UMLGeneralizableElementGeneralizationListModel
         generalizationListModel =
             new UMLGeneralizableElementGeneralizationListModel();
 
     private static UMLTagDefinitionListModel
-    tagDefinitionListModel =
-        new UMLTagDefinitionListModel();
+        tagDefinitionListModel =
+            new UMLTagDefinitionListModel();
 
     private JScrollPane generalizationScroll;
 
@@ -93,6 +93,8 @@ public class PropPanelStereotype extends PropPanelModelElement {
         modifiersPanel.add(new UMLGeneralizableElementLeafCheckBox());
         modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());
         add(modifiersPanel);
+        
+        add(getNamespaceVisibilityPanel());
 
         addSeperator();
 
