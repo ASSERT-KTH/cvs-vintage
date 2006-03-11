@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.30 2006/03/10 18:49:25 linus Exp $
+// $Id: SequenceDiagramLayer.java,v 1.1 2006/03/11 22:23:16 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.tigris.gef.presentation.FigEdge;
  *
  * @author : jaap.branderhorst@xs4all.nl
  */
-public class SequenceDiagramLayout extends LayerPerspectiveMutable {
+public class SequenceDiagramLayer extends LayerPerspectiveMutable {
     /**
      * The distance between two objects on the sequence diagram.
      */
@@ -79,7 +79,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
      * @param name the name
      * @param gm the graph model
      */
-    public SequenceDiagramLayout(String name, MutableGraphModel gm) {
+    public SequenceDiagramLayer(String name, MutableGraphModel gm) {
         super(name, gm);
 
     }

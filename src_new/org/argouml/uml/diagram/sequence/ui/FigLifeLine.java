@@ -1,4 +1,4 @@
-// $Id: FigLifeLine.java,v 1.6 2006/03/11 21:43:52 bobtarling Exp $
+// $Id: FigLifeLine.java,v 1.7 2006/03/11 22:23:16 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,9 +161,9 @@ class FigLifeLine extends FigGroup implements HandlerFactory {
 
     final int getYCoordinate(int nodeIndex) {
         return
-            nodeIndex * SequenceDiagramLayout.LINK_DISTANCE
+            nodeIndex * SequenceDiagramLayer.LINK_DISTANCE
                 + getY()
-                + SequenceDiagramLayout.LINK_DISTANCE / 2;
+                + SequenceDiagramLayer.LINK_DISTANCE / 2;
     }
 
     /**

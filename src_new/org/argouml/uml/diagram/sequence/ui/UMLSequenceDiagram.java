@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.52 2006/03/11 21:43:52 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.53 2006/03/11 22:23:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,8 +62,8 @@ public class UMLSequenceDiagram extends UMLDiagram {
         // Dirty hack to remove the trash the Diagram constructor leaves
         SequenceDiagramGraphModel gm =
             new SequenceDiagramGraphModel();
-        SequenceDiagramLayout lay =
-            new SequenceDiagramLayout(this.getName(), gm);
+        SequenceDiagramLayer lay =
+            new SequenceDiagramLayer(this.getName(), gm);
         SequenceDiagramRenderer rend = new SequenceDiagramRenderer();
         lay.setGraphEdgeRenderer(rend);
         lay.setGraphNodeRenderer(rend);

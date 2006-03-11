@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.13 2006/03/05 17:33:05 bobtarling Exp $
+// $Id: FigMessage.java,v 1.14 2006/03/11 22:23:16 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -164,13 +164,13 @@ public abstract class FigMessage
                 // have 2 points, add the middle point
                 if (getNumPoints() <= 2) {
                     insertPoint(0, startPoint.x
-                            + SequenceDiagramLayout.OBJECT_DISTANCE / 3,
+                            + SequenceDiagramLayer.OBJECT_DISTANCE / 3,
                                 (startPoint.y + endPoint.y) / 2);
                 } else {
                     // Otherwise, move the middle point
                     int middleX =
                         startPoint.x
-                        + SequenceDiagramLayout.OBJECT_DISTANCE / 3;
+                        + SequenceDiagramLayer.OBJECT_DISTANCE / 3;
                     int middleY = (startPoint.y + endPoint.y) / 2;
                     Point p = getPoint(1);
                     if (p.x != middleX || p.y != middleY) {
@@ -224,7 +224,7 @@ public abstract class FigMessage
                 && getDestPortFig() instanceof FigMessagePort
                 && ((FigMessagePort) getSourcePortFig()).getNode() != null
                 && ((FigMessagePort) getDestPortFig()).getNode() != null) {
-            ((SequenceDiagramLayout) getLayer()).updateActivations();
+            ((SequenceDiagramLayer) getLayer()).updateActivations();
             Globals.curEditor().damageAll();
         }
     }

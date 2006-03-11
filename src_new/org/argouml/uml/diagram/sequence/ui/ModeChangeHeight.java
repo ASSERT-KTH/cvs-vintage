@@ -1,4 +1,4 @@
-// $Id: ModeChangeHeight.java,v 1.6 2006/03/04 19:31:14 bobtarling Exp $
+// $Id: ModeChangeHeight.java,v 1.7 2006/03/11 22:23:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,29 +82,29 @@ public class ModeChangeHeight extends FigModifyingModeImpl {
             return;
 	}
 
-        SequenceDiagramLayout layout =
-	    (SequenceDiagramLayout) Globals.curEditor().getLayerManager()
+        SequenceDiagramLayer layout =
+	    (SequenceDiagramLayer) Globals.curEditor().getLayerManager()
 	        .getActiveLayer();
         int endY = me.getY();
         if (isContract()) {
-            int startOffset = SequenceDiagramLayout.getNodeIndex(startY);
+            int startOffset = SequenceDiagramLayer.getNodeIndex(startY);
             int endOffset;
             if (startY > endY) {
                 endOffset = startOffset;
-                startOffset = SequenceDiagramLayout.getNodeIndex(endY);
+                startOffset = SequenceDiagramLayer.getNodeIndex(endY);
             } else {
-                endOffset = SequenceDiagramLayout.getNodeIndex(endY);
+                endOffset = SequenceDiagramLayer.getNodeIndex(endY);
 	    }
             int diff = endOffset - startOffset;
             if (diff > 0) {
                 layout.contractDiagram(startOffset, diff);
             }
         } else {
-            int startOffset = SequenceDiagramLayout.getNodeIndex(startY);
+            int startOffset = SequenceDiagramLayer.getNodeIndex(startY);
             if (startOffset > 0 && endY < startY) {
                 startOffset--;
 	    }
-            int diff = SequenceDiagramLayout.getNodeIndex(endY) - startOffset;
+            int diff = SequenceDiagramLayer.getNodeIndex(endY) - startOffset;
             if (diff < 0) {
                 diff = -diff;
 	    }

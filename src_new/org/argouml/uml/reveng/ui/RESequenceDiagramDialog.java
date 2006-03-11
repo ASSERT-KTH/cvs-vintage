@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.12 2006/02/19 19:14:10 linus Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.13 2006/03/11 22:23:16 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ import org.argouml.uml.diagram.sequence.MessageNode;
 import org.argouml.uml.diagram.sequence.SequenceDiagramGraphModel;
 import org.argouml.uml.diagram.sequence.ui.FigClassifierRole;
 import org.argouml.uml.diagram.sequence.ui.FigMessage;
-import org.argouml.uml.diagram.sequence.ui.SequenceDiagramLayout;
+import org.argouml.uml.diagram.sequence.ui.SequenceDiagramLayer;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.reveng.java.JavaLexer;
@@ -176,7 +176,7 @@ public class RESequenceDiagramDialog
             }
             classifierRole = getClassifierRole(classifier, "obj");
             portCnt =
-                SequenceDiagramLayout.getNodeIndex(
+                SequenceDiagramLayer.getNodeIndex(
                     figMessage.getDestMessageNode().getFigMessagePort().getY());
             Enumeration enu = diagram.elements();
             while (enu.hasMoreElements()) {
@@ -192,7 +192,7 @@ public class RESequenceDiagramDialog
                     }
                 } else if (f instanceof FigMessage) {
                     int port =
-                        SequenceDiagramLayout.getNodeIndex(
+                        SequenceDiagramLayer.getNodeIndex(
                             ((FigMessage) f).getDestMessageNode()
                                 .getFigMessagePort().getY());
                     if (maxPort < port) {
@@ -654,7 +654,7 @@ public class RESequenceDiagramDialog
             FigClassifierRole endFig,
             Object callType) {
         FigMessage figEdge = null;
-        SequenceDiagramLayout lay = (SequenceDiagramLayout) diagram.getLayer();
+        SequenceDiagramLayer lay = (SequenceDiagramLayer) diagram.getLayer();
         int n = startFig == endFig ? 2 : 1;
         if (portCnt < maxPort) {
             lay.expandDiagram(portCnt + 1, n);
