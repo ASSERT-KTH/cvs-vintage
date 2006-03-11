@@ -192,7 +192,7 @@
 
     <target name="doc" depends="init" description="Creates the JavaDocs of the Columba API in doc/">
         <javadoc destdir="${doc.api}" doctitle="Columba ${version} API Documentation"
-                 windowtitle="Columba API Documentation" link="http://java.sun.com/j2se/1.4.2/docs/api">
+                 windowtitle="Columba API Documentation" link="http://java.sun.com/j2se/1.5.0/docs/api">
             <classpath refid="compile.classpath"/>
             <packageset dir="${src.columba.api}"/>
             <packageset dir="${src.columba.core}"/>
