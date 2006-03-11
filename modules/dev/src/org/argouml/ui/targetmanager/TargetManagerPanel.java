@@ -1,4 +1,4 @@
-// $Id: TargetManagerPanel.java,v 1.1 2006/03/11 19:36:01 mvw Exp $
+// $Id: TargetManagerPanel.java,v 1.1 2006/03/11 21:57:56 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,9 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.ui;
+package org.argouml.ui.targetmanager;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +34,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
@@ -45,9 +45,10 @@ import org.argouml.ui.targetmanager.TargetManager;
  * 
  * @author Michiel
  */
-public class TargetManagerPanel extends JPanel  
-    implements TargetListener {
+public class TargetManagerPanel extends JPanel implements TargetListener {
 
+    private static final long serialVersionUID = -4827194145585220207L;
+    
     private DefaultListModel lm = new DefaultListModel();
     private JList lst;
     
@@ -64,9 +65,8 @@ public class TargetManagerPanel extends JPanel
         setLayout(new BorderLayout());
         
         lst = new JList(lm);
-        lst.setPreferredSize(new Dimension(400, 200));
         setTarget(TargetManager.getInstance().getTargets());
-        add(lst, BorderLayout.CENTER);
+        add(new JScrollPane(lst));
         lst.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         TargetManager.getInstance().addTargetListener(this);
     }
