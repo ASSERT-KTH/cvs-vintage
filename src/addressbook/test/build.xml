@@ -3,10 +3,11 @@
 <project name="addressbook.test" default="test">
 	<target name="compile">
 		<echo message="Compile Addressbook test"/>
-		<javac source="1.5" target="1.5" srcdir="${src.addressbook.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}">
+		<javac source="1.5" target="1.5" srcdir="${src.addressbook.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}" deprecation="${deprecation}">
 			<classpath refid="compile.test.classpath"/>
 			<exclude name="**/*.html"/>
 			<exclude name="**/*.xml"/>
+			<compilerarg value="${unchecked}"/>
 		</javac>
 	</target>
 

@@ -220,20 +220,22 @@
         <echo message="the classes are going to ${dest} "/>
 
         <!-- compile columba APIs -->
-        <javac destdir="${dest}" target="1.5" source="1.5">
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
             <src path="${src.columba.api}"/>
             <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
         </javac>
 
         <!-- compile columba core -->
         <ant dir="${src.columba.core}" target="compile" inheritrefs="true"/>
 
         <!-- compile mail/addressbook APIs -->
-        <javac destdir="${dest}" target="1.5" source="1.5">
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}">
             <src path="${src.columba.api}"/>
             <src path="${src.mail.api}"/>
             <src path="${src.addressbook.api}"/>
             <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
         </javac>
 
         <ant dir="${src.mail.core}" target="compile" inheritrefs="true"/>
