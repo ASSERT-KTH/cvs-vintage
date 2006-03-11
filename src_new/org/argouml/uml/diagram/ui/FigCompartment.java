@@ -1,4 +1,4 @@
-// $Id: FigCompartment.java,v 1.18 2005/11/13 11:01:09 linus Exp $
+// $Id: FigCompartment.java,v 1.19 2006/03/11 07:51:39 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,9 +92,11 @@ public abstract class FigCompartment extends FigGroup {
         return new Dimension(minWidth, minHeight);
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#setBoundsImpl(int, int, int, int)
+     */
     protected void setBoundsImpl(int x, int y, int w, int h) {
         int newW = w;
-        int n = getFigs().size() - 1;
         int newH = h;
 
         Iterator figs = iterator();

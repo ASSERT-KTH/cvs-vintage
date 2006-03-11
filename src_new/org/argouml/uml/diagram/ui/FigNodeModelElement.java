@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.232 2006/03/03 23:44:52 tfmorris Exp $
+// $Id: FigNodeModelElement.java,v 1.233 2006/03/11 07:51:39 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -567,7 +567,8 @@ public abstract class FigNodeModelElement
                     owningModelelement = currentProject.getRoot();
                 }
 	    } else if (newEncloser != null
-                    && Model.getFacade().isAModelElement(newEncloser.getOwner())) {
+                    && Model.getFacade()
+                            .isAModelElement(newEncloser.getOwner())) {
                 owningModelelement = newEncloser.getOwner();
             }
             if (owningModelelement != null

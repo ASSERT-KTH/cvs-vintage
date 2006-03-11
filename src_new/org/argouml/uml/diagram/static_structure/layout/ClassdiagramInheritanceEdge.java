@@ -1,4 +1,4 @@
-// $Id: ClassdiagramInheritanceEdge.java,v 1.14 2005/11/13 11:01:23 linus Exp $
+// $Id: ClassdiagramInheritanceEdge.java,v 1.15 2006/03/11 07:51:39 tfmorris Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
      * @return the vertical offset
      */
     public int getVerticalOffset() {
-        return (int) (getVGap() / 2) - 10 + getOffset();
+        return (getVGap() / 2) - 10 + getOffset();
     }
 
     /**

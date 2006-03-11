@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.210 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: FigClass.java,v 1.211 2006/03/11 07:51:39 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.Model;
@@ -73,12 +72,11 @@ public class FigClass extends FigClassifierBox
     /**
      * Logger.
      */
-    private static final Logger LOG =
-        Logger.getLogger(FigClass.class);
+    //private static final Logger LOG = Logger.getLogger(FigClass.class);
 
-    FigAttributesCompartment attributesFigCompartment;
+    private FigAttributesCompartment attributesFigCompartment;
 
-    Fig borderFig;
+    private Fig borderFig;
 
     /**
      * Text highlighted by mouse actions on the diagram.<p>
@@ -216,13 +214,6 @@ public class FigClass extends FigClassifierBox
         return figClone;
     }
 
-
-    /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#placeString()
-     */
-    public String placeString() {
-        return "new Class";
-    }
 
     ////////////////////////////////////////////////////////////////
     // accessors

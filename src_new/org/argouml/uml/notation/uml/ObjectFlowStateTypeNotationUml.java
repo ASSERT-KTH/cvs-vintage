@@ -1,4 +1,4 @@
-// $Id: ObjectFlowStateTypeNotationUml.java,v 1.1 2006/03/01 22:38:48 mvw Exp $
+// $Id: ObjectFlowStateTypeNotationUml.java,v 1.2 2006/03/11 07:51:39 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class ObjectFlowStateTypeNotationUml
      */
     public String parse(String text) {
         try {
-                parseObjectFlowState1(myObjectFlowState, text);
+            parseObjectFlowState1(myObjectFlowState, text);
         } catch (ParseException pe) {
             String msg = "statusmsg.bar.error.parsing.objectflowstate";
             Object[] args = {
@@ -80,7 +80,8 @@ public class ObjectFlowStateTypeNotationUml
         if (c != null) {
             Model.getCoreHelper().setType(objectFlowState, c);
         } else {
-            throw new ParseException("Classifier with name " + s + " not found", 0);
+            throw new ParseException(
+                    "Classifier with name " + s + " not found", 0);
         }
         return objectFlowState;
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.27 2006/02/24 23:49:40 bobtarling Exp $
+// $Id: PropPanelNamespace.java,v 1.28 2006/03/11 07:51:39 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,11 @@
 package org.argouml.uml.ui.foundation.core;
 
 import javax.swing.ImageIcon;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ScrollList;
-import org.argouml.uml.ui.UMLLinkedList;
 import org.tigris.swidgets.Orientation;
 
 /**

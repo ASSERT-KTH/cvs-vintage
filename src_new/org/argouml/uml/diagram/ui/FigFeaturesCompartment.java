@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.19 2006/02/26 16:25:03 linus Exp $
+// $Id: FigFeaturesCompartment.java,v 1.20 2006/03/11 07:51:39 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.tigris.gef.presentation.FigLine;
  * Presentation logic which is common to both an operations
  * compartment and an attributes compartment.<p>
  *
- * TODO: Investicate if this could be renamed to AbstractFigFeaturesCompartment?
+ * TODO: Investigate if this could be renamed to AbstractFigFeaturesCompartment?
  * @author Bob Tarling
  */
 public abstract class FigFeaturesCompartment extends FigCompartment {
@@ -62,6 +62,9 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
         addFig(compartmentSeperator);
     }
 
+    /**
+     * @return separator figure
+     */
     protected FigSeperator getSeperatorFig() {
         return compartmentSeperator;
     }
@@ -187,6 +190,9 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
      */
     public abstract void createFeature();
 
+    /**
+     * Fig representing separator for compartment.
+     */
     protected class FigSeperator extends FigLine {
         /**
          * Constructor.

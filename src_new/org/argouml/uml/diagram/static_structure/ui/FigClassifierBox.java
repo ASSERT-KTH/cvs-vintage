@@ -1,4 +1,4 @@
-// $Id: FigClassifierBox.java,v 1.20 2006/02/26 01:35:25 linus Exp $
+// $Id: FigClassifierBox.java,v 1.21 2006/03/11 07:51:38 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,9 +110,6 @@ public abstract class FigClassifierBox extends FigNodeModelElement
         operationsFig.populate();
         Fig operPort = operationsFig.getBigPort();
 
-        int xpos = operPort.getX();
-        int ypos = operPort.getY();
-
         Rectangle rect = getBounds();
         // ouch ugly but that's for a next refactoring
         // TODO: make setBounds, calcBounds and updateBounds consistent
@@ -217,6 +214,13 @@ public abstract class FigClassifierBox extends FigNodeModelElement
         return unhighlight(operationsFig);
     }
 
+    /**
+     * Search the given compartment for a highlighted CompartmentFigText
+     * and unhighlight it.
+     * 
+     * @param fc compartment to search for highlight item
+     * @return item that was unhighlighted or null if no action was taken
+     */
     protected final CompartmentFigText unhighlight(FigFeaturesCompartment fc) {
         Fig ft;
         for (int i = 1; i < fc.getFigs().size(); i++) {
