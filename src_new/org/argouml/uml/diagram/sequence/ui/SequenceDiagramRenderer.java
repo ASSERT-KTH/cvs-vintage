@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramRenderer.java,v 1.21 2005/11/20 01:15:08 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.22 2006/03/11 21:43:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SequenceDiagramRenderer.java,v 1.21 2005/11/20 01:15:08 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.22 2006/03/11 21:43:52 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -47,6 +47,9 @@ import org.tigris.gef.presentation.FigNode;
  * @author 5eichler
  */
 public class SequenceDiagramRenderer extends UmlDiagramRenderer {
+    
+    private static final long serialVersionUID = -5460387717430613088L;
+    
     /**
      * Logger.
      */

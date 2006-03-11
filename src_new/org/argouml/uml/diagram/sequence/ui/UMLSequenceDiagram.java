@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.51 2006/03/04 19:31:14 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.52 2006/03/11 21:43:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,8 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  */
 public class UMLSequenceDiagram extends UMLDiagram {
 
+    private static final long serialVersionUID = 4143700589122465301L;
+    
     private Object[] actions;
     static final String SEQUENCE_CONTRACT_BUTTON = "button.sequence-contract";
     static final String SEQUENCE_EXPAND_BUTTON = "button.sequence-expand";
