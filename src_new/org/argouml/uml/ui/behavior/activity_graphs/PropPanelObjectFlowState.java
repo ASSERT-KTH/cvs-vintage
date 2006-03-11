@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.14 2006/03/09 17:45:37 mvw Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.15 2006/03/11 09:12:35 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,7 +79,7 @@ public class PropPanelObjectFlowState extends AbstractPropPanelState {
         addField(Translator.localize("label.container"),
                 getContainerScroll());
 
-        // field for Classifier(not InState)
+        // field for Type (Classifier)
         addField(Translator.localize("label.type"),
             new UMLComboBoxNavigator(
                 this,
@@ -354,6 +354,7 @@ public class PropPanelObjectFlowState extends AbstractPropPanelState {
                     removeTopStateFrom(states);
                     
                     if (states.size() < 1) return;
+                    super.actionPerformed(e);
                     Object cis = Model.getActivityGraphsFactory()
                         .buildClassifierInState(type, states);
                     Model.getCoreHelper().setType(ofs, cis);
