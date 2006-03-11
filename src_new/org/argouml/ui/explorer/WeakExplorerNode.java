@@ -1,4 +1,4 @@
-// $Id: WeakExplorerNode.java,v 1.2 2004/07/08 13:16:10 d00mst Exp $
+// $Id: WeakExplorerNode.java,v 1.3 2006/03/11 19:34:08 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ package org.argouml.ui.explorer;
  * }
  * </pre>
  *
- * <p>About subsumtion:
+ * <p>About subsumption:
  * <ul>
  * <li>Weak nodes must not rely on that the Explorer preserves the oldest one.
  * <li>The Explorer will not check if several PerspectiveRules has returned
