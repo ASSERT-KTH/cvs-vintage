@@ -1,4 +1,4 @@
-// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.22 2005/11/10 02:09:18 tfmorris Exp $
+// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.23 2006/03/11 09:58:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,6 +103,14 @@ public class TestUMLStructuralFeatureTypeComboBoxModel extends TestCase {
     public void testSetType() {
         Model.getCoreHelper().setType(elem, types[0]);
         Model.getPump().flushModelEvents();
+        // One can only do this by changing target, 
+        // so let's simulate that:
+        model.targetSet(new TargetEvent(this,
+                TargetEvent.TARGET_SET,
+                new Object[0],
+                new Object[] {
+                elem,
+        }));
         assertTrue(model.getSelectedItem() == types[0]);
     }
 
