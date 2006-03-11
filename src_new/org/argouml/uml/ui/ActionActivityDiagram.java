@@ -1,5 +1,5 @@
-// $Id: ActionActivityDiagram.java,v 1.43 2005/11/13 11:01:14 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ActionActivityDiagram.java,v 1.44 2006/03/11 21:48:00 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,6 +39,9 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  */
 public class ActionActivityDiagram extends ActionAddDiagram {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(ActionStateDiagram.class);
 
@@ -60,17 +63,18 @@ public class ActionActivityDiagram extends ActionAddDiagram {
             ns = Model.getFacade().getNamespace(target);
             // this fails always, see issue 1817
         }*/
-        return (UMLDiagram)DiagramFactory.getInstance().createDiagram(
+        return (UMLDiagram) DiagramFactory.getInstance().createDiagram(
                 UMLActivityDiagram.class,
                 ns,
                 graph);
     }
 
     /**
-     * An ActivityGraph specifies the dynamics of<br>
-     *       (i) a Package, or<br>
-     *      (ii) a Classifier (including UseCase), or<br>
-     *     (iii) a BehavioralFeature.<p>
+     * An ActivityGraph specifies the dynamics of<ul>
+     * <li> a Package, or
+     * <li> a Classifier (including UseCase), or
+     * <li> a BehavioralFeature.
+     * </ul>
      *
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
@@ -96,4 +100,8 @@ public class ActionActivityDiagram extends ActionAddDiagram {
             .isAddingActivityGraphAllowed(handle);
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -28844322376391273L;
 } /* end class ActionActivityDiagram */
