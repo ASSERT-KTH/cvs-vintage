@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.16 2006/03/06 01:25:19 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.17 2006/03/12 21:24:38 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
 import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.ExtensionsCompartmentContainer;
@@ -52,6 +53,11 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class PGMLStackParser
     extends org.tigris.gef.persistence.pgml.PGMLStackParser {
+
+    private static final Logger LOG =
+        Logger.getLogger(PGMLStackParser.class);
+
+    
     /**
      * Constructor.
      * @param modelElementsByUuid a map of model elements indexed
@@ -160,7 +166,11 @@ public class PGMLStackParser
             if (modelElement == null) {
                 throw new SAXException("Found href of " + owner + " with no matching element in model");
             }
-            f.setOwner(modelElement);
+            if (f.getOwner() != modelElement) {
+                f.setOwner(modelElement);
+            } else {
+                LOG.info("Ignoring href on " + f.getClass().getName() + " as it's already set");
+            }
         }
     }
 
