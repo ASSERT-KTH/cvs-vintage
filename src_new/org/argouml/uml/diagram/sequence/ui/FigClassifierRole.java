@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.33 2006/03/11 22:23:16 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.34 2006/03/12 02:02:49 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -534,7 +534,8 @@ public class FigClassifierRole extends FigNodeModelElement
                 lifeLine.addActivationFig(
                         new FigBirthActivation(
                                 lifeLine.getX(),
-                                lifeLine.getYCoordinate(i)));
+                                lifeLine.getYCoordinate(i)
+                                - SequenceDiagramLayer.LINK_DISTANCE / 4));
             } if (lastState != nextState && nextState == MessageNode.DESTROYED) {
                 int y =
                     lifeLine.getYCoordinate(i)
