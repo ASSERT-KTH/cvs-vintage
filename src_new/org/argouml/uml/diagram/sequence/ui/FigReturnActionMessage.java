@@ -1,4 +1,4 @@
-// $Id: FigReturnActionMessage.java,v 1.3 2006/03/03 23:44:05 tfmorris Exp $
+// $Id: FigReturnActionMessage.java,v 1.4 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import org.tigris.gef.presentation.Fig;
  * @author Jaap
  */
 public class FigReturnActionMessage extends FigMessage {
+
+    private static final long serialVersionUID = -6620833059472736152L;
 
     /**
      * @param owner The owner of the link.

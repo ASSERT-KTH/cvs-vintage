@@ -1,4 +1,4 @@
-// $Id: FigMessagePort.java,v 1.8 2006/03/06 01:25:20 bobtarling Exp $
+// $Id: FigMessagePort.java,v 1.9 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,8 @@ import org.tigris.gef.presentation.FigLine;
  */
 public class FigMessagePort extends FigGroup {
 
+    private static final long serialVersionUID = -7805833566723101923L;
+    
     private MessageNode node;
 
     /**
@@ -126,10 +128,10 @@ public class FigMessagePort extends FigGroup {
     }
 
     void clearNode() {
-        Fig owner = getGroup();
-        if (owner instanceof FigClassifierRole) {
-            ((FigClassifierRole) owner).removeFigMessagePort(this);
-	}
+        Fig parent = getGroup();
+        if (parent instanceof FigLifeLine) {
+            ((FigClassifierRole) parent.getGroup()).removeFigMessagePort(this);
+        }
     }
 
     void setNode(MessageNode n) {
@@ -138,7 +140,7 @@ public class FigMessagePort extends FigGroup {
 
     // TODO: Question - how does this differ to getY?
     public int getY1() {
-	return getMyLine().getY1();
+        return getMyLine().getY1();
     }
 
     private FigLine getMyLine() {

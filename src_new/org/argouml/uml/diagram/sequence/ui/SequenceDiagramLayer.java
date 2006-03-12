@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayer.java,v 1.1 2006/03/11 22:23:16 bobtarling Exp $
+// $Id: SequenceDiagramLayer.java,v 1.2 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.log4j.Logger;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.graph.GraphEvent;
 import org.tigris.gef.graph.MutableGraphModel;
@@ -46,6 +47,13 @@ import org.tigris.gef.presentation.FigEdge;
  * @author : jaap.branderhorst@xs4all.nl
  */
 public class SequenceDiagramLayer extends LayerPerspectiveMutable {
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(SequenceDiagramLayer.class);
+
     /**
      * The distance between two objects on the sequence diagram.
      */
@@ -280,11 +288,14 @@ public class SequenceDiagramLayer extends LayerPerspectiveMutable {
      */
     public void remove(Fig f) {
         if (f instanceof FigMessage) {
+            LOG.info("Removing a FigMessage");
             FigMessage fm = (FigMessage) f;
             ((FigMessagePort) fm.getSourcePortFig()).clearNode();
             ((FigMessagePort) fm.getDestPortFig()).clearNode();
         }
         super.remove(f);
+        
+        LOG.info("A Fig has been removed, updating activations");
         updateActivations();
     }
 

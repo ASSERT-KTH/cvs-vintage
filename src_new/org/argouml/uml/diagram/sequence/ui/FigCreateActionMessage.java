@@ -1,4 +1,4 @@
-// $Id: FigCreateActionMessage.java,v 1.2 2006/03/03 23:44:05 tfmorris Exp $
+// $Id: FigCreateActionMessage.java,v 1.3 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,8 @@ import org.tigris.gef.presentation.ArrowHeadGreater;
  * @author jaap.branderhorst
  */
 public class FigCreateActionMessage extends FigMessage {
+
+    private static final long serialVersionUID = -2607959442732866191L;
 
     /**
      * @param owner the owner object

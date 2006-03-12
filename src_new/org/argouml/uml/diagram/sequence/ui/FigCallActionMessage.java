@@ -1,4 +1,4 @@
-// $Id: FigCallActionMessage.java,v 1.2 2005/07/12 20:50:54 linus Exp $
+// $Id: FigCallActionMessage.java,v 1.3 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,8 @@ import org.tigris.gef.presentation.ArrowHeadTriangle;
  * @author jaap.branderhorst@xs4all.nl
  */
 public class FigCallActionMessage extends FigMessage {
+
+    private static final long serialVersionUID = 6483648469519347377L;
 
     /**
      * @param owner the owner object

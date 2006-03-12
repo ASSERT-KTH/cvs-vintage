@@ -1,4 +1,4 @@
-// $Id: FigLifeLine.java,v 1.7 2006/03/11 22:23:16 bobtarling Exp $
+// $Id: FigLifeLine.java,v 1.8 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
 import org.argouml.uml.diagram.sequence.MessageNode;
 import org.argouml.uml.diagram.sequence.ui.FigClassifierRole.TempFig;
 import org.tigris.gef.persistence.pgml.Container;
@@ -53,6 +54,12 @@ class FigLifeLine extends FigGroup implements HandlerFactory {
 
     private static final long serialVersionUID = -1242239243040698287L;
     
+    /**
+     * Logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(FigLifeLine.class);
+
     final static int WIDTH = 20;
     final static int HEIGHT = 1000;
     private FigRect rect;
@@ -140,6 +147,7 @@ class FigLifeLine extends FigGroup implements HandlerFactory {
      * @see org.tigris.gef.presentation.FigGroup#removeFig(Fig)
      */
     public final void removeFig(Fig f) {
+        LOG.info("Removing " + f.getClass().getName());
         super.removeFig(f);
         activationFigs.remove(f);
     }

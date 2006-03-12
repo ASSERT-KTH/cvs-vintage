@@ -1,4 +1,4 @@
-// $Id: FigDestroyActionMessage.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: FigDestroyActionMessage.java,v 1.2 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,8 @@ import org.tigris.gef.presentation.ArrowHeadGreater;
  * @author jaap.branderhorst
  */
 public class FigDestroyActionMessage extends FigMessage {
+
+    private static final long serialVersionUID = 8246653379767368449L;
 
     /**
      * @param owner the owner object

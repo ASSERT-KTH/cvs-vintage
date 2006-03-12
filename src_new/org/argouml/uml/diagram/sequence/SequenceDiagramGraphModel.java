@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.54 2006/02/19 18:31:32 linus Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.55 2006/03/12 01:41:59 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,7 @@ import org.tigris.gef.base.ModeManager;
 public class SequenceDiagramGraphModel
     extends UMLMutableGraphSupport
     implements VetoableChangeListener {
+    
     /**
      * Logger.
      */
