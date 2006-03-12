@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.92 2006/03/12 12:01:36 bobtarling Exp $
+// $Id: FigPackage.java,v 1.93 2006/03/12 12:36:08 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -857,6 +857,7 @@ public class FigPackage extends FigNodeModelElement
          *         java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent ae) {
+            super.actionPerformed(ae);
             doStereotype(false);
         }
 
@@ -877,6 +878,7 @@ public class FigPackage extends FigNodeModelElement
          *         java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent ae) {
+            super.actionPerformed(ae);
             doStereotype(true);
         }
 
@@ -897,6 +899,7 @@ public class FigPackage extends FigNodeModelElement
          *         java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent ae) {
+            super.actionPerformed(ae);
             doVisibility(false);
         }
 
@@ -917,6 +920,7 @@ public class FigPackage extends FigNodeModelElement
          *         java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent ae) {
+            super.actionPerformed(ae);
             doVisibility(true);
         }
 
