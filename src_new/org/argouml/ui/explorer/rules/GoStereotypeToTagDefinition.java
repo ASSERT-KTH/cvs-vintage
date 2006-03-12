@@ -1,4 +1,4 @@
-// $Id: GoStereotypeToTagDefinition.java,v 1.2 2005/11/13 11:01:21 linus Exp $
+// $Id: GoStereotypeToTagDefinition.java,v 1.3 2006/03/12 10:05:34 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,14 @@ package org.argouml.ui.explorer.rules;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.argouml.model.Model;
 
+/**
+ * Rule for Stereotype -> TagDefinition.
+ */
 public class GoStereotypeToTagDefinition extends AbstractPerspectiveRule {
 
     /**
@@ -45,7 +49,7 @@ public class GoStereotypeToTagDefinition extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
         if (Model.getFacade().isAStereotype(parent)) {
-            ArrayList list = new ArrayList();
+            List list = new ArrayList();
 
             if (Model.getFacade().getTagDefinitions(parent) != null
                     && Model.getFacade().getTagDefinitions(parent).size() > 0) {
