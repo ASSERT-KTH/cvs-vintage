@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.34 2006/03/12 02:02:49 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.35 2006/03/12 13:29:36 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1207,30 +1207,21 @@ public class FigClassifierRole extends FigNodeModelElement
 
         Rectangle rect = headFig.getBounds();
 
-        int stereotypeHeight = 0;
-        if (getStereotypeFig().isVisible()) {
-            stereotypeHeight = getStereotypeFig().getHeight();
-        }
-        int heightWithoutStereo = headFig.getHeight() - stereotypeHeight;
-
         getStereotypeFig().setOwner(getOwner());
         ((FigStereotypesCompartment) getStereotypeFig()).populate();
-
-        stereotypeHeight = 0;
-        if (getStereotypeFig().isVisible()) {
-            stereotypeHeight = getStereotypeFig().getHeight();
-        }
 
         int minWidth = headFig.getMinimumSize().width;
         if (minWidth > rect.width) {
             rect.width = minWidth;
         }
+        
+        int headHeight = headFig.getMinimumSize().height;
 
         headFig.setBounds(
                 rect.x,
                 rect.y,
                 rect.width,
-                heightWithoutStereo + stereotypeHeight);
+                headHeight);
 
         if (getLayer() == null) {
             return;
@@ -1258,6 +1249,8 @@ public class FigClassifierRole extends FigNodeModelElement
             }
         }
 
+        calcBounds();
+        damage();
     }
 
     /**
