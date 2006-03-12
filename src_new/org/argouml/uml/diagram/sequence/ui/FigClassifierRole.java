@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.35 2006/03/12 13:29:36 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.36 2006/03/12 19:29:41 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -302,6 +302,7 @@ public class FigClassifierRole extends FigNodeModelElement
      * @see FigNodeModelElement#calcBounds()
      */
     public void calcBounds() {
+        lifeLine.setY(headFig.getHeight() + headFig.getY());
         Rectangle bounds = headFig.getBounds();
         bounds.add(lifeLine.getBounds());
         _x = bounds.x;
