@@ -1,5 +1,5 @@
-// $Id: PropPanelFeature.java,v 1.17 2005/10/04 21:35:08 bobtarling Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PropPanelFeature.java,v 1.18 2006/03/12 13:13:18 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -30,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.tigris.swidgets.Orientation;
 
@@ -43,8 +42,6 @@ import org.tigris.swidgets.Orientation;
 public abstract class PropPanelFeature extends PropPanelModelElement {
 
     private UMLFeatureOwnerScopeCheckBox ownerScopeCheckbox;
-
-    private UMLComboBox2 ownerComboBox;
 
     private JScrollPane ownerScroll;
 
@@ -107,7 +104,8 @@ public abstract class PropPanelFeature extends PropPanelModelElement {
      */
     protected JPanel getVisibilityPanel() {
         if (visibilityPanel == null) {
-            visibilityPanel = new UMLModelElementVisibilityRadioButtonPanel(
+            visibilityPanel =
+                new UMLModelElementVisibilityRadioButtonPanel(
                     Translator.localize("label.visibility"), true);
         }
         return visibilityPanel;
