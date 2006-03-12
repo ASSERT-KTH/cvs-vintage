@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.24 2006/03/12 10:42:03 linus Exp $
+// $Id: PropPanelCallAction.java,v 1.25 2006/03/12 16:26:39 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.tigris.gef.undo.UndoableAction;
 
@@ -62,7 +63,10 @@ public class PropPanelCallAction extends PropPanelAction {
             new UMLCallActionOperationComboBox2(
                 new UMLCallActionOperationComboBoxModel());
         addFieldBefore(Translator.localize("label.operation"),
-                operationComboBox,
+                new UMLComboBoxNavigator(
+                        this,
+                        Translator.localize("label.operation.navigate.tooltip"),
+                        operationComboBox),
                 argumentsScroll);
     }
 
