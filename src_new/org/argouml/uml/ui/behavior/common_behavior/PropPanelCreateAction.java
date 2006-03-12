@@ -1,4 +1,4 @@
-// $Id: PropPanelCreateAction.java,v 1.11 2006/02/22 21:55:16 mvw Exp $
+// $Id: PropPanelCreateAction.java,v 1.12 2006/03/12 10:42:03 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,10 +42,12 @@ public class PropPanelCreateAction extends PropPanelAction {
     public PropPanelCreateAction() {
         super("CreateAction", lookupIcon("CreateAction"));
 
-        AbstractActionAddModelElement action = 
+        AbstractActionAddModelElement action =
             new ActionAddCreateActionInstantiation();
-        UMLMutableLinkedList list = new UMLMutableLinkedList(
-                new UMLCreateActionClassifierListModel(), action, null, null, true);
+        UMLMutableLinkedList list =
+            new UMLMutableLinkedList(
+                new UMLCreateActionClassifierListModel(),
+                action, null, null, true);
         list.setVisibleRowCount(1);
         JScrollPane instantiationScroll = new JScrollPane(list);
         addFieldBefore(Translator.localize("label.instantiation"),
@@ -54,4 +56,8 @@ public class PropPanelCreateAction extends PropPanelAction {
 
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 6909604490593418840L;
 }
