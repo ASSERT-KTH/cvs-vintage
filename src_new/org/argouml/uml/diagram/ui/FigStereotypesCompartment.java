@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.16 2006/02/26 16:25:03 linus Exp $
+// $Id: FigStereotypesCompartment.java,v 1.17 2006/03/12 10:53:15 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,8 @@ public class FigStereotypesCompartment extends FigCompartment {
 
         Object modelElement = getOwner();
         if (modelElement == null) {
-            LOG.warn("Cannot populate the stereotype compartment "
+            // TODO: This block can be removed after issue 4075 is tackled
+            LOG.debug("Cannot populate the stereotype compartment "
                      + "unless the parent has an owner.");
             return;
         }
