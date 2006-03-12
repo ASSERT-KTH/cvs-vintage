@@ -1,4 +1,4 @@
-// $Id: StylePanelFigClass.java,v 1.22 2006/02/26 01:35:25 linus Exp $
+// $Id: StylePanelFigClass.java,v 1.23 2006/03/12 09:06:09 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.JCheckBox;
 
+import org.argouml.i18n.Translator;
 import org.argouml.ui.StylePanelFigNodeModelElement;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
@@ -43,9 +44,9 @@ import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 public class StylePanelFigClass extends StylePanelFigNodeModelElement {
 
     /* TODO: i18n */
-    private JCheckBox attrCheckBox = new JCheckBox("Attributes");
+    private JCheckBox attrCheckBox = new JCheckBox(Translator.localize("checkbox.attributes"));
 
-    private JCheckBox operCheckBox = new JCheckBox("Operations");
+    private JCheckBox operCheckBox = new JCheckBox(Translator.localize("checkbox.operations"));
 
     /**
      * Flag to indicate that a refresh is going on.
