@@ -1,4 +1,4 @@
-// $Id: ArgoSingletonModule.java,v 1.7 2005/01/09 14:58:03 linus Exp $
+// $Id: ArgoSingletonModule.java,v 1.8 2006/03/13 11:41:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,9 @@ package org.argouml.application.api;
  * @author Will Howery
  * @author Thierry Lach
  * @since  0.9.4
+ * @deprecated by Linus Tolke (March 2006).
+ *         Use {@link org.argouml.moduleloader.ModuleInterface} instead even
+ *         though it doesn't have a specific handling for Singleton modules.
  */
 public interface ArgoSingletonModule extends ArgoModule {
 

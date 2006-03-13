@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.87 2006/02/27 14:27:20 bobtarling Exp $
+// $Id: Import.java,v 1.88 2006/03/13 11:41:55 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,6 +95,8 @@ import org.tigris.gef.base.Globals;
  *   <li> 1 - classifiers plus feature specifications
  *   <li> 2 - full import, feature detail (ie. operations with methods)
  * </ol>
+ *
+ * TODO: Add registration methods for new languages.
  *
  * @author Andreas Rueckert a_rueckert@gmx.net
  */

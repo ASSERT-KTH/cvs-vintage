@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.85 2006/03/02 15:00:48 mvw Exp $
+// $Id: TabProps.java,v 1.86 2006/03/13 11:41:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -154,6 +154,10 @@ import org.tigris.swidgets.Orientation;
  * They are not registered with TargetManager
  * but with this class to prevent race-conditions while firing TargetEvents from
  * TargetManager.
+ *
+ * TODO: Once the old module loader is removed from ArgoUML the
+ * {@link org.argouml.application.events.ArgoModuleEventListener}
+ * interface can be removed.
  */
 public class TabProps
     extends AbstractArgoJPanel
@@ -727,6 +731,8 @@ public class TabProps
 
     /**
      * @see org.argouml.application.events.ArgoModuleEventListener#moduleLoaded(org.argouml.application.events.ArgoModuleEvent)
+     *
+     * TODO: Replace by another registration procedure.
      */
     public void moduleLoaded(ArgoModuleEvent event) {
         if (event.getSource() instanceof PluggablePropertyPanel) {

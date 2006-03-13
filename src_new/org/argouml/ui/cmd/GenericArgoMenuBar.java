@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.42 2006/03/12 09:49:40 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.43 2006/03/13 11:41:55 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,6 +107,10 @@ import org.tigris.toolbar.ToolBar;
  * mnemonics of menuitems:  [file].[flag for item].[name of menuitem].mnemonic
  *  e.g:                    menu.item.new.mnemonic
  * </pre>
+ *
+ * TODO: Add registration for new menu items.
+ * TODO: Once the old module loader is removed from ArgoUML, the
+ *       {@link ArgoModuleEventListener} can be removed.
  */
 public class GenericArgoMenuBar extends JMenuBar
     implements ArgoModuleEventListener {

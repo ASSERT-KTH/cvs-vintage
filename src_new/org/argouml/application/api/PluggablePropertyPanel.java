@@ -1,4 +1,4 @@
-// $Id: PluggablePropertyPanel.java,v 1.9 2005/01/09 14:58:03 linus Exp $
+// $Id: PluggablePropertyPanel.java,v 1.10 2006/03/13 11:41:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,12 @@ import org.argouml.uml.ui.PropPanel;
  *
  * @author Thierry Lach
  * @since ARGO0.9.4
+ * @deprecated by Linus Tolke (March 2006).
+ *         Call registration in the Details Tabs subsystem from
+ *         {@link org.argouml.moduleloader.ModuleInterface#enable()}.
+ *         The needed registration is not currently available. Add it first!
+ *         See {@link org.argouml.uml.ui.TabProps.moduleLoaded(
+ *         ArgoModuleEvent event)}
  */
 public interface PluggablePropertyPanel extends Pluggable {
 

@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.28 2005/11/13 17:57:07 mvw Exp $
+// $Id: ModuleLoader.java,v 1.29 2006/03/13 11:41:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,8 @@ import org.argouml.i18n.Translator;
  * @author  Will Howery
  * @author  Thierry Lach
  * @since   0.9.4
+ * @deprecated by Linus Tolke (March 2006).
+ *         Use {@link org.argouml.moduleloader.ModuleLoader2}.
  */
 public class ModuleLoader {
     /**

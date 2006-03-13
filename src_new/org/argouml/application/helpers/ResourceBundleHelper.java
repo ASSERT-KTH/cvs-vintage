@@ -1,4 +1,4 @@
-// $Id: ResourceBundleHelper.java,v 1.6 2005/01/09 14:58:03 linus Exp $
+// $Id: ResourceBundleHelper.java,v 1.7 2006/03/13 11:41:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,9 @@ import org.tigris.gef.util.Localizer;
  *
  * @author Thierry Lach
  * @since  0.9.4
+ * @deprecated by Linus Tolke (March 2006).
+ *         I can't find that this class is ever used. If that is the case it
+ *         is better to remove it then to update it for the new ModuleLoader.
  */
 public abstract class ResourceBundleHelper extends ListResourceBundle
     implements PluggableResourceBundle {

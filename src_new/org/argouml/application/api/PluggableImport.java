@@ -1,4 +1,4 @@
-// $Id: PluggableImport.java,v 1.6 2005/01/09 14:58:03 linus Exp $
+// $Id: PluggableImport.java,v 1.7 2006/03/13 11:41:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: PluggableImport.java,v 1.6 2005/01/09 14:58:03 linus Exp $
+//$Id: PluggableImport.java,v 1.7 2006/03/13 11:41:54 linus Exp $
 
 package org.argouml.application.api;
 
@@ -42,6 +42,10 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  *
  * @author Alexander Lepekhine
  * @since 0.13.4
+ * @deprecated by Linus Tolke (March 2006).
+ *         Call registration in {@link org.argouml.uml.reveng.Import} from
+ *         {@link org.argouml.moduleloader.ModuleInterface#enable()}.
+ *         The needed registration is not currently available. Add it first!
  */
 public interface PluggableImport extends Pluggable {
 

@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.50 2005/12/29 18:24:06 mvw Exp $
+// $Id: AboutBox.java,v 1.51 2006/03/13 11:41:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,8 @@ import org.argouml.util.Tools;
 /**
  * This is what you see after you activate the "Help->About ArgoUML" menu-item.
  *
+ * TODO: Add registration for new AboutBox tabs 
+ * (instead of {@link org.argouml.application.api.PluggableAboutTab}).
  */
 public class AboutBox extends JDialog {
 

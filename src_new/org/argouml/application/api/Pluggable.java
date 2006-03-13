@@ -1,4 +1,4 @@
-// $Id: Pluggable.java,v 1.11 2004/11/19 22:36:10 linus Exp $
+// $Id: Pluggable.java,v 1.12 2006/03/13 11:41:54 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,10 @@ package org.argouml.application.api;
  *
  *   @author Thierry Lach
  *   @since  0.9.4
+ *   @deprecated by Linus Tolke (March 2006).
+ *         Call registration in the appropriate subsystem from
+ *         {@link org.argouml.moduleloader.ModuleInterface#enable()}.
+ *         If the needed registration is not available, add it!
  */
 public interface Pluggable extends ArgoModule {
 
