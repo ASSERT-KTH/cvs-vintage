@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.2 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.3 2006/03/13 19:54:01 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -389,14 +389,17 @@ class ExtensionMechanismsHelperMDRImpl implements ExtensionMechanismsHelper {
      * @see org.argouml.model.ExtensionMechanismsHelper#setBaseClass(java.lang.Object, java.lang.Object)
      */
     public void setBaseClass(Object handle, Object baseClass) {
-        if (handle instanceof Stereotype && baseClass instanceof String) {
+        if (handle instanceof Stereotype 
+                && (baseClass instanceof String 
+                        || baseClass instanceof ModelElement)) {
+
             /*
              * TODO: UML 1.4 allows multiple baseclassses, but we restrict our
              * implementation to a single baseclass for compatibility with other
              * tools.
              */
             ((Stereotype) handle).getBaseClass().clear();
-            ((Stereotype) handle).getBaseClass().add(baseClass);
+            addBaseClass(handle, baseClass);
             return;
         }
         throw new IllegalArgumentException("handle: " + handle
