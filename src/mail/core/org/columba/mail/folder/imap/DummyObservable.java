@@ -1,4 +1,4 @@
-package org.columba.mail.imap;
+package org.columba.mail.folder.imap;
 
 import org.columba.api.command.IStatusObservable;
 
