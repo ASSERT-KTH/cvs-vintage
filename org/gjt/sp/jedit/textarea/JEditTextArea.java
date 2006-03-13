@@ -61,7 +61,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.365 2006/03/03 16:18:06 ezust Exp $
+ * @version $Id: JEditTextArea.java,v 1.366 2006/03/13 17:58:13 ezust Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -306,6 +306,12 @@ public class JEditTextArea extends JComponent
 	//{{{ getBuffer() method
 	/**
 	 * Returns the buffer this text area is editing.
+	 * @since jedit 4.3pre3
+	 * 
+	 *  Prior to 4.3pre3, this function returned a "Buffer" type.
+	 *  If this causes your code to break, try calling view.getBuffer() instead of 
+	 *  view.getTextArea().getBuffer().
+	 *  
 	 */
 	public final JEditBuffer getBuffer()
 	{
