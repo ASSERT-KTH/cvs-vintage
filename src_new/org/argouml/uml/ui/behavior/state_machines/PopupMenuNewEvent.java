@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewEvent.java,v 1.9 2005/07/19 12:16:57 mkl Exp $
+// $Id: PopupMenuNewEvent.java,v 1.10 2006/03/13 20:17:04 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,11 +52,21 @@ public class PopupMenuNewEvent extends JPopupMenu {
     public PopupMenuNewEvent(String role, UMLMutableLinkedList list) {
         super();
 
-        JMenu select = new JMenu();
-        select.setText(Translator.localize("action.select"));
-        ActionAddEventAsTrigger.SINGLETON.setTarget(list.getTarget());
-        select.add(ActionAddEventAsTrigger.SINGLETON);
-        add(select);
+        if (role == ActionNewEvent.Roles.DEFERRABLE_EVENT
+                || role == ActionNewEvent.Roles.TRIGGER) {
+            JMenu select = new JMenu();
+            select.setText(Translator.localize("action.select"));
+            if (role == ActionNewEvent.Roles.DEFERRABLE_EVENT) {
+                ActionAddEventAsDeferrableEvent.SINGLETON.setTarget(list
+                        .getTarget());
+                select.add(ActionAddEventAsDeferrableEvent.SINGLETON);
+            } else if (role == ActionNewEvent.Roles.TRIGGER) {
+                ActionAddEventAsTrigger.SINGLETON.setTarget(list.getTarget());
+                select.add(ActionAddEventAsTrigger.SINGLETON);
+            }
+            add(select);
+        }
+        
         JMenu newMenu = new JMenu();
         newMenu.setText(Translator.localize("action.new"));
         newMenu.add(ActionNewCallEvent.getSingleton());
