@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.5 2006/03/03 23:51:32 tfmorris Exp $
+// $Id: ActionAddOperation.java,v 1.6 2006/03/13 19:45:34 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.ui.targetmanager;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 
+import javax.swing.Action;
+
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
@@ -47,6 +49,9 @@ class ActionAddOperation extends UndoableAction {
     ActionAddOperation() {
         super(Translator.localize("button.new-operation"),
                 ResourceLoaderWrapper.lookupIcon("button.new-operation"));
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("button.new-operation"));
     }
 
     ////////////////////////////////////////////////////////////////

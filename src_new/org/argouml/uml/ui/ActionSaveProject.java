@@ -1,5 +1,5 @@
-// $Id: ActionSaveProject.java,v 1.56 2006/02/23 00:49:33 bobtarling Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ActionSaveProject.java,v 1.57 2006/03/13 19:45:34 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
@@ -43,7 +44,7 @@ import org.argouml.ui.ProjectBrowser;
  */
 public class ActionSaveProject extends AbstractAction {
 	
-	private static final long serialVersionUID = -5579548202585774293L;
+    private static final long serialVersionUID = -5579548202585774293L;
 	/**
      * Logger.
      */
@@ -55,6 +56,9 @@ public class ActionSaveProject extends AbstractAction {
     public ActionSaveProject() {
         super(Translator.localize("action.save-project"),
                 ResourceLoaderWrapper.lookupIcon("action.save-project"));
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("action.save-project"));
         super.setEnabled(false);
     }
 
