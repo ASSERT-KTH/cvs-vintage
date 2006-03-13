@@ -1677,6 +1677,8 @@ public class IMAPServer implements IMAPListener, Observer, IImapServer {
 	 * @see org.columba.mail.imap.IImapServer#existsChanged(java.lang.String, int)
 	 */
 	public void existsChanged(String arg0, int arg1) {
+		if( selectedStatus == null) return;
+		
 		selectedStatus.setMessages(arg1);
 		statusDirty = true;
 		
@@ -1713,6 +1715,8 @@ public class IMAPServer implements IMAPListener, Observer, IImapServer {
 	 * @see org.columba.mail.imap.IImapServer#recentChanged(java.lang.String, int)
 	 */
 	public void recentChanged(String arg0, int arg1) {
+		if( selectedStatus == null) return;
+		
 		selectedStatus.setRecent(arg1);
 		statusDirty = true;
 		
