@@ -1,4 +1,4 @@
-// $Id: FigHead.java,v 1.4 2006/03/10 18:49:26 linus Exp $
+// $Id: FigHead.java,v 1.5 2006/03/14 00:20:15 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,6 +92,7 @@ class FigHead extends FigGroup {
                 w = stereotypeFig.getMinimumSize().width;
             }
         }
+        
         if (w < FigClassifierRole.MIN_HEAD_WIDTH) {
             w = FigClassifierRole.MIN_HEAD_WIDTH;
         }
@@ -104,6 +105,9 @@ class FigHead extends FigGroup {
         if (stereotypeFig.isVisible()) {
             h += stereotypeFig.getMinimumSize().height;
         }
+        
+        h += 4;
+
         if (h < FigClassifierRole.MIN_HEAD_HEIGHT) {
             h = FigClassifierRole.MIN_HEAD_HEIGHT;
         }
