@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.30 2006/03/13 17:17:41 linus Exp $
+// $Id: ModuleLoader.java,v 1.31 2006/03/14 07:38:20 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ import org.argouml.i18n.Translator;
  * @author  Will Howery
  * @author  Thierry Lach
  * @since   0.9.4
- * @deprecated by Linus Tolke (March 2006).
+ * @deprecated by Linus Tolke (0.21.1 March 2006).
  *         Use {@link org.argouml.moduleloader.ModuleLoader2}.
  */
 public class ModuleLoader {
@@ -346,7 +346,7 @@ public class ModuleLoader {
 		    if (jarfile != null) {
 	                ClassLoader classloader =
 			    new URLClassLoader(new URL[] {
-				file[i].toURL()
+				file[i].toURL(),
 			    });
 			Translator.addClassLoader(classloader);
 	                processJarFile(classloader, file[i]);

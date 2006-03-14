@@ -1,5 +1,5 @@
-// $Id: PluggableDiagram.java,v 1.8 2006/03/13 11:41:54 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PluggableDiagram.java,v 1.9 2006/03/14 07:38:19 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -32,7 +32,7 @@ import javax.swing.JMenuItem;
  *
  * @author Thomas Neustupny
  * @since 0.9.5
- * @deprecated by Linus Tolke (March 2006).
+ * @deprecated by Linus Tolke (0.21.1 March 2006).
  *         Call registration in the appropriate subsystem from
  *         {@link org.argouml.moduleloader.ModuleInterface#enable()}.
  *         The needed registration is not currently available. Add it first!
