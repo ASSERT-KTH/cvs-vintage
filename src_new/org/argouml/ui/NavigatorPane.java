@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.82 2006/02/19 10:17:59 linus Exp $
+// $Id: NavigatorPane.java,v 1.83 2006/03/14 22:57:36 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,13 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.QuadrantPanel;
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.ui.explorer.DnDExplorerTree;
 import org.argouml.ui.explorer.ExplorerTree;
@@ -42,7 +44,6 @@ import org.argouml.ui.explorer.PerspectiveComboBox;
 import org.argouml.ui.explorer.PerspectiveConfigurator;
 import org.argouml.ui.explorer.PerspectiveManager;
 import org.argouml.ui.explorer.TypeThenNameOrder;
-import org.argouml.uml.ui.UMLAction;
 import org.tigris.toolbar.ToolBar;
 
 /**
@@ -129,13 +130,15 @@ class NavigatorPane
         return Q_TOP_LEFT;
     }
 
-    class ActionPerspectiveConfig extends UMLAction {
+    static class ActionPerspectiveConfig extends AbstractAction {
         /**
          * The constructor.
          */
         public ActionPerspectiveConfig() {
             // this is not a "global" action, since it is never downlighted...
-	    super("action.configure-perspectives", HAS_ICON);
+	    super(Translator.localize("action.configure-perspectives"),
+                    ResourceLoaderWrapper.lookupIcon(
+                            "action.configure-perspectives"));
 	}
 
         /**

@@ -1,4 +1,4 @@
-// $Id: ModuleLoader2.java,v 1.10 2006/02/19 09:34:48 linus Exp $
+// $Id: ModuleLoader2.java,v 1.11 2006/03/14 22:57:37 linus Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -703,7 +703,7 @@ public final class ModuleLoader2 {
     /**
      * The file filter that selects Jar files.
      */
-    class JarFileFilter implements FileFilter {
+    static class JarFileFilter implements FileFilter {
 	/**
 	 * @see java.io.FileFilter#accept(java.io.File)
 	 */

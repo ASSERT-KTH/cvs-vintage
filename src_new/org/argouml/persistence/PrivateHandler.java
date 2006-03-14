@@ -1,4 +1,4 @@
-// $Id: PrivateHandler.java,v 1.3 2006/02/19 18:08:18 linus Exp $
+// $Id: PrivateHandler.java,v 1.4 2006/03/14 22:57:35 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,6 +116,8 @@ public class PrivateHandler
 
     /**
      * Determine if the string contains an ItemUID.
+     *
+     * @return a newly created ItemUID (or <code>null</code>).
      */
     private ItemUID getItemUID(String privateContents) {
         StringTokenizer st = new StringTokenizer(privateContents, "\n");
@@ -141,7 +143,7 @@ public class PrivateHandler
     /**
      * Utility class to pair a name and a value String together.
      */
-    class NameVal {
+    static class NameVal {
         private String name;
         private String value;
 

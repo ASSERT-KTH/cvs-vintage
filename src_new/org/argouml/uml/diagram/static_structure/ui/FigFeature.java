@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.20 2006/03/11 07:51:39 tfmorris Exp $
+// $Id: FigFeature.java,v 1.21 2006/03/14 22:57:37 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.tigris.gef.presentation.Handle;
 
 /**
  * Fig to show features in class or interface like attributes or operations.
- * 
+ *
  * TODO: This doesn't have any behavior specific to Features.  It's really
  * just an item for a ListCompartment and should probably have a better name
  * tfm - 20060310
@@ -46,7 +46,7 @@ import org.tigris.gef.presentation.Handle;
  */
 public class FigFeature extends CompartmentFigText {
 
-    private class SelectionFeature extends Selection {
+    private static class SelectionFeature extends Selection {
         /**
          * Constructor for SelectionFeature.
          *

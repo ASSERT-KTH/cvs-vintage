@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.89 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: UMLDiagram.java,v 1.90 2006/03/14 22:57:35 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -433,7 +433,7 @@ public abstract class UMLDiagram
         }
     }
 
-    class PopupActionsListener implements PropertyChangeListener {
+    static class PopupActionsListener implements PropertyChangeListener {
         private boolean blockEvents;
         private ConfigurationKey key;
 
