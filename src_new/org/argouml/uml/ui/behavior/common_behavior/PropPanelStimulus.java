@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.62 2005/10/20 05:29:04 tfmorris Exp $
+// $Id: PropPanelStimulus.java,v 1.63 2006/03/14 16:35:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,9 +40,6 @@ import org.argouml.util.ConfigLoader;
 
 /**
  * The properties panel for a Stimulus.
- *
- * TODO: this property panel needs refactoring to remove dependency on
- *       old gui components.
  *
  * @author agauthie
  */
