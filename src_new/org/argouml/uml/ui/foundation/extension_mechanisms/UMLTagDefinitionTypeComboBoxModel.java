@@ -1,4 +1,4 @@
-// $Id: UMLTagDefinitionTypeComboBoxModel.java,v 1.1 2006/01/11 22:48:05 tfmorris Exp $
+// $Id: UMLTagDefinitionTypeComboBoxModel.java,v 1.2 2006/03/14 17:57:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,9 +163,11 @@ public class UMLTagDefinitionTypeComboBoxModel extends UMLComboBoxModel2 {
          */
         if (evt instanceof AddAssociationEvent
                 || evt instanceof RemoveAssociationEvent) {
+            buildingModel = true;
             if ("ownedElement".equals(evt.getPropertyName())) {
                 buildModelList();
             }
+            buildingModel = false;
         } else {
             super.propertyChange(evt);
         }

@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.30 2005/11/13 11:01:16 linus Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.31 2006/03/14 17:57:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,11 +98,13 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
             if ("ownedElement".equals(evt.getPropertyName())) {
                 Object o = getChangedElement(evt);
                 if (contains(o)) {
+                    buildingModel = true;
                     if (o instanceof Collection) {
                         removeAll((Collection) o);
                     } else {
                         removeElement(o);
                     }
+                    buildingModel = false;
                 }
             }
         } else {
