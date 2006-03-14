@@ -1,4 +1,4 @@
-// $Id: ActionAddAllClassesFromModel.java,v 1.10 2006/02/25 16:38:53 mvw Exp $
+// $Id: ActionAddAllClassesFromModel.java,v 1.11 2006/03/14 20:50:25 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,7 @@ public class ActionAddAllClassesFromModel extends UndoableAction {
      * Smart Information Flow Technologies.
      */
     public void actionPerformed(ActionEvent ae) {
-
+        super.actionPerformed(ae);
 	if (object instanceof UMLClassDiagram) {
 
 	    // Use DiagramInterface to add classes to diagram

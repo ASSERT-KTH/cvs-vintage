@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.18 2006/02/25 16:38:53 mvw Exp $
+// $Id: ActionAddPackage.java,v 1.19 2006/03/14 20:47:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,7 @@ public class ActionAddPackage  extends UndoableAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
         Object namespace =
             TargetManager.getInstance().getModelTarget();
         Model.getCoreHelper().addOwnedElement(namespace,

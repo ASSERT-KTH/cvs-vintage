@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingNode.java,v 1.23 2006/02/25 16:38:53 mvw Exp $
+// $Id: ActionAddExistingNode.java,v 1.24 2006/03/14 20:50:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,7 @@ public class ActionAddExistingNode extends UndoableAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
+        super.actionPerformed(ae);
         AddExistingNodeCommand cmd = new AddExistingNodeCommand(object);
         cmd.execute();
     }
