@@ -1,5 +1,5 @@
-// $Id: ToDoItem.java,v 1.23 2005/06/20 07:42:04 bobtarling Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ToDoItem.java,v 1.24 2006/03/15 13:48:59 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -115,8 +115,6 @@ public class ToDoItem implements Serializable, WizardItem {
      * This is set by the constructor and cannot change.
      */
     private ListSet theOffenders;
-
-    private Icon theClarifier;
 
     private Wizard theWizard;
 
@@ -395,9 +393,6 @@ public class ToDoItem implements Serializable, WizardItem {
      * @return an Icon or null if none found.
      */
     public Icon getClarifier() {
-	if (theClarifier != null) {
-	    return theClarifier;
-	}
 	Icon posterClarifier = thePoster.getClarifier();
 	if (posterClarifier != null) {
 	    return posterClarifier;
@@ -582,6 +577,10 @@ public class ToDoItem implements Serializable, WizardItem {
 	    + "(" + getHeadline() + ") on " + getOffenders().toString();
     }
 
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 3058660098451455153L;
 } /* end class ToDoItem */
 
 

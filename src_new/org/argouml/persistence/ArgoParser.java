@@ -1,5 +1,5 @@
-// $Id: ArgoParser.java,v 1.3 2004/12/31 02:37:35 bobtarling Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: ArgoParser.java,v 1.4 2006/03/15 13:52:01 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,7 +25,6 @@
 package org.argouml.persistence;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +49,7 @@ public class ArgoParser extends SAXParserBase {
 
     private ArgoTokenTable tokens = new ArgoTokenTable();
 
-    private URL url;
-    private ArrayList memberList = new ArrayList();
+    private List memberList = new ArrayList();
 
     /**
      * The constructor.
@@ -82,7 +80,7 @@ public class ArgoParser extends SAXParserBase {
 
         try {
             LOG.info("=======================================");
-            LOG.info("== READING PROJECT " + url);
+            LOG.info("== READING PROJECT " + theProject);
             this.project = theProject;
             parse(is);
         } catch (SAXException e) {
