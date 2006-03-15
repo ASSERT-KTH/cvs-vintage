@@ -1,4 +1,4 @@
-// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.15 2006/03/11 09:13:27 mvw Exp $
+// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.16 2006/03/15 21:59:57 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,6 +96,9 @@ public class UMLObjectFlowStateClassifierComboBoxModel
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        /* Do nothing by design. */
+        buildingModel = true;
+        buildModelList();
+        buildingModel = false;
+        setSelectedItem(getSelectedModelElement());
     }
 }
