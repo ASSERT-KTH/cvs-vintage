@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.39 2006/03/14 17:57:45 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.40 2006/03/15 19:00:45 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,11 +110,12 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
      * differences between NSUML and MDR - tfm - 20060302
      */
     public void propertyChange(PropertyChangeEvent e) {
-        buildingModel = true;
         if (e instanceof AttributeChangeEvent) {
             if (isValidEvent(e)) {
                 removeAllElements();
+                buildingModel = true;
                 buildModelList();
+                buildingModel = false;
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
                 }
@@ -162,7 +163,6 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
                 }
             }
         }
-        buildingModel = false;
     }
 
     /**
