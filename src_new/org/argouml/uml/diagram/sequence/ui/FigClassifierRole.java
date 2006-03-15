@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.37 2006/03/14 00:20:15 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.38 2006/03/15 01:10:02 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,7 +130,7 @@ public class FigClassifierRole extends FigNodeModelElement
      * Default constructor. Constructs the object rectangle, the lifeline,
      * the name box and the stereotype box.
      */
-    public FigClassifierRole() {
+    private FigClassifierRole() {
         super();
         headFig = new FigHead(getStereotypeFig(), getNameFig());
         getStereotypeFig().setBounds(MIN_HEAD_WIDTH / 2,
@@ -146,22 +146,26 @@ public class FigClassifierRole extends FigNodeModelElement
             new FigLifeLine(MIN_HEAD_WIDTH / 2 - WIDTH / 2, MIN_HEAD_HEIGHT);
         linkPositions.add(new MessageNode(this));
         for (int i = 0;
-            i <= lifeLineFig.getHeight() / SequenceDiagramLayer.LINK_DISTANCE;
-            i++) {
+                i <= lifeLineFig.getHeight() / SequenceDiagramLayer.LINK_DISTANCE;
+                i++) {
             linkPositions.add(new MessageNode(this));
         }
         addFig(lifeLineFig);
         addFig(headFig);
     }
 
-    /**
-     * @param node the owner
-     */
+    public FigClassifierRole(Object node, int x, int y, int w, int h) {
+        this();
+        setBounds(x, y, w, h);
+        setOwner(node);
+    }
+
     public FigClassifierRole(Object node) {
         this();
         setOwner(node);
     }
 
+    
     /**
      * When the mouse button is released, this fig will be moved into position.
      *

@@ -1,4 +1,4 @@
-// $Id: FigLifeLine.java,v 1.8 2006/03/12 01:41:59 bobtarling Exp $
+// $Id: FigLifeLine.java,v 1.9 2006/03/15 01:10:02 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -234,7 +234,6 @@ class FigLifeLine extends FigGroup implements HandlerFactory {
         FigLifeLineHandler(PGMLStackParser parser,
                 FigLifeLine lifeLine) {
             super(parser, lifeLine);
-            System.out.println("Creating a FigLifeLineHandler");
         }
 
         /**
