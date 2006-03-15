@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.38 2006/02/20 12:41:00 mvw Exp $
+// $Id: PropPanelCallEvent.java,v 1.39 2006/03/15 19:10:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.foundation.core.ActionNewParameter;
 import org.argouml.util.ConfigLoader;
@@ -64,7 +65,11 @@ public class PropPanelCallEvent extends PropPanelEvent {
         UMLSearchableComboBox operationComboBox =
             new UMLCallEventOperationComboBox2(
                 new UMLCallEventOperationComboBoxModel());
-        addField(Translator.localize("label.operations"), operationComboBox);
+        addField(Translator.localize("label.operations"),
+                new UMLComboBoxNavigator(
+                        this,
+                        Translator.localize("label.operation.navigate.tooltip"),
+                        operationComboBox));
 
         addAction(new ActionNewParameter());
         addAction(new ActionDeleteSingleModelElement());
