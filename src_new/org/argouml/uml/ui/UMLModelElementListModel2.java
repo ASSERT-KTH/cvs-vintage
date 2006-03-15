@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.40 2006/03/15 19:00:45 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.41 2006/03/15 20:00:48 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,7 +259,6 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
      * @param theNewTarget the new target
      */
     public void setTarget(Object theNewTarget) {
-        buildingModel = true;
         theNewTarget = theNewTarget instanceof Fig
             ? ((Fig) theNewTarget).getOwner() : theNewTarget;
         if (Model.getFacade().isAModelElement(theNewTarget)
@@ -279,7 +278,9 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
                 addOtherModelEventListeners(listTarget);
 
                 removeAllElements();
+                buildingModel = true;
                 buildModelList();
+                buildingModel = false;
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
                 }
@@ -287,9 +288,7 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
                 listTarget = null;
                 removeAllElements();
             }
-
         }
-        buildingModel = false;
     }
 
     /**
