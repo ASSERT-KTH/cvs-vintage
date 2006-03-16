@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.151 2006/03/16 00:05:00 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.152 2006/03/16 01:26:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -456,6 +456,9 @@ public abstract class FigEdgeModelElement
         return nameFig;
     }
     
+    /**
+     * Get the Rectangle in which the model elements name is displayed
+     */
     public Rectangle getNameBounds() {
         return nameFig.getBounds();
     }

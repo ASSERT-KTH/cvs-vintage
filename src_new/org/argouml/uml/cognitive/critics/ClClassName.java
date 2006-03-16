@@ -1,4 +1,4 @@
-// $Id: ClClassName.java,v 1.10 2006/03/16 00:04:59 bobtarling Exp $
+// $Id: ClClassName.java,v 1.11 2006/03/16 01:26:59 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,8 +48,6 @@ public class ClClassName implements Clarifier {
     private static final int WAVE_LENGTH = 4;
     private static final int WAVE_HEIGHT = 2;
 
-    ////////////////////////////////////////////////////////////////
-    // instance variables
     private Fig fig;
 
     /**
@@ -70,12 +68,8 @@ public class ClClassName implements Clarifier {
         Rectangle rect = null;
         if (fig instanceof FigNodeModelElement) {
             FigNodeModelElement fnme = (FigNodeModelElement) fig;
-            FigText ft = fnme.getNameFig();
-            if (ft != null) {
-                rect = ft.getBounds();
-            }
-        }
-        if (fig instanceof FigEdgeModelElement) {
+            rect = fnme.getNameBounds();
+        } else if (fig instanceof FigEdgeModelElement) {
             FigEdgeModelElement feme = (FigEdgeModelElement) fig;
             rect = feme.getNameBounds();
         }
@@ -122,12 +116,8 @@ public class ClClassName implements Clarifier {
         Rectangle rect = null;
         if (fig instanceof FigNodeModelElement) {
             FigNodeModelElement fnme = (FigNodeModelElement) fig;
-            FigText ft = fnme.getNameFig();
-            if (ft != null) {
-                rect = ft.getBounds();
-            }
-        }
-        if (fig instanceof FigEdgeModelElement) {
+            rect = fnme.getNameBounds();
+        } else if (fig instanceof FigEdgeModelElement) {
             FigEdgeModelElement feme = (FigEdgeModelElement) fig;
             rect = feme.getNameBounds();
         }

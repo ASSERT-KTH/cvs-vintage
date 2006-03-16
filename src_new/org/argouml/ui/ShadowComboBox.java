@@ -1,4 +1,4 @@
-// $Id: ShadowComboBox.java,v 1.10 2006/03/14 22:57:36 linus Exp $
+// $Id: ShadowComboBox.java,v 1.11 2006/03/16 01:26:59 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,7 +99,7 @@ public class ShadowComboBox extends JComboBox {
                 for (int i = 0; i < shadowFigs.length; ++i) {
                     shadowFigs[i] = new ShadowFig();
                     shadowFigs[i].setShadowSize(i);
-                    shadowFigs[i].getNameFig().setText(
+                    shadowFigs[i].setName(
                         (String) ShadowComboBox.this.getItemAt(i));
                 }
             }
@@ -157,6 +157,10 @@ public class ShadowComboBox extends JComboBox {
             super();
             addFig(getBigPort());
             addFig(getNameFig());
+        }
+        
+        public void setName(String text) {
+            getNameFig().setText(text);
         }
 
         /**

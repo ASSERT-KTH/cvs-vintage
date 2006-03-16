@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.70 2006/03/16 00:05:00 bobtarling Exp $
+// $Id: FigComment.java,v 1.71 2006/03/16 01:26:59 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -482,6 +482,13 @@ public class FigComment
      */
     public boolean getUseTrapRect() {
         return true;
+    }
+    
+    /**
+     * Always returns null as the FigComment does not display its name.
+     */
+    public Rectangle getNameBounds() {
+        return null;
     }
 
     /**

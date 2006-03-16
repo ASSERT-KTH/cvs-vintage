@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.233 2006/03/11 07:51:39 tfmorris Exp $
+// $Id: FigNodeModelElement.java,v 1.234 2006/03/16 01:26:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -402,10 +402,17 @@ public abstract class FigNodeModelElement
      *
      * @return the name Fig
      */
-    public FigText getNameFig() {
+    protected FigText getNameFig() {
         return nameFig;
     }
-
+    
+    /**
+     * Get the Rectangle in which the model elements name is displayed
+     */
+    public Rectangle getNameBounds() {
+        return nameFig.getBounds();
+    }
+    
     /**
      * Set the Fig that displays the model element name.
      *
