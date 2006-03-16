@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.48 2006/03/16 00:23:21 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.49 2006/03/16 00:41:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -263,8 +263,8 @@ public class ArgoDiagram extends Diagram {
                 Object owner = f.getOwner();
                 if (owner == null) {
                     report += "Removed: " + figDescription(f) + " owner was null\n";
-//                } else if (Model.getFacade().isRemoved(owner)) {
-//                    report += "Removed: " + figDescription(f) + " model element no longer in the repository\n";
+                } else if (Model.getUmlFactory().isRemoved(owner)) {
+                    report += "Removed: " + figDescription(f) + " model element no longer in the repository\n";
                 }
                 // The fix
                 f.removeFromDiagram();
