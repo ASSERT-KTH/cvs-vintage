@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.22 2006/02/27 20:44:55 tfmorris Exp $
+// $Id: CoreHelper.java,v 1.23 2006/03/16 00:14:39 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,6 +104,8 @@ public interface CoreHelper {
      *
      * @param o object
      * @return true if it's a method, false if not
+     * @deprecated by Bob in 0.21.1.
+     * There is a duplicate method Model.getFacade().isAMethod(Object)
      */
     boolean isMethod(Object o);
 
@@ -112,6 +114,8 @@ public interface CoreHelper {
      *
      * @param o object
      * @return true if it's an operation, false if not
+     * @deprecated by Bob in 0.21.1.
+     * There is a duplicate method Model.getFacade().isAOperation(Object)
      */
     boolean isOperation(Object o);
 

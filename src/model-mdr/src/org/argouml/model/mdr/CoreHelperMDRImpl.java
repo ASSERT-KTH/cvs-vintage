@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.4 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.5 2006/03/16 00:15:02 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -281,6 +281,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
 
     /**
      * @see org.argouml.model.CoreHelper#isMethod(java.lang.Object)
+     * There is a duplicate method Model.getFacade().isAMethod(Object)
      */
     public boolean isMethod(Object o) {
         return (o instanceof Method);
@@ -288,6 +289,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
 
     /**
      * @see org.argouml.model.CoreHelper#isOperation(java.lang.Object)
+     * There is a duplicate method Model.getFacade().isAOperation(Object)
      */
     public boolean isOperation(Object o) {
         return (o instanceof Operation);
