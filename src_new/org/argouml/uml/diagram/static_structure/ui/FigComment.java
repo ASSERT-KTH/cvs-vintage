@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.69 2006/03/15 14:12:44 linus Exp $
+// $Id: FigComment.java,v 1.70 2006/03/16 00:05:00 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -649,6 +649,10 @@ public class FigComment
         // Whatever happened we are no longer newly created, so clear the
         // flag. Then set the bounds for the rectangle we have defined.
         newlyCreated = false;
+    }
+    
+    public String getBody() {
+        return bodyTextFig.getText();
     }
 
     /**
