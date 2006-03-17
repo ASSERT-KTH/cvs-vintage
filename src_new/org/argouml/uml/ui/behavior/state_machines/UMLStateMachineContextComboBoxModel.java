@@ -1,4 +1,4 @@
-// $Id: UMLStateMachineContextComboBoxModel.java,v 1.3 2005/11/13 11:01:20 linus Exp $
+// $Id: UMLStateMachineContextComboBoxModel.java,v 1.4 2006/03/17 17:58:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui.behavior.state_machines;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -49,7 +50,7 @@ public class UMLStateMachineContextComboBoxModel
      * Constructor for UMLStateMachineContextListModel.
      */
     public UMLStateMachineContextComboBoxModel() {
-        super("context",false);
+        super("context", false);
     }
 
     /**
@@ -80,6 +81,9 @@ public class UMLStateMachineContextComboBoxModel
             addAllUniqueModelElementsFrom(elements, paths, Model
                     .getModelManagementHelper().getAllModelElementsOfKind(
                             model, Model.getMetaTypes().getClassifier()));
+            addAllUniqueModelElementsFrom(elements, paths, Model
+                    .getModelManagementHelper().getAllModelElementsOfKind(
+                            model, Model.getMetaTypes().getBehavioralFeature()));
         }
 
         addAll(elements);
@@ -120,4 +124,12 @@ public class UMLStateMachineContextComboBoxModel
     protected Object getSelectedModelElement() {
         return Model.getFacade().getContext(getTarget());
     }
+
+    /**
+     * @see org.argouml.uml.ui.UMLComboBoxModel2#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        /* Do nothing by design. */
+    }
+
 }

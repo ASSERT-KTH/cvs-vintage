@@ -1,4 +1,4 @@
-// $Id: MetaTypes.java,v 1.7 2005/09/04 19:25:02 linus Exp $
+// $Id: MetaTypes.java,v 1.8 2006/03/17 17:58:48 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,6 +101,11 @@ public interface MetaTypes {
      * @return Returns the Attribute.
      */
     Object getAttribute();
+
+    /**
+     * @return Returns the BehavioralFeature.
+     */
+    Object getBehavioralFeature();
 
     /**
      * @return Returns the BooleanExpression.

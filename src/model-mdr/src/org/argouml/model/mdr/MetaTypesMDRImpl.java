@@ -1,4 +1,4 @@
-// $Id: MetaTypesMDRImpl.java,v 1.2 2006/03/07 01:33:18 tfmorris Exp $
+// $Id: MetaTypesMDRImpl.java,v 1.3 2006/03/17 17:59:04 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,6 +72,7 @@ import org.omg.uml.foundation.core.Abstraction;
 import org.omg.uml.foundation.core.AssociationClass;
 import org.omg.uml.foundation.core.AssociationEnd;
 import org.omg.uml.foundation.core.Attribute;
+import org.omg.uml.foundation.core.BehavioralFeature;
 import org.omg.uml.foundation.core.Classifier;
 import org.omg.uml.foundation.core.Comment;
 import org.omg.uml.foundation.core.Component;
@@ -235,6 +236,13 @@ public final class MetaTypesMDRImpl implements MetaTypes {
      */
     public Object getAttribute() {
         return Attribute.class;
+    }
+
+    /**
+     * @see org.argouml.model.MetaTypes#getBehavioralFeature()
+     */
+    public Object getBehavioralFeature() {
+        return BehavioralFeature.class;    
     }
 
     /**

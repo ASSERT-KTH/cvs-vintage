@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.104 2005/12/20 07:54:44 tfmorris Exp $
+// $Id: PropPanelModelElement.java,v 1.105 2006/03/17 17:58:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -39,6 +40,7 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanel;
 import org.argouml.uml.ui.ScrollList;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.UMLPlainTextDocument;
@@ -58,7 +60,7 @@ public abstract class PropPanelModelElement extends PropPanel {
 
     private JScrollPane namespaceScroll;
 
-    private JComponent namespaceSelector;
+    private JComboBox namespaceSelector;
 
     private JScrollPane supplierDependencyScroll;
 
@@ -253,8 +255,10 @@ public abstract class PropPanelModelElement extends PropPanel {
                     namespaceComboBoxModel,
                     ActionSetModelElementNamespace.getInstance(), true);
         }
-        return namespaceSelector;
-
+        return new UMLComboBoxNavigator(
+                this,
+                Translator.localize("label.namespace.navigate.tooltip"),
+                namespaceSelector);
     }
 
     /**
