@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.34 2005/01/30 20:47:43 linus Exp $
+// $Id: ProjectMemberModel.java,v 1.35 2006/03/17 23:19:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,4 +80,14 @@ public class ProjectMemberModel extends AbstractProjectMember {
     public String getZipFileExtension() {
         return FILE_EXT;
     }
+    
+    /**
+     * There is not yet any repair task for the UML model but this is open to
+     * implement as and when any problems areas are discovered.
+     * @see org.argouml.kernel.ProjectMember#repair()
+     */
+    public String repair() {
+        return "";
+    }
+
 } /* end class ProjectMemberModel */

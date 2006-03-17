@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.33 2005/02/20 21:55:16 linus Exp $
+// $Id: ProjectMember.java,v 1.34 2006/03/17 23:19:42 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,4 +62,10 @@ public interface ProjectMember {
      * @return the file extension string
      */
     String getZipFileExtension();
+    
+    /**
+     * Repair any corruptions in the project member. Executed before a save in
+     * order to ensure persistence is robust.
+     */
+    String repair();
 }

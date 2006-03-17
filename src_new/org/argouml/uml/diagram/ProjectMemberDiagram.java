@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.33 2005/01/09 14:58:37 linus Exp $
+// $Id: ProjectMemberDiagram.java,v 1.34 2006/03/17 23:19:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,6 +86,13 @@ public class ProjectMemberDiagram extends AbstractProjectMember {
      */
     protected void setDiagram(ArgoDiagram d) {
         diagram = d;
+    }
+    
+    /**
+     * @see org.argouml.kernel.ProjectMember#repair()
+     */
+    public String repair() {
+        return diagram.repair();
     }
 
 } /* end class ProjectMemberDiagram */
