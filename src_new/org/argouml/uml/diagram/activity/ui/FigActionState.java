@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.38 2006/03/03 23:51:32 tfmorris Exp $
+// $Id: FigActionState.java,v 1.39 2006/03/18 01:23:17 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,13 +120,6 @@ public class FigActionState extends FigStateVertex {
                 NotationProviderFactory2.getInstance().getNotationProvider(
                     NotationProviderFactory2.TYPE_ACTIONSTATE, this, own);
         }
-    }
-
-    /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#placeString()
-     */
-    public String placeString() {
-        return "new ActionState";
     }
 
     /**
