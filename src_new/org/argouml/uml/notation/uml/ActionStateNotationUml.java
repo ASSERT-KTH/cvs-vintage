@@ -1,4 +1,4 @@
-// $Id: ActionStateNotationUml.java,v 1.4 2005/11/13 11:01:22 linus Exp $
+// $Id: ActionStateNotationUml.java,v 1.5 2006/03/18 01:25:56 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,9 +53,10 @@ public class ActionStateNotationUml extends ActionStateNotation {
                 Model.getCommonBehaviorFactory()
                         .buildUninterpretedAction(myActionState);
         } else {
-            language =
-                Model.getDataTypesHelper().getLanguage(
-                        Model.getFacade().getScript(entry));
+            Object script = Model.getFacade().getScript(entry);
+            if (script != null) {
+                language = Model.getDataTypesHelper().getLanguage(script);
+            }
         }
         Object actionExpression =
             Model.getDataTypesFactory().createActionExpression(language, text);
