@@ -374,4 +374,9 @@ public class TestServer implements IImapServer {
 		return headerList;
 	}
 
+	public int getLargestRemoteUid(IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -51,6 +51,7 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
+import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IHeaderList;
@@ -72,7 +73,6 @@ import org.columba.ristretto.imap.MailboxStatus;
 import org.columba.ristretto.imap.NamespaceCollection;
 import org.columba.ristretto.imap.SearchKey;
 import org.columba.ristretto.imap.SequenceSet;
-import org.columba.ristretto.io.ConnectionDroppedException;
 import org.columba.ristretto.io.SequenceInputStream;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
@@ -624,6 +624,16 @@ public class IMAPServer implements IMAPListener, Observer, IImapServer {
 		}
 	}
 
+	public int getLargestRemoteUid(IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException {
+		MailboxStatus status = getStatus(folder);
+		if(status.getUidNext() < 0) {
+			return fetchUid(new SequenceSet(status.getMessages()), folder);
+		} else {
+			return (int)(status.getUidNext() -1);
+		}
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.columba.mail.imap.IImapServer#getStatus(org.columba.mail.folder.imap.IMAPFolder)
 	 */
