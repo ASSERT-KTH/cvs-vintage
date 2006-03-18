@@ -273,8 +273,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		int largestLocalUid = localUids.size() > 0 ? ((Integer) localUids
 				.get(localUids.size() - 1)).intValue() : -1;
 
-		int largestRemoteUid = (int) status.getUidNext() - 1;
-
+		int largestRemoteUid = getServer().getLargestRemoteUid(this);
+		
 		if (localUids.size() == status.getMessages()
 				&& largestRemoteUid == largestLocalUid) {
 			// Seems to be no change!
@@ -421,8 +421,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	private void findRemovedMessages(MailboxStatus status, List localUids)
 			throws Exception, IOException, IMAPException,
 			CommandCancelledException {
-		int largestRemoteUid = (int) status.getUidNext() - 1;
-
+		int largestRemoteUid = getServer().getLargestRemoteUid(this);
+		
 		int deletedMessages = localUids.size() - status.getMessages();
 
 		LOG.fine("Found " + deletedMessages + " deleted Messages");

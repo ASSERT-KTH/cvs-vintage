@@ -508,4 +508,7 @@ public interface IImapServer {
 	 */
 	public void setObservable(IStatusObservable observable);
 
+	
+	public int getLargestRemoteUid(IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException;
+	
 }
