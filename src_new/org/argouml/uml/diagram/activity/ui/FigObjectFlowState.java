@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.28 2006/03/05 10:57:02 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.29 2006/03/19 16:07:50 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,10 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.model.Model;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
+import org.argouml.uml.diagram.state.ui.SelectionState;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigSingleLineText;
+import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
@@ -398,6 +400,10 @@ public class FigObjectFlowState extends FigNodeModelElement {
         if (ft == state) {
             showHelp(notationProviderState.getParsingHelp());
         }
+    }
+
+    public Selection makeSelection() {
+        return new SelectionActionState(this);
     }
 
 } /* end class FigObjectFlowState */
