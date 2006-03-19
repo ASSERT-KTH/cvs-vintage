@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewAction.java,v 1.9 2005/01/09 14:59:07 linus Exp $
+// $Id: PopupMenuNewAction.java,v 1.10 2006/03/19 21:44:24 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,32 +53,40 @@ public class PopupMenuNewAction extends JPopupMenu {
 
         JMenu newMenu = new JMenu();
         newMenu.setText(Translator.localize("action.new"));
+
         newMenu.add(ActionNewCallAction.getInstance());
         ActionNewCallAction.getInstance().setTarget(list.getTarget());
         ActionNewCallAction.getInstance().putValue(ActionNewAction.ROLE, role);
+
         newMenu.add(ActionNewCreateAction.getInstance());
         ActionNewCreateAction.getInstance().setTarget(list.getTarget());
         ActionNewCreateAction.getInstance()
             .putValue(ActionNewAction.ROLE, role);
+
         newMenu.add(ActionNewDestroyAction.getiNSTANCE());
         ActionNewDestroyAction.getiNSTANCE().setTarget(list.getTarget());
         ActionNewDestroyAction.getiNSTANCE()
             .putValue(ActionNewAction.ROLE, role);
+
         newMenu.add(ActionNewReturnAction.getInstance());
         ActionNewReturnAction.getInstance().setTarget(list.getTarget());
         ActionNewReturnAction.getInstance()
             .putValue(ActionNewAction.ROLE, role);
+
         newMenu.add(ActionNewSendAction.getInstance());
         ActionNewSendAction.getInstance().setTarget(list.getTarget());
         ActionNewSendAction.getInstance().putValue(ActionNewAction.ROLE, role);
+
         newMenu.add(ActionNewTerminateAction.getInstance());
         ActionNewTerminateAction.getInstance().setTarget(list.getTarget());
         ActionNewTerminateAction.getInstance()
             .putValue(ActionNewAction.ROLE, role);
+
         newMenu.add(ActionNewUninterpretedAction.getInstance());
         ActionNewUninterpretedAction.getInstance().setTarget(list.getTarget());
         ActionNewUninterpretedAction.getInstance()
             .putValue(ActionNewAction.ROLE, role);
+
         add(newMenu);
 
         addSeparator();
