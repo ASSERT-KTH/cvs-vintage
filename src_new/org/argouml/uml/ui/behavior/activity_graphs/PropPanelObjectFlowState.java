@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.17 2006/03/13 20:35:37 mvw Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.18 2006/03/19 15:37:57 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import javax.swing.JScrollPane;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.AbstractActionRemoveElement;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
