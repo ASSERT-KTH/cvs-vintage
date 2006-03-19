@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.83 2005/11/13 11:01:25 linus Exp $
+// $Id: UMLActivityDiagram.java,v 1.84 2006/03/19 19:49:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -312,7 +312,7 @@ public class UMLActivityDiagram extends UMLDiagram {
         if (actionNewSwimlane == null) {
             actionNewSwimlane =
                 new CmdCreateNode(Model.getMetaTypes().getPartition(),
-                        	  "Create a new swimlane");
+                        	  "button.new-partition");
         }
         return actionNewSwimlane;
     }

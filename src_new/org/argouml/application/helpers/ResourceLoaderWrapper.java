@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.43 2005/11/21 17:20:45 mvw Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.44 2006/03/19 19:49:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -361,6 +361,7 @@ public final class ResourceLoaderWrapper {
         images.put("button.new-operation", "New Operation");
         images.put("button.new-package", "Package");
         images.put("button.new-parameter", "New Parameter");
+        images.put("button.new-partition", "Partition");
         images.put("button.new-permission", "Permission");
         images.put("button.new-raised-signal", "New Raised Signal");
         images.put("button.new-reception", "New Reception");
