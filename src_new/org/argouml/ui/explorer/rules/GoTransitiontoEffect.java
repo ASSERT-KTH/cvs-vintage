@@ -1,4 +1,4 @@
-// $Id: GoTransitiontoEffect.java,v 1.3 2005/11/13 11:01:21 linus Exp $
+// $Id: GoTransitiontoEffect.java,v 1.4 2006/03/19 16:27:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,10 +50,13 @@ public class GoTransitiontoEffect extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (Model.getFacade().isATransition(parent)) {
-            Collection col = new ArrayList();
-            col.add(Model.getFacade().getEffect(parent));
-            return col;
+        if (Model.getFacade().isATransition(parent)) { 
+                Object effect = Model.getFacade().getEffect(parent);
+                if (effect != null) {
+                    Collection col = new ArrayList();
+                    col.add(effect);
+                    return col;
+                }
         }
         return null;
     }
