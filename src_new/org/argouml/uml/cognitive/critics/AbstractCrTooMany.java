@@ -1,5 +1,5 @@
-// $Id: AbstractCrTooMany.java,v 1.3 2004/12/26 18:48:07 linus Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: AbstractCrTooMany.java,v 1.4 2006/03/19 10:46:34 mvw Exp $
+// Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -31,8 +31,8 @@ import org.argouml.cognitive.ToDoItem;
 /**
  * An abstract helper class for classes which require to set a threshold
  * argument.
+ * 
  * @author mkl
- *
  */
 public abstract class AbstractCrTooMany extends CrUML {
 

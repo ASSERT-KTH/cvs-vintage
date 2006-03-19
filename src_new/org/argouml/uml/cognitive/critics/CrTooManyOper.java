@@ -1,5 +1,5 @@
-// $Id: CrTooManyOper.java,v 1.18 2005/11/13 11:01:11 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: CrTooManyOper.java,v 1.19 2006/03/19 10:46:34 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,14 +37,14 @@ import org.argouml.uml.cognitive.UMLDecision;
  * TODO: exclude getter and setter operations from count
  */
 public class CrTooManyOper extends AbstractCrTooMany {
+
     /**
-     * Threshold.
+     * The initial threshold.
      */
     private static final int OPERATIONS_THRESHOLD = 20;
 
     /**
      * The constructor.
-     *
      */
     public CrTooManyOper() {
         setupHeadAndDesc();
@@ -61,9 +61,9 @@ public class CrTooManyOper extends AbstractCrTooMany {
 	if (!(Model.getFacade().isAClassifier(dm))) {
             return NO_PROBLEM;
         }
-	Object cls = /*(MClassifier)*/ dm;
+
 	// TODO: consider inherited attributes?
-	Collection str = Model.getFacade().getFeatures(cls);
+	Collection str = Model.getFacade().getFeatures(dm);
 	if (str == null) {
             return NO_PROBLEM;
         }
@@ -83,4 +83,5 @@ public class CrTooManyOper extends AbstractCrTooMany {
      * The UID.
      */
     private static final long serialVersionUID = 3221965323817473947L;
+
 } /* end class CrTooManyOper */
