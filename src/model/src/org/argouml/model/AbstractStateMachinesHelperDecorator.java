@@ -1,4 +1,4 @@
-// $Id: AbstractStateMachinesHelperDecorator.java,v 1.2 2005/10/23 20:04:55 rastaman Exp $
+// $Id: AbstractStateMachinesHelperDecorator.java,v 1.3 2006/03/19 19:06:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -322,6 +322,15 @@ public abstract class AbstractStateMachinesHelperDecorator
      */
     public void setWhen(Object handle, Object value) {
         impl.setWhen(handle, value);
+    }
+
+    /**
+     * @see org.argouml.model.StateMachinesHelper#setChangeExpression(
+     *         java.lang.Object,
+     *         java.lang.Object)
+     */
+    public void setChangeExpression(Object handle, Object value) {
+        impl.setChangeExpression(handle, value);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.35 2006/02/27 20:44:55 tfmorris Exp $
+// $Id: Facade.java,v 1.36 2006/03/19 19:06:33 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2748,6 +2748,12 @@ public interface Facade {
      * @return TimeExpression
      */
     Object getWhen(Object target);
+
+    /**
+     * @param target The ChangeEvent.
+     * @return BooleanExpression
+     */
+    Object getChangeExpression(Object target);
 
     /**
      * Recognizer for TagDefinition. Implemented only in UML 1.4+ metamodels.

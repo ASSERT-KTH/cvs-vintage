@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: StateMachinesHelperMDRImpl.java,v 1.4 2006/03/19 19:06:13 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -600,6 +600,20 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
         if (handle instanceof TimeEvent
                 && (value == null || value instanceof TimeExpression)) {
             ((TimeEvent) handle).setWhen((TimeExpression) value);
+            return;
+        }
+        throw new IllegalArgumentException("handle: " + handle + " or value: "
+                + value);
+    }
+
+    /**
+     * @see org.argouml.model.StateMachinesHelper#setChangeExpression(
+     * java.lang.Object, java.lang.Object)
+     */
+    public void setChangeExpression(Object handle, Object value) {
+        if (handle instanceof ChangeEvent
+                && (value == null || value instanceof BooleanExpression)) {
+            ((ChangeEvent) handle).setChangeExpression((BooleanExpression) value);
             return;
         }
         throw new IllegalArgumentException("handle: " + handle + " or value: "

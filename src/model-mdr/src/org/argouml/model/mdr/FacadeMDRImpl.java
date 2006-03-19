@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.5 2006/03/13 21:53:45 bobtarling Exp $
+// $Id: FacadeMDRImpl.java,v 1.6 2006/03/19 19:06:13 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3985,6 +3985,16 @@ class FacadeMDRImpl implements Facade {
     public Object getWhen(Object target) {
         if (isATimeEvent(target)) {
             return ((TimeEvent) target).getWhen();
+        }
+        return illegalArgumentObject(target);
+    }
+
+    /**
+     * @see org.argouml.model.Facade#getChangeExpression(java.lang.Object)
+     */
+    public Object getChangeExpression(Object target) {
+        if (isAChangeEvent(target)) {
+            return ((ChangeEvent) target).getChangeExpression();
         }
         return illegalArgumentObject(target);
     }

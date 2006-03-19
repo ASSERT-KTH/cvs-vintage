@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.10 2006/02/24 21:58:04 mvw Exp $
+// $Id: StateMachinesHelper.java,v 1.11 2006/03/19 19:06:33 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -305,11 +305,19 @@ public interface StateMachinesHelper {
     /**
      * Sets the time-expression for a TimeEvent.
      *
-     * @param handle Object (MTimeEvent)
-     * @param value Object (MTimeExpression)
+     * @param handle Object (TimeEvent)
+     * @param value Object (TimeExpression)
      */
     void setWhen(Object handle, Object value);
 
+    /**
+     * Sets the change-expression for a ChangeEvent.
+     *
+     * @param handle Object (ChangeEvent)
+     * @param value Object (BooleanExpression)
+     */
+    void setChangeExpression(Object handle, Object value);
+    
     /**
      * Returns the path of a state vertex.
      * @param o the StateVertex
