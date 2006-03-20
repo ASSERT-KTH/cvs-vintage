@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.32 2006/03/20 07:49:40 bobtarling Exp $
+// $Id: FigStateVertex.java,v 1.33 2006/03/20 20:19:33 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.diagram.state.ui;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.Model;
@@ -37,7 +36,6 @@ import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
-import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigNode;
 
 /**
