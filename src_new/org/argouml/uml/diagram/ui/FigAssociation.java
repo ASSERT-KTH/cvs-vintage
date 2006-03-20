@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.107 2006/03/07 17:26:29 tfmorris Exp $
+// $Id: FigAssociation.java,v 1.108 2006/03/20 17:02:02 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -419,11 +419,13 @@ public class FigAssociation extends FigEdgeModelElement {
      */
     private void updateEnds(Object association) {
         Object[] ends = 
-            Model.getFacade().getConnections(association).toArray(); 
-        Object ae0 = ends[0];
-        Object ae1 = ends[1];
-        updateEnd(srcMult, srcRole, srcOrdering, ae0);
-        updateEnd(destMult, destRole, destOrdering, ae1);
+            Model.getFacade().getConnections(association).toArray();
+        if (ends.length >= 2) {
+            Object ae0 = ends[0];
+            Object ae1 = ends[1];
+            updateEnd(srcMult, srcRole, srcOrdering, ae0);
+            updateEnd(destMult, destRole, destOrdering, ae1);
+        }
     }
 
     /**
