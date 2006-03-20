@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.178 2006/03/14 22:57:35 linus Exp $
+// $Id: Project.java,v 1.179 2006/03/20 07:49:02 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1352,5 +1352,19 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public Profile getProfile() {
         return profile;
+    }
+    
+    /**
+     * Repair all parts of the project before a save takes place.
+     * @return a report of any fixes
+     */
+    public String repair() {
+        String report = "";
+        Iterator it = members.iterator();
+        while (it.hasNext()) {
+            ProjectMember member = (ProjectMember)it.next();
+            report += member.repair();
+        }
+        return report;
     }
 } /* end class Project */
