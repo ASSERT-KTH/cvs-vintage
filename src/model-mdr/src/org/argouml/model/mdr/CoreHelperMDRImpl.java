@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.6 2006/03/20 17:11:01 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.7 2006/03/20 23:12:18 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1083,6 +1083,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
                 return ((AssociationEnd) relationship).getAssociation();
             }
         } catch (InvalidObjectException e) {
+            LOG.error("Queried a removed model element", e);
             return null;
         }
         return null;
