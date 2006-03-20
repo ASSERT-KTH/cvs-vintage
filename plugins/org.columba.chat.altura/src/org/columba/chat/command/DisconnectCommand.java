@@ -20,6 +20,8 @@ package org.columba.chat.command;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.chat.Connection;
+import org.columba.chat.MainInterface;
+import org.columba.chat.conn.api.IConnection.STATUS;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.columba.core.command.Command;
 
@@ -38,6 +40,8 @@ public class DisconnectCommand extends Command {
 	 */
 	@Override
 	public void updateGUI() throws Exception {
+		MainInterface.connection.setStatus(STATUS.OFFLINE);
+		
 		mediator.getRoasterTree().setEnabled(false);
 	}
 
@@ -46,7 +50,6 @@ public class DisconnectCommand extends Command {
 		ChatCommandReference ref = (ChatCommandReference) getReference();
 
 		Connection.XMPPConnection.close();
-
 	}
 
 }

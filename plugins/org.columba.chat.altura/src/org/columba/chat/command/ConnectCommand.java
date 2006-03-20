@@ -23,6 +23,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.chat.Connection;
 import org.columba.chat.MainInterface;
 import org.columba.chat.config.api.IAccount;
+import org.columba.chat.conn.api.IConnection.STATUS;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.columba.core.command.Command;
 import org.columba.mail.gui.util.PasswordDialog;
@@ -107,6 +108,8 @@ public class ConnectCommand extends Command {
 		if (!success)
 			return;
 
+		
+		
 		populateCommand.execute(worker);
 
 		Connection.XMPPConnection.getRoster().setSubscriptionMode(
@@ -124,14 +127,11 @@ public class ConnectCommand extends Command {
 		if (!success)
 			return;
 
+		MainInterface.connection.setStatus(STATUS.ONLINE);
+		
 		populateCommand.updateGUI();
 
-		// awt-event-thread
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				mediator.getRoasterTree().setEnabled(true);
+		mediator.getRoasterTree().setEnabled(true);
 
-			}
-		});
 	}
 }
