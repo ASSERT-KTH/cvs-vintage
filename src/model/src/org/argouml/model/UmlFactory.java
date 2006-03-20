@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.6 2006/02/27 20:39:57 tfmorris Exp $
+// $Id: UmlFactory.java,v 1.7 2006/03/20 17:09:00 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,6 +113,12 @@ public interface UmlFactory {
      * @param elem The element to be deleted
      */
     void delete(Object elem);
+    
+    /**
+     * Delete all model data in the model subsystem.
+     * Reinitializes everything to the startup state.
+     */
+    void deleteAll();
 
     /**
      * The Project may check if a certain model element has been removed.
