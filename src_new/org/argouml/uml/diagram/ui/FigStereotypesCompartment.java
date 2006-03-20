@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.17 2006/03/12 10:53:15 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.18 2006/03/20 20:54:16 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class FigStereotypesCompartment extends FigCompartment {
      * One UML keyword is allowed. These are not strictly stereotypes but are
      * displayed as such. e.g. &lt;&lt;interface&gt;&gt;
      */
-    String keyword;
+    private String keyword;
 
     /**
      * The constructor.

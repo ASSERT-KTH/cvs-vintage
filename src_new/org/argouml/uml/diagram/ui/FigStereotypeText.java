@@ -1,4 +1,4 @@
-// $Id: FigStereotypeText.java,v 1.1 2006/01/07 10:48:20 mvw Exp $
+// $Id: FigStereotypeText.java,v 1.2 2006/03/20 20:54:16 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,9 @@ public class FigStereotypeText extends FigGroup {
      */
     private static final Logger LOG = Logger.getLogger(FigComment.class);
 
+    /**
+     * Height in pixels of stereotype text.
+     */
     protected static final int STEREOHEIGHT = 18;
 
     private String pseudoStereotype;
@@ -84,6 +87,9 @@ public class FigStereotypeText extends FigGroup {
         pseudoStereotype = stereotype;
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
+     */
     public void setOwner(Object modelElement) {
         super.setOwner(modelElement);
 
@@ -97,10 +103,8 @@ public class FigStereotypeText extends FigGroup {
         this.removeAll();
 
 
-        int xPosn = getX();
-        int yPosn = getY();
-
-        FigSingleLineText singleStereotype;
+//        int xPosn = getX();
+//        int yPosn = getY();
 
 //        if (pseudoStereotype != null) {
 //            addStereotypeText(pseudoStereotype, xPosn, yPosn);
@@ -110,13 +114,15 @@ public class FigStereotypeText extends FigGroup {
 //        Iterator it = Model.getFacade().getStereotypes(getOwner()).iterator();
 //        while (it.hasNext()) {
 //            Object stereotype = it.next();
-//            addStereotypeText(Model.getFacade().getName(stereotype), xPosn, yPosn);
+//            addStereotypeText(Model.getFacade().getName(stereotype), xPosn, 
+//                              yPosn);
 //            yPosn += STEREOHEIGHT;
 //        }
     }
 
     private void addStereotypeText(String text, int xPosn, int yPosn) {
-        FigSingleLineText singleStereotype = new FigSingleLineText(xPosn, yPosn, getWidth(), STEREOHEIGHT, true);
+        FigSingleLineText singleStereotype = new FigSingleLineText(xPosn,
+                yPosn, getWidth(), STEREOHEIGHT, true);
         singleStereotype.setEditable(false);
         singleStereotype.setJustification(FigText.JUSTIFY_CENTER);
         singleStereotype.setLineWidth(0);
@@ -124,7 +130,9 @@ public class FigStereotypeText extends FigGroup {
         singleStereotype.setVisible(true);
         singleStereotype.setFont(FigNodeModelElement.getLabelFont());
         singleStereotype.setTextColor(Color.black);
-        singleStereotype.setText("<<" + (text == null ? "(anon)" : text) + ">>");
+        // TODO: Use message formatting here
+        singleStereotype
+                .setText("<<" + (text == null ? "(anon)" : text) + ">>");
         LOG.info("Adding " + singleStereotype.getText() + " to Fig");
         addFig(singleStereotype);
     }

@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.21 2006/03/14 22:57:35 linus Exp $
+// $Id: FigFeaturesCompartment.java,v 1.22 2006/03/20 20:54:16 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,10 @@ import org.tigris.gef.presentation.FigLine;
  * Presentation logic which is common to both an operations
  * compartment and an attributes compartment.<p>
  *
+ * TODO: This is really just a generic list compartment.  It doesn't have
+ * any behavior specific to features.  Rename to something more appropriate and
+ * create a named list compartment variant. - tfm - 20060313
+ * 
  * TODO: Investigate if this could be renamed to AbstractFigFeaturesCompartment?
  * @author Bob Tarling
  */
@@ -143,7 +147,7 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
 
     /**
      * The minimum width is the minimum width of the widest child feature.
-     * The minium height is the total minimum height of all child figs but no
+     * The minimum height is the total minimum height of all child figs but no
      * less than 21 pixels.
      * @return the minimum width
      */

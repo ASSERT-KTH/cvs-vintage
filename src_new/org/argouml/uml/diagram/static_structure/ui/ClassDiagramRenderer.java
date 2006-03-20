@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.48 2006/02/26 01:35:25 linus Exp $
+// $Id: ClassDiagramRenderer.java,v 1.49 2006/03/20 20:54:16 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,8 @@ import org.tigris.gef.presentation.FigNode;
  *  AssociationClass ---  FigAssociationClass
  *  Dependency       ---  FigDependency
  *  Link             ---  FigLink
+ *  DataType         ---  FigDataType
+ *  Stereotype       ---  FigStereotypeDeclaration
  * </pre>
  *
  * @author jrobbins
@@ -115,6 +117,12 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
             figNode = new FigComment(gm, node);
         } else if (Model.getFacade().isAAssociation(node)) {
             figNode = new FigNodeAssociation(gm, node);
+        } else if (Model.getFacade().isAEnumeration(node)) {
+            figNode = new FigEnumeration(gm, node);
+        } else if (Model.getFacade().isADataType(node)) {
+            figNode = new FigDataType(gm, node);
+        } else if (Model.getFacade().isAStereotype(node)) {
+            figNode = new FigStereotypeDeclaration(gm, node);
         } else {
             LOG.error("TODO: ClassDiagramRenderer getFigNodeFor " + node);
             throw new IllegalArgumentException(

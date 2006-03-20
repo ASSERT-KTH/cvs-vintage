@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.57 2006/03/11 19:35:57 mvw Exp $
+// $Id: TargetManager.java,v 1.58 2006/03/20 20:54:17 tfmorris Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -398,6 +398,9 @@ public final class TargetManager {
     private Action addAttributeAction = new ActionAddAttribute();
 
     private Action addOperationAction = new ActionAddOperation();
+
+    private Action addEnumerationLiteralAction = 
+        new ActionAddEnumerationLiteral();
 
     /**
      * Singleton retrieval method.
@@ -880,6 +883,16 @@ public final class TargetManager {
     }
 
     /**
+     * Get the Action class for creating and adding a new EnumerationLiteral for
+     * the single selected target (or its owner).
+     * 
+     * @return the action
+     */
+    public Action getAddEnumerationLiteralAction() {
+        return addEnumerationLiteralAction;
+    }
+
+    /**
      * Convenience method to return the target as fig. If the current
      * target (retrieved by getTarget) is either a fig itself or the
      * owner of a fig this fig will be returned. Otherwise null will
@@ -1004,3 +1017,4 @@ public final class TargetManager {
     }
 
 }
+

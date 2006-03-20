@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.17 2005/12/10 18:49:32 mvw Exp $
+// $Id: UmlDiagramRenderer.java,v 1.18 2006/03/20 20:54:17 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,12 +59,15 @@ import org.argouml.uml.diagram.state.ui.FigTransition;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
+import org.argouml.uml.diagram.static_structure.ui.FigDataType;
 import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
+import org.argouml.uml.diagram.static_structure.ui.FigEnumeration;
 import org.argouml.uml.diagram.static_structure.ui.FigInstance;
 import org.argouml.uml.diagram.static_structure.ui.FigInterface;
 import org.argouml.uml.diagram.static_structure.ui.FigLink;
 import org.argouml.uml.diagram.static_structure.ui.FigModel;
 import org.argouml.uml.diagram.static_structure.ui.FigPackage;
+import org.argouml.uml.diagram.static_structure.ui.FigStereotypeDeclaration;
 import org.argouml.uml.diagram.static_structure.ui.FigSubsystem;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.FigAssociation;
@@ -119,6 +122,12 @@ public abstract class UmlDiagramRenderer
             figNode = new FigClass();
         } else if (Model.getFacade().isAInterface(node)) {
             figNode = new FigInterface();
+        } else if (Model.getFacade().isAEnumeration(node)) {
+            figNode = new FigEnumeration();
+        } else if (Model.getFacade().isAStereotype(node)) {
+            figNode = new FigStereotypeDeclaration();
+        } else if (Model.getFacade().isADataType(node)) {
+            figNode = new FigDataType();
         } else if (Model.getFacade().isAInstance(node)) {
             figNode = new FigInstance();
         } else if (Model.getFacade().isAModel(node)) {
@@ -259,7 +268,7 @@ public abstract class UmlDiagramRenderer
                 name = Model.getFacade().getName(o);
                 if ("realize".equals(name)) break;
             }
-            if("realize".equals(name)) {
+            if ("realize".equals(name)) {
                 newEdge = new FigRealization();
             } else {
                 newEdge = new FigDependency();
