@@ -25,15 +25,20 @@ public class ComponentInfo implements IComponentInfo {
 	private String id;
 
 	private TYPE type;
+	
+	private String calendarId;
 
-	public ComponentInfo(String id, TYPE type) {
+	public ComponentInfo(String id, TYPE type, String calendarId) {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		if (type == null)
 			throw new IllegalArgumentException("type == null");
+		if (calendarId == null)
+			throw new IllegalArgumentException("calendarId == null");
 		
 		this.id = id;
 		this.type = type;
+		this.calendarId = calendarId;
 	}
 
 	public TYPE getType() {
@@ -42,6 +47,10 @@ public class ComponentInfo implements IComponentInfo {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getCalendar() {
+		return calendarId;
 	}
 
 }

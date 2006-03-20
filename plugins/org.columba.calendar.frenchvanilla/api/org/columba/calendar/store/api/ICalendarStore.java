@@ -1,8 +1,9 @@
 package org.columba.calendar.store.api;
 
+import java.util.Iterator;
+
 import org.columba.calendar.model.api.IComponent;
 import org.columba.calendar.model.api.IComponentInfoList;
-import org.columba.core.util.InternalException;
 
 /**
  * Calendar store.
@@ -21,5 +22,9 @@ public interface ICalendarStore {
 
 	IComponentInfoList getComponentInfoList() throws StoreException;
 
+	Iterator<String> getIdIterator() throws StoreException;
+	
+	Iterator<String> getIdIterator(String calendarId) throws StoreException;
+	
 	boolean exists(Object uid) throws StoreException;
 }

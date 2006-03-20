@@ -121,7 +121,7 @@ public class MenuXMLDecoder {
 			if (extension != null)
 				a = (AbstractColumbaAction) extension
 						.instanciateExtension(new Object[] { controller });
-		} catch (PluginException e) {
+		} catch (Exception e) {
 			LOG.severe(e.getMessage());
 			if (Logging.DEBUG)
 				e.printStackTrace();
@@ -233,6 +233,8 @@ public class MenuXMLDecoder {
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
+				if ( action == null ) continue;
+				
 				CMenuItem menuItem = new CMenuItem(action);
 				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
@@ -242,6 +244,8 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
+				if ( action == null ) continue;
+				
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
 				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
@@ -250,6 +254,8 @@ public class MenuXMLDecoder {
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
+				if ( action == null ) continue;
+				
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
 				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
@@ -261,6 +267,8 @@ public class MenuXMLDecoder {
 				IMenu imenu;
 				try {
 					imenu = getIMenu(id, mediator);
+					if ( imenu == null ) continue;
+					
 					parentMenu.add(imenu);
 				} catch (Exception e) {
 					LOG.severe(e.getMessage());

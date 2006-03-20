@@ -15,18 +15,19 @@
 //All Rights Reserved.
 
 package org.columba.calendar.ui.list;
+
 import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.columba.calendar.base.api.ICalendarItem;
 
 /**
  * 
- *
+ * 
  * @author fdietz
  */
 public class DefaultStringRenderer extends DefaultTableCellRenderer {
@@ -34,16 +35,11 @@ public class DefaultStringRenderer extends DefaultTableCellRenderer {
 	private Font font;
 
 	public DefaultStringRenderer() {
-		setBorder(BorderFactory.createEmptyBorder(2,4,2,4));
+		setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
 	}
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
 
 		if (isSelected) {
 			setForeground(table.getSelectionForeground());
@@ -54,16 +50,14 @@ public class DefaultStringRenderer extends DefaultTableCellRenderer {
 		}
 
 		if (font == null) {
-			font= getFont();
-			font= font.deriveFont(Font.PLAIN);
+			font = getFont();
+			font = font.deriveFont(Font.PLAIN);
 		}
-	
+
 		setFont(font);
-		
-		
-		
-		CalendarItem item = (CalendarItem) value;
-		
+
+		ICalendarItem item = (ICalendarItem) value;
+
 		setText(item.getName());
 
 		return this;

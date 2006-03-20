@@ -200,7 +200,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 	}
 
 	/**
-	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#connectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		IMailFolder[] selection = ((TreeSelectionChangedEvent) e).getSelected();

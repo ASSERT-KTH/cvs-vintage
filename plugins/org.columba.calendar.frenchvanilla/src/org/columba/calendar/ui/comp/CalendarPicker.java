@@ -18,15 +18,16 @@
 package org.columba.calendar.ui.comp;
 
 import java.awt.Component;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 
+import org.columba.calendar.base.api.ICalendarItem;
 import org.columba.calendar.config.Config;
+import org.columba.calendar.config.api.ICalendarList;
 
 public class CalendarPicker extends JComboBox {
 
@@ -35,28 +36,16 @@ public class CalendarPicker extends JComboBox {
 	public CalendarPicker() {
 		super();
 
-		try {
-			Preferences prefs = Config.getInstance().getCalendarOptions();
-			String[] children = prefs.childrenNames();
-			for (int i = 0; i < children.length; i++) {
-				String calendarId = children[i];
-				Preferences childNode = prefs.node(calendarId);
-				String[] keys = childNode.keys();
-				String name = childNode.get(Config.CALENDAR_NAME, null);
-				int colorInt = childNode.getInt(Config.CALENDAR_COLOR, -1);
-				String type = childNode.get(Config.CALENDAR_TYPE, "local");
+		ICalendarList list = Config.getInstance().getCalendarList();
+		Enumeration<ICalendarItem> e = list.getElements();
+		while (e.hasMoreElements()) {
+			ICalendarItem item = e.nextElement();
+			addItem(item.getId());
 
-				addItem(calendarId);
-
-				table.put(calendarId, name);
-			}
-
-			setSelectedIndex(0);
-
-		} catch (BackingStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			table.put(item.getId(), item.getName());
 		}
+
+		setSelectedIndex(0);
 
 		// custom renderer to convert from calendar id to calendar name
 		setRenderer(new MyListCellRenderer());

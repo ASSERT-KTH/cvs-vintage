@@ -19,9 +19,17 @@ package org.columba.calendar.ui.list.api;
 
 import javax.swing.JComponent;
 
+import org.columba.calendar.base.api.ICalendarItem;
+
+
+
 public interface ICalendarListView {
 
 	public abstract JComponent getView();
 	
-	public abstract String getSelectedId();
+	public abstract ICalendarItem getSelected();
+	
+	public abstract void addSelectionChangedListener(ICalendarSelectionChangedListener listener);
+	public abstract void removeSelectionChangedListener(ICalendarSelectionChangedListener listener);
+	
 }

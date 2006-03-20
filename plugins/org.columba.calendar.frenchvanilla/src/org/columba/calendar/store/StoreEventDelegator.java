@@ -26,13 +26,12 @@ import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
-import org.columba.calendar.CalendarComponent;
 import org.columba.calendar.model.api.IComponent;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.store.api.IStoreListener;
 import org.columba.calendar.store.api.StoreEvent;
 import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.store.api.StoreListener;
 import org.columba.calendar.ui.base.CalendarHelper;
 import org.columba.core.base.Mutex;
 
@@ -40,7 +39,7 @@ import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.ActivityDepository;
 import com.miginfocom.calendar.category.CategoryStructureEvent;
 
-public class StoreEventDelegator implements StoreListener, ActionListener {
+public class StoreEventDelegator implements IStoreListener, ActionListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger

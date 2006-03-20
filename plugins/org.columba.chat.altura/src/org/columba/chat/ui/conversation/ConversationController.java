@@ -19,16 +19,31 @@ package org.columba.chat.ui.conversation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Hashtable;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.swing.JTabbedPane;
 
-import org.columba.chat.AlturaComponent;
-import org.columba.chat.api.IAlturaFrameMediator;
-import org.columba.chat.api.IChatMediator;
-import org.columba.chat.api.IConversationController;
+import org.columba.chat.Connection;
+import org.columba.chat.MainInterface;
+import org.columba.chat.base.Parser;
+import org.columba.chat.config.api.IAccount;
+import org.columba.chat.conn.api.ConnectionChangedEvent;
+import org.columba.chat.conn.api.IConnectionChangedListener;
+import org.columba.chat.conn.api.IConnection.STATUS;
+import org.columba.chat.model.BuddyList;
+import org.columba.chat.model.api.IBuddyStatus;
+import org.columba.chat.ui.conversation.api.IChatMediator;
+import org.columba.chat.ui.conversation.api.IConversationController;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 
 /**
  * Handles all chat panels.
@@ -36,21 +51,29 @@ import org.jivesoftware.smack.Chat;
  * @author fdietz
  */
 public class ConversationController extends JTabbedPane implements
-		IConversationController, ActionListener {
+		IConversationController, ActionListener, IConnectionChangedListener {
 
-	private Map chatMap;
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.chat.ui.conversation");
 
-	private IAlturaFrameMediator mediator;
+	private Map<String, IChatMediator> chatMap;
+
+	private IChatFrameMediator mediator;
+
+	private MessageListener messageListener = new MessageListener();
 
 	/**
 	 * 
 	 */
-	public ConversationController(IAlturaFrameMediator mediator) {
+	public ConversationController(IChatFrameMediator mediator) {
 		super();
 
 		this.mediator = mediator;
 
-		chatMap = new HashMap();
+		chatMap = new Hashtable<String, IChatMediator>();
+
+		MainInterface.connection.addConnectionChangedListener(this);
+
 	}
 
 	/*
@@ -58,14 +81,12 @@ public class ConversationController extends JTabbedPane implements
 	 * 
 	 * @see org.columba.chat.ui.conversation.IConversationController#addChat(java.lang.String)
 	 */
-	public IChatMediator addChat(String jabberId) {
+	public IChatMediator addChat(String jabberId, Chat chat) {
 
 		ChatMediator m = null;
 		if (chatMap.containsKey(jabberId)) {
 			m = (ChatMediator) chatMap.get(jabberId);
 		} else {
-			// create chat connection
-			Chat chat = AlturaComponent.connection.createChat(jabberId);
 
 			m = new ChatMediator(mediator, chat);
 			m.registerCloseActionListener(this);
@@ -110,10 +131,98 @@ public class ConversationController extends JTabbedPane implements
 		remove(index);
 	}
 
+	private IChatMediator getMediator(String jabberId) {
+		if (jabberId == null)
+			throw new IllegalArgumentException(jabberId);
+
+		return chatMap.get(jabberId);
+	}
+
 	public void actionPerformed(ActionEvent event) {
 		if (event.getActionCommand().equals("CLOSE")) {
 			closeSelected();
 		}
 
 	}
+
+	class MessageListener implements PacketListener {
+
+		public MessageListener() {
+		}
+
+		/**
+		 * @see org.jivesoftware.smack.PacketListener#processPacket(org.jivesoftware.smack.packet.Packet)
+		 */
+		public void processPacket(Packet packet) {
+			final Message message = (Message) packet;
+
+			// time of packet arrival
+			Date date = Calendar.getInstance().getTime();
+
+			LOG.finest("message" + message.toString());
+			// log.info(message.toString());
+
+			if ((message.getType() != Message.Type.NORMAL)
+					&& (message.getType() != Message.Type.CHAT))
+				return;
+
+			String from = message.getFrom();
+
+			LOG.info("From=" + from);
+
+			// example: fdietz@jabber.org/Jabber-client
+			// -> remove "/Jabber-client"
+			final String normalizedFrom = Parser.normalizeFrom(from);
+			final IBuddyStatus buddyStatus = BuddyList.getInstance().getBuddy(
+					normalizedFrom);
+
+			if (buddyStatus != null) {
+
+				// awt-event-thread
+				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+
+						IChatMediator mediator = getMediator(normalizedFrom);
+						if (mediator != null) {
+							mediator.displayReceivedMessage(message,
+									buddyStatus);
+
+							mediator.sendTextFieldRequestFocus();
+						}
+
+					}
+				});
+
+			}
+
+		}
+	}
+
+	public boolean exists(String jabberId) {
+		if (chatMap.containsKey(jabberId))
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.chat.conn.api.IConnectionChangedListener#connectionChanged(org.columba.chat.conn.api.ConnectionChangedEvent)
+	 */
+	public void connectionChanged(ConnectionChangedEvent object) {
+		IAccount account = object.getAccount();
+		STATUS status = object.getStatus();
+
+		if (status == STATUS.ONLINE) {
+			setEnabled(true);
+
+			messageListener = new MessageListener();
+			Connection.XMPPConnection.addPacketListener(messageListener,
+					new PacketTypeFilter(Message.class));
+
+		} else if (status == STATUS.OFFLINE) {
+			setEnabled(false);
+			Connection.XMPPConnection.removePacketListener(messageListener);
+		}
+	}
+
 }

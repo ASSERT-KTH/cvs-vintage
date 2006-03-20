@@ -2,16 +2,27 @@
 
 <menubar>
 
-	<menu id="menu_file" placeholderid="open">
-	 <menuitem id="NewAppointment" />
-	 <menuitem id="NewAllDayAppointment" />	
+	<menu id="menu_file_new" placeholderid="open">
+	<separator />
+		<menuitem id="NewAppointment" />
+		<!-- <menuitem id="NewAllDayAppointment" />-->
 	</menu>
-	
+
 	<menu id="menu_file" placeholderid="top">
-		<menuitem id="EditActivity"/>
-		<menuitem id="SaveAs"/>
+		<menuitem id="SaveAs" />
 	</menu>
-	
+
+	<menu id="menu_actions">
+		<menuitem id="NewAppointment" />
+		<!-- <menuitem id="NewAllDayAppointment" />  -->
+		<separator />
+		<menuitem id="EditActivity" />
+		<menuitem id="DeleteActivity" />
+		<separator />
+		<imenu id="CopyActivity" />
+		<imenu id="MoveActivity" />
+	</menu>
+
 	<menu id="menu_view" placeholderid="bottom">
 		<separator />
 		<menuitem id="GoBack" />
@@ -25,11 +36,11 @@
 			<checkboxmenuitem id="MonthView" />
 		</menu>
 	</menu>
-	
+
 	<menu id="menu_utilities" placeholderid="bottom">
 		<separator />
-	 	<menuitem id="ImportCalendar" />
+		<menuitem id="ImportCalendar" />
 		<menuitem id="ExportCalendar" />
 	</menu>
-	
+
 </menubar>

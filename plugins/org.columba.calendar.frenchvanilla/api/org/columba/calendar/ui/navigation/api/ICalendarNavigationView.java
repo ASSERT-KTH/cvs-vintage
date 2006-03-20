@@ -21,11 +21,11 @@ import javax.swing.JComponent;
 
 
 public interface ICalendarNavigationView {
-	public abstract JComponent getView();
+	public JComponent getView();
 
 	public abstract void setSelectionMode(int mode);
 	
-	public abstract void addSelectionChangedListener(SelectionChangedListener listener);
-	public abstract void removeSelectionChangedListener(SelectionChangedListener listener);
+	public abstract void addSelectionChangedListener(IDateRangeChangedListener listener);
+	public abstract void removeSelectionChangedListener(IDateRangeChangedListener listener);
 	
 }

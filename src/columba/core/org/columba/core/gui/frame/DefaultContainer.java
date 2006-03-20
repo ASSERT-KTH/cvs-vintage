@@ -48,6 +48,7 @@ import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.statusbar.IStatusBar;
+import org.columba.api.statusbar.IStatusBarExtension;
 import org.columba.core.command.TaskManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
@@ -57,11 +58,12 @@ import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ExtendableToolBar;
 import org.columba.core.gui.toolbar.ToolBarXMLDecoder;
-import org.columba.core.gui.util.ThrobberIcon;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.Logging;
+import org.columba.core.plugin.Extension;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
+import org.columba.core.pluginhandler.StatusBarExtensionHandler;
 import org.columba.core.resourceloader.ImageLoader;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.drag.effects.EffectsManager;
@@ -266,11 +268,23 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// update content-pane
 		setContentPane(m.getContentPane());
 
-		/*
-		 * // awt-event-thread javax.swing.SwingUtilities.invokeLater(new
-		 * Runnable() { public void run() { } });
-		 */
-
+		try {
+			StatusBarExtensionHandler handler = (StatusBarExtensionHandler) PluginManager
+					.getInstance().getHandler(StatusBarExtensionHandler.NAME);
+			Enumeration e = handler.getExtensionEnumeration();
+			while (e.hasMoreElements()) {
+				Extension ext = (Extension) e.nextElement();
+				try {
+					IStatusBarExtension comp = (IStatusBarExtension) ext
+							.instanciateExtension(new Object[] { m });
+					statusBar.addComponent(comp);
+				} catch (PluginException e1) {
+					e1.printStackTrace();
+				}
+			}
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
 		// add to new mediator's listener list
 		mediator.addListener(this);
 
@@ -320,6 +334,24 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// update content-pane
 		setContentPane(m.getContentPane());
+
+		try {
+			StatusBarExtensionHandler handler = (StatusBarExtensionHandler) PluginManager
+					.getInstance().getHandler(StatusBarExtensionHandler.NAME);
+			Enumeration e = handler.getExtensionEnumeration();
+			while (e.hasMoreElements()) {
+				Extension ext = (Extension) e.nextElement();
+				try {
+					IStatusBarExtension comp = (IStatusBarExtension) ext
+							.instanciateExtension(new Object[] { m });
+					statusBar.addComponent(comp);
+				} catch (PluginException e1) {
+					e1.printStackTrace();
+				}
+			}
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
 
 		// add to new mediator's listener list
 		mediator.addListener(this);
@@ -572,7 +604,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		setJMenuBar(menubar);
 		// add animated icon to right-hand side corner of menubar
 		MenuThrobber.setThrobber(menubar);
-		
+
 		// // add new componnet
 		contentPane.add(view, BorderLayout.CENTER);
 

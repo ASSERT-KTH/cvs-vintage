@@ -56,15 +56,16 @@ public class ExtensionXMLParser {
 	private static final java.util.logging.Logger LOG = java.util.logging.Logger
 			.getLogger("org.columba.core.plugin");
 
+	
 	/**
 	 * Parse IExtension enumeration metadata from xml file.
 	 * 
-	 * @param xmlResource
-	 *            path to xml resource file
-	 * 
-	 * @return IExtension enumeration
+	 * @param is					inputstream of xml extension file
+	 * @param pluginMetadata		can be <code>null</code>, in case of internal plugin
+	 * @param internal			true, if internal, False, otherwise.
+	 * @return					enumeration of <code>Extension</code>
 	 */
-	public Enumeration loadExtensionsFromStream(InputStream is) {
+	public Enumeration loadExtensionsFromStream(InputStream is, PluginMetadata pluginMetadata, boolean internal) {
 		Vector vector = new Vector();
 
 		XmlIO xmlFile = new XmlIO();
@@ -84,7 +85,11 @@ public class ExtensionXMLParser {
 
 			ExtensionMetadata metadata = parseExtensionMetadata(extensionXmlElement);
 
-			vector.add(new Extension(metadata));
+			if ( internal == true)
+				vector.add(new Extension(metadata, internal));
+			else
+				vector.add(new Extension(pluginMetadata, metadata));
+				
 		}
 
 		return vector.elements();

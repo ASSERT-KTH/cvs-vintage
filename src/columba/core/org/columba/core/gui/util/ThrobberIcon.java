@@ -47,7 +47,6 @@ public class ThrobberIcon extends JPanel implements TaskManagerListener {
 	public ThrobberIcon() {
 		super();
 
-		taskManager = TaskManager.getInstance();
 
 		setLayout(new BorderLayout());
 
@@ -57,7 +56,7 @@ public class ThrobberIcon extends JPanel implements TaskManagerListener {
 		add(comp, BorderLayout.CENTER);
 
 		// register interested on changes in the running worker list
-		this.taskManager = taskManager;
+		taskManager = TaskManager.getInstance();
 		taskManager.addTaskManagerListener(this);
 	}
 

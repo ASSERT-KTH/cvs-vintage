@@ -27,7 +27,7 @@ import org.columba.core.xml.XmlElement;
 /**
  * Configuration storage
  * 
- * @see org.columba.config.Config
+ * @see org.columba.config.ConfigPersistence
  * 
  * @author fdietz
  */

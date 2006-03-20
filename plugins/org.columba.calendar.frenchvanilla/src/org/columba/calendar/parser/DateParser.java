@@ -24,7 +24,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import net.fortuna.ical4j.model.Time;
 import net.fortuna.ical4j.util.TimeZones;
 
 public class DateParser {
@@ -58,15 +57,16 @@ public class DateParser {
 	public static String createDateStringFromCalendar(Calendar calendar) {
 		long millis = calendar.getTimeInMillis();
 		Date date = new Date(millis);
-		StringBuffer b = new StringBuffer(date.toString());
-        b.append('T');
-        // TODO fix timezone
-        Time time = new Time(millis, TimeZone.getDefault());
-        b.append(time.toString());
-        return b.toString();
-        
+		StringBuffer b = new StringBuffer(utcFormat.format(date));
+
+		// TODO fix timezone
+		// b.append('T');
+		// Time time = new Time(millis, TimeZone.getDefault());
+		// b.append(time.toString());
+		return b.toString();
+
 	}
-	
+
 	public static Calendar createCalendarFromDateString(String dateString) {
 
 		if (dateString == null)

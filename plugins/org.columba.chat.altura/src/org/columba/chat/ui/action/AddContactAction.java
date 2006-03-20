@@ -22,52 +22,55 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.AlturaComponent;
-import org.columba.chat.api.IAlturaFrameMediator;
+import org.columba.chat.base.Parser;
+import org.columba.chat.command.AddContactCommand;
+import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
+import org.columba.chat.ui.util.ResourceLoader;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.jivesoftware.smack.XMPPException;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class AddContactAction extends AbstractColumbaAction {
+public class AddContactAction extends AbstractConnectionAwareAction {
 
-    /**
-     * @param mediator
-     * @param name
-     */
-    public AddContactAction(IFrameMediator mediator) {
-        super(mediator, "Add Contact...");
-        
-        putValue(AbstractColumbaAction.TOOLBAR_NAME, "Add Contact");
+	/**
+	 * @param mediator
+	 * @param name
+	 */
+	public AddContactAction(IFrameMediator mediator) {
+		super(mediator, "Add Contact...");
 
-    }
+		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Add Contact");
 
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-//      prompt for jabber id
-        String jabberId = JOptionPane.showInputDialog(null, "Enter jabber ID");
-        
-        // if user cancelled action
-        if ( jabberId == null) return;
-        
-//      example: fdietz@jabber.org/Jabber-client
-        // -> remove "/Jabber-client"
-        String normalizedFrom = jabberId.replaceAll("\\/.*", "");
-        
-        try {
-            // add contact to roaster, nickname="", group=null
-        	AlturaComponent.connection.getRoster().createEntry(jabberId, "",
-                    null);
-            System.out.println("update tree");
-            ((IAlturaFrameMediator)frameMediator).getRoasterTree().populate();
-        } catch (XMPPException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            e.printStackTrace();
-        }
+		putValue(AbstractColumbaAction.LARGE_ICON, ResourceLoader
+				.getIcon("system-users.png"));
+		putValue(AbstractColumbaAction.SMALL_ICON, ResourceLoader
+				.getSmallIcon("system-users.png"));
 
-    }
+	}
+
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		// prompt for jabber id
+		String jabberId = JOptionPane.showInputDialog(null, "Enter jabber ID");
+
+		// if user cancelled action
+		if (jabberId == null)
+			return;
+
+		// example: fdietz@jabber.org/Jabber-client
+		// -> remove "/Jabber-client"
+		String normalizedFrom = Parser.normalizeFrom(jabberId);
+
+		CommandProcessor.getInstance()
+				.addOp(
+						new AddContactCommand((IChatFrameMediator) getFrameMediator(), new ChatCommandReference(
+								normalizedFrom)));
+
+	}
 }

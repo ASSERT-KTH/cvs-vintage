@@ -27,7 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 
-import org.columba.calendar.ui.util.ResourceLoader;
+import org.columba.calendar.base.api.ICalendarItem;
 
 /**
  * 
@@ -71,7 +71,7 @@ public class CheckableListEditor
 			checkbox.setBackground(table.getBackground());
 		}
 
-		CalendarItem item = (CalendarItem) value;
+		ICalendarItem item = (ICalendarItem) value;
 
 		checkbox.setBackground(item.getColor());
 		

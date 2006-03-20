@@ -17,29 +17,46 @@
 //All Rights Reserved.
 package org.columba.chat.ui.roaster;
 
-import java.awt.Dimension;
-import java.util.Iterator;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.chat.AlturaComponent;
-import org.columba.chat.api.IBuddyStatus;
-import org.columba.chat.api.IRoasterTree;
-import org.columba.chat.jabber.BuddyList;
-import org.columba.chat.jabber.BuddyStatus;
+import org.columba.chat.Connection;
+import org.columba.chat.MainInterface;
+import org.columba.chat.command.AddContactCommand;
+import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.command.SubscriptionCommand;
+import org.columba.chat.config.api.IAccount;
+import org.columba.chat.conn.api.ConnectionChangedEvent;
+import org.columba.chat.conn.api.IConnectionChangedListener;
+import org.columba.chat.conn.api.IConnection.STATUS;
+import org.columba.chat.model.BuddyList;
+import org.columba.chat.model.BuddyStatus;
+import org.columba.chat.model.api.IBuddyStatus;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
+import org.columba.chat.ui.roaster.api.IRoasterController;
+import org.columba.core.command.CommandProcessor;
+import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterGroup;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 
 /**
  * @author fdietz
  * 
  */
-public class RoasterTree extends JTree implements IRoasterTree {
+public class RoasterTree extends JTree implements IRoasterController,
+		IConnectionChangedListener {
+
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.chat.ui.roaster");
 
 	private DefaultTreeModel model;
 
@@ -47,12 +64,16 @@ public class RoasterTree extends JTree implements IRoasterTree {
 
 	private DefaultMutableTreeNode root;
 
-	private DefaultMutableTreeNode uncategorizedNode;
+	private IChatFrameMediator mediator;
 
-	public RoasterTree() {
+	private SubscriptionListener subscriptionListener = new SubscriptionListener();
+
+	private PresenceListener presenceListener = new PresenceListener();
+
+	public RoasterTree(IChatFrameMediator mediator) {
+		this.mediator = mediator;
 
 		root = new DefaultMutableTreeNode("Roster");
-		uncategorizedNode = new DefaultMutableTreeNode("Uncategorized");
 
 		model = new DefaultTreeModel(root);
 
@@ -60,12 +81,17 @@ public class RoasterTree extends JTree implements IRoasterTree {
 
 		setCellRenderer(new RoasterTreeRenderer());
 
-		setPreferredSize(new Dimension(250, 300));
+		// setPreferredSize(new Dimension(250, 300));
 		setRootVisible(false);
 		setShowsRootHandles(true);
+
+		MainInterface.connection.addConnectionChangedListener(this);
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.chat.ui.roaster.IRoasterTree#getSelected()
 	 */
 	public IBuddyStatus getSelected() {
@@ -84,7 +110,9 @@ public class RoasterTree extends JTree implements IRoasterTree {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.chat.ui.roaster.IRoasterTree#updateBuddyPresence(org.columba.chat.api.IBuddyStatus)
 	 */
 	public void updateBuddyPresence(IBuddyStatus buddy) {
@@ -98,105 +126,6 @@ public class RoasterTree extends JTree implements IRoasterTree {
 		updateUI();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.chat.ui.roaster.IRoasterTree#populate()
-	 */
-	public void populate() {
-		root = new DefaultMutableTreeNode("Roster");
-
-		roster = AlturaComponent.connection.getRoster();
-
-		// add all groups as folder to JTree
-		Iterator it = roster.getGroups();
-		while (it.hasNext()) {
-
-			RosterGroup group = (RosterGroup) it.next();
-			DefaultMutableTreeNode child = new DefaultMutableTreeNode(group);
-
-			root.add(child);
-		}
-
-		// add "Uncategorized" note
-		root.add(uncategorizedNode);
-
-		// add all contacts as leafs of group folders
-		it = roster.getEntries();
-		while (it.hasNext()) {
-			RosterEntry entry = (RosterEntry) it.next();
-
-			// add to global buddy list
-			BuddyStatus buddy;
-			if (BuddyList.getInstance().exists(entry.getUser())) {
-				// buddy already exists
-				buddy = BuddyList.getInstance().getBuddy(entry.getUser());
-
-			} else {
-				// create new buddy
-				buddy = new BuddyStatus(entry.getUser());
-				buddy.setName(entry.getName());
-				// and add it to the buddylist
-				BuddyList.getInstance().add(entry.getUser(), buddy);
-			}
-
-			// get presence
-			Presence p = roster.getPresence(entry.getUser());
-			if (p != null) {
-				// update status information
-
-				buddy.setPresenceMode(p.getMode());
-				buddy.setStatusMessage(p.getStatus());
-			}
-
-			// check if this buddy belongs to a group
-			Iterator groups = entry.getGroups();
-			boolean notAdded = true;
-			while (groups.hasNext()) {
-				RosterGroup group = (RosterGroup) groups.next();
-
-				DefaultMutableTreeNode parent = findGroup(root, group);
-
-				if (parent != null) {
-					// found group for buddy
-					parent.add(new DefaultMutableTreeNode(buddy));
-					notAdded = false;
-				}
-			}
-
-			// didn't find any group for this buddy
-			if (notAdded == true)
-				// add to "Uncategorized" node
-				uncategorizedNode.add(new DefaultMutableTreeNode(buddy));
-
-		}
-		model.setRoot(root);
-
-		model.nodeStructureChanged(root);
-
-	}
-
-	/**
-	 * Find group node.
-	 * 
-	 * @param parent
-	 *            parent node
-	 * @param group
-	 *            group
-	 * @return group node
-	 */
-	private DefaultMutableTreeNode findGroup(DefaultMutableTreeNode parent,
-			RosterGroup group) {
-		for (int i = 0; i < parent.getChildCount(); i++) {
-			DefaultMutableTreeNode child = (DefaultMutableTreeNode) parent
-					.getChildAt(i);
-
-			if (group.equals(child.getUserObject()))
-				return child;
-
-		}
-
-		return null;
-	}
-
 	private DefaultMutableTreeNode findBuddy(DefaultMutableTreeNode parent,
 			IBuddyStatus buddy) {
 		for (int i = 0; i < parent.getChildCount(); i++) {
@@ -206,11 +135,167 @@ public class RoasterTree extends JTree implements IRoasterTree {
 			Object o = child.getUserObject();
 
 			if (o instanceof BuddyStatus) {
-				if (buddy.getJabberId().equals(((IBuddyStatus) o).getJabberId()))
+				if (buddy.getJabberId()
+						.equals(((IBuddyStatus) o).getJabberId()))
 					return child;
 			}
 		}
 
 		return null;
 	}
+
+	public void populate(DefaultMutableTreeNode rootNode) {
+		this.root = rootNode;
+
+		model.setRoot(root);
+
+		model.nodeStructureChanged(root);
+
+	}
+
+	class SubscriptionListener implements PacketListener {
+
+		public SubscriptionListener() {
+			super();
+		}
+
+		/**
+		 * @see org.jivesoftware.smack.PacketListener#processPacket(org.jivesoftware.smack.packet.Packet)
+		 */
+
+		public void processPacket(Packet p) {
+			Presence presence = (Presence) p;
+
+			// we are only interested on subscription requests
+			if (presence.getType().equals(Presence.Type.SUBSCRIBE)) {
+				// ask the user
+				String from = presence.getFrom();
+
+				// example: fdietz@jabber.org/Jabber-client
+				// -> remove "/Jabber-client"
+				String normalizedFrom = from.replaceAll("\\/.*", "");
+
+				int option = JOptionPane
+						.showConfirmDialog(
+								null,
+								"The user "
+										+ from
+										+ " requests presence notification.\nDo you wish to allow them to see your "
+										+ "online presence?",
+								"Subscription Request",
+								JOptionPane.YES_NO_OPTION);
+
+				if (option == JOptionPane.YES_OPTION) {
+
+					CommandProcessor.getInstance().addOp(
+							new SubscriptionCommand(mediator,
+									new ChatCommandReference(normalizedFrom)));
+
+				} else {
+					return;
+				}
+
+				option = JOptionPane.showConfirmDialog(null,
+						"Do you wish to add " + from + " to your roaster?",
+						"Add user", JOptionPane.YES_NO_OPTION);
+
+				if (option == JOptionPane.YES_OPTION) {
+					CommandProcessor.getInstance().addOp(
+							new AddContactCommand(mediator,
+									new ChatCommandReference(normalizedFrom)));
+				}
+			}
+
+		}
+
+	}
+
+	class PresenceListener implements PacketListener {
+
+		public PresenceListener() {
+			super();
+
+		}
+
+		/**
+		 * @see org.jivesoftware.smack.PacketListener#processPacket(org.jivesoftware.smack.packet.Packet)
+		 */
+		public void processPacket(Packet packet) {
+			Presence presence = (Presence) packet;
+
+			String from = presence.getFrom();
+
+			if ((presence.getType() != Presence.Type.AVAILABLE)
+					&& (presence.getType() != Presence.Type.UNAVAILABLE))
+				return;
+
+			LOG.info("From=" + from);
+			LOG.info("Presence Mode=" + presence.getMode());
+
+			// example: fdietz@jabber.org/Jabber-client
+			// -> remove "/Jabber-client"
+			String normalizedFrom = from.replaceAll("\\/.*", "");
+
+			final IBuddyStatus status = BuddyList.getInstance().getBuddy(
+					normalizedFrom);
+			// just ignore unknown people
+			if (status == null)
+				return;
+
+			status.setPresenceMode(presence.getMode());
+			if (presence.getType() == Presence.Type.AVAILABLE) {
+				status.setSignedOn(true);
+
+			} else if (presence.getType() == Presence.Type.UNAVAILABLE) {
+				status.setSignedOn(false);
+
+			}
+
+			Runnable updateAComponent = new Runnable() {
+
+				public void run() {
+					updateBuddyPresence(status);
+				}
+			};
+
+			try {
+				SwingUtilities.invokeAndWait(updateAComponent);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
+	 * @see org.columba.chat.conn.api.IConnectionChangedListener#connectionChanged(org.columba.chat.conn.api.ConnectionChangedEvent)
+	 */
+	public void connectionChanged(ConnectionChangedEvent object) {
+		IAccount account = object.getAccount();
+		STATUS status = object.getStatus();
+
+		if (status == STATUS.ONLINE) {
+			setEnabled(true);
+
+			Connection.XMPPConnection.addPacketListener(subscriptionListener,
+					new PacketTypeFilter(Presence.class));
+
+			Connection.XMPPConnection.addPacketListener(presenceListener,
+					new PacketTypeFilter(Presence.class));
+
+		} else if (status == STATUS.OFFLINE) {
+			setEnabled(false);
+
+			Connection.XMPPConnection
+					.removePacketListener(subscriptionListener);
+
+			Connection.XMPPConnection.removePacketListener(presenceListener);
+
+		}
+	}
+
 }

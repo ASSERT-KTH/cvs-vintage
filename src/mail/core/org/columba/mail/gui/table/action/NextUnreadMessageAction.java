@@ -121,7 +121,7 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 
 	/**
 	 * 
-	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#connectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

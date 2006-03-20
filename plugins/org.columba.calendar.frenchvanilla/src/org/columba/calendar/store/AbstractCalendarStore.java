@@ -23,9 +23,9 @@ import javax.swing.event.EventListenerList;
 
 import org.columba.calendar.model.api.IComponent;
 import org.columba.calendar.model.api.IComponentInfoList;
+import org.columba.calendar.store.api.IStoreListener;
 import org.columba.calendar.store.api.StoreEvent;
 import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.store.api.StoreListener;
 
 public abstract class AbstractCalendarStore {
 
@@ -72,15 +72,15 @@ public abstract class AbstractCalendarStore {
 	/**
 	 * Adds a listener.
 	 */
-	public void addStorageListener(StoreListener l) {
-		listenerList.add(StoreListener.class, l);
+	public void addStorageListener(IStoreListener l) {
+		listenerList.add(IStoreListener.class, l);
 	}
 
 	/**
 	 * Removes a previously registered listener.
 	 */
-	public void removeStorageListener(StoreListener l) {
-		listenerList.remove(StoreListener.class, l);
+	public void removeStorageListener(IStoreListener l) {
+		listenerList.remove(IStoreListener.class, l);
 	}
 
 	/**
@@ -96,8 +96,8 @@ public abstract class AbstractCalendarStore {
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == StoreListener.class) {
-				((StoreListener) listeners[i + 1]).itemAdded(e);
+			if (listeners[i] == IStoreListener.class) {
+				((IStoreListener) listeners[i + 1]).itemAdded(e);
 			}
 		}
 	}
@@ -115,8 +115,8 @@ public abstract class AbstractCalendarStore {
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == StoreListener.class) {
-				((StoreListener) listeners[i + 1]).itemRemoved(e);
+			if (listeners[i] == IStoreListener.class) {
+				((IStoreListener) listeners[i + 1]).itemRemoved(e);
 			}
 		}
 	}
@@ -134,8 +134,8 @@ public abstract class AbstractCalendarStore {
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == StoreListener.class) {
-				((StoreListener) listeners[i + 1]).itemChanged(e);
+			if (listeners[i] == IStoreListener.class) {
+				((IStoreListener) listeners[i + 1]).itemChanged(e);
 			}
 		}
 	}

@@ -24,6 +24,7 @@ import java.util.Hashtable;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 
 import org.columba.core.gui.base.CMenu;
 
@@ -72,6 +73,15 @@ public class ExtendableMenu extends CMenu {
 	 * @see javax.swing.JMenu#addSeparator()
 	 */
 	public void addSeparator() {
+		int index = getComponentCount();
+
+		// make sure that we don't end up with two separators
+		if (index > 0 && (index - 1 < getComponentCount())) {
+			Component prev = getComponent(index - 1);
+			if (prev instanceof JSeparator)
+				return;
+		}
+
 		model.addSeparator();
 
 		super.addSeparator();
@@ -125,9 +135,11 @@ public class ExtendableMenu extends CMenu {
 	}
 
 	public void insert(JMenuItem menuItem, String placeholderId) {
-		if ( menuItem == null ) throw new IllegalArgumentException("menuItem == null");
-		if ( placeholderId == null ) throw new IllegalArgumentException("placeholderId == null");
-		
+		if (menuItem == null)
+			throw new IllegalArgumentException("menuItem == null");
+		if (placeholderId == null)
+			throw new IllegalArgumentException("placeholderId == null");
+
 		int index = model.insert(menuItem, placeholderId);
 		if (index != -1)
 			super.insert(menuItem, index);
@@ -135,6 +147,13 @@ public class ExtendableMenu extends CMenu {
 
 	public void insertSeparator(String placeholderId) {
 		int index = model.insertSeparator(placeholderId);
+		// make sure that we don't end up with two separators
+		if (index > 0 && (index - 1 < getComponentCount())) {
+			Component prev = getComponent(index - 1);
+			if (prev instanceof JSeparator)
+				return;
+		}
+
 		if (index != -1)
 			super.insertSeparator(index);
 	}

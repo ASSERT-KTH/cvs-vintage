@@ -47,6 +47,15 @@ public interface IExtensionHandler {
 	public void loadExtensionsFromStream(InputStream is);
 	
 	/**
+	 * Add many extensions at once using a xml file. In this case
+	 * these are all extensions which can only be loaded using
+	 * the plugin classloader.
+	 * 
+	 * @param is			xml file path 
+	 */
+	public void loadExternalExtensionsFromStream(PluginMetadata pluginMetadata, InputStream is);
+	
+	/**
 	 * Check if extension exists.
 	 * 
 	 * @param id		extension id

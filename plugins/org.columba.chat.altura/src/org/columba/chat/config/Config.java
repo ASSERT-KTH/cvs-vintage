@@ -27,6 +27,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import org.columba.chat.config.api.IAccount;
+import org.columba.chat.config.api.IConfig;
+import org.columba.core.io.DiskIO;
 import org.columba.core.shutdown.ShutdownManager;
 
 /**
@@ -35,26 +38,36 @@ import org.columba.core.shutdown.ShutdownManager;
  * 
  * @author fdietz
  */
-public class Config {
+public class Config implements IConfig {
 
-	private File file = new File("altura.ini");
+	private File file;
 
-	private Account account;
+	private File chatDirectory;
+
+	private IAccount account;
 
 	private Properties properties;
 
-	private static Config instance;
-
 	/**
-	 *  
+	 * 
 	 */
-	private Config() {
+	public Config() {
 
-		if ( file.exists()  )
+		// get Columba's top-level configuration directory
+		File parentFile = org.columba.core.config.Config.getDefaultConfigPath();
+
+		// create top-level configuration directory
+		chatDirectory = new File(parentFile, "chat");
+		DiskIO.ensureDirectory(chatDirectory);
+
+		file = new File(chatDirectory, "config.ini");
+
+		if (file.exists())
 			load();
 		else
 			account = new Account();
 
+		// persist changes on exit
 		ShutdownManager.getInstance().register(new Runnable() {
 
 			public void run() {
@@ -67,17 +80,10 @@ public class Config {
 		});
 	}
 
-	public static Config getInstance() {
-		if ( instance == null ) {
-			instance = new Config();
-		}
-		return instance;
-	}
-
 	/**
 	 * @return Returns the account.
 	 */
-	public Account getAccount() {
+	public IAccount getAccount() {
 		return account;
 	}
 
@@ -96,7 +102,7 @@ public class Config {
 	private void load() {
 		// use key/value properties file
 		properties = new Properties();
-		
+
 		// load configuraation
 		try {
 			// open stream to file
@@ -147,16 +153,16 @@ public class Config {
 	/**
 	 * Save configuration to file. Automatically called by using the system
 	 * shutdown hook.
-	 *  
+	 * 
 	 */
 	private void save() {
-		if ( properties == null)
+		if (properties == null)
 			properties = new Properties();
-		
+
 		// store account data in properties
 		put("host", account.getHost());
 		put("id", account.getId());
-		if ( account.getPassword() != null)
+		if (account.getPassword() != null)
 			put("password", new String(account.getPassword()));
 		put("resource", account.getResource());
 		put("enable_ssl", new Boolean(account.isEnableSSL()).toString());

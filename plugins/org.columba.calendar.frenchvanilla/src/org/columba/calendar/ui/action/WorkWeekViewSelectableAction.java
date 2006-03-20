@@ -20,7 +20,7 @@ package org.columba.calendar.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.calendar.ui.frame.CalendarFrameMediator;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.calendar.ui.util.ResourceLoader;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.action.AbstractSelectableAction;
@@ -48,7 +48,7 @@ public class WorkWeekViewSelectableAction extends AbstractSelectableAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
-		CalendarFrameMediator calendarFrame = (CalendarFrameMediator) frameMediator;
+		ICalendarMediator calendarFrame = (ICalendarMediator) frameMediator;
 			
 		calendarFrame.showWorkWeekView();
 	}

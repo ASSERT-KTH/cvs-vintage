@@ -20,12 +20,17 @@ package org.columba.calendar.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.calendar.base.api.IActivity;
+import org.columba.calendar.command.CalendarCommandReference;
+import org.columba.calendar.command.DeleteEventCommand;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.calendar.store.api.ICalendarStore;
-import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.ui.base.api.IActivity;
+import org.columba.calendar.ui.calendar.api.ActivitySelectionChangedEvent;
+import org.columba.calendar.ui.calendar.api.IActivitySelectionChangedListener;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
-import org.columba.calendar.ui.frame.CalendarFrameMediator;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
@@ -33,33 +38,43 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * 
  * @author fdietz
  */
-public class DeleteActivityAction extends AbstractColumbaAction {
+public class DeleteActivityAction extends AbstractColumbaAction implements
+		IActivitySelectionChangedListener {
 
 	public DeleteActivityAction(IFrameMediator frameMediator) {
 		super(frameMediator, "Remove Activity");
-		
+
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Remove");
 		setShowToolBarText(true);
-		
+
+		setEnabled(false);
+
+		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
+		m.getCalendarView().addSelectionChangedListener(this);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		CalendarFrameMediator m = (CalendarFrameMediator) getFrameMediator();
+		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
 
 		ICalendarView c = m.getCalendarView();
 
 		IActivity activity = c.getSelectedActivity();
 
-		String id = (String) activity.getId();
-
 		ICalendarStore store = CalendarStoreFactory.getInstance()
 				.getLocaleStore();
-		
-		try {
-			store.remove(id);
-		} catch (StoreException e1) {
-			e1.printStackTrace();
-		}
+
+		Command command = new DeleteEventCommand(new CalendarCommandReference(
+				store, activity));
+
+		CommandProcessor.getInstance().addOp(command);
+
+	}
+
+	public void selectionChanged(ActivitySelectionChangedEvent event) {
+		if (event.getSelection().length == 0)
+			setEnabled(false);
+		else
+			setEnabled(true);
 
 	}
 

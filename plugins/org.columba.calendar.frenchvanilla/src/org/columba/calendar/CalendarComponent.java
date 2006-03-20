@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.PluginMetadata;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.plugin.PluginManager;
@@ -32,6 +33,7 @@ import org.columba.core.pluginhandler.ActionExtensionHandler;
  */
 public class CalendarComponent implements IComponentPlugin {
 
+	public final static String PLUGIN_ID = "org.columba.calendar.frenchvanilla";
 	/**
 	 * 
 	 */
@@ -56,11 +58,13 @@ public class CalendarComponent implements IComponentPlugin {
 	public void init() {
 
 		try {
+			PluginMetadata metadata = PluginManager.getInstance().getPluginMetadata(PLUGIN_ID);
+			
 			InputStream is = this.getClass().getResourceAsStream(
 					"/org/columba/calendar/action/action.xml");
 
 			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
-					ActionExtensionHandler.NAME)).loadExtensionsFromStream(is);
+					ActionExtensionHandler.NAME)).loadExternalExtensionsFromStream(metadata, is);
 
 		} catch (PluginHandlerNotFoundException ex) {
 		}

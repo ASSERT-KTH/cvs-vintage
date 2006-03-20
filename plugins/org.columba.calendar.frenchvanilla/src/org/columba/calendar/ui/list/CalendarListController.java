@@ -21,20 +21,29 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.columba.calendar.base.api.ICalendarItem;
 import org.columba.calendar.config.Config;
+import org.columba.calendar.config.api.ICalendarList;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
+import org.columba.calendar.ui.list.api.CalendarSelectionChangedEvent;
 import org.columba.calendar.ui.list.api.ICalendarListView;
+import org.columba.calendar.ui.list.api.ICalendarSelectionChangedListener;
+import org.columba.core.gui.menu.ExtendablePopupMenu;
+import org.columba.core.gui.menu.MenuXMLDecoder;
+import org.columba.core.io.DiskIO;
 
 import com.miginfocom.ashape.AShapeUtil;
 import com.miginfocom.ashape.shapes.AShape;
@@ -63,11 +72,15 @@ public class CalendarListController implements ICalendarListView,
 
 	private CheckableItemListTableModel model;
 
-	private CalendarItem selection;
+	private ICalendarItem selection;
 
 	private Category localCategory;
 
 	private Category webCategory;
+
+	private EventListenerList listenerList = new EventListenerList();
+
+	private ExtendablePopupMenu menu;
 
 	public CalendarListController(ICalendarMediator frameMediator) {
 		super();
@@ -82,14 +95,37 @@ public class CalendarListController implements ICalendarListView,
 		// create default root nodes <Local> and <Web>
 		Category rootCategory = CategoryDepository.getRoot();
 
-		localCategory = rootCategory.addSubCategory(Config.NODE_ID_LOCAL_ROOT
-				.toString(), "Local");
-		webCategory = rootCategory.addSubCategory(Config.NODE_ID_WEB_ROOT
-				.toString(), "Web");
+		localCategory = rootCategory.addSubCategory(
+				"local", "Local");
+		webCategory = rootCategory.addSubCategory(
+				"web", "Web");
 
-		Preferences prefs = loadCalendarPreferences();
+		loadCalendarPreferences();
 
 		list.addMouseListener(new MyMouseListener());
+	}
+
+	/**
+	 * Get popup menu
+	 * 
+	 * @return popup menu
+	 */
+	public JPopupMenu getPopupMenu() {
+		return menu;
+	}
+
+	/**
+	 * create the PopupMenu
+	 */
+	public void createPopupMenu(ICalendarMediator mediator) {
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/calendar/action/contextmenu_list.xml");
+
+			menu = new MenuXMLDecoder(mediator).createPopupMenu(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
@@ -102,59 +138,43 @@ public class CalendarListController implements ICalendarListView,
 		if (!theList.isSelectionEmpty()) {
 			int index = theList.getAnchorSelectionIndex();
 
-			selection = (CalendarItem) ((CheckableItemListTableModel) list
+			selection = (ICalendarItem) ((CheckableItemListTableModel) list
 					.getModel()).getElement(index);
 
+			fireSelectionChanged(selection);
+
+		} else {
+			fireSelectionChanged(null);
 		}
 	}
 
-	/**
-	 * @return
-	 * @throws BackingStoreException
-	 */
-	private Preferences loadCalendarPreferences() {
+	private void loadCalendarPreferences() {
+		ICalendarList list = Config.getInstance().getCalendarList();
+		Enumeration<ICalendarItem> e = list.getElements();
+		while (e.hasMoreElements()) {
+			ICalendarItem item = e.nextElement();
 
-		try {
-			Preferences prefs = Config.getInstance().getCalendarOptions();
-			String[] children = prefs.childrenNames();
-			for (int i = 0; i < children.length; i++) {
-				String calendarId = children[i];
-				Preferences childNode = prefs.node(calendarId);
-				String[] keys = childNode.keys();
-				String name = childNode.get(Config.CALENDAR_NAME, null);
-				int colorInt = childNode.getInt(Config.CALENDAR_COLOR, -1);
-				String type = childNode.get(Config.CALENDAR_TYPE, "local");
+			Category category = createCalendar(item.getId(), item.getName(),
+					item.getColor().getRGB(), item.getType());
 
-				Category category = createCalendar(calendarId, name, colorInt,
-						type);
+			// if (calendarId.equals("work"))
+			// category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
+			// .valueOf(false), Boolean.TRUE);
+			// else
+			// category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
+			// .valueOf(true), Boolean.TRUE);
 
-				// if (calendarId.equals("work"))
-				// category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
-				// .valueOf(false), Boolean.TRUE);
-				// else
-				// category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
-				// .valueOf(true), Boolean.TRUE);
+			// category filtering is disabled as default
+			category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
+					.valueOf(true), Boolean.TRUE);
 
-				// category filtering is disabled as default
-				category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
-						.valueOf(true), Boolean.TRUE);
+			// calendar is selected as default
+			item.setSelected(true);
 
-				CalendarItem item = new CalendarItem(calendarId, name,
-						new Color(colorInt));
-				// calendar is selected as default
-				item.setSelected(true);
+			model.addElement(item);
 
-				model.addElement(item);
-
-			}
-
-			return prefs;
-		} catch (BackingStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
-		return null;
 	}
 
 	/**
@@ -164,13 +184,13 @@ public class CalendarListController implements ICalendarListView,
 	 * @param type
 	 */
 	public Category createCalendar(String calendarId, String name,
-			int colorInt, String type) {
+			int colorInt, ICalendarItem.TYPE type) {
 
 		Category root = CategoryDepository.getRoot();
 		Category calendar = null;
-		if (type.equals("local"))
+		if (type == ICalendarItem.TYPE.LOCAL)
 			calendar = localCategory.addSubCategory(calendarId, name);
-		else if (type.equals("web"))
+		else if (type == ICalendarItem.TYPE.WEB)
 			calendar = webCategory.addSubCategory(calendarId, name);
 
 		String bgName = AShapeUtil.DEFAULT_BACKGROUND_SHAPE_NAME;
@@ -190,24 +210,6 @@ public class CalendarListController implements ICalendarListView,
 		CategoryDepository.setOverride(calendarId, textName, AShape.A_PAINT,
 				outlineColor);
 
-		// CategoryDepository
-		// .setOverride(calendarId, "treeCheckBox", AShape.A_PAINT,
-		// new ShapeGradientPaint(color, 0.2f, 115, false));
-		// CategoryDepository.setOverride(calendarId, "treeCheckBoxOutline",
-		// AShape.A_PAINT, outlineColor);
-		// CategoryDepository.setOverride(calendarId, "titleText",
-		// AShape.A_PAINT,
-		// outlineColor);
-		// CategoryDepository.setOverride(calendarId, "mainText",
-		// AShape.A_PAINT,
-		// outlineColor);
-
-		// Shape defaultShape = new RoundRectangle(0, 0, 12, 12, 6, 6);
-		// CategoryDepository.setOverride(calendarId, "treeCheckBox",
-		// AShape.A_SHAPE, defaultShape);
-		// CategoryDepository.setOverride(calendarId, "treeCheckBoxOutline",
-		// AShape.A_SHAPE, defaultShape);
-
 		return calendar;
 	}
 
@@ -215,74 +217,6 @@ public class CalendarListController implements ICalendarListView,
 		return list;
 	}
 
-	/**
-	 * Creates the labels shape for the tree panel
-	 * 
-	 * @return A new shape.
-	 */
-	// private RootAShape createLabelShape() {
-	// ShapeGradientPaint bgPaint = new ShapeGradientPaint(new Color(235, 235,
-	// 235), new Color(255, 255, 255), 90, 0.7f, 0.61f, false);
-	// Color textColor = new Color(50, 50, 50);
-	// Font labFont = new Font("Arial", Font.BOLD, 12);
-	//
-	// RootAShape root = new RootAShape();
-	// FillAShape bgAShape = new FillAShape("treeLabelFill", new Rectangle(0,
-	// 0, 1, 1), new AbsRect(SwingConstants.TOP, new Integer(25)),
-	// bgPaint, Boolean.FALSE);
-	// TextAShape labelTextAShape = new TextAShape("treeLabelText",
-	// "Calendars", AbsRect.FILL, TextAShape.TYPE_SINGE_LINE, labFont,
-	// textColor, new AtFraction(0.5f), new AtFraction(0.40f),
-	// Boolean.TRUE);
-	//
-	// bgAShape.addSubShape(labelTextAShape);
-	// root.addSubShape(bgAShape);
-	//
-	// return root;
-	// }
-	// public void interactionOccured(InteractionEvent e) {
-	// Object value = e.getCommand().getValue();
-	// if (MigUtil.equals(value, "selectedCheckPressed")) {
-	//
-	// Category category = (Category) e.getInteractor().getInteracted();
-	//
-	// // Toggle selection
-	// boolean hidden = MigUtil.isTrue(category
-	// .getProperty(Category.PROP_IS_HIDDEN));
-	//
-	// category.setPropertyDeep(Category.PROP_IS_HIDDEN, Boolean
-	// .valueOf(!hidden), Boolean.TRUE);
-	//
-	// frameMediator.getCalendarView().recreateFilterRows();
-	//
-	// } else if (MigUtil.equals(value, "categorizeOnPressed")) {
-	//
-	// Category category = (Category) e.getInteractor().getInteracted();
-	//
-	// // Deselect all others
-	// if (e.getSourceEvent().isShiftDown() == false) {
-	// Collection cats = CategoryDepository.getRoot()
-	// .getChildrenDeep();
-	// for (Iterator it = cats.iterator(); it.hasNext();) {
-	// Category tmpCat = (Category) it.next();
-	// if (tmpCat != category)
-	// tmpCat.setProperty(PropertyKey
-	// .getKey(CalendarFrameMediator.PROP_FILTERED),
-	// null, null);
-	// }
-	// }
-	//
-	// // Toggle selection
-	// boolean catOn = MigUtil.isTrue(category.getProperty(PropertyKey
-	// .getKey(CalendarFrameMediator.PROP_FILTERED)));
-	// category.setProperty(PropertyKey
-	// .getKey(CalendarFrameMediator.PROP_FILTERED), Boolean
-	// .valueOf(!catOn), Boolean.TRUE);
-	//
-	// frameMediator.getCalendarView().recreateFilterRows();
-	//
-	// }
-	// }
 	class MyMouseListener extends MouseAdapter {
 
 		MyMouseListener() {
@@ -321,7 +255,7 @@ public class CalendarListController implements ICalendarListView,
 
 			int count = model.getRowCount();
 			for (int i = 0; i < count; i++) {
-				CalendarItem item = (CalendarItem) model.getElement(i);
+				ICalendarItem item = (ICalendarItem) model.getElement(i);
 				String calendarId = item.getId();
 				boolean selected = item.isSelected();
 
@@ -334,15 +268,52 @@ public class CalendarListController implements ICalendarListView,
 
 			}
 
-			frameMediator.getCalendarView().recreateFilterRows();
+			frameMediator.fireFilterUpdated();
 
 		}
 	}
 
-	public String getSelectedId() {
+	public ICalendarItem getSelected() {
 		if (selection == null)
 			return null;
 
-		return selection.getId();
+		return selection;
 	}
+
+	/**
+	 * Adds a listener.
+	 */
+	public void addSelectionChangedListener(
+			ICalendarSelectionChangedListener listener) {
+		listenerList.add(ICalendarSelectionChangedListener.class, listener);
+	}
+
+	/**
+	 * Removes a previously registered listener.
+	 */
+	public void removeSelectionChangedListener(
+			ICalendarSelectionChangedListener listener) {
+		listenerList.remove(ICalendarSelectionChangedListener.class, listener);
+	}
+
+	/**
+	 * Propagates an event to all registered listeners notifying them that this
+	 * folder has been renamed.
+	 */
+	public void fireSelectionChanged(ICalendarItem selection) {
+		CalendarSelectionChangedEvent e = new CalendarSelectionChangedEvent(
+				this, selection);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == ICalendarSelectionChangedListener.class) {
+				((ICalendarSelectionChangedListener) listeners[i + 1])
+						.selectionChanged(e);
+			}
+		}
+	}
+
 }

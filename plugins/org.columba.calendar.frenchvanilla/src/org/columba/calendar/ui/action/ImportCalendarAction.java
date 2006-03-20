@@ -19,44 +19,61 @@ package org.columba.calendar.ui.action;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.calendar.model.api.IEvent;
-import org.columba.calendar.parser.CalendarImporter;
+import org.columba.calendar.base.api.ICalendarItem;
+import org.columba.calendar.command.CalendarCommandReference;
+import org.columba.calendar.command.ImportCalendarCommand;
 import org.columba.calendar.store.CalendarStoreFactory;
-import org.columba.calendar.ui.frame.CalendarFrameMediator;
+import org.columba.calendar.store.api.ICalendarStore;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
+import org.columba.calendar.ui.list.api.CalendarSelectionChangedEvent;
 import org.columba.calendar.ui.list.api.ICalendarListView;
+import org.columba.calendar.ui.list.api.ICalendarSelectionChangedListener;
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * Import all calendar events into selected calendar.
  * <p>
- * User is prompted with an open file dialog to select one or
- * multiple iCal file.
+ * User is prompted with an open file dialog to select one or multiple iCal
+ * file.
  * 
  * @author fdietz
- *
+ * 
  */
-public class ImportCalendarAction extends AbstractColumbaAction {
+public class ImportCalendarAction extends AbstractColumbaAction implements
+		ICalendarSelectionChangedListener {
 
 	public ImportCalendarAction(IFrameMediator frameMediator) {
 		super(frameMediator, "Import Calendar");
+
+		setEnabled(false);
+
+		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
+		ICalendarListView list = m.getListView();
+
+		list.addSelectionChangedListener(this);
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		CalendarFrameMediator m = (CalendarFrameMediator) getFrameMediator();
+		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
 		ICalendarListView list = m.getListView();
-		String calendarId = list.getSelectedId();
-		
-		if ( calendarId == null ) {
-			JOptionPane.showMessageDialog(null, "No calendar for import selected.");
+
+		// get selected calendar id
+		ICalendarItem calendar = list.getSelected();
+
+		if (calendar == null) {
+			JOptionPane.showMessageDialog(null,
+					"No calendar for import selected.");
 			return;
 		}
-		
+
 		JFileChooser fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(true);
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -66,22 +83,23 @@ public class ImportCalendarAction extends AbstractColumbaAction {
 			File[] sourceFiles = fc.getSelectedFiles();
 
 			if (sourceFiles.length >= 1) {
-				for ( int i=0; i<sourceFiles.length; i++) {
-					try {
-						Iterator<IEvent> it = new CalendarImporter().importCalendar(sourceFiles[i]);
-						
-						while (it.hasNext()) {
-							IEvent event = it.next();
-							event.setCalendar(calendarId);
-							
-							CalendarStoreFactory.getInstance().getLocaleStore().add(event);
-						}
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-				}
+				ICalendarStore store = CalendarStoreFactory.getInstance()
+						.getLocaleStore();
+
+				Command command = new ImportCalendarCommand(
+						new CalendarCommandReference(store, calendar), sourceFiles);
+
+				CommandProcessor.getInstance().addOp(command);
+
 			}
 		}
 	}
 
+	public void selectionChanged(CalendarSelectionChangedEvent event) {
+		if (event.getSelection() != null)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }

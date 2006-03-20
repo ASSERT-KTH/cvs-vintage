@@ -21,19 +21,54 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
+import org.columba.core.io.DiskIO;
+
 public class ResourceLoader {
 
-	public static ImageIcon getImageIcon(String resourceName) {
+	public static ImageIcon getImage(String resourceName) {
 		if (resourceName == null)
 			throw new IllegalArgumentException("resourceName == null");
-		
-		String path = "/org/columba/chat/images/"+resourceName;
-		
+
+		String path = "/org/columba/chat/images/" + resourceName;
+
 		URL url = ResourceLoader.class.getResource(path);
-		if ( url ==  null) return null;
-		
+		if (url == null)
+			return null;
+
 		ImageIcon icon = new ImageIcon(url);
-		
+
 		return icon;
 	}
+
+	public static ImageIcon getIcon(String name) {
+		return getIcon("org/columba/chat/icons", name, false);
+	}
+
+	public static ImageIcon getSmallIcon(String name) {
+		return getIcon("org/columba/chat/icons", name, true);
+	}
+
+	public static ImageIcon getIcon(String path, String name, boolean small) {
+		URL url;
+
+		if (small)
+			url = DiskIO.getResourceURL(path + "/16x16/" + name);
+		else
+			url = DiskIO.getResourceURL(path + "/22x22/" + name);
+
+		if (url == null) {
+			path = "org/columba/core/icons";
+			name = "image-missing.png";
+			if (small)
+
+				url = DiskIO.getResourceURL(path + "/16x16/" + name);
+			else
+				url = DiskIO.getResourceURL(path + "/22x22/" + name);
+		}
+
+		ImageIcon icon = new ImageIcon(url);
+
+		return icon;
+	}
+
 }

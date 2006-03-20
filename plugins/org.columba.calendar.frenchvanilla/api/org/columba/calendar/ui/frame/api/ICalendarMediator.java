@@ -18,6 +18,8 @@
 package org.columba.calendar.ui.frame.api;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.calendar.base.api.IActivity;
+import org.columba.calendar.model.api.IDateRange;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
 import org.columba.calendar.ui.list.api.ICalendarListView;
 import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
@@ -25,8 +27,24 @@ import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
 public interface ICalendarMediator extends IFrameMediator {
 
 	public abstract ICalendarView getCalendarView();
-	
+
 	public abstract ICalendarListView getListView();
-	
+
 	public abstract ICalendarNavigationView getNavigationView();
+
+	public abstract void fireFilterUpdated();
+
+	public abstract void fireActivityMoved(IActivity activity);
+
+	public abstract void fireStartActivityEditing(IActivity activity);
+
+	public abstract void fireCreateActivity(IDateRange range);
+	
+	public abstract void showDayView();
+
+	public abstract void showWeekView();
+
+	public abstract void showWorkWeekView();
+
+	public abstract void showMonthView();
 }

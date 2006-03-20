@@ -26,7 +26,12 @@ import java.util.Vector;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.DtStart;
 
 import org.columba.calendar.model.Event;
 import org.columba.calendar.model.api.IEvent;
@@ -71,17 +76,46 @@ public class CalendarImporter {
 							+ property.getValue() + "]");
 
 					if (name.equals(Property.DTSTART)) {
-						dtStart = DateParser
-								.createCalendarFromDateString(value);
+						DtStart dtStart1 = (DtStart) property;
+						DateTime dateTime = (DateTime) dtStart1.getDate();
+						// ensure tzid matches date-time timezone..
+						Parameter tzId = dtStart1.getParameters().getParameter(
+								Parameter.TZID);
+
+						
+						dtStart = Calendar.getInstance();
+
+						dtStart.setTimeInMillis(dateTime.getTime());
+						dtStart.setTimeZone(dateTime.getTimeZone());
+
 					} else if (name.equals(Property.DTEND)) {
-						dtEnd = DateParser.createCalendarFromDateString(value);
+						DtEnd dtEnd1 = (DtEnd) property;
+						DateTime dateTime = (DateTime) dtEnd1.getDate();
+						// ensure tzid matches date-time timezone..
+						Parameter tzId = dtEnd1.getParameters().getParameter(
+								Parameter.TZID);
+
+						
+						dtEnd = Calendar.getInstance();
+
+						dtEnd.setTimeInMillis(dateTime.getTime());
+						dtEnd.setTimeZone(dateTime.getTimeZone());
 					} else if (name.equals(Property.SUMMARY)) {
 						summary = value;
 					} else if (name.equals(Property.LOCATION)) {
 						location = value;
 					} else if (name.equals(Property.DTSTAMP)) {
-						dtStamp = DateParser
-								.createCalendarFromDateString(value);
+						DtStamp dtStamp1 = (DtStamp) property;
+						DateTime dateTime = (DateTime) dtStamp1.getDate();
+						// ensure tzid matches date-time timezone..
+						Parameter tzId = dtStamp1.getParameters().getParameter(
+								Parameter.TZID);
+
+						
+						dtStamp = Calendar.getInstance();
+
+						dtStamp.setTimeInMillis(dateTime.getTime());
+						dtStamp.setTimeZone(dateTime.getTimeZone());
 					} else if (name.equals(Property.UID)) {
 						uid = value;
 					} else if (name.equals(Property.URL)) {

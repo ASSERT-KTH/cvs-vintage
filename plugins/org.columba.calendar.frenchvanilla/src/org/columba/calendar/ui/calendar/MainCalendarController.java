@@ -27,8 +27,9 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.beans.PropertyChangeEvent;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
@@ -40,12 +41,18 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolTip;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.EventListenerList;
 
+import org.columba.calendar.base.Activity;
+import org.columba.calendar.base.api.IActivity;
 import org.columba.calendar.model.api.IDateRange;
-import org.columba.calendar.ui.action.api.IActionFactory;
-import org.columba.calendar.ui.base.Activity;
-import org.columba.calendar.ui.base.api.IActivity;
+import org.columba.calendar.ui.calendar.api.ActivitySelectionChangedEvent;
+import org.columba.calendar.ui.calendar.api.IActivitySelectionChangedListener;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
+import org.columba.core.gui.menu.ExtendablePopupMenu;
+import org.columba.core.gui.menu.MenuXMLDecoder;
+import org.columba.core.io.DiskIO;
 
 import com.miginfocom.ashape.AShapeUtil;
 import com.miginfocom.ashape.DefaultAShapeProvider;
@@ -53,7 +60,6 @@ import com.miginfocom.ashape.interaction.DefaultInteractionBroker;
 import com.miginfocom.ashape.interaction.InteractionEvent;
 import com.miginfocom.ashape.interaction.InteractionListener;
 import com.miginfocom.ashape.interaction.MouseKeyInteractor;
-import com.miginfocom.ashape.layout.CutEdgeAShapeLayout;
 import com.miginfocom.ashape.shapes.AShape;
 import com.miginfocom.ashape.shapes.ContainerAShape;
 import com.miginfocom.ashape.shapes.DrawAShape;
@@ -84,9 +90,11 @@ import com.miginfocom.calendar.grid.GridLineSpecProvider;
 import com.miginfocom.calendar.grid.GridLineSpecification;
 import com.miginfocom.calendar.header.CellDecorationRow;
 import com.miginfocom.calendar.header.DateGridHeader;
+import com.miginfocom.calendar.layout.TimeBoundsLayout;
 import com.miginfocom.util.MigUtil;
 import com.miginfocom.util.PropertyKey;
 import com.miginfocom.util.command.DefaultCommand;
+import com.miginfocom.util.dates.BoundaryRounder;
 import com.miginfocom.util.dates.DateFormatList;
 import com.miginfocom.util.dates.DateRange;
 import com.miginfocom.util.dates.DateRangeI;
@@ -107,6 +115,7 @@ import com.miginfocom.util.gfx.geometry.numbers.AtFixed;
 import com.miginfocom.util.gfx.geometry.numbers.AtFraction;
 import com.miginfocom.util.gfx.geometry.numbers.AtStart;
 import com.miginfocom.util.repetition.DefaultRepetition;
+import com.miginfocom.util.states.GenericStates;
 import com.miginfocom.util.states.ToolTipProvider;
 
 /**
@@ -120,9 +129,9 @@ public class MainCalendarController implements InteractionListener,
 
 	public static final String MAIN_DAYS_CONTEXT = "mainDays";
 
-	public static final RootAShape VERSHAPE = createDefault(SwingConstants.VERTICAL);
+	public static final RootAShape HORSHAPE = createDefaultShape(SwingConstants.HORIZONTAL);
 
-	public static final RootAShape HORSHAPE = createDefault(SwingConstants.HORIZONTAL);
+	public static final RootAShape VERSHAPE = createDefaultShape(SwingConstants.VERTICAL);
 
 	private int currentViewMode = ICalendarView.VIEW_MODE_WEEK;
 
@@ -131,8 +140,6 @@ public class MainCalendarController implements InteractionListener,
 	public static final String PROP_FILTERED = "filterRow";
 
 	private IActivity selectedActivity;
-
-	private IActionFactory actionFactory;
 
 	// private com.miginfocom.beans.ActivityAShapeBean activityAShapeBean;
 
@@ -157,6 +164,8 @@ public class MainCalendarController implements InteractionListener,
 
 	private com.miginfocom.beans.DateAreaBean currentDateAreaBean;
 
+	private com.miginfocom.calendar.activity.Activity selectedInternalActivitiy;
+
 	private JPanel panel = new JPanel();
 
 	final Color labelColor = Color.DARK_GRAY;
@@ -168,13 +177,19 @@ public class MainCalendarController implements InteractionListener,
 
 	final Color darkDarkGrayColor = new Color(180, 180, 180);
 
+	private EventListenerList listenerList = new EventListenerList();
+
+	private ExtendablePopupMenu menu;
+
+	private ICalendarMediator mediator;
+
 	/**
 	 * 
 	 */
-	public MainCalendarController(IActionFactory actionFactory) {
+	public MainCalendarController(ICalendarMediator mediator) {
 		super();
 
-		this.actionFactory = actionFactory;
+		this.mediator = mediator;
 
 		panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -187,6 +202,29 @@ public class MainCalendarController implements InteractionListener,
 		panel.repaint();
 		// view.getDateArea().setActivitiesSupported(true);
 
+	}
+
+	/**
+	 * Get popup menu
+	 * 
+	 * @return popup menu
+	 */
+	public JPopupMenu getPopupMenu() {
+		return menu;
+	}
+
+	/**
+	 * create the PopupMenu
+	 */
+	public void createPopupMenu(ICalendarMediator mediator) {
+		try {
+			InputStream is = DiskIO
+					.getResourceStream("org/columba/calendar/action/contextmenu_calendar.xml");
+
+			menu = new MenuXMLDecoder(mediator).createPopupMenu(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private DateAreaBean initComponents(boolean dailyView) {
@@ -271,8 +309,7 @@ public class MainCalendarController implements InteractionListener,
 								new AtEnd(0.0f), new AtEnd(0.0f), null, null,
 								null), (java.awt.Paint[]) null,
 						new java.awt.Paint[] { labelColor }, null,
-						new Font[] { UIManager.getFont("Label.font")
-								.deriveFont(Font.BOLD) },
+						new Font[] { UIManager.getFont("Label.font") },
 						new Integer[] { null }, new AtFraction(0.5f),
 						new AtFraction(0.5f)) });
 
@@ -286,7 +323,7 @@ public class MainCalendarController implements InteractionListener,
 		// monthlyDateAreaBean.setHorizontalGridLinePaintOdd(new UIColor(
 		// "controlShadow", null, null));
 
-		//monthlyDateAreaBean.setVisibleDateRangeString("20060101T000000000-20060131T235959999");
+		// monthlyDateAreaBean.setVisibleDateRangeString("20060101T000000000-20060131T235959999");
 		monthlyDateAreaBean.setNorthDateHeader(monthlyNorthDateHeaderBean);
 		monthlyDateAreaBean
 				.setPrimaryDimensionLayout(monthlyVerticalGridDimensionLayout);
@@ -371,15 +408,45 @@ public class MainCalendarController implements InteractionListener,
 		 * public void doPaint(Graphics2D g2, Rectangle bounds) { DateGrid
 		 * dateGrid = (DateGrid) getGrid();
 		 * 
-		 * g2.setColor(Color.red); g2.drawString("hello", bounds.x, bounds.y);
-		 *  }
+		 * g2.setColor(Color.red); g2.drawString("hello", bounds.x, bounds.y); }
 		 * 
 		 * public void gridChanged(PropertyChangeEvent e) { }
 		 * 
 		 * public void dispose() { } });
 		 */
 
-		monthlyDateAreaBean.getDateArea().setActivitiesSupported(true);
+		monthlyDateAreaBean.setPrimaryDimension(SwingConstants.HORIZONTAL);
+		monthlyDateAreaBean
+				.setPrimaryDimensionCellType(DateRangeI.RANGE_TYPE_DAY);
+		monthlyDateAreaBean.setPrimaryDimensionCellTypeCount(1);
+		monthlyDateAreaBean.setWrapBoundary(DateRangeI.RANGE_TYPE_WEEK);
+
+		DefaultDateArea dateArea = monthlyDateAreaBean.getDateArea();
+
+		dateArea.setActivitiesSupported(true);
+
+		AtFixed forcedSize = new AtFixed(20);
+		TimeBoundsLayout layout = new TimeBoundsLayout(new AtFixed(2),
+				new AtStart(2), new AtEnd(-2), 2, forcedSize, forcedSize,
+				forcedSize);
+		BoundaryRounder dayRounder = new BoundaryRounder(
+				DateRangeI.RANGE_TYPE_DAY);
+		// layout.setVisualDateRangeRounder(dayRounder);
+
+		dateArea.getActivityLayouts().clear();
+		dateArea.addActivityLayout(layout);
+
+		// List list = dateArea.getActivityLayouts();
+
+		// dateArea.addDecorator(dateArea.new ActivityViewDecorator(70));
+
+		DefaultAShapeProvider defaultShapeFactory = ((AShapeRenderer) dateArea
+				.getActivityViewRenderer()).getShapeProvider();
+
+		defaultShapeFactory.setShape(HORSHAPE, null);
+
+		// dateArea.recreateActivityViews();
+
 		registerListeners(monthlyDateAreaBean);
 	}
 
@@ -404,31 +471,35 @@ public class MainCalendarController implements InteractionListener,
 				false));
 
 		// west header
-		westDateHeaderBean.setHeaderRows(new CellDecorationRow[] {
-				// first row showing the hour
-				new CellDecorationRow(DateRangeI.RANGE_TYPE_HOUR,
-						new DateFormatList("HH", null), new AtFixed(20.0f),
-						new AbsRect(new AtStart(0.0f), new AtStart(0.0f),
-								new AtEnd(0.0f), new AtEnd(0.0f), null, null,
-								null), (java.awt.Paint[]) null,
-						new java.awt.Paint[] { labelColor },
-						new DefaultRepetition(0, 1, null, null),
-						new java.awt.Font[] { UIManager.getFont("Label.font")
-								.deriveFont(Font.BOLD, 16) },
-						new java.lang.Integer[] { null }, new AtStart(3.0f),
-						new AtStart(10.0f)),
-				// second row showing the minutes
-				new com.miginfocom.calendar.header.CellDecorationRow(
-						com.miginfocom.util.dates.DateRangeI.RANGE_TYPE_MINUTE,
-						new DateFormatList("mm", null), new AtFixed(20.0f),
-						new AbsRect(new AtStart(0.0f), new AtStart(0.0f),
-								new AtEnd(0.0f), new AtEnd(0.0f), null, null,
-								null), (java.awt.Paint[]) null, null,
-						new DefaultRepetition(0, 2, null, null),
-						new java.awt.Font[] { UIManager.getFont("Label.font")
-								.deriveFont(Font.BOLD) },
-						new java.lang.Integer[] { null }, new AtStart(5.0f),
-						new AtStart(5.0f)) });
+		westDateHeaderBean
+				.setHeaderRows(new CellDecorationRow[] {
+						// first row showing the hour
+						new CellDecorationRow(DateRangeI.RANGE_TYPE_HOUR,
+								new DateFormatList("HH", null), new AtFixed(
+										20.0f), new AbsRect(new AtStart(0.0f),
+										new AtStart(0.0f), new AtEnd(0.0f),
+										new AtEnd(0.0f), null, null, null),
+								(java.awt.Paint[]) null,
+								new java.awt.Paint[] { labelColor },
+								new DefaultRepetition(0, 1, null, null),
+								new java.awt.Font[] { UIManager.getFont(
+										"Label.font")
+										.deriveFont(Font.PLAIN, 16) },
+								new java.lang.Integer[] { null }, new AtStart(
+										3.0f), new AtStart(10.0f)),
+						// second row showing the minutes
+						new com.miginfocom.calendar.header.CellDecorationRow(
+								com.miginfocom.util.dates.DateRangeI.RANGE_TYPE_MINUTE,
+								new DateFormatList("mm", null), new AtFixed(
+										20.0f), new AbsRect(new AtStart(0.0f),
+										new AtStart(0.0f), new AtEnd(0.0f),
+										new AtEnd(0.0f), null, null, null),
+								(java.awt.Paint[]) null, null,
+								new DefaultRepetition(0, 2, null, null),
+								new java.awt.Font[] { UIManager
+										.getFont("Label.font") },
+								new java.lang.Integer[] { null }, new AtStart(
+										5.0f), new AtStart(5.0f)) });
 
 		westDateHeaderBean
 				.setTextAntiAlias(com.miginfocom.util.gfx.GfxUtil.AA_HINT_ON);
@@ -447,8 +518,7 @@ public class MainCalendarController implements InteractionListener,
 						new AtEnd(0.0f), null, null, null),
 				(java.awt.Paint[]) null, new java.awt.Paint[] { labelColor },
 				new DefaultRepetition(0, 1, null, null),
-				new java.awt.Font[] { UIManager.getFont("Label.font")
-						.deriveFont(Font.BOLD) },
+				new java.awt.Font[] { UIManager.getFont("Label.font") },
 				new java.lang.Integer[] { null }, new AtFraction(0.5f),
 				new AtFraction(0.5f));
 
@@ -520,8 +590,8 @@ public class MainCalendarController implements InteractionListener,
 				.setPrimaryDimensionCellType(com.miginfocom.util.dates.DateRangeI.RANGE_TYPE_MINUTE);
 		dateAreaBean.setPrimaryDimensionCellTypeCount(30);
 		dateAreaBean.setPrimaryDimensionLayout(verticalGridDimensionLayout);
-//		 dateAreaBean
-//		 .setVisibleDateRangeString("20060101T000000000-20060107T235959999");
+		// dateAreaBean
+		// .setVisibleDateRangeString("20060101T000000000-20060107T235959999");
 		dateAreaBean.setWestDateHeader(westDateHeaderBean);
 		dateAreaBean.setWrapBoundary(new Integer(
 				com.miginfocom.util.dates.DateRangeI.RANGE_TYPE_DAY));
@@ -566,9 +636,15 @@ public class MainCalendarController implements InteractionListener,
 		 * 
 		 * public void dispose() { } });
 		 */
-		
+
 		// dateAreaBean.setActivityDepositoryContext();
 		dateAreaBean.getDateArea().setActivitiesSupported(true);
+
+		DefaultAShapeProvider defaultShapeFactory = ((AShapeRenderer) dateAreaBean
+				.getDateArea().getActivityViewRenderer()).getShapeProvider();
+
+		defaultShapeFactory.setShape(VERSHAPE, null);
+
 		registerListeners(dateAreaBean);
 	}
 
@@ -624,33 +700,26 @@ public class MainCalendarController implements InteractionListener,
 
 			currentDateAreaBean = initComponents(false);
 
-			// defaultShapeFactory.setShape(VERSHAPE, null);
-
 			break;
 		}
 
 		DefaultDateArea dateArea = currentDateAreaBean.getDateArea();
 
-		DefaultAShapeProvider defaultShapeFactory = ((AShapeRenderer) dateArea
-				.getActivityViewRenderer()).getShapeProvider();
-
-		if (days == 1)
-			defaultShapeFactory.setShape(VERSHAPE, null);
-		else
-			defaultShapeFactory.setShape(HORSHAPE, null);
+		// DefaultAShapeProvider defaultShapeFactory = ((AShapeRenderer)
+		// dateArea
+		// .getActivityViewRenderer()).getShapeProvider();
+		//
+		// if (days == 1)
+		// defaultShapeFactory.setShape(HORSHAPE, null);
+		// else
+		// defaultShapeFactory.setShape(VERSHAPE, null);
+		//
+		// dateArea.recreateActivityViews();
 
 		DateRange newVisRange = new DateRange(dateArea.getVisibleDateRange());
 
 		newVisRange.setSize(viewMode, days, MutableDateRange.ALIGN_CENTER_UP);
 		dateArea.setVisibleDateRange(newVisRange);
-
-		dateArea.recreateActivityViews();
-
-		// dateArea.revalidate();
-		// dateArea.repaint();
-
-		// currentDateAreaBean.revalidate();
-		// currentDateAreaBean.repaint();
 
 		panel.revalidate();
 		panel.repaint();
@@ -678,14 +747,14 @@ public class MainCalendarController implements InteractionListener,
 	 *            <code>SwingConstants.VERTICAL</code> or
 	 *            <code>SwingConstants.HORIZONTAL</code>.
 	 */
-	public static RootAShape createDefault(int dimension) {
+	private static RootAShape createDefaultShape(int dimension) {
 		Color bgPaint = new Color(0, 0, 255, 40);
 		Color outlinePaint = new Color(100, 100, 150);
 		Color textPaint = new Color(50, 50, 50);
 		// Color shadowPaint = new Color(0, 0, 0, 100);
 		Color shadowPaint = null;
 
-		Font textFont = new Font("sansserif", Font.BOLD, 11);
+		Font textFont = UIManager.getFont("Label.font");
 
 		RootAShape root = new RootAShape();
 		ContainerAShape container = new ContainerAShape(
@@ -738,121 +807,82 @@ public class MainCalendarController implements InteractionListener,
 		root.addSubShape(container);
 		root.setRepaintPadding(new Insets(4, 4, 4, 4));
 
-		AShapeUtil.enableMouseOverCursor(root);
-		AShapeUtil.enableMouseOverState(outlineAShape);
+		if (dimension == SwingConstants.VERTICAL) {
+			AShapeUtil.enableMouseOverCursor(root);
+			AShapeUtil.enableMouseOverState(outlineAShape);
 
-		AShapeUtil.setResizeBoxes(outlineAShape, dimension, 4);
+			AShapeUtil.setResizeBoxes(outlineAShape, dimension, 4);
 
-		// Drag, resize interactions
-		Integer button = new Integer(MouseEvent.BUTTON1);
+			// Drag, resize interactions
+			Integer button = new Integer(MouseEvent.BUTTON1);
 
-		AShapeUtil.addMouseFireEvent(outlineAShape,
-				MouseKeyInteractor.MOUSE_PRESS,
-				DefaultDateArea.AE_SELECTED_PRESSED, true, false, button);
-		AShapeUtil.addMouseFireEvent(outlineAShape,
-				MouseKeyInteractor.MOUSE_PRESS,
-				DefaultDateArea.AE_DRAG_PRESSED, true, true, button);
+			AShapeUtil.addMouseFireEvent(outlineAShape,
+					MouseKeyInteractor.MOUSE_PRESS,
+					DefaultDateArea.AE_SELECTED_PRESSED, true, false, button);
+			AShapeUtil.addMouseFireEvent(outlineAShape,
+					MouseKeyInteractor.MOUSE_PRESS,
+					DefaultDateArea.AE_DRAG_PRESSED, true, true, button);
 
-		DefaultCommand entCmd = new DefaultCommand(
-				DefaultInteractionBroker.CMD_FIRE_INTERACTION_EVENT, null,
-				DefaultDateArea.AE_MOUSE_ENTERED, null);
-		DefaultCommand exitCmd = new DefaultCommand(
-				DefaultInteractionBroker.CMD_FIRE_INTERACTION_EVENT, null,
-				DefaultDateArea.AE_MOUSE_EXITED, null);
-		AShapeUtil.addEnterExitCommands(outlineAShape, entCmd, exitCmd, true);
+			DefaultCommand entCmd = new DefaultCommand(
+					DefaultInteractionBroker.CMD_FIRE_INTERACTION_EVENT, null,
+					DefaultDateArea.AE_MOUSE_ENTERED, null);
+			DefaultCommand exitCmd = new DefaultCommand(
+					DefaultInteractionBroker.CMD_FIRE_INTERACTION_EVENT, null,
+					DefaultDateArea.AE_MOUSE_EXITED, null);
+			AShapeUtil.addEnterExitCommands(outlineAShape, entCmd, exitCmd,
+					true);
 
-		AShapeUtil.addMouseFireEvent(outlineAShape,
-				MouseKeyInteractor.MOUSE_CLICK, DefaultDateArea.AE_CLICKED,
-				true, false, button);
-		AShapeUtil.addMouseFireEvent(outlineAShape,
-				MouseKeyInteractor.MOUSE_DOUBLE_CLICK,
-				DefaultDateArea.AE_DOUBLE_CLICKED, true, true, button);
-		AShapeUtil.addMouseFireEvent(outlineAShape,
-				MouseKeyInteractor.MOUSE_POPUP_TRIGGER,
-				DefaultDateArea.AE_POPUP_TRIGGER, true, true, null);
+			AShapeUtil.addMouseFireEvent(outlineAShape,
+					MouseKeyInteractor.MOUSE_CLICK, DefaultDateArea.AE_CLICKED,
+					true, false, button);
+			AShapeUtil.addMouseFireEvent(outlineAShape,
+					MouseKeyInteractor.MOUSE_DOUBLE_CLICK,
+					DefaultDateArea.AE_DOUBLE_CLICKED, true, true, button);
+			AShapeUtil.addMouseFireEvent(outlineAShape,
+					MouseKeyInteractor.MOUSE_POPUP_TRIGGER,
+					DefaultDateArea.AE_POPUP_TRIGGER, true, true, null);
 
-		// Block mouse moves to the underlaying component won't restore the
-		// Cursor
-		AShapeUtil.addMouseEventBlock(outlineAShape, false, new Integer(
-				MouseEvent.MOUSE_MOVED));
+			// Block mouse moves to the underlaying component won't restore the
+			// Cursor
+			AShapeUtil.addMouseEventBlock(outlineAShape, false, new Integer(
+					MouseEvent.MOUSE_MOVED));
+		} else {
+			AShapeUtil.enableMouseOverCursor(root);
+			AShapeUtil.enableMouseOverState(outlineAShape);
 
-		// Yellow border for recurrent events
-		// ActivityInteractor.setStaticOverride("outline", AShape.A_PAINT, new
-		// OverrideFilter() {
-		// public Object getOverride(Object subject, Object defaultObject) {
-		// return ((ActivityView) subject).getModel().isRecurrent() ?
-		// Color.YELLOW : defaultObject;
+			// AShapeUtil.addResizeBoxes(root, SwingConstants.HORIZONTAL, 4);
+
+			// Drag, resize interactions
+
+			Integer button = new Integer(MouseEvent.BUTTON1);
+			AShapeUtil.addMouseFireEvent(outlineAShape,
+					MouseKeyInteractor.MOUSE_PRESS,
+					DefaultDateArea.AE_SELECTED_PRESSED, true, false, button);
+			AShapeUtil.addMouseFireEvent(outlineAShape,
+					MouseKeyInteractor.MOUSE_PRESS,
+					DefaultDateArea.AE_DRAG_PRESSED, true, true, button);
+
+			AShapeUtil.addMouseEventBlock(outlineAShape, false, new Integer(
+					MouseEvent.MOUSE_MOVED));
+		}
+
+		// differnt border for recurrent events
+		// ActivityInteractor.setStaticOverride("outline", AShape.A_PAINT,
+		// new OverrideFilter() {
+		// public Object getOverride(Object subject,
+		// Object defaultObject) {
+		// return ((ActivityView) subject).getModel()
+		// .isRecurrent() ? Color.YELLOW : defaultObject;
 		// }
 		// });
 
-		return root;
-	}
+		// differnt outline color is selected
+		// AShapeUtil.setStateOverride(outlineAShape, GenericStates.SELECTED,
+		// AShape.A_PAINT, new Color(255, 255, 50));
 
-	/**
-	 * Creates the default shape.
-	 */
-	public static RootAShape createTraslucentShapeHorizontal() {
-		Color bgPaint = new Color(255, 200, 200);
-		Color bulletPaint = null;
-
-		Color outlinePaint = new Color(128, 0, 0);
-		Color moOutlinePaint = new Color(0, 0, 0);
-
-		Color textPaint = new Color(50, 50, 50);
-
-		Font titleFont = new Font("SansSerif", Font.BOLD, 10);
-
-		RootAShape root = new RootAShape();
-		FillAShape bgAShape = new FillAShape("bg", new RoundRectangle(0, 0, 1,
-				1, 8, 8), AbsRect.FILL_INSIDE, bgPaint, Boolean.TRUE);
-
-		PlaceRect bulletRect = new AbsRect(new AtStart(2), new AtStart(2));
-		FillAShape bulletAShape = new FillAShape("bulletBackground",
-				new Ellipse2D.Float(0, 0, 8, 8), bulletRect, bulletPaint,
-				Boolean.TRUE);
-
-		PlaceRect contentAbsRect = new AbsRect(new AtStart(3), new AtStart(0),
-				new AtEnd(-1), new AtEnd(-1));
-		ContainerAShape content = new ContainerAShape("dock", contentAbsRect,
-				new CutEdgeAShapeLayout());
-		PlaceRect titleTextAbsRect = new AbsRect(new AtStart(0),
-				new AtStart(0), new AtEnd(0), new AtEnd(-1), null, null, null);
-		TextAShape timeTitleText = new TextAShape("titleText",
-				"$startTime$-$endTimeExcl$ $summary$", titleTextAbsRect,
-				TextAShape.TYPE_WRAP_TEXT, titleFont, textPaint,
-				new AtStart(0), new AtStart(-2), Boolean.FALSE);
-
-		DrawAShape outlineAShape = new DrawAShape("outline",
-				new RoundRectangle(0, 0, 1, 1, 12, 12), AbsRect.FILL,
-				outlinePaint, new BasicStroke(1.2f), Boolean.TRUE);
-		outlineAShape.setAttribute(AShape.A_MOUSE_CURSOR, Cursor
-				.getPredefinedCursor(Cursor.MOVE_CURSOR));
-		outlineAShape.setAttribute(AShape.A_REPORT_HIT_AREA, Boolean.TRUE);
-
-		bgAShape.addSubShape(bulletAShape);
-		content.addSubShape(timeTitleText);
-		bgAShape.addSubShape(content);
-		root.addSubShape(bgAShape);
-
-		root.addSubShape(outlineAShape);
-
-		AShapeUtil.enableMouseOverCursor(root);
-		AShapeUtil.enableMouseOverState(outlineAShape);
-
-		// AShapeUtil.addResizeBoxes(root, SwingConstants.HORIZONTAL, 4);
-
-		// Drag, resize interactions
-
-		Integer button = new Integer(MouseEvent.BUTTON1);
-		AShapeUtil.addMouseFireEvent(outlineAShape,
-				MouseKeyInteractor.MOUSE_PRESS,
-				DefaultDateArea.AE_SELECTED_PRESSED, true, false, button);
-		AShapeUtil.addMouseFireEvent(outlineAShape,
-				MouseKeyInteractor.MOUSE_PRESS,
-				DefaultDateArea.AE_DRAG_PRESSED, true, true, button);
-
-		AShapeUtil.addMouseEventBlock(outlineAShape, false, new Integer(
-				MouseEvent.MOUSE_MOVED));
+		// bold outline if selected
+		AShapeUtil.setStateOverride(outlineAShape, GenericStates.SELECTED,
+				AShape.A_STROKE, new BasicStroke(2.5f));
 
 		return root;
 	}
@@ -925,71 +955,79 @@ public class MainCalendarController implements InteractionListener,
 	public void interactionOccured(InteractionEvent e) {
 		Object value = e.getCommand().getValue();
 
+		System.out.println("interactionOccured="+value.toString());
+		
 		if (MigUtil.equals(value, DefaultDateArea.AE_MOUSE_ENTERED)) {
 			// mouse hovers over activity
 			com.miginfocom.calendar.activity.Activity activity = ((ActivityView) e
 					.getInteractor().getInteracted()).getModel();
-			System.out.println("MouseOver - activity=" + activity.getID());
-			System.out.println("summary=" + activity.getSummary());
-			System.out.println("description=" + activity.getDescription());
+			// System.out.println("MouseOver - activity=" + activity.getID());
+			// System.out.println("summary=" + activity.getSummary());
+			// System.out.println("description=" + activity.getDescription());
 
 		}
 
 		final Object o = e.getInteractor().getInteracted();
 
-		if (o instanceof ActivityView
-				&& e.getSourceEvent() instanceof MouseEvent) {
-
+		if (e.getSourceEvent() instanceof MouseEvent) {
 			final Point p = ((MouseEvent) e.getSourceEvent()).getPoint();
 			Object commandValue = e.getCommand().getValue();
 
-			com.miginfocom.calendar.activity.Activity act = ((ActivityView) o)
-					.getModel();
+//			if (DefaultDateArea.AE_CLICKED.equals(commandValue)
+//					|| DefaultDateArea.AE_DOUBLE_CLICKED.equals(commandValue)) {
 
-			// remember selected activity
-			selectedActivity = new Activity(act);
+				if (o instanceof ActivityView) {
+					// retrieve new selection
+					selectedInternalActivitiy = ((ActivityView) o).getModel();
 
-			if (DefaultDateArea.AE_POPUP_TRIGGER.equals(commandValue)) {
+					// remember selected activity
+					selectedActivity = new Activity(selectedInternalActivitiy);
 
-				JPopupMenu pop = new JPopupMenu();
-				pop.add(actionFactory.createEditAction());
-				pop.add(actionFactory.createDeleteAction());
+					// notify all listeners
+					fireSelectionChanged(new IActivity[] { selectedActivity });
+				} else {
+					// clicked on calendar - not activity
+					selectedInternalActivitiy = null;
 
-				pop.show(getView(), p.x, p.y);
+					selectedActivity = null;
+					// fireSelectionChanged(new Activity[] {});
+				}
+//			}
 
-			} else if (DefaultDateArea.AE_DOUBLE_CLICKED.equals(commandValue)) {
-				actionFactory.createEditAction().actionPerformed(null);
+			if (o instanceof ActivityView) {
+				// check if happens on the selected activity
+				if (DefaultDateArea.AE_POPUP_TRIGGER.equals(commandValue)) {
+
+					// select activity before opening context context-menu
+					// selectedInternalActivitiy.getStates().setStates(
+					// GenericStates.SELECTED_BIT, true);
+
+					// show context menu
+					menu.show(currentDateAreaBean.getDateArea(), p.x, p.y);
+
+				} else if (DefaultDateArea.AE_DOUBLE_CLICKED
+						.equals(commandValue)) {
+
+					mediator.fireStartActivityEditing(selectedActivity);
+				}
+			} else {
+				// check if happens in calendar, but not on activity
+				
+				if (DefaultDateArea.AE_DOUBLE_CLICKED.equals(commandValue)) {
+
+					// double-click on empty calendar
+					mediator.fireCreateActivity(null);
+				}
 			}
 		}
-
-		// else if (MigUtil.equals(value, "selectedPressed")) {
-		// // left mouse click selected activity
-		// com.miginfocom.calendar.activity.Activity activity = ((ActivityView)
-		// e
-		// .getInteractor().getInteracted()).getModel();
-		// System.out.println("Selected Pressed - activity="
-		// + activity.getID());
-		// System.out.println("summary=" + activity.getSummary());
-		// System.out.println("description=" + activity.getDescription());
-		//
-		// selectedActivity = new Activity(activity);
-		// }
-
 	}
 
 	// trigged if activity is moved or daterange is modified
 	public void activityMoved(ActivityMoveEvent e) {
 
 		com.miginfocom.calendar.activity.Activity activity = e.getActivity();
-		// System.out.println("Moved - activity=" + activity.getID());
-		// System.out.println("summary=" + activity.getSummary());
-		// System.out.println("description=" + activity.getDescription());
-		ImmutableDateRange dateRange = activity.getBaseDateRange();
-		// System.out.println("dateRange=" + dateRange);
 
-		// actionFactory.createActivityMovedAction(dateRange.getStart(),
-		// dateRange
-		// .getEnd(true)).actionPerformed(null);
+		ImmutableDateRange dateRange = activity.getBaseDateRange();
 
 	}
 
@@ -1093,9 +1131,47 @@ public class MainCalendarController implements InteractionListener,
 
 		for (int i = 0, size = activityList.size(); i < size; i++) {
 			System.out.println("Changed: " + activityList.get(i));
-			actionFactory.createActivityMovedAction().actionPerformed(null);
+			// TimeSpan span = activityList.get(i);
+
+			mediator.fireActivityMoved(selectedActivity);
 		}
 
+	}
+
+	/**
+	 * Adds a listener.
+	 */
+	public void addSelectionChangedListener(
+			IActivitySelectionChangedListener listener) {
+		listenerList.add(IActivitySelectionChangedListener.class, listener);
+	}
+
+	/**
+	 * Removes a previously registered listener.
+	 */
+	public void removeSelectionChangedListener(
+			IActivitySelectionChangedListener listener) {
+		listenerList.remove(IActivitySelectionChangedListener.class, listener);
+	}
+
+	/**
+	 * Propagates an event to all registered listeners notifying them that the
+	 * selectoin has been changed.
+	 */
+	private void fireSelectionChanged(IActivity[] selection) {
+		ActivitySelectionChangedEvent e = new ActivitySelectionChangedEvent(
+				this, selection);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IActivitySelectionChangedListener.class) {
+				((IActivitySelectionChangedListener) listeners[i + 1])
+						.selectionChanged(e);
+			}
+		}
 	}
 
 }

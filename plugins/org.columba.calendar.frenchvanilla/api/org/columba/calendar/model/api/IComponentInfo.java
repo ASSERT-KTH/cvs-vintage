@@ -31,4 +31,6 @@ public interface IComponentInfo {
 	 * @return Returns type of component
 	 */
 	public abstract TYPE getType();
+	
+	public abstract String getCalendar();
 }

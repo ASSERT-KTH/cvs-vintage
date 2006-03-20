@@ -20,14 +20,13 @@ package org.columba.chat.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.gui.action.AbstractColumbaAction;
 
 
 /**
  * @author fdietz
  *
  */
-public class JoinChatGroupAction extends AbstractColumbaAction {
+public class JoinChatGroupAction extends AbstractConnectionAwareAction {
 
     /**
      * @param mediator

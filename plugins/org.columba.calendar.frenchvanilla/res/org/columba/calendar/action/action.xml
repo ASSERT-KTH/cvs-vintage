@@ -14,4 +14,6 @@
     <extension id="ImportCalendar" class="org.columba.calendar.ui.action.ImportCalendarAction"/>
     <extension id="ExportCalendar" class="org.columba.calendar.ui.action.ExportCalendarAction"/>
     <extension id="SaveAs" class="org.columba.calendar.ui.action.SaveAsAction"/>
+    <extension id="CopyActivity" class="org.columba.calendar.ui.action.CopyActivityMenu"/>
+    <extension id="MoveActivity" class="org.columba.calendar.ui.action.MoveActivityMenu"/>
 </extensionlist>

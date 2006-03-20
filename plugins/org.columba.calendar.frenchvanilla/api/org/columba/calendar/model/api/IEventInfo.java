@@ -36,4 +36,5 @@ public interface IEventInfo extends IComponentInfo{
 	public abstract String getSummary();
 	
 	public abstract String getCalendar();
+	
 }

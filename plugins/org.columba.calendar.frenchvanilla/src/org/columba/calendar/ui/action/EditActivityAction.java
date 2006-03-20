@@ -22,14 +22,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.calendar.base.api.IActivity;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.calendar.store.api.ICalendarStore;
 import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.ui.base.api.IActivity;
+import org.columba.calendar.ui.calendar.api.ActivitySelectionChangedEvent;
+import org.columba.calendar.ui.calendar.api.IActivitySelectionChangedListener;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
 import org.columba.calendar.ui.dialog.EditEventDialog;
-import org.columba.calendar.ui.frame.CalendarFrameMediator;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
@@ -38,7 +40,8 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * @author fdietz
  * 
  */
-public class EditActivityAction extends AbstractColumbaAction {
+public class EditActivityAction extends AbstractColumbaAction implements
+		IActivitySelectionChangedListener {
 
 	public EditActivityAction(IFrameMediator frameMediator) {
 		super(frameMediator, "Edit Activity");
@@ -50,10 +53,14 @@ public class EditActivityAction extends AbstractColumbaAction {
 		// .getImageIcon("new_appointment-32.png"));
 		// putValue(AbstractColumbaAction.SMALL_ICON, ResourceLoader
 		// .getImageIcon("new_appointment.png"));
+		setEnabled(false);
+		
+		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
+		m.getCalendarView().addSelectionChangedListener(this);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		CalendarFrameMediator m = (CalendarFrameMediator) getFrameMediator();
+		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
 
 		ICalendarView c = m.getCalendarView();
 
@@ -81,6 +88,16 @@ public class EditActivityAction extends AbstractColumbaAction {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 			e1.printStackTrace();
 		}
+
+	}
+
+	public void selectionChanged(ActivitySelectionChangedEvent event) {
+		System.out.println("changed="+event.getSelection().length);
+		
+		if (event.getSelection().length == 0)
+			setEnabled(false);
+		else
+			setEnabled(true);
 
 	}
 

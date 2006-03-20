@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.chat.ui.conversation;
 
-import org.columba.chat.ui.conversation.view.HTMLViewer;
 
 /**
  * @author fdietz

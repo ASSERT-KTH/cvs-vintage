@@ -19,16 +19,17 @@ package org.columba.calendar.ui.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
-
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.calendar.command.AddEventCommand;
+import org.columba.calendar.command.CalendarCommandReference;
 import org.columba.calendar.model.Event;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.calendar.store.api.ICalendarStore;
-import org.columba.calendar.store.api.StoreException;
 import org.columba.calendar.ui.dialog.EditEventDialog;
 import org.columba.calendar.ui.util.ResourceLoader;
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
@@ -66,12 +67,9 @@ public class NewAppointmentAction extends AbstractColumbaAction {
 			ICalendarStore store = CalendarStoreFactory.getInstance()
 					.getLocaleStore();
 
-			try {
-				store.add(model);
-			} catch (StoreException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage());
-				e1.printStackTrace();
-			}
+			Command command = new AddEventCommand(new CalendarCommandReference(
+					store), model);
+			CommandProcessor.getInstance().addOp(command);
 
 		}
 	}

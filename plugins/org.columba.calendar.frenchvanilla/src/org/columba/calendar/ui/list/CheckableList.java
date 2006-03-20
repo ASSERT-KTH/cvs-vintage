@@ -47,7 +47,7 @@ public class CheckableList extends JTable {
 
 		super.setModel(model);
 
-		setRowHeight((int)new JCheckBox("test").getPreferredSize().getHeight()+4);
+		setRowHeight((int)new JCheckBox("test").getPreferredSize().getHeight()+3);
 	
 
 	}
@@ -63,7 +63,7 @@ public class CheckableList extends JTable {
 
 		TableColumn tc = new TableColumn(0);
 		tc.setIdentifier("Boolean");
-		tc.setMaxWidth(32);
+		tc.setMaxWidth(21);
 		tc.setCellEditor(new CheckableListEditor());
 		tc.setCellRenderer(new DefaultBooleanRenderer());
 

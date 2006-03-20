@@ -15,20 +15,22 @@
 //All Rights Reserved.
 
 package org.columba.calendar.ui.list;
+
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.columba.calendar.base.api.ICalendarItem;
 
 /**
  * 
- *
+ * 
  * @author fdietz
  */
 public class CheckableItemListTableModel extends AbstractTableModel {
 	private Vector data;
 
-	private final static String[] columns= { "Boolean", "String" };
+	private final static String[] columns = { "Boolean", "String" };
 
 	/**
 	 * 
@@ -36,7 +38,7 @@ public class CheckableItemListTableModel extends AbstractTableModel {
 	public CheckableItemListTableModel() {
 		super();
 
-		data= new Vector();
+		data = new Vector();
 
 	}
 
@@ -60,22 +62,22 @@ public class CheckableItemListTableModel extends AbstractTableModel {
 	 */
 	public Object getValueAt(int row, int column) {
 
-		CalendarItem item= (CalendarItem) data.get(row);
-//
-//		if (column == 0)
-//			return Boolean.valueOf(item.isSelected());
-//
-//		else
-//			return item.toString();
+		ICalendarItem item = (ICalendarItem) data.get(row);
+		//
+		// if (column == 0)
+		// return Boolean.valueOf(item.isSelected());
+		//
+		// else
+		// return item.toString();
 
 		return item;
 	}
 
-	public void addElement(CalendarItem item) {
+	public void addElement(ICalendarItem item) {
 		data.add(item);
 	}
 
-	public void setElement(int index, CalendarItem item) {
+	public void setElement(int index, ICalendarItem item) {
 		data.set(index, item);
 	}
 
@@ -102,7 +104,7 @@ public class CheckableItemListTableModel extends AbstractTableModel {
 	 */
 	public void setValueAt(Object value, int row, int column) {
 
-		CalendarItem item= (CalendarItem) data.get(row);
+		ICalendarItem item = (ICalendarItem) data.get(row);
 
 		if (column == 0)
 			item.setSelected(((Boolean) value).booleanValue());
@@ -115,16 +117,16 @@ public class CheckableItemListTableModel extends AbstractTableModel {
 	public String getColumnName(int column) {
 		return columns[column];
 	}
-	
+
 	public int count() {
 		return data.size();
 	}
 
-	public CalendarItem getElement(int index) {
-		return (CalendarItem) data.get(index);
+	public ICalendarItem getElement(int index) {
+		return (ICalendarItem) data.get(index);
 	}
-	
-	public void updateRow(CalendarItem item) {
+
+	public void updateRow(ICalendarItem item) {
 		int index = data.indexOf(item);
 		fireTableRowsUpdated(index, index);
 	}

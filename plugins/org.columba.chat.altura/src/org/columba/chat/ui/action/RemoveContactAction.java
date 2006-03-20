@@ -22,25 +22,26 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.AlturaComponent;
-import org.columba.chat.api.IAlturaFrameMediator;
-import org.columba.chat.api.IBuddyStatus;
+import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.command.RemoveContactCommand;
+import org.columba.chat.model.api.IBuddyStatus;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.jivesoftware.smack.RosterEntry;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class RemoveContactAction extends AbstractColumbaAction {
+public class RemoveContactAction extends AbstractConnectionAwareAction {
 
 	/**
 	 * @param mediator
 	 * @param name
 	 */
 	public RemoveContactAction(IFrameMediator mediator) {
-		super(mediator, "Remove Contact...");
-		
+		super(mediator, "Remove Contact");
+
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Remove Contact");
 
 	}
@@ -52,7 +53,7 @@ public class RemoveContactAction extends AbstractColumbaAction {
 		String jabberId = "";
 
 		// selected buddy in buddylist
-		IBuddyStatus buddy = (IBuddyStatus) ((IAlturaFrameMediator) frameMediator)
+		IBuddyStatus buddy = (IBuddyStatus) ((IChatFrameMediator) frameMediator)
 				.getRoasterTree().getSelected();
 
 		if (buddy != null) {
@@ -63,29 +64,18 @@ public class RemoveContactAction extends AbstractColumbaAction {
 			jabberId = JOptionPane.showInputDialog(null, "Enter jabber ID");
 		}
 
-		RosterEntry entry = AlturaComponent.connection.getRoster().getEntry(
-				jabberId);
-
 		int option = JOptionPane.showConfirmDialog(null,
 				"Do you really want to remove " + jabberId
 						+ " from your roster?", "Remove Contact",
 				JOptionPane.YES_NO_OPTION);
 
 		if (option == JOptionPane.YES_OPTION) {
-			AlturaComponent.connection.getRoster().removeEntry(entry);
-			System.out.println("update tree");
-			((IAlturaFrameMediator) frameMediator).getRoasterTree().populate();
-		}
 
-		/*
-		 * try {
-		 *  } catch (XMPPException e) {
-		 * 
-		 * JOptionPane.showMessageDialog(MainInterface.mediator.getView(), e
-		 * .getMessage());
-		 * 
-		 * e.printStackTrace(); }
-		 */
+			CommandProcessor.getInstance().addOp(
+					new RemoveContactCommand(
+							(IChatFrameMediator) getFrameMediator(),
+							new ChatCommandReference(jabberId)));
+		}
 
 	}
 }

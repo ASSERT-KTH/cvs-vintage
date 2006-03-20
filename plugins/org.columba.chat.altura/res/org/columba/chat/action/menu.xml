@@ -5,7 +5,7 @@
 	<!-- -->	
 	</menu>
 	
-	<menu id="menu_file" placeholderid="top">
+	<menu id="menu_actions" placeholderid="top">
 		<menuitem id="Connect" />
 		<menuitem id="Disconnect" />
 		<separator/>

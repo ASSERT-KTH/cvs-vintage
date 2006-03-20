@@ -9,8 +9,13 @@
     <extension id="AlturaMessenger" class="org.columba.chat.AlturaComponent" />
   </extensionlist>
   <extensionlist id="org.columba.core.frame">
-    <extension id="AlturaFrame" class="org.columba.chat.frame.AlturaFrameController">
+    <extension id="AlturaFrame" class="org.columba.chat.ui.frame.AlturaFrameController">
      <properties managed="true" />
     </extension>
   </extensionlist>
+  <!--
+  <extensionlist id="org.columba.core.statusbar">
+    <extension id="Presence" class="org.columba.chat.ui.presence.PresenceComboBox" />
+  </extensionlist>
+  -->
 </plugin>

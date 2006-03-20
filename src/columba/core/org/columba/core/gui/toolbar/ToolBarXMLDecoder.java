@@ -111,6 +111,8 @@ public class ToolBarXMLDecoder {
 					continue;
 
 				AbstractColumbaAction action = getAction(actionId, mediator);
+				if ( action == null ) continue;
+				
 				toolBar.add(action);
 
 			} else if (menuElement.getName().equals("separator")) {

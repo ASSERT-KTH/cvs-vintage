@@ -119,9 +119,7 @@ public interface IEvent extends IComponent, ICategoryList, IAttachmentList {
 
 	public abstract void setEventClass(String eventClass);
 	
-	
-	public abstract String getCalendar();
 
-	public abstract void setCalendar(String calendar);
+	public abstract IEvent createCopy();
 	
 }

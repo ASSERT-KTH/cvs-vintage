@@ -38,7 +38,7 @@ import javax.swing.SwingConstants;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.chat.config.Account;
+import org.columba.chat.config.api.IAccount;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -64,7 +64,7 @@ public class AccountDialog extends JDialog implements ActionListener {
 
 	private JTextField idTextField;
 
-	//private JPasswordField passwordTextField;
+	// private JPasswordField passwordTextField;
 
 	private JTextField resourceTextField;
 
@@ -76,12 +76,12 @@ public class AccountDialog extends JDialog implements ActionListener {
 
 	private JButton registerButton;
 
-	private Account account;
+	private IAccount account;
 
 	/**
 	 * @throws java.awt.HeadlessException
 	 */
-	public AccountDialog(Account account) throws HeadlessException {
+	public AccountDialog(IAccount account) throws HeadlessException {
 		super(new Frame(), true);
 
 		this.account = account;
@@ -103,7 +103,7 @@ public class AccountDialog extends JDialog implements ActionListener {
 		if (b) {
 			idTextField.setText(account.getId());
 			serverTextField.setText(account.getHost());
-			//passwordTextField.setText(account.getPassword());
+			// passwordTextField.setText(account.getPassword());
 			enableSSLCheckBox.setSelected(account.isEnableSSL());
 			resourceTextField.setText(account.getResource());
 
@@ -118,7 +118,7 @@ public class AccountDialog extends JDialog implements ActionListener {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void layoutComponents() {
 
@@ -138,12 +138,12 @@ public class AccountDialog extends JDialog implements ActionListener {
 		DefaultFormBuilder b = new DefaultFormBuilder(center, layout);
 		b.setRowGroupingEnabled(true);
 
-		//b.addSeparator("Account Options");
+		// b.addSeparator("Account Options");
 
 		b.append("&Server:", serverTextField);
 
 		b.append("&User:", idTextField);
-		//b.append("Pass&word:", passwordTextField);
+		// b.append("Pass&word:", passwordTextField);
 		b.append("&Resource:", resourceTextField);
 		b.append("&Port:", portSpinner);
 
@@ -174,7 +174,7 @@ public class AccountDialog extends JDialog implements ActionListener {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void initComponents() {
 
@@ -188,10 +188,10 @@ public class AccountDialog extends JDialog implements ActionListener {
 
 		serverTextField = new JTextField(10);
 		idTextField = new JTextField(10);
-		//passwordTextField = new JPasswordField(10);
+		// passwordTextField = new JPasswordField(10);
 		resourceTextField = new JTextField(10);
 		portSpinner = new JSpinner(new SpinnerNumberModel(5222, 1, 65535, 1));
-		portSpinner.setEditor(new JSpinner.NumberEditor(portSpinner,"#####"));
+		portSpinner.setEditor(new JSpinner.NumberEditor(portSpinner, "#####"));
 
 	}
 
@@ -208,10 +208,8 @@ public class AccountDialog extends JDialog implements ActionListener {
 	}
 
 	/*
-	public String getPassword() {
-		return passwordTextField.getText();
-	}
-	*/
+	 * public String getPassword() { return passwordTextField.getText(); }
+	 */
 
 	public boolean enableSSL() {
 		return enableSSLCheckBox.isSelected();

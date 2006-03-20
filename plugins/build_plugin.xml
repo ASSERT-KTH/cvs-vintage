@@ -111,9 +111,12 @@
 
 			<!-- the external classloader should include all libraries automatically
         there's no need to set the classpath in the MANIFEST file again -->
+<!--
 			<manifest>
+			   <attribute name="Class-Path"
+                           value="${plugin_manifest}" />
 			</manifest>
-
+-->
 		</jar>
 	</target>
 

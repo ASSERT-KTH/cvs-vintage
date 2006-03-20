@@ -20,10 +20,9 @@ package org.columba.calendar.ui.comp;
 import java.io.InputStream;
 import java.util.Calendar;
 
-import org.columba.calendar.model.DateRange;
+import org.columba.calendar.model.api.IDateRange;
 
 import com.miginfocom.calendar.ThemeDatePicker;
-import com.miginfocom.calendar.datearea.DefaultDateArea;
 import com.miginfocom.theme.Themes;
 import com.miginfocom.util.dates.DateRangeI;
 import com.miginfocom.util.dates.ImmutableDateRange;
@@ -65,7 +64,7 @@ public class DatePicker extends ThemeDatePicker {
 		return range.getStart();
 	}
 
-	public void setSelectedColumbaDateRange(DateRange range) {
+	public void setSelectedColumbaDateRange(IDateRange range) {
 		ImmutableDateRange dr = new ImmutableDateRange(range.getStartTime()
 				.getTimeInMillis(), range.getEndTime().getTimeInMillis(),
 				false, null, null);

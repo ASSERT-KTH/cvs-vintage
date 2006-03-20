@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import org.columba.calendar.base.UUIDGenerator;
 import org.columba.calendar.model.api.IEvent;
 
 public class Event extends Component implements IEvent {
@@ -41,8 +42,6 @@ public class Event extends Component implements IEvent {
 
 	private String eventClass;
 
-	private String calendar;
-	
 	private URL url;
 
 	private CategoryList categoryList = new CategoryList();
@@ -207,12 +206,33 @@ public class Event extends Component implements IEvent {
 		this.url = url;
 	}
 
-	public String getCalendar() {
-		return calendar;
+	/**
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		// create new event with new UUID
+		Event event = new Event(new UUIDGenerator().newUUID());
+		// copy all attributes
+
+		event.setDtStart(getDtStart());
+		event.setDtEnt(getDtEnt());
+		event.setDtStamp(getDtStamp());
+		event.setSummary(getSummary());
+		event.setLocation(getLocation());
+		event.setCalendar(getCalendar());
+
+		return event;
 	}
 
-	public void setCalendar(String calendar) {
-		this.calendar = calendar;
+	/**
+	 * @see org.columba.calendar.model.api.IEvent#createCopy()
+	 */
+	public IEvent createCopy() {
+		try {
+			return (IEvent) clone();
+		} catch (CloneNotSupportedException e) {
+		}
+		return null;
 	}
-
 }

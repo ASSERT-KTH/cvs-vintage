@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menu id="menu_contextmenu_list" placeholderid="bottom">
+    <menuitem id="ImportCalendar" />
+    <menuitem id="ExportCalendar" />	
+</menu>

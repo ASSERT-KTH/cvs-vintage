@@ -17,22 +17,29 @@
 //All Rights Reserved.
 package org.columba.calendar.ui.frame;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.InputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 
 import org.columba.api.gui.frame.IContainer;
-import org.columba.calendar.ui.action.ActionFactory;
+import org.columba.calendar.base.api.IActivity;
+import org.columba.calendar.model.api.IDateRange;
+import org.columba.calendar.ui.action.ActivityMovedAction;
+import org.columba.calendar.ui.action.EditActivityAction;
+import org.columba.calendar.ui.action.NewAppointmentAction;
 import org.columba.calendar.ui.calendar.MainCalendarController;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.calendar.ui.list.CalendarListController;
 import org.columba.calendar.ui.list.api.ICalendarListView;
 import org.columba.calendar.ui.navigation.NavigationController;
+import org.columba.calendar.ui.navigation.api.DateRangeChangedEvent;
 import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
-import org.columba.calendar.ui.navigation.api.SelectionChangedEvent;
-import org.columba.calendar.ui.navigation.api.SelectionChangedListener;
+import org.columba.calendar.ui.navigation.api.IDateRangeChangedListener;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.frame.DockFrameController;
@@ -47,9 +54,9 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	public static final String PROP_FILTERED = "filterRow";
 
-	private ICalendarListView listController;
+	private CalendarListController listController;
 
-	public ICalendarView calendarController;
+	public MainCalendarController calendarController;
 
 	private ICalendarNavigationView navigationController;
 
@@ -67,13 +74,13 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 		// TestDataGenerator.generateTestData();
 
-		calendarController = new MainCalendarController(new ActionFactory(this));
+		calendarController = new MainCalendarController(this);
 
 		navigationController = new NavigationController();
 
 		navigationController
-				.addSelectionChangedListener(new SelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent object) {
+				.addSelectionChangedListener(new IDateRangeChangedListener() {
+					public void selectionChanged(DateRangeChangedEvent object) {
 						calendarController.setVisibleDateRange(object
 								.getDateRange());
 
@@ -81,16 +88,27 @@ public class CalendarFrameMediator extends DockFrameController implements
 				});
 
 		listController = new CalendarListController(this);
+		listController.getView().addMouseListener(new ListMouseListener());
 
 		registerDockables();
 
+		initContextMenu();
+
+	}
+
+	private void initContextMenu() {
+		listController.createPopupMenu(this);
+		calendarController.createPopupMenu(this);
 	}
 
 	public void registerDockables() {
 		// init dockable panels
 		listPanel = new DockableView("calendar_tree", "Calendar");
 		JScrollPane treeScrollPane = new JScrollPane(listController.getView());
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		// set background of scrollpane, in case the list is smaller than the dockable
+		treeScrollPane.getViewport().setBackground(UIManager.getColor("List.background"));
+		treeScrollPane.setBackground(UIManager.getColor("List.background"));
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
 		listPanel.setContentPane(treeScrollPane);
 
 		navigationPanel = new DockableView("navigation", "Navigation");
@@ -125,12 +143,18 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	/** *********************** container callbacks ************* */
 
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#extendMenu(org.columba.api.gui.frame.IContainer)
+	 */
 	public void extendMenu(IContainer container) {
 		InputStream is = this.getClass().getResourceAsStream(
 				"/org/columba/calendar/action/menu.xml");
 		getContainer().extendMenu(this, is);
 	}
 
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#extendToolBar(org.columba.api.gui.frame.IContainer)
+	 */
 	public void extendToolBar(IContainer container) {
 
 		InputStream is2 = this.getClass().getResourceAsStream(
@@ -138,6 +162,9 @@ public class CalendarFrameMediator extends DockFrameController implements
 		getContainer().extendToolbar(this, is2);
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#showDayView()
+	 */
 	public void showDayView() {
 
 		calendarController.setViewMode(ICalendarView.VIEW_MODE_DAY);
@@ -147,6 +174,9 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#showWeekView()
+	 */
 	public void showWeekView() {
 		calendarController.setViewMode(ICalendarView.VIEW_MODE_WEEK);
 
@@ -155,33 +185,114 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#showWorkWeekView()
+	 */
 	public void showWorkWeekView() {
-		calendarController
-				.setViewMode(ICalendarView.VIEW_MODE_WORK_WEEK);
+		calendarController.setViewMode(ICalendarView.VIEW_MODE_WORK_WEEK);
 
 		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_WORK_WEEK);
 
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#showMonthView()
+	 */
 	public void showMonthView() {
 		calendarController.setViewMode(ICalendarView.VIEW_MODE_MONTH);
 
 		navigationController
 				.setSelectionMode(NavigationController.SELECTION_MODE_MONTH);
-		
+
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#getCalendarView()
+	 */
 	public ICalendarView getCalendarView() {
 		return calendarController;
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#getListView()
+	 */
 	public ICalendarListView getListView() {
 		return listController;
 	}
 
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#getNavigationView()
+	 */
 	public ICalendarNavigationView getNavigationView() {
 		return navigationController;
+	}
+
+	/**
+	 * Double-click mouse listener for calendar list component.
+	 */
+	class ListMouseListener extends MouseAdapter {
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+		 */
+		public void mousePressed(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
+		 */
+		public void mouseReleased(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		/**
+		 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
+		 */
+		public void mouseClicked(MouseEvent event) {
+			// if mouse button was pressed twice times
+			if (event.getClickCount() == 2) {
+
+			}
+		}
+
+		protected void processPopup(final MouseEvent event) {
+
+			listController.getPopupMenu().show(event.getComponent(),
+					event.getX(), event.getY());
+
+		}
+	}
+
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#fireFilterUpdated()
+	 */
+	public void fireFilterUpdated() {
+		calendarController.recreateFilterRows();
+
+	}
+
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#fireActivityMoved(org.columba.calendar.base.api.IActivity)
+	 */
+	public void fireActivityMoved(IActivity activity) {
+		new ActivityMovedAction(this).actionPerformed(null);
+	}
+
+	/**
+	 * @see org.columba.calendar.ui.frame.api.ICalendarMediator#fireStartActivityEditing(org.columba.calendar.base.api.IActivity)
+	 */
+	public void fireStartActivityEditing(IActivity activity) {
+		new EditActivityAction(this).actionPerformed(null);
+	}
+
+	public void fireCreateActivity(IDateRange range) {
+		new NewAppointmentAction(this).actionPerformed(null);
 	}
 
 }

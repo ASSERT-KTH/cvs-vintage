@@ -18,6 +18,7 @@
 package org.columba.calendar.store;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
@@ -32,7 +33,6 @@ import org.columba.calendar.parser.SyntaxException;
 import org.columba.calendar.parser.VCalendarModelFactory;
 import org.columba.calendar.store.api.ICalendarStore;
 import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.store.local.LocalXMLFileStore;
 import org.columba.core.io.DiskIO;
 import org.jdom.Document;
 
@@ -198,12 +198,69 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 			if (basicModel.getType() == IComponent.TYPE.EVENT) {
 				IEvent event = (IEvent) basicModel;
 				IEventInfo item = new EventInfo(event.getId(), event
-						.getDtStart(), event.getDtEnt(), event.getSummary(), event.getCalendar());
+						.getDtStart(), event.getDtEnt(), event.getSummary(),
+						event.getCalendar());
 				list.add(item);
 			}
 		}
 
 		return list;
+	}
+
+	public Iterator<String> getIdIterator() throws StoreException {
+		ArrayList<String> result = new ArrayList<String>();
+
+		Iterator it = dataStorage.iterator();
+		while (it.hasNext()) {
+			Document document = (Document) it.next();
+
+			IComponent basicModel = null;
+			try {
+				basicModel = VCalendarModelFactory.unmarshall(document);
+			} catch (SyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if (basicModel.getType() == IComponent.TYPE.EVENT) {
+				IEvent event = (IEvent) basicModel;
+				result.add(event.getId());
+			}
+		}
+
+		return result.iterator();
+	}
+
+	public Iterator<String> getIdIterator(String calendarId)
+			throws StoreException {
+		ArrayList<String> result = new ArrayList<String>();
+
+		Iterator it = dataStorage.iterator();
+		while (it.hasNext()) {
+			Document document = (Document) it.next();
+
+			IComponent basicModel = null;
+			try {
+				basicModel = VCalendarModelFactory.unmarshall(document);
+			} catch (SyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if (basicModel.getType() == IComponent.TYPE.EVENT) {
+				IEvent event = (IEvent) basicModel;
+				if (event.getCalendar().equals(calendarId))
+					result.add(event.getId());
+			}
+		}
+
+		return result.iterator();
 	}
 
 }

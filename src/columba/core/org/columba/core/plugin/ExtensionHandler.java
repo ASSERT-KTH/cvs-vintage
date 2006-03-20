@@ -25,6 +25,7 @@ import java.util.Vector;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginMetadata;
 
 
 /**
@@ -182,7 +183,15 @@ public class ExtensionHandler implements IExtensionHandler {
 	 * @see org.columba.api.plugin.IExtensionHandler#loadExtensionsFromStream(InputStream)
 	 */
 	public void loadExtensionsFromStream(InputStream is) {
-		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is);
+		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is, null, true);
+		while (e.hasMoreElements()) {
+			IExtension extension = (IExtension) e.nextElement();
+			addExtension(extension.getMetadata().getId(), extension);
+		}
+	}
+
+	public void loadExternalExtensionsFromStream(PluginMetadata pluginMetadata, InputStream is) {
+		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is, pluginMetadata, false);
 		while (e.hasMoreElements()) {
 			IExtension extension = (IExtension) e.nextElement();
 			addExtension(extension.getMetadata().getId(), extension);

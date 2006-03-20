@@ -20,7 +20,6 @@ package org.columba.calendar.store;
 import java.io.File;
 import java.util.Iterator;
 
-import org.columba.calendar.CalendarComponent;
 import org.columba.calendar.config.Config;
 import org.columba.calendar.model.api.IComponent;
 import org.columba.calendar.model.api.IComponentInfo;
@@ -48,7 +47,7 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 	private CalendarStoreFactory() {
 		super();
 
-		parentDirectory = Config.getInstance().getCalendarDirectory();
+		parentDirectory = Config.getInstance().getConfigDirectory();
 
 		storeDirectory = new File(parentDirectory, "store");
 		DiskIO.ensureDirectory(storeDirectory);
@@ -60,6 +59,8 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 
 	public ICalendarStore getLocaleStore() {
 
+		System.out.println("classloader="+this.getClass().getClassLoader());
+		
 		if (store == null)
 			try {
 				store = new LocalCalendarStore(storeDirectory);
@@ -71,10 +72,15 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 
 					if (item.getType() == IComponent.TYPE.EVENT) {
 						IEventInfo event = (IEventInfo) item;
-						Activity act = CalendarHelper.createActivity(event);
+						try {
+							Activity act = CalendarHelper.createActivity(event);
 
-						ActivityDepository.getInstance().addBrokedActivity(act,
-								CalendarComponent.class);
+							ActivityDepository.getInstance().addBrokedActivity(act,
+									this);
+						} catch (RuntimeException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 

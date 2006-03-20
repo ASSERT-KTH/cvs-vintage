@@ -185,7 +185,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 	/**
 	 * 
-	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#connectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

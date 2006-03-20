@@ -74,7 +74,7 @@ public class SaveMessageBodyAsAction extends AbstractColumbaAction
     /**
      * Ensures that the action is only enabled when at least
      * one message is selected in the GUI.
-     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#connectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

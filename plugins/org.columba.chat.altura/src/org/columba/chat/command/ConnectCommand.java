@@ -20,51 +20,46 @@ package org.columba.chat.command;
 import javax.swing.JOptionPane;
 
 import org.columba.api.command.IWorkerStatusController;
-import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.AlturaComponent;
-import org.columba.chat.api.IAlturaFrameMediator;
-import org.columba.chat.config.Account;
-import org.columba.chat.config.Config;
-import org.columba.chat.ui.conversation.MessageListener;
-import org.columba.chat.ui.roaster.PresenceListener;
-import org.columba.chat.ui.roaster.SubscriptionListener;
+import org.columba.chat.Connection;
+import org.columba.chat.MainInterface;
+import org.columba.chat.config.api.IAccount;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.SSLXMPPConnection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Presence;
 
 public class ConnectCommand extends Command {
 
 	private boolean success;
 
-	private IFrameMediator m;
+	private IChatFrameMediator mediator;
 
-	public ConnectCommand(IFrameMediator mediator) {
-		super(new DefaultCommandReference());
+	private PopulateRoasterCommand populateCommand;
 
-		this.m = mediator;
+	public ConnectCommand(IChatFrameMediator mediator, ChatCommandReference ref) {
+		super(ref);
+
+		this.mediator = mediator;
+
+		populateCommand = new PopulateRoasterCommand(mediator, ref);
 	}
 
 	/**
 	 * @see org.columba.api.command.Command#execute(org.columba.api.command.IWorkerStatusController)
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		Account account = Config.getInstance().getAccount();
-		IAlturaFrameMediator mediator = (IAlturaFrameMediator) m;
+		IAccount account = MainInterface.config.getAccount();
 
 		try {
 
 			if (account.isEnableSSL())
-				AlturaComponent.connection = new SSLXMPPConnection(account
+				Connection.XMPPConnection = new SSLXMPPConnection(account
 						.getHost(), account.getPort());
 			else
-				AlturaComponent.connection = new XMPPConnection(account
+				Connection.XMPPConnection = new XMPPConnection(account
 						.getHost(), account.getPort());
 
 		} catch (XMPPException e) {
@@ -99,8 +94,8 @@ public class ConnectCommand extends Command {
 			}
 
 			try {
-				AlturaComponent.connection.login(account.getId(), new String(
-						password));
+				Connection.XMPPConnection.login(account.getId(),
+						new String(password));
 				success = true;
 			} catch (XMPPException e) {
 				JOptionPane.showMessageDialog(null, e.getMessage());
@@ -112,15 +107,12 @@ public class ConnectCommand extends Command {
 		if (!success)
 			return;
 
-		AlturaComponent.connection.getRoster().setSubscriptionMode(
+		populateCommand.execute(worker);
+
+		Connection.XMPPConnection.getRoster().setSubscriptionMode(
 				Roster.SUBSCRIPTION_MANUAL);
 
-		AlturaComponent.connection.addPacketListener(new MessageListener(
-				mediator.getConversationController()), new PacketTypeFilter(Message.class));
-		AlturaComponent.connection.addPacketListener(new PresenceListener(
-				mediator.getRoasterTree()), new PacketTypeFilter(Presence.class));
-		AlturaComponent.connection.addPacketListener(new SubscriptionListener(
-				mediator.getRoasterTree()), new PacketTypeFilter(Presence.class));
+		
 
 	}
 
@@ -132,13 +124,13 @@ public class ConnectCommand extends Command {
 		if (!success)
 			return;
 
-		final IAlturaFrameMediator mediator = (IAlturaFrameMediator) m;
+		populateCommand.updateGUI();
 
 		// awt-event-thread
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mediator.getRoasterTree().setEnabled(true);
-				mediator.getRoasterTree().populate();
+
 			}
 		});
 	}

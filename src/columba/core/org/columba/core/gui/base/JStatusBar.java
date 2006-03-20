@@ -81,6 +81,21 @@ public class JStatusBar extends JPanel {
 		contentPanel.add(c, new CellConstraints(layoutCoordinateX,
 				layoutCoordinateY));
 	}
+	
+	public void addRightComponent(JComponent c) {
+		layout.appendColumn(new ColumnSpec("2dlu"));
+		layout.appendColumn(new ColumnSpec("default"));
+
+		layoutCoordinateX++;
+
+		contentPanel.add(new SeparatorPanel(Color.GRAY, Color.WHITE),
+				new CellConstraints(layoutCoordinateX, layoutCoordinateY));
+		layoutCoordinateX++;
+
+		contentPanel.add(c, new CellConstraints(layoutCoordinateX,
+				layoutCoordinateY));
+	}
+	
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

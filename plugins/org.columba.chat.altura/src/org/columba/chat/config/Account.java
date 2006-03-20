@@ -17,109 +17,136 @@
 //All Rights Reserved.
 package org.columba.chat.config;
 
+import org.columba.chat.config.api.IAccount;
 
 /**
  * Contains account-related configuration.
  * 
  * @author fdietz
- *
+ * 
  */
-public class Account {
+public class Account implements IAccount {
 
-    private String id;
-    private char[] password;
-    private String host;
-    private String resource;
-    private int port;
-    private boolean enableSSL;
-    
-    public Account() {
-        host = "jabber.org";
-        port = 5222;
-        enableSSL = false;
-    }
-    
-    public Account(String id) {
-    	this();
-        this.id = id;
-    }
-    
-    public Account(String id, String host) {
-        this.id = id;
-        this.host = host;
-        
-        port = 5222;
-        enableSSL = false;
-    }
-   
-    /**
-     * @return Returns the enableSSL.
-     */
-    public boolean isEnableSSL() {
-        return enableSSL;
-    }
-    /**
-     * @return Returns the host.
-     */
-    public String getHost() {
-        return host;
-    }
-    /**
-     * @return Returns the id.
-     */
-    public String getId() {
-        return id;
-    }
-    /**
-     * @return Returns the password.
-     */
-    public char[] getPassword() {
-        return password;
-    }
-    /**
-     * @return Returns the port.
-     */
-    public int getPort() {
-        return port;
-    }
+	private String id;
+
+	private char[] password;
+
+	private String host;
+
+	private String resource;
+
+	private int port;
+
+	private boolean enableSSL;
+
+	public Account() {
+		host = "jabber.org";
+		port = 5222;
+		enableSSL = false;
+	}
+
+	public Account(String id) {
+		this();
+
+		if (id == null)
+			throw new IllegalArgumentException("id == null");
+
+		this.id = id;
+	}
+
+	public Account(String id, String host) {
+		this.id = id;
+		this.host = host;
+
+		port = 5222;
+		enableSSL = false;
+	}
+
 	/**
-	 * @param enableSSL The enableSSL to set.
+	 * @return Returns the enableSSL.
+	 */
+	public boolean isEnableSSL() {
+		return enableSSL;
+	}
+
+	/**
+	 * @return Returns the host.
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @return Returns the id.
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @return Returns the password.
+	 */
+	public char[] getPassword() {
+		return password;
+	}
+
+	/**
+	 * @return Returns the port.
+	 */
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * @param enableSSL
+	 *            The enableSSL to set.
 	 */
 	public void setEnableSSL(boolean enableSSL) {
 		this.enableSSL = enableSSL;
 	}
+
 	/**
-	 * @param host The host to set.
+	 * @param host
+	 *            The host to set.
 	 */
 	public void setHost(String host) {
 		this.host = host;
 	}
+
 	/**
-	 * @param id The id to set.
+	 * @param id
+	 *            The id to set.
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
+
 	/**
-	 * @param password The password to set.
+	 * @param password
+	 *            The password to set.
 	 */
 	public void setPassword(char[] password) {
 		this.password = password;
 	}
+
 	/**
-	 * @param port The port to set.
+	 * @param port
+	 *            The port to set.
 	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
+
 	/**
 	 * @return Returns the resource.
 	 */
 	public String getResource() {
 		return resource;
 	}
+
 	/**
-	 * @param resource The resource to set.
+	 * @param resource
+	 *            The resource to set.
 	 */
 	public void setResource(String resource) {
 		this.resource = resource;

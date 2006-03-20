@@ -20,15 +20,16 @@ package org.columba.chat.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.AlturaComponent;
-import org.columba.chat.api.IAlturaFrameMediator;
-import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.command.DisconnectCommand;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
+import org.columba.core.command.CommandProcessor;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class DisconnectAction extends AbstractColumbaAction {
+public class DisconnectAction extends AbstractConnectionAwareAction {
 
 	/**
 	 * @param mediator
@@ -44,8 +45,7 @@ public class DisconnectAction extends AbstractColumbaAction {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 
-		AlturaComponent.connection.close();
-
-		((IAlturaFrameMediator) frameMediator).getRoasterTree().setEnabled(false);
+		CommandProcessor.getInstance().addOp(
+				new DisconnectCommand((IChatFrameMediator) getFrameMediator(),new ChatCommandReference()));
 	}
 }

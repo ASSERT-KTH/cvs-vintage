@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.calendar.ui.base;
 
-import org.columba.calendar.config.Config;
 import org.columba.calendar.model.DateRange;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.model.api.IEventInfo;
@@ -43,6 +42,7 @@ public class CalendarHelper {
 		// act.setDescription(model.getDescription());
 
 		String calendar = model.getCalendar();
+		// this is for the calendar component and only used internally
 		act.setCategoryIDs(new Object[] { calendar });
 		
 		return act;

@@ -48,7 +48,7 @@ public class XCSDocumentParser {
 
 	protected Element componentElement;
 
-	public XCSDocumentParser(TYPE type) throws IllegalArgumentException {
+	public XCSDocumentParser(TYPE type) {
 		if (type == null)
 			throw new IllegalArgumentException("type == null");
 
@@ -70,7 +70,7 @@ public class XCSDocumentParser {
 		vcalendarElement.setAttribute(ICALENDAR.VCALENDAR_METHOD, "PUBLISH");
 		vcalendarElement.setAttribute(ICALENDAR.VCALENDAR_VERSION, "2.0");
 		vcalendarElement.setAttribute(ICALENDAR.VCALENDAR_PRODID,
-				"-//fdietz //NONSGML Columba v1.0//EN");
+				"-//Columba Project //NONSGML Columba v1.0//EN");
 
 		if (type == TYPE.EVENT) {
 			componentElement = new Element(ICALENDAR.VEVENT);

@@ -20,18 +20,25 @@ package org.columba.chat.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.chat.MainInterface;
+import org.columba.chat.command.ChatCommandReference;
 import org.columba.chat.command.ConnectCommand;
-import org.columba.chat.config.Account;
-import org.columba.chat.config.Config;
+import org.columba.chat.config.api.IAccount;
+import org.columba.chat.conn.api.ConnectionChangedEvent;
+import org.columba.chat.conn.api.IConnectionChangedListener;
+import org.columba.chat.conn.api.IConnection.STATUS;
 import org.columba.chat.ui.dialog.AccountDialog;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
+import org.columba.chat.ui.util.ResourceLoader;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class ConnectAction extends AbstractColumbaAction {
+public class ConnectAction extends AbstractColumbaAction implements
+		IConnectionChangedListener {
 
 	/**
 	 * @param mediator
@@ -41,18 +48,37 @@ public class ConnectAction extends AbstractColumbaAction {
 		super(mediator, "Connect...");
 
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Connect");
+		putValue(AbstractColumbaAction.LARGE_ICON, ResourceLoader
+				.getIcon("network-receive.png"));
+		putValue(AbstractColumbaAction.SMALL_ICON, ResourceLoader
+				.getSmallIcon("network-receive.png"));
+		MainInterface.connection.addConnectionChangedListener(this);
+	}
 
+	/**
+	 * @see org.columba.chat.conn.api.IConnectionChangedListener#connectionChanged(org.columba.chat.conn.api.ConnectionChangedEvent)
+	 */
+	public void connectionChanged(ConnectionChangedEvent object) {
+		IAccount account = object.getAccount();
+		STATUS status = object.getStatus();
+
+		if (status == STATUS.ONLINE)
+			setEnabled(false);
+		else if (status == STATUS.OFFLINE)
+			setEnabled(true);
 	}
 
 	/**
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		Account account = Config.getInstance().getAccount();
+		IAccount account = MainInterface.config.getAccount();
 
-		if ((account.getHost() == null) || (account.getId() == null) )
+		if ((account.getHost() == null) || (account.getId() == null))
 			new AccountDialog(account);
 
-		CommandProcessor.getInstance().addOp(new ConnectCommand(getFrameMediator()));
+		CommandProcessor.getInstance().addOp(
+				new ConnectCommand((IChatFrameMediator) getFrameMediator(),
+						new ChatCommandReference()));
 	}
 }

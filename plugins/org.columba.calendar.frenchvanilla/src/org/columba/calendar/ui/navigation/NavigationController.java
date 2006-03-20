@@ -25,9 +25,10 @@ import javax.swing.JComponent;
 import javax.swing.event.EventListenerList;
 
 import org.columba.calendar.model.DateRange;
+import org.columba.calendar.model.api.IDateRange;
+import org.columba.calendar.ui.navigation.api.DateRangeChangedEvent;
 import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
-import org.columba.calendar.ui.navigation.api.SelectionChangedEvent;
-import org.columba.calendar.ui.navigation.api.SelectionChangedListener;
+import org.columba.calendar.ui.navigation.api.IDateRangeChangedListener;
 
 import com.miginfocom.calendar.datearea.ThemeDateAreaContainer;
 import com.miginfocom.calendar.theme.CalendarTheme;
@@ -94,31 +95,31 @@ public class NavigationController implements ICalendarNavigationView {
 	/**
 	 * Adds a listener.
 	 */
-	public void addSelectionChangedListener(SelectionChangedListener listener) {
-		listenerList.add(SelectionChangedListener.class, listener);
+	public void addSelectionChangedListener(IDateRangeChangedListener listener) {
+		listenerList.add(IDateRangeChangedListener.class, listener);
 	}
 
 	/**
 	 * Removes a previously registered listener.
 	 */
-	public void removeSelectionChangedListener(SelectionChangedListener listener) {
-		listenerList.remove(SelectionChangedListener.class, listener);
+	public void removeSelectionChangedListener(IDateRangeChangedListener listener) {
+		listenerList.remove(IDateRangeChangedListener.class, listener);
 	}
 
 	/**
 	 * Propagates an event to all registered listeners notifying them that this
 	 * folder has been renamed.
 	 */
-	public void fireSelectionChanged(DateRange dateRange) {
-		SelectionChangedEvent e = new SelectionChangedEvent(this, dateRange);
+	public void fireSelectionChanged(IDateRange dateRange) {
+		DateRangeChangedEvent e = new DateRangeChangedEvent(this, dateRange);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == SelectionChangedListener.class) {
-				((SelectionChangedListener) listeners[i + 1])
+			if (listeners[i] == IDateRangeChangedListener.class) {
+				((IDateRangeChangedListener) listeners[i + 1])
 						.selectionChanged(e);
 			}
 		}

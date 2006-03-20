@@ -18,69 +18,99 @@
 package org.columba.chat.ui.presence;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 
-import org.columba.chat.AlturaComponent;
-import org.columba.chat.api.IPresenceController;
+import org.columba.api.statusbar.IStatusBarExtension;
+import org.columba.chat.command.ChangePresenceCommand;
+import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
+import org.columba.chat.ui.presence.api.IPresenceController;
 import org.columba.chat.ui.util.ResourceLoader;
-import org.columba.core.resourceloader.ImageLoader;
+import org.columba.core.command.CommandProcessor;
 import org.jivesoftware.smack.packet.Presence;
 
 /**
  * @author fdietz
  * 
  */
-public class PresenceComboBox extends JPanel implements ItemListener, IPresenceController {
-
-	private JComboBox checkBox;
+public class PresenceComboBox extends JPanel implements ItemListener,
+		IPresenceController, IStatusBarExtension {
 
 	private JLabel label;
 
-	private ImageIcon available = ResourceLoader.getImageIcon("available.png");
+	private JComboBox comboBox;
 
-	private ImageIcon extendedaway = ImageLoader
-			.getImageIcon("extended-away.png");
+	private ImageIcon available = ResourceLoader.getImage("online.png");
 
-	private ImageIcon away = ResourceLoader.getImageIcon("away.png");
+	private ImageIcon extendedaway = ResourceLoader
+			.getImage("extended_away.png");
 
-	private ImageIcon busy = ResourceLoader.getImageIcon("busy.png");
+	private ImageIcon away = ResourceLoader.getImage("away.png");
 
-	private ImageIcon message = ResourceLoader.getImageIcon("message.png");
+	private ImageIcon busy = ResourceLoader.getImage("unavailable.png");
 
-	private ImageIcon offline = ResourceLoader.getImageIcon("offline.png");
+	private ImageIcon message = ResourceLoader.getImage("message.png");
 
-	public PresenceComboBox() {
+	private ImageIcon offline = ResourceLoader.getImage("offline.png");
 
-		checkBox = new JComboBox();
+	private IChatFrameMediator mediator;
 
-		checkBox.addItem("Available");
-		checkBox.addItem("Custom Message...");
-		checkBox.addItem("Working");
-		checkBox.addItem("Custom Message...");
+	public PresenceComboBox(IChatFrameMediator mediator) {
+		super();
+
+		this.mediator = mediator;
+
+		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+
+		setBackground(UIManager.getColor("Tree.background"));
+		
+		comboBox = new JComboBox();
+		// comboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		comboBox.addItem("Available");
+		comboBox.addItem("Busy");
+		comboBox.addItem("Away");
+		comboBox.addItem("Extended  Aways");
+		// checkBox.addItem("Custom Message...", null);
 		// checkBox.addItem("Leave...");
 
-		label = new JLabel();
+		comboBox.setRenderer(new ItemRenderer());
 
-		label.setIcon(available);
+		label = new JLabel();
+		label.setBorder(BorderFactory.createEmptyBorder(0,2,0,2));
+		label.setIcon(offline);
 
 		setLayout(new BorderLayout());
 
 		add(label, BorderLayout.WEST);
-		add(checkBox, BorderLayout.CENTER);
 
-		checkBox.addItemListener(this);
+		add(comboBox, BorderLayout.CENTER);
 
-		addItemListener(this);
+		comboBox.addItemListener(this);
+
+		// addItemListener(this);
 	}
 
+	// private void addStatus(String tooltip, ImageIcon icon) {
+	// JLabel label = new JLabel(icon);
+	// label.setToolTipText(tooltip);
+	//
+	// comboBox.addItem(tooltip);
+	// }
+
 	public void addItemListener(ItemListener l) {
-		checkBox.addItemListener(l);
+		comboBox.addItemListener(l);
 	}
 
 	/**
@@ -95,21 +125,67 @@ public class PresenceComboBox extends JPanel implements ItemListener, IPresenceC
 		switch (index) {
 		case 0: {
 			label.setIcon(available);
-
 			p = new Presence(Presence.Type.AVAILABLE);
 			p.setStatus("Available");
-			AlturaComponent.connection.sendPacket(p);
+			CommandProcessor.getInstance().addOp(
+					new ChangePresenceCommand(mediator,
+							new ChatCommandReference(p)));
+			break;
+		}
+		case 1: {
+			label.setIcon(busy);
+			p = new Presence(Presence.Type.UNAVAILABLE);
+			p.setStatus("Busy");
+			CommandProcessor.getInstance().addOp(
+					new ChangePresenceCommand(mediator,
+							new ChatCommandReference(p)));
+
 			break;
 		}
 		case 2: {
-			label.setIcon(busy);
-
+			label.setIcon(away);
 			p = new Presence(Presence.Type.UNAVAILABLE);
 			p.setStatus("Away");
-			AlturaComponent.connection.sendPacket(p);
+			CommandProcessor.getInstance().addOp(
+					new ChangePresenceCommand(mediator,
+							new ChatCommandReference(p)));
+
+			break;
+		}
+		case 3: {
+			label.setIcon(extendedaway);
+			p = new Presence(Presence.Type.UNAVAILABLE);
+			p.setStatus("Extended Away");
+			CommandProcessor.getInstance().addOp(
+					new ChangePresenceCommand(mediator,
+							new ChatCommandReference(p)));
+
 			break;
 		}
 		}
 
 	}
+
+	public JComponent getView() {
+		return this;
+	}
+
+	public class ItemRenderer extends JLabel implements ListCellRenderer {
+
+		public ItemRenderer() {
+			/*
+			 * setIconTextGap(5); setVerticalAlignment(JLabel.CENTER);
+			 */
+		}
+
+		/** {@inheritDoc} */
+		public Component getListCellRendererComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) {
+
+			setText((String) value);
+
+			return this;
+		}
+	}
+
 }

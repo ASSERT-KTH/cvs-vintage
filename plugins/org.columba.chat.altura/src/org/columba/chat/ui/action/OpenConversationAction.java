@@ -22,25 +22,33 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.chat.api.IAlturaFrameMediator;
-import org.columba.chat.api.IBuddyStatus;
-import org.columba.chat.api.IChatMediator;
+import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.command.OpenChatCommand;
+import org.columba.chat.model.api.IBuddyStatus;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
+import org.columba.chat.ui.util.ResourceLoader;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
  * @author fdietz
- *  
+ * 
  */
-public class OpenConversationAction extends AbstractColumbaAction {
+public class OpenConversationAction extends AbstractConnectionAwareAction {
 
 	/**
 	 * @param mediator
 	 * @param name
 	 */
 	public OpenConversationAction(IFrameMediator mediator) {
-		super(mediator, "Send message...");
+		super(mediator, "Chat...");
 
-		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Send");
+		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Chat");
+
+		putValue(AbstractColumbaAction.LARGE_ICON, ResourceLoader
+				.getIcon("internet-group-chat.png"));
+		putValue(AbstractColumbaAction.SMALL_ICON, ResourceLoader
+				.getSmallIcon("internet-group-chat.png"));
 
 	}
 
@@ -52,7 +60,7 @@ public class OpenConversationAction extends AbstractColumbaAction {
 		String jabberId = "";
 
 		// selected buddy in buddylist
-		IBuddyStatus buddy = (IBuddyStatus) ((IAlturaFrameMediator) frameMediator)
+		IBuddyStatus buddy = (IBuddyStatus) ((IChatFrameMediator) frameMediator)
 				.getRoasterTree().getSelected();
 
 		if (buddy != null) {
@@ -60,15 +68,12 @@ public class OpenConversationAction extends AbstractColumbaAction {
 			jabberId = buddy.getJabberId();
 		} else {
 			// prompt for jabber id
-			jabberId = JOptionPane.showInputDialog(null, "Enter jabber ID");
+			jabberId = JOptionPane.showInputDialog(null, "Enter Jabber ID");
 		}
-
-		IChatMediator m =
-
-		((IAlturaFrameMediator) frameMediator).getConversationController()
-				.addChat(jabberId);
-
-		buddy.setChatMediator(m);
+		CommandProcessor.getInstance()
+		.addOp(
+				new OpenChatCommand((IChatFrameMediator) getFrameMediator(),new ChatCommandReference(
+						jabberId)));
 
 	}
 }

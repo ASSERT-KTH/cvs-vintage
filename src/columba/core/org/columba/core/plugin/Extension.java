@@ -59,10 +59,10 @@ public class Extension implements IExtension {
 	 * 
 	 * @param metadata
 	 */
-	public Extension(ExtensionMetadata metadata) {
+	public Extension(ExtensionMetadata metadata, boolean internal) {
 		this.metadata = metadata;
 
-		internalPlugin = true;
+		internalPlugin = internal;
 	}
 
 	/**
@@ -122,22 +122,6 @@ public class Extension implements IExtension {
 								className, arguments);
 					}
 				else {
-					// just in case that someone who developers on a plugin adds
-					// the plugin files to his classpath, we try to load them
-					// with
-					// the default classloader
-
-					// use default Java classlodaer
-					try {
-						plugin = new DefaultPluginLoader().loadPlugin(id,
-								className, arguments);
-						if ( plugin != null ) return plugin;
-						
-					} catch (Exception e) {
-						handleException(e);
-					} catch (Error e) {
-						handleException(e);
-					}
 
 					// external plugin
 					// -> use external classloader
@@ -151,6 +135,27 @@ public class Extension implements IExtension {
 						plugin = instanciateGroovyClass(arguments,
 								pluginDirectory, className);
 					} else {
+
+						// just in case that someone who developers on a plugin
+						// adds the plugin files to his classpath, we try to
+						// load
+						// them with the default classloader
+
+						// use default Java classlodaer
+						
+						try {
+							plugin = new DefaultPluginLoader().loadPlugin(id,
+									className, arguments);
+							if (plugin != null)
+								return plugin;
+
+						} catch (Exception e) {
+							handleException(e);
+						} catch (Error e) {
+							handleException(e);
+						}
+						
+
 						// use external Java URL classloader
 						plugin = instanciateExternalJavaClass(arguments,
 								pluginDirectory, className);

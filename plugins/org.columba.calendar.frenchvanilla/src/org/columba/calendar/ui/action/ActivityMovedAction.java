@@ -18,18 +18,17 @@
 package org.columba.calendar.ui.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Calendar;
-
-import javax.swing.JOptionPane;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.calendar.model.api.IEvent;
+import org.columba.calendar.base.api.IActivity;
+import org.columba.calendar.command.ActivityMovedCommand;
+import org.columba.calendar.command.CalendarCommandReference;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.calendar.store.api.ICalendarStore;
-import org.columba.calendar.store.api.StoreException;
-import org.columba.calendar.ui.base.api.IActivity;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
-import org.columba.calendar.ui.frame.CalendarFrameMediator;
+import org.columba.calendar.ui.frame.api.ICalendarMediator;
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
@@ -46,37 +45,20 @@ public class ActivityMovedAction extends AbstractColumbaAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		CalendarFrameMediator m = (CalendarFrameMediator) getFrameMediator();
+		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
 
 		ICalendarView c = m.getCalendarView();
 
 		IActivity activity = c.getSelectedActivity();
 
-		String id = (String) activity.getId();
-
 		ICalendarStore store = CalendarStoreFactory.getInstance()
 				.getLocaleStore();
 
-		// retrieve event from store
-		try {
-			IEvent model = (IEvent) store.get(id);
+		Command command = new ActivityMovedCommand(
+				new CalendarCommandReference(store, activity));
 
-			Calendar start = activity.getDtStart();
-			Calendar end = activity.getDtEnd();
+		CommandProcessor.getInstance().addOp(command);
 
-			// update start/end time
-			model.setDtStart(start);
-			model.setDtEnt(end);
-			System.out.println("start="+start.toString());
-			System.out.println("end="+end.toString());
-			
-			// update store
-			store.modify(id, model);
-
-		} catch (StoreException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage());
-			e1.printStackTrace();
-		}
 	}
 
 }

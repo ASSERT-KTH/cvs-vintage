@@ -25,10 +25,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.columba.chat.api.IAlturaFrameMediator;
-import org.columba.chat.api.IBuddyStatus;
-import org.columba.chat.api.IChatMediator;
-import org.columba.chat.jabber.BuddyList;
+import org.columba.chat.model.BuddyList;
+import org.columba.chat.model.api.IBuddyStatus;
+import org.columba.chat.ui.conversation.api.IChatMediator;
+import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
@@ -56,9 +56,9 @@ public class ChatMediator extends JPanel implements IChatMediator,
 
 	private JButton closeButton;
 
-	private IAlturaFrameMediator mediator;
+	private IChatFrameMediator mediator;
 
-	public ChatMediator(IAlturaFrameMediator mediator, Chat chat) {
+	public ChatMediator(IChatFrameMediator mediator, Chat chat) {
 		super();
 
 		this.mediator = mediator;

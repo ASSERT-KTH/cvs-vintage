@@ -16,7 +16,6 @@
 
 package org.columba.core.gui.statusbar;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,15 +28,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.statusbar.IStatusBar;
+import org.columba.api.statusbar.IStatusBarExtension;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
@@ -217,6 +214,12 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 		addRightComponent(onlineButton, 30);
 	}
 
+	public void addComponent(IStatusBarExtension ext) {
+		if ( ext == null ) throw new IllegalArgumentException("extension == null");
+		
+		addRightComponent(ext.getView());
+	}
+	
 	/**
 	 * layout components
 	 */

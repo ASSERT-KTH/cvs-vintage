@@ -19,8 +19,9 @@ package org.columba.calendar.ui.calendar.api;
 
 import javax.swing.JComponent;
 
+import org.columba.calendar.base.api.IActivity;
 import org.columba.calendar.model.api.IDateRange;
-import org.columba.calendar.ui.base.api.IActivity;
+
 
 public interface ICalendarView {
 
@@ -42,4 +43,7 @@ public interface ICalendarView {
 	public abstract void setVisibleDateRange(IDateRange dateRange);
 	
 	public abstract void recreateFilterRows();
+	
+	public abstract void addSelectionChangedListener(IActivitySelectionChangedListener listener);
+	public abstract void removeSelectionChangedListener(IActivitySelectionChangedListener listener);
 }

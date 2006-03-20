@@ -30,12 +30,14 @@ public class Component implements IComponent {
 
 	private Calendar dtStamp;
 
+	private String calendarId;
+	
 	public Component(String id, TYPE type) {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		if (type == null)
 			throw new IllegalArgumentException("type == null");
-
+		
 		this.id = id;
 		this.type = type;
 		
@@ -69,6 +71,14 @@ public class Component implements IComponent {
 
 	public void setDtStamp(Calendar calendar) {
 		this.dtStamp = calendar;
+	}
+
+	public String getCalendar() {
+		return calendarId;
+	}
+
+	public void setCalendar(String calendar) {
+		this.calendarId = calendar;		
 	}
 
 }

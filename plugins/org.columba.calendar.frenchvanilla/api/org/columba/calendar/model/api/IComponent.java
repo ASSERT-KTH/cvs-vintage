@@ -47,5 +47,9 @@ public interface IComponent {
 	public abstract Calendar getDtStamp();
 	
 	public abstract void setDtStamp(Calendar calendar);
+	
+	public abstract String getCalendar();
+	
+	public abstract void setCalendar(String calendar);
 
 }

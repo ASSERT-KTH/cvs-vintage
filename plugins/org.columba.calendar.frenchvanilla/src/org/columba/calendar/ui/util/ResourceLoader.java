@@ -21,8 +21,6 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import org.columba.core.io.DiskIO;
-
 public class ResourceLoader {
 
 	private static String path = "/org/columba/calendar/images/";
