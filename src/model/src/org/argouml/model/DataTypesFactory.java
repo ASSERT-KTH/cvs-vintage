@@ -1,4 +1,4 @@
-// $Id: DataTypesFactory.java,v 1.6 2006/02/27 20:39:57 tfmorris Exp $
+// $Id: DataTypesFactory.java,v 1.7 2006/03/20 17:03:58 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,4 +157,25 @@ public interface DataTypesFactory extends Factory {
      * @return an initialized UML Multiplicity instance.
      */
     Object createMultiplicity(String str);
+    
+    /**
+     * Create a MultiplicityRange from a string.
+     * 
+     * @since UML 1.4
+     * @param str the string definition of the range
+     * @return MultiplicityRange A multiplicity range
+     */
+    public Object createMultiplicityRange(String str);
+    
+    /**
+     * Create a MultiplicityRange from a pair of integers.
+     * 
+     * @since UML 1.4
+     * @param lower
+     *            the lower bound of the range
+     * @param upper
+     *            the upper bound of the range
+     * @return MultiplictyRange A multiplicity range
+     */
+    public Object createMultiplicityRange(int lower, int upper);
 }
