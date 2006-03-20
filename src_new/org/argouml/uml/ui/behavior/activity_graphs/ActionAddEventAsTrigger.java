@@ -1,4 +1,4 @@
-// $Id: ActionAddEventAsTrigger.java,v 1.2 2005/11/13 11:01:27 linus Exp $
+// $Id: ActionAddEventAsTrigger.java,v 1.3 2006/03/20 17:05:33 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,17 +31,19 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 /**
- * Provide a dialog which helps the user to select one event out of an existing list,
- * which will be used as the trigger of the transition.
+ * Provide a dialog which helps the user to select one event out of an existing
+ * list, which will be used as the trigger of the transition.
+ * 
  * @author MarkusK
- *
+ * 
  */
 public class ActionAddEventAsTrigger extends AbstractActionAddModelElement {
 
     /**
      * The one and only instance of this class.
      */
-    public static final ActionAddEventAsTrigger SINGLETON = new ActionAddEventAsTrigger();
+    public static final ActionAddEventAsTrigger SINGLETON =
+        new ActionAddEventAsTrigger();
 
     /**
      * Constructor for ActionAddClassifierRoleBase.
@@ -56,12 +58,15 @@ public class ActionAddEventAsTrigger extends AbstractActionAddModelElement {
      */
     protected Vector getChoices() {
         Vector vec = new Vector();
-        // TODO: the namespace of created events is currently the model. I think this is wrong, they should be
+        // TODO: the namespace of created events is currently the model. 
+        // I think this is wrong, they should be
         // in the namespace of the activitygraph!
 //        vec.addAll(Model.getModelManagementHelper().getAllModelElementsOfKind(
-//                Model.getFacade().getNamespace(getTarget()), Model.getMetaTypes().getEvent()));
-      vec.addAll(Model.getModelManagementHelper().getAllModelElementsOfKind(
-      Model.getFacade().getModel(getTarget()), Model.getMetaTypes().getEvent()));
+//                Model.getFacade().getNamespace(getTarget()),
+//                Model.getMetaTypes().getEvent()));
+        vec.addAll(Model.getModelManagementHelper().getAllModelElementsOfKind(
+                Model.getFacade().getModel(getTarget()),
+                Model.getMetaTypes().getEvent()));
 
         return vec;
     }

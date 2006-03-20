@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierInState.java,v 1.4 2006/03/05 10:57:01 mvw Exp $
+// $Id: PropPanelClassifierInState.java,v 1.5 2006/03/20 17:05:33 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,7 +176,8 @@ class UMLClassifierInStateTypeComboBoxModel extends UMLComboBoxModel2 {
     protected void buildModelList() {
         Object model =
             ProjectManager.getManager().getCurrentProject().getModel();
-        Collection c = new ArrayList(Model.getCoreHelper().getAllClassifiers(model));
+        Collection c = 
+            new ArrayList(Model.getCoreHelper().getAllClassifiers(model));
         Collection newList = new ArrayList();
         Iterator i = c.iterator();
         while (i.hasNext()) {
@@ -257,7 +258,8 @@ class ActionAddCISState extends AbstractActionAddModelElement {
         Object classifier = Model.getFacade().getType(cis);
         if (Model.getFacade().isAClassifier(classifier)) {
             ret.addAll(Model.getModelManagementHelper()
-                    .getAllModelElementsOfKindWithModel(classifier, choiceClass));
+                    .getAllModelElementsOfKindWithModel(classifier,
+                            choiceClass));
         }
         return ret;
     }
