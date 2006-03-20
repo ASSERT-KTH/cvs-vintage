@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.234 2006/03/16 01:26:58 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.235 2006/03/20 20:51:22 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1692,7 +1692,7 @@ public abstract class FigNodeModelElement
     }
     
     /**
-     * Add an element listener and remember the registration.
+     * Remove an element listener and remember the registration.
      * 
      * @param element
      *            element to listen for changes on
