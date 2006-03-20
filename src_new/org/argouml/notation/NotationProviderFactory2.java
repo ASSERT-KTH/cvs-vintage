@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.8 2006/03/01 22:38:48 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.9 2006/03/20 22:24:42 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,9 +90,15 @@ public final class NotationProviderFactory2 {
 
     /**
      * TYPE_OBJECTFLOWSTATE_STATE the text shown on a 
-     * objectflowsate's state.
+     * objectflowstate's state.
      */
     public static final int TYPE_OBJECTFLOWSTATE_STATE = 11;
+
+    /**
+     * TYPE_CALLSTATE the text shown on a 
+     * callstate's state.
+     */
+    public static final int TYPE_CALLSTATE = 12;
 
     /**
      * defaultLanguage the Notation language used by default, i.e. UML

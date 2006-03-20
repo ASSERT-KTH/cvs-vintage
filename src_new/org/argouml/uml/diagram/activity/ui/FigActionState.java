@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.39 2006/03/18 01:23:17 tfmorris Exp $
+// $Id: FigActionState.java,v 1.40 2006/03/20 22:24:41 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class FigActionState extends FigStateVertex {
 
     private FigRRect cover;
 
-    private NotationProvider4 notationProvider;
+    protected NotationProvider4 notationProvider;
 
     ////////////////////////////////////////////////////////////////
     // constructors
