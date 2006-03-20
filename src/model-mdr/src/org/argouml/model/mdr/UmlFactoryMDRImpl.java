@@ -1,4 +1,4 @@
-// $Id: UmlFactoryMDRImpl.java,v 1.3 2006/03/20 17:09:00 tfmorris Exp $
+// $Id: UmlFactoryMDRImpl.java,v 1.4 2006/03/20 22:48:10 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1051,12 +1051,4 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
         }
     }
 
-    /**
-     * @see org.argouml.model.UmlFactory#deleteAll()
-     */
-    public void deleteAll() {
-        instancesDeleted.clear();
-        instancesToBeDeleted.clear();
-        nsmodel.clearModelExtent();
-    }
 }
