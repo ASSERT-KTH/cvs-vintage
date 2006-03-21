@@ -1,4 +1,4 @@
-// $Id: FigDataType.java,v 1.1 2006/03/20 20:54:16 tfmorris Exp $
+// $Id: FigDataType.java,v 1.2 2006/03/21 19:14:42 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -148,7 +148,7 @@ public class FigDataType extends FigClassifierBox {
      * @see org.tigris.gef.presentation.Fig#makeSelection()
      */
     public Selection makeSelection() {
-        return new SelectionInterface(this);
+        return new SelectionDataType(this);
     }
 
     /**
