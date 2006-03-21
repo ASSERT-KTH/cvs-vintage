@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.182 2006/03/15 01:09:07 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.183 2006/03/21 07:29:50 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1309,11 +1309,14 @@ public final class ProjectBrowser
                                 + " members in the old project");
                         LOG.info("There are " + p.getMembers().size()
                                 + " members in the new project");
+                        // Set new project before removing old so we always have
+                        // a valid current project
+                        ProjectManager.getManager().setCurrentProject(p);
                         ProjectManager.getManager().removeProject(oldProject);
                         saveAction.setEnabled(false);
-                    }
+                    } 
                 }
-                ProjectManager.getManager().setCurrentProject(p);
+
                 if (p == null) {
                     LOG.info("The current project is null");
                 } else {
@@ -1464,13 +1467,6 @@ public final class ProjectBrowser
 
         chooser.setAcceptAllFileFilterUsed(false);
         PersistenceManager.getInstance().setSaveFileChooserFilters(chooser);
-
-        String fn =
-            Configuration.getString(PersistenceManager.KEY_PROJECT_NAME_PATH);
-        if (fn.length() > 0) {
-            fn = PersistenceManager.getInstance().getBaseName(fn);
-            chooser.setSelectedFile(new File(fn));
-        }
 
         int retval = chooser.showSaveDialog(pb);
         if (retval == JFileChooser.APPROVE_OPTION) {
