@@ -1,5 +1,5 @@
-// $Id: MetaTypes.java,v 1.8 2006/03/17 17:58:48 mvw Exp $
-// Copyright (c) 2005 The Regents of the University of California. All
+// $Id: MetaTypes.java,v 1.9 2006/03/21 21:55:34 mvw Exp $
+// Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -190,6 +190,11 @@ public interface MetaTypes {
      */
     Object getDestroyAction();
 
+    /**
+     * @return Returns the Enumeration.
+     */
+    Object getEnumeration();
+    
     /**
      * @return Returns the Event.
      */
