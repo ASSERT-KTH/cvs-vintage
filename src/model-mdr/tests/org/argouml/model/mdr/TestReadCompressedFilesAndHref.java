@@ -1,4 +1,4 @@
-// $Id: TestReadCompressedFilesAndHref.java,v 1.1 2006/03/03 07:28:24 tfmorris Exp $
+// $Id: TestReadCompressedFilesAndHref.java,v 1.2 2006/03/21 07:45:48 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,8 @@ package org.argouml.model.mdr;
 
 import java.io.File;
 import java.io.FileInputStream;
+
+import javax.jmi.reflect.RefPackage;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
@@ -61,7 +63,7 @@ public class TestReadCompressedFilesAndHref extends
             //     org.argouml.persistence.PersistenceManager
             //         .getInstance().getPersisterFromFileName(testModel);
             XmiReaderImpl reader = new XmiReaderImpl(modelImplementation,
-                    modelImplementation.getMofPackage());
+                    (RefPackage) modelImplementation.getMofPackage());
             try {
                 //persister.doLoad(new File(testModel));
                 reader.parseToModel(new InputSource(new FileInputStream(
