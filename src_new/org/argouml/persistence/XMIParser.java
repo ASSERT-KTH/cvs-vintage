@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.15 2006/02/28 07:04:25 tfmorris Exp $
+// $Id: XMIParser.java,v 1.16 2006/03/21 07:40:25 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,7 +153,7 @@ public class XMIParser {
             }
             
             curModel = null;
-            elementsRead = reader.parse(source);
+            elementsRead = reader.parse(source, false);
             if (elementsRead != null && !elementsRead.isEmpty()) {
                 Facade facade = Model.getFacade();
                 Object current;
@@ -210,8 +210,8 @@ public class XMIParser {
         while (it.hasNext()) {
             Object element = it.next();
             if (facade.isAModel(element)) {
-                diagramsElement.addAll(Model.getModelManagementHelper().
-                        getAllModelElementsOfKind(element,
+                diagramsElement.addAll(Model.getModelManagementHelper()
+                        .getAllModelElementsOfKind(element,
                                 Model.getMetaTypes().getStateMachine()));
             } else if (facade.isAStateMachine(element)) {
                 diagramsElement.add(element);

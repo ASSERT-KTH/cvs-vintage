@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.7 2006/02/28 07:04:25 tfmorris Exp $
+// $Id: XmiReader.java,v 1.8 2006/03/21 07:40:24 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import org.xml.sax.InputSource;
 public interface XmiReader {
 
     /**
-     * Parses a given inputsource to a model.
+     * Parse a given inputsource to a model.
      *
      * @param pIs the input source for parsing
      * @return MModel the UML model
@@ -52,13 +52,28 @@ public interface XmiReader {
     Object parseToModel(InputSource pIs) throws UmlException;
 
     /**
-     * Parses a given inputsource to a collection of top level elements.
+     * Parse a given inputsource to a collection of top level model elements.
      *
      * @param pIs the input source for parsing
      * @return a collection of top level elements
      * @throws UmlException on any error
      */
     Collection parse(InputSource pIs) throws UmlException;
+
+    /**
+     * Parse a given inputsource to a collection of top level model elements.
+     * 
+     * @param pIs
+     *            the input source for parsing
+     * @param profile
+     *            true if the resulting model will be used as a profile.
+     *            Profiles are read-only and will not be written back out when
+     *            the model data is written.
+     * @return a collection of top level elements
+     * @throws UmlException
+     *             on any error
+     */
+    Collection parse(InputSource pIs, boolean profile) throws UmlException;
 
     /**
      * @return the map

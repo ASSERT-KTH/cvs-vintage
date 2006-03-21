@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.179 2006/03/20 07:49:02 bobtarling Exp $
+// $Id: Project.java,v 1.180 2006/03/21 07:40:23 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1296,7 +1296,20 @@ public class Project implements java.io.Serializable, TargetListener {
         }
 
         if (models != null) {
+            for (Iterator it = models.iterator(); it.hasNext();) {
+                Object model = it.next();
+                LOG.debug("Deleting project model " 
+                        + Model.getFacade().getName(model));
+                Model.getUmlFactory().delete(model);
+            }
             models.clear();
+        }
+        
+        if (defaultModel != null) {
+            LOG.debug("Deleting profile model " 
+                    + Model.getFacade().getName(defaultModel));
+            Model.getUmlFactory().delete(defaultModel);
+            defaultModel = null;
         }
 
         if (diagrams != null) {

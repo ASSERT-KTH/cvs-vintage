@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.49 2006/02/28 07:02:51 tfmorris Exp $
+// $Id: ProfileJava.java,v 1.50 2006/03/21 07:40:24 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -407,7 +407,7 @@ public class ProfileJava extends Profile {
                 XmiReader xmiReader = Model.getXmiReader();
                 InputSource inputSource = new InputSource(is);
                 LOG.info("Loaded profile '" + modelFilename + "'");
-                Collection elements = xmiReader.parse(inputSource);
+                Collection elements = xmiReader.parse(inputSource, true);
                 if (elements.size() != 1) {
                     LOG.error("Error loading profile '" + modelFilename
                             + "' expected 1 top level element" + " found "
