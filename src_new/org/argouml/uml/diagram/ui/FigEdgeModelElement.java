@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.152 2006/03/16 01:26:58 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.153 2006/03/22 01:51:39 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -529,7 +529,7 @@ public abstract class FigEdgeModelElement
             super.propertyChange(pve);
         }
 
-        if (Model.getFacade().isAModelElement(src)) {
+        if (Model.getFacade().isAModelElement(src) && !Model.getUmlFactory().isRemoved(getOwner())) {
             /* If the source of the event is an UML object,
              * then the UML model has been changed.*/
             modelChanged(pve);
@@ -960,8 +960,9 @@ public abstract class FigEdgeModelElement
      */
     protected boolean updateClassifiers() {
         Object owner = getOwner();
-        if (owner == null || getLayer() == null)
+        if (owner == null || getLayer() == null) {
             return false;
+        }
 
         Object newSource = getSource();
         Object newDest = getDestination();

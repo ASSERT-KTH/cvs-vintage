@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.235 2006/03/20 20:51:22 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.236 2006/03/22 01:51:39 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -917,7 +917,7 @@ public abstract class FigNodeModelElement
         } else {
             super.propertyChange(pve);
         }
-        if (Model.getFacade().isAModelElement(src)) {
+        if (Model.getFacade().isAModelElement(src) && !Model.getUmlFactory().isRemoved(getOwner())) {
             /* If the source of the event is an UML object,
              * e.g. the owner of this Fig (but not always only the owner
              * is shown, e.g. for a class, also its attributes are shown),
