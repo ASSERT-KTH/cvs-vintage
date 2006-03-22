@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.236 2006/03/22 01:51:39 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.237 2006/03/22 21:10:50 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1192,6 +1192,7 @@ public abstract class FigNodeModelElement
      * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
      */
     public void setOwner(Object own) {
+        // call this before the owner is set:
         updateListeners(own);
         super.setOwner(own);
         initNotationProviders(own);
@@ -1302,21 +1303,22 @@ public abstract class FigNodeModelElement
      * to all Figs when a diagram is not displayed, and restore them
      * when it becomes visible again. <p>
      * 
-     * In this case, it is not imperative that indeed ALL listeners are 
-     * updated, as long as the ones removed get added again and vice versa. <p>
+     * In this case, it is imperative that indeed ALL listeners are 
+     * updated, since they are ALL removed by 
+     * the call to removeElementListener. <p>
      * 
      * Additionally, this function may be used by the modelChanged()
      * function.<p>
      * 
-     * In this case, it IS imperative that all listeners get removed / added.
+     * In this case, it is also imperative that all listeners get removed / added.
      * 
-     * @param newOwner the new owner for the listeners
+     * @param newOwner null, or the owner of this. 
+     *          The former means that listeners have to be removed, 
+     *          the latter that they have to be set.
+     *          TODO: Should this not be boolean, to clarify?
      */
     protected void updateListeners(Object newOwner) {
         Object oldOwner = getOwner();
-        if (newOwner == oldOwner) {
-            return;
-        }
         if (oldOwner != null) {
             removeElementListener(oldOwner);
         }
