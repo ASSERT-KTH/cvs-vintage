@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.18 2006/03/20 20:54:16 tfmorris Exp $
+// $Id: FigStereotypesCompartment.java,v 1.19 2006/03/22 20:34:00 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,7 @@ public class FigStereotypesCompartment extends FigCompartment {
      * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#populate()
      */
     public void populate() {
-
+        
         Object modelElement = getOwner();
         if (modelElement == null) {
             // TODO: This block can be removed after issue 4075 is tackled
@@ -101,6 +101,9 @@ public class FigStereotypesCompartment extends FigCompartment {
                      + "unless the parent has an owner.");
             return;
         }
+        
+        LOG.info("Populating stereotypes compartment for " + Model.getFacade().getName(modelElement));
+        
         int acounter = 1;
         Fig bigPort = this.getBigPort();
         int xpos = bigPort.getX();
