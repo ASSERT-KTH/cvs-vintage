@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.36 2006/03/05 19:37:15 bobtarling Exp $
+// $Id: StylePanelFig.java,v 1.37 2006/03/22 10:06:58 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -337,6 +337,9 @@ public class StylePanelFig
                 res.height = 6000 - res.y;
                 changed = true;
             }
+            if (res.x<0 || res.y<0 || res.width<0 || res.height<0) {
+                throw new IllegalArgumentException();
+            }
             if (changed) {
                 StringBuffer sb = new StringBuffer();
                 sb.append(Integer.toString(res.x));
@@ -349,9 +352,14 @@ public class StylePanelFig
                 bboxField.setText(sb.toString());
             }
         } catch (NumberFormatException ex) {
+            bboxField.setBackground(Color.RED);
             return null;
         }
-
+        catch (IllegalArgumentException iae) {
+            bboxField.setBackground(Color.RED);
+            return null;
+        }
+        bboxField.setBackground(null);
         return res;
     }
 
