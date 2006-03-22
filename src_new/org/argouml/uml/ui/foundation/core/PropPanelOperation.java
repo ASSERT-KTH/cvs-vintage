@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.90 2005/12/13 18:59:53 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.91 2006/03/22 17:07:43 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -184,6 +184,18 @@ public class PropPanelOperation extends PropPanelFeature {
                     Translator.localize("button.new-method"));
             Icon icon = ResourceLoaderWrapper.lookupIcon("Method");
             putValue(Action.SMALL_ICON, icon);
+        }
+        
+        public boolean shouldBeEnabled() {
+        	Object target = TargetManager.getInstance().getModelTarget();
+        	boolean result = true;
+        	if (Model.getFacade().isAOperation(target)) {
+        		Object owner = Model.getFacade().getOwner(target);
+        		if (owner == null || Model.getFacade().isAInterface(owner)) {
+        			result = false;
+        		}
+        	}
+        	return super.shouldBeEnabled() && result;
         }
 
         /**
