@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.27 2005/11/13 11:01:17 linus Exp $
+// $Id: ExplorerTreeModel.java,v 1.28 2006/03/23 14:53:32 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,6 +50,7 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.explorer.rules.PerspectiveRule;
+import org.argouml.util.MyTokenizer;
 
 /**
  * The model for the Explorer tree view of the uml model.
@@ -732,6 +733,7 @@ public class ExplorerTreeModel extends DefaultTreeModel
 	    order = (Comparator) e.getItem();
 	}
 	structureChanged();
+	tree.expandPath(tree.getPathForRow(0));
     }
 
     /**
