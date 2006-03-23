@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.73 2006/02/10 06:10:51 tfmorris Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.74 2006/03/23 16:01:54 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -201,12 +201,11 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
 
         addSeperator();
 
-        JPanel panel = new JPanel(new GridLayout2());
+        JPanel panel = createBorderPanel(Translator.localize(
+                "label.modifiers"));
         panel.add(navigabilityCheckBox);
         panel.add(orderingCheckBox);
         panel.add(targetScopeCheckBox);
-        panel.setBorder(new TitledBorder(Translator.localize(
-                "label.modifiers")));
         panel.setVisible(true);
         add(panel);
         addField(Translator.localize("label.specification"),

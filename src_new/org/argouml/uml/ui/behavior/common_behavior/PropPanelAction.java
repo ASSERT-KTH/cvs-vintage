@@ -1,4 +1,4 @@
-// $Id: PropPanelAction.java,v 1.22 2006/03/12 10:42:03 linus Exp $
+// $Id: PropPanelAction.java,v 1.23 2006/03/23 16:01:54 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,9 +91,8 @@ public abstract class PropPanelAction extends PropPanelModelElement {
             new UMLScriptExpressionModel(
                 this, "script");
 
-        JPanel scriptPanel = new JPanel(new GridLayout2());
-        scriptPanel.setBorder(new TitledBorder(Translator
-                .localize("label.script")));
+        JPanel scriptPanel = createBorderPanel(Translator
+                .localize("label.script"));
 
         scriptPanel.add(new JScrollPane(new UMLExpressionBodyField(
                 scriptModel, true)));
@@ -106,9 +105,8 @@ public abstract class PropPanelAction extends PropPanelModelElement {
             new UMLRecurrenceExpressionModel(
                 this, "recurrence");
 
-        JPanel recurrencePanel = new JPanel(new GridLayout2());
-        recurrencePanel.setBorder(new TitledBorder(Translator
-                .localize("label.recurrence")));
+        JPanel recurrencePanel = createBorderPanel(Translator
+                .localize("label.recurrence"));
         recurrencePanel.add(new JScrollPane(new UMLExpressionBodyField(
                 recurrenceModel, true)));
         recurrencePanel.add(new UMLExpressionLanguageField(

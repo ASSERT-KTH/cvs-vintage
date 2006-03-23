@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociation.java,v 1.51 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelAssociation.java,v 1.52 2006/03/23 16:01:54 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,9 +122,8 @@ public class PropPanelAssociation extends PropPanelRelationship {
 
     private void initialize() {
 
-        modifiersPanel = new JPanel(new GridLayout2());
-        modifiersPanel.setBorder(new TitledBorder(
-                Translator.localize("label.modifiers")));
+        modifiersPanel = createBorderPanel(
+                Translator.localize("label.modifiers"));
         modifiersPanel.add(new UMLGeneralizableElementAbstractCheckBox());
         modifiersPanel.add(new UMLGeneralizableElementLeafCheckBox());
         modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());

@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.36 2006/02/15 20:00:58 mvw Exp $
+// $Id: PropPanelReception.java,v 1.37 2006/03/23 16:01:54 mkl Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,11 +63,8 @@ public class PropPanelReception extends PropPanelModelElement {
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
-        modifiersPanel =
-            new JPanel(new GridLayout2());
-        modifiersPanel.setBorder(
-            new TitledBorder(Translator.localize(
-                    "label.modifiers")));
+        modifiersPanel = createBorderPanel(Translator.localize(
+                    "label.modifiers"));
 
         modifiersPanel.add(
                             new UMLGeneralizableElementAbstractCheckBox());

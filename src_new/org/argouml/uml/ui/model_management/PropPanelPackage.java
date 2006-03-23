@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.71 2005/12/13 18:59:53 mvw Exp $
+// $Id: PropPanelPackage.java,v 1.72 2006/03/23 16:01:54 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,11 +104,8 @@ public class PropPanelPackage extends PropPanelNamespace  {
 
         // TODO: facilitate importedElements.
 
-        modifiersPanel =
-            new JPanel(new GridLayout2());
-        modifiersPanel.setBorder(
-            new TitledBorder(Translator.localize(
-                    "label.modifiers")));
+        modifiersPanel = createBorderPanel(Translator.localize(
+                    "label.modifiers"));
 
         modifiersPanel.add(
                             new UMLGeneralizableElementAbstractCheckBox());

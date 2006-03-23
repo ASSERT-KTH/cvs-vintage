@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.43 2006/03/22 17:51:27 mkl Exp $
+// $Id: PropPanelGuard.java,v 1.44 2006/03/23 16:01:55 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,9 +73,8 @@ public class PropPanelGuard extends PropPanelModelElement {
 
 		addSeperator();
 
-		JPanel exprPanel = new JPanel(new GridLayout2());
-		exprPanel.setBorder(new TitledBorder(Translator
-				.localize("label.expression")));
+		JPanel exprPanel = createBorderPanel(Translator
+				.localize("label.expression"));
 		UMLExpressionModel2 expressionModel = new UMLExpressionExpressionModel(
 				this, "expression");
 		JTextArea ebf = new UMLExpressionBodyField(expressionModel, true);

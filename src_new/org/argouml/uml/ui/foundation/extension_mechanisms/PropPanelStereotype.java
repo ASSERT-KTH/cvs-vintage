@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.55 2006/03/11 23:49:58 tfmorris Exp $
+// $Id: PropPanelStereotype.java,v 1.56 2006/03/23 16:01:54 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,10 +85,8 @@ public class PropPanelStereotype extends PropPanelModelElement {
                  getNamespaceSelector());
 
 
-        JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 3,
-                FlexiGridLayout.ROWCOLPREFERRED));
-        modifiersPanel.setBorder(new TitledBorder(
-                Translator.localize("label.modifiers")));
+        JPanel modifiersPanel = createBorderPanel(
+                Translator.localize("label.modifiers"));
         modifiersPanel.add(new UMLGeneralizableElementAbstractCheckBox());
         modifiersPanel.add(new UMLGeneralizableElementLeafCheckBox());
         modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());

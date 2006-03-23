@@ -1,4 +1,4 @@
-// $Id: PropPanelMethod.java,v 1.6 2006/03/15 14:40:14 linus Exp $
+// $Id: PropPanelMethod.java,v 1.7 2006/03/23 16:01:54 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,11 +88,8 @@ public class PropPanelMethod extends PropPanelFeature {
 
         add(getVisibilityPanel());
 
-        JPanel modifiersPanel =
-            new JPanel(new GridLayout2(0, 3,
-                GridLayout2.ROWCOLPREFERRED));
-        modifiersPanel.setBorder(new TitledBorder(Translator.localize(
-                "label.modifiers")));
+        JPanel modifiersPanel = createBorderPanel(Translator.localize(
+                "label.modifiers"));
         modifiersPanel.add(new UMLBehavioralFeatureQueryCheckBox());
         modifiersPanel.add(new UMLFeatureOwnerScopeCheckBox());
         add(modifiersPanel);

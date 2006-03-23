@@ -1,4 +1,4 @@
-// $Id: PropPanelTimeEvent.java,v 1.16 2005/11/13 11:01:20 linus Exp $
+// $Id: PropPanelTimeEvent.java,v 1.17 2006/03/23 16:01:55 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,9 +61,8 @@ public class PropPanelTimeEvent extends PropPanelEvent {
         UMLExpressionModel2 whenModel = new UMLTimeExpressionModel(
                 this, "when");
 
-        JPanel whenPanel = new JPanel(new GridLayout2());
-        whenPanel.setBorder(new TitledBorder(Translator
-                .localize("label.when")));
+        JPanel whenPanel = createBorderPanel(Translator
+                .localize("label.when"));
         whenPanel.add(new JScrollPane(new UMLExpressionBodyField(
                 whenModel, true)));
         whenPanel.add(new UMLExpressionLanguageField(whenModel,

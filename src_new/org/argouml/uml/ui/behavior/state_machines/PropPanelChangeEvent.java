@@ -1,4 +1,4 @@
-// $Id: PropPanelChangeEvent.java,v 1.15 2006/03/19 19:06:22 mvw Exp $
+// $Id: PropPanelChangeEvent.java,v 1.16 2006/03/23 16:01:55 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,9 +60,8 @@ public class PropPanelChangeEvent extends PropPanelEvent {
 
         UMLExpressionModel2 changeModel = new UMLChangeExpressionModel(
                 this, "changeExpression");
-        JPanel changePanel = new JPanel(new GridLayout2());
-        changePanel.setBorder(new TitledBorder(Translator
-                .localize("label.change")));
+        JPanel changePanel = createBorderPanel(Translator
+                .localize("label.change"));
         changePanel.add(new JScrollPane(new UMLExpressionBodyField(
                 changeModel, true)));
         changePanel.add(new UMLExpressionLanguageField(changeModel,
