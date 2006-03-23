@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.53 2005/09/08 18:22:54 mkl Exp $
+// $Id: PropPanelClassifierRole.java,v 1.54 2006/03/23 10:21:18 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 		ActionAddClassifierRoleBase.SINGLETON,
 		null,
 		ActionRemoveClassifierRoleBase.getInstance(),
-		false);
+		true);
 	addField(Translator.localize("label.base"),
 		new JScrollPane(baseList));
 
