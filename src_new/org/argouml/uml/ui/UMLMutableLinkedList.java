@@ -1,4 +1,4 @@
-// $Id: UMLMutableLinkedList.java,v 1.17 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLMutableLinkedList.java,v 1.18 2006/03/23 10:57:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,7 +128,7 @@ public class UMLMutableLinkedList extends UMLLinkedList
     public UMLMutableLinkedList(UMLModelElementListModel2 dataModel,
             AbstractActionAddModelElement theAddAction,
             AbstractActionNewModelElement theNewAction) {
-        this(dataModel, theAddAction, theNewAction, null, false);
+        this(dataModel, theAddAction, theNewAction, null, true);
     }
 
     /**
@@ -139,7 +139,7 @@ public class UMLMutableLinkedList extends UMLLinkedList
      */
     public UMLMutableLinkedList(UMLModelElementListModel2 dataModel,
             AbstractActionAddModelElement theAddAction) {
-        this(dataModel, theAddAction, null, null, false);
+        this(dataModel, theAddAction, null, null, true);
     }
 
     /**
@@ -150,7 +150,7 @@ public class UMLMutableLinkedList extends UMLLinkedList
      */
     public UMLMutableLinkedList(UMLModelElementListModel2 dataModel,
             AbstractActionNewModelElement theNewAction) {
-        this(dataModel, null, theNewAction, null, false);
+        this(dataModel, null, theNewAction, null, true);
     }
 
     /**
@@ -159,7 +159,7 @@ public class UMLMutableLinkedList extends UMLLinkedList
      * @param dataModel the data model
      */
     protected UMLMutableLinkedList(UMLModelElementListModel2 dataModel) {
-        this(dataModel, null, null, null, false);
+        this(dataModel, null, null, null, true);
         setDelete(false);
         setDeleteAction(null);
     }
