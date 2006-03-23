@@ -1,4 +1,4 @@
-// $Id: FigLifeLine.java,v 1.9 2006/03/15 01:10:02 bobtarling Exp $
+// $Id: FigLifeLine.java,v 1.10 2006/03/23 22:01:24 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,16 +52,19 @@ import org.xml.sax.helpers.DefaultHandler;
 
 class FigLifeLine extends FigGroup implements HandlerFactory {
 
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = -1242239243040698287L;
-    
+
     /**
      * Logger.
      */
     private static final Logger LOG =
         Logger.getLogger(FigLifeLine.class);
 
-    final static int WIDTH = 20;
-    final static int HEIGHT = 1000;
+    static final int WIDTH = 20;
+    static final int HEIGHT = 1000;
     private FigRect rect;
     private FigLine line;
 
@@ -128,7 +131,7 @@ class FigLifeLine extends FigGroup implements HandlerFactory {
     final void removeActivations() {
         List activations = new ArrayList(activationFigs);
         activationFigs.clear();
-        for (Iterator it = activations.iterator(); it.hasNext(); ) {
+        for (Iterator it = activations.iterator(); it.hasNext();) {
             removeFig((Fig) it.next());
         }
         calcBounds();
