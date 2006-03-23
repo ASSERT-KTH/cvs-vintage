@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.94 2006/03/23 16:01:54 mkl Exp $
+// $Id: PropPanelOperation.java,v 1.95 2006/03/23 21:13:26 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
@@ -42,7 +41,6 @@ import org.argouml.uml.ui.ActionNavigateOwner;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
-import org.tigris.swidgets.GridLayout2;
 
 /**
  * A property panel for operations.

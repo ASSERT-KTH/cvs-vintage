@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.62 2006/03/23 16:01:54 mkl Exp $
+// $Id: PropPanelClassifier.java,v 1.63 2006/03/23 21:13:26 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Collection;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
@@ -37,7 +36,6 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ScrollList;
 import org.argouml.uml.ui.behavior.common_behavior.ActionNewReception;
-import org.tigris.swidgets.GridLayout2;
 import org.tigris.swidgets.Orientation;
 
 /**
