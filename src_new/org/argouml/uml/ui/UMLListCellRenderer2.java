@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.34 2006/02/27 20:41:55 tfmorris Exp $
+// $Id: UMLListCellRenderer2.java,v 1.35 2006/03/23 15:24:18 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.34 2006/02/27 20:41:55 tfmorris Exp $
+// $Id: UMLListCellRenderer2.java,v 1.35 2006/03/23 15:24:18 mkl Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -141,7 +141,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             Object type = Model.getFacade().getType(value);
             name = Model.getFacade().getName(value);
             if (name == null || name.equals("")) {
-                name = "(anon " + makeTypeName(value) + ")";
+                name = "(unnamed " + makeTypeName(value) + ")";
             }
             String typeName = null;
             if (type != null) typeName = Model.getFacade().getName(type);
@@ -154,7 +154,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             Object/* MModelElement */elem = value;
             name = Model.getFacade().getName(elem);
             if (name == null || name.equals("")) {
-                name = "(anon " + makeTypeName(elem) + ")";
+                name = "(unnamed " + makeTypeName(elem) + ")";
             }
             if (Model.getFacade().isAStereotype(value)) {
                 Object b = Model.getFacade().getBaseClass(value);

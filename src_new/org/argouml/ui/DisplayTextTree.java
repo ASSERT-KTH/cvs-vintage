@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.51 2006/03/23 14:23:06 mkl Exp $
+// $Id: DisplayTextTree.java,v 1.52 2006/03/23 15:23:34 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -155,7 +155,7 @@ public class DisplayTextTree extends JTree {
 
             if (name == null || name.equals("")) {
                 name =
-                    "(anon " + Model.getFacade().getUMLClassName(value) + ")";
+                    "(unnamed " + Model.getFacade().getUMLClassName(value) + ")";
             }
             /*
              * If the name is too long or multi-line (e.g. for comments)
@@ -189,7 +189,7 @@ public class DisplayTextTree extends JTree {
         if (Model.getFacade().isATaggedValue(value)) {
             String tagName = Model.getFacade().getTagOfTag(value);
             if (tagName == null || tagName.equals("")) {
-                tagName = "(anon)";
+                tagName = "(unnamed)";
             }
             return ("1-" + tagName);
         }
