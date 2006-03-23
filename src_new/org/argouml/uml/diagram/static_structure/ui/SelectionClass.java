@@ -1,4 +1,4 @@
-// $Id: SelectionClass.java,v 1.31 2006/02/26 01:35:25 linus Exp $
+// $Id: SelectionClass.java,v 1.32 2006/03/23 20:54:09 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -236,6 +236,8 @@ public class SelectionClass extends SelectionNodeClarifiers {
             ModeCreateEdgeAndNode m =
                 new ModeCreateEdgeAndNode(ce,
                         edgeType, nodeType, useComposite);
+            // This will fix issue 2400, once we have the new GEF:
+//                      edgeType, useComposite, this);
             m.setup((FigNode) getContent(), getContent().getOwner(),
                     bx, by, reverse);
             ce.pushMode(m);

@@ -1,4 +1,4 @@
-// $Id: SelectionActionState.java,v 1.29 2005/09/07 21:03:52 linus Exp $
+// $Id: SelectionActionState.java,v 1.30 2006/03/23 20:54:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,6 +252,8 @@ public class SelectionActionState extends SelectionNodeClarifiers {
 	if (edgeType != null && nodeType != null) {
 	    ModeCreateEdgeAndNode m =
 	        new ModeCreateEdgeAndNode(ce, edgeType, nodeType, false);
+                //This will fix issue 2400, once we have the new GEF:
+//              new ModeCreateEdgeAndNode(ce, edgeType, false, this);
 	    m.setup((FigNode) getContent(), getContent().getOwner(),
 	            bx, by, reverse);
 	    ce.pushMode(m);
