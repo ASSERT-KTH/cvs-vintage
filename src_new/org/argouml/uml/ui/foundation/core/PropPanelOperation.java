@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.95 2006/03/23 21:13:26 mkl Exp $
+// $Id: PropPanelOperation.java,v 1.96 2006/03/23 21:28:08 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,12 @@ public class PropPanelOperation extends PropPanelFeature {
         addField(Translator.localize("label.owner"),
                 getOwnerScroll());
 
+        addField(Translator.localize("label.parameters"),
+                new JScrollPane(new UMLLinkedList(
+                new UMLClassifierParameterListModel())));
+        
+        addSeperator();
+        
         add(getVisibilityPanel());
 
         JPanel modifiersPanel = createBorderPanel(Translator.localize(
@@ -76,14 +82,8 @@ public class PropPanelOperation extends PropPanelFeature {
         modifiersPanel.add(new UMLFeatureOwnerScopeCheckBox());
         add(modifiersPanel);
 
-        addSeperator();
-
         add(new UMLOperationConcurrencyRadioButtonPanel(
                 Translator.localize("label.concurrency"), true));
-
-        addField(Translator.localize("label.parameters"),
-                new JScrollPane(new UMLLinkedList(
-                new UMLClassifierParameterListModel())));
 
         addSeperator();
 
