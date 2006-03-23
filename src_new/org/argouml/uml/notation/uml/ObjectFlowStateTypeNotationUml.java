@@ -1,4 +1,4 @@
-// $Id: ObjectFlowStateTypeNotationUml.java,v 1.2 2006/03/11 07:51:39 tfmorris Exp $
+// $Id: ObjectFlowStateTypeNotationUml.java,v 1.3 2006/03/23 22:43:09 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,12 +34,12 @@ import org.argouml.uml.notation.ObjectFlowStateTypeNotation;
 /**
  * @author Michiel
  */
-public class ObjectFlowStateTypeNotationUml 
+public class ObjectFlowStateTypeNotationUml
     extends ObjectFlowStateTypeNotation {
 
     /**
      * The constructor.
-     * 
+     *
      * @param objectflowstate the ObjectFlowState represented by this notation
      */
     public ObjectFlowStateTypeNotationUml(Object objectflowstate) {
@@ -63,14 +63,14 @@ public class ObjectFlowStateTypeNotationUml
         }
         return toString();
     }
-    
+
     /**
      * Do the actual parsing.
-     * 
+     *
      * @param objectFlowState the given element to be altered
      * @param s the new string
      * @return the altered ObjectFlowState
-     * @throws ParseException when the given text was rejected 
+     * @throws ParseException when the given text was rejected
      */
     protected Object parseObjectFlowState1(Object objectFlowState, String s)
         throws ParseException {
@@ -99,13 +99,15 @@ public class ObjectFlowStateTypeNotationUml
     public String toString() {
         Object classifier = Model.getFacade().getType(myObjectFlowState);
         if (Model.getFacade().isAClassifierInState(classifier)) {
-            classifier = Model.getFacade().getType(classifier); 
+            classifier = Model.getFacade().getType(classifier);
         }
         if (classifier == null) {
             return "";
         }
         String name = Model.getFacade().getName(classifier);
-        if (name == null) name = "";
+        if (name == null) {
+            name = "";
+        }
         return name;
     }
 
