@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.52 2006/03/23 15:23:34 mkl Exp $
+// $Id: DisplayTextTree.java,v 1.53 2006/03/23 17:30:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,12 +133,18 @@ public class DisplayTextTree extends JTree {
 
             // Jeremy Bennett patch
             if (Model.getFacade().isATransition(value)) {
+                name = Model.getFacade().getName(value);
                 NotationProvider4 notationProvider =
                     NotationProviderFactory2.getInstance().getNotationProvider(
                             NotationProviderFactory2.TYPE_TRANSITION,
                             NotationHelper.getDefaultNotationContext(),
                             value);
-                name = notationProvider.toString();
+                String signature = notationProvider.toString();
+                if (name != null && name.length() > 0) {
+                    name += ": " + signature;
+                } else {
+                    name = signature;
+                }
             } else if (Model.getFacade().isAExtensionPoint(value)) {
                 name =
                     GeneratorDisplay.getInstance()
