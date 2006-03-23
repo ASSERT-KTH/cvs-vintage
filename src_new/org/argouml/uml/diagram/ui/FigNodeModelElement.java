@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.237 2006/03/22 21:10:50 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.238 2006/03/23 00:36:57 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -320,6 +320,15 @@ public abstract class FigNodeModelElement
         nameFig.setText(placeString());
         readyToEdit = false;
 
+        //ArgoEventPump.addListener(ArgoEvent.ANY_NOTATION_EVENT, this);
+    }
+
+    public FigNodeModelElement(Object node, int x, int y) {
+        this();
+        setOwner(node);
+        nameFig.setText(placeString());
+        readyToEdit = false;
+        setLocation(x, y);
         //ArgoEventPump.addListener(ArgoEvent.ANY_NOTATION_EVENT, this);
     }
 

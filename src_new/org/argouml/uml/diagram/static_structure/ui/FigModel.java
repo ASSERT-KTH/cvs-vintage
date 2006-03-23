@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.21 2005/07/22 13:59:03 bobtarling Exp $
+// $Id: FigModel.java,v 1.22 2006/03/23 00:36:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.21 2005/07/22 13:59:03 bobtarling Exp $
+// $Id: FigModel.java,v 1.22 2006/03/23 00:36:57 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -42,8 +42,8 @@ public class FigModel extends FigPackage {
     /**
      * Constructor
      */
-    public FigModel() {
-        super();
+    public FigModel(Object modelElement, int x, int y) {
+        super(modelElement, x, y);
 
         int[] xpoints = {125, 130, 135, 125};
         int[] ypoints = {45, 40, 45, 45};
@@ -63,8 +63,7 @@ public class FigModel extends FigPackage {
      * @param node the UMl element
      */
     public FigModel(GraphModel gm, Object node) {
-        this();
-        setOwner(node);
+        this(node, 0, 0);
     }
 
     /**

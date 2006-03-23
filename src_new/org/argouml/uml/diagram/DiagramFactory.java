@@ -1,4 +1,4 @@
-// $Id: DiagramFactory.java,v 1.6 2005/11/13 11:01:18 linus Exp $
+// $Id: DiagramFactory.java,v 1.7 2006/03/23 00:36:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,7 +177,7 @@ public final class DiagramFactory {
     public Object createRenderingElement(Object diagram, Object model) {
         GraphNodeRenderer rend =
             ((UMLDiagram) diagram).getLayer().getGraphNodeRenderer();
-        Object renderingElement = rend.getFigNodeFor(model, noStyleProperties);
+        Object renderingElement = rend.getFigNodeFor(model, 0, 0, noStyleProperties);
         return renderingElement;
     }
 }

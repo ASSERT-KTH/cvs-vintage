@@ -1,4 +1,4 @@
-// $Id: TestFigClonable.java,v 1.1 2005/07/22 17:29:44 linus Exp $
+// $Id: TestFigClonable.java,v 1.2 2006/03/23 00:34:47 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,32 +101,6 @@ public class TestFigClonable extends TestCase {
 
     }
 
-
-    /**
-     * Try to clone {@link FigModel}.
-     */
-    public void testModelClonable() {
-
-	FigModel fig = new FigModel();
-	FigModel figclone;
-
-	figclone = (FigModel) fig.clone();
-
-    }
-
-    /**
-     * Try to clone {@link FigSubsystem}.
-     */
-    public void testSubsystemClonable() {
-
-	FigSubsystem fig = new FigSubsystem();
-	FigSubsystem figclone;
-
-	figclone = (FigSubsystem) fig.clone();
-
-    }
-
-
     /**
      * Try to clone {@link FigComment}.
      */
@@ -138,19 +112,4 @@ public class TestFigClonable extends TestCase {
 	figclone = (FigComment) fig.clone();
 
     }
-
-
-    /**
-     * Try to clone {@link FigPackage}.
-     */
-    public void testPackageClonable() {
-
-	FigPackage fig = new FigPackage();
-	FigPackage figclone;
-
-	figclone = (FigPackage) fig.clone();
-
-    }
-
-
 }

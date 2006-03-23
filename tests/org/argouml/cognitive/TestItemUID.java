@@ -1,4 +1,4 @@
-// $Id: TestItemUID.java,v 1.16 2005/01/09 14:59:13 linus Exp $
+// $Id: TestItemUID.java,v 1.17 2006/03/23 00:34:46 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -155,7 +155,7 @@ public class TestItemUID extends TestCase {
         FigInstance figinstance = new FigInstance();
         FigInterface figinterface = new FigInterface();
         FigLink figlink = new FigLink();
-        FigPackage figpackage = new FigPackage();
+//        FigPackage figpackage = new FigPackage();
 
         FigActor figactor = new FigActor();
         FigExtend figextend = new FigExtend();
@@ -199,7 +199,7 @@ public class TestItemUID extends TestCase {
         checkAssignIDToObject(figinstance, true, true);
         checkAssignIDToObject(figinterface, true, true);
         checkAssignIDToObject(figlink, true, true);
-        checkAssignIDToObject(figpackage, true, true);
+        //checkAssignIDToObject(figpackage, true, true);
 
         checkAssignIDToObject(figactor, true, true);
         checkAssignIDToObject(figextend, true, true);

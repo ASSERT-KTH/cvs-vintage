@@ -1,4 +1,4 @@
-// $Id: FigSubsystem.java,v 1.18 2005/07/22 13:59:03 bobtarling Exp $
+// $Id: FigSubsystem.java,v 1.19 2006/03/23 00:36:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigSubsystem.java,v 1.18 2005/07/22 13:59:03 bobtarling Exp $
+// $Id: FigSubsystem.java,v 1.19 2006/03/23 00:36:57 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -42,8 +42,8 @@ public class FigSubsystem extends FigPackage {
     /**
      * The main Constructor.
      */
-    public FigSubsystem() {
-        super();
+    public FigSubsystem(Object modelElement, int x, int y) {
+        super(modelElement, x, y);
 
         int[] xpoints = {125, 125, 130, 130, 130, 135, 135};
         int[] ypoints = {45, 40, 40, 35, 40, 40, 45};
@@ -62,8 +62,7 @@ public class FigSubsystem extends FigPackage {
      * @param node the UML element
      */
     public FigSubsystem(GraphModel gm, Object node) {
-        this();
-        setOwner(node);
+        this(node, 0, 0);
     }
 
     /**
