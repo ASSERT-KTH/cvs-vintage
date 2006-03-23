@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.92 2006/03/23 12:28:25 mkl Exp $
+// $Id: PropPanelOperation.java,v 1.93 2006/03/23 12:36:12 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,8 +69,7 @@ public class PropPanelOperation extends PropPanelFeature {
 
         add(getVisibilityPanel());
 
-        JPanel modifiersPanel = new JPanel(new GridLayout2(0, 5,
-                GridLayout2.ROWCOLPREFERRED));
+        JPanel modifiersPanel = new JPanel(new GridLayout2());
         modifiersPanel.setBorder(new TitledBorder(Translator.localize(
                 "label.modifiers")));
         modifiersPanel.add(new UMLGeneralizableElementAbstractCheckBox());
