@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.16 2006/03/21 07:40:25 tfmorris Exp $
+// $Id: XMIParser.java,v 1.17 2006/03/24 02:14:22 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,9 @@ import org.xml.sax.InputSource;
  * manages the overall reading process, but all actual XMI
  * deserialization is the responsibility of the Model subsystem.
  *
+ * TODO: This is set up as a singleton, but it's retaining project
+ * specific state (eg UUID map)in an uncoordinated manner which
+ * will be a problem when we attempt to support multiple projects. - tfm
  */
 public class XMIParser {
 
@@ -101,6 +104,8 @@ public class XMIParser {
     }
 
     /**
+     * Return XMI id to object map for the most recently read XMI file.
+     * 
      * @return the UUID
      */
     public HashMap getUUIDRefs() {

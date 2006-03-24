@@ -1,4 +1,4 @@
-// $Id: XmiWriterMDRImpl.java,v 1.2 2006/03/21 07:40:24 tfmorris Exp $
+// $Id: XmiWriterMDRImpl.java,v 1.3 2006/03/24 02:14:22 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class XmiWriterMDRImpl implements XmiWriter {
      * except for the profile model(s), ignoring the model specified by the 
      * caller.
      */
-    private static final boolean WRITE_ALL = true;
+    private static final boolean WRITE_ALL = false;
 
     /**
      * Create an XMI writer for the given model or extent.
@@ -91,7 +91,7 @@ public class XmiWriterMDRImpl implements XmiWriter {
         this.writer = theWriter;
         config = new OutputConfig();
         config.setEncoding(ENCODING);
-        config.setReferenceProvider(new XmiReferenceProviderImpl());
+        config.setReferenceProvider(new XmiReferenceProviderImpl(parent.getObjectToId()));
         config.setHeaderProvider(new XmiHeaderProviderImpl());
     }
 
