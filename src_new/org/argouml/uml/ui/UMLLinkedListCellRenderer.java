@@ -1,4 +1,4 @@
-// $Id: UMLLinkedListCellRenderer.java,v 1.6 2006/03/22 11:53:30 mkl Exp $
+// $Id: UMLLinkedListCellRenderer.java,v 1.7 2006/03/24 14:06:34 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,9 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLLinkedListCellRenderer.java,v 1.6 2006/03/22 11:53:30 mkl Exp $
+// $Id: UMLLinkedListCellRenderer.java,v 1.7 2006/03/24 14:06:34 mkl Exp $
 package org.argouml.uml.ui;
 import java.awt.Component;
-import java.awt.Font;
-import java.awt.font.TextAttribute;
-import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JList;

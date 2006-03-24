@@ -1,4 +1,4 @@
-// $Id: UMLUserInterfaceContainer.java,v 1.13 2005/02/21 20:48:15 mvw Exp $
+// $Id: UMLUserInterfaceContainer.java,v 1.14 2006/03/24 14:08:38 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,9 @@
 
 
 package org.argouml.uml.ui;
-import org.argouml.uml.*;
-import java.util.*;
+import java.util.Iterator;
+
+import org.argouml.uml.Profile;
 
 /**
  * Interface supported by any container of UML user interface components.

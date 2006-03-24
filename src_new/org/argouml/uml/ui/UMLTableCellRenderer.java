@@ -1,4 +1,4 @@
-// $Id: UMLTableCellRenderer.java,v 1.4 2005/11/14 03:55:52 tfmorris Exp $
+// $Id: UMLTableCellRenderer.java,v 1.5 2006/03/24 14:08:38 mkl Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 
 public class UMLTableCellRenderer extends DefaultTableCellRenderer implements TableCellRenderer {

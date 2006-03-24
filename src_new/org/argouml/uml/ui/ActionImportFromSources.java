@@ -1,4 +1,4 @@
-// $Id: ActionImportFromSources.java,v 1.22 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionImportFromSources.java,v 1.23 2006/03/24 14:08:38 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.argouml.uml.reveng.Import;
 
 

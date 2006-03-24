@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.34 2006/02/27 20:41:55 tfmorris Exp $
+// $Id: TabStyle.java,v 1.35 2006/03/24 14:08:38 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,10 +40,10 @@ import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.StylePanel;
 import org.argouml.ui.TabFigTarget;
-import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.uml.util.namespace.Namespace;
