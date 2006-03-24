@@ -1,5 +1,5 @@
-// $Id: Designer.java,v 1.52 2006/03/05 19:37:16 bobtarling Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: Designer.java,v 1.53 2006/03/24 05:54:11 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -67,8 +67,7 @@ import org.tigris.gef.util.EnumerationEmpty;
 public final class Designer
      implements Poster,
          Runnable,
-         PropertyChangeListener,
-         java.io.Serializable {
+         PropertyChangeListener {
     /**
      * Logger.
      */
@@ -83,8 +82,8 @@ public final class Designer
 
     private static Vector unspecDecisionVector;
     private static Vector unspecGoalVector;
-    
-    private static Action saveAction = null;
+
+    private static Action saveAction;
 
     static {
         unspecDecisionVector = new Vector();
@@ -442,7 +441,12 @@ public final class Designer
             pcs.removePropertyChangeListener(p);
         }
     }
-    
+
+    /**
+     * Setter for saveAction.
+     *
+     * @param theSaveAction The new saveAction.
+     */
     public static void setSaveAction(Action theSaveAction) {
     	saveAction = theSaveAction;
     }
@@ -459,9 +463,9 @@ public final class Designer
         }
         if (MODEL_TODOITEM_ADDED.equals(property)
                 || MODEL_TODOITEM_DISMISSED.equals(property)) {
-        	if (saveAction != null) {
-        		saveAction.setEnabled(true);
-        	}
+            if (saveAction != null) {
+                saveAction.setEnabled(true);
+            }
         }
     }
 
