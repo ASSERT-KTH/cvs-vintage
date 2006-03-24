@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.135 2006/03/23 21:14:29 mkl Exp $
+// $Id: PropPanel.java,v 1.136 2006/03/24 13:19:37 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
 
     private JLabel titleLabel;
 
-    private static Font smallFont = LookAndFeelMgr.getInstance().getSmallFont();
+    protected static Font smallFont = LookAndFeelMgr.getInstance().getSmallFont();
 
     /**
      * Construct new PropPanel using LabelledLayout.
@@ -109,7 +109,9 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
         buttonPanel = new ToolBar();
         buttonPanel.setFloatable(false);
 
-        setLayout(new LabelledLayout(orientation == Vertical.getInstance()));
+        LabelledLayout layout = new LabelledLayout(orientation == Vertical.getInstance());
+        layout.setHgap(5);
+        setLayout(layout);
 
         if (icon != null) {
             setTitleLabel(new JLabel(title, icon, SwingConstants.LEFT));
