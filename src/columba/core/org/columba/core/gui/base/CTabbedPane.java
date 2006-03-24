@@ -18,6 +18,7 @@ package org.columba.core.gui.base;
 import javax.swing.JTabbedPane;
 
 
+
 public class CTabbedPane extends JTabbedPane {
     public CTabbedPane() {
         super();

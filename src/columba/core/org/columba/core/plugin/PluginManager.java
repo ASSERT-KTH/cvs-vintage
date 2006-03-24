@@ -33,7 +33,6 @@ import org.columba.api.plugin.IPluginManager;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.logging.Logging;
 import org.columba.core.util.PluginFinder;
-import org.columba.core.xml.XmlIO;
 
 /**
  * Plugin manager is a singleton registry for all plugins and all extension

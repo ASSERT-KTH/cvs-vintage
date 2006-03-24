@@ -41,7 +41,8 @@ public class VCardParserTest extends TestCase {
 		File file = new File("res/org/columba/addressbook/parser/columba.xml");
 
 		Document doc = XmlNewIO.load(file);
-
+		assertNotNull(doc);
+		
 		IContactModel c = new ContactModel(new Integer(0).toString());
 
 		BufferedOutputStream out = new BufferedOutputStream(
@@ -57,6 +58,7 @@ public class VCardParserTest extends TestCase {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				file));
 		IContactModel c = VCardParser.read(in);
+		assertNotNull(c);
 	}
 
 }

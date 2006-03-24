@@ -16,9 +16,9 @@
 
 package org.columba.mail.pop3;
 
-import org.columba.mail.util.AuthenticationManager;
-
 import junit.framework.TestCase;
+
+import org.columba.mail.util.AuthenticationManager;
 
 public class AuthenticationManagerTest extends TestCase {
 

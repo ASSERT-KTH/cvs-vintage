@@ -16,7 +16,6 @@
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Observable;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractSelectableAction;
@@ -34,6 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz, Karl Peder Olesen
  */
+
 public class EnableHtmlAction extends AbstractSelectableAction {
     /**
      * @param frameMediator

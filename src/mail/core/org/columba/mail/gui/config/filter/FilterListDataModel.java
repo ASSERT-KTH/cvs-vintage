@@ -22,7 +22,7 @@ import org.columba.core.filter.FilterList;
 import org.columba.mail.util.MailResourceLoader;
 
 
-class FilterListDataModel extends AbstractTableModel {
+ class FilterListDataModel extends AbstractTableModel {
     final String[] columnNames = {
         MailResourceLoader.getString("dialog", "filter",
             "description_tableheader"),

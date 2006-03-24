@@ -22,7 +22,7 @@ import org.columba.mail.config.AccountList;
 import org.columba.mail.util.MailResourceLoader;
 
 
-class AccountListDataModel extends AbstractTableModel {
+ class AccountListDataModel extends AbstractTableModel {
     final String[] columnNames = {
         MailResourceLoader.getString("dialog", "account", "accountname"), //$NON-NLS-1$
         MailResourceLoader.getString("dialog", "account", "type"), //$NON-NLS-1$

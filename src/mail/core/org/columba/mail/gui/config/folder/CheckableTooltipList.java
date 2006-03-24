@@ -30,15 +30,13 @@ import org.frapuccino.checkablelist.CheckableList;
  * @author fdietz
  *
  */
-class CheckableTooltipList extends CheckableList {
+ class CheckableTooltipList extends CheckableList {
 	public CheckableTooltipList() {
 		super();
 	}
 
 	public String getToolTipText(MouseEvent event) {
 		int row = rowAtPoint(event.getPoint());
-		int col = columnAtPoint(event.getPoint());
-
 		String s = MailResourceLoader.getString("dialog", "folderoptions",
 				FolderOptionsDialog.tooltips[row]+"_tooltip");
 

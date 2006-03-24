@@ -40,6 +40,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class CreateSubFolderAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	public CreateSubFolderAction(IFrameMediator frameMediator) {
@@ -76,7 +77,7 @@ public class CreateSubFolderAction extends AbstractColumbaAction implements
 				((IMailFolder) selection.getSourceFolder())
 						.getSelectionTreePath());
 
-		String name;
+		
 
 		if (dialog.success()) {
 			// ok pressed

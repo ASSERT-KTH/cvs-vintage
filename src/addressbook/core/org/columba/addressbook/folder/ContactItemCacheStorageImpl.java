@@ -37,76 +37,55 @@ import org.jdom.Document;
  * Contact item cache storage.
  * 
  * @author fdietz
- *  
+ * 
  */
 public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger
-            .getLogger("org.columba.addressbook.folder");
-    
-	
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.addressbook.folder");
+
 	/**
 	 * 
 	 * keeps a list of HeaderItem's we need for the table-view
-	 *  
+	 * 
 	 */
 	private IContactItemMap headerItemList;
 
 	/**
 	 * 
 	 * binary file named "header"
-	 *  
+	 * 
 	 */
 	private File headerFile;
 
 	/**
-	 * 
-	 * boolean variable shows if we already loaded the header-cache from disc
-	 *  
-	 */
-	private boolean headerCacheAlreadyLoaded;
-
-	/**
-	 * dirty flag should be set if cached was changed
-	 */
-	private boolean hasChanged;
-	
-	/**
 	 * directory where contact files are stored
 	 */
 	private File directoryFile;
-	
+
 	private AbstractFolder folder;
-	
+
 	/**
-	 *  
+	 * 
 	 */
 	public ContactItemCacheStorageImpl(AbstractFolder folder) {
 		super();
 
 		this.folder = folder;
-		
+
 		headerItemList = new ContactItemMap();
 
 		directoryFile = folder.getDirectoryFile();
-		
+
 		headerFile = new File(directoryFile, ".header");
 
 		/*
-		if (headerFile.exists()) {
-			try {
-				load();
-				headerCacheAlreadyLoaded = true;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-
-				headerCacheAlreadyLoaded = false;
-			}
-		} else {
-			sync();
-		}
-		*/
+		 * if (headerFile.exists()) { try { load(); headerCacheAlreadyLoaded =
+		 * true; } catch (Exception ex) { ex.printStackTrace();
+		 * 
+		 * headerCacheAlreadyLoaded = false; } } else { sync(); }
+		 */
 		sync();
 	}
 
@@ -156,76 +135,74 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	public void load() throws Exception {
 
 	}
-	
+
 	public void sync() {
-		
 
-	        File[] list = directoryFile.listFiles();
-	        List v = new Vector();
+		File[] list = directoryFile.listFiles();
+		List v = new Vector();
 
-	        for (int i = 0; i < list.length; i++) {
-	            File file = list[i];
-	            File renamedFile;
-	            String name = file.getName();
-	            int index = name.indexOf("header");
+		for (int i = 0; i < list.length; i++) {
+			File file = list[i];
+			File renamedFile;
+			String name = file.getName();
+			int index = name.indexOf("header");
 
-	            if (index == -1) {
-	                // message file found
-	                String number = name;
+			if (index == -1) {
+				
 
-	                //                Integer numberString = new Integer( number );
-	                //System.out.println("number: "+ number );
-	                if ((file.exists()) && (file.length() > 0)) {
-	                    renamedFile = new File(file.getParentFile(),
-	                            file.getName() + '~');
-	                    file.renameTo(renamedFile);
+				// Integer numberString = new Integer( number );
+				// System.out.println("number: "+ number );
+				if ((file.exists()) && (file.length() > 0)) {
+					renamedFile = new File(file.getParentFile(),
+							file.getName() + '~');
+					file.renameTo(renamedFile);
 
-	                    //System.out.println("renamed file:" + renamedFile);
-	                    v.add(renamedFile);
-	                }
+					// System.out.println("renamed file:" + renamedFile);
+					v.add(renamedFile);
+				}
 
-	                //System.out.println("v index: "+ v.indexOf( file ) );
-	            } else {
-	                // header file found
-	                headerFile.delete();
-	            }
-	        }
+				// System.out.println("v index: "+ v.indexOf( file ) );
+			} else {
+				// header file found
+				headerFile.delete();
+			}
+		}
 
-	        for (int i = 0; i < v.size(); i++) {
-	            File file = (File) v.get(i);
+		for (int i = 0; i < v.size(); i++) {
+			File file = (File) v.get(i);
 
-	            File newFile = new File(file.getParentFile(),
-	                    (new Integer(i)).toString() + ".xml");
-	            file.renameTo(newFile);
-	            try {
-	            	
-	            	Document doc = XmlNewIO.load(newFile);
-	            
-	            	IContactModel model = ContactModelFactory.unmarshall(doc, new Integer(i).toString());
-	            	
-	            	IContactItem item = new ContactItem(model);
-	  
-	            	item.setUid(new Integer(i));
-	             
-	                add(new Integer(i), item);
-	                
-	                folder.setNextMessageUid(i+1);
-	            } catch (WrongFileFormatException ex) {
-	            	if (Logging.DEBUG)
-	            		ex.printStackTrace();
-	            	// delete corrupt file
-	            	newFile.delete();
-	            	
-	            }catch (Exception ex) {
-	                ex.printStackTrace();
-	            }
-	        }
-	        
-	        
-	        LOG.info("map-size()=="+headerItemList.count());
-	        
-	    }
-	
+			File newFile = new File(file.getParentFile(), (new Integer(i))
+					.toString()
+					+ ".xml");
+			file.renameTo(newFile);
+			try {
+
+				Document doc = XmlNewIO.load(newFile);
+
+				IContactModel model = ContactModelFactory.unmarshall(doc,
+						new Integer(i).toString());
+
+				IContactItem item = new ContactItem(model);
+
+				item.setUid(new Integer(i));
+
+				add(new Integer(i), item);
+
+				folder.setNextMessageUid(i + 1);
+			} catch (WrongFileFormatException ex) {
+				if (Logging.DEBUG)
+					ex.printStackTrace();
+				// delete corrupt file
+				newFile.delete();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		LOG.info("map-size()==" + headerItemList.count());
+
+	}
 
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#count()
@@ -233,6 +210,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	public int count() {
 		return headerItemList.count();
 	}
+
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#exists(java.lang.Object)
 	 */

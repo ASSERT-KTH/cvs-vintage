@@ -23,142 +23,132 @@ import java.util.logging.Logger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.PopItem;
 
+public class POP3ServerCollection { // implements ActionListener
 
-public class POP3ServerCollection { //implements ActionListener
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger.getLogger("org.columba.mail.pop3");
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.pop3");
+	private List serverList;
 
-    private List serverList;
-    private POP3Server popServer;
-    private List listeners;
-    
-    private static POP3ServerCollection instance = new POP3ServerCollection();
+	private POP3Server popServer;
 
-    public POP3ServerCollection() {
-        serverList = new Vector();
-        listeners = new Vector();
+	private static POP3ServerCollection instance = new POP3ServerCollection();
 
-        AccountList list = MailConfig.getInstance().getAccountList();
+	public POP3ServerCollection() {
+		serverList = new Vector();
 
-        for (int i = 0; i < list.count(); i++) {
-            AccountItem accountItem = list.get(i);
+		AccountList list = MailConfig.getInstance().getAccountList();
 
-            if (accountItem.isPopAccount()) {
-                add(accountItem);
-            }
-        }
-    }
-    
-    public static POP3ServerCollection getInstance() {
-    	return instance;
-    }
+		for (int i = 0; i < list.count(); i++) {
+			AccountItem accountItem = list.get(i);
 
-    public ListIterator getServerIterator() {
-        return serverList.listIterator();
-    }
+			if (accountItem.isPopAccount()) {
+				add(accountItem);
+			}
+		}
+	}
 
-    public POP3Server[] getList() {
-        POP3Server[] list = new POP3Server[count()];
+	public static POP3ServerCollection getInstance() {
+		return instance;
+	}
 
-        ((Vector) serverList).copyInto(list);
+	public ListIterator getServerIterator() {
+		return serverList.listIterator();
+	}
 
-        return list;
-    }
+	public POP3Server[] getList() {
+		POP3Server[] list = new POP3Server[count()];
 
-    public void add(AccountItem item) {
-        POP3Server server = new POP3Server(item);
-        serverList.add(server);
+		((Vector) serverList).copyInto(list);
 
-        /*
-        notifyListeners(new ModelChangedEvent(ModelChangedEvent.ADDED, server));
-        */
-    }
+		return list;
+	}
 
-    public POP3Server uidGet(int uid) {
-        int index = getIndex(uid);
+	public void add(AccountItem item) {
+		POP3Server server = new POP3Server(item);
+		serverList.add(server);
 
-        if (index != -1) {
-            return get(index);
-        } else {
-            return null;
-        }
-    }
+		/*
+		 * notifyListeners(new ModelChangedEvent(ModelChangedEvent.ADDED,
+		 * server));
+		 */
+	}
 
-    public POP3Server get(int index) {
-        return (POP3Server) serverList.get(index);
-    }
+	public POP3Server uidGet(int uid) {
+		int index = getIndex(uid);
 
-    public int count() {
-        return serverList.size();
-    }
+		if (index != -1) {
+			return get(index);
+		} else {
+			return null;
+		}
+	}
 
-    public void removePopServer(int uid) {
-        int index = getIndex(uid);
-        POP3Server server;
+	public POP3Server get(int index) {
+		return (POP3Server) serverList.get(index);
+	}
 
-        if (index == -1) {
-            LOG.severe("could not find popserver");
+	public int count() {
+		return serverList.size();
+	}
 
-            return;
-        } else {
-            server = (POP3Server) serverList.remove(index);
-        }
+	public void removePopServer(int uid) {
+		int index = getIndex(uid);
+		
 
-        /*
-        notifyListeners(new ModelChangedEvent(ModelChangedEvent.REMOVED));
-        */
-    }
+		if (index == -1) {
+			LOG.severe("could not find popserver");
 
-    public int getIndex(int uid) {
-        POP3Server c;
-        int number;
-        PopItem item;
+			return;
+		} else {
+			serverList.remove(index);
+		}
 
-        for (int i = 0; i < count(); i++) {
-            c = get(i);
-            number = c.getAccountItem().getUid();
+		/*
+		 * notifyListeners(new ModelChangedEvent(ModelChangedEvent.REMOVED));
+		 */
+	}
 
-            if (number == uid) {
-                return i;
-            }
-        }
+	public int getIndex(int uid) {
+		POP3Server c;
+		int number;
+		for (int i = 0; i < count(); i++) {
+			c = get(i);
+			number = c.getAccountItem().getUid();
 
-        return -1;
-    }
+			if (number == uid) {
+				return i;
+			}
+		}
 
-    public void saveAll() {
-        POP3Server c;
+		return -1;
+	}
 
-        for (int i = 0; i < count(); i++) {
-            c = get(i);
+	public void saveAll() {
+		POP3Server c;
 
-            try {
-                c.save();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
+		for (int i = 0; i < count(); i++) {
+			c = get(i);
 
-    public POP3Server getSelected() {
-        return popServer;
-    }
+			try {
+				c.save();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 
-    /*
-    public void addModelListener(ModelChangeListener l) {
-        listeners.add(l);
-    }
+	public POP3Server getSelected() {
+		return popServer;
+	}
 
-    private void notifyListeners(ModelChangedEvent e) {
-        for (Iterator it = listeners.iterator(); it.hasNext();) {
-            ((ModelChangeListener) it.next()).modelChanged(e);
-
-            // for (int i = 0; i < listeners.size(); i++) {
-            // ((ModelChangeListener) listeners.get(i)).modelChanged(e);
-        }
-    }
-    */
+	/*
+	 * public void addModelListener(ModelChangeListener l) { listeners.add(l); }
+	 * 
+	 * private void notifyListeners(ModelChangedEvent e) { for (Iterator it =
+	 * listeners.iterator(); it.hasNext();) { ((ModelChangeListener)
+	 * it.next()).modelChanged(e); // for (int i = 0; i < listeners.size(); i++) { //
+	 * ((ModelChangeListener) listeners.get(i)).modelChanged(e); } }
+	 */
 }

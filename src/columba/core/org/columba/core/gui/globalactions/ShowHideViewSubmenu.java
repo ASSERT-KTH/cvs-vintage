@@ -8,7 +8,6 @@ import javax.swing.JMenuItem;
 import org.columba.api.gui.frame.IDock;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.gui.frame.event.FrameEvent;
-import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.frame.FrameMediatorAdapter;
 import org.columba.core.gui.menu.IMenu;
@@ -24,7 +23,7 @@ public class ShowHideViewSubmenu extends IMenu {
 		controller.addListener(new MyListener());
 	}
 
-	class DisplayAction extends AbstractAction {
+	 class DisplayAction extends AbstractAction {
 		String id;
 
 		DisplayAction(String id, String name) {

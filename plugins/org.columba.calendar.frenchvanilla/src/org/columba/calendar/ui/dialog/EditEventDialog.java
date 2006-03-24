@@ -55,6 +55,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+
 public class EditEventDialog extends JDialog implements ActionListener {
 
 	JTextField summaryTextField = new JTextField();

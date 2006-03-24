@@ -45,6 +45,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
+
 public class ForwardAction extends AbstractColumbaAction
     implements ISelectionListener, Observer {
     private XmlElement forward;

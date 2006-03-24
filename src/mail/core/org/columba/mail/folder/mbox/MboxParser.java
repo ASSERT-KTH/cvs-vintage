@@ -69,8 +69,6 @@ public class MboxParser {
 	}
 
 	private static int findNext(Source source, int pos, char ch) {
-		int result = -1;
-
 		pos++;
 		while (!source.isEOF()) {
 			if (source.charAt(pos) == ch) {

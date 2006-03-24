@@ -4,6 +4,7 @@ import java.util.EventObject;
 
 import org.flexdock.docking.Dockable;
 
+
 public class DockableEvent extends EventObject {
 
 	private Dockable dockable;

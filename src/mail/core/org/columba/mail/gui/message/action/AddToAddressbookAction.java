@@ -39,6 +39,7 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz
  */
+@SuppressWarnings({"serial","serial"})
 public class AddToAddressbookAction extends AbstractColumbaAction implements
 		Observer {
 	private String emailAddress;

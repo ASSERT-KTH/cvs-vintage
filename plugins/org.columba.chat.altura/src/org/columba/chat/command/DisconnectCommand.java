@@ -47,8 +47,6 @@ public class DisconnectCommand extends Command {
 
 	@Override
 	public void execute(IWorkerStatusController worker) throws Exception {
-		ChatCommandReference ref = (ChatCommandReference) getReference();
-
 		Connection.XMPPConnection.close();
 	}
 

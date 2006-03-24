@@ -38,9 +38,9 @@ public class HtmlParserTest extends TestCase {
      *  
      */
     public void testSubstituteURL3() {
-        String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
+        //String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
 
-        String result = HtmlParser.substituteURL(input);
+        //String result = HtmlParser.substituteURL(input);
      
         // TODO: fix testcase
         /*

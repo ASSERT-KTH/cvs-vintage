@@ -3,34 +3,16 @@ package org.columba.core.gui.docking;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
-import org.columba.core.gui.base.AscendingIcon;
 import org.columba.core.gui.base.ShadowBorder;
-import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingStub;
 
-class DockingPanel extends JPanel implements DockingStub {
-
-	private static Color INACTIVE_BORDER_COLOR = UIManager
-			.getColor("controlDkShadow");
-
-	private static Color ACTIVE_BORDER_COLOR = UIManager
-			.getColor("Menu.selectionBackground");
+ class DockingPanel extends JPanel implements DockingStub {
 
 	public static Color ACTIVE_MID_COLOR = UIManager.getColor(
 			"Menu.selectionBackground").brighter();
@@ -58,11 +40,7 @@ class DockingPanel extends JPanel implements DockingStub {
 
 	private JPanel contentPanel;
 
-	private Dockable dockable;
-
 	private String dockingId;
-
-	private boolean active = false;
 
 	public DockingPanel(String id, String title) {
 		super();
@@ -70,7 +48,7 @@ class DockingPanel extends JPanel implements DockingStub {
 		this.dockingId = id;
 
 		this.titlebar = new TitleBar(title, INACTIVE_MID_COLOR,
-				INACTIVE_START_COLOR, INACTIVE_FILL_COLOR);
+				INACTIVE_FILL_COLOR);
 
 		setLayout(new BorderLayout());
 
@@ -78,10 +56,6 @@ class DockingPanel extends JPanel implements DockingStub {
 
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
-		Border border = BorderFactory.createCompoundBorder(new LineBorder(
-				INACTIVE_BORDER_COLOR), BorderFactory.createEmptyBorder(1, 1,
-				1, 1));
-
 		add(contentPanel, BorderLayout.CENTER);
 
 		setContentPane(createContentPane());
@@ -90,33 +64,23 @@ class DockingPanel extends JPanel implements DockingStub {
 
 		titlebar.setMidColor(INACTIVE_MID_COLOR);
 		titlebar.setFillColor(INACTIVE_FILL_COLOR);
-		titlebar.setStartColor(INACTIVE_START_COLOR);
 
 		titlebar.setActiveTitleColor(INACTIVE_LABEL_COLOR, INACTIVE_MID_COLOR);
 
 	}
 
 	public void setActive(boolean active) {
-		this.active = active;
 
 		if (active) {
 			// contentPanel.setBorder(new LineBorder(ACTIVE_BORDER_COLOR, 1));
 
 			titlebar.setMidColor(ACTIVE_MID_COLOR);
 			titlebar.setFillColor(ACTIVE_FILL_COLOR);
-			titlebar.setStartColor(ACTIVE_START_COLOR);
 
 			titlebar.setActiveTitleColor(ACTIVE_LABEL_COLOR, ACTIVE_FILL_COLOR);
 		} else {
-			Border border = BorderFactory.createCompoundBorder(new LineBorder(
-					INACTIVE_BORDER_COLOR), BorderFactory.createEmptyBorder(1,
-					1, 1, 1));
-
-			// contentPanel.setBorder(border);
-
 			titlebar.setMidColor(INACTIVE_MID_COLOR);
 			titlebar.setFillColor(INACTIVE_FILL_COLOR);
-			titlebar.setStartColor(INACTIVE_START_COLOR);
 
 			titlebar.setActiveTitleColor(INACTIVE_LABEL_COLOR,
 					INACTIVE_MID_COLOR);
@@ -191,10 +155,6 @@ class DockingPanel extends JPanel implements DockingStub {
 
 	public void updateUI() {
 		super.updateUI();
-
-		INACTIVE_BORDER_COLOR = UIManager.getColor("controlDkShadow");
-
-		ACTIVE_BORDER_COLOR = UIManager.getColor("Menu.selectionBackground");
 
 		ACTIVE_MID_COLOR = alpha(
 				UIManager.getColor("Menu.selectionBackground"), 200);

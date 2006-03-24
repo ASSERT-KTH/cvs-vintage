@@ -37,11 +37,10 @@ import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 
+
 public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel {
 
 	protected DefaultXmlConfig folderXmlConfig;
-
-	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
 	private static AddressbookTreeModel instance = new AddressbookTreeModel(
 			AddressbookConfig.getInstance().get("tree").getElement("/tree"));
@@ -92,9 +91,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 			return null;
 		}
 
-		// i18n stuff
-		String name = item.getString("property", "name");
-
+		
 		// XmlElement.printNode(item.getRoot(), "");
 		int uid = item.getInteger("uid");
 

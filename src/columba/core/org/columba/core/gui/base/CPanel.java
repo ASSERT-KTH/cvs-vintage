@@ -23,6 +23,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 
+
 public class CPanel extends JPanel {
     static int size = 10;
     JPanel panel;

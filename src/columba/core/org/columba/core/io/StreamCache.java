@@ -170,7 +170,7 @@ public class StreamCache {
 	}
 }
 
-class CacheEntry implements Serializable {
+@SuppressWarnings({"serial","serial"}) class CacheEntry implements Serializable {
 	Date lastAccess;
 
 	Object key;

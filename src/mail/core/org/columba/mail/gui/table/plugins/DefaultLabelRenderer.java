@@ -39,6 +39,7 @@ import org.columba.ristretto.message.Flags;
  * 
  * @author dietz
  */
+
 public class DefaultLabelRenderer extends DefaultTableCellRenderer implements
 		IExtensionInterface {
 	

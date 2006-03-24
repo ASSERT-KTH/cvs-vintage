@@ -32,6 +32,7 @@ import org.columba.core.gui.action.AbstractSelectableAction;
  *
  * @author fdietz
  */
+
 public class CCheckBoxMenuItem extends JCheckBoxMenuItem {
     /**
      * default constructor

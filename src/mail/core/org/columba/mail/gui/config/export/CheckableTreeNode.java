@@ -21,6 +21,7 @@ import org.frapuccino.checkabletree.CheckableItemImpl;
 /**
  * @author fdietz
  */
+
 public class CheckableTreeNode extends CheckableItemImpl {
 	private IMailFolder node;
 

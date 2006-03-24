@@ -19,11 +19,9 @@ package org.columba.addressbook.gui.table;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,14 +34,11 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+
 public class FilterToolbar extends JPanel implements ActionListener {
 	public JButton searchButton;
 
-	private JComboBox comboBox;
-
 	private TableController table;
-
-	private ResourceBundle toolbarLabels;
 
 	private JLabel label;
 
@@ -78,7 +73,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		FormLayout l = new FormLayout(
 				"3dlu, default, 3dlu, fill:default:grow, 3dlu, default, 3dlu",
 				"fill:default:grow");
-		PanelBuilder b = new PanelBuilder(this, l);
+		PanelBuilder b = new PanelBuilder(l, this);
 
 		CellConstraints c = new CellConstraints();
 
@@ -111,7 +106,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		}
 
 		public void changedUpdate(DocumentEvent e) {
-			//Plain text components don't fire these events
+			// Plain text components don't fire these events
 		}
 
 		public void update() {

@@ -26,6 +26,7 @@ import javax.swing.JButton;
  *
  * @author fdietz
  */
+
 public class ButtonWithMnemonic extends JButton {
     /**
  * default constructor

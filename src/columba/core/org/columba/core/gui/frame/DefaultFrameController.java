@@ -19,7 +19,6 @@ package org.columba.core.gui.frame;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
-import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
@@ -39,9 +38,6 @@ import org.flexdock.docking.Dockable;
  * 
  */
 public class DefaultFrameController implements IFrameMediator {
-
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.gui.frame");
 
 	/**
 	 * Saves view information like position, size and maximization state
@@ -64,8 +60,6 @@ public class DefaultFrameController implements IFrameMediator {
 
 	// Menuitems use this to display a string in the statusbar
 	protected TooltipMouseHandler tooltipMouseHandler;
-
-	private boolean initialized = false;
 
 	/**
 	 * 
@@ -193,9 +187,6 @@ public class DefaultFrameController implements IFrameMediator {
 
 	public void loadPositions() {
 		// overwrite this method
-
-		initialized = true;
-
 	}
 
 	public String getId() {

@@ -59,8 +59,6 @@ import org.columba.ristretto.message.StreamableMimePart;
  */
 public class MessageBuilderHelper {
 
-	private static final Pattern quotePattern = Pattern.compile("^(.*)$");
-
 	/**
 	 * 
 	 * Check if the subject headerfield already starts with a pattern like "Re:"
@@ -127,7 +125,7 @@ public class MessageBuilderHelper {
 	 *            of the message we want reply/forward.
 	 * 
 	 * FIXME (@author fdietz): we need to i18n this!
-	 *  
+	 * 
 	 */
 	public static String createForwardSubject(String subject) {
 		// if subject doesn't start already with "Fwd:" prepend it
@@ -146,7 +144,7 @@ public class MessageBuilderHelper {
 	 * @param header
 	 *            A <code>Header</code> which contains the headerfields of the
 	 *            message we want reply/forward.
-	 *  
+	 * 
 	 */
 	public static String createTo(Header header) {
 		String replyTo = (String) header.get("Reply-To");
@@ -174,7 +172,7 @@ public class MessageBuilderHelper {
 	 * @param header
 	 *            A <code>ColumbaHeader</code> which contains the headerfields
 	 *            of the message we want reply/forward.
-	 *  
+	 * 
 	 */
 	public static String createToAll(Header header) {
 		String sender = "";
@@ -253,7 +251,7 @@ public class MessageBuilderHelper {
 	 * characters, we have to remove some of the first References, before
 	 * appending another one. (RFC822 headerfields are not allowed to become
 	 * that long)
-	 *  
+	 * 
 	 */
 	public static void createMailingListHeaderItems(Header header,
 			ComposerModel model) {
@@ -267,11 +265,11 @@ public class MessageBuilderHelper {
 			model.setHeaderField("In-Reply-To", messageId);
 
 			String references = (String) header.get("References");
-			
+
 			if (references != null) {
 				references = references + " " + messageId;
 				references = removeDoubleEntries(references);
-				
+
 				model.setHeaderField("References", references);
 			}
 		}
@@ -281,37 +279,35 @@ public class MessageBuilderHelper {
 		Pattern separatorPattern = Pattern.compile("\\s*(<[^\\s<>]+>)\\s*");
 		ArrayList entries = new ArrayList();
 		Matcher matcher = separatorPattern.matcher(input);
-		while(matcher.find()) {
+		while (matcher.find()) {
 			entries.add(matcher.group(1));
 		}
-		
+
 		Collections.sort(entries);
-		
-		Iterator it = entries.iterator();		
+
+		Iterator it = entries.iterator();
 		StringBuffer result = new StringBuffer();
-		
-		String last = (String)it.next();
+
+		String last = (String) it.next();
 		result.append(last);
-		
-		while(it.hasNext()) {
-			String next = (String)it.next();
-			if( !next.equals(last)) {
+
+		while (it.hasNext()) {
+			String next = (String) it.next();
+			if (!next.equals(last)) {
 				last = next;
 				result.append(' ');
 				result.append(last);
 			}
 		}
-		
+
 		return result.toString();
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * Search the correct Identity for replying to someone
 	 * <p>
-	 *  
+	 * 
 	 */
 	public static AccountItem getAccountItem(Integer accountUid) {
 		if (MailConfig.getInstance() == null)
@@ -330,9 +326,9 @@ public class MessageBuilderHelper {
 			accountItem = list.getDefaultAccount();
 		}
 
-		//if (accountUid != null) {
-		//    accountItem = list.getDefaultAccount();
-		//}
+		// if (accountUid != null) {
+		// accountItem = list.getDefaultAccount();
+		// }
 
 		return accountItem;
 	}
@@ -346,8 +342,6 @@ public class MessageBuilderHelper {
 	 *            message we want reply/forward.
 	 */
 	public static String createBodyText(MimePart mimePart) throws IOException {
-		CharSequence bodyText = "";
-
 		StreamableMimePart bodyPart = (StreamableMimePart) mimePart;
 		String charsetName = bodyPart.getHeader()
 				.getContentParameter("charset");
@@ -396,7 +390,7 @@ public class MessageBuilderHelper {
 	 *            True for html messages (a different quoting is necessary)
 	 * 
 	 * TODO (@author fdietz): we should make this configureable
-	 *  
+	 * 
 	 */
 	public static String createQuotedBodyText(CharSequence bodyText,
 			boolean html) throws IOException {
@@ -465,10 +459,10 @@ public class MessageBuilderHelper {
 	 * 
 	 * add automatically every person we'll send a message to the "Collected
 	 * Addresses" Addressbook
-	 *  
+	 * 
 	 */
 	public static void addAddressesToAddressbook(Address[] addresses) {
-		IContactFacade contactFacade=null;
+		IContactFacade contactFacade = null;
 		try {
 			contactFacade = ServiceConnector.getContactFacade();
 			for (int i = 0; i < addresses.length; i++) {

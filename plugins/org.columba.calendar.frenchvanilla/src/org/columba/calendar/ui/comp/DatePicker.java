@@ -27,6 +27,7 @@ import com.miginfocom.theme.Themes;
 import com.miginfocom.util.dates.DateRangeI;
 import com.miginfocom.util.dates.ImmutableDateRange;
 
+@SuppressWarnings({"serial","serial"})
 public class DatePicker extends ThemeDatePicker {
 
 	private static final String DP_THEME_CTX1 = "datePicker1";

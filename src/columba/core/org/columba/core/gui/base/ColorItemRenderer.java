@@ -27,6 +27,7 @@ import javax.swing.ListCellRenderer;
  *
  * @author redsolo
  */
+
 public class ColorItemRenderer extends JLabel implements ListCellRenderer {
     /**
  * Creates a <code>ColorItemRenderer</code>.

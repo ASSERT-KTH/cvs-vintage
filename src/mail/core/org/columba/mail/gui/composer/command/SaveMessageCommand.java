@@ -27,7 +27,6 @@ import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
-import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -59,9 +58,6 @@ public class SaveMessageCommand extends Command {
 		ComposerCommandReference r = (ComposerCommandReference) getReference();
 
 		ComposerController composerController = r.getComposerController();
-
-		AccountItem item = ((ComposerModel) composerController.getModel())
-				.getAccountItem();
 
 		SendableMessage message = (SendableMessage) r.getMessage();
 

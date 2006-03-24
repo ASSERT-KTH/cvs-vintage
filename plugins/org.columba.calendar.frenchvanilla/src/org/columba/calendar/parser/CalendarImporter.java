@@ -27,7 +27,6 @@ import java.util.Vector;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
@@ -79,8 +78,8 @@ public class CalendarImporter {
 						DtStart dtStart1 = (DtStart) property;
 						DateTime dateTime = (DateTime) dtStart1.getDate();
 						// ensure tzid matches date-time timezone..
-						Parameter tzId = dtStart1.getParameters().getParameter(
-								Parameter.TZID);
+//						Parameter tzId = dtStart1.getParameters().getParameter(
+//								Parameter.TZID);
 
 						
 						dtStart = Calendar.getInstance();
@@ -92,8 +91,8 @@ public class CalendarImporter {
 						DtEnd dtEnd1 = (DtEnd) property;
 						DateTime dateTime = (DateTime) dtEnd1.getDate();
 						// ensure tzid matches date-time timezone..
-						Parameter tzId = dtEnd1.getParameters().getParameter(
-								Parameter.TZID);
+//						Parameter tzId = dtEnd1.getParameters().getParameter(
+//								Parameter.TZID);
 
 						
 						dtEnd = Calendar.getInstance();
@@ -108,8 +107,8 @@ public class CalendarImporter {
 						DtStamp dtStamp1 = (DtStamp) property;
 						DateTime dateTime = (DateTime) dtStamp1.getDate();
 						// ensure tzid matches date-time timezone..
-						Parameter tzId = dtStamp1.getParameters().getParameter(
-								Parameter.TZID);
+//						Parameter tzId = dtStamp1.getParameters().getParameter(
+//								Parameter.TZID);
 
 						
 						dtStamp = Calendar.getInstance();
@@ -146,8 +145,7 @@ public class CalendarImporter {
 				for (Iterator j = component.getProperties().iterator(); j
 						.hasNext();) {
 					Property property = (Property) j.next();
-					String name = property.getName();
-					String value = property.getValue();
+				
 
 					System.out.println("Property [" + property.getName() + ", "
 							+ property.getValue() + "]");

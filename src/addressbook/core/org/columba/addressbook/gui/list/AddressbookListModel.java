@@ -29,6 +29,7 @@ import org.columba.addressbook.model.IHeaderItemList;
  * @version 1.0
  * @author
  */
+
 public class AddressbookListModel extends AbstractListModel {
    private IHeaderItemList list;
    

@@ -21,8 +21,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.Enumeration;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -50,6 +48,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
+
 public class ChooseTemplateDialog extends JDialog implements ActionListener,
     ListSelectionListener {
     boolean result;

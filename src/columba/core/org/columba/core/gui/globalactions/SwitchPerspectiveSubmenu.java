@@ -39,18 +39,6 @@ import org.columba.core.pluginhandler.FrameExtensionHandler;
  */
 public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
-	private static final String MAIL_PERSPECTIVE = "ThreePaneMail";
-
-	private static final String ADDRESSBOOK_PERSPECTIVE = "Addressbook";
-
-	private static final String CHAT_PERSPECTIVE = "AlturaFrame";
-
-	private JRadioButtonMenuItem mailMenu;
-
-	private JRadioButtonMenuItem addressbookMenu;
-
-	private JRadioButtonMenuItem chatMenu;
-
 	private ButtonGroup group;
 
 	private FrameExtensionHandler handler;
@@ -136,7 +124,6 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 			}
 		});
 
-		
 	}
 
 }

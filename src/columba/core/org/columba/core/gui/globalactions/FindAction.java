@@ -26,6 +26,7 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
 
+
 public class FindAction extends AbstractColumbaAction {
     public FindAction(IFrameMediator controller) {
         super(controller,

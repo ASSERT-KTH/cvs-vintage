@@ -42,8 +42,6 @@ import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.frame.DockFrameController;
 import org.columba.core.io.DiskIO;
 import org.flexdock.docking.DockingConstants;
-import org.flexdock.perspective.LayoutSequence;
-import org.flexdock.perspective.Perspective;
 
 /**
  * 

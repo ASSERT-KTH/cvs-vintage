@@ -27,8 +27,6 @@ public class FilterCriteria extends DefaultItem {
 
 	private static final String CRITERIA = "criteria";
 
-	private static final String TYPE_DATE = "Date";
-
 	private static final String TYPE = "type";
 
 	private static final String PATTERN = "pattern";

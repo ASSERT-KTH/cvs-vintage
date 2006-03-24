@@ -101,14 +101,6 @@ public class AddressAutoCompleter implements KeyListener, ItemListener {
                 item = (HeaderItem) item.clone();
             }
 
-            String address = (String) item.getDisplayName();
-
-            /*
-            if (address == null) {
-                address = (String) item.get("email;internet");
-            }
-            */
-
             _editor.setCaretPosition(cursor_pos);
 
             //_editor.moveCaretPosition(cursor_pos);
@@ -156,14 +148,6 @@ public class AddressAutoCompleter implements KeyListener, ItemListener {
             } else {
                 item = (HeaderItem) item.clone();
             }
-
-            String address = item.getDisplayName();
-
-            /*
-            if (address == null) {
-                address = (String) item.get("email;internet");
-            }
-            */
 
             int pos2 = _editor.getCaretPosition();
 

@@ -31,6 +31,7 @@ import org.columba.addressbook.model.IContactItemMap;
  * 
  * @author fdietz
  */
+@SuppressWarnings({"serial","serial"})
 public class AddressbookTableModel extends AbstractTableModel
 		implements
 			ContactItemTableModel {

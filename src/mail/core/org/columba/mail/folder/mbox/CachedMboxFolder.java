@@ -23,6 +23,7 @@ import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.search.LuceneQueryEngine;
 
+
 public class CachedMboxFolder extends AbstractLocalFolder {
 
 	

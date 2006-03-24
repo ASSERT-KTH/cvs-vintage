@@ -178,22 +178,23 @@ public class MessageViewer extends JPanel implements ICustomViewer {
 	}
 
 	public void setAttachmentSelectionReference(MailFolderCommandReference ref) {
-		// TODO
+		// FIXME
 	}
 
 	public MailFolderCommandReference getAttachmentSelectionReference() {
-		// TODO
+		// FIXME
 		return null;
 	}
 
 	private void initComponents() {
 		spamStatusController = new SpamStatusViewer(mediator);
 		bodytextViewer = new TextViewer(mediator);
-		securityInformationController = new SecurityStatusViewer(mediator);
+		securityInformationController = new SecurityStatusViewer();
 		headerController = new HeaderViewer(mediator,
 				securityInformationController, spamStatusController);
 
-		pgpFilter = new PGPMessageFilter(mediator.getFrameController(), mediator);
+		pgpFilter = new PGPMessageFilter(mediator.getFrameController(),
+				mediator);
 		pgpFilter.addSecurityStatusListener(securityInformationController);
 
 	}
@@ -281,25 +282,6 @@ public class MessageViewer extends JPanel implements ICustomViewer {
 
 		return false;
 
-	}
-
-	/**
-	 * @param mimePartTree
-	 */
-	private Integer[] getBodyPartAddress(MimeTree mimePartTree) {
-		MimePart bodyPart = null;
-		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
-				.getRoot().getElement("/options/html");
-
-		// Which Bodypart shall be shown? (html/plain)
-		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
-				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
-			bodyPart = mimePartTree.getFirstTextPart("html");
-		} else {
-			bodyPart = mimePartTree.getFirstTextPart("plain");
-		}
-
-		return bodyPart.getAddress();
 	}
 
 }

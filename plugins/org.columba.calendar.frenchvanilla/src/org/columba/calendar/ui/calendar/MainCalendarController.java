@@ -94,7 +94,6 @@ import com.miginfocom.calendar.layout.TimeBoundsLayout;
 import com.miginfocom.util.MigUtil;
 import com.miginfocom.util.PropertyKey;
 import com.miginfocom.util.command.DefaultCommand;
-import com.miginfocom.util.dates.BoundaryRounder;
 import com.miginfocom.util.dates.DateFormatList;
 import com.miginfocom.util.dates.DateRange;
 import com.miginfocom.util.dates.DateRangeI;
@@ -429,10 +428,6 @@ public class MainCalendarController implements InteractionListener,
 		TimeBoundsLayout layout = new TimeBoundsLayout(new AtFixed(2),
 				new AtStart(2), new AtEnd(-2), 2, forcedSize, forcedSize,
 				forcedSize);
-		BoundaryRounder dayRounder = new BoundaryRounder(
-				DateRangeI.RANGE_TYPE_DAY);
-		// layout.setVisualDateRangeRounder(dayRounder);
-
 		dateArea.getActivityLayouts().clear();
 		dateArea.addActivityLayout(layout);
 
@@ -961,7 +956,7 @@ public class MainCalendarController implements InteractionListener,
 			// mouse hovers over activity
 			com.miginfocom.calendar.activity.Activity activity = ((ActivityView) e
 					.getInteractor().getInteracted()).getModel();
-			// System.out.println("MouseOver - activity=" + activity.getID());
+			System.out.println("MouseOver - activity=" + activity.getID());
 			// System.out.println("summary=" + activity.getSummary());
 			// System.out.println("description=" + activity.getDescription());
 
@@ -1026,9 +1021,7 @@ public class MainCalendarController implements InteractionListener,
 	public void activityMoved(ActivityMoveEvent e) {
 
 		com.miginfocom.calendar.activity.Activity activity = e.getActivity();
-
-		ImmutableDateRange dateRange = activity.getBaseDateRange();
-
+		System.out.println("activity moved=" + activity.getID());
 	}
 
 	public void viewToday() {
@@ -1041,8 +1034,8 @@ public class MainCalendarController implements InteractionListener,
 
 		int selectedStartDay = newVisRange.getStart().get(
 				java.util.Calendar.DAY_OF_YEAR);
-		int selectedEndDay = newVisRange.getStart().get(
-				java.util.Calendar.DAY_OF_YEAR);
+//		int selectedEndDay = newVisRange.getStart().get(
+//				java.util.Calendar.DAY_OF_YEAR);
 
 		int diff = selectedStartDay - today;
 

@@ -36,6 +36,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
+@SuppressWarnings({"serial","serial"})
 public class ForwardAsAttachmentAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	/**

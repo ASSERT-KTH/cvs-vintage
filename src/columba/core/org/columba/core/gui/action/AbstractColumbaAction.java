@@ -32,6 +32,7 @@ import org.columba.api.plugin.IExtensionInterface;
  *
  * @author fdietz
  */
+
 public abstract class AbstractColumbaAction extends AbstractAction
     implements IExtensionInterface {
     /**

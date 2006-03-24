@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 import org.columba.api.gui.frame.IContainer;
-import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.menu.ExtendableMenuBar;
@@ -33,9 +32,7 @@ import org.columba.core.gui.menu.ExtendableMenuBar;
  * Lookup <code>menuId</code> and <code>placeholderId</code> in
  * <code>org.columba.core.action.menu.xml</code>.
  * <p>
- * TODO:
- * 
- * @author fdietz: we should consider adding public constants here or to
+ * TODO (@author fdietz):  we should consider adding public constants here or to
  *         ExtendableMenuBar to make it easier for users to find insertion
  *         points.
  * 
@@ -75,10 +72,6 @@ public class MenuExtensionPoint extends AbstractExtensionPoint {
 
 		menu.insertAction(menuId, placeholderId, action);
 
-	}
-
-	private IFrameMediator getDefaultFrameMediator() {
-		return getFirstContainer().getFrameMediator();
 	}
 
 	private IContainer getFirstContainer() {

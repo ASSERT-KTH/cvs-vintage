@@ -22,7 +22,6 @@ import javax.swing.AbstractButton;
 import javax.swing.Action;
 
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.api.statusbar.IStatusBar;
 
 
 /**

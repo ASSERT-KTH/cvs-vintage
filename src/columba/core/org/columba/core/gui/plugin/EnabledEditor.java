@@ -30,6 +30,7 @@ import javax.swing.table.TableCellEditor;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+
 public class EnabledEditor extends AbstractCellEditor implements TableCellEditor {
     protected JCheckBox component = new JCheckBox();
     protected PluginNode currentNode;

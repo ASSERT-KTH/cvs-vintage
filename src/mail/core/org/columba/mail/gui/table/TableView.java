@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import java.awt.Dimension;
-
 import javax.swing.JOptionPane;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -55,7 +53,7 @@ public class TableView extends TreeTable {
 	private TableModelSorter sorter;
 
 	private int defaultRowHeight;
-	
+
 	public TableView(HeaderTableModel headerTableModel, TableModelSorter sorter) {
 		super();
 
@@ -63,26 +61,27 @@ public class TableView extends TreeTable {
 		this.headerTableModel = headerTableModel;
 
 		defaultRowHeight = getRowHeight();
-		
+
 		setModel(headerTableModel);
 
 		// load plugin handler used for the columns
 		try {
-			handler = (TableRendererExtensionHandler) PluginManager.getInstance()
-					.getHandler(TableRendererExtensionHandler.NAME);
+			handler = (TableRendererExtensionHandler) PluginManager
+					.getInstance().getHandler(
+							TableRendererExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
 
 		getTree().setCellRenderer(new SubjectTreeRenderer(this));
-		
+
 		getTree().setLargeModel(true);
 	}
 
 	public void resetRowHeight() {
 		setRowHeight(defaultRowHeight);
 	}
-	
+
 	/**
 	 * Enable/Disable tree renderer for the subject column.
 	 * <p>
@@ -166,9 +165,9 @@ public class TableView extends TreeTable {
 					size, false);
 		} else {
 			IExtension extension = handler.getExtension(name);
-			
+
 			String image = extension.getMetadata().getAttribute("icon");
-			String fixed = extension.getMetadata().getAttribute( "size");
+			String fixed = extension.getMetadata().getAttribute("size");
 			boolean lockSize = false;
 
 			if (fixed != null) {
@@ -214,10 +213,10 @@ public class TableView extends TreeTable {
 		}
 
 		// this is a hack for the multiline column
-		if ( name.equals("MultiLine")) {
-			setRowHeight(getRowHeight()*2);
-		} 
-		
+		if (name.equals("MultiLine")) {
+			setRowHeight(getRowHeight() * 2);
+		}
+
 		if (cell != null) {
 			tc.setCellRenderer(cell);
 		}
@@ -395,12 +394,6 @@ public class TableView extends TreeTable {
 			// changing the selection to the specified row
 			// changeSelection(row, 0, true, false);
 			changeSelection(row, 0, false, false);
-
-			// getting the node
-			MessageNode selectedNode = (MessageNode) getValueAt(row, 0);
-
-			// and getting the uid for this node
-			Object uid = selectedNode.getUid();
 
 			makeRowVisible(row);
 			/*

@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MailboxInfo;
 
 /**
@@ -112,8 +111,6 @@ public class AddMessageFolderTest extends AbstractFolderTst {
 
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
-        Flags flags = getSourceFolder().getFlags(uid);
-        
         // mark message as read
         getSourceFolder().markMessage(new Object[] {uid}, MarkMessageCommand.MARK_AS_READ);
 

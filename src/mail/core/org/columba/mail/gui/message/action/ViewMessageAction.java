@@ -16,7 +16,6 @@
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
@@ -31,10 +30,6 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
  * @author fdietz
  */
 public class ViewMessageAction extends AbstractColumbaAction {
-
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.table.action");
 
 	protected static Object oldUid;
 

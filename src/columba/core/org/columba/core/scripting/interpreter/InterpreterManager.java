@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 
 import org.columba.core.scripting.config.BeanshellConfig;
 import org.columba.core.scripting.model.ColumbaScript;
-import org.columba.core.scripting.ScriptLogger;
 
 
 /**

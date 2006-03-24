@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Observer;
 
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.gui.config.account.EditSignatureAction;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 

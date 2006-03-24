@@ -163,7 +163,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	/**
 	 * Propagates an event to all registered listeners notifying them of a
 	 * message addition.
-	 * @param flags TODO
+	 * @param flags 
 	 */
 	public void fireMessageAdded(Object uid, Flags flags) {
 		getMessageFolderInfo().incExists();

@@ -21,10 +21,8 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 
-
 public class PluginMetadata {
 
-	
 	private String id;
 
 	private String name;
@@ -40,8 +38,6 @@ public class PluginMetadata {
 	private Vector extensions = new Vector();
 
 	private File directory;
-	
-	private String jar;
 
 	public PluginMetadata(String id, String name, boolean enabled) {
 		this.id = id;
@@ -124,14 +120,16 @@ public class PluginMetadata {
 	}
 
 	/**
-	 * @param enabled The enabled to set.
+	 * @param enabled
+	 *            The enabled to set.
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
 	/**
-	 * @param directory The directory to set.
+	 * @param directory
+	 *            The directory to set.
 	 */
 	public void setDirectory(File directory) {
 		this.directory = directory;

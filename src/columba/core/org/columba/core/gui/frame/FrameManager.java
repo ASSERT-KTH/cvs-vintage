@@ -163,12 +163,8 @@ public class FrameManager implements IFrameManager {
 		for (int i = 0; i < viewList.count(); i++) {
 			// get element from view list
 			XmlElement view = viewList.getElement(i);
-			String id = view.getAttribute("id");
-
-			// create frame controller for this view...
-			IFrameMediator c;
 			try {
-				c = createFrameMediator(new ViewItem(view));
+				createFrameMediator(new ViewItem(view));
 			} catch (PluginLoadingFailedException plfe) {
 				// should not occur
 				continue;
@@ -255,14 +251,11 @@ public class FrameManager implements IFrameManager {
 	protected IFrameMediator createFrameMediator(ViewItem viewItem)
 			throws PluginLoadingFailedException {
 
-		String id = viewItem.get("id");
-
-		// create new default container
-		boolean newContainer = false;
+	
 
 		IFrameMediator frame = instanciateFrameMediator(viewItem);
 
-		IContainer c = new DefaultContainer((DefaultFrameController)frame);
+		IContainer c = new DefaultContainer((DefaultFrameController) frame);
 
 		activeFrameCtrls.add(c);
 

@@ -34,6 +34,7 @@ import org.columba.calendar.base.api.ICalendarItem;
  *
  * @author fdietz
  */
+
 public class CheckableListEditor
 	extends DefaultCellEditor
 	implements ActionListener {

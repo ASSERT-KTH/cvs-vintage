@@ -183,7 +183,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
             ""); // rows are added dynamically (no need to define them here)
 
         // create a form builder
-        DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
         // create EmptyBorder between components and dialog-frame
         builder.setDefaultDialogBorder();
@@ -235,7 +235,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
             "fill:default:grow"); // rows are added dynamically (no need to define them here)
 
         // create a form builder
-        DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+        DefaultFormBuilder b = new DefaultFormBuilder(l, panel);
         
         b.append(attachsignatureCheckBox, selectSignatureButton, editSignatureButton);
 

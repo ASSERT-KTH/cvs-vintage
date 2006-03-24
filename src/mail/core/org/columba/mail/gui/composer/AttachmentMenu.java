@@ -20,43 +20,44 @@ import javax.swing.JPopupMenu;
 
 import org.columba.core.resourceloader.ImageLoader;
 
-
 /**
  * Popup menu for the attachment view.
- *
+ * 
  * @author frdietz
  */
+
 public class AttachmentMenu extends JPopupMenu {
-    private JMenuItem menuItem;
-    private AttachmentController controller;
+	private JMenuItem menuItem;
 
-    /**
-     * Creates a popup menu for the attachment view.
-     * @param c the attachment controller.
-     */
-    public AttachmentMenu(AttachmentController c) {
-        super();
+	/**
+	 * Creates a popup menu for the attachment view.
+	 * 
+	 * @param c
+	 *            the attachment controller.
+	 */
+	public AttachmentMenu(AttachmentController c) {
+		super();
 
-        this.controller = c;
+		initComponents(c);
+	}
 
-        initComponents(c);
-    }
-
-    /**
-     * Inits the components for the popup menu.
-     * @param c the attachment controller.
-     */
-    private void initComponents(AttachmentController c) {
-        menuItem = new JMenuItem("Attach File..",
-                ImageLoader.getSmallImageIcon("stock_attach-16.png"));
-        menuItem.setActionCommand("ADD");
-        menuItem.addActionListener(c.getActionListener());
-        add(menuItem);
-        addSeparator();
-        menuItem = new JMenuItem("Remove Selected Attachments",
-                ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-        menuItem.setActionCommand("REMOVE");
-        menuItem.addActionListener(c.getActionListener());
-        add(menuItem);
-    }
+	/**
+	 * Inits the components for the popup menu.
+	 * 
+	 * @param c
+	 *            the attachment controller.
+	 */
+	private void initComponents(AttachmentController c) {
+		menuItem = new JMenuItem("Attach File..", ImageLoader
+				.getSmallImageIcon("stock_attach-16.png"));
+		menuItem.setActionCommand("ADD");
+		menuItem.addActionListener(c.getActionListener());
+		add(menuItem);
+		addSeparator();
+		menuItem = new JMenuItem("Remove Selected Attachments", ImageLoader
+				.getSmallImageIcon("stock_delete-16.png"));
+		menuItem.setActionCommand("REMOVE");
+		menuItem.addActionListener(c.getActionListener());
+		add(menuItem);
+	}
 }

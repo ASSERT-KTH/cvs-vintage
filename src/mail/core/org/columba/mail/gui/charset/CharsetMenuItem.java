@@ -27,6 +27,7 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * A menu item for displaying charsets.
  */
+
 public class CharsetMenuItem extends CRadioButtonMenuItem {
     protected Charset charset;
 

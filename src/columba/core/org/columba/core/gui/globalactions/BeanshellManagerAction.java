@@ -27,6 +27,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.scripting.ScriptManager;
 import org.columba.core.scripting.FileObserverThread;
 
+
 public class BeanshellManagerAction extends AbstractColumbaAction {
 
 	/* TODO should come up with a better name for the menu item */

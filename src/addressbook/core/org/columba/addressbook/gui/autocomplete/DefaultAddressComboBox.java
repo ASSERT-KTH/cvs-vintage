@@ -22,6 +22,7 @@ package org.columba.addressbook.gui.autocomplete;
  * 
  * @author fdietz
  */
+
 public class DefaultAddressComboBox extends BasicAddressAutocompleteComboBox {
 
 	/**

@@ -19,7 +19,6 @@ package org.columba.mail.gui.table;
 
 import java.util.Observable;
 
-import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.message.IHeaderList;
 

@@ -16,7 +16,6 @@
 package org.columba.core.pluginhandler;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 

@@ -561,9 +561,7 @@ public class XmlElement extends Observable implements Cloneable {
 		}
 
 		List subs = node.getElements();
-		int i;
-		int j;
-
+		
 		for (Iterator it = subs.iterator(); it.hasNext();) {
 			printNode((XmlElement) it.next(), indent + "    ");
 

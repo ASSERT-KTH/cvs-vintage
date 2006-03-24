@@ -21,7 +21,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTextPane;
-import javax.swing.Scrollable;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
@@ -30,75 +29,73 @@ import org.columba.core.gui.base.UndoDocument;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.xml.XmlElement;
 
-
 /**
  * @author frd
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class TextEditorView extends JTextPane implements Observer,
-    CharsetListener {
-    private TextEditorController controller;
-    private UndoDocument message;
+		CharsetListener {
 
-    public TextEditorView(TextEditorController controller, UndoDocument m) {
-        super();
+	private UndoDocument message;
 
-        this.controller = controller;
-        controller.getController().addCharsetListener(this);
+	public TextEditorView(TextEditorController controller, UndoDocument m) {
+		super();
 
-        message = m;
+		controller.getController().addCharsetListener(this);
 
-        setStyledDocument(message);
-        setEditable(true);
+		message = m;
 
-        Font font = FontProperties.getTextFont();
-        setFont(font);
+		setStyledDocument(message);
+		setEditable(true);
 
-        XmlElement options = Config.getInstance().get("options").getElement("/options");
-        XmlElement gui = options.getElement("gui");
-        XmlElement fonts = gui.getElement("fonts");
+		Font font = FontProperties.getTextFont();
+		setFont(font);
 
-        if (fonts == null) {
-            fonts = gui.addSubElement("fonts");
-        }
+		XmlElement options = Config.getInstance().get("options").getElement(
+				"/options");
+		XmlElement gui = options.getElement("gui");
+		XmlElement fonts = gui.getElement("fonts");
 
-        // register interest on configuratin changes
-        fonts.addObserver(this);
-    }
+		if (fonts == null) {
+			fonts = gui.addSubElement("fonts");
+		}
 
-    public void installListener(TextEditorController controller) {
-        message.addDocumentListener(controller);
-    }
+		// register interest on configuratin changes
+		fonts.addObserver(this);
+	}
 
-    /**
-     *
-     * @see org.columba.mail.gui.config.general.MailOptionsDialog
-     *
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void update(Observable arg0, Object arg1) {
-        Font font = FontProperties.getTextFont();
-        setFont(font);
-    }
+	public void installListener(TextEditorController controller) {
+		message.addDocumentListener(controller);
+	}
 
-    public void charsetChanged(CharsetEvent e) {
-        Charset charset = e.getCharset();
+	/**
+	 * 
+	 * @see org.columba.mail.gui.config.general.MailOptionsDialog
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		Font font = FontProperties.getTextFont();
+		setFont(font);
+	}
 
-        if (charset == null) {
-            charset = Charset.forName(System.getProperty("file.encoding"));
-        }
+	public void charsetChanged(CharsetEvent e) {
+		Charset charset = e.getCharset();
 
-        setContentType("text/plain; charset=\"" + charset.name() + "\"");
-    }
+		if (charset == null) {
+			charset = Charset.forName(System.getProperty("file.encoding"));
+		}
+
+		setContentType("text/plain; charset=\"" + charset.name() + "\"");
+	}
 
 	/**
 	 * @see javax.swing.JEditorPane#getScrollableTracksViewportWidth()
 	 */
-	public boolean getScrollableTracksViewportWidth() {		
+	public boolean getScrollableTracksViewportWidth() {
 		return true;
 	}
 }

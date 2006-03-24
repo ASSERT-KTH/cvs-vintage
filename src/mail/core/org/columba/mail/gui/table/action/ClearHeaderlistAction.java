@@ -26,6 +26,7 @@ import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.table.ITableController;
 
+
 public class ClearHeaderlistAction extends AbstractColumbaAction {
 	
 	/**

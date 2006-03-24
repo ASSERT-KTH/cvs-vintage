@@ -19,8 +19,8 @@ package org.columba.core.scripting.interpreter;
 
 import java.util.Map;
 
-import org.columba.core.scripting.model.ColumbaScript;
 import org.columba.core.scripting.ScriptLogger;
+import org.columba.core.scripting.model.ColumbaScript;
 
 /**
     @author Celso Pinto (cpinto@yimports.com)

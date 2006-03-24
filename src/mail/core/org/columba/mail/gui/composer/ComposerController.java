@@ -161,7 +161,7 @@ public class ComposerController extends DefaultFrameController implements
 		priorityController = new PriorityController(this);
 		accountController = new AccountController(this);
 		accountController.getView().addItemListener(this);
-		composerSpellCheck = new ComposerSpellCheck(this);
+		composerSpellCheck = new ComposerSpellCheck();
 
 		signatureView = new SignatureView(this);
 

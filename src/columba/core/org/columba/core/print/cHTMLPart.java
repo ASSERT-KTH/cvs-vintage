@@ -376,8 +376,6 @@ public class cHTMLPart extends cPrintObject {
             // no childs - we have a leaf view (i.e. with contents)
             double allocY = allocation.getBounds().getY();
             double allocMaxY = allocation.getBounds().getMaxY();
-            double allocHeight = allocation.getBounds().getHeight();
-
             if ((allocY >= 0) && (allocY < actBreakHeight)
                     && (allocMaxY > actBreakHeight)) {
                 // view starts on page and exceeds it

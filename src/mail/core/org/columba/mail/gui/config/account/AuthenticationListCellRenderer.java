@@ -23,6 +23,7 @@ import javax.swing.JList;
 
 import org.columba.mail.util.AuthenticationManager;
 
+
 public class AuthenticationListCellRenderer extends DefaultListCellRenderer {
 	
 	/**

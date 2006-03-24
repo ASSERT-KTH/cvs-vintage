@@ -15,75 +15,71 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import java.util.logging.Logger;
-
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.model.IContactModel;
 
-
 /**
- *
- * AbstractLocalFolder-class gives as an additional abstraction-layer:
- *  --> IDataStorage
- *
+ * 
+ * AbstractLocalFolder-class gives as an additional abstraction-layer: -->
+ * IDataStorage
+ * 
  * this makes it very easy to add other folder-formats
- *
- * the important methods from Folder are just mapped to
- * the corresponding methods from IDataStorage
- *
- *
+ * 
+ * the important methods from Folder are just mapped to the corresponding
+ * methods from IDataStorage
+ * 
+ * 
  */
 public abstract class LocalFolder extends AbstractFolder {
-	/** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger
-            .getLogger("org.columba.addressbook.folder");
-    
-    protected DataStorage dataStorage;
 
-    public LocalFolder(String name, String path) {
-    	super(name, path);
-    }
+	protected DataStorage dataStorage;
 
-    public LocalFolder(FolderItem item) {
-        super(item);
-       
-    }
+	public LocalFolder(String name, String path) {
+		super(name, path);
+	}
 
+	public LocalFolder(FolderItem item) {
+		super(item);
 
-    public abstract DataStorage getDataStorageInstance();
+	}
 
-  
+	public abstract DataStorage getDataStorageInstance();
+
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	public Object add(IContactModel contact) throws Exception{
+	public Object add(IContactModel contact) throws Exception {
 		Object uid = super.add(contact);
 
-        getDataStorageInstance().save(uid, contact);
+		getDataStorageInstance().save(uid, contact);
 
-        return uid;
+		return uid;
 	}
+
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public IContactModel get(Object uid) throws Exception{
+	public IContactModel get(Object uid) throws Exception {
 		return getDataStorageInstance().load(uid);
 	}
+
 	/**
-	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object, IContactModel)
+	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
+	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactModel contact) throws Exception{
+	public void modify(Object uid, IContactModel contact) throws Exception {
 		super.modify(uid, contact);
-		
+
 		getDataStorageInstance().modify(uid, contact);
 
 	}
+
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws Exception{
+	public void remove(Object uid) throws Exception {
 		super.remove(uid);
-		
+
 		getDataStorageInstance().remove(uid);
 
 	}

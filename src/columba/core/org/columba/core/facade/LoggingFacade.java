@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.facade;
 
-import java.util.logging.Logger;
-
 import org.columba.core.logging.Logging;
 
 /**
@@ -26,16 +24,13 @@ import org.columba.core.logging.Logging;
  */
 public final class LoggingFacade {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.facade");
+	/**
+	 * Utility classes should have a private constructor.
+	 */
+	private LoggingFacade() {
+	}
 
-    /**
-     * Utility classes should have a private constructor.
-     */
-    private LoggingFacade() {
-    }
-
-    
-    public static void enableDebuggingMode(boolean enabled) {
-    	Logging.setDebugging(enabled);
-    }
+	public static void enableDebuggingMode(boolean enabled) {
+		Logging.setDebugging(enabled);
+	}
 }

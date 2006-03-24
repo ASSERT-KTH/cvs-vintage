@@ -40,11 +40,10 @@ import org.columba.mail.message.IColumbaMessage;
 public abstract class AbstractFilter implements Filter {
 
     private MailFrameMediator mediator;
-    private MessageController messageController;
+
     
     public AbstractFilter(MailFrameMediator mediator, MessageController messageViewer) {
         this.mediator = mediator;
-        this.messageController = messageViewer;
     }
     /**
      * @return 

@@ -16,7 +16,6 @@
 package org.columba.mail.gui.config.filter.plugins;
 
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
@@ -26,8 +25,6 @@ public class FlagsCriteriaRow extends DefaultCriteriaRow {
 	private JComboBox matchComboBox;
 
 	private JComboBox flagsComboBox;
-
-	private JTextField textField;
 
 	public FlagsCriteriaRow(FilterExtensionHandler pluginHandler,
 			CriteriaList criteriaList, FilterCriteria c) {

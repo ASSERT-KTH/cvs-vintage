@@ -19,9 +19,9 @@ package org.columba.addressbook.parser;
 
 import java.util.List;
 
-import org.columba.mail.parser.ListParser;
-
 import junit.framework.TestCase;
+
+import org.columba.mail.parser.ListParser;
 
 /**
  * @author fdietz
@@ -32,7 +32,7 @@ public class ListParserTest extends TestCase {
 	public void testCreateListFromString() {
 		String s = "test@test.de";
 		
-		List l = new ListParser().createListFromString(s);
+		List l = ListParser.createListFromString(s);
 		
 		assertEquals("list size 1", 1, l.size());
 	}
@@ -40,7 +40,7 @@ public class ListParserTest extends TestCase {
 	public void testCreateListFromString2() {
 		String s = "test@test.de, test2@test2.de";
 		
-		List l = new ListParser().createListFromString(s);
+		List l = ListParser.createListFromString(s);
 		
 		assertEquals("list size 2", 2, l.size());
 	}

@@ -33,101 +33,97 @@ import org.jivesoftware.smack.packet.Presence;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class RoasterTreeRenderer extends DefaultTreeCellRenderer {
 
-    private ImageIcon available = ResourceLoader.getImage("available.png");
+	private ImageIcon available = ResourceLoader.getImage("available.png");
 
-    private ImageIcon extendedaway = ResourceLoader
-            .getImage("extended-away.png");
+	private ImageIcon extendedaway = ResourceLoader
+			.getImage("extended-away.png");
 
-    private ImageIcon away = ResourceLoader.getImage("away.png");
+	private ImageIcon busy = ResourceLoader.getImage("busy.png");
 
-    private ImageIcon busy = ResourceLoader.getImage("busy.png");
+	private ImageIcon offline = ResourceLoader.getImage("offline.png");
 
-    private ImageIcon message = ResourceLoader.getImage("message.png");
+	/**
+	 * 
+	 */
+	public RoasterTreeRenderer() {
+		super();
 
-    private ImageIcon offline = ResourceLoader.getImage("offline.png");
+	}
 
-    /**
-     *  
-     */
-    public RoasterTreeRenderer() {
-        super();
+	/**
+	 * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree,
+	 *      java.lang.Object, boolean, boolean, boolean, int, boolean)
+	 */
+	public Component getTreeCellRendererComponent(JTree arg0, Object arg1,
+			boolean arg2, boolean arg3, boolean arg4, int arg5, boolean arg6) {
 
-    }
+		super.getTreeCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5,
+				arg6);
 
-    /**
-     * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree,
-     *      java.lang.Object, boolean, boolean, boolean, int, boolean)
-     */
-    public Component getTreeCellRendererComponent(JTree arg0, Object arg1,
-            boolean arg2, boolean arg3, boolean arg4, int arg5, boolean arg6) {
+		Object o = ((DefaultMutableTreeNode) arg1).getUserObject();
 
-        super.getTreeCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5,
-                arg6);
+		setIcon(null);
 
-        Object o = ((DefaultMutableTreeNode) arg1).getUserObject();
+		if (o instanceof BuddyStatus) {
+			// contact
+			IBuddyStatus entry = (IBuddyStatus) o;
+		
 
-        setIcon(null);
-        
-        if (o instanceof BuddyStatus) {
-            // contact
-            IBuddyStatus entry = (IBuddyStatus) o;
-            Presence.Mode mode = entry.getPresenceMode();
+			String name = entry.getName();
+			Presence.Mode presence = entry.getPresenceMode();
 
-            String name = entry.getName();
-            Presence.Mode presence = entry.getPresenceMode();
+			setFont(getFont().deriveFont(Font.PLAIN));
 
-            setFont( getFont().deriveFont(Font.PLAIN));
+			if (presence != null) {
+				if (presence.equals(Presence.Mode.AVAILABLE)) {
+					setIcon(available);
+				} else if (presence.equals(Presence.Mode.AWAY)) {
+					setIcon(offline);
+				}
+				if (presence.equals(Presence.Mode.EXTENDED_AWAY)) {
+					setIcon(extendedaway);
+				}
+				if (presence.equals(Presence.Mode.CHAT)) {
 
-            if (presence != null) {
-                if (presence.equals(Presence.Mode.AVAILABLE)) {
-                    setIcon(available);
-                } else if (presence.equals(Presence.Mode.AWAY)) {
-                    setIcon(offline);
-                }
-                if (presence.equals(Presence.Mode.EXTENDED_AWAY)) {
-                    setIcon(extendedaway);
-                }
-                if (presence.equals(Presence.Mode.CHAT)) {
+				}
+				if (presence.equals(Presence.Mode.DO_NOT_DISTURB)) {
+					setIcon(busy);
+				}
 
-                }
-                if (presence.equals(Presence.Mode.DO_NOT_DISTURB)) {
-                    setIcon(busy);
-                }
+			}
 
-            }
+			StringBuffer buf = new StringBuffer();
+			if (name != null)
+				buf.append(name + " (" + entry.getJabberId() + ")");
+			else
+				buf.append(entry.getJabberId());
 
-            StringBuffer buf = new StringBuffer();
-            if (name != null)
-                buf.append(name + " (" + entry.getJabberId() + ")");
-            else
-                buf.append(entry.getJabberId());
+			if (presence != null) {
+				buf.append(" - " + presence.toString());
+				if (presence.equals(Presence.Mode.EXTENDED_AWAY)) {
+					setToolTipText(entry.getStatusMessage());
+				} else {
+					setToolTipText(presence.toString());
+				}
+			}
 
-            if (presence != null) {
-                buf.append(" - " + presence.toString());
-                if (presence.equals(Presence.Mode.EXTENDED_AWAY)) {
-                    setToolTipText(entry.getStatusMessage());
-                } else {
-                    setToolTipText(presence.toString());
-                }
-            }
+			setText(buf.toString());
+		} else if (o instanceof RosterGroup) {
+			// group
+			RosterGroup group = (RosterGroup) o;
 
-            setText(buf.toString());
-        } else if (o instanceof RosterGroup) {
-            // group
-            RosterGroup group = (RosterGroup) o;
-            
-            setFont( getFont().deriveFont(Font.BOLD));
-            setText(group.getName());
-            
-        } else {
-            setFont( getFont().deriveFont(Font.BOLD));
-            setText(arg1.toString());
-        }
+			setFont(getFont().deriveFont(Font.BOLD));
+			setText(group.getName());
 
-        return this;
-    }
+		} else {
+			setFont(getFont().deriveFont(Font.BOLD));
+			setText(arg1.toString());
+		}
+
+		return this;
+	}
 }

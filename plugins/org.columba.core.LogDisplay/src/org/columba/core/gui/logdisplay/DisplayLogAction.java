@@ -24,6 +24,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 /**
  * @author redsolo
  */
+
 public class DisplayLogAction extends AbstractColumbaAction {
 
     /**

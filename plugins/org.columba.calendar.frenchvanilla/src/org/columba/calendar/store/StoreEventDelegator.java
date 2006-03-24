@@ -123,13 +123,10 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 			Collections.sort(itemRemovedList[swap], StoreEventComparator
 					.getInstance());
 
-			ICalendarStore lastFolder = (ICalendarStore) ((StoreEvent) itemRemovedList[swap]
-					.get(0)).getSource();
-
 			// Process the events
 			for (int i = 0; i < itemRemovedList[swap].size(); i++) {
 				StoreEvent next = (StoreEvent) itemRemovedList[swap].get(i);
-				ICalendarStore store = (ICalendarStore) next.getSource();
+				//ICalendarStore store = (ICalendarStore) next.getSource();
 				String activityId = (String) next.getChanges();
 
 				// remove old activity
@@ -141,9 +138,6 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 		if (itemChangedList[swap].size() > 0) {
 			Collections.sort(itemChangedList[swap], StoreEventComparator
 					.getInstance());
-
-			ICalendarStore lastFolder = (ICalendarStore) ((StoreEvent) itemChangedList[swap]
-					.get(0)).getSource();
 
 			// Process the events
 			for (int i = 0; i < itemChangedList[swap].size(); i++) {

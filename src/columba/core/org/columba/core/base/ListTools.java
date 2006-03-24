@@ -30,16 +30,6 @@ import java.util.ListIterator;
  * Window>Preferences>Java>Code Generation.
  */
 public class ListTools {
-    private static int compare(int a, int b) {
-        if (a < b) {
-            return -1;
-        } else if (a > b) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
     /**
  * Intersect two Lists that contain Objects that implement
  * the Comparable Interface. The Result is in List a and sorted.

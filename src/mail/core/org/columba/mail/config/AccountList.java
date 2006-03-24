@@ -87,8 +87,6 @@ public class AccountList extends DefaultItem {
      *  
      */
     public SecurityItem getPGPItem(String to) {
-        int result = -1;
-
         for (int i = 0; i < count(); i++) {
             AccountItem item = (AccountItem) get(i);
             SecurityItem pgpItem = item.getPGPItem();

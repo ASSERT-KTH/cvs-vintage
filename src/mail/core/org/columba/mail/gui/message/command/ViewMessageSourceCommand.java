@@ -74,7 +74,6 @@ public class ViewMessageSourceCommand extends Command {
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-		Object[] destUids = new Object[uids.length];
 		Object uid = uids[0];
 
 		InputStream in = null;

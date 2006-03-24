@@ -48,12 +48,11 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Templates. To enable and disable the creation of type
  * comments go to Window>Preferences>Java>Code Generation.
  */
+
 public class FolderTreeModel extends DefaultTreeModel {
 	protected FolderXmlConfig folderXmlConfig;
 
 	protected TempFolder tempFolder;
-
-	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
 	private static FolderTreeModel instance = new FolderTreeModel(MailConfig
 			.getInstance().getFolderConfig());

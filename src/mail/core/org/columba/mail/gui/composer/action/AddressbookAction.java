@@ -34,6 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class AddressbookAction extends AbstractColumbaAction {
 	public AddressbookAction(ComposerController composerController) {
 		super(composerController, MailResourceLoader.getString("menu",

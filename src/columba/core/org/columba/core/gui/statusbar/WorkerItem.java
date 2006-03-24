@@ -30,7 +30,6 @@ class WorkerItem {
     private String text;
     private int maximum;
     private int value;
-    private Timer timer;
     private boolean allowed;
     private int priority;
 
@@ -41,7 +40,7 @@ class WorkerItem {
 
         allowed = false;
 
-        timer = new Timer(TWO_SECONDS,
+        new Timer(TWO_SECONDS,
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         allowed = true;

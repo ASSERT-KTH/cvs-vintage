@@ -20,7 +20,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Observer;
@@ -67,8 +66,6 @@ public class MessageController extends JPanel implements CharsetListener,
 
 	private MailFrameMediator frameController;
 
-	private MouseListener listener;
-
 	private SecurityStatusViewer securityStatusViewer;
 
 	private TextViewer bodytextViewer;
@@ -91,7 +88,7 @@ public class MessageController extends JPanel implements CharsetListener,
 		this.frameController = frameMediator;
 
 		Border outterBorder = BorderFactory.createCompoundBorder(BorderFactory
-				.createEmptyBorder(5,5,5,5), new MessageBorder(
+				.createEmptyBorder(5, 5, 5, 5), new MessageBorder(
 				Color.LIGHT_GRAY, 1, true));
 		Border innerBorder = BorderFactory.createCompoundBorder(outterBorder,
 				new LineBorder(Color.WHITE, 5, true));
@@ -118,7 +115,7 @@ public class MessageController extends JPanel implements CharsetListener,
 				try {
 					updateGUI();
 					repaint();
-					
+
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -133,7 +130,7 @@ public class MessageController extends JPanel implements CharsetListener,
 	private void initComponents() {
 		spamStatusViewer = new SpamStatusViewer(this);
 		bodytextViewer = new TextViewer(this);
-		securityStatusViewer = new SecurityStatusViewer(this);
+		securityStatusViewer = new SecurityStatusViewer();
 		headerController = new HeaderViewer(this, securityStatusViewer,
 				spamStatusViewer);
 
@@ -277,7 +274,7 @@ public class MessageController extends JPanel implements CharsetListener,
 	}
 
 	public String getSelectedText() {
-		// TODO
+		// TODO (@author fdietz): get selected text
 		throw new IllegalArgumentException("not implemented yet");
 	}
 
@@ -353,25 +350,6 @@ public class MessageController extends JPanel implements CharsetListener,
 
 		return false;
 
-	}
-
-	/**
-	 * @param mimePartTree
-	 */
-	private Integer[] getBodyPartAddress(MimeTree mimePartTree) {
-		MimePart bodyPart = null;
-		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
-				.getRoot().getElement("/options/html");
-
-		// Which Bodypart shall be shown? (html/plain)
-		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
-				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
-			bodyPart = mimePartTree.getFirstTextPart("html");
-		} else {
-			bodyPart = mimePartTree.getFirstTextPart("plain");
-		}
-
-		return bodyPart.getAddress();
 	}
 
 }

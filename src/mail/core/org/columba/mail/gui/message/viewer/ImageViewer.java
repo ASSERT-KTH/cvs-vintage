@@ -40,7 +40,7 @@ import org.columba.ristretto.message.MimePart;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class ImageViewer extends JPanel implements IMimePartViewer {
 
@@ -50,10 +50,8 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 
 	private ImageIcon image;
 
-	private int width;
-
 	/**
-	 *  
+	 * 
 	 */
 	public ImageViewer(MessageController mediator) {
 		super();
@@ -99,7 +97,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		}
 
 		data = StreamUtils.readInByteArray(bodyStream);
-		
+
 		bodyStream.close();
 	}
 
@@ -111,7 +109,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		removeAll();
 
 		image = new ImageIcon(Toolkit.getDefaultToolkit().createImage(data));
-		//image = new ImageIcon(data);
+		// image = new ImageIcon(data);
 
 		Container parent = mediator;
 		int cwidth = (int) parent.getWidth();
@@ -121,10 +119,9 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 			// scale image
 			float scaling = (float) cwidth / image.getIconWidth();
 
-			image = new ImageIcon(image.getImage()
-					.getScaledInstance((int) (image.getIconWidth() * scaling),
-							(int) (image.getIconHeight() * scaling),
-							Image.SCALE_FAST));
+			image = new ImageIcon(image.getImage().getScaledInstance(
+					(int) (image.getIconWidth() * scaling),
+					(int) (image.getIconHeight() * scaling), Image.SCALE_FAST));
 		}
 
 		JLabel label = new JLabel(image);

@@ -40,6 +40,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.IMenu;
 
+
 public class CopyActivityMenu extends IMenu implements
 		IActivitySelectionChangedListener {
 

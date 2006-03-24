@@ -34,6 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class AddSenderToAddressbookAction extends AbstractColumbaAction
 		implements ISelectionListener {
 	public AddSenderToAddressbookAction(IFrameMediator frameMediator) {

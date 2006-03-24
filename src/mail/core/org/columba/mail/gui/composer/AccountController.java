@@ -18,8 +18,6 @@ package org.columba.mail.gui.composer;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.JCheckBoxMenuItem;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
@@ -33,10 +31,6 @@ public class AccountController implements ItemListener {
 	private AccountView view;
 
 	private ComposerController controller;
-
-	private JCheckBoxMenuItem signMenuItem;
-
-	private JCheckBoxMenuItem encryptMenuItem;
 
 	public AccountController(ComposerController controller) {
 		this.controller = controller;

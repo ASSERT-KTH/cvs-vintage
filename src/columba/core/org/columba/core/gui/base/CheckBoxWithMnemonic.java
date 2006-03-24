@@ -26,6 +26,7 @@ import javax.swing.JCheckBox;
  *
  * @author fdietz
  */
+
 public class CheckBoxWithMnemonic extends JCheckBox {
     /**
  * default constructor

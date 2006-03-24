@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 import org.columba.mail.folder.headercache.MemoryHeaderList;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IHeaderList;
-import org.columba.mail.message.IPersistantHeaderList;
 import org.frapuccino.treetable.Tree;
 import org.frapuccino.treetable.TreeTable;
 

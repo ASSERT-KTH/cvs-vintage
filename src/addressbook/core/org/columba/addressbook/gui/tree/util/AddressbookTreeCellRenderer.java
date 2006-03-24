@@ -25,51 +25,42 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.core.resourceloader.ImageLoader;
 
-
+@SuppressWarnings({"serial","serial"})
 public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
-    Border unselectedBorder = null;
-    Border selectedBorder = null;
-    boolean isBordered = true;
-    boolean bool;
-    ImageIcon image;
-    private ImageIcon image1;
-    private ImageIcon image2;
-    private ImageIcon image3;
-    private String fontName;
-    private int fontSize;
-    
-    ImageIcon groupImageIcon = ImageLoader.getSmallImageIcon("group_small.png");
+	Border unselectedBorder = null;
 
-    public AddressbookTreeCellRenderer(boolean bool) {
-        super();
+	Border selectedBorder = null;
 
-        this.bool = bool;
+	boolean isBordered = true;
 
-        image1 = ImageLoader.getSmallImageIcon("stock_book-16.png");
+	boolean bool;
 
-        image2 = ImageLoader.getSmallImageIcon("localhost.png");
+	ImageIcon image;
 
-        image3 = ImageLoader.getSmallImageIcon("remotehost.png");
+	ImageIcon groupImageIcon = ImageLoader.getSmallImageIcon("group_small.png");
 
-        //setOpaque(true); //MUST do this for background to show up.
-    }
+	public AddressbookTreeCellRenderer(boolean bool) {
+		super();
 
-    public Component getTreeCellRendererComponent(JTree tree, Object value,
-        boolean isSelected, boolean expanded, boolean leaf, int row,
-        boolean hasFocus) {
-        super.getTreeCellRendererComponent(tree, value, isSelected, expanded,
-            leaf, row, hasFocus);
+		this.bool = bool;
 
-        AddressbookTreeNode folder = (AddressbookTreeNode) value;
+	}
 
-        if (folder == null) {
-            return this;
-        }
+	public Component getTreeCellRendererComponent(JTree tree, Object value,
+			boolean isSelected, boolean expanded, boolean leaf, int row,
+			boolean hasFocus) {
+		super.getTreeCellRendererComponent(tree, value, isSelected, expanded,
+				leaf, row, hasFocus);
 
-        setText(folder.getName());
-        setIcon(folder.getIcon());
+		AddressbookTreeNode folder = (AddressbookTreeNode) value;
 
-      
-        return this;
-    }
+		if (folder == null) {
+			return this;
+		}
+
+		setText(folder.getName());
+		setIcon(folder.getIcon());
+
+		return this;
+	}
 }

@@ -31,7 +31,7 @@ public class ConfigExample extends AbstractConfigPlugin {
 		// open configuration file 
 		File file = Facade.getPluginConfigFile("org.columba.example.ConfigExample");
 		try {
-			XmlIO xmlIO = new XmlIO(file.toURL());
+			xmlFile = new XmlIO(file.toURL());
 			xmlFile.load();
 			
 			parent = xmlFile.getRoot();

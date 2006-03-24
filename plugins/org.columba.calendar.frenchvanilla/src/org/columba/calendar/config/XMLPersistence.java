@@ -21,10 +21,7 @@ import java.io.File;
 
 public class XMLPersistence {
 
-	private File configDirectory;
-
 	public XMLPersistence(File configDirectory) {
-		this.configDirectory = configDirectory;
 	}
 
 	public boolean load() {

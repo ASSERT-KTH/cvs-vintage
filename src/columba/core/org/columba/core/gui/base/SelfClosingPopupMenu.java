@@ -15,7 +15,6 @@
 //All Rights Reserved.
 
 package org.columba.core.gui.base;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

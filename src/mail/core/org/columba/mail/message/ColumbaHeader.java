@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
-import java.util.logging.Logger;
-
 import org.columba.core.gui.base.ColorFactory;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.ristretto.message.Address;
@@ -28,266 +26,271 @@ import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.parser.HeaderParser;
 
-
 /**
  * Represents a RFC822-compliant header
  * <p>
  * Every headerfield is saved in {@HeaderList}.
  * <p>
- * Generally every headerfield is a string,
- * but for optimization reasons some items
- * are going to change to for example a Date class
+ * Generally every headerfield is a string, but for optimization reasons some
+ * items are going to change to for example a Date class
  * <p>
- * These items are saved in {@link Attributes} to separate
- * them clearly from general RFC822 headerfields.
- *
+ * These items are saved in {@link Attributes} to separate them clearly from
+ * general RFC822 headerfields.
+ * 
  * <p>
+ * 
  * @see CachedHeaderfields
- *
+ * 
  * @author tstich, fdietz
  */
 public class ColumbaHeader implements IColumbaHeader {
-    
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.message");
-    
-    protected Header header;
-    protected Attributes attributes;
-    protected Flags flags;
 
-    public ColumbaHeader(Header header, Attributes attributes, Flags flags ) {
+	protected Header header;
+
+	protected Attributes attributes;
+
+	protected Flags flags;
+
+	public ColumbaHeader(Header header, Attributes attributes, Flags flags) {
 		this.attributes = attributes;
 		this.flags = flags;
 		this.header = header;
 	}
 
 	public ColumbaHeader(IColumbaHeader header) {
-        this.header = header.getHeader();
-        this.attributes = header.getAttributes();
-        this.flags = header.getFlags();
-    }
+		this.header = header.getHeader();
+		this.attributes = header.getAttributes();
+		this.flags = header.getFlags();
+	}
 
-    public ColumbaHeader() {
-        this(new Header());
-    }
+	public ColumbaHeader() {
+		this(new Header());
+	}
 
-    public ColumbaHeader(Header header) {
-        this.header = header;
-        flags = new Flags();
-        attributes = new Attributes();
+	public ColumbaHeader(Header header) {
+		this.header = header;
+		flags = new Flags();
+		attributes = new Attributes();
 
-        BasicHeader basicHeader = new BasicHeader(header);
+		BasicHeader basicHeader = new BasicHeader(header);
 
-        attributes.put("columba.alreadyfetched", Boolean.FALSE);
-        attributes.put("columba.spam", Boolean.FALSE);
+		attributes.put("columba.alreadyfetched", Boolean.FALSE);
+		attributes.put("columba.spam", Boolean.FALSE);
 
-        attributes.put("columba.priority",
-            new Integer(basicHeader.getPriority()));
+		attributes.put("columba.priority", new Integer(basicHeader
+				.getPriority()));
 
-       	Address from = basicHeader.getFrom();
+		Address from = basicHeader.getFrom();
 
-        if (from != null) {
-            attributes.put("columba.from", from);
-        } else {
-            attributes.put("columba.from", "");
-        }
+		if (from != null) {
+			attributes.put("columba.from", from);
+		} else {
+			attributes.put("columba.from", "");
+		}
 
-        Address[] to = basicHeader.getTo();
+		Address[] to = basicHeader.getTo();
 
-        if (to.length > 0) {
-            //We save only the first item in the to-list
-            attributes.put("columba.to", to[0]);
-        } else {
-            attributes.put("columba.to", "");
-        }
+		if (to.length > 0) {
+			// We save only the first item in the to-list
+			attributes.put("columba.to", to[0]);
+		} else {
+			attributes.put("columba.to", "");
+		}
 
-        Address[] cc = basicHeader.getCc();
+		Address[] cc = basicHeader.getCc();
 
-        if (cc.length > 0) {
-            //We save only the first item in the cc-list            
-            attributes.put("columba.cc", cc[0]);
-        } else {
-            attributes.put("columba.cc", "");
-        }
+		if (cc.length > 0) {
+			// We save only the first item in the cc-list
+			attributes.put("columba.cc", cc[0]);
+		} else {
+			attributes.put("columba.cc", "");
+		}
 
-        attributes.put("columba.host", "");
-        attributes.put("columba.date", basicHeader.getDate());
+		attributes.put("columba.host", "");
+		attributes.put("columba.date", basicHeader.getDate());
 
-        String subject = basicHeader.getSubject();
+		String subject = basicHeader.getSubject();
 
-        if (subject != null) {
-            attributes.put("columba.subject", subject);
-        } else {
-            attributes.put("columba.subject", "");
-        }
+		if (subject != null) {
+			attributes.put("columba.subject", subject);
+		} else {
+			attributes.put("columba.subject", "");
+		}
 
-        attributes.put("columba.attachment", hasAttachments());
-        attributes.put("columba.size", new Integer(0));
+		attributes.put("columba.attachment", hasAttachments());
+		attributes.put("columba.size", new Integer(0));
 
-        // message colour should be black as default
-        attributes.put("columba.color", ColorFactory.getColor(0));
+		// message colour should be black as default
+		attributes.put("columba.color", ColorFactory.getColor(0));
 
-        // use default account 
-        attributes.put("columba.accountuid", new Integer(0));
-    }
-    
-    /**
-     * Pay attention when using this method.
-     * Only the Attributes and the flags get copied.
-     * The Header stays the same!
-     * 
-     */
-    public Object clone() {
-        ColumbaHeader clone = new ColumbaHeader();
-        clone.header = this.header;
-        clone.attributes = (Attributes) this.attributes.clone();
-        clone.flags = (Flags) this.flags.clone();
-        return clone;
-    }
+		// use default account
+		attributes.put("columba.accountuid", new Integer(0));
+	}
 
-    public void copyColumbaKeys(IColumbaHeader header) {
-        header.setFlags( (Flags) flags.clone());
-        header.setAttributes( (Attributes) attributes.clone());
-    }
+	/**
+	 * Pay attention when using this method. Only the Attributes and the flags
+	 * get copied. The Header stays the same!
+	 * 
+	 */
+	public Object clone() {
+		ColumbaHeader clone = new ColumbaHeader();
+		clone.header = this.header;
+		clone.attributes = (Attributes) this.attributes.clone();
+		clone.flags = (Flags) this.flags.clone();
+		return clone;
+	}
 
-    /* (non-Javadoc)
-     * @see org.columba.mail.message.HeaderInterface#count()
-     */
-    public int count() {
-        return attributes.count() + header.count() + 5;
-    }
+	public void copyColumbaKeys(IColumbaHeader header) {
+		header.setFlags((Flags) flags.clone());
+		header.setAttributes((Attributes) attributes.clone());
+	}
 
-    /* (non-Javadoc)
-     * @see org.columba.mail.message.HeaderInterface#getFlags()
-     */
-    public Flags getFlags() {
-        return flags;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.message.HeaderInterface#count()
+	 */
+	public int count() {
+		return attributes.count() + header.count() + 5;
+	}
 
-    /**
-     * Note: Don't use this method anymore when accessing
-     * attributes like "columba.size", use getAttribute() instead
-     *
-     */
-    public Object get(String s) {
-        if (s.startsWith("columba.flags.")) {
-            String flag = s.substring("columba.flags.".length());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.message.HeaderInterface#getFlags()
+	 */
+	public Flags getFlags() {
+		return flags;
+	}
 
-            if (flag.equals("seen")) {
-                return Boolean.valueOf(flags.get(Flags.SEEN));
-            } else if (flag.equals("recent")) {
-                return Boolean.valueOf(flags.get(Flags.RECENT));
-            } else if (flag.equals("answered")) {
-                return Boolean.valueOf(flags.get(Flags.ANSWERED));
-            } else if (flag.equals("draft")) {
-                return Boolean.valueOf(flags.get(Flags.DRAFT));
-            } else if (flag.equals("flagged")) {
-                return Boolean.valueOf(flags.get(Flags.FLAGGED));
-            } else if (flag.equals("expunged")) {
-                return Boolean.valueOf(flags.get(Flags.DELETED));
-            }
-        }
+	/**
+	 * Note: Don't use this method anymore when accessing attributes like
+	 * "columba.size", use getAttribute() instead
+	 * 
+	 */
+	public Object get(String s) {
+		if (s.startsWith("columba.flags.")) {
+			String flag = s.substring("columba.flags.".length());
 
-        if (s.startsWith("columba.")) {
-            return attributes.get(s);
-        }
+			if (flag.equals("seen")) {
+				return Boolean.valueOf(flags.get(Flags.SEEN));
+			} else if (flag.equals("recent")) {
+				return Boolean.valueOf(flags.get(Flags.RECENT));
+			} else if (flag.equals("answered")) {
+				return Boolean.valueOf(flags.get(Flags.ANSWERED));
+			} else if (flag.equals("draft")) {
+				return Boolean.valueOf(flags.get(Flags.DRAFT));
+			} else if (flag.equals("flagged")) {
+				return Boolean.valueOf(flags.get(Flags.FLAGGED));
+			} else if (flag.equals("expunged")) {
+				return Boolean.valueOf(flags.get(Flags.DELETED));
+			}
+		}
 
-        return header.get(HeaderParser.normalizeKey(s));
-    }
+		if (s.startsWith("columba.")) {
+			return attributes.get(s);
+		}
 
-    /* (non-Javadoc)
-     * @see org.columba.mail.message.HeaderInterface#set(java.lang.String, java.lang.Object)
-     */
-    public void set(String s, Object o) {
-        if (o == null) {
-            return;
-        }
-        if (s.startsWith("columba.flags")) {
-            String flag = s.substring("columba.flags.".length());
-            boolean value = ((Boolean) o).booleanValue();
+		return header.get(HeaderParser.normalizeKey(s));
+	}
 
-            if (flag.equals("seen")) {
-                flags.set(Flags.SEEN, value);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.message.HeaderInterface#set(java.lang.String,
+	 *      java.lang.Object)
+	 */
+	public void set(String s, Object o) {
+		if (o == null) {
+			return;
+		}
+		if (s.startsWith("columba.flags")) {
+			String flag = s.substring("columba.flags.".length());
+			boolean value = ((Boolean) o).booleanValue();
 
-                return;
-            }
+			if (flag.equals("seen")) {
+				flags.set(Flags.SEEN, value);
 
-            if (flag.equals("recent")) {
-                flags.set(Flags.RECENT, value);
+				return;
+			}
 
-                return;
-            }
+			if (flag.equals("recent")) {
+				flags.set(Flags.RECENT, value);
 
-            if (flag.equals("answered")) {
-                flags.set(Flags.ANSWERED, value);
+				return;
+			}
 
-                return;
-            }
+			if (flag.equals("answered")) {
+				flags.set(Flags.ANSWERED, value);
 
-            if (flag.equals("expunged")) {
-                flags.set(Flags.DELETED, value);
+				return;
+			}
 
-                return;
-            }
+			if (flag.equals("expunged")) {
+				flags.set(Flags.DELETED, value);
 
-            if (flag.equals("draft")) {
-                flags.set(Flags.DRAFT, value);
+				return;
+			}
 
-                return;
-            }
+			if (flag.equals("draft")) {
+				flags.set(Flags.DRAFT, value);
 
-            if (flag.equals("flagged")) {
-                flags.set(Flags.FLAGGED, value);
-            }
-        }
+				return;
+			}
 
-        if (s.startsWith("columba.")) {
-            attributes.put(s, o);
-        } else {
-            header.set(HeaderParser.normalizeKey(s), (String) o);
-        }
-    }
+			if (flag.equals("flagged")) {
+				flags.set(Flags.FLAGGED, value);
+			}
+		}
 
-    /**
-     * @return
-     */
-    public Header getHeader() {
-        return header;
-    }
+		if (s.startsWith("columba.")) {
+			attributes.put(s, o);
+		} else {
+			header.set(HeaderParser.normalizeKey(s), (String) o);
+		}
+	}
 
-    /**
-     * @return
-     */
-    public Attributes getAttributes() {
-        return attributes;
-    }
+	/**
+	 * @return
+	 */
+	public Header getHeader() {
+		return header;
+	}
 
-    /**
-     * @param attributes
-     */
-    public void setAttributes(Attributes attributes) {
-        this.attributes = attributes;
-    }
+	/**
+	 * @return
+	 */
+	public Attributes getAttributes() {
+		return attributes;
+	}
 
-    /**
-     * @param flags
-     */
-    public void setFlags(Flags flags) {
-        this.flags = flags;
-    }
+	/**
+	 * @param attributes
+	 */
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
+	}
 
-    /**
-     * @param header
-     */
-    public void setHeader(Header header) {
-        this.header = header;
-    }
+	/**
+	 * @param flags
+	 */
+	public void setFlags(Flags flags) {
+		this.flags = flags;
+	}
 
-    public Boolean hasAttachments() {
-        boolean hasAttachments = false;
-        MimeType mimeType = new MimeHeader(header).getMimeType();
-        hasAttachments = !mimeType.getType().equals("text") &&
-            !mimeType.getSubtype().equals("alternative");
+	/**
+	 * @param header
+	 */
+	public void setHeader(Header header) {
+		this.header = header;
+	}
 
-        return Boolean.valueOf(hasAttachments);
-    }
+	public Boolean hasAttachments() {
+		boolean hasAttachments = false;
+		MimeType mimeType = new MimeHeader(header).getMimeType();
+		hasAttachments = !mimeType.getType().equals("text")
+				&& !mimeType.getSubtype().equals("alternative");
+
+		return Boolean.valueOf(hasAttachments);
+	}
 }

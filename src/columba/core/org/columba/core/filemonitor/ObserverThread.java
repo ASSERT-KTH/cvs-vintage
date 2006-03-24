@@ -24,8 +24,10 @@ package org.columba.core.filemonitor;
 */
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Celso Pinto <cpinto@yimports.com>

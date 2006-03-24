@@ -28,6 +28,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+@SuppressWarnings({"serial","serial"})
 public class AddressbookImportAction extends AbstractColumbaAction {
 	public AddressbookImportAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",

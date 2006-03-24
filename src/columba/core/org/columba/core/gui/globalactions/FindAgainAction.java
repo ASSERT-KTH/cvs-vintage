@@ -22,6 +22,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
 
+
 public class FindAgainAction extends AbstractColumbaAction {
     public FindAgainAction(IFrameMediator controller) {
         super(controller,

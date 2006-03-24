@@ -1,6 +1,5 @@
 package org.columba.chat.model.api;
 
-import org.columba.chat.ui.conversation.api.IChatMediator;
 import org.jivesoftware.smack.packet.Presence;
 
 public interface IBuddyStatus {

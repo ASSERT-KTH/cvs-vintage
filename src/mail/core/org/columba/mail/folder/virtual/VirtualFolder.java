@@ -55,7 +55,6 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ICloseableIterator;
-import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;

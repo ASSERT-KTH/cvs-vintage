@@ -25,6 +25,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * Quick fix to fix the Mnemonic correctly.
  * @author redsolo
  */
+
 public class CRadioButtonMenuItem extends JRadioButtonMenuItem {
 
     /**

@@ -16,9 +16,6 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.selection.ISelectionListener;

@@ -30,8 +30,6 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
-import org.columba.core.config.DefaultItem;
-import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.menu.IMenu;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
@@ -75,8 +73,6 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 
 	protected void createSubMenu() {
 		removeAll();
-
-		TableViewOwner table = (TableViewOwner) getFrameMediator();
 
 		XmlElement columns = ((MailFrameMediator) getFrameMediator())
 				.getFolderOptionsController().getConfigNode(selectedFolder,
@@ -221,11 +217,11 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 			if (xmlElement != null) {
 				// *20040510, karlpeder* columns may be null (first time we
 				// visit a folder!?)
-				IDefaultItem item = new DefaultItem(xmlElement);
+				// IDefaultItem item = new DefaultItem(xmlElement);
 
 				// String column = xmlElement.getAttribute("column");
 				// String s = threadedview.getAttribute("order");
-				boolean order = item.getBoolean("order");
+				// boolean order = item.getBoolean("order");
 			}
 		}
 	}

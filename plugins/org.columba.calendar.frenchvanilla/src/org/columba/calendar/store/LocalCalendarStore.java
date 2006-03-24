@@ -20,7 +20,6 @@ package org.columba.calendar.store;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.columba.calendar.base.UUIDGenerator;
 import org.columba.calendar.model.ComponentInfoList;
@@ -39,15 +38,6 @@ import org.jdom.Document;
 public class LocalCalendarStore extends AbstractCalendarStore implements
 		ICalendarStore {
 
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.calendar.store");
-
-	/**
-	 * folder where we save everything in
-	 */
-	private File directory;
-
 	private LocalXMLFileStore dataStorage;
 
 	public LocalCalendarStore(File directory) throws StoreException {
@@ -55,8 +45,6 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 
 		if (directory == null)
 			throw new IllegalArgumentException("directory == null");
-
-		this.directory = directory;
 
 		DiskIO.ensureDirectory(directory);
 

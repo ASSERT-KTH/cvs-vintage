@@ -19,15 +19,12 @@ package org.columba.core.scripting;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observer;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Logger;
 
-import org.columba.core.gui.globalactions.BeanshellManagerAction;
 import org.columba.core.io.DiskIO;
 import org.columba.core.scripting.config.BeanshellConfig;
-import org.columba.core.scripting.extensions.ExtensionPointManager;
-import org.columba.core.scripting.extensions.MenuExtensionPoint;
 import org.columba.core.scripting.service.IColumbaService;
 
 /**

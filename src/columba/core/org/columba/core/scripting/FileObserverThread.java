@@ -59,7 +59,7 @@ public class FileObserverThread
     private final ScriptFileFilter fileFilter;
     private final InterpreterManager interpreterManager;
     private final List observers;
-    private Map scriptList;
+    private Map<String,ColumbaScript> scriptList;
 
     private long lastExecution;
     private int pollingInterval = -1;
@@ -74,7 +74,7 @@ public class FileObserverThread
         fileFilter = new ScriptFileFilter();
         interpreterManager = new InterpreterManager();
 
-        scriptList = new HashMap();
+        scriptList = new HashMap<String, ColumbaScript>();
         observers = new Vector();
         lastExecution = System.currentTimeMillis();
 
@@ -279,7 +279,7 @@ public class FileObserverThread
 
     public List getScripts()
     {
-        return new ArrayList(scriptList.values());
+        return new ArrayList<ColumbaScript>(scriptList.values());
     }
 
     public void refreshScriptList()

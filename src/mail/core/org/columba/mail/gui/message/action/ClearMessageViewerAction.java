@@ -29,6 +29,7 @@ import org.columba.mail.gui.message.IMessageController;
  * 
  * @author fdietz
  */
+
 public class ClearMessageViewerAction extends AbstractColumbaAction {
 	public ClearMessageViewerAction(IFrameMediator controller) {
 		super(controller, "ClearMessageViewerAction");

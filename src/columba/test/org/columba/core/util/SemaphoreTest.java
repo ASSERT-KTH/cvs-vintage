@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
+import junit.framework.TestCase;
+
 import org.columba.core.base.Semaphore;
 import org.columba.core.base.StopWatch;
-
-import junit.framework.TestCase;
 
 /**
  * @author redsolo

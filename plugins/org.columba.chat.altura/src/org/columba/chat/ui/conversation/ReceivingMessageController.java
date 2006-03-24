@@ -17,19 +17,14 @@
 //All Rights Reserved.
 package org.columba.chat.ui.conversation;
 
-
 /**
  * @author fdietz
- *  
+ * 
  */
 public class ReceivingMessageController extends HTMLViewer {
 
-	private ChatMediator mediator;
-
 	public ReceivingMessageController(ChatMediator mediator) {
 		super();
-
-		this.mediator = mediator;
 
 	}
 

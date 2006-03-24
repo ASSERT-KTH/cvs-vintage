@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import org.columba.mail.gui.table.model.MessageNode;
 
 
+
 public class BasicRenderer extends DefaultLabelRenderer {
 	
 	private static final java.util.logging.Logger LOG = 

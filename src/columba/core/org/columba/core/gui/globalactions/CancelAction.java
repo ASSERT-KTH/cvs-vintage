@@ -29,6 +29,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
+@SuppressWarnings({"serial","serial"})
 public class CancelAction extends AbstractColumbaAction implements
 		TaskManagerListener {
 

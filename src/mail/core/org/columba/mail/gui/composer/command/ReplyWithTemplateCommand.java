@@ -92,7 +92,6 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 			// setup charset and html
 			initMimeHeader(bodyPart);
 
-			StringBuffer bodyText;
 			Integer[] address = bodyPart.getAddress();
 
 			String quotedBodyText = createQuotedBody(bodyPart.getHeader(),

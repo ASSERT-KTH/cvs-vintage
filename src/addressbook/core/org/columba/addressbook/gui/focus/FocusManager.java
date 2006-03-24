@@ -179,7 +179,7 @@ public class FocusManager implements FocusListener {
 	 * Component lost focus
 	 */
 	public void focusLost(FocusEvent event) {
-		FocusOwner lost = (FocusOwner) map.get(event.getSource());
+		//FocusOwner lost = (FocusOwner) map.get(event.getSource());
 
 		last = current;
 

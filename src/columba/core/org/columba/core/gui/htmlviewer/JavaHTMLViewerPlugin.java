@@ -1,12 +1,9 @@
 package org.columba.core.gui.htmlviewer;
 
-import java.awt.Color;
-import java.awt.Insets;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -25,23 +22,19 @@ import org.columba.core.io.DiskIO;
 public class JavaHTMLViewerPlugin extends JScrollPane implements
 		IHTMLViewerPlugin {
 
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.gui.htmlviewer");
-
 	private HTMLEditorKit htmlEditorKit;
 
 	private AsynchronousHTMLDocument doc;
-	
+
 	private JTextPane textPane;
-	
+
 	public JavaHTMLViewerPlugin() {
 		super();
 
 		textPane = new JTextPane();
-		
+
 		setViewportView(textPane);
-		//textPane.setMargin(new Insets(5, 5, 5, 5));
+		// textPane.setMargin(new Insets(5, 5, 5, 5));
 		textPane.setEditable(false);
 
 		htmlEditorKit = new HTMLEditorKit();
@@ -49,16 +42,16 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 
 		textPane.setContentType("text/html");
 
-		setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 	}
 
 	/*
-	public void view(String htmlSource) {
-
-		setText(htmlSource);
-
-		postView();
-	}*/
+	 * public void view(String htmlSource) {
+	 * 
+	 * setText(htmlSource);
+	 * 
+	 * postView(); }
+	 */
 
 	private void postView() {
 		// setup base url in order to be able to display images
@@ -72,13 +65,14 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 	}
 
 	public void view(String text) {
-		if( text == null) return;
-		
+		if (text == null)
+			return;
+
 		doc = new AsynchronousHTMLDocument();
-		
-        Reader rd = new StringReader(text);
-        try {
-			htmlEditorKit.read(rd, doc, 0);		
+
+		Reader rd = new StringReader(text);
+		try {
+			htmlEditorKit.read(rd, doc, 0);
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,10 +81,10 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 			e.printStackTrace();
 		}
 		textPane.setDocument(doc);
-		
-		postView();		
+
+		postView();
 	}
-	
+
 	public JComponent getComponent() {
 		return textPane;
 	}
@@ -106,6 +100,7 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 	 * 
 	 * @author fdietz
 	 */
+	
 	public class AsynchronousHTMLDocument extends HTMLDocument {
 
 		/**
@@ -132,21 +127,25 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 			return 10;
 		}
 
-		public String getTextWithLineBreaks(int start, int end) throws BadLocationException {
+		public String getTextWithLineBreaks(int start, int end)
+				throws BadLocationException {
 			StringBuffer result = new StringBuffer(end - start);
 			ElementIterator iter = new ElementIterator(this);
 
 			// First find the beginning element
 			for (iter.next(); iter.current() != null; iter.next()) {
 				Element e = iter.current();
-				if (e.isLeaf() && (e.getStartOffset() >= start || e.getEndOffset() >= start) && e.getStartOffset() <= end) { 
-					Object a = e.getAttributes().getAttribute(StyleContext.NamedStyle.NameAttribute);					
-					if( a == HTML.Tag.CONTENT) {
+				if (e.isLeaf()
+						&& (e.getStartOffset() >= start || e.getEndOffset() >= start)
+						&& e.getStartOffset() <= end) {
+					Object a = e.getAttributes().getAttribute(
+							StyleContext.NamedStyle.NameAttribute);
+					if (a == HTML.Tag.CONTENT) {
 						int as = Math.max(e.getStartOffset(), start);
-						int ae = Math.min(e.getEndOffset(),  end);
-						result.append(super.getText(as, ae-as));
-					} 
-					if( a == HTML.Tag.BR ) {					
+						int ae = Math.min(e.getEndOffset(), end);
+						result.append(super.getText(as, ae - as));
+					}
+					if (a == HTML.Tag.BR) {
 						result.append("\n");
 					}
 				}
@@ -165,7 +164,8 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 	 */
 	public String getSelectedText() {
 		try {
-			return doc.getTextWithLineBreaks(textPane.getSelectionStart(),textPane.getSelectionEnd());
+			return doc.getTextWithLineBreaks(textPane.getSelectionStart(),
+					textPane.getSelectionEnd());
 		} catch (BadLocationException e) {
 			return "";
 		}

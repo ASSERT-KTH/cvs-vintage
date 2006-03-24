@@ -23,13 +23,10 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
@@ -65,9 +62,6 @@ public class SendLaterAction extends AbstractColumbaAction {
 			return;
 		}
 
-		AccountItem item = ((ComposerModel) composerController.getModel())
-				.getAccountItem();
-		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
 		OutboxFolder destFolder = (OutboxFolder) FolderTreeModel.getInstance()
 				.getFolder(103);
 

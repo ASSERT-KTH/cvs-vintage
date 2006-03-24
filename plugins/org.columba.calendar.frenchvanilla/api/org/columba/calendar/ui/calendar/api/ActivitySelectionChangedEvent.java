@@ -22,6 +22,7 @@ import java.util.EventObject;
 import org.columba.calendar.base.api.IActivity;
 
 
+
 public class ActivitySelectionChangedEvent extends EventObject {
 
 	private IActivity[] selection;

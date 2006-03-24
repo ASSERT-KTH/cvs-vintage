@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.columba.core.scripting.model.ColumbaScript;
-import org.columba.core.scripting.ScriptLogger;
 
 import bsh.EvalError;
 import bsh.Interpreter;

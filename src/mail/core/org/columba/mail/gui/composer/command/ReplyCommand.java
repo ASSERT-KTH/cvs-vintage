@@ -136,7 +136,6 @@ public class ReplyCommand extends Command {
             // setup charset and html
             initMimeHeader(bodyPart);
 
-            StringBuffer bodyText;
             Integer[] address = bodyPart.getAddress();
 
             String quotedBodyText = createQuotedBody(bodyPart.getHeader(), folder, uids, address);

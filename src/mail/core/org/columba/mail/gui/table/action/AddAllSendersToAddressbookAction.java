@@ -34,6 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+@SuppressWarnings({"serial","serial"})
 public class AddAllSendersToAddressbookAction extends AbstractColumbaAction
 		implements ISelectionListener {
 	public AddAllSendersToAddressbookAction(IFrameMediator frameMediator) {

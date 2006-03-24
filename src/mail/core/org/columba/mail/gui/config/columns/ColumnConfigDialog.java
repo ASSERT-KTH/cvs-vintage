@@ -63,6 +63,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
+
 public class ColumnConfigDialog extends JDialog implements ActionListener,
 		ListSelectionListener {
 

@@ -26,6 +26,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.ristretto.message.Address;
 
 
+@SuppressWarnings({"serial","serial"})
 public class FromRenderer extends DefaultLabelRenderer {
     public FromRenderer() {
         super();

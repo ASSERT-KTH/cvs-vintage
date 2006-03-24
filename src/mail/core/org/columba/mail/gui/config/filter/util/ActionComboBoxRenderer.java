@@ -32,6 +32,7 @@ import org.columba.mail.plugin.FilterActionExtensionHandler;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class ActionComboBoxRenderer extends DefaultListCellRenderer {
 	protected FilterActionExtensionHandler pluginHandler;
 

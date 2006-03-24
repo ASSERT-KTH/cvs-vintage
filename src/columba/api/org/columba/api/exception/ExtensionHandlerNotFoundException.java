@@ -18,6 +18,7 @@
 package org.columba.api.exception;
 
 
+
 public class ExtensionHandlerNotFoundException extends PluginException {
 
 	public ExtensionHandlerNotFoundException() {

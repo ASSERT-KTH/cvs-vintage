@@ -54,6 +54,7 @@ import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
 import org.columba.mail.plugin.FilterActionExtensionHandler;
 import org.columba.mail.plugin.FilterActionUIExtensionHandler;
 
+
 public class ActionList extends JPanel implements ActionListener, ItemListener {
 	private Filter filter;
 
@@ -106,7 +107,7 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 		FilterActionList actionList = filter.getFilterActionList();
 		for (int i = 0; i < actionList.getChildCount(); i++) {
 			FilterAction action = actionList.get(i);
-			String name = action.getAction();
+			
 
 			if ((action.equals("move")) || (action.equals("delete"))) {
 				allowed = false;

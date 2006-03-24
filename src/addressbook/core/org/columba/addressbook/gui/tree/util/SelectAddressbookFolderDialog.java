@@ -26,7 +26,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -48,17 +47,16 @@ import org.columba.core.gui.base.ButtonWithMnemonic;
 
 public class SelectAddressbookFolderDialog extends JDialog implements
 		ActionListener, TreeSelectionListener, ISelectFolderDialog {
-	private String name;
 
-	//private MainInterface mainInterface;
+	// private MainInterface mainInterface;
 	private boolean bool = false;
 
-	//public SelectFolderTree tree;
+	// public SelectFolderTree tree;
 	private JTree tree;
 
 	private JButton[] buttons;
 
-	//private TreeView treeViewer;
+	// private TreeView treeViewer;
 	private IFolder selectedFolder;
 
 	private TreeModel model;
@@ -70,8 +68,6 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 				"select_folder"));
 
 		this.model = model;
-
-		name = new String("name");
 
 		initComponents();
 
@@ -107,9 +103,6 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 	private void initComponents() {
 		buttons = new JButton[3];
 
-		JLabel label2 = new JLabel(AddressbookResourceLoader.getString("tree",
-				"folderdialog", "select_folder"));
-
 		buttons[0] = new ButtonWithMnemonic(AddressbookResourceLoader
 				.getString("global", "cancel"));
 		buttons[0].setActionCommand("CANCEL");
@@ -139,9 +132,8 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 			buttons[i].addActionListener(this);
 		}
 
-		tree.setSelectionPath(new TreePath(
-				AddressbookTreeModel.getInstance().getFolder(101)
-						.getPath()));
+		tree.setSelectionPath(new TreePath(AddressbookTreeModel.getInstance()
+				.getFolder(101).getPath()));
 	}
 
 	public boolean success() {
@@ -159,7 +151,7 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 		 */
 		return 101;
 
-		//return item.getUid();
+		// return item.getUid();
 	}
 
 	public void actionPerformed(ActionEvent e) {

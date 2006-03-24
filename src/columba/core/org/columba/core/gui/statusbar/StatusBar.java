@@ -19,16 +19,13 @@ package org.columba.core.gui.statusbar;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -75,9 +72,6 @@ import org.columba.core.resourceloader.ImageLoader;
 public class StatusBar extends JStatusBar implements TaskManagerListener,
 		ActionListener, ChangeListener, IStatusBar {
 
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.gui.statusbar");
-
 	/**
 	 * update status every 10 ms
 	 */
@@ -108,16 +102,10 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 	 */
 	private JProgressBar progressBar;
 
-	private Border border;
-
-	private JPanel mainRightPanel;
-
 	/**
 	 * button opening task manager dialog
 	 */
 	private JButton taskButton;
-
-	private JPanel leftMainPanel;
 
 	/**
 	 * Currently displayed worker
@@ -210,16 +198,17 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 		setMainLeftComponent(label);
 
 		addRightComponent(progressBar, 100);
-		//addRightComponent(taskButton, 30);
+		// addRightComponent(taskButton, 30);
 		addRightComponent(onlineButton, 30);
 	}
 
 	public void addComponent(IStatusBarExtension ext) {
-		if ( ext == null ) throw new IllegalArgumentException("extension == null");
-		
+		if (ext == null)
+			throw new IllegalArgumentException("extension == null");
+
 		addRightComponent(ext.getView());
 	}
-	
+
 	/**
 	 * layout components
 	 */

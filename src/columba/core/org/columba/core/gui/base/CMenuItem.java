@@ -32,6 +32,7 @@ import org.columba.core.help.HelpManager;
  *
  * @author fdietz
  */
+
 public class CMenuItem extends JMenuItem {
     /**
      * Creates a menu item with a given action attached.

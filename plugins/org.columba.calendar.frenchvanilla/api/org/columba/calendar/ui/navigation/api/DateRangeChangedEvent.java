@@ -21,6 +21,7 @@ import java.util.EventObject;
 
 import org.columba.calendar.model.api.IDateRange;
 
+
 public class DateRangeChangedEvent extends EventObject {
 
 	private IDateRange dateRange;

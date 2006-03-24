@@ -88,7 +88,7 @@ public class ProfileManagerDialog extends JDialog implements ActionListener,
 
 	protected JButton exportButton;
 
-	//protected JButton defaultButton;
+	// protected JButton defaultButton;
 	private DefaultListModel model;
 
 	protected JList list;
@@ -99,13 +99,11 @@ public class ProfileManagerDialog extends JDialog implements ActionListener,
 
 	protected JCheckBox checkBox;
 
-	private IFrameMediator mediator;
-
 	public ProfileManagerDialog(IFrameMediator mediator)
 			throws HeadlessException {
 		super(mediator.getView().getFrame(), GlobalResourceLoader.getString(
 				RESOURCE_PATH, "profiles", "manager.title"), true);
-		this.mediator = mediator;
+	
 
 		initComponents();
 

@@ -36,6 +36,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
+
 public class ForwardInlineAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	public ForwardInlineAction(IFrameMediator frameMediator) {

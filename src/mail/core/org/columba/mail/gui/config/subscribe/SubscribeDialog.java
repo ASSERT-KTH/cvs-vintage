@@ -152,7 +152,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
-		//topPanel.setLayout( );
+		// topPanel.setLayout( );
 		JPanel topBorderPanel = new JPanel();
 		topBorderPanel.setLayout(new BorderLayout());
 
@@ -160,7 +160,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 		c.anchor = GridBagConstraints.EAST;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 
-		//c.fill = GridBagConstraints.HORIZONTAL;
+		// c.fill = GridBagConstraints.HORIZONTAL;
 		gridBagLayout.setConstraints(glue, c);
 
 		gridBagLayout = new GridBagLayout();
@@ -205,7 +205,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 		JScrollPane scrollPane = new JScrollPane(tree);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 		scrollPane.getViewport().setBackground(Color.white);
-		scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
+		scrollPane.setTransferHandler(new FilterTransferHandler());
 		centerPanel.add(scrollPane);
 
 		mainPanel.add(centerPanel);
@@ -256,8 +256,8 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 	private void syncAndExit() {
 		setEnabled(false);
 
-		Command c = new FetchSubFolderListCommand(new MailFolderCommandReference(
-				root));
+		Command c = new FetchSubFolderListCommand(
+				new MailFolderCommandReference(root));
 		CommandProcessor.getInstance().addOp(c);
 
 		setVisible(false);
@@ -274,7 +274,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void updateButtons() {
 		if (selection != null) {
@@ -311,7 +311,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void subscribeDone() {
 		selection.setSelected(true);
@@ -321,7 +321,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void unsubscribeDone() {
 		selection.setSelected(false);

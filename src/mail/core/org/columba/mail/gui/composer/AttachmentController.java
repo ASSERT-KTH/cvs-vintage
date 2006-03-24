@@ -139,18 +139,6 @@ public class AttachmentController implements KeyListener, ListSelectionListener 
 	}
 
 	/**
-	 * Add the mime part as an attachment to the email.
-	 * 
-	 * @param part
-	 *            mime part.
-	 */
-	private void add(StreamableMimePart part) {
-		view.add(part);
-		((ComposerModel) composerController.getModel()).getAttachments().add(
-				part);
-	}
-
-	/**
 	 * Removes the current selected attachments.
 	 */
 	public void removeSelected() {

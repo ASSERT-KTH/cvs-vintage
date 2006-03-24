@@ -17,13 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Set;
-
-import org.columba.ristretto.message.Attributes;
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
 
 /**
  * @author fdietz

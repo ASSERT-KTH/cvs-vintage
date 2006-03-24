@@ -21,7 +21,6 @@ import org.columba.core.command.Command;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 
-
 /**
  * A Command for moving a folder to another folder.
  * <p>
@@ -30,55 +29,46 @@ import org.columba.mail.folder.IMailFolder;
  * <li> A <code>Folder</code> that is going to be moved.
  * <li> A <code>FolderTreeNode</code> that the above folder is moved to.
  * </ol>
+ * 
  * @author redsolo
  */
 public class MoveFolderCommand extends Command {
 
-    private IMailFolder destParentFolder;
-    private int[] destChildIndicies;
+	private IMailFolder destParentFolder;
 
-    private IMailFolder srcParentFolder;
-    private int[] srcChildIndicies;
-    private Object[] srcChildObjects;
+	/**
+	 * @param references
+	 *            the folder references.
+	 */
+	public MoveFolderCommand(ICommandReference reference) {
+		super(reference);
+	}
 
-    /**
-     * @param references the folder references.
-     */
-    public MoveFolderCommand(ICommandReference reference) {
-        super(reference);
-    }
+	/** {@inheritDoc} */
+	/*
+	 * public void updateGUI() throws Exception { // update treemodel if
+	 * (srcParentFolder != null) {
+	 * MailInterface.treeModel.nodesWereRemoved(srcParentFolder,
+	 * srcChildIndicies, srcChildObjects); }
+	 * 
+	 * if (destParentFolder != null) {
+	 * MailInterface.treeModel.nodesWereInserted(destParentFolder,
+	 * destChildIndicies); } }
+	 */
 
-    /** {@inheritDoc} */
-    /*
-    public void updateGUI() throws Exception {
+	/** {@inheritDoc} */
+	public void execute(IWorkerStatusController worker) throws Exception {
+		// get folder that is going to be moved
+		IMailFolder movedFolder = (IMailFolder) ((IFolderCommandReference) getReference())
+				.getSourceFolder();
 
-        // update treemodel
-        if (srcParentFolder != null) {
-            MailInterface.treeModel.nodesWereRemoved(srcParentFolder, srcChildIndicies, srcChildObjects);
-        }
+		// get destination folder
+		destParentFolder = (IMailFolder) ((IFolderCommandReference) getReference())
+				.getDestinationFolder();
 
-        if (destParentFolder != null) {
-            MailInterface.treeModel.nodesWereInserted(destParentFolder, destChildIndicies);
-        }
-    }
-    */
+		// AbstractFolder.append also automatically removes the folder
+		// from its parent
+		movedFolder.moveTo(destParentFolder);
 
-    /** {@inheritDoc} */
-    public void execute(IWorkerStatusController worker) throws Exception {
-        // get folder that is going to be moved
-    	IMailFolder movedFolder = (IMailFolder) ((IFolderCommandReference) getReference()).getSourceFolder();
-
-        // get destination folder
-        destParentFolder = (IMailFolder) ((IFolderCommandReference) getReference()).getDestinationFolder();
-
-        srcParentFolder = (IMailFolder)movedFolder.getParent();
-        srcChildIndicies = new int[] {srcParentFolder.getIndex(movedFolder)};
-        srcChildObjects = new Object[] {movedFolder};
-
-        //AbstractFolder.append also automatically removes the folder
-        //from its parent
-        movedFolder.moveTo(destParentFolder);
-
-        destChildIndicies = new int[] {destParentFolder.getIndex(movedFolder)};
-    }
+	}
 }

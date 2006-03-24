@@ -26,69 +26,67 @@ import javax.swing.table.TableModel;
 import org.columba.addressbook.gui.table.renderer.DefaultHeaderRenderer;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
-
 /**
  * JTable customized with renderers.
- *
+ * 
  * @author fdietz
  */
 public class TableView extends JTable {
-   
-    private TableController controller;
-    private TableModel tableModel;
 
-    public TableView(TableController controller, TableModel tableModel) {
-        super(tableModel);
+	private TableController controller;
 
-        this.controller = controller;
+	public TableView(TableController controller, TableModel tableModel) {
+		super(tableModel);
 
-        //this.addressbookModel = addressbookModel;
-        setIntercellSpacing(new Dimension(0, 0));
-        setShowGrid(false);
-        setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		this.controller = controller;
 
-        // set renderers for columns
-        TableColumn tc = getColumnModel().getColumn(0);
-        
-        //tc.setHeaderRenderer(new DefaultHeaderRenderer(""));
-        //tc.setCellRenderer(new TypeRenderer());
-        //tc.setMaxWidth(23);
-        
-        
-        tc = getColumnModel().getColumn(0);
-        tc.setHeaderRenderer(createHeader("displayname"));
+		// this.addressbookModel = addressbookModel;
+		setIntercellSpacing(new Dimension(0, 0));
+		setShowGrid(false);
+		setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        tc = getColumnModel().getColumn(1);
-        tc.setHeaderRenderer(createHeader("email;internet"));
+		// set renderers for columns
+		TableColumn tc = getColumnModel().getColumn(0);
 
-        tc = getColumnModel().getColumn(2);
-        tc.setHeaderRenderer(createHeader("url"));
-    }
+		// tc.setHeaderRenderer(new DefaultHeaderRenderer(""));
+		// tc.setCellRenderer(new TypeRenderer());
+		// tc.setMaxWidth(23);
 
-    /**
-     * Create table header renderer. Names use semicolon ";" character to
-     * define subtypes.
-     * <p>
-     * For example:email;internet or: tel;fax
-     * <p>
-     * Method searches for a semicolon and creates a string representation,
-     * setting the subtype in braces.
-     *
-     * @param name
-     * @return
-     */
-    private DefaultHeaderRenderer createHeader(String name) {
-        int index = name.indexOf(";");
+		tc = getColumnModel().getColumn(0);
+		tc.setHeaderRenderer(createHeader("displayname"));
 
-        if (index != -1) {
-            String prefix = AddressbookResourceLoader.getString("header",
-                    name.substring(0, index));
-            String suffix = AddressbookResourceLoader.getString("header",
-                    name.substring(index + 1, name.length()));
+		tc = getColumnModel().getColumn(1);
+		tc.setHeaderRenderer(createHeader("email;internet"));
 
-           return new DefaultHeaderRenderer(controller.getSortDecorator(), prefix + "(" + suffix + ")");
-        }
+		tc = getColumnModel().getColumn(2);
+		tc.setHeaderRenderer(createHeader("url"));
+	}
 
-        return new DefaultHeaderRenderer(controller.getSortDecorator(), name);
-    }
+	/**
+	 * Create table header renderer. Names use semicolon ";" character to define
+	 * subtypes.
+	 * <p>
+	 * For example:email;internet or: tel;fax
+	 * <p>
+	 * Method searches for a semicolon and creates a string representation,
+	 * setting the subtype in braces.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private DefaultHeaderRenderer createHeader(String name) {
+		int index = name.indexOf(";");
+
+		if (index != -1) {
+			String prefix = AddressbookResourceLoader.getString("header", name
+					.substring(0, index));
+			String suffix = AddressbookResourceLoader.getString("header", name
+					.substring(index + 1, name.length()));
+
+			return new DefaultHeaderRenderer(controller.getSortDecorator(),
+					prefix + "(" + suffix + ")");
+		}
+
+		return new DefaultHeaderRenderer(controller.getSortDecorator(), name);
+	}
 }

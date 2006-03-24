@@ -27,12 +27,6 @@ public class ExtensionXMLParser {
 
 	private static final String XML_ELEMENT_EXTENSIONLIST = "extensionlist";
 
-	private static final String XML_ATTRIBUTE_TYPE = "type";
-
-	private static final String XML_ELEMENT_JAR = "jar";
-
-	private static final String XML_ELEMENT_RUNTIME = "runtime";
-
 	private static final String XML_ATTRIBUTE_DESCRIPTION = "description";
 
 	private static final String XML_ATTRIBUTE_CATEGORY = "category";
@@ -56,16 +50,19 @@ public class ExtensionXMLParser {
 	private static final java.util.logging.Logger LOG = java.util.logging.Logger
 			.getLogger("org.columba.core.plugin");
 
-	
 	/**
 	 * Parse IExtension enumeration metadata from xml file.
 	 * 
-	 * @param is					inputstream of xml extension file
-	 * @param pluginMetadata		can be <code>null</code>, in case of internal plugin
-	 * @param internal			true, if internal, False, otherwise.
-	 * @return					enumeration of <code>Extension</code>
+	 * @param is
+	 *            inputstream of xml extension file
+	 * @param pluginMetadata
+	 *            can be <code>null</code>, in case of internal plugin
+	 * @param internal
+	 *            true, if internal, False, otherwise.
+	 * @return enumeration of <code>Extension</code>
 	 */
-	public Enumeration loadExtensionsFromStream(InputStream is, PluginMetadata pluginMetadata, boolean internal) {
+	public Enumeration loadExtensionsFromStream(InputStream is,
+			PluginMetadata pluginMetadata, boolean internal) {
 		Vector vector = new Vector();
 
 		XmlIO xmlFile = new XmlIO();
@@ -85,11 +82,11 @@ public class ExtensionXMLParser {
 
 			ExtensionMetadata metadata = parseExtensionMetadata(extensionXmlElement);
 
-			if ( internal == true)
+			if (internal == true)
 				vector.add(new Extension(metadata, internal));
 			else
 				vector.add(new Extension(pluginMetadata, metadata));
-				
+
 		}
 
 		return vector.elements();
@@ -234,11 +231,11 @@ public class ExtensionXMLParser {
 
 			String extensionpointId = extensionListXmlElement
 					.getAttribute(XML_ATTRIBUTE_ID);
-			if ( extensionpointId == null) {
+			if (extensionpointId == null) {
 				LOG.severe("missing extension point id attribute");
 				continue;
 			}
-			
+
 			Vector vector = new Vector();
 
 			for (int k = 0; k < extensionListXmlElement.count(); k++) {

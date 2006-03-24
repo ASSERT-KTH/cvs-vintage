@@ -16,6 +16,7 @@
 
 package org.columba.mail.folder;
 
+
 public class FolderCreationException extends Exception {
 
 	/**

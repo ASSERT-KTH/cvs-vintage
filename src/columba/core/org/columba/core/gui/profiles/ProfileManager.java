@@ -98,7 +98,9 @@ public class ProfileManager implements IProfileManager {
 		return instance;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.profiles.IProfileManager#getProfileForName(java.lang.String)
 	 */
 	public Profile getProfileForName(String name) {
@@ -161,7 +163,9 @@ public class ProfileManager implements IProfileManager {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.profiles.IProfileManager#getProfile(java.lang.String)
 	 */
 	public Profile getProfile(String location) {
@@ -204,7 +208,9 @@ public class ProfileManager implements IProfileManager {
 		return currentProfile;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.profiles.IProfileManager#getSelectedProfile()
 	 */
 	public String getSelectedProfile() {
@@ -231,7 +237,7 @@ public class ProfileManager implements IProfileManager {
 			profiles.addAttribute("dont_ask", "true");
 		}
 
-		//		 save to profiles.xml
+		// save to profiles.xml
 		try {
 			xml.save();
 		} catch (Exception e) {
@@ -263,14 +269,16 @@ public class ProfileManager implements IProfileManager {
 	protected Profile promptForProfile() {
 		String s = profiles.getAttribute("dont_ask");
 		if (s == null)
-			s = "false";
+			s = "true";
 
 		boolean dontAsk = Boolean.valueOf(s).booleanValue();
 
 		// use preselected profile
 		if (dontAsk) {
 			String selected = profiles.getAttribute("selected");
-			Profile p = getProfileForName(selected);
+			Profile p = null;
+			if (selected != null)
+				p = getProfileForName(selected);
 
 			if (p == null) {
 				// fall back to default profile
@@ -314,7 +322,9 @@ public class ProfileManager implements IProfileManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.profiles.IProfileManager#getProfiles()
 	 */
 	public XmlElement getProfiles() {
@@ -378,7 +388,9 @@ public class ProfileManager implements IProfileManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.profiles.IProfileManager#getCurrentProfile()
 	 */
 	public Profile getCurrentProfile() {
@@ -411,7 +423,7 @@ public class ProfileManager implements IProfileManager {
 
 			// delete all directories
 			for (int i = 0; i < folders.length; i++) {
-				//	delete directory recursivly
+				// delete directory recursivly
 				DiskIO.deleteDirectory(new File(location, folders[i]));
 			}
 

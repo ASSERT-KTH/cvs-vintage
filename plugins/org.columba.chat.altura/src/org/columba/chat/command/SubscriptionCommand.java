@@ -26,15 +26,10 @@ import org.jivesoftware.smack.packet.Presence;
 
 public class SubscriptionCommand extends Command {
 
-	private IChatFrameMediator mediator;
-
-	private String jabberId;
-
 	public SubscriptionCommand(IChatFrameMediator mediator,
 			ICommandReference reference) {
 		super(reference);
 
-		this.mediator = mediator;
 	}
 
 	/**

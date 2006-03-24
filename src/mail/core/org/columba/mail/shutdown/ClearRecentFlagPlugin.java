@@ -20,7 +20,6 @@ package org.columba.mail.shutdown;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 
 import org.columba.core.filter.Filter;
 import org.columba.core.xml.XmlIO;
@@ -33,24 +32,20 @@ public class ClearRecentFlagPlugin implements Runnable {
 
 	private static final String FILTER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><filter enabled=\"true\"><rules condition=\"matchall\"><criteria criteria=\"is\" type=\"Flags\" pattern=\"Recent\"></criteria></rules></filter>";
 
-	private static Filter RECENT_FILTER; 
-	
+	private static Filter RECENT_FILTER;
+
 	static {
 		try {
-			XmlIO io = new XmlIO();		
+			XmlIO io = new XmlIO();
 			io.load(new ByteArrayInputStream(FILTER_XML.getBytes("UTF-8")));
-			
+
 			RECENT_FILTER = new Filter(io.getRoot().getElement(0));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
 
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.shutdown");
+	}
 
 	public void run() {
 		IMailFolder rootFolder = (IMailFolder) FolderTreeModel.getInstance()
@@ -63,15 +58,16 @@ public class ClearRecentFlagPlugin implements Runnable {
 
 		for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
 			child = (IMailFolder) e.nextElement();
-			
-			if( child instanceof AbstractMessageFolder ) {
+
+			if (child instanceof AbstractMessageFolder) {
 				AbstractMessageFolder folder = (AbstractMessageFolder) child;
-				if( folder.getMessageFolderInfo().getRecent() >  0) {
-				
+				if (folder.getMessageFolderInfo().getRecent() > 0) {
+
 					try {
-						Object uids[] = folder.searchMessages(RECENT_FILTER);		
-						folder.markMessage(uids, MarkMessageCommand.MARK_AS_NOTRECENT);
-						
+						Object uids[] = folder.searchMessages(RECENT_FILTER);
+						folder.markMessage(uids,
+								MarkMessageCommand.MARK_AS_NOTRECENT);
+
 						folder.save();
 					} catch (Exception e1) {
 					}

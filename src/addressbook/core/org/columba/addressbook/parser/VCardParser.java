@@ -206,7 +206,6 @@ public class VCardParser {
 			Iterator it = communications.getEmailAddresses();
 			while (it.hasNext()) {
 				EmailAddress adr = (EmailAddress) it.next();
-				String type = adr.getType();
 				c.addEmail(new EmailModel(adr.getAddress(),
 						EmailModel.TYPE_WORK));
 			}

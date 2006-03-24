@@ -37,6 +37,7 @@ import org.columba.core.plugin.PluginManager;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+
 public class DescriptionTreeRenderer extends DefaultTreeCellRenderer {
     /* (non-Javadoc)
          * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -73,7 +74,7 @@ public class DescriptionTreeRenderer extends DefaultTreeCellRenderer {
         Font font = getFont();
         FontMetrics fontMetrics = g.getFontMetrics(font);
 
-        int textWidth = fontMetrics.stringWidth(getText());
+     
 
         int iconOffset = 0;
 

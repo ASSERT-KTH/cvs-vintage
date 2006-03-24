@@ -52,7 +52,7 @@ public class SaveFolderConfigurationCommand extends Command {
 				.getSourceFolder();
 
 		// if folder is message folder
-		// ->TODO: there should be an interface, instead of the AbstractMessageFolder
+		// ->TODO (@author fdietz):  there should be an interface, instead of the AbstractMessageFolder
 		// class
 		if (folderTreeNode instanceof AbstractMessageFolder) {
 			AbstractMessageFolder folder = (AbstractMessageFolder) folderTreeNode;

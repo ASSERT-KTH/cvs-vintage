@@ -1,7 +1,7 @@
 /*
- * $Revision: 1.3 $
- * $Date: 2004/09/25 04:13:27 $
- * $Author: mlivingstone $
+ * $Revision: 1.4 $
+ * $Date: 2006/03/24 17:07:30 $
+ * $Author: fdietz $
  *
  * Copyright (C) 2001 C. Scott Willy
  *
@@ -30,8 +30,6 @@
 
 package org.columba.mail.spellcheck.cswilly;
 
-
-
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -59,733 +57,623 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
-
-
 /**
  * Dialog to the user to determine what to do about a misspelled word.
- *<p>
- *   <p>Features of the dialog box:</p>
- *   <ul>
- *     <li>the dialog box is modal</li>
- *     <li>the title of the dialog box is set to "Spell Check"</li>
- *     <li>the user action change be determined using the getUserAction() method</li>
- *     <li>the possible user actions are modelled using the instances of the class UserAction
- *       (which is an enum-like thingy). The possible instances are give by public
- *       static text fields (e.g. ADD, and CANCEL) of type UserAction.</li>
- *     <li>the dialog box can be closed using the escape key (user action is CANCEL)</li>
- *     <li>there is a default button (<cite>Ignore</cite>)</li>
- *     <li>the buttons all have mnemonic keys</li>
- *     <li>??? todo set focus to <cite>Change to</cite> text field when dialog is
- *       opened</li>
- *     <li>??? todo add tool tips to all visual components</li>
- *     <li>??? todo move text to properties file</li>
- *   </ul>
- *<p>
- * Escape closes dialog (http://www.javaworld.com/javaworld/javatips/jw-javatip72.html)
+ * <p>
+ * <p>
+ * Features of the dialog box:
+ * </p>
+ * <ul>
+ * <li>the dialog box is modal</li>
+ * <li>the title of the dialog box is set to "Spell Check"</li>
+ * <li>the user action change be determined using the getUserAction() method</li>
+ * <li>the possible user actions are modelled using the instances of the class
+ * UserAction (which is an enum-like thingy). The possible instances are give by
+ * public static text fields (e.g. ADD, and CANCEL) of type UserAction.</li>
+ * <li>the dialog box can be closed using the escape key (user action is
+ * CANCEL)</li>
+ * <li>there is a default button (<cite>Ignore</cite>)</li>
+ * <li>the buttons all have mnemonic keys</li>
+ * <li>??? todo set focus to <cite>Change to</cite> text field when dialog is
+ * opened</li>
+ * <li>??? todo add tool tips to all visual components</li>
+ * <li>??? todo move text to properties file</li>
+ * </ul>
+ * <p>
+ * Escape closes dialog
+ * (http://www.javaworld.com/javaworld/javatips/jw-javatip72.html)
  */
 
 public class ValidationDialog extends JDialog {
 
-    // ??? bad to have release hardocoded here. Fix later...right.
+	// ??? bad to have release hardocoded here. Fix later...right.
 
-    private static Point _location = new Point(100, 100);
+	private static Point _location = new Point(100, 100);
 
-    public static final UserAction ADD = new UserAction("Add");
+	public static final UserAction ADD = new UserAction("Add");
 
-    public static final UserAction CANCEL = new UserAction("Cancel");
+	public static final UserAction CANCEL = new UserAction("Cancel");
 
-    public static final UserAction CHANGE = new UserAction("Change");
+	public static final UserAction CHANGE = new UserAction("Change");
 
-    public static final UserAction CHANGE_ALL = new UserAction("Change All");
+	public static final UserAction CHANGE_ALL = new UserAction("Change All");
 
-    public static final UserAction IGNORE = new UserAction("Ignore");
+	public static final UserAction IGNORE = new UserAction("Ignore");
 
-    public static final UserAction IGNORE_ALL = new UserAction("Ignore All");
+	public static final UserAction IGNORE_ALL = new UserAction("Ignore All");
 
-    private JTextField _changeToTextField;
+	private JTextField _changeToTextField;
 
-    private final String _originalWord;
+	private final String _originalWord;
 
-    private final List _suggestions;
+	private final List _suggestions;
 
-    private JList _suggestionsJList;
+	private JList _suggestionsJList;
 
-    private UserAction _userAction = CANCEL;
+	private UserAction _userAction = CANCEL;
 
-    private String _title = "Spell Check, Release R004";
+	private String _title = "Spell Check, Release R004";
 
+	public ValidationDialog(Frame owner, String originalWord, List suggestions) {
 
+		super(owner);
 
-    public ValidationDialog(Frame owner, String originalWord, List suggestions) {
+		_originalWord = originalWord;
 
-        super(owner);
+		_suggestions = suggestions;
 
-        _originalWord = originalWord;
+		_init();
 
-        _suggestions = suggestions;
+	}
 
-        _init();
+	public ValidationDialog(Dialog owner, String originalWord, List suggestions) {
 
-    }
+		super(owner);
 
+		_originalWord = originalWord;
 
+		_suggestions = suggestions;
 
-    public ValidationDialog(Dialog owner, String originalWord, List suggestions) {
+		_init();
 
-        super(owner);
+	}
 
-        _originalWord = originalWord;
+	public ValidationDialog(String originalWord, List suggestions) {
 
-        _suggestions = suggestions;
+		super();
 
-        _init();
+		_originalWord = originalWord;
 
-    }
+		_suggestions = suggestions;
 
+		_init();
 
+	}
 
-    public ValidationDialog(String originalWord, List suggestions) {
+	public void dispose() {
 
-        super();
+		// save current location statically for next time
 
-        _originalWord = originalWord;
+		_location = getLocation();
 
-        _suggestions = suggestions;
+		super.dispose();
 
-        _init();
+	}
 
-    }
+	public UserAction getUserAction() {
 
+		return _userAction;
 
+	}
 
-    public void dispose() {
+	/**
+	 * Returns the replacement word selected by the user
+	 * <p>
+	 * The returned value only makes sense if the user action is either CHANGE
+	 * or CHANGE_ALL. Should be ignored for any other action.
+	 * <p>
+	 * 
+	 * @return the replacement word selected by the user as a String
+	 */
 
-        // save current location statically for next time
+	public String getSelectedWord() {
 
-        _location = getLocation();
+		return _changeToTextField.getText();
 
-        super.dispose();
+	}
 
-    }
+	/**
+	 * Overriden to register {@link CloseDialogActionListener} to be called when
+	 * the escape key is pressed.
+	 */
 
+	protected JRootPane createRootPane() {
 
+		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 
-    public UserAction getUserAction() {
+		JRootPane rootPane = new JRootPane();
 
-        return _userAction;
+		ActionListener actionListener = new CloseDialogActionListener();
 
-    }
+		rootPane.registerKeyboardAction(actionListener, stroke,
 
+		JComponent.WHEN_IN_FOCUSED_WINDOW);
 
+		return rootPane;
 
-    /**
- * Returns the replacement word selected by the user
- *<p>
- * The returned value only makes sense if the user action is either CHANGE
- * or CHANGE_ALL. Should be ignored for any other action.
- *<p>
- * @return the replacement word selected by the user as a String
- */
+	}
 
-    public String getSelectedWord() {
+	/**
+	 * Convenience method add lableled component
+	 */
 
-        return _changeToTextField.getText();
+	private void _addRow(Box mainBox, JComponent labelComponent,
 
-    }
+	Component component) {
 
+		Box hBox = Box.createHorizontalBox();
 
+		mainBox.add(hBox);
 
-    /**
- * Overriden to register {@link CloseDialogActionListener} to be called when
- * the escape key is pressed.
- */
+		Dimension labelComponentDim = new Dimension(100,
 
-    protected JRootPane createRootPane() {
+		labelComponent.getPreferredSize().height);
 
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+		labelComponent.setPreferredSize(labelComponentDim);
 
-        JRootPane rootPane = new JRootPane();
+		labelComponent.setMinimumSize(labelComponentDim);
 
-        ActionListener actionListener = new CloseDialogActionListener();
+		labelComponent.setMaximumSize(labelComponentDim);
 
-        rootPane.registerKeyboardAction(actionListener, stroke,
+		hBox.add(labelComponent);
 
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+		hBox.add(Box.createHorizontalGlue());
 
+		hBox.add(component);
 
+		hBox.add(Box.createHorizontalGlue());
 
-        return rootPane;
+	}
 
-    }
+	/**
+	 * Convenience method to create and config buttons from an action
+	 * <p>
+	 * After creating the JButton, sets the Mnemonic and ToolTipText by looking
+	 * for the AbstractFilterAction.MNEMONIC_KEY and
+	 * AbstractFilterAction.SHORT_DESCRIPTION keys in <code>action</code>.
+	 * <p>
+	 * 
+	 * @return a new, freshly configured JButton
+	 */
 
+	private static JButton _configButton(AbstractAction action) {
 
+		JButton retButton = new JButton(action);
 
-    /**
- * Convenience method add lableled component
- */
+		Object value;
 
-    private void _addRow(Box mainBox, JComponent labelComponent,
+		value = action.getValue(AbstractAction.MNEMONIC_KEY);
 
-        Component component) {
+		if (value != null) {
 
-        Box hBox = Box.createHorizontalBox();
+			int MnemonicKey = ((Integer) value).intValue();
 
-        mainBox.add(hBox);
+			retButton.setMnemonic(MnemonicKey);
 
+		}
 
+		value = action.getValue(AbstractAction.SHORT_DESCRIPTION);
 
-        Dimension labelComponentDim = new Dimension(100,
+		if (value != null) {
 
-                labelComponent.getPreferredSize().height);
+			String toolTip = (String) value;
 
-        labelComponent.setPreferredSize(labelComponentDim);
+			retButton.setToolTipText(toolTip);
 
-        labelComponent.setMinimumSize(labelComponentDim);
+		}
 
-        labelComponent.setMaximumSize(labelComponentDim);
+		retButton.setMinimumSize(new Dimension(85,
+				retButton.getPreferredSize().height));
 
-        hBox.add(labelComponent);
+		retButton.setMaximumSize(new Dimension(85,
+				retButton.getPreferredSize().height));
 
+		retButton.setPreferredSize(new Dimension(85, retButton
+				.getPreferredSize().height));
 
+		return retButton;
 
-        hBox.add(Box.createHorizontalGlue());
+	}
 
-        hBox.add(component);
+	/**
+	 * Initializes the dialog box
+	 */
 
-        hBox.add(Box.createHorizontalGlue());
+	private void _init() {
 
-    }
+		setModal(true);
 
+		setTitle(_title);
 
+		// --
 
-    /**
- * Convenience method to create and config buttons from an action
- *<p>
- * After creating the JButton, sets the Mnemonic and ToolTipText by looking
- * for the AbstractFilterAction.MNEMONIC_KEY and AbstractFilterAction.SHORT_DESCRIPTION
- * keys in <code>action</code>.
- *<p>
- * @return a new, freshly configured JButton
- */
+		// -- Buttons
 
-    private static JButton _configButton(AbstractAction action) {
+		// --
 
-        JButton retButton = new JButton(action);
+		JButton aboutButton = _configButton(new AboutAction());
 
+		JButton addButton = _configButton(new AddAction());
 
+		addButton.setEnabled(false);
 
-        Object value;
+		JButton cancelButton = _configButton(new CancelAction());
 
+		JButton changeButton = _configButton(new ChangeAction());
 
+		JButton changeAllButton = _configButton(new ChangeAllAction());
 
-        value = action.getValue(AbstractAction.MNEMONIC_KEY);
+		JButton ignoreButton = _configButton(new IgnoreAction());
 
+		JButton ignoreAllButton = _configButton(new IgnoreAllAction());
 
+		// --
 
-        if (value != null) {
+		// -- Text Fields
 
-            int MnemonicKey = ((Integer) value).intValue();
+		// --
 
-            retButton.setMnemonic(MnemonicKey);
+		_changeToTextField = new JTextField();
 
-        }
+		_changeToTextField.setMinimumSize(new Dimension(200,
 
+		_changeToTextField.getPreferredSize().height));
 
+		_changeToTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
 
-        value = action.getValue(AbstractAction.SHORT_DESCRIPTION);
+		_changeToTextField.getPreferredSize().height));
 
+		JTextField originalWordTextField = new JTextField(_originalWord);
 
+		originalWordTextField.setMinimumSize(new Dimension(200,
 
-        if (value != null) {
+		originalWordTextField.getPreferredSize().height));
 
-            String toolTip = (String) value;
+		originalWordTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
 
-            retButton.setToolTipText(toolTip);
+		originalWordTextField.getPreferredSize().height));
 
-        }
+		// --
 
+		// -- Other components
 
-        retButton.setMinimumSize(new Dimension(85, retButton.getPreferredSize().height));
+		// --
 
-        retButton.setMaximumSize(new Dimension(85, retButton.getPreferredSize().height));
+		_suggestionsJList = new JList(_suggestions.toArray());
 
-        retButton.setPreferredSize(new Dimension(85, retButton.getPreferredSize().height));
+		_suggestionsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+		_suggestionsJList
+				.addListSelectionListener(new MyListSelectionListener());
 
+		_suggestionsJList.setMinimumSize(new Dimension(200, 300));
 
+		_suggestionsJList.setMaximumSize(new Dimension(Integer.MAX_VALUE,
 
-        return retButton;
+		Integer.MAX_VALUE));
 
-    }
+		_suggestionsJList.setPreferredSize(new Dimension(200, 300));
 
+		JScrollPane suggestionsJScrollPane = new JScrollPane(_suggestionsJList);
 
+		// suggestionsJScrollPane.setPreferredSize(
 
-    /**
- * Initializes the dialog box
- */
+		// new Dimension( suggestionsJScrollPane.getPreferredSize().width, 75 )
+		// );
 
-    private void _init() {
+		// --
 
-        setModal(true);
+		// -- Overall Dialog box
 
-        setTitle(_title);
+		// --
 
+		Box mainBox = Box.createVerticalBox();
 
+		getContentPane().add(mainBox);
 
-        //--
+		Box hBox;
 
-        //-- Buttons
+		JLabel jLabel;
 
-        //--
+		jLabel = new JLabel(" Not in Dictionary:");
 
-        JButton aboutButton = _configButton(new AboutAction());
+		_addRow(mainBox, jLabel, originalWordTextField);
 
-        JButton addButton = _configButton(new AddAction());
+		jLabel = new JLabel(" Change to:");
 
-        addButton.setEnabled(false);
+		_addRow(mainBox, jLabel, _changeToTextField);
 
+		jLabel = new JLabel(" Suggestions:");
 
+		hBox = Box.createHorizontalBox();
 
-        JButton cancelButton = _configButton(new CancelAction());
+		// suggestionsJScrollPane.setMinimumSize( new Dimension( 200, 300 ) );
 
-        JButton changeButton = _configButton(new ChangeAction());
+		// suggestionsJScrollPane.setMaximumSize( new Dimension(
+		// Integer.MAX_VALUE, Integer.MAX_VALUE ) );
 
-        JButton changeAllButton = _configButton(new ChangeAllAction());
+		hBox.add(suggestionsJScrollPane);
 
-        JButton ignoreButton = _configButton(new IgnoreAction());
+		hBox.add(Box.createHorizontalGlue());
 
-        JButton ignoreAllButton = _configButton(new IgnoreAllAction());
+		getRootPane().setDefaultButton(ignoreButton);
 
+		JPanel buttonPanel = new JPanel();
 
+		buttonPanel.setPreferredSize(new Dimension(200, 100));
 
-        //--
+		buttonPanel.add(ignoreButton);
 
-        //-- Text Fields
+		buttonPanel.add(ignoreAllButton);
 
-        //--
+		buttonPanel.add(changeButton);
 
-        _changeToTextField = new JTextField();
+		buttonPanel.add(changeAllButton);
 
-        _changeToTextField.setMinimumSize(new Dimension(200,
+		buttonPanel.add(addButton);
 
-                _changeToTextField.getPreferredSize().height));
+		buttonPanel.add(cancelButton);
 
-        _changeToTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+		buttonPanel.add(aboutButton);
 
-                _changeToTextField.getPreferredSize().height));
+		hBox.add(buttonPanel);
 
+		hBox.add(Box.createHorizontalGlue());
 
+		_addRow(mainBox, jLabel, hBox);
 
-        Dimension textFieldDim = new Dimension(Integer.MAX_VALUE,
+		if (_location != null) {
 
-                _changeToTextField.getPreferredSize().height);
+			setLocation(_location);
 
-        JTextField originalWordTextField = new JTextField(_originalWord);
+		}
 
-        originalWordTextField.setMinimumSize(new Dimension(200,
+		pack();
 
-                originalWordTextField.getPreferredSize().height));
+		_suggestionsJList.setSelectedIndex(0);
 
-        originalWordTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+		_suggestionsJList.grabFocus();
 
-                originalWordTextField.getPreferredSize().height));
+		// setSize( 750, getPreferredSize().height );
 
+	}
 
+	/**
+	 * Models a enum of UserActions
+	 */
 
-        //--
+	public static class UserAction {
 
-        //-- Other components
+		private final String _name;
 
-        //--
+		private UserAction(String name) {
 
-        _suggestionsJList = new JList(_suggestions.toArray());
+			_name = name;
 
-        _suggestionsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		}
 
-        _suggestionsJList.addListSelectionListener(new MyListSelectionListener());
+		public String toString() {
 
-        _suggestionsJList.setMinimumSize(new Dimension(200, 300));
+			return _name;
 
-        _suggestionsJList.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+		}
 
-                Integer.MAX_VALUE));
+	}
 
-        _suggestionsJList.setPreferredSize(new Dimension(200, 300));
+	// --
 
+	// -- Availables Actions
 
+	// --
 
-        JScrollPane suggestionsJScrollPane = new JScrollPane(_suggestionsJList);
+	
+	private class AboutAction extends AbstractAction {
 
+		private AboutAction() {
 
+			super("About...");
 
-        //    suggestionsJScrollPane.setPreferredSize(
+		}
 
-        //      new Dimension( suggestionsJScrollPane.getPreferredSize().width, 75 ) );
+		public void actionPerformed(ActionEvent event) {
 
-        //--
+			String msg = "Based on interfacing Java with Aspell.\n" +
 
-        //-- Overall Dialog box
+			"Hacked by C. Scott Willy to scratch an itch.\n" +
 
-        //--
+			"Copyright 2001 Scott Willy\n" +
 
-        Box mainBox = Box.createVerticalBox();
+			"http://www.geocities.com/cswilly/spellcheck/";
 
+			String title = "About " + _title;
 
+			JOptionPane.showMessageDialog(ValidationDialog.this, msg, title,
 
-        getContentPane().add(mainBox);
+			JOptionPane.INFORMATION_MESSAGE);
 
+		}
 
+	}
 
-        Box hBox;
+	
+	private class AddAction extends AbstractAction {
 
-        JLabel jLabel;
+		private AddAction() {
 
+			super("Add");
 
+			putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
 
-        jLabel = new JLabel(" Not in Dictionary:");
+			putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_A));
 
-        _addRow(mainBox, jLabel, originalWordTextField);
+		}
 
+		public void actionPerformed(ActionEvent event) {
 
+			_userAction = ADD;
 
-        jLabel = new JLabel(" Change to:");
+			dispose();
 
-        _addRow(mainBox, jLabel, _changeToTextField);
+		}
 
+	}
 
+	
+	private class CancelAction extends AbstractAction {
 
-        jLabel = new JLabel(" Suggestions:");
+		private CancelAction() {
 
-        hBox = Box.createHorizontalBox();
+			super("Cancel");
 
+		}
 
+		public void actionPerformed(ActionEvent event) {
 
-        //suggestionsJScrollPane.setMinimumSize( new Dimension( 200, 300 ) );
+			_userAction = CANCEL;
 
-        //suggestionsJScrollPane.setMaximumSize( new Dimension( Integer.MAX_VALUE, Integer.MAX_VALUE ) );
+			dispose();
 
-        hBox.add(suggestionsJScrollPane);
+		}
 
-        hBox.add(Box.createHorizontalGlue());
+	}
 
+	
+	private class ChangeAction extends AbstractAction {
 
+		private ChangeAction() {
 
-        getRootPane().setDefaultButton(ignoreButton);
+			super("Change");
 
+			putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
 
+			putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_C));
 
-        JPanel buttonPanel = new JPanel();
+			putValue(
+					SHORT_DESCRIPTION,
 
-        buttonPanel.setPreferredSize(new Dimension(200, 100));
+					"Replaces the word not in the Not in Dictionary text field with the word in the Change to text field.");
 
-        buttonPanel.add(ignoreButton);
+		}
 
-        buttonPanel.add(ignoreAllButton);
+		public void actionPerformed(ActionEvent event) {
 
-        buttonPanel.add(changeButton);
+			_userAction = CHANGE;
 
-        buttonPanel.add(changeAllButton);
+			dispose();
 
-        buttonPanel.add(addButton);
+		}
 
-        buttonPanel.add(cancelButton);
+	}
 
-        buttonPanel.add(aboutButton);
+	
+	private class ChangeAllAction extends AbstractAction {
 
-        hBox.add(buttonPanel);
+		private ChangeAllAction() {
 
-        hBox.add(Box.createHorizontalGlue());
+			super("Change All");
 
+			putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
 
+			putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_L));
 
-        _addRow(mainBox, jLabel, hBox);
+		}
 
+		public void actionPerformed(ActionEvent event) {
 
+			_userAction = CHANGE_ALL;
 
-        if (_location != null) {
+			dispose();
 
-            setLocation(_location);
+		}
 
-        }
+	}
 
+	private class IgnoreAction extends AbstractAction {
 
+		private IgnoreAction() {
 
-        pack();
+			super("Ignore");
 
-        _suggestionsJList.setSelectedIndex(0);
+			putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_I));
 
-        _suggestionsJList.grabFocus();
+			putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_I));
 
+		}
 
+		public void actionPerformed(ActionEvent event) {
 
-        //setSize( 750, getPreferredSize().height );
+			_userAction = IGNORE;
 
-    }
+			dispose();
 
+		}
 
+	}
 
-    /**
- * Models a enum of UserActions
- */
+	private class IgnoreAllAction extends AbstractAction {
 
-    public static class UserAction {
+		private IgnoreAllAction() {
 
-        private final String _name;
+			super("Ignore All");
 
+			// putValue( MNEMONIC_KEY, new Integer(KeyEvent.VK_G) );
 
+			// putValue( ACCELERATOR_KEY, new Integer(KeyEvent.VK_G) );
 
-        private UserAction(String name) {
+			putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_G));
 
-            _name = name;
+			putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_G));
 
-        }
+		}
 
+		public void actionPerformed(ActionEvent event) {
 
+			_userAction = IGNORE_ALL;
 
-        public String toString() {
+			dispose();
 
-            return _name;
+		}
 
-        }
+	}
 
-    }
+	private class CloseDialogActionListener implements ActionListener {
 
+		public void actionPerformed(ActionEvent actionEvent) {
 
+			_userAction = CANCEL;
 
-    //--
+			dispose();
 
-    //-- Availables Actions
+		}
 
-    //--
+	}
 
-    private class AboutAction extends AbstractAction {
+	private class MyListSelectionListener implements ListSelectionListener {
 
-        private AboutAction() {
+		public void valueChanged(ListSelectionEvent e) {
 
-            super("About...");
+			int selectedIndex = _suggestionsJList.getSelectedIndex();
 
-        }
+			if (selectedIndex >= 0) {
 
+				_changeToTextField.setText((String) _suggestions.get(
 
+				selectedIndex));
 
-        public void actionPerformed(ActionEvent event) {
+			}
 
-            String msg = "Based on interfacing Java with Aspell.\n" +
+		}
 
-                "Hacked by C. Scott Willy to scratch an itch.\n" +
-
-                "Copyright 2001 Scott Willy\n" +
-
-                "http://www.geocities.com/cswilly/spellcheck/";
-
-            String title = "About " + _title;
-
-            JOptionPane.showMessageDialog(ValidationDialog.this, msg, title,
-
-                JOptionPane.INFORMATION_MESSAGE);
-
-        }
-
-    }
-
-
-
-    private class AddAction extends AbstractAction {
-
-        private AddAction() {
-
-            super("Add");
-
-            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
-
-            putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_A));
-
-        }
-
-
-
-        public void actionPerformed(ActionEvent event) {
-
-            _userAction = ADD;
-
-            dispose();
-
-        }
-
-    }
-
-
-
-    private class CancelAction extends AbstractAction {
-
-        private CancelAction() {
-
-            super("Cancel");
-
-        }
-
-
-
-        public void actionPerformed(ActionEvent event) {
-
-            _userAction = CANCEL;
-
-            dispose();
-
-        }
-
-    }
-
-
-
-    private class ChangeAction extends AbstractAction {
-
-        private ChangeAction() {
-
-            super("Change");
-
-            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
-
-            putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_C));
-
-            putValue(SHORT_DESCRIPTION,
-
-                "Replaces the word not in the Not in Dictionary text field with the word in the Change to text field.");
-
-        }
-
-
-
-        public void actionPerformed(ActionEvent event) {
-
-            _userAction = CHANGE;
-
-            dispose();
-
-        }
-
-    }
-
-
-
-    private class ChangeAllAction extends AbstractAction {
-
-        private ChangeAllAction() {
-
-            super("Change All");
-
-            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
-
-            putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_L));
-
-        }
-
-
-
-        public void actionPerformed(ActionEvent event) {
-
-            _userAction = CHANGE_ALL;
-
-            dispose();
-
-        }
-
-    }
-
-
-
-    private class IgnoreAction extends AbstractAction {
-
-        private IgnoreAction() {
-
-            super("Ignore");
-
-            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_I));
-
-            putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_I));
-
-        }
-
-
-
-        public void actionPerformed(ActionEvent event) {
-
-            _userAction = IGNORE;
-
-            dispose();
-
-        }
-
-    }
-
-
-
-    private class IgnoreAllAction extends AbstractAction {
-
-        private IgnoreAllAction() {
-
-            super("Ignore All");
-
-
-
-            //      putValue( MNEMONIC_KEY, new Integer(KeyEvent.VK_G) );
-
-            //      putValue( ACCELERATOR_KEY, new Integer(KeyEvent.VK_G) );
-
-            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_G));
-
-            putValue(ACCELERATOR_KEY, new Integer(KeyEvent.VK_G));
-
-        }
-
-
-
-        public void actionPerformed(ActionEvent event) {
-
-            _userAction = IGNORE_ALL;
-
-            dispose();
-
-        }
-
-    }
-
-
-
-    private class CloseDialogActionListener implements ActionListener {
-
-        public void actionPerformed(ActionEvent actionEvent) {
-
-            _userAction = CANCEL;
-
-            dispose();
-
-        }
-
-    }
-
-
-
-    private class MyListSelectionListener implements ListSelectionListener {
-
-        public void valueChanged(ListSelectionEvent e) {
-
-            int selectedIndex = _suggestionsJList.getSelectedIndex();
-
-
-
-            if (selectedIndex >= 0) {
-
-                _changeToTextField.setText((String) _suggestions.get(
-
-                        selectedIndex));
-
-            }
-
-        }
-
-    }
+	}
 
 }
-

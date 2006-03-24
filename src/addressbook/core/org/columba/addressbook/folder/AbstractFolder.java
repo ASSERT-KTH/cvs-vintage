@@ -19,7 +19,6 @@ package org.columba.addressbook.folder;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import javax.swing.event.EventListenerList;
 
@@ -44,9 +43,7 @@ import org.columba.core.io.DiskIO;
 public abstract class AbstractFolder extends AddressbookTreeNode implements
 		IContactStorage, IContactFolder {
 
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.addressbook.folder");
+
 
 	protected EventListenerList listenerList = new EventListenerList();
 

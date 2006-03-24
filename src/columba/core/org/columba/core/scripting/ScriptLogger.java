@@ -17,14 +17,12 @@
 
 package org.columba.core.scripting;
 
-import java.util.LinkedList;
-import java.util.Observable;
-import java.util.List;
-import java.util.Collections;
-
-import java.io.StringWriter;
 import java.io.PrintWriter;
-import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Observable;
 
 /**
     @author Celso Pinto (cpinto@yimports.com)

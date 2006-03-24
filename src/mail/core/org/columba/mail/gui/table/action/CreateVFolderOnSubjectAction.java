@@ -35,6 +35,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+
 public class CreateVFolderOnSubjectAction extends AbstractColumbaAction
     implements ISelectionListener {
     public CreateVFolderOnSubjectAction(IFrameMediator frameMediator) {

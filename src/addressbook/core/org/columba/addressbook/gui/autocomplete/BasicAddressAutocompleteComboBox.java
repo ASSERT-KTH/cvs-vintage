@@ -23,6 +23,8 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import org.columba.addressbook.model.HeaderItem;
+
 
 /**
  * ComboBox for {@link HeaderItem} objects. Includes an
@@ -30,6 +32,7 @@ import javax.swing.JTextField;
  *
  * @author fdietz
  */
+
 public class BasicAddressAutocompleteComboBox extends JComboBox {
     public BasicAddressAutocompleteComboBox() {
         super();

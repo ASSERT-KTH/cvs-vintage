@@ -59,12 +59,10 @@ public class MarkMessageCommand extends Command {
 	public final static int MARK_AS_DRAFT = 6;
 
 	public final static int MARK_AS_NOTDRAFT = -6;
-	
-	public final static int MARK_AS_RECENT = 7;
-	
-	public final static int MARK_AS_NOTRECENT = -7;
 
-	private IWorkerStatusController worker;
+	public final static int MARK_AS_RECENT = 7;
+
+	public final static int MARK_AS_NOTRECENT = -7;
 
 	/**
 	 * Constructor for MarkMessageCommand.
@@ -80,7 +78,6 @@ public class MarkMessageCommand extends Command {
 	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		this.worker = worker;
 
 		/*
 		 * // use wrapper class for easier handling of references array adapter =

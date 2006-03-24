@@ -63,10 +63,10 @@ public class AlturaFrameController extends DockFrameController implements
 
 		tree = new RoasterTree(this);
 		presence = new PresenceComboBox(this);
-		conversation = new ConversationController(this);
+		conversation = new ConversationController();
 
 		registerDockables();
-		
+
 		// connect to server
 		// new ConnectAction(this).actionPerformed(null);
 
@@ -87,27 +87,27 @@ public class AlturaFrameController extends DockFrameController implements
 		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		leftPanel.add(treeScrollPane, BorderLayout.CENTER);
 		leftPanel.add(presence, BorderLayout.NORTH);
-		
+
 		treePanel.setContentPane(leftPanel);
 
-		conversationPanel = new DockableView("conversation_view", "Conversation");
+		conversationPanel = new DockableView("conversation_view",
+				"Conversation");
 
 		conversationPanel.setContentPane(conversation);
 
 	}
-
 
 	/**
 	 * @see org.columba.core.gui.frame.DockFrameController#loadDefaultPosition()
 	 */
 	public void loadDefaultPosition() {
 
-		 super.dock(conversationPanel, DockingConstants.CENTER_REGION);
-		 conversationPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
-		
-		 super.setSplitProportion(conversationPanel, 0.35f);
+		super.dock(conversationPanel, DockingConstants.CENTER_REGION);
+		conversationPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
+
+		super.setSplitProportion(conversationPanel, 0.35f);
 	}
-	
+
 	/**
 	 * @see org.columba.chat.ui.frame.api.IChatFrameMediator#getRoasterTree()
 	 */

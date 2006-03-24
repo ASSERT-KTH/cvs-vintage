@@ -30,6 +30,7 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class CloseAction extends AbstractColumbaAction {
 	public CloseAction(IFrameMediator frameMediator) {
 		super(frameMediator, GlobalResourceLoader

@@ -75,8 +75,6 @@ public class CloneInputStreamTest extends TestCase {
         byte[] result1 = new byte[20000];
         byte[] result2 = new byte[20000];
 
-        byte[] buffer = new byte[50];
-
         for (int i = 0; i < (20000 / 50); i++) {
             if ((i % 2) == 0) {
                 clone1.read(result1, i * 50, 50);

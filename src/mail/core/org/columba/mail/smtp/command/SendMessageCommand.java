@@ -18,7 +18,6 @@
 package org.columba.mail.smtp.command;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
@@ -76,17 +75,7 @@ public class SendMessageCommand extends Command {
 		super(reference);
 	}
 
-	private void showInvalidRecipientMessage(String recipient) {
-
-		String message = MailResourceLoader.getString("dialog", "error",
-				recipient);
-
-		String title = MailResourceLoader.getString("dialog", "error",
-				"invalid_recipient_title");
-		message = MessageFormat.format(message, new Object[] { recipient });
-		JOptionPane.showMessageDialog(null, message, title,
-				JOptionPane.ERROR_MESSAGE);
-	}
+	
 
 	/*
 	 * validate command parameters. At the moment only checks if there are any
@@ -95,7 +84,7 @@ public class SendMessageCommand extends Command {
 	 */
 	private boolean validArguments(ComposerCommandReference reference) {
 
-		String invalidRecipient = null;
+		//String invalidRecipient = null;
 
 		// VALIDATION DISABLE ! Sebastian Witt 25.07.04,
 		// "NAME" <email@somewhat.de> isnt true, which should :(
@@ -103,7 +92,6 @@ public class SendMessageCommand extends Command {
 		// root is also valid (with local mailserver), but not with this check
 		// :(
 
-		// TODO: get the validation working CORRECTLY !
 
 		// for(int i=0;i<references.length;i++)
 		// {

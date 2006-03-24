@@ -92,7 +92,6 @@ public class Group implements IGroup {
 	protected XmlElement getMember(Object uid) {
 		XmlElement members = root.getElement("members");
 
-		String[] result = new String[members.count()];
 		for (int i = 0; i < members.count(); i++) {
 			XmlElement m = members.getElement(i);
 			Integer str = new Integer(m.getAttribute("uid"));

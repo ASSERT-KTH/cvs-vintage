@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 
 import org.columba.api.exception.PluginException;

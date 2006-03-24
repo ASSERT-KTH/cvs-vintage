@@ -18,7 +18,6 @@
 package org.columba.chat.model;
 
 import org.columba.chat.model.api.IBuddyStatus;
-import org.columba.chat.ui.conversation.api.IChatMediator;
 import org.jivesoftware.smack.packet.Presence;
 
 /**
@@ -35,8 +34,6 @@ public class BuddyStatus implements IBuddyStatus {
 	private String statusMessage;
 
 	private boolean signedOn;
-
-	private IChatMediator mediator;
 
 	public BuddyStatus(String jabberId) {
 		if (jabberId == null)

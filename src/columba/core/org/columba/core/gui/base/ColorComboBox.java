@@ -28,6 +28,7 @@ import javax.swing.JComboBox;
  * A JComboBox that displays Colors.
  * @author redsolo
  */
+
 public class ColorComboBox extends JComboBox implements ItemListener {
     private boolean codeSelectionUpdate = false;
 

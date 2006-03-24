@@ -26,7 +26,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-import javax.help.search.SearchEngine;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
@@ -79,14 +78,11 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
+
 public class FolderOptionsDialog extends JDialog implements ActionListener,
 		ListSelectionListener {
 	public final static String[] tooltips = { "columns", "sorting", "filter",
 			"threadedview", "selection" };
-
-	private JPanel generalPanel;
-
-	private JPanel advPanel;
 
 	private IMailbox folder;
 
@@ -115,11 +111,11 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	private JLabel sizeLabel2;
 
 	private JButton exportButton;
-	
+
 	private MultiLineLabel enableLabel;
 
 	private JLabel enableTextIndexingLabel;
-	
+
 	private JCheckBox enableTextIndexingCheckBox;
 
 	private boolean renameFolder;
@@ -230,9 +226,9 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		builder.add(sizeLabel, cc.xy(2, 11));
 		builder.add(sizeLabel2, cc.xy(4, 11));
 
-		//@author tstich: Added Lucene gui element here
-		builder.add(enableTextIndexingLabel, cc.xy(2,13));		
-		builder.add(enableTextIndexingCheckBox, cc.xy(4,13));		
+		// @author tstich: Added Lucene gui element here
+		builder.add(enableTextIndexingLabel, cc.xy(2, 13));
+		builder.add(enableTextIndexingCheckBox, cc.xy(4, 13));
 
 		builder.appendGlueRow();
 
@@ -248,8 +244,6 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		panel.add(exportButton, BorderLayout.EAST);
 		builder.add(panel, cc.xywh(4, 19, 2, 1));
 
-		
-		
 		return builder.getPanel();
 	}
 
@@ -344,13 +338,12 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		exportButton.setActionCommand("EXPORT"); //$NON-NLS-1$
 		exportButton.addActionListener(this);
 
-		enableTextIndexingLabel = new JLabel(MailResourceLoader
-				.getString(
-						"dialog", "folderoptions", "enable_full-text_indexing")); //$NON-NLS-1$
+		enableTextIndexingLabel = new JLabel(MailResourceLoader.getString(
+				"dialog", "folderoptions", "enable_full-text_indexing")); //$NON-NLS-1$
 		enableTextIndexingLabel.setFont(boldFont);
 
 		enableTextIndexingCheckBox = new JCheckBox(); //$NON-NLS-1$
-		
+
 		enableLabel = new MultiLineLabel(MailResourceLoader.getString(
 				"dialog", "folderoptions", "this_is_an_experimental_feature")); //$NON-NLS-1$
 		enableLabel.setFont(boldFont);
@@ -526,7 +519,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				AbstractLocalFolder localFolder = (AbstractLocalFolder) folder;
 
 				if (bool) {
-					localFolder.getSearchEngine().setNonDefaultEngine(new LuceneQueryEngine(localFolder));
+					localFolder.getSearchEngine().setNonDefaultEngine(
+							new LuceneQueryEngine(localFolder));
 
 					// execute resyncing command
 					MailFolderCommandReference r = new MailFolderCommandReference(
@@ -650,8 +644,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				.getSource();
 
 		if (!theList.isSelectionEmpty()) {
-			int index = theList.getAnchorSelectionIndex();
-
+			
 			CheckableItem item = (CheckableItem) checkableList.getSelected();
 			updateButtonState(item.isSelected());
 		}

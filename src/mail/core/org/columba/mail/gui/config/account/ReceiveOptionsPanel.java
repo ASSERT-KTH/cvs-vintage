@@ -28,7 +28,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,9 +39,7 @@ import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.IncomingItem;
-import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -58,8 +55,6 @@ import com.jgoodies.forms.layout.FormLayout;
 public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener {
 
 	private AccountItem item;
-
-	private JCheckBox downloadnewCheckBox;
 
 	private JCheckBox playsoundCheckBox;
 
@@ -79,25 +74,12 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 
 	private JButton chooseButton;
 
-	private PopItem popItem = null;
-
-	private ImapItem imapItem = null;
-
 	private PopAttributPanel popPanel;
 
 	private ImapAttributPanel imapPanel;
 
-	private JDialog dialog;
-
-	public ReceiveOptionsPanel(JDialog dialog, AccountItem item) {
+	public ReceiveOptionsPanel(AccountItem item) {
 		this.item = item;
-		this.dialog = dialog;
-
-		if (item.isPopAccount()) {
-			popItem = item.getPopItem();
-		} else {
-			imapItem = item.getImapItem();
-		}
 
 		initComponents();
 
@@ -125,14 +107,15 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 	}
 
 	protected void layoutComponents() {
-		//		Create a FormLayout instance.
+		// Create a FormLayout instance.
 		FormLayout layout = new FormLayout(
 				"10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
 
 				// 2 columns
-				""); // rows are added dynamically (no need to define them here)
+				""); // rows are added dynamically (no need to define them
+		// here)
 
-		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+		DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 		builder.setLeadingColumnOffset(1);
 
 		// create EmptyBorder between components and dialog-frame
@@ -145,7 +128,7 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 		builder.append(intervalCheckingCheckBox, 4);
 		builder.nextLine();
 
-		//builder.setLeadingColumnOffset(2);
+		// builder.setLeadingColumnOffset(2);
 		builder.setLeadingColumnOffset(2);
 		builder.append(autodownloadCheckBox, 3);
 		builder.nextLine();
@@ -157,16 +140,17 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 		FormLayout l = new FormLayout("default, 3dlu, default, 3dlu, default",
 
 		// 2 columns
-				""); // rows are added dynamically (no need to define them here)
+				""); // rows are added dynamically (no need to define them
+		// here)
 
 		// create a form builder
-		DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+		DefaultFormBuilder b = new DefaultFormBuilder(l, panel);
 		b.append(intervalCheckingLabel, intervalCheckingSpinner,
 				intervalCheckingLabel2);
 
 		builder.append(panel, 3);
 
-		//b2.nextLine();
+		// b2.nextLine();
 		builder.setLeadingColumnOffset(1);
 
 		if (item.isPopAccount()) {
@@ -174,7 +158,7 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 		} else {
 			imapPanel.createPanel(builder);
 
-			//attributPanel.add(imapPanel, BorderLayout.CENTER);
+			// attributPanel.add(imapPanel, BorderLayout.CENTER);
 		}
 
 	}
@@ -221,7 +205,7 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 		chooseButton.addActionListener(this);
 
 		if (item.isPopAccount()) {
-			popPanel = new PopAttributPanel(dialog, item.getPopItem());
+			popPanel = new PopAttributPanel(item.getPopItem());
 
 		} else {
 			imapPanel = new ImapAttributPanel(item.getImapItem());

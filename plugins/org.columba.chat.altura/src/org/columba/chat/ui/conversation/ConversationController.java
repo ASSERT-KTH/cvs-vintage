@@ -19,8 +19,6 @@ package org.columba.chat.ui.conversation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -30,7 +28,6 @@ import javax.swing.JTabbedPane;
 import org.columba.chat.Connection;
 import org.columba.chat.MainInterface;
 import org.columba.chat.base.Parser;
-import org.columba.chat.config.api.IAccount;
 import org.columba.chat.conn.api.ConnectionChangedEvent;
 import org.columba.chat.conn.api.IConnectionChangedListener;
 import org.columba.chat.conn.api.IConnection.STATUS;
@@ -38,7 +35,6 @@ import org.columba.chat.model.BuddyList;
 import org.columba.chat.model.api.IBuddyStatus;
 import org.columba.chat.ui.conversation.api.IChatMediator;
 import org.columba.chat.ui.conversation.api.IConversationController;
-import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
@@ -50,6 +46,7 @@ import org.jivesoftware.smack.packet.Packet;
  * 
  * @author fdietz
  */
+
 public class ConversationController extends JTabbedPane implements
 		IConversationController, ActionListener, IConnectionChangedListener {
 
@@ -58,17 +55,13 @@ public class ConversationController extends JTabbedPane implements
 
 	private Map<String, IChatMediator> chatMap;
 
-	private IChatFrameMediator mediator;
-
 	private MessageListener messageListener = new MessageListener();
 
 	/**
 	 * 
 	 */
-	public ConversationController(IChatFrameMediator mediator) {
+	public ConversationController() {
 		super();
-
-		this.mediator = mediator;
 
 		chatMap = new Hashtable<String, IChatMediator>();
 
@@ -88,7 +81,7 @@ public class ConversationController extends JTabbedPane implements
 			m = (ChatMediator) chatMap.get(jabberId);
 		} else {
 
-			m = new ChatMediator(mediator, chat);
+			m = new ChatMediator(chat);
 			m.registerCloseActionListener(this);
 
 			chatMap.put(jabberId, m);
@@ -156,9 +149,6 @@ public class ConversationController extends JTabbedPane implements
 		public void processPacket(Packet packet) {
 			final Message message = (Message) packet;
 
-			// time of packet arrival
-			Date date = Calendar.getInstance().getTime();
-
 			LOG.finest("message" + message.toString());
 			// log.info(message.toString());
 
@@ -209,7 +199,6 @@ public class ConversationController extends JTabbedPane implements
 	 * @see org.columba.chat.conn.api.IConnectionChangedListener#connectionChanged(org.columba.chat.conn.api.ConnectionChangedEvent)
 	 */
 	public void connectionChanged(ConnectionChangedEvent object) {
-		IAccount account = object.getAccount();
 		STATUS status = object.getStatus();
 
 		if (status == STATUS.ONLINE) {

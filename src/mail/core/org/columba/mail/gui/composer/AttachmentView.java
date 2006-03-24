@@ -36,6 +36,7 @@ import org.frapuccino.iconpanel.IconPanel;
  * @author frdietz
  * @author redsolo
  */
+
 public class AttachmentView extends IconPanel {
 
 	/** Reference to the controller controlling this view */

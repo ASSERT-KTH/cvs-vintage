@@ -46,6 +46,7 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 /**
  * @author frd
  */
+
 public class ConfigurationDialog extends JDialog implements ActionListener {
 	protected JButton okButton;
 

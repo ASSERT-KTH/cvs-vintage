@@ -25,17 +25,14 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
-import javax.swing.text.JTextComponent;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
+
 
 public class CopyAction extends AbstractColumbaAction implements
 		PropertyChangeListener {

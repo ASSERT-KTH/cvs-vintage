@@ -25,10 +25,8 @@ import java.util.logging.Logger;
 import org.columba.calendar.base.UUIDGenerator;
 import org.columba.calendar.model.api.ICALENDAR;
 import org.columba.calendar.model.api.IComponent.TYPE;
-import org.jdom.DefaultJDOMFactory;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMFactory;
 
 public class XCSDocumentParser {
 
@@ -41,8 +39,6 @@ public class XCSDocumentParser {
 	private Element root;
 
 	protected Element parentElement;
-
-	private JDOMFactory factory = new DefaultJDOMFactory();
 
 	protected Element vcalendarElement;
 
@@ -342,8 +338,8 @@ public class XCSDocumentParser {
 	}
 
 	public Enumeration getCategoryEnumeration() {
-		Element child = getParentElement().getChild(ICALENDAR.CATEGORIES);
-		List list = child.getChildren();
+		//Element child = getParentElement().getChild(ICALENDAR.CATEGORIES);
+		//List list = child.getChildren();
 
 		// TODO categoryEnumeration
 		return null;

@@ -21,6 +21,7 @@ package org.columba.core.gui.externaltools;
  *
  * @author fdietz
  */
+
 public class ExternalToolsNotFoundException extends Exception {
     /**
  * 

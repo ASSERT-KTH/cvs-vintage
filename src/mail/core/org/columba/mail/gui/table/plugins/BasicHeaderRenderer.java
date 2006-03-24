@@ -29,6 +29,7 @@ import org.columba.core.gui.base.DescendingIcon;
 import org.columba.mail.gui.table.model.TableModelSorter;
 
 
+
 public class BasicHeaderRenderer extends DefaultTableCellRenderer {
     private TableModelSorter sorter;
     private ImageIcon ascending = new AscendingIcon();

@@ -128,7 +128,7 @@ public class Extension implements IExtension {
 					if (className.endsWith(".groovy")) {
 						// use Groovy classloader, wrapped in external URL
 						// classloader
-						// TODO: still needs to be wrapped in external URL
+						// TODO (@author fdietz):  still needs to be wrapped in external URL
 						// classloader,
 						// nevertheless, it seems to work this way - but don't
 						// know why?!

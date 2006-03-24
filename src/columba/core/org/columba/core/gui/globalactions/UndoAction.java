@@ -26,7 +26,6 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import javax.swing.undo.UndoManager;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;

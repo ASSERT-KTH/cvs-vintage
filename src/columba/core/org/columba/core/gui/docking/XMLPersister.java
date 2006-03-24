@@ -19,14 +19,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.PersistenceException;
-import org.flexdock.perspective.persist.PerspectiveModel;
 import org.flexdock.perspective.persist.xml.ISerializer;
-import org.flexdock.perspective.persist.xml.PersistenceConstants;
 import org.flexdock.perspective.persist.xml.SerializerRegistry;
 import org.flexdock.util.Utilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

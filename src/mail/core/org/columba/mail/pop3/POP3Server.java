@@ -248,7 +248,7 @@ public class POP3Server {
 		// pipe through preprocessing filter
 		// if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 		// rawString = modifyMessage(rawString);
-		// TODO: UPDATE! @author fdietz
+		// UPDATE! @author fdietz
 		// was:
 		// Activate PreProcessor again with Source instead of String
 		// new goal:

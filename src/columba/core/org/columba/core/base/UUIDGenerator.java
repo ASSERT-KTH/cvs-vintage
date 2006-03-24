@@ -35,11 +35,6 @@ public class UUIDGenerator {
 	 */
 	private final byte[] secRandBuf16 = new byte[16];
 
-	/**
-	 * 64-bit buffer for use with secRand
-	 */
-	private final byte[] secRandBuf8 = new byte[8];
-
 	public UUIDGenerator() {
 		super();
 	}

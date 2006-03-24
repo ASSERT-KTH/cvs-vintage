@@ -24,6 +24,7 @@ import org.columba.ristretto.message.Flags;
 /**
  * Passed to listeners to notify them of changes.
  */
+
 public class FolderEvent extends EventObject implements IFolderEvent {
     protected Object changes;
     

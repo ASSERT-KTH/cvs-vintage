@@ -22,17 +22,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.util.TempFileStore;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.MimeHeader;
 
 public class ExternalEditor {
 	String Cmd;
@@ -45,7 +42,7 @@ public class ExternalEditor {
 	}
 
 	private File writeToFile(final AbstractEditorController editController) {
-		MimeHeader myHeader = new MimeHeader("text", "plain");
+		
 		File tmpFile = TempFileStore.createTempFileWithSuffix("txt");
 		FileWriter FO;
 

@@ -18,249 +18,274 @@ package org.columba.core.print;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-
 public abstract class cPrintObject {
-    public static final int SOUTHWEST = 1;
-    public static final int SOUTH = 2;
-    public static final int SOUTHEAST = 3;
-    public static final int WEST = 4;
-    public static final int CENTER = 5;
-    public static final int EAST = 6;
-    public static final int NORTHWEST = 7;
-    public static final int NORTH = 8;
-    public static final int NORTHEAST = 9;
-    public static final int NONE = 0;
-    public static final int HORIZONTAL = 1;
-    public static final int VERTICAL = 2;
-    public static final int BOTH = 3;
-    public static final int NORMAL = 1;
-    public static final int HEADER = 2;
-    public static final int FOOTER = 3;
-    public static final int GROUPMEMBER = 4;
-    private int orientation;
-    private int sizePolicy;
-    private int type;
-    private cPoint location;
-    private cSize size;
-    protected cUnit leftMargin;
-    protected cUnit rightMargin;
-    protected cUnit topMargin;
-    protected cUnit bottomMargin;
-    private cPoint drawingOrigin;
-    private cSize drawingSize;
-    protected Color color;
-    private boolean relative;
-    protected cPage page;
+	public static final int SOUTHWEST = 1;
 
-    public cPrintObject() {
-        relative = true;
+	public static final int SOUTH = 2;
 
-        leftMargin = new cCmUnit();
-        rightMargin = new cCmUnit();
-        topMargin = new cCmUnit();
-        bottomMargin = new cCmUnit();
+	public static final int SOUTHEAST = 3;
 
-        drawingOrigin = new cPoint(new cCmUnit(), new cCmUnit());
-        drawingSize = new cSize(new cCmUnit(), new cCmUnit());
+	public static final int WEST = 4;
 
-        location = new cPoint(new cCmUnit(), new cCmUnit());
-        size = new cSize(new cCmUnit(), new cCmUnit());
+	public static final int CENTER = 5;
 
-        orientation = NORTHWEST;
-        sizePolicy = HORIZONTAL;
-        type = NORMAL;
+	public static final int EAST = 6;
 
-        color = Color.black;
-    }
+	public static final int NORTHWEST = 7;
 
-    public void setPage(cPage p) {
-        page = p;
-    }
+	public static final int NORTH = 8;
 
-    /**
- * Returns the page, that this print object belongs to.
- * *20030604, karlpeder* Added
- */
-    public cPage getPage() {
-        return page;
-    }
+	public static final int NORTHEAST = 9;
 
-    public abstract void print(Graphics2D g);
+	public static final int NONE = 0;
 
-    public void setLocation(cPoint l) {
-        location = l;
-    }
+	public static final int HORIZONTAL = 1;
 
-    public cPoint getLocation() {
-        return location;
-    }
+	public static final int VERTICAL = 2;
 
-    public void setSize(cSize s) {
-        size = s;
-    }
+	public static final int BOTH = 3;
 
-    public void setOrientation(int o) {
-        orientation = o;
-    }
+	public static final int NORMAL = 1;
 
-    public void setSizePolicy(int sp) {
-        sizePolicy = sp;
-    }
+	public static final int HEADER = 2;
 
-    public void setLeftMargin(cUnit m) {
-        leftMargin = m;
-    }
+	public static final int FOOTER = 3;
 
-    public void setRightMargin(cUnit m) {
-        rightMargin = m;
-    }
+	public static final int GROUPMEMBER = 4;
 
-    public void setTopMargin(cUnit m) {
-        topMargin = m;
-    }
+	private int orientation;
 
-    public void setBottomMargin(cUnit m) {
-        bottomMargin = m;
-    }
+	private int sizePolicy;
 
-    public cPoint getDrawingOrigin() {
-        return drawingOrigin;
-    }
+	private int type;
 
-    public cSize getDrawingSize() {
-        return drawingSize;
-    }
+	private cPoint location;
 
-    public cSize getSize() {
-        return size;
-    }
+	private cSize size;
 
-    public void setRelativeMode(boolean r) {
-        relative = r;
-    }
+	protected cUnit leftMargin;
 
-    public void setColor(Color c) {
-        color = c;
-    }
+	protected cUnit rightMargin;
 
-    public Color getColor() {
-        return color;
-    }
+	protected cUnit topMargin;
 
-    public void computePositionAndSize() {
-        cPoint parentLocation;
-        cSize parentSize;
+	protected cUnit bottomMargin;
 
-        parentLocation = page.getPrintableAreaOrigin();
-        parentSize = page.getPrintableAreaSize();
+	private cPoint drawingOrigin;
 
-        switch (type) {
-        case NORMAL: {
-            drawingOrigin = location.add(parentLocation);
+	private cSize drawingSize;
 
-            break;
-        }
+	protected Color color;
 
-        case HEADER: {
-            drawingOrigin = parentLocation.subHeight(getSize(
-                        parentSize.getWidth()).getHeight());
+	protected cPage page;
 
-            break;
-        }
+	public cPrintObject() {
 
-        case FOOTER: {
-            drawingOrigin = parentLocation.addHeight(parentSize.getHeight());
+		leftMargin = new cCmUnit();
+		rightMargin = new cCmUnit();
+		topMargin = new cCmUnit();
+		bottomMargin = new cCmUnit();
 
-            break;
-        }
+		drawingOrigin = new cPoint(new cCmUnit(), new cCmUnit());
+		drawingSize = new cSize(new cCmUnit(), new cCmUnit());
 
-        case GROUPMEMBER: {
-            drawingOrigin = location;
+		location = new cPoint(new cCmUnit(), new cCmUnit());
+		size = new cSize(new cCmUnit(), new cCmUnit());
 
-            break;
-        }
-        }
+		orientation = NORTHWEST;
+		sizePolicy = HORIZONTAL;
+		type = NORMAL;
 
-        // SizePolicy
-        if ((sizePolicy == HORIZONTAL) || (sizePolicy == BOTH)) {
-            drawingSize = new cSize(parentSize.getWidth(),
-                    drawingSize.getHeight());
-        }
+		color = Color.black;
+	}
 
-        if ((sizePolicy == VERTICAL) || (sizePolicy == BOTH)) {
-            drawingSize = new cSize(drawingSize.getWidth(),
-                    parentSize.getHeight());
-        }
+	public void setPage(cPage p) {
+		page = p;
+	}
 
-        // Margins
-        drawingOrigin.setX(drawingOrigin.getX().add(leftMargin));
-        drawingOrigin.setY(drawingOrigin.getY().add(topMargin));
-        drawingSize.setWidth(drawingSize.getWidth().sub(leftMargin).sub(rightMargin));
-        drawingSize.setHeight(drawingSize.getHeight().sub(topMargin).sub(bottomMargin));
+	/**
+	 * Returns the page, that this print object belongs to. *20030604,
+	 * karlpeder* Added
+	 */
+	public cPage getPage() {
+		return page;
+	}
 
-        // Orientation
-        if ((orientation == SOUTHWEST) || (orientation == WEST) ||
-                (orientation == NORTHWEST)) {
-            drawingOrigin = new cPoint(drawingOrigin.getX(),
-                    drawingOrigin.getY());
-        }
+	public abstract void print(Graphics2D g);
 
-        if ((orientation == SOUTHEAST) || (orientation == EAST) ||
-                (orientation == NORTHEAST)) {
-            cUnit objectPosition = parentSize.getWidth().sub(this.getSize()
-                                                                 .getWidth());
-            drawingOrigin = new cPoint(drawingOrigin.getX().add(objectPosition),
-                    drawingOrigin.getY());
-        }
+	public void setLocation(cPoint l) {
+		location = l;
+	}
 
-        if ((orientation == NORTH) || (orientation == CENTER) ||
-                (orientation == SOUTH)) {
-            cUnit parentCenter = parentSize.getWidth().div(2.0);
-            cUnit childCenter = getSize().getWidth().div(2.0);
-            cUnit objectPosition = parentCenter.sub(childCenter);
-            drawingOrigin = new cPoint(drawingOrigin.getX().add(objectPosition),
-                    drawingOrigin.getY());
-        }
+	public cPoint getLocation() {
+		return location;
+	}
 
-        if ((orientation == SOUTHWEST) || (orientation == SOUTH) ||
-                (orientation == SOUTHEAST)) {
-            cUnit objectPosition = parentSize.getHeight().sub(getSize()
-                                                                  .getHeight());
+	public void setSize(cSize s) {
+		size = s;
+	}
 
-            drawingOrigin = new cPoint(drawingOrigin.getX(),
-                    objectPosition.add(drawingOrigin.getY()));
-        }
+	public void setOrientation(int o) {
+		orientation = o;
+	}
 
-        if ((orientation == WEST) || (orientation == CENTER) ||
-                (orientation == EAST)) {
-            cUnit parentCenter = parentSize.getHeight().div(2.0);
-            cUnit childCenter = getSize().getHeight().div(2.0);
-            cUnit objectPosition = parentCenter.sub(childCenter);
-            drawingOrigin = new cPoint(drawingOrigin.getX(),
-                    drawingOrigin.getY().add(objectPosition));
-        }
+	public void setSizePolicy(int sp) {
+		sizePolicy = sp;
+	}
 
-        if ((orientation == SOUTHWEST) || (orientation == SOUTH) ||
-                (orientation == SOUTHEAST)) {
-            cUnit objectPosition = parentSize.getHeight().sub(getSize()
-                                                                  .getHeight());
+	public void setLeftMargin(cUnit m) {
+		leftMargin = m;
+	}
 
-            drawingOrigin = new cPoint(drawingOrigin.getX(),
-                    parentLocation.getY().add(location.getY()).add(size.getHeight()));
-        }
-    }
+	public void setRightMargin(cUnit m) {
+		rightMargin = m;
+	}
 
-    public abstract cSize getSize(cUnit maxWidth);
+	public void setTopMargin(cUnit m) {
+		topMargin = m;
+	}
 
-    public cPrintObject breakBlock(cUnit w, cUnit maxHeight) {
-        return null;
-    }
+	public void setBottomMargin(cUnit m) {
+		bottomMargin = m;
+	}
 
-    public int getType() {
-        return type;
-    }
+	public cPoint getDrawingOrigin() {
+		return drawingOrigin;
+	}
 
-    public void setType(int type) {
-        this.type = type;
-    }
+	public cSize getDrawingSize() {
+		return drawingSize;
+	}
+
+	public cSize getSize() {
+		return size;
+	}
+
+	public void setColor(Color c) {
+		color = c;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void computePositionAndSize() {
+		cPoint parentLocation;
+		cSize parentSize;
+
+		parentLocation = page.getPrintableAreaOrigin();
+		parentSize = page.getPrintableAreaSize();
+
+		switch (type) {
+		case NORMAL: {
+			drawingOrigin = location.add(parentLocation);
+
+			break;
+		}
+
+		case HEADER: {
+			drawingOrigin = parentLocation.subHeight(getSize(
+					parentSize.getWidth()).getHeight());
+
+			break;
+		}
+
+		case FOOTER: {
+			drawingOrigin = parentLocation.addHeight(parentSize.getHeight());
+
+			break;
+		}
+
+		case GROUPMEMBER: {
+			drawingOrigin = location;
+
+			break;
+		}
+		}
+
+		// SizePolicy
+		if ((sizePolicy == HORIZONTAL) || (sizePolicy == BOTH)) {
+			drawingSize = new cSize(parentSize.getWidth(), drawingSize
+					.getHeight());
+		}
+
+		if ((sizePolicy == VERTICAL) || (sizePolicy == BOTH)) {
+			drawingSize = new cSize(drawingSize.getWidth(), parentSize
+					.getHeight());
+		}
+
+		// Margins
+		drawingOrigin.setX(drawingOrigin.getX().add(leftMargin));
+		drawingOrigin.setY(drawingOrigin.getY().add(topMargin));
+		drawingSize.setWidth(drawingSize.getWidth().sub(leftMargin).sub(
+				rightMargin));
+		drawingSize.setHeight(drawingSize.getHeight().sub(topMargin).sub(
+				bottomMargin));
+
+		// Orientation
+		if ((orientation == SOUTHWEST) || (orientation == WEST)
+				|| (orientation == NORTHWEST)) {
+			drawingOrigin = new cPoint(drawingOrigin.getX(), drawingOrigin
+					.getY());
+		}
+
+		if ((orientation == SOUTHEAST) || (orientation == EAST)
+				|| (orientation == NORTHEAST)) {
+			cUnit objectPosition = parentSize.getWidth().sub(
+					this.getSize().getWidth());
+			drawingOrigin = new cPoint(
+					drawingOrigin.getX().add(objectPosition), drawingOrigin
+							.getY());
+		}
+
+		if ((orientation == NORTH) || (orientation == CENTER)
+				|| (orientation == SOUTH)) {
+			cUnit parentCenter = parentSize.getWidth().div(2.0);
+			cUnit childCenter = getSize().getWidth().div(2.0);
+			cUnit objectPosition = parentCenter.sub(childCenter);
+			drawingOrigin = new cPoint(
+					drawingOrigin.getX().add(objectPosition), drawingOrigin
+							.getY());
+		}
+
+		if ((orientation == SOUTHWEST) || (orientation == SOUTH)
+				|| (orientation == SOUTHEAST)) {
+			cUnit objectPosition = parentSize.getHeight().sub(
+					getSize().getHeight());
+
+			drawingOrigin = new cPoint(drawingOrigin.getX(), objectPosition
+					.add(drawingOrigin.getY()));
+		}
+
+		if ((orientation == WEST) || (orientation == CENTER)
+				|| (orientation == EAST)) {
+			cUnit parentCenter = parentSize.getHeight().div(2.0);
+			cUnit childCenter = getSize().getHeight().div(2.0);
+			cUnit objectPosition = parentCenter.sub(childCenter);
+			drawingOrigin = new cPoint(drawingOrigin.getX(), drawingOrigin
+					.getY().add(objectPosition));
+		}
+
+		if ((orientation == SOUTHWEST) || (orientation == SOUTH)
+				|| (orientation == SOUTHEAST)) {
+			
+
+			drawingOrigin = new cPoint(drawingOrigin.getX(), parentLocation
+					.getY().add(location.getY()).add(size.getHeight()));
+		}
+	}
+
+	public abstract cSize getSize(cUnit maxWidth);
+
+	public cPrintObject breakBlock(cUnit w, cUnit maxHeight) {
+		return null;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 }

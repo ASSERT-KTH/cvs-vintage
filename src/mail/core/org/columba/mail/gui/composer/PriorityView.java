@@ -59,7 +59,7 @@ public class PriorityView extends JComboBox {
         addItemListener(controller);
     }
 
-    class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+     class ComboBoxRenderer extends JLabel implements ListCellRenderer {
         private ImageIcon image1 = ImageLoader.getSmallImageIcon(
                 "priority-high.png");
 

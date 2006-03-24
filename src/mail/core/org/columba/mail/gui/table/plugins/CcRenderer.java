@@ -26,6 +26,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.ristretto.message.Address;
 
 
+
 public class CcRenderer extends DefaultLabelRenderer {
     public CcRenderer() {
         super();

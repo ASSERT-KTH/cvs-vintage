@@ -25,6 +25,7 @@ import org.waffel.jscf.JSCFException;
  * @author waffel
  *
  */
+
 public class CancelledException extends JSCFException {
 
     /**

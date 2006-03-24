@@ -39,6 +39,7 @@ import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoableEdit;
 
 
+
 public class ExtendedHTMLDocument extends HTMLDocument {
     public ExtendedHTMLDocument() {
     }

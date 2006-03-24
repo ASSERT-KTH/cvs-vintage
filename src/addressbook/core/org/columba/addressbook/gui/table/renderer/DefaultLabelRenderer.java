@@ -30,6 +30,7 @@ import javax.swing.table.TableCellRenderer;
 /**
  * @author fdietz
  */
+
 public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
     private Border unselectedBorder = null;
     private Border selectedBorder = null;

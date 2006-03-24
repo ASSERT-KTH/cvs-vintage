@@ -106,7 +106,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 				""); // rows are added dynamically (no need to define them here)
 
 		// create a form builder
-		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+		DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
 		// create EmptyBorder between components and dialog-frame
 		builder.setDefaultDialogBorder();
@@ -201,8 +201,6 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 			enablePGP(enableCheckBox.isSelected());
 		} else if (action.equals("PATH")) {
 			JFileChooser fileChooser = new JFileChooser();
-			File aktFile;
-
 			fileChooser.setDialogTitle(MailResourceLoader.getString("dialog",
 					"account", "PGP_Binary")); //$NON-NLS-1$
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

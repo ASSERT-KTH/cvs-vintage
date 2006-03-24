@@ -24,46 +24,42 @@ import javax.swing.UIManager;
 
 import org.columba.mail.gui.table.model.MessageNode;
 
-
 public class SizeRenderer extends DefaultLabelRenderer {
-    private Font plainFont;
-    private Font boldFont;
+	private Font boldFont;
 
-    public SizeRenderer() {
-        super();
+	public SizeRenderer() {
+		super();
 
-        setHorizontalAlignment(SwingConstants.RIGHT);
+		setHorizontalAlignment(SwingConstants.RIGHT);
 
-        //setOpaque(true); //MUST do this for background to show up.
-        boldFont = UIManager.getFont("Tree.font");
-        boldFont = boldFont.deriveFont(Font.BOLD);
+		// setOpaque(true); //MUST do this for background to show up.
+		boldFont = UIManager.getFont("Tree.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
 
-        plainFont = UIManager.getFont("Tree.font");
-    }
+	}
 
-    public void updateUI() {
-        super.updateUI();
+	public void updateUI() {
+		super.updateUI();
 
-        boldFont = UIManager.getFont("Tree.font");
-        boldFont = boldFont.deriveFont(Font.BOLD);
+		boldFont = UIManager.getFont("Tree.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
 
-        plainFont = UIManager.getFont("Tree.font");
-    }
+	}
 
-    public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
-    	
-    	super.getTableCellRendererComponent(table, value, isSelected,
-                hasFocus, row, column);
-    	
-        if (value == null) {
-            setText("");
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
 
-            return this;
-        }
+		super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+				row, column);
 
-        setText(((MessageNode) value).getHeader().get("columba.size") + "KB");
+		if (value == null) {
+			setText("");
 
-        return this;
-    }
+			return this;
+		}
+
+		setText(((MessageNode) value).getHeader().get("columba.size") + "KB");
+
+		return this;
+	}
 }

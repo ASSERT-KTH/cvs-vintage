@@ -24,7 +24,6 @@ import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JRadioButton;
 
 import org.columba.api.gui.frame.IFrameMediator;
@@ -50,8 +49,6 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author fdietz
  */
 public class SpamPanel extends DefaultPanel implements ActionListener {
-
-	private JDialog dialog;
 
 	private AccountItem item;
 
@@ -145,7 +142,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 				""); // rows are added dynamically (no need to define them
 
 		// here)
-		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+		DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 		builder.setLeadingColumnOffset(1);
 
 		// create EmptyBorder between components and dialog-frame
@@ -215,8 +212,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 
 			markCheckBox.setSelected(spam.isMoveMessageWhenMarkingEnabled());
 
-			folder = (IMailbox) FolderTreeModel.getInstance()
-					.getFolder(spam.getMoveCustomFolder());
+			folder = (IMailbox) FolderTreeModel.getInstance().getFolder(
+					spam.getMoveCustomFolder());
 			treePath = folder.getTreePath();
 			markChooseFolderButton.setText(treePath);
 
@@ -236,8 +233,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 
 			TreeNodeList list = new TreeNodeList(incomingChooseFolderButton
 					.getText());
-			IMailbox folder = (IMailbox) FolderTreeModel
-					.getInstance().getFolder(list);
+			IMailbox folder = (IMailbox) FolderTreeModel.getInstance()
+					.getFolder(list);
 
 			if (folder == null) {
 				// user didn't select any folder
@@ -250,8 +247,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 			spam.setIncomingCustomFolder(uid);
 
 			list = new TreeNodeList(markChooseFolderButton.getText());
-			folder = (IMailbox) FolderTreeModel.getInstance()
-					.getFolder(list);
+			folder = (IMailbox) FolderTreeModel.getInstance().getFolder(list);
 
 			if (folder == null) {
 				// user didn't select any folder

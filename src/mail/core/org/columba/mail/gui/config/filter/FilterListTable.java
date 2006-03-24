@@ -23,7 +23,7 @@ import javax.swing.table.TableColumn;
 import org.columba.core.filter.FilterList;
 
 
-class FilterListTable extends JTable {
+ class FilterListTable extends JTable {
     public FilterListTable(FilterList filterList, ConfigFrame frame) {
         super(new FilterListDataModel(filterList));
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

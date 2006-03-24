@@ -46,6 +46,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * A dialog for editing a contact's full name.
  */
+
 public class FullNameDialog extends JDialog implements ActionListener {
 	private JLabel titleLabel;
 
@@ -130,7 +131,7 @@ public class FullNameDialog extends JDialog implements ActionListener {
 		FormLayout layout = new FormLayout("right:default, 3dlu, default:grow",
 				"");
 
-		DefaultFormBuilder b = new DefaultFormBuilder(mainPanel, layout);
+		DefaultFormBuilder b = new DefaultFormBuilder(layout, mainPanel);
 		b.setRowGroupingEnabled(true);
 
 		getContentPane().setLayout(new BorderLayout());
@@ -201,7 +202,6 @@ public class FullNameDialog extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent event) {
-		Object source = event.getSource();
 		if (event.getActionCommand().equals("OK")) {
 			success = true;
 		} else if (event.getActionCommand().equals("CANCEL")) {

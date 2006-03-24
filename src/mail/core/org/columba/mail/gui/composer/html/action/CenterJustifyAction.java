@@ -40,6 +40,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz, Karl Peder Olesen (karlpeder)
  */
+
 public class CenterJustifyAction extends AbstractSelectableAction
     implements Observer, ContainerListener {
 

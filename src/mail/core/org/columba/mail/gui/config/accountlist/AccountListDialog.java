@@ -67,6 +67,7 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * A dialog showing a list with the user's accounts.
  */
+
 public class AccountListDialog extends JDialog implements ActionListener,
 		ListSelectionListener {
 
@@ -279,7 +280,7 @@ public class AccountListDialog extends JDialog implements ActionListener,
 		AccountItem parent = getSelected();
 
 		if (parent != null) {
-			AccountDialog dialog = new AccountDialog(mediator, parent);
+			new AccountDialog(mediator, parent);
 		}
 	}
 

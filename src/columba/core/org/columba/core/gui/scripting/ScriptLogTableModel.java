@@ -16,14 +16,15 @@
  */
 package org.columba.core.gui.scripting;
 
-import org.columba.core.scripting.ScriptLogger;
-
-import javax.swing.SwingUtilities;
-import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.SwingUtilities;
+import javax.swing.table.AbstractTableModel;
+
+import org.columba.core.scripting.ScriptLogger;
 
 /**
     @author Celso Pinto (cpinto@yimports.com)
@@ -106,7 +107,6 @@ public class ScriptLogTableModel
 
     public void update(Observable o, Object arg)
     {
-        ScriptLogger.LogEntry entry = (ScriptLogger.LogEntry) arg;
         fireTableChangedEv();
     }
 

@@ -34,6 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
+
 public class ComposeMessageAction extends AbstractColumbaAction implements
 		Observer {
 

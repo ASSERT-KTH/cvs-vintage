@@ -31,6 +31,7 @@ import org.columba.mail.folder.search.LuceneQueryEngine;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
+@SuppressWarnings({"serial","serial"})
 public class CachedMHFolder extends AbstractLocalFolder {
     public CachedMHFolder(FolderItem item, String path) {
         super(item, path);

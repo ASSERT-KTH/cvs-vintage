@@ -17,20 +17,21 @@
 
 package org.columba.core.gui.scripting;
 
-import org.columba.core.scripting.ScriptLogger;
-import org.columba.core.gui.base.ButtonWithMnemonic;
-
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.scripting.ScriptLogger;
 
 /**
  @author Celso Pinto <cpinto@yimports.com> */

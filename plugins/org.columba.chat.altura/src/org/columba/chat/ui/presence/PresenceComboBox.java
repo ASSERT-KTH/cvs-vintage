@@ -61,8 +61,6 @@ public class PresenceComboBox extends JPanel implements ItemListener,
 
 	private ImageIcon busy = ResourceLoader.getImage("unavailable.png");
 
-	private ImageIcon message = ResourceLoader.getImage("message.png");
-
 	private ImageIcon offline = ResourceLoader.getImage("offline.png");
 
 	private IChatFrameMediator mediator;
@@ -72,10 +70,10 @@ public class PresenceComboBox extends JPanel implements ItemListener,
 
 		this.mediator = mediator;
 
-		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
 		setBackground(UIManager.getColor("Tree.background"));
-		
+
 		comboBox = new JComboBox();
 		// comboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		comboBox.addItem("Available");
@@ -88,7 +86,7 @@ public class PresenceComboBox extends JPanel implements ItemListener,
 		comboBox.setRenderer(new ItemRenderer());
 
 		label = new JLabel();
-		label.setBorder(BorderFactory.createEmptyBorder(0,2,0,2));
+		label.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
 		label.setIcon(offline);
 
 		setLayout(new BorderLayout());

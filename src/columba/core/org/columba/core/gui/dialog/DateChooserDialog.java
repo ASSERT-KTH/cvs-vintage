@@ -36,6 +36,7 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 /**
  * @author fdietz
  */
+
 public class DateChooserDialog extends JDialog implements ActionListener {
     protected DateChooser dateChooser;
     
@@ -50,7 +51,7 @@ public class DateChooserDialog extends JDialog implements ActionListener {
     public DateChooserDialog() {
         super(FrameManager.getInstance().getActiveFrame(), true);
         
-        //TODO: i18n
+        //TODO (@author fdietz): i18n
         setTitle("Choose Date...");
         
         dateChooser = new DateChooser();

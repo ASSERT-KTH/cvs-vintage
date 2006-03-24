@@ -28,7 +28,7 @@ public interface ISpamPlugin extends IExtensionInterface{
 	 * @param mailbox
 	 * @param uid
 	 * @return
-	 * @throws Exception TODO
+	 * @throws Exception 
 	 */
 	boolean scoreMessage(IMailbox mailbox, Object uid) throws Exception;
 	
@@ -37,7 +37,7 @@ public interface ISpamPlugin extends IExtensionInterface{
 	 * 
 	 * @param mailbox
 	 * @param uid
-	 * @throws Exception TODO
+	 * @throws Exception 
 	 */
 	void trainMessageAsSpam(IMailbox mailbox, Object uid) throws Exception;
 	
@@ -46,7 +46,7 @@ public interface ISpamPlugin extends IExtensionInterface{
 	 * 
 	 * @param mailbox
 	 * @param uid
-	 * @throws Exception TODO
+	 * @throws Exception 
 	 */
 	void trainMessageAsHam(IMailbox mailbox, Object uid) throws Exception;
 	

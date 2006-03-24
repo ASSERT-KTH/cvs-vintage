@@ -20,10 +20,8 @@ import java.io.File;
 import org.columba.api.backgroundtask.IBackgroundTaskManager;
 import org.columba.api.plugin.IPluginManager;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.config.Config;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.util.TempFileStore;
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author fdietz 

@@ -61,8 +61,6 @@ import org.frapuccino.swing.SortedTreeModelDecorator;
 public class SelectFolderDialog extends JDialog implements ActionListener,
 		TreeSelectionListener, ISelectFolderDialog {
 
-	private String name;
-
 	private boolean bool = false;
 
 	protected JTree tree;
@@ -82,8 +80,6 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 
 		setTitle(MailResourceLoader.getString("dialog", "folder",
 				"select_folder"));
-
-		name = new String("name");
 
 		initComponents();
 
@@ -105,8 +101,6 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 
 		setTitle(MailResourceLoader.getString("dialog", "folder",
 				"select_folder"));
-
-		name = new String("name");
 
 		initComponents();
 
@@ -260,7 +254,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		}
 
 		selectedFolder = node;
-		
+
 		if (node.supportsAddMessage()) {
 			okButton.setEnabled(true);
 		} else {

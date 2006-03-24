@@ -22,6 +22,7 @@ import java.util.EventObject;
 import org.columba.chat.config.api.IAccount;
 import org.columba.chat.conn.api.IConnection.STATUS;
 
+
 public class ConnectionChangedEvent extends EventObject {
 
 	private IAccount account;

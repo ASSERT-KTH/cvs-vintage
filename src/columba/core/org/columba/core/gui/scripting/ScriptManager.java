@@ -20,10 +20,15 @@ All Rights Reserved.
 */
 package org.columba.core.gui.scripting;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-import org.columba.core.scripting.ScriptLogger;
-import org.columba.core.scripting.model.ColumbaScript;
-import org.columba.core.gui.base.ButtonWithMnemonic;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -41,15 +46,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.logging.Logger;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.scripting.ScriptLogger;
+import org.columba.core.scripting.model.ColumbaScript;
 
 /**
     @author Celso Pinto (cpinto@yimports.com)
@@ -159,7 +161,8 @@ public class ScriptManager
 
     }
 
-    private JPanel createLogList()
+    
+	private JPanel createLogList()
     {
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -212,7 +215,8 @@ public class ScriptManager
 
     }
 
-    private JPanel createScriptList()
+    
+	private JPanel createScriptList()
     {
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -382,7 +386,7 @@ public class ScriptManager
                 (ScriptLogger.LogEntry)logList.getModel().getValueAt(logList.getSelectedRow(),
                                                                     ScriptLogTableModel.MESSAGE_COLUMN);
 
-            new MessageDetailsDialog(this,entry).show();
+            new MessageDetailsDialog(this,entry).setVisible(true);
 
         }
         else if (command.equals(CLEAR_LOG_ACTION))

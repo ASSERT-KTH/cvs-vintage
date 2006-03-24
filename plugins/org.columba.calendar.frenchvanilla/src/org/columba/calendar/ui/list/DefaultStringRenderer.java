@@ -30,6 +30,7 @@ import org.columba.calendar.base.api.ICalendarItem;
  * 
  * @author fdietz
  */
+
 public class DefaultStringRenderer extends DefaultTableCellRenderer {
 
 	private Font font;

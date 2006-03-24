@@ -25,6 +25,7 @@ package org.columba.mail.folder;
  *
  * @author fdietz
  */
+
 public class FolderInconsistentException extends Exception {
     /**
  * Constructs the FolderInconsistentException.java.

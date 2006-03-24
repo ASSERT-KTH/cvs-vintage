@@ -36,7 +36,6 @@ import org.columba.addressbook.gui.focus.FocusOwner;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
@@ -50,6 +49,7 @@ import org.columba.core.resourceloader.ImageLoader;
  * 
  * @author fdietz
  */
+
 public class EditPropertiesAction extends DefaultTableAction implements
 		TreeSelectionListener {
 	public EditPropertiesAction(IFrameMediator frameController) {

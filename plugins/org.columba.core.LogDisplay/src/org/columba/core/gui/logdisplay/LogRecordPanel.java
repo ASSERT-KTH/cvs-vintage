@@ -58,7 +58,7 @@ public class LogRecordPanel extends JPanel {
 
         FormLayout layout = new FormLayout("right:pref, 3dlu, pref:grow, 7dlu, right:pref, 3dlu, pref:grow", //"right:max(40dlu;pref),3dlu,
                 "");
-        DefaultFormBuilder builder = new DefaultFormBuilder(main, layout);
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, main);
 
         builder.appendSeparator("Details");
 

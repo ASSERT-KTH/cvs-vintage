@@ -58,8 +58,6 @@ public class PopulateRoasterCommand extends Command {
 
 	@Override
 	public void execute(IWorkerStatusController worker) throws Exception {
-		ChatCommandReference ref = (ChatCommandReference) getReference();
-
 		root = new DefaultMutableTreeNode("Roster");
 		uncategorizedNode = new DefaultMutableTreeNode("Uncategorized");
 

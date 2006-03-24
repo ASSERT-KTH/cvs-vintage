@@ -33,6 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
+
 public class ColumnDialogAction extends AbstractColumbaAction {
     public ColumnDialogAction(IFrameMediator frameMediator) {
         super(frameMediator, MailResourceLoader.getString(

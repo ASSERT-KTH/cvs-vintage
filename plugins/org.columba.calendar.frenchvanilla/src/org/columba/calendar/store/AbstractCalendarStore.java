@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.calendar.store;
 
-import java.util.logging.Logger;
-
 import javax.swing.event.EventListenerList;
 
 import org.columba.calendar.model.api.IComponent;
@@ -29,16 +27,13 @@ import org.columba.calendar.store.api.StoreException;
 
 public abstract class AbstractCalendarStore {
 
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.calendar.store");
-
 	private EventListenerList listenerList = new EventListenerList();
 
 	public AbstractCalendarStore() {
 		super();
 
-		// register interest on tree node changes
+		// register interest on store changes
+		// TODO the dependency should be the other way around
 		addStorageListener(StoreEventDelegator.getInstance());
 
 	}

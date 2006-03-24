@@ -20,12 +20,13 @@ All Rights Reserved.
 */
 package org.columba.core.gui.scripting;
 
-import org.columba.core.scripting.IScriptsObserver;
-import org.columba.core.scripting.model.ColumbaScript;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
-import java.util.List;
+
+import org.columba.core.scripting.IScriptsObserver;
+import org.columba.core.scripting.model.ColumbaScript;
 
 /**
     @author Celso Pinto (cpinto@yimports.com)

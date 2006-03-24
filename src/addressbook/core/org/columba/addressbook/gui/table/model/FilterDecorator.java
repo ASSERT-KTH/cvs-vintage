@@ -51,10 +51,6 @@ public class FilterDecorator extends TableModelDecorator {
 		//allocate();
 	}
 
-	private void allocate() {
-		list = new ArrayList();
-	}
-
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setContactItemMap(org.columba.addressbook.model.ContactItemMap)
 	 */

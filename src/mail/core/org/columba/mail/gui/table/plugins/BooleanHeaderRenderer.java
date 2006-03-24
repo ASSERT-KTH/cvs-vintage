@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 
+
 public class BooleanHeaderRenderer extends DefaultTableCellRenderer {
     ImageIcon icon;
 

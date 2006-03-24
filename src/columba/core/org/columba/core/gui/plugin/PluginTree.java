@@ -8,10 +8,8 @@ package org.columba.core.gui.plugin;
 
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.ListIterator;
 import java.util.Map;
 
-import javax.swing.JCheckBox;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -19,7 +17,6 @@ import javax.swing.tree.TreePath;
 
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.xml.XmlElement;
 import org.frapuccino.treetable.Tree;
 import org.frapuccino.treetable.TreeTable;
 
@@ -44,8 +41,6 @@ public class PluginTree extends TreeTable {
 	protected Map map;
 
 	protected PluginTreeTableModel model;
-
-	private JCheckBox enabledCheckBox;
 
 	/**
 	 * 

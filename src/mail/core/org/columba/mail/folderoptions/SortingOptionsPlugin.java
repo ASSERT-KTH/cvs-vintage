@@ -71,8 +71,6 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
  */
     public void saveOptionsToXml(IMailbox folder) {
         XmlElement sorting = getConfigNode(folder);
-        IDefaultItem item = new DefaultItem(sorting);
-
         TableController tableController =((TableController)((TableViewOwner) getMediator()).getTableController());
 
         String column = tableController.getSortingColumn();

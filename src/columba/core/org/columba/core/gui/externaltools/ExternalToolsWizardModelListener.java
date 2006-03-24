@@ -40,10 +40,7 @@ class ExternalToolsWizardModelListener implements WizardModelListener {
     }
 
     public void wizardFinished(WizardModelEvent e) {
-        // get selected plugin
-        AbstractExternalToolsPlugin plugin = (AbstractExternalToolsPlugin) data.getData(
-                "Plugin");
-
+       
         // get location of executable
         File sourceFile = (File) data.getData("Location.source");
 

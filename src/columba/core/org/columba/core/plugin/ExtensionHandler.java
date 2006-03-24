@@ -27,7 +27,6 @@ import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.PluginMetadata;
 
-
 /**
  * Extension handler is a registry for extensions and resembles a hook to extend
  * Columba's functionality.
@@ -37,12 +36,8 @@ import org.columba.api.plugin.PluginMetadata;
  */
 public class ExtensionHandler implements IExtensionHandler {
 
-	
-
 	private static final java.util.logging.Logger LOG = java.util.logging.Logger
 			.getLogger("org.columba.core.plugin");
-
-	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
 	private String id;
 
@@ -65,8 +60,8 @@ public class ExtensionHandler implements IExtensionHandler {
 		if (extension == null)
 			throw new IllegalArgumentException("extension == null");
 
-		if ( map.containsKey(id)) {
-			LOG.severe("duplicate id="+id);
+		if (map.containsKey(id)) {
+			LOG.severe("duplicate id=" + id);
 			return;
 		}
 
@@ -104,7 +99,6 @@ public class ExtensionHandler implements IExtensionHandler {
 	/**
 	 * @see org.columba.core.plugin.IExtensionHandler#loadExtensionsFromFile(java.lang.String)
 	 */
-	
 
 	/**
 	 * @param id
@@ -118,11 +112,11 @@ public class ExtensionHandler implements IExtensionHandler {
 		LOG.severe("Failed to load extension= " + metadata.getId());
 		LOG.severe("Classname= " + metadata.getClassname());
 
-//		JOptionPane.showMessageDialog(null, new MultiLineLabel(MessageFormat
-//				.format(GlobalResourceLoader.getString(RESOURCE_PATH,
-//						"pluginmanager", "errLoad.msg"), new String[] { id })),
-//				GlobalResourceLoader.getString(RESOURCE_PATH, "pluginmanager",
-//						"errLoad.title"), JOptionPane.ERROR_MESSAGE);
+		// JOptionPane.showMessageDialog(null, new MultiLineLabel(MessageFormat
+		// .format(GlobalResourceLoader.getString(RESOURCE_PATH,
+		// "pluginmanager", "errLoad.msg"), new String[] { id })),
+		// GlobalResourceLoader.getString(RESOURCE_PATH, "pluginmanager",
+		// "errLoad.title"), JOptionPane.ERROR_MESSAGE);
 
 		// disable plugin
 
@@ -146,7 +140,6 @@ public class ExtensionHandler implements IExtensionHandler {
 		Enumeration _enum = map.elements();
 		while (_enum.hasMoreElements()) {
 			IExtension extension = (IExtension) _enum.nextElement();
-			boolean enabled = extension.getMetadata().isEnabled();
 			String id = extension.getMetadata().getId();
 
 			result.add(id);
@@ -178,20 +171,22 @@ public class ExtensionHandler implements IExtensionHandler {
 		return v.elements();
 	}
 
-	
 	/**
 	 * @see org.columba.api.plugin.IExtensionHandler#loadExtensionsFromStream(InputStream)
 	 */
 	public void loadExtensionsFromStream(InputStream is) {
-		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is, null, true);
+		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is,
+				null, true);
 		while (e.hasMoreElements()) {
 			IExtension extension = (IExtension) e.nextElement();
 			addExtension(extension.getMetadata().getId(), extension);
 		}
 	}
 
-	public void loadExternalExtensionsFromStream(PluginMetadata pluginMetadata, InputStream is) {
-		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is, pluginMetadata, false);
+	public void loadExternalExtensionsFromStream(PluginMetadata pluginMetadata,
+			InputStream is) {
+		Enumeration e = new ExtensionXMLParser().loadExtensionsFromStream(is,
+				pluginMetadata, false);
 		while (e.hasMoreElements()) {
 			IExtension extension = (IExtension) e.nextElement();
 			addExtension(extension.getMetadata().getId(), extension);

@@ -29,6 +29,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
+
 public class ExportDialogAction extends AbstractColumbaAction {
     public ExportDialogAction(IFrameMediator frameMediator) {
         super(frameMediator,

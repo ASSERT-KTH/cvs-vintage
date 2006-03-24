@@ -31,6 +31,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
+
 public class AttachFileAction extends AbstractColumbaAction {
     public AttachFileAction(ComposerController composerController) {
         super(composerController,

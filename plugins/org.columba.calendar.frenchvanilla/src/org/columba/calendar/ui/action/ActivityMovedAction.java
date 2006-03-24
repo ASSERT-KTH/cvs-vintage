@@ -37,6 +37,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * @author fdietz
  * 
  */
+
 public class ActivityMovedAction extends AbstractColumbaAction {
 
 	public ActivityMovedAction(IFrameMediator frameMediator) {

@@ -62,7 +62,6 @@ import org.columba.core.io.ZipFileIO;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ConfigExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author fdietz

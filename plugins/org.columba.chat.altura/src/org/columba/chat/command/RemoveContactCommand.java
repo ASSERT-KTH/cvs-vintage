@@ -25,7 +25,6 @@ import org.columba.core.command.Command;
 import org.jivesoftware.smack.RosterEntry;
 
 public class RemoveContactCommand extends Command {
-	private IChatFrameMediator mediator;
 
 	private String jabberId;
 
@@ -34,8 +33,6 @@ public class RemoveContactCommand extends Command {
 	public RemoveContactCommand(IChatFrameMediator mediator,
 			ICommandReference reference) {
 		super(reference);
-
-		this.mediator = mediator;
 
 		populateCommand = new PopulateRoasterCommand(mediator, reference);
 	}
@@ -54,8 +51,8 @@ public class RemoveContactCommand extends Command {
 
 		jabberId = ref.getJabberId();
 
-		RosterEntry entry = Connection.XMPPConnection.getRoster()
-				.getEntry(jabberId);
+		RosterEntry entry = Connection.XMPPConnection.getRoster().getEntry(
+				jabberId);
 
 		Connection.XMPPConnection.getRoster().removeEntry(entry);
 		populateCommand.execute(worker);

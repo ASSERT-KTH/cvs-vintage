@@ -27,6 +27,7 @@ import org.columba.core.gui.base.UndoDocument;
  * 
  * @author fdietz
  */
+
 public class CTextField extends JTextField {
 	/**
 	 * 

@@ -15,9 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import java.awt.Point;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
@@ -31,294 +29,285 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import java.awt.image.BufferedImage;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.addressbook.model.IHeaderItem;
 
-
 //import sun.security.krb5.internal.i;
 //import sun.security.krb5.internal.crypto.b;
 
 /**
- * @version         1.0
+ * @version 1.0
  * @author
  */
-public class AddressbookDNDListView extends AddressbookListView
-    implements DropTargetListener, DragSourceListener, DragGestureListener,
-        ListSelectionListener {
-    //private static Object[] headerItems;
-    private static AddressbookDNDListView source;
+@SuppressWarnings({"serial","serial"})
+public class AddressbookDNDListView extends AddressbookListView implements
+		DropTargetListener, DragSourceListener, DragGestureListener,
+		ListSelectionListener {
 
-    /**
-* enables this component to be a dropTarget
-*/
-    DropTarget dropTarget = null;
+	/**
+	 * enables this component to be a dropTarget
+	 */
+	DropTarget dropTarget = null;
 
-    /**
- * enables this component to be a Drag Source
- */
-    DragSource dragSource = null;
-    boolean acceptDrop = true;
-    private IHeaderItem[] selection1;
-    private IHeaderItem[] selection2;
-    int index = -1;
-    private boolean dndAction = false;
-    private BufferedImage _imgGhost; // The 'drag image'
-    private Point _ptOffset = new Point();
+	/**
+	 * enables this component to be a Drag Source
+	 */
+	DragSource dragSource = null;
 
-    // Where, in the drag image, the mouse was clicked
-    public AddressbookDNDListView() {
-        super();
+	boolean acceptDrop = true;
 
-        addListSelectionListener(this);
+	private IHeaderItem[] selection1;
 
-        dropTarget = new DropTarget(this, this);
-        dragSource = DragSource.getDefaultDragSource();
+	private IHeaderItem[] selection2;
 
-        if (acceptDrop == true) {
-            dragSource.createDefaultDragGestureRecognizer(this,
-                DnDConstants.ACTION_COPY_OR_MOVE, this);
-        } else {
-            dragSource.createDefaultDragGestureRecognizer(this,
-                DnDConstants.ACTION_COPY, this);
-        }
-    }
+	int index = -1;
 
-    public AddressbookDNDListView(AddressbookListModel model) {
-        super(model);
+	private boolean dndAction = false;
 
-        addListSelectionListener(this);
+	// Where, in the drag image, the mouse was clicked
+	public AddressbookDNDListView() {
+		super();
 
-        dropTarget = new DropTarget(this, this);
-        dragSource = new DragSource();
+		addListSelectionListener(this);
 
-        if (acceptDrop == true) {
-            dragSource.createDefaultDragGestureRecognizer(this,
-                DnDConstants.ACTION_COPY_OR_MOVE, this);
-        } else {
-            dragSource.createDefaultDragGestureRecognizer(this,
-                DnDConstants.ACTION_COPY, this);
-        }
-    }
+		dropTarget = new DropTarget(this, this);
+		dragSource = DragSource.getDefaultDragSource();
 
-    public void setAcceptDrop(boolean b) {
-        acceptDrop = b;
-    }
+		if (acceptDrop == true) {
+			dragSource.createDefaultDragGestureRecognizer(this,
+					DnDConstants.ACTION_COPY_OR_MOVE, this);
+		} else {
+			dragSource.createDefaultDragGestureRecognizer(this,
+					DnDConstants.ACTION_COPY, this);
+		}
+	}
 
-    /**
-* is invoked when you are dragging over the DropSite
-*
-*/
-    public void dragEnter(DropTargetDragEvent event) {
-        // debug messages for diagnostics
-        if (acceptDrop == true) {
-            event.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
-        } else {
-            event.acceptDrag(DnDConstants.ACTION_COPY);
-        }
-    }
+	public AddressbookDNDListView(AddressbookListModel model) {
+		super(model);
 
-    /**
- * is invoked when you are exit the DropSite without dropping
- *
- */
-    public void dragExit(DropTargetEvent event) {
-    }
+		addListSelectionListener(this);
 
-    /**
- * is invoked when a drag operation is going on
- *
- */
-    public void dragOver(DropTargetDragEvent event) {
-    }
+		dropTarget = new DropTarget(this, this);
+		dragSource = new DragSource();
 
-    /**
- * a drop has occurred
- *
- */
-    public void drop(DropTargetDropEvent event) {
-        if (acceptDrop == false) {
-            event.rejectDrop();
+		if (acceptDrop == true) {
+			dragSource.createDefaultDragGestureRecognizer(this,
+					DnDConstants.ACTION_COPY_OR_MOVE, this);
+		} else {
+			dragSource.createDefaultDragGestureRecognizer(this,
+					DnDConstants.ACTION_COPY, this);
+		}
+	}
 
-            clearSelection();
+	public void setAcceptDrop(boolean b) {
+		acceptDrop = b;
+	}
 
-            return;
-        }
+	/**
+	 * is invoked when you are dragging over the DropSite
+	 * 
+	 */
+	public void dragEnter(DropTargetDragEvent event) {
+		// debug messages for diagnostics
+		if (acceptDrop == true) {
+			event.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+		} else {
+			event.acceptDrag(DnDConstants.ACTION_COPY);
+		}
+	}
 
-        Transferable transferable = event.getTransferable();
+	/**
+	 * is invoked when you are exit the DropSite without dropping
+	 * 
+	 */
+	public void dragExit(DropTargetEvent event) {
+	}
 
-        IHeaderItem[] items = HeaderItemDNDManager.getInstance()
-                                                 .getHeaderItemList();
+	/**
+	 * is invoked when a drag operation is going on
+	 * 
+	 */
+	public void dragOver(DropTargetDragEvent event) {
+	}
 
-        for (int i = 0; i < items.length; i++) {
-            addElement((IHeaderItem) ((IHeaderItem) items[i]).clone());
-        }
+	/**
+	 * a drop has occurred
+	 * 
+	 */
+	public void drop(DropTargetDropEvent event) {
+		if (acceptDrop == false) {
+			event.rejectDrop();
 
-        event.getDropTargetContext().dropComplete(true);
+			clearSelection();
 
-        clearSelection();
-    }
+			return;
+		}
 
-    /**
- * is invoked if the use modifies the current drop gesture
- *
- */
-    public void dropActionChanged(DropTargetDragEvent event) {
-    }
+		IHeaderItem[] items = HeaderItemDNDManager.getInstance()
+				.getHeaderItemList();
 
-    /**
- * a drag gesture has been initiated
- *
- */
-    public void dragGestureRecognized(DragGestureEvent event) {
-        if (dndAction == false) {
-            /*
-        HeaderItem[] items = new HeaderItem[selection1.length];
-        items = selection1;
-        HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-*/
-            if (selection1 == null) {
-                IHeaderItem[] items = new IHeaderItem[1];
-                items[0] = (IHeaderItem) getSelectedValue();
+		for (int i = 0; i < items.length; i++) {
+			addElement((IHeaderItem) ((IHeaderItem) items[i]).clone());
+		}
 
-                HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-            } else if (selection1.length != 0) {
-                IHeaderItem[] items = new IHeaderItem[selection1.length];
-                items = selection1;
-                HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-            }
+		event.getDropTargetContext().dropComplete(true);
 
-            /*
-else
-{
+		clearSelection();
+	}
 
-        HeaderItem[] items = new HeaderItem[1];
-        items[0] = (HeaderItem) getSelectedValue();
-        HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-}
-*/
-        } else {
-            /*
-HeaderItem[] items = new HeaderItem[selection2.length];
-        items = selection2;
-        HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-*/
-            if (selection2.length != 0) {
-                IHeaderItem[] items = new IHeaderItem[selection2.length];
-                items = selection2;
-                HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-            } else {
-                IHeaderItem[] items = new IHeaderItem[1];
-                items[0] = (IHeaderItem) getSelectedValue();
+	/**
+	 * is invoked if the use modifies the current drop gesture
+	 * 
+	 */
+	public void dropActionChanged(DropTargetDragEvent event) {
+	}
 
-                HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-            }
-        }
+	/**
+	 * a drag gesture has been initiated
+	 * 
+	 */
+	public void dragGestureRecognized(DragGestureEvent event) {
+		if (dndAction == false) {
+			/*
+			 * HeaderItem[] items = new HeaderItem[selection1.length]; items =
+			 * selection1;
+			 * HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+			 */
+			if (selection1 == null) {
+				IHeaderItem[] items = new IHeaderItem[1];
+				items[0] = (IHeaderItem) getSelectedValue();
 
-        source = this;
+				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+			} else if (selection1.length != 0) {
+				IHeaderItem[] items = new IHeaderItem[selection1.length];
+				items = selection1;
+				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+			}
 
-        /*
-dragSource.startDrag(
-        event,
-        new Cursor(Cursor.DEFAULT_CURSOR),
-        ImageLoader.getImageIcon("contact_small","Add16").getImage(),
-        new Point(5, 5),
-        new StringSelection("contact"),
-        this);
-*/
-        StringSelection text = new StringSelection("contact");
+			/*
+			 * else {
+			 * 
+			 * HeaderItem[] items = new HeaderItem[1]; items[0] = (HeaderItem)
+			 * getSelectedValue();
+			 * HeaderItemDNDManager.getInstance().setHeaderItemList(items); }
+			 */
+		} else {
+			/*
+			 * HeaderItem[] items = new HeaderItem[selection2.length]; items =
+			 * selection2;
+			 * HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+			 */
+			if (selection2.length != 0) {
+				IHeaderItem[] items = new IHeaderItem[selection2.length];
+				items = selection2;
+				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+			} else {
+				IHeaderItem[] items = new IHeaderItem[1];
+				items[0] = (IHeaderItem) getSelectedValue();
 
-        dragSource.startDrag(event, DragSource.DefaultMoveDrop, text, this);
+				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+			}
+		}
 
-        clearSelection();
-    }
+		/*
+		 * dragSource.startDrag( event, new Cursor(Cursor.DEFAULT_CURSOR),
+		 * ImageLoader.getImageIcon("contact_small","Add16").getImage(), new
+		 * Point(5, 5), new StringSelection("contact"), this);
+		 */
+		StringSelection text = new StringSelection("contact");
 
-    /**
- * this message goes to DragSourceListener, informing it that the dragging
- * has ended
- *
- */
-    public void dragDropEnd(DragSourceDropEvent event) {
-        if (event.getDropSuccess()) {
-            if (acceptDrop == true) {
-                IHeaderItem[] items = HeaderItemDNDManager.getInstance()
-                                                         .getHeaderItemList();
+		dragSource.startDrag(event, DragSource.DefaultMoveDrop, text, this);
 
-                for (int i = 0; i < items.length; i++) {
-                    ((AddressbookListModel) getModel()).removeElement(items[i]);
-                }
+		clearSelection();
+	}
 
-                //removeElement();
-            }
-        }
-    }
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging
+	 * has ended
+	 * 
+	 */
+	public void dragDropEnd(DragSourceDropEvent event) {
+		if (event.getDropSuccess()) {
+			if (acceptDrop == true) {
+				IHeaderItem[] items = HeaderItemDNDManager.getInstance()
+						.getHeaderItemList();
 
-    /**
- * this message goes to DragSourceListener, informing it that the dragging
- * has entered the DropSite
- *
- */
-    public void dragEnter(DragSourceDragEvent event) {
-    }
+				for (int i = 0; i < items.length; i++) {
+					((AddressbookListModel) getModel()).removeElement(items[i]);
+				}
 
-    /**
- * this message goes to DragSourceListener, informing it that the dragging
- * has exited the DropSite
- *
- */
-    public void dragExit(DragSourceEvent event) {
-    }
+				// removeElement();
+			}
+		}
+	}
 
-    /**
- * this message goes to DragSourceListener, informing it that the dragging is currently
- * ocurring over the DropSite
- *
- */
-    public void dragOver(DragSourceDragEvent event) {
-    }
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging
+	 * has entered the DropSite
+	 * 
+	 */
+	public void dragEnter(DragSourceDragEvent event) {
+	}
 
-    /**
- * is invoked when the user changes the dropAction
- *
- */
-    public void dropActionChanged(DragSourceDragEvent event) {
-    }
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging
+	 * has exited the DropSite
+	 * 
+	 */
+	public void dragExit(DragSourceEvent event) {
+	}
 
-    /**
- * adds elements to itself
- *
- */
-    /**
- * removes an element from itself
- */
-    public void removeElement() {
-        ((AddressbookListModel) getModel()).removeElement((IHeaderItem)getSelectedValue());
-    }
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging
+	 * is currently ocurring over the DropSite
+	 * 
+	 */
+	public void dragOver(DragSourceDragEvent event) {
+	}
 
-    public void valueChanged(ListSelectionEvent e) {
-        if (dndAction == true) {
-            Object[] list = getSelectedValues();
+	/**
+	 * is invoked when the user changes the dropAction
+	 * 
+	 */
+	public void dropActionChanged(DragSourceDragEvent event) {
+	}
 
-            selection1 = new IHeaderItem[list.length];
+	/**
+	 * adds elements to itself
+	 * 
+	 */
+	/**
+	 * removes an element from itself
+	 */
+	public void removeElement() {
+		((AddressbookListModel) getModel())
+				.removeElement((IHeaderItem) getSelectedValue());
+	}
 
-            for (int i = 0; i < list.length; i++) {
-                selection1[i] = (IHeaderItem) list[i];
-            }
+	public void valueChanged(ListSelectionEvent e) {
+		if (dndAction == true) {
+			Object[] list = getSelectedValues();
 
-            dndAction = false;
-        } else {
-            Object[] list = getSelectedValues();
+			selection1 = new IHeaderItem[list.length];
 
-            selection2 = new IHeaderItem[list.length];
+			for (int i = 0; i < list.length; i++) {
+				selection1[i] = (IHeaderItem) list[i];
+			}
 
-            for (int i = 0; i < list.length; i++) {
-                selection2[i] = (IHeaderItem) list[i];
-            }
+			dndAction = false;
+		} else {
+			Object[] list = getSelectedValues();
 
-            dndAction = true;
-        }
-    }
+			selection2 = new IHeaderItem[list.length];
+
+			for (int i = 0; i < list.length; i++) {
+				selection2[i] = (IHeaderItem) list[i];
+			}
+
+			dndAction = true;
+		}
+	}
 }

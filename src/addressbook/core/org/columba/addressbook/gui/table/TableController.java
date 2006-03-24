@@ -29,7 +29,6 @@ import javax.swing.table.TableColumnModel;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
-import org.columba.addressbook.folder.FolderEvent;
 import org.columba.addressbook.folder.FolderListener;
 import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IFolderEvent;
@@ -55,8 +54,6 @@ public class TableController implements TreeSelectionListener, FolderListener,
 
 	private AddressbookTableModel addressbookModel;
 
-	private FilterToolbar toolbar;
-
 	private SortDecorator sortDecorator;
 
 	private FilterDecorator filterDecorator;
@@ -64,7 +61,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	private AddressbookTreeNode selectedFolder;
 
 	/**
-	 *  
+	 * 
 	 */
 	public TableController(AddressbookFrameMediator mediator) {
 		super();
@@ -90,7 +87,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	/**
 	 * Add MouseListener to JTableHeader to sort table based on clicked column
 	 * header.
-	 *  
+	 * 
 	 */
 	protected void addMouseListenerToHeaderInTable() {
 		final JTable tableView = getView();

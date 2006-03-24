@@ -54,8 +54,6 @@ public class FlagsFilter extends AbstractFilter {
 
 		String headerField = pattern;
 
-		String searchHeaderField = null;
-
 		Flags flags = ((IMailbox)folder).getFlags(uid);
 
 		if (headerField.equalsIgnoreCase("Answered")) {

@@ -21,6 +21,7 @@ import org.columba.ristretto.imap.SearchKey;
 import org.columba.ristretto.imap.SequenceSet;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
+import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 public interface IImapServer {
@@ -422,7 +423,7 @@ public interface IImapServer {
 
 	/**
 	 * @param folder
-	 *            TODO
+	 *         
 	 * @return
 	 * @throws CommandCancelledException
 	 * @throws IMAPException

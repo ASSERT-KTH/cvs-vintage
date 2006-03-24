@@ -42,8 +42,6 @@ import org.columba.mail.pgp.PGPPassChecker;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.Source;
-import org.columba.ristretto.message.Address;
-import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -61,12 +59,12 @@ import org.waffel.jscf.JSCFStatement;
  * <p>
  * A {@link SecurityStatusEvent}is used to notify all listeners.
  * <p>
- * {@link SecurityStatusViewer}is currently the only listener. In the
- * future a status icon will be added to the message header, too.
+ * {@link SecurityStatusViewer}is currently the only listener. In the future a
+ * status icon will be added to the message header, too.
  * <p>
  * 
  * @author fdietz
- *  
+ * 
  */
 public class PGPMessageFilter extends AbstractFilter {
 
@@ -77,18 +75,14 @@ public class PGPMessageFilter extends AbstractFilter {
 
 	private int pgpMode = SecurityStatusViewer.NOOP;
 
-	// true if we view an encrypted message
-	private boolean encryptedMessage = false;
-
 	private String pgpMessage = "";
-
-	private InputStream decryptedStream;
 
 	private ColumbaMessage message;
 
 	private List listeners;
 
-	public PGPMessageFilter(MailFrameMediator mediator, MessageController messageController) {
+	public PGPMessageFilter(MailFrameMediator mediator,
+			MessageController messageController) {
 		super(mediator, messageController);
 
 		listeners = new ArrayList();
@@ -100,18 +94,18 @@ public class PGPMessageFilter extends AbstractFilter {
 
 	public void fireSecurityStatusEvent(SecurityStatusEvent ev) {
 		final SecurityStatusEvent event = ev;
-		
+
 		Iterator it = listeners.iterator();
 		while (it.hasNext()) {
 			final SecurityStatusListener l = (SecurityStatusListener) it.next();
 			Runnable doWorkRunnable = new Runnable() {
 				public void run() {
 					l.statusUpdate(event);
-					
+
 				}
 			};
 			SwingUtilities.invokeLater(doWorkRunnable);
-			
+
 		}
 	}
 
@@ -126,19 +120,20 @@ public class PGPMessageFilter extends AbstractFilter {
 
 		// Check if the message still exists
 		// or has been moved by e.g. a filter
-		if(mimePartTree == null ) return null;
-		
-		
-		// TODO (@author waffel): encrypt AND sign dosN#t work. The message is always only
+		if (mimePartTree == null)
+			return null;
+
+		// TODO (@author waffel): encrypt AND sign dosN#t work. The message is
+		// always only
 		// encrypted. We need a function that knows, here
 		// is an encrypted AND signed Message. Thus first encyrpt and then
 		// verifySign the message
-		//      if this message is signed/encrypted we have to use
+		// if this message is signed/encrypted we have to use
 		// GnuPG to extract the decrypted bodypart
 		// - multipart/encrypted
 		// - multipart/signed
 		MimeType firstPartMimeType = mimePartTree.getRootMimeNode().getHeader()
-		.getMimeType();
+				.getMimeType();
 
 		AccountItem defAccount = MailConfig.getInstance().getAccountList()
 				.getDefaultAccount();
@@ -164,7 +159,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			pgpMode = SecurityStatusViewer.NOOP;
 		}
 
-		//notify listeners
+		// notify listeners
 		fireSecurityStatusEvent(new SecurityStatusEvent(this, pgpMessage,
 				pgpMode));
 
@@ -189,21 +184,9 @@ public class PGPMessageFilter extends AbstractFilter {
 			pgpMessage = "";
 			pgpMode = SecurityStatusViewer.NO_KEY;
 		} else {
-			SecurityItem pgpItem = null;
-			// we need the pgpItem, to extract the path to gpg
-			pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
-					.getPGPItem();
-			// this is wrong! we need the default id.
-			//pgpItem.set("id", new BasicHeader(header.getHeader()).getTo()[0]
-			//        .getMailAddress());
+			
 
 			MimePart encryptedMultipart = mimePartTree.getRootMimeNode();
-
-			encryptedMessage = true;
-
-			// the first child must be the control part
-			InputStream controlPart = folder.getMimePartBodyStream(uid,
-					encryptedMultipart.getChild(0).getAddress());
 
 			// the second child must be the encrypted message
 			InputStream encryptedPart = folder.getMimePartBodyStream(uid,
@@ -230,11 +213,11 @@ public class PGPMessageFilter extends AbstractFilter {
 				if (res.isError()) {
 					LOG.fine("the result set contains errors ");
 					pgpMode = SecurityStatusViewer.DECRYPTION_FAILURE;
-					pgpMessage = StreamUtils.readCharacterStream(res.getErrorStream())
-							.toString();
+					pgpMessage = StreamUtils.readCharacterStream(
+							res.getErrorStream()).toString();
 					LOG.fine("error message: " + pgpMessage);
 					decryptedStream = res.getResultStream();
-					//return null;
+					// return null;
 				} else {
 					decryptedStream = res.getResultStream();
 					pgpMode = SecurityStatusViewer.DECRYPTION_SUCCESS;
@@ -254,8 +237,10 @@ public class PGPMessageFilter extends AbstractFilter {
 			CharSequence decryptedBodyPart = "";
 			// if the pgp mode is active we should get the decrypted part
 			if (pgpActive) {
-				// TODO (@author fdietz): should be removed if we only use Streams!
-				decryptedBodyPart = StreamUtils.readCharacterStream(decryptedStream);
+				// TODO (@author fdietz): should be removed if we only use
+				// Streams!
+				decryptedBodyPart = StreamUtils
+						.readCharacterStream(decryptedStream);
 				// check if the returned String is has a length != 0
 				if (decryptedBodyPart.length() == 0) {
 					LOG
@@ -289,11 +274,9 @@ public class PGPMessageFilter extends AbstractFilter {
 					.readCharacterStream(messageSourceStream)));
 			messageSourceStream.close();
 
-			encryptedMessage = true;
-
 			// call AbstractFilter to do the tricky part
 			return filter(folder, uid, message);
-			//header = (ColumbaHeader) message.getHeaderInterface();
+			// header = (ColumbaHeader) message.getHeaderInterface();
 		} catch (ParserException e) {
 			e.printStackTrace();
 
@@ -328,7 +311,7 @@ public class PGPMessageFilter extends AbstractFilter {
 		}
 		MimePart signedMultipart = mimePartTree.getRootMimeNode();
 
-		//          the first child must be the signed part
+		// the first child must be the signed part
 		InputStream signedPart = folder.getMimePartSourceStream(uid,
 				signedMultipart.getChild(0).getAddress());
 
@@ -336,8 +319,6 @@ public class PGPMessageFilter extends AbstractFilter {
 		InputStream signature = folder.getMimePartBodyStream(uid,
 				signedMultipart.getChild(1).getAddress());
 
-		// Get the mailaddress and use it as the id
-		Address fromAddress = new BasicHeader(folder.getHeaderFields(uid, new String[] { "From" })).getFrom();
 		try {
 			JSCFController controller = JSCFController.getInstance();
 			JSCFConnection con = controller.getConnection();
@@ -348,12 +329,12 @@ public class PGPMessageFilter extends AbstractFilter {
 					micalg);
 			if (res.isError()) {
 				pgpMode = SecurityStatusViewer.VERIFICATION_FAILURE;
-				pgpMessage = StreamUtils.readCharacterStream(res.getErrorStream())
-						.toString();
+				pgpMessage = StreamUtils.readCharacterStream(
+						res.getErrorStream()).toString();
 			} else {
 				pgpMode = SecurityStatusViewer.VERIFICATION_SUCCESS;
-				pgpMessage = StreamUtils.readCharacterStream(res.getResultStream())
-						.toString();
+				pgpMessage = StreamUtils.readCharacterStream(
+						res.getResultStream()).toString();
 			}
 
 		} catch (JSCFException e) {
@@ -364,7 +345,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			pgpMode = SecurityStatusViewer.VERIFICATION_FAILURE;
 			pgpMessage = e.getMessage();
 			// something really got wrong here -> show error dialog
-			//JOptionPane.showMessageDialog(null, e.getMessage());
+			// JOptionPane.showMessageDialog(null, e.getMessage());
 
 			pgpMode = SecurityStatusViewer.VERIFICATION_FAILURE;
 		}

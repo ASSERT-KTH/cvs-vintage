@@ -244,6 +244,7 @@ public class TreeView extends SortedJTree {
 	 * 
 	 * @author redsolo
 	 */
+	
 	private class DropHandler extends DropTarget {
 		private boolean canImport;
 
@@ -365,8 +366,6 @@ public class TreeView extends SortedJTree {
 	 * @author redsolo
 	 */
 	private class TreeLeafActionListener implements ActionListener {
-		private JTree treeParent;
-
 		/**
 		 * Constructs a leaf listener.
 		 * 
@@ -374,7 +373,6 @@ public class TreeView extends SortedJTree {
 		 *            the parent JTree.
 		 */
 		public TreeLeafActionListener(JTree parent) {
-			treeParent = parent;
 		}
 
 		/** {@inheritDoc} */

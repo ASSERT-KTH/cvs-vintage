@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
-import org.columba.core.base.BooleanCompressor;
-
 import junit.framework.TestCase;
+
+import org.columba.core.base.BooleanCompressor;
 
 
 public class BooleanCompressorTest extends TestCase {

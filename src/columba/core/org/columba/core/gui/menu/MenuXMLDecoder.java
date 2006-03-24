@@ -17,15 +17,11 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import javax.swing.Box;
-import javax.swing.JMenu;
-import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.api.exception.PluginException;
@@ -36,7 +32,6 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.action.AbstractSelectableAction;
 import org.columba.core.gui.base.CCheckBoxMenuItem;
 import org.columba.core.gui.base.CMenuItem;
-import org.columba.core.gui.util.ThrobberIcon;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
@@ -156,7 +151,7 @@ public class MenuXMLDecoder {
 			return null;
 		}
 
-		// TODO: fix menu id
+		
 		ExtendablePopupMenu menu = new ExtendablePopupMenu("id");
 		parsePopupMenu(menu, menuElement);
 
@@ -178,14 +173,13 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				// TODO: fix i18n
+
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
 
-				// TODO: fix menu id
 				ExtendableMenu menu = new ExtendableMenu(menuId, menuName);
 				parseMenu(menu, menuElement);
 				menuBar.add(menu);
@@ -220,13 +214,13 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				// TODO: fix i18n
+				
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
 
-				// TODO: fix menu id
+			
 				ExtendableMenu menu = new ExtendableMenu(menuId, menuName);
 				parseMenu(menu, menuElement);
 				parentMenu.add(menu);
@@ -236,7 +230,6 @@ public class MenuXMLDecoder {
 				if ( action == null ) continue;
 				
 				CMenuItem menuItem = new CMenuItem(action);
-				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
@@ -247,7 +240,6 @@ public class MenuXMLDecoder {
 				if ( action == null ) continue;
 				
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
-				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
@@ -257,7 +249,6 @@ public class MenuXMLDecoder {
 				if ( action == null ) continue;
 				
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
-				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.SEPARATOR)) {
@@ -289,13 +280,13 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				// TODO: fix i18n
+				
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
 
-				// TODO: fix menu id
+			
 				ExtendableMenu menu = new ExtendableMenu(menuId, menuName);
 				parseMenu(menu, menuElement);
 				parentMenu.add(menu);
@@ -303,7 +294,6 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
 				CMenuItem menuItem = new CMenuItem(action);
-				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
@@ -312,7 +302,6 @@ public class MenuXMLDecoder {
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
-				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(
@@ -320,7 +309,6 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
-				// TODO
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.SEPARATOR)) {
@@ -362,7 +350,7 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				// TODO: fix i18n
+			
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 				String placeholderId = menuElement
@@ -373,7 +361,7 @@ public class MenuXMLDecoder {
 
 				LOG.finest("menu:"+menuId);
 				
-				// TODO: fix menu id
+			
 				ExtendableMenu menu = menubar.getMenu(menuId);
 				if (menu == null) {
 					LOG.finest("--> creating new menu");
@@ -399,7 +387,7 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				// TODO: fix i18n
+				
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 				String menuName = mediator.getString("menu", "mainframe",
@@ -407,7 +395,7 @@ public class MenuXMLDecoder {
 
 				LOG.finest("menu="+menuId);
 				
-				// TODO: fix menu id
+			
 				ExtendableMenu menu = menubar.getMenu(menuId);
 				if (menu == null) {
 					// create new menu

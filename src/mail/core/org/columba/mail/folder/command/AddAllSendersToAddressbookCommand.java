@@ -27,7 +27,6 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
 

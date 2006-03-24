@@ -176,6 +176,7 @@ public class ContactModelFactory {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public static IContactModel unmarshall(Document document, String id)
 			throws SyntaxException, IllegalArgumentException {
 

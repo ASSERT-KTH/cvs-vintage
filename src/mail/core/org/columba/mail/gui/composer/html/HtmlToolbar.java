@@ -116,7 +116,6 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 			htmlElement = optionsElement.addSubElement("html");
 		}
 
-		String enableHtml = htmlElement.getAttribute("enable", "false");
 		htmlElement.addObserver(this);
 	}
 
@@ -125,9 +124,6 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 
 		// we generate most buttons using the actions already instanciated
 
-		// init components
-		LabelWithMnemonic paraLabel = new LabelWithMnemonic(MailResourceLoader
-				.getString("dialog", "composer", "style"));
 		paragraphComboBox = new JComboBox(ParagraphMenu.STYLE_TAGS);
 		paragraphComboBox.setRenderer(new ParagraphTagRenderer());
 		paragraphComboBox.setActionCommand("PARA");
@@ -309,7 +305,7 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 				ctrl.setParagraphFormat(tag);
 			}
 		} else if (action.equals("SIZE")) {
-			int selectedIndex = sizeComboBox.getSelectedIndex();
+//			int selectedIndex = sizeComboBox.getSelectedIndex();
 
 			// TODO (@author fdietz):: implement action for font size combo box!
 		}

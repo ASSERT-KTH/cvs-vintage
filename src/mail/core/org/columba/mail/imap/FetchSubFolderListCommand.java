@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
-import java.util.logging.Logger;
-
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
@@ -28,10 +26,6 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
  * @author freddy
  */
 public class FetchSubFolderListCommand extends Command {
-
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.tree.command");
 
 	IMAPRootFolder imapRoot;
 
@@ -55,7 +49,7 @@ public class FetchSubFolderListCommand extends Command {
 		}
 
 		if (r.getSourceFolder() instanceof IMAPRootFolder) {
-			imapRoot = (IMAPRootFolder) r.getSourceFolder();			
+			imapRoot = (IMAPRootFolder) r.getSourceFolder();
 			imapRoot.syncSubscribedFolders();
 		}
 	}

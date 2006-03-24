@@ -43,6 +43,7 @@ import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
+
 public class FontSelectionDialog extends JDialog implements ActionListener,
 		ListSelectionListener {
 	public static final int APPROVE_OPTION = 1;

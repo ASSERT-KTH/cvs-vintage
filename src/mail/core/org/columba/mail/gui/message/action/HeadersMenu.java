@@ -30,9 +30,7 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.menu.IMenu;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.frame.MailFrameMediator;
 
 /**
  * Submenu containing three choices: Show default headers, show custom headers
@@ -87,10 +85,6 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
-
-		// get current message list selection
-		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
-				.getTableSelection();
 
 		if (action.equals("DEFAULT")) {
 			element.addAttribute("style", "0");

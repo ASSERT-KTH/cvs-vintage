@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import javax.swing.tree.TreeNode;
-
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
@@ -31,14 +29,6 @@ import org.columba.mail.folder.IMailbox;
  */
 public class RemoveFolderCommand extends Command {
 
-	private TreeNode parentFolder;
-
-	private int[] childIndicies;
-
-	private Object[] childObjects;
-
-	private boolean success;
-
 	/**
 	 * Constructor for RemoveFolder.
 	 * 
@@ -48,17 +38,7 @@ public class RemoveFolderCommand extends Command {
 	public RemoveFolderCommand(ICommandReference reference) {
 		super(reference);
 
-		success = false;
 	}
-
-	/**
-	 * @see org.columba.api.command.Command#updateGUI()
-	 */
-	/*
-	 * public void updateGUI() throws Exception { // update treemodel with more
-	 * relevant data. MailInterface.treeModel.nodesWereRemoved(parentFolder,
-	 * childIndicies, childObjects); }
-	 */
 
 	/**
 	 * @see org.columba.api.command.Command#execute(Worker)
@@ -67,11 +47,6 @@ public class RemoveFolderCommand extends Command {
 		// get source folder
 		IMailbox childFolder = (IMailbox) ((IMailFolderCommandReference) getReference())
 				.getSourceFolder();
-
-		// need to store the data for the proper event generation.
-		parentFolder = childFolder.getParent();
-		childIndicies = new int[] { parentFolder.getIndex(childFolder) };
-		childObjects = new Object[] { childFolder };
 
 		// remove source folder
 		childFolder.removeFolder();

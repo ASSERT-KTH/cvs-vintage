@@ -39,10 +39,11 @@ import org.columba.mail.message.IColumbaHeader;
 import org.columba.ristretto.message.Flags;
 
 /**
- * MultiLine renderer uses a two-row JPanel to display as much 
- * information as possible in a very narrow JTable column.
+ * MultiLine renderer uses a two-row JPanel to display as much information as
+ * possible in a very narrow JTable column.
  * <p>
  * Horrible experimental hack - you have been warned!
+ * 
  * @author fdietz
  */
 public class MultiLineRenderer extends JPanel implements TableCellRenderer,
@@ -58,8 +59,13 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 	private Font underlinedFont;
 
 	protected static Border outterBorder = new EmptyBorder(2, 1, 2, 2);
-	protected static Border lineBorder = new HeaderSeparatorBorder(Color.LIGHT_GRAY);
-	protected static Border noFocusBorder = BorderFactory.createCompoundBorder(lineBorder, outterBorder);
+
+	protected static Border lineBorder = new HeaderSeparatorBorder(
+			Color.LIGHT_GRAY);
+
+	protected static Border noFocusBorder = BorderFactory.createCompoundBorder(
+			lineBorder, outterBorder);
+
 	// We need a place to store the color the JLabel should be returned
 	// to after its foreground and background colors have been set
 	// to the selection background color.
@@ -70,14 +76,8 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 
 	private JLabel subjectLabel;
 
-	private JLabel statusLabel;
-
-	private JLabel dateLabel;
-
-	private JLabel fromLabel;
-
 	private AttachmentRenderer attachmentRenderer;
-	
+
 	private StatusRenderer statusRenderer;
 
 	private FromRenderer fromRenderer;
@@ -105,36 +105,36 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 		fromRenderer = new FromRenderer();
 		dateRenderer = new DateRenderer();
 		attachmentRenderer = new AttachmentRenderer();
-		
+
 		subjectLabel = new JLabel();
 		subjectLabel.setForeground(Color.darkGray);
 
 		JPanel p3 = new JPanel();
-		p3.setBorder(BorderFactory.createEmptyBorder(0,2,0,2));
+		p3.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
 		p3.setOpaque(false);
 		p3.setLayout(new BorderLayout());
 		add(p3, BorderLayout.WEST);
 		p3.add(statusRenderer, BorderLayout.NORTH);
-		
+
 		JPanel p = new JPanel();
 		p.setOpaque(false);
 		p.setLayout(new BorderLayout());
 		add(p, BorderLayout.CENTER);
-		
+
 		JPanel p2 = new JPanel();
 		p2.setOpaque(false);
 		p2.setLayout(new BorderLayout());
-		//p2.setBorder(BorderFactory.createEmptyBorder(0,0,2,0));
+		// p2.setBorder(BorderFactory.createEmptyBorder(0,0,2,0));
 		p.add(p2, BorderLayout.NORTH);
-		
+
 		p2.add(fromRenderer, BorderLayout.CENTER);
 		p2.add(dateRenderer, BorderLayout.EAST);
-		
+
 		JPanel p4 = new JPanel();
 		p4.setOpaque(false);
 		p4.setLayout(new BorderLayout());
 		p.add(p4, BorderLayout.CENTER);
-		
+
 		p4.add(subjectLabel, BorderLayout.CENTER);
 		p4.add(attachmentRenderer, BorderLayout.EAST);
 
@@ -159,8 +159,6 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 							: table.getBackground());
 		}
 
-		
-		
 		setFont(table.getFont());
 
 		if (hasFocus) {
@@ -183,9 +181,9 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 				hasFocus, row, column);
 		dateRenderer.getTableCellRendererComponent(table, value, isSelected,
 				hasFocus, row, column);
-		attachmentRenderer.getTableCellRendererComponent(table, value, isSelected,
-				hasFocus, row, column);
-		
+		attachmentRenderer.getTableCellRendererComponent(table, value,
+				isSelected, hasFocus, row, column);
+
 		// TreePath path = tree.getPathForRow(row);
 		MessageNode messageNode = (MessageNode) value;
 

@@ -42,7 +42,7 @@ public class AddContactTest extends AbstractFolderTstCase {
 		c.setNickName("nickname");
 
 		Object uid = getSourceFolder().add(c);
-
+		assertNotNull(uid);
 		assertEquals("nextUid", 1, getSourceFolder().getNextMessageUid());
 
 	}
@@ -53,7 +53,7 @@ public class AddContactTest extends AbstractFolderTstCase {
 		c.setNickName("nickname");
 
 		Object uid = getSourceFolder().add(c);
-
+		assertNotNull(uid);
 		assertEquals("nextUid", 1, getSourceFolder().getNextMessageUid());
 
 		c = new ContactModel();

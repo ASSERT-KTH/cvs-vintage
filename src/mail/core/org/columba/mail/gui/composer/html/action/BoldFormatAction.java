@@ -41,6 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
+
 public class BoldFormatAction extends AbstractSelectableAction
     implements Observer, ContainerListener {
 

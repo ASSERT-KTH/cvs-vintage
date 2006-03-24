@@ -56,9 +56,6 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(IMailbox)
 	 */
 	public void saveOptionsToXml(IMailbox folder) {
-		XmlElement parent = getConfigNode(folder);
-		IDefaultItem item = new DefaultItem(parent);
-
 		TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 
 		if (tableController.getSelectedNodes() == null)

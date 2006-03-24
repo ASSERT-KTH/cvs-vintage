@@ -50,11 +50,8 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+
 public class FilterDialog extends JDialog implements ActionListener {
-	
-	
-	private static final java.util.logging.Logger LOG = 
-        java.util.logging.Logger.getLogger("org.columba.mail.gui.config.filter"); //$NON-NLS-1$
 
 	private JTextField nameTextField;
 
@@ -99,7 +96,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 				"dialog_title"));
 		this.filter = filter;
 
-		//System.out.println("filternode name: " + filter.getName());
+		// System.out.println("filternode name: " + filter.getName());
 		initComponents();
 		updateComponents(true);
 		pack();
@@ -156,7 +153,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 		CellConstraints cc = new CellConstraints();
 		jpanel1.setLayout(formlayout1);
 
-		//jpanel1.add(addCriteriaButton, cc.xy(1, 1));
+		// jpanel1.add(addCriteriaButton, cc.xy(1, 1));
 
 		jpanel1.add(executeActionLabel, cc.xy(3, 1));
 
@@ -175,7 +172,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 		CellConstraints cc = new CellConstraints();
 		jpanel1.setLayout(formlayout1);
 
-		//jpanel1.add(addActionButton, cc.xy(1, 1));
+		// jpanel1.add(addActionButton, cc.xy(1, 1));
 
 		jpanel1.add(actionList, cc.xywh(1, 3, 2, 1));
 
@@ -216,9 +213,6 @@ public class FilterDialog extends JDialog implements ActionListener {
 		addActionButton.addActionListener(this);
 		addActionButton.setActionCommand("ADD_ACTION");
 
-		JLabel actionLabel = new LabelWithMnemonic(MailResourceLoader
-				.getString("dialog", "filter", "action_list"));
-
 		actionList = new ActionList(mediator, filter, frame);
 
 		getContentPane().add(createPanel(), BorderLayout.CENTER);
@@ -227,7 +221,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void createBottomPanel() {
 		JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -309,7 +303,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 			updateComponents(false);
 			setVisible(false);
 
-			//frame.listView.update();
+			// frame.listView.update();
 			dialogWasCancelled = false;
 		} else if (action.equals("CANCEL")) {
 			setVisible(false);
@@ -317,7 +311,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 		} else if (action.equals("ADD_CRITERION")) {
 			criteriaList.add();
 		} else if (action.equals("ADD_ACTION")) {
-			//System.out.println( "add" );
+			// System.out.println( "add" );
 			actionList.add();
 		}
 	}

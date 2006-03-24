@@ -29,6 +29,7 @@ import java.awt.MediaTracker;
  * 
  * @author fdietz
  */
+
 public class AnimatedGIFComponent extends Component {
 	private Image image;
 	private Image restImage;

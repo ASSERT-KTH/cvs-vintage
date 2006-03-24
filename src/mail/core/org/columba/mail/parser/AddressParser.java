@@ -42,7 +42,6 @@ public class AddressParser{
 	public List normalizeRCPTVector(List in) {
 		if ( in == null ) return null;
 		
-		int v_size = in.size();
 		String mailaddress = "";
 		String new_address = "";
 		List out = new Vector();

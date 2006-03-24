@@ -18,8 +18,6 @@
 package org.columba.chat.ui.conversation;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Date;
 
 import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
@@ -36,19 +34,18 @@ import org.jivesoftware.smack.packet.Message;
  * HTML view.
  * 
  * @author fdietz
- *  
+ * 
  */
 public class HTMLViewer extends JEditorPane implements IMessageViewer {
 
 	private HTMLEditorKit kit;
+
 	private HTMLDocument doc;
 
 	private StringBuffer buffer = new StringBuffer();
 
-	private String css;
-
 	/**
-	 *  
+	 * 
 	 */
 	public HTMLViewer() {
 		super();
@@ -101,15 +98,12 @@ public class HTMLViewer extends JEditorPane implements IMessageViewer {
 		String body = message.getBody();
 		String from = message.getFrom();
 
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT);
-		String dateString = format.format(new Date());
-
-		//append(dateString+" "+from+":"+body);
-
+		//DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT);
 		// green color
 		append("<font color='#348756'>" + from + "</font>: " + body);
 
 	}
+
 	/**
 	 * @see org.altura.ui.conversation.view.IViewer#displaySendMessage(org.jivesoftware.smack.packet.Message,
 	 *      org.altura.jabber.BuddyStatus)
@@ -118,9 +112,7 @@ public class HTMLViewer extends JEditorPane implements IMessageViewer {
 		String body = message.getBody();
 		String to = MainInterface.config.getAccount().getId();
 
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT);
-		String dateString = format.format(new Date());
-
+		//DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT);
 		append("<font color='#2B3780'>" + to + "</font>: " + body);
 	}
 

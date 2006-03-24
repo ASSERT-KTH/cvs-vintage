@@ -17,37 +17,34 @@
 package org.columba.core.config;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.columba.core.xml.XmlElement;
 
 public class OptionsXmlConfig extends DefaultXmlConfig {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.config");
+	private GuiItem guiItem;
 
-    private GuiItem guiItem;
+	public OptionsXmlConfig(File file) {
+		super(file);
+	}
 
-    public OptionsXmlConfig(File file) {
-        super(file);
-    }
+	public boolean load() {
+		boolean result = super.load();
 
-    public boolean load() {
-        boolean result = super.load();
-        
-        XmlElement proxy = getRoot().getElement("/options/proxy");
-        if (proxy != null && System.getProperty("http.proxyHost") != null) {
-            System.setProperty("http.proxyHost", proxy.getAttribute("host"));
-            System.setProperty("http.proxyPort", proxy.getAttribute("port"));
-        }
+		XmlElement proxy = getRoot().getElement("/options/proxy");
+		if (proxy != null && System.getProperty("http.proxyHost") != null) {
+			System.setProperty("http.proxyHost", proxy.getAttribute("host"));
+			System.setProperty("http.proxyPort", proxy.getAttribute("port"));
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    public GuiItem getGuiItem() {
-        if (guiItem == null) {
-            guiItem = new GuiItem(getRoot().getElement("/options/gui"));
-        }
+	public GuiItem getGuiItem() {
+		if (guiItem == null) {
+			guiItem = new GuiItem(getRoot().getElement("/options/gui"));
+		}
 
-        return guiItem;
-    }
+		return guiItem;
+	}
 }

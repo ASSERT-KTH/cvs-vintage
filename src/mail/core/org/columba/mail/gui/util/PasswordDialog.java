@@ -135,8 +135,6 @@ public class PasswordDialog extends JDialog implements ActionListener {
 		 */
 		JLabel hostLabel = new JLabel(message);
 
-		JLabel passwordLabel = new JLabel("Password:");
-
 		passwordField = new JPasswordField(password, 40);
 
 		checkbox = new JCheckBox(MailResourceLoader.getString("dialog",
@@ -194,7 +192,7 @@ public class PasswordDialog extends JDialog implements ActionListener {
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 		pack();
 		setLocationRelativeTo(null);
-		show();
+		setVisible(true);
 		requestFocus();
 		passwordField.requestFocus();
 	}
@@ -227,7 +225,7 @@ public class PasswordDialog extends JDialog implements ActionListener {
 				return;
 			} else {
 				File configPath = Config.getInstance().getConfigDirectory();
-				File defaultConfigPath = Config.getInstance()
+				File defaultConfigPath = Config
 						.getDefaultConfigPath();
 				while (!configPath.equals(defaultConfigPath)) {
 					configPath = configPath.getParentFile();

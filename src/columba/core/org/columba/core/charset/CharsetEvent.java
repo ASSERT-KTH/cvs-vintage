@@ -22,6 +22,7 @@ import java.util.EventObject;
 /**
  * Encapsulates information about charset changes.
  */
+
 public class CharsetEvent extends EventObject {
     protected Charset value;
 

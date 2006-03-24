@@ -26,7 +26,6 @@ import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
@@ -62,6 +61,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
+
 public class FilterToolbar extends JPanel implements ActionListener,
 		ItemListener, ISelectionListener {
 
@@ -70,8 +70,6 @@ public class FilterToolbar extends JPanel implements ActionListener,
 	private JButton searchButton;
 
 	private ComboMenu criteriaComboMenu;
-
-	private JLabel label;
 
 	private JTextField textField;
 
@@ -99,7 +97,8 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		initComponents();
 		layoutComponents();
 
-		((MailFrameMediator) tableController.getFrameController()).registerTreeSelectionListener(this);
+		((MailFrameMediator) tableController.getFrameController())
+				.registerTreeSelectionListener(this);
 	}
 
 	private ComboMenu createComboMenu() {
@@ -166,7 +165,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		FormLayout l = new FormLayout(
 				"default, 3dlu, fill:default:grow, 3dlu, default, 3dlu, default",
 				"fill:default:grow");
-		PanelBuilder b = new PanelBuilder(this, l);
+		PanelBuilder b = new PanelBuilder(l, this);
 
 		CellConstraints c = new CellConstraints();
 
@@ -180,9 +179,6 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 	}
 
-	private void update() throws Exception {
-
-	}
 
 	private int getIndex(String name) {
 		for (int i = 0; i < strs.length; i++) {
@@ -460,7 +456,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 			return;
 		}
 
-		SearchFrame frame = new SearchFrame(tableController
+		new SearchFrame(tableController
 				.getFrameController(), searchFolder, folder);
 	}
 

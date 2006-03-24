@@ -50,8 +50,6 @@ public class Service {
 	/**
 	 * Load instance of class.
 	 * <p>
-	 * TODO: This can be only used for classes in the classpath. It won't work
-	 * for services registred by plugins. Should we extend this here?
 	 * 
 	 * @param className
 	 *            class name

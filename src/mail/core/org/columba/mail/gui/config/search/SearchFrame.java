@@ -30,7 +30,6 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
@@ -68,10 +67,6 @@ public class SearchFrame extends JDialog implements ActionListener {
 	private JLabel folderLabel;
 
 	private JLabel nameLabel;
-
-	private JTextField folderTextField;
-
-	private JButton addButton;
 
 	private JButton selectButton;
 

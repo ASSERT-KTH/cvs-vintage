@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.command;
 
-import java.util.Hashtable;
-
 import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -33,65 +31,63 @@ import org.columba.mail.folder.IMailFolder;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class CreateAndSelectSubFolderCommand extends Command {
 
-    private IMailFolder parentFolder;
+	private IMailFolder parentFolder;
 
-    private boolean success;
+	private boolean success;
 
-    private Hashtable attributes;
+	private JTree tree;
 
-    private JTree tree;
-    
-    private IMailFolder childFolder;
+	private IMailFolder childFolder;
 
-    public CreateAndSelectSubFolderCommand(JTree tree,
-            ICommandReference reference) {
-        super(reference);
+	public CreateAndSelectSubFolderCommand(JTree tree,
+			ICommandReference reference) {
+		super(reference);
 
-        success = true;
-        this.tree = tree;
-    }
+		success = true;
+		this.tree = tree;
+	}
 
-    /**
-     * @see org.columba.api.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-        if (success) {
-        	/*
-            MailInterface.treeModel.nodeStructureChanged(parentFolder);
-            */
-        	
-            // select node in JTree
-            TreeNode[] nodes = childFolder.getPath();
-            tree.setSelectionPath(new TreePath(nodes));
-        }
-    }
+	/**
+	 * @see org.columba.api.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		if (success) {
+			/*
+			 * MailInterface.treeModel.nodeStructureChanged(parentFolder);
+			 */
 
-    /**
-     * @see org.columba.api.command.Command#execute(Worker)
-     */
-    public void execute(IWorkerStatusController worker) throws Exception {
-        parentFolder = (IMailFolder) ((IMailFolderCommandReference) getReference())
-                .getSourceFolder();
+			// select node in JTree
+			TreeNode[] nodes = childFolder.getPath();
+			tree.setSelectionPath(new TreePath(nodes));
+		}
+	}
 
-        String name = ((IMailFolderCommandReference) getReference())
-                .getFolderName();
+	/**
+	 * @see org.columba.api.command.Command#execute(Worker)
+	 */
+	public void execute(IWorkerStatusController worker) throws Exception {
+		parentFolder = (IMailFolder) ((IMailFolderCommandReference) getReference())
+				.getSourceFolder();
 
-        try {
-            childFolder = FolderFactory.getInstance()
-                    .createDefaultChild(parentFolder, name);
+		String name = ((IMailFolderCommandReference) getReference())
+				.getFolderName();
 
-            // if folder creation failed
-            //  -> don't update tree ui
-            if (childFolder == null) {
-                success = false;
-            }
-        } catch (Exception ex) {
-            success = false;
-            throw ex;
-        }
-    }
+		try {
+			childFolder = FolderFactory.getInstance().createDefaultChild(
+					parentFolder, name);
+
+			// if folder creation failed
+			// -> don't update tree ui
+			if (childFolder == null) {
+				success = false;
+			}
+		} catch (Exception ex) {
+			success = false;
+			throw ex;
+		}
+	}
 }

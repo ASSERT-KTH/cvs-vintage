@@ -32,6 +32,7 @@ import org.columba.mail.plugin.FilterExtensionHandler;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class CriteriaComboBoxRenderer extends DefaultListCellRenderer {
 	protected FilterExtensionHandler pluginHandler;
 

@@ -30,6 +30,7 @@ import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.core.resourceloader.ImageLoader;
 
+@SuppressWarnings({"serial","serial"})
 public class AddressbookListRenderer extends JLabel implements ListCellRenderer {
 	ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");
 

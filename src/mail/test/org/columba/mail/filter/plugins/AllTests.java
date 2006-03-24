@@ -24,7 +24,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.columba.mail.folder.IMAPTstFactory;
 import org.columba.mail.folder.MBOXFolderTstFactory;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;

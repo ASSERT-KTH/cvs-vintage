@@ -26,7 +26,6 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.config.ImapItem;
 
 /**
  * Check for new messages in IMAPFolder.

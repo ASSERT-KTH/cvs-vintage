@@ -71,6 +71,7 @@ import com.jgoodies.forms.layout.Sizes;
  * 
  * @author Frederik Dietz
  */
+
 public class ContactEditorDialog extends JDialog implements ActionListener {
 
 	private JPanel dialogPane;

@@ -15,6 +15,7 @@ import org.columba.mail.config.Identity;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
+
 public class EditSignatureAction extends AbstractColumbaAction implements Observer, ItemListener {
 
 	private Identity identity;

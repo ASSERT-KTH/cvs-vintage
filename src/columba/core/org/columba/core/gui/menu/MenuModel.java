@@ -40,14 +40,6 @@ public class MenuModel {
 
 	private String id;
 
-	private String label;
-
-	public MenuModel(String id, String label) {
-		this(id);
-		this.label = label;
-
-	}
-
 	public MenuModel(String id) {
 		this.id = id;
 
@@ -104,16 +96,19 @@ public class MenuModel {
 	}
 
 	protected int insert(IMenuElement element, String placeholderId) {
-		if ( element == null) throw new IllegalArgumentException("element == null");
-		if ( placeholderId == null ) throw new IllegalArgumentException("placeholderId == null, for element "+element.toString());
-		
+		if (element == null)
+			throw new IllegalArgumentException("element == null");
+		if (placeholderId == null)
+			throw new IllegalArgumentException(
+					"placeholderId == null, for element " + element.toString());
+
 		if (placeholders.containsKey(placeholderId) == false) {
 			if (Logging.DEBUG)
 				printDebugPlaceholders();
-			
+
 			LOG.severe("no matching placeholder with id <" + placeholderId
-					+ "> in menu <"+getId()+"> found.");
-			
+					+ "> in menu <" + getId() + "> found.");
+
 		}
 
 		IMenuElement placeholderElement = (IMenuElement) placeholders

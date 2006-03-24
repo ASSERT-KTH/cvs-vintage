@@ -23,61 +23,60 @@ import java.awt.Insets;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 
 public class LabelTextFieldPanel extends JPanel {
-    private JTextField textField;
-    private GridBagLayout layout;
-    private int y = 0;
 
-    public LabelTextFieldPanel() {
-        layout = new GridBagLayout();
-        setLayout(layout);
-    }
+	private GridBagLayout layout;
 
-    public void addLabel(JComponent label) {
-        GridBagConstraints c = new GridBagConstraints();
+	private int y = 0;
 
-        c.gridx = 0;
-        c.gridy = y;
-        c.weightx = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(0, 0, 0, 11);
-        layout.setConstraints(label, c);
-        add(label);
-    }
+	public LabelTextFieldPanel() {
+		layout = new GridBagLayout();
+		setLayout(layout);
+	}
 
-    public void addTextField(JComponent component) {
-        GridBagConstraints c = new GridBagConstraints();
+	public void addLabel(JComponent label) {
+		GridBagConstraints c = new GridBagConstraints();
 
-        c.gridx = 1;
-        c.weightx = 1.0;
-        c.gridy = y;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5, 0, 0, 0);
-        c.anchor = GridBagConstraints.EAST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        layout.setConstraints(component, c);
-        add(component);
+		c.gridx = 0;
+		c.gridy = y;
+		c.weightx = 0.0;
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(0, 0, 0, 11);
+		layout.setConstraints(label, c);
+		add(label);
+	}
 
-        y += 1;
-    }
+	public void addTextField(JComponent component) {
+		GridBagConstraints c = new GridBagConstraints();
 
-    public void addSeparator() {
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.weightx = 1.0;
-        c.gridy = y;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(0, 0, 0, 0);
-        c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridx = 1;
+		c.weightx = 1.0;
+		c.gridy = y;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(5, 0, 0, 0);
+		c.anchor = GridBagConstraints.EAST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		layout.setConstraints(component, c);
+		add(component);
 
-        Component component = Box.createVerticalStrut(11);
-        layout.setConstraints(component, c);
-        add(component);
+		y += 1;
+	}
 
-        y += 1;
-    }
+	public void addSeparator() {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.weightx = 1.0;
+		c.gridy = y;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.gridwidth = GridBagConstraints.REMAINDER;
+
+		Component component = Box.createVerticalStrut(11);
+		layout.setConstraints(component, c);
+		add(component);
+
+		y += 1;
+	}
 }

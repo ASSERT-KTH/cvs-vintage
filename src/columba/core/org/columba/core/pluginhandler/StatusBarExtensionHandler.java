@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
-import java.io.InputStream;
-
 import org.columba.core.plugin.ExtensionHandler;
 
 public class StatusBarExtensionHandler extends ExtensionHandler {

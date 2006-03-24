@@ -29,7 +29,6 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.FolderEventDelegator;
-import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderListener;
 
 /**

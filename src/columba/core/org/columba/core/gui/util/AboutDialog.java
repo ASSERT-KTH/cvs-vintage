@@ -57,6 +57,7 @@ import org.columba.core.versioninfo.VersionInfo;
 /**
  * This dialog shows information about Columba.
  */
+
 public class AboutDialog extends JDialog implements ActionListener {
     public static final String CMD_CLOSE = "CLOSE";
     private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";

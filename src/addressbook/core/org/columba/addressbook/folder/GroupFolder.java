@@ -23,7 +23,6 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.Group;
-import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IContactModel;

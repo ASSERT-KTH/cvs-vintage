@@ -1,6 +1,5 @@
 package org.columba.api.gui.frame;
 
-import org.flexdock.docking.Dockable;
 
 /**
  * 

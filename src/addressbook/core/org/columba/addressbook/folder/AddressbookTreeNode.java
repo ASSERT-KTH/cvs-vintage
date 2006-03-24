@@ -40,15 +40,11 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
 	protected ImageIcon icon = ImageLoader
 			.getSmallImageIcon("stock_book-16.png");
 
-	private String name;
-
 	protected FolderItem node;
 
 	protected Lock myLock;
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
-
-	private final Class[] STRING_ARG = new Class[] { String.class };
 
 	public AddressbookTreeNode(String name) {
 		super(name);

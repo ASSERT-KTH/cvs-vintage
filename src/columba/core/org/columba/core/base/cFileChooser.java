@@ -25,6 +25,7 @@ import javax.swing.filechooser.FileFilter;
  * @version         1.0
  * @author
  */
+@SuppressWarnings({"serial","serial"})
 public class cFileChooser extends JFileChooser {
     private FileFilter selectFilter;
 

@@ -71,6 +71,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author Erik Mattsson
  */
+
 public class ConfigFrame extends JDialog implements ListSelectionListener,
 		ActionListener {
 	/*
@@ -315,13 +316,13 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 		listView = new FilterListTable(filterList, this);
 		listView.getSelectionModel().addListSelectionListener(this);
 		listView.addMouseListener(new MouseTableListener());
-		listView.setTransferHandler(new FilterTransferHandler(listView));
+		listView.setTransferHandler(new FilterTransferHandler());
 		listView.setDragEnabled(true);
 
 		JScrollPane scrollPane = new JScrollPane(listView);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 		scrollPane.getViewport().setBackground(Color.white);
-		scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
+		scrollPane.setTransferHandler(new FilterTransferHandler());
 		centerPanel.add(scrollPane);
 
 		mainPanel.add(centerPanel);

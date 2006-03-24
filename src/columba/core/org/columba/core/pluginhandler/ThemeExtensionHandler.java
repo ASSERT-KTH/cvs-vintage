@@ -19,8 +19,6 @@ package org.columba.core.pluginhandler;
 
 import java.io.InputStream;
 
-import javax.swing.UIManager;
-
 import org.columba.core.plugin.ExtensionHandler;
 
 /**
@@ -50,7 +48,7 @@ public class ThemeExtensionHandler extends ExtensionHandler {
 
 		// remove all Look and Feels from the list
 		// which aren't supported by this system
-		UIManager.LookAndFeelInfo[] list = UIManager.getInstalledLookAndFeels();
+		//UIManager.LookAndFeelInfo[] list = UIManager.getInstalledLookAndFeels();
 
 		/*
 		 * for (int i = 0; i < parentNode.count(); i++) { XmlElement child =

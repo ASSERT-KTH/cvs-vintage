@@ -29,7 +29,6 @@ import javax.swing.JPanel;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.filter.SecurityStatusEvent;
 import org.columba.mail.gui.message.filter.SecurityStatusListener;
 import org.columba.mail.parser.text.HtmlParser;
@@ -64,16 +63,8 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 
 	private boolean visible;
 
-	private MessageController mediator;
-
-	private static final Color background = Color.YELLOW;
-
-	public SecurityStatusViewer(MessageController mediator) {
+	public SecurityStatusViewer() {
 		super();
-
-		this.mediator = mediator;
-
-		
 
 		setLayout(new BorderLayout());
 
@@ -99,7 +90,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 		super.updateUI();
 
 		setBorder(new MessageBorder(new Color(255, 255, 60), 1, true));
-		
+
 		Color color = new Color(255, 255, 160);
 
 		setBackground(color);
@@ -188,7 +179,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 
 			icon.setIcon(image);
 		}
-		
+
 		updateUI();
 	}
 
@@ -203,7 +194,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("<html><body><p>");
-		//buf.append("<b>" + title + "</b><br>");
+		// buf.append("<b>" + title + "</b><br>");
 		buf.append(title + "<br>");
 		buf.append(html);
 		buf.append("</p></body></html>");

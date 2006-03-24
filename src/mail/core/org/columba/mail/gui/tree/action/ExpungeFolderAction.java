@@ -26,7 +26,6 @@ import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.mail.command.IMailFolderCommandReference;
-import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
@@ -40,6 +39,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class ExpungeFolderAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	public ExpungeFolderAction(IFrameMediator frameMediator) {
@@ -82,8 +82,6 @@ public class ExpungeFolderAction extends AbstractColumbaAction implements
 			IMailFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
 			if (folder != null) {
-				IFolderItem item = folder.getConfiguration();
-
 				if (folder instanceof RootFolder) {
 					setEnabled(false);
 				} else {

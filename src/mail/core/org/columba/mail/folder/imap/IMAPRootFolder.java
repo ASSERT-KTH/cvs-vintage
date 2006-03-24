@@ -16,7 +16,6 @@
 
 package org.columba.mail.folder.imap;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.columba.api.command.ICommand;
@@ -46,7 +45,6 @@ import org.columba.mail.imap.IMAPServerOwner;
 import org.columba.mail.imap.IUpdateFlagAction;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPFlags;
-import org.columba.ristretto.imap.IMAPProtocol;
 import org.columba.ristretto.imap.ListInfo;
 
 /**
@@ -59,23 +57,10 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.folder.imap");
 
-	private static final int ONE_SECOND = 1000;
-
 	private static final String[] SPECIAL_FOLDER_NAMES = { "trash", "drafts",
 			"templates", "sent" };
 
-	private IMAPProtocol imap;
-
-	//private boolean select=false;
-	private boolean fetch = false;
-
-	private StringBuffer cache;
-
-	private int state;
-
-	private List lsubList;
-
-	//    private ImapOperator operator;
+	// private ImapOperator operator;
 	private AccountItem accountItem;
 
 	private IImapServer server;
@@ -98,7 +83,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	protected IStatusObservable observable;
 
 	public IMAPRootFolder(FolderItem folderItem, String path) {
-		//super(node, folderItem);
+		// super(node, folderItem);
 		super(folderItem);
 
 		// remember parent path
@@ -114,18 +99,19 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	}
 
 	public IMAPRootFolder(AccountItem accountItem, String path) {
-		//super(node, folderItem);
-		//super(getDefaultItem("IMAPRootFolder", getDefaultProperties()));
+		// super(node, folderItem);
+		// super(getDefaultItem("IMAPRootFolder", getDefaultProperties()));
 		super(accountItem.get("name"), "IMAPRootFolder");
 		observable = new StatusObservableImpl();
 
-		//remember parent path
+		// remember parent path
 		// (this is necessary for IMAPRootFolder sync operations)
 		parentPath = path;
 
 		this.accountItem = accountItem;
 
-		getConfiguration().setInteger("account_uid", accountItem.getInteger("uid"));
+		getConfiguration().setInteger("account_uid",
+				accountItem.getInteger("uid"));
 
 		updateConfiguration();
 	}
@@ -158,8 +144,8 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		if ((name.indexOf(server.getDelimiter()) != -1)
 				&& (name.indexOf(server.getDelimiter()) != (name.length() - 1))) {
 			// delimiter found
-			//  -> recursively create all necessary folders to create
-			//  -> the final folder
+			// -> recursively create all necessary folders to create
+			// -> the final folder
 			String subchild = name.substring(0, name.indexOf(server
 					.getDelimiter()));
 			AbstractFolder subFolder = (AbstractFolder) parent
@@ -179,24 +165,25 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 				subFolder.getConfiguration().setString("selectable", "false");
 
 				// this is the final folder
-				//subFolder = addIMAPChildFolder(parent, info, subchild);
+				// subFolder = addIMAPChildFolder(parent, info, subchild);
 			} else {
 				if (!((IMAPFolder) subFolder).existsOnServer) {
 					((IMAPFolder) subFolder).existsOnServer = true;
-					subFolder.getConfiguration().setString("selectable", "false");
+					subFolder.getConfiguration().setString("selectable",
+							"false");
 				}
 			}
 
 			// recursively go on
 			syncFolder(subFolder, name.substring(name.indexOf(server
-					.getDelimiter()) + server
-					.getDelimiter().length()), info);
+					.getDelimiter())
+					+ server.getDelimiter().length()), info);
 		} else {
 			// no delimiter found
-			//  -> this is already the final folder
+			// -> this is already the final folder
 			// if folder doesn't exist already
 			AbstractFolder subFolder = (AbstractFolder) parent
-					.findChildWithName(name, false, IMAPFolder.class );
+					.findChildWithName(name, false, IMAPFolder.class);
 
 			if (subFolder == null) {
 				subFolder = new IMAPFolder(name, "IMAPFolder", getParentPath());
@@ -232,12 +219,12 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		for (int i = 0; i < parent.getChildCount(); i++) {
 			child = (AbstractFolder) parent.getChildAt(i);
 
-			if (child instanceof IMAPFolder) {				
+			if (child instanceof IMAPFolder) {
 				markAllSubfoldersAsExistOnServer(child, value);
 			}
 		}
-		
-		if( parent instanceof IMAPFolder ) {
+
+		if (parent instanceof IMAPFolder) {
 			((IMAPFolder) parent).existsOnServer = value;
 		}
 	}
@@ -251,7 +238,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 			child = (AbstractFolder) parent.getChildAt(i);
 
 			if (child instanceof IMAPFolder) {
-				if( removeNotMarkedSubfolders(child) ) {
+				if (removeNotMarkedSubfolders(child)) {
 					// A child got removed -> stay at this position to
 					// get the next
 					i--;
@@ -267,11 +254,10 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
-	
 	public void findSpecialFolders() {
 		SpecialFoldersItem folders = accountItem.getSpecialFoldersItem();
 
@@ -295,15 +281,14 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 				if (specialFolder != null) {
 					// we found a suitable folder -> set it
-					folders
-							.setInteger(SPECIAL_FOLDER_NAMES[i], specialFolder
-									.getUid());
+					folders.setInteger(SPECIAL_FOLDER_NAMES[i], specialFolder
+							.getUid());
 				}
 			}
 		}
 	}
 
-	public void syncSubscribedFolders() throws Exception{
+	public void syncSubscribedFolders() throws Exception {
 		// first clear all flags
 		markAllSubfoldersAsExistOnServer(this, false);
 
@@ -332,7 +317,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		inbox.getConfiguration().setString("selectable", "true");
 
 		removeNotMarkedSubfolders(this);
-		
+
 		findSpecialFolders();
 	}
 
@@ -342,52 +327,54 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 	public void updateConfiguration() {
 		try {
-			if( server != null ) server.logout();
+			if (server != null)
+				server.logout();
 		} catch (Exception e1) {
 			// don't care
 		}
 		server = new IMAPServer(accountItem.getImapItem());
 		server.setObservable(observable);
-		
-		server.setFirstLoginAction( new IFirstLoginAction() {
+
+		server.setFirstLoginAction(new IFirstLoginAction() {
 			public void actionPerformed() {
-				// If we are online sync the subscribed folders on first connection
-				if ( ConnectionStateImpl.getInstance().isOnline() ) {
-				ICommand c = new FetchSubFolderListCommand(
-					new MailFolderCommandReference(thisFolder));
-			try {
-				// MainInterface.processor.addOp(c);
-				c.execute(NullWorkerStatusController.getInstance());
-				c.updateGUI();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}	
+				// If we are online sync the subscribed folders on first
+				// connection
+				if (ConnectionStateImpl.getInstance().isOnline()) {
+					ICommand c = new FetchSubFolderListCommand(
+							new MailFolderCommandReference(thisFolder));
+					try {
+						// MainInterface.processor.addOp(c);
+						c.execute(NullWorkerStatusController.getInstance());
+						c.updateGUI();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-		}
-			
+			}
+
 		});
-		
+
 		server.setExistsChangedAction(new IExistsChangedAction() {
 
 			public void actionPerformed(IMailFolder folder) {
 				// Trigger synchronization of the selected Folder
-				Command updateFolderCommand = new CheckForNewMessagesCommand(null,
-						new MailFolderCommandReference(folder));
+				Command updateFolderCommand = new CheckForNewMessagesCommand(
+						null, new MailFolderCommandReference(folder));
 				CommandProcessor.getInstance().addOp(updateFolderCommand);
 			}
-			
+
 		});
-		
-		server.setUpdateFlagAction( new IUpdateFlagAction() {
+
+		server.setUpdateFlagAction(new IUpdateFlagAction() {
 
 			public void actionPerformed(IMailFolder folder, IMAPFlags flags) {
 				// Trigger synchronization of the IMAPFolder
 				Command updateFlagCommand = new UpdateFlagCommand(
 						new MailFolderCommandReference(folder), flags);
 				CommandProcessor.getInstance().addOp(updateFlagCommand);
-				
+
 			}
-			
+
 		});
 	}
 
@@ -450,7 +437,8 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 		// has the imap account no trash folder using the default trash folder
 		if (ret == null) {
-			ret = (AbstractFolder) FolderTreeModel.getInstance().getTrashFolder();
+			ret = (AbstractFolder) FolderTreeModel.getInstance()
+					.getTrashFolder();
 		}
 
 		return ret;

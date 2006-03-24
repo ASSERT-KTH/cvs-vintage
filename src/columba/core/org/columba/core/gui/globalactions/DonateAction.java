@@ -26,6 +26,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.util.URLController;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
+
 public class DonateAction extends AbstractColumbaAction {
 	public DonateAction(IFrameMediator frameMediator) {
 		super(frameMediator, GlobalResourceLoader.getString(null, null,

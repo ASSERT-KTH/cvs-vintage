@@ -14,10 +14,6 @@
 //
 //All Rights Reserved.
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.io.File;
-
 import javax.swing.UIManager;
 
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;

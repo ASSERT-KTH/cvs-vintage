@@ -55,7 +55,6 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.message.viewer.AttachmentModel;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -196,16 +195,11 @@ public class PrintMessageCommand extends Command {
             Object uid = uids[j];
             LOG.info("Printing UID=" + uid);
 
-            ColumbaMessage message = new ColumbaMessage();
             Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
 
             setupMessageBodyPart(uid, srcFolder, worker);
             
-            // Does the user prefer html or plain text?
-            XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
-                                                  .getRoot().getElement("/options/html");
-            boolean viewhtml = Boolean.valueOf(html.getAttribute("prefer"))
-                                      .booleanValue();
+            
             
             
             // Setup print document for message
@@ -281,9 +275,6 @@ public class PrintMessageCommand extends Command {
 
             for (int i = 0; i < attachments.size(); i++) {
                 StreamableMimePart mp = (StreamableMimePart) attachments.get(i);
-                String contenttype = mp.getHeader().getMimeType().getType();
-                String contentSubtype = mp.getHeader().getMimeType().getSubtype();
-
                 if (mp.getHeader().getFileName() != null) {
                     // one line is added to the header for each attachment
                     // (which has a filename defined)

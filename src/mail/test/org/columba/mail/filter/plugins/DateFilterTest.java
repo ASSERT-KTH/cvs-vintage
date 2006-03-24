@@ -71,7 +71,7 @@ public class DateFilterTest extends AbstractFilterTst {
 		filter.setUp(criteria);
 
 		// execute filter
-		boolean result = filter.process(getSourceFolder(), uid);
+		filter.process(getSourceFolder(), uid);
 
 		// TODO: fix testcase
 		//assertEquals("filter result", true, result);

@@ -31,8 +31,6 @@ public class FilterFactory {
 		filter.addElement(rules);
 	
 		XmlElement actionList = new XmlElement("actionlist");
-		XmlElement action = new XmlElement("action");
-	
 		filter.addElement(actionList);
 	
 		return new Filter(filter);

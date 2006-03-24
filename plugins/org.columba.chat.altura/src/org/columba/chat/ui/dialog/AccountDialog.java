@@ -28,7 +28,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -48,18 +47,10 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
+
 public class AccountDialog extends JDialog implements ActionListener {
 
-	private JLabel serverLabel;
-
-	private JLabel idLabel;
-
-	private JLabel passwordLabel;
-
-	private JLabel resourceLabel;
-
-	private JLabel portLabel;
-
+	
 	private JTextField serverTextField;
 
 	private JTextField idTextField;
@@ -135,7 +126,7 @@ public class AccountDialog extends JDialog implements ActionListener {
 		FormLayout layout = new FormLayout("right:default, 3dlu, default:grow",
 				"");
 
-		DefaultFormBuilder b = new DefaultFormBuilder(center, layout);
+		DefaultFormBuilder b = new DefaultFormBuilder(layout, center);
 		b.setRowGroupingEnabled(true);
 
 		// b.addSeparator("Account Options");
@@ -178,11 +169,6 @@ public class AccountDialog extends JDialog implements ActionListener {
 	 */
 	private void initComponents() {
 
-		serverLabel = new JLabel("&Server:");
-		idLabel = new JLabel("&User");
-		passwordLabel = new JLabel("&Password:");
-		resourceLabel = new JLabel("&Resource:");
-		portLabel = new JLabel("P&ort:");
 		enableSSLCheckBox = new JCheckBox("Use Secure Connection (SSL)");
 		enableSSLCheckBox.setMnemonic('s');
 

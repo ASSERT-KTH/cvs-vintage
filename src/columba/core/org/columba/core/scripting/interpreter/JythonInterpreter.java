@@ -19,7 +19,6 @@ package org.columba.core.scripting.interpreter;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.columba.core.scripting.model.ColumbaScript;
 import org.python.util.PythonInterpreter;

@@ -38,8 +38,6 @@ public class ClassLoaderHelper {
 
 		Constructor[] list = actClass.getConstructors();
 
-		Class[] classes = new Class[args.length];
-
 		for (int i = 0; i < list.length; i++) {
 			Constructor c = list[i];
 

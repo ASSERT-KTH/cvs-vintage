@@ -36,6 +36,7 @@ import org.columba.ristretto.io.SourceInputStream;
 /**
  * Import VCARD contact to selected addressbook.
  */
+
 public class AddVCardAction extends DefaultTreeAction {
 	public AddVCardAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",

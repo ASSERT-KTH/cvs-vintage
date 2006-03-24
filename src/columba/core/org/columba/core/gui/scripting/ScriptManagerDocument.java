@@ -21,10 +21,10 @@ All Rights Reserved.
 package org.columba.core.gui.scripting;
 
 
+import java.util.List;
+
 import org.columba.core.scripting.IScriptsObserver;
 import org.columba.core.scripting.model.ColumbaScript;
-
-import java.util.List;
 
 /**
     @author Celso Pinto (cpinto@yimports.com)

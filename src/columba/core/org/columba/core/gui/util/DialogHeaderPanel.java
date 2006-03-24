@@ -33,14 +33,15 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 
-import org.columba.core.resourceloader.ImageLoader;
-
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * @author fdietz
  *  
  */
+
 public class DialogHeaderPanel extends JPanel {
 
 	public DialogHeaderPanel(String title, String description) {

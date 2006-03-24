@@ -26,80 +26,85 @@ import javax.swing.table.TableCellRenderer;
 
 import org.columba.core.resourceloader.ImageLoader;
 
-
 public class StringAccountRenderer extends JLabel implements TableCellRenderer {
-	
-	private static final java.util.logging.Logger LOG = 
-        java.util.logging.Logger.getLogger("org.columba.mail.gui.config.accountlist"); //$NON-NLS-1$
-	
-    private Border unselectedBorder = null;
-    private Border selectedBorder = null;
-    private boolean isBordered = true;
-    private Font plainFont;
-    private Font boldFont;
-    private ImageIcon image1 = ImageLoader.getSmallImageIcon("16_computer.png");
-    private ImageIcon image2 = ImageLoader.getSmallImageIcon("stock_internet-16.png");
-    private boolean b;
 
-    public StringAccountRenderer(boolean b) {
-        super();
-        this.b = b;
+	private static final java.util.logging.Logger LOG = java.util.logging.Logger
+			.getLogger("org.columba.mail.gui.config.accountlist"); //$NON-NLS-1$
 
-        this.isBordered = true;
+	private Border unselectedBorder = null;
 
-        setOpaque(true); //MUST do this for background to show up.
+	private Border selectedBorder = null;
 
-        boldFont = UIManager.getFont("Label.font");
-        boldFont = boldFont.deriveFont(Font.BOLD);
+	private boolean isBordered = true;
 
-        plainFont = UIManager.getFont("Label.font");
-    }
+	private Font boldFont;
 
-    public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
-        //super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
-        if (isBordered) {
-            if (isSelected) {
-                if (selectedBorder == null) {
-                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
-                            5, table.getSelectionBackground());
-                }
+	private ImageIcon image1 = ImageLoader.getSmallImageIcon("16_computer.png");
 
-                //setBorder(selectedBorder);
-                setBackground(table.getSelectionBackground());
-                setForeground(table.getSelectionForeground());
-            } else {
-                if (unselectedBorder == null) {
-                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
-                            5, table.getBackground());
-                }
+	private ImageIcon image2 = ImageLoader
+			.getSmallImageIcon("stock_internet-16.png");
 
-                setBackground(table.getBackground());
+	private boolean b;
 
-                //setBorder(unselectedBorder);
-                setForeground(table.getForeground());
-            }
-        }
+	public StringAccountRenderer(boolean b) {
+		super();
+		this.b = b;
 
-        String str = null;
+		this.isBordered = true;
 
-        try {
-            str = (String) value;
-        } catch (ClassCastException ex) {
-            LOG.info(" filter renderer: " + ex.getMessage()); //$NON-NLS-1$
-            str = "";
-        }
+		setOpaque(true); // MUST do this for background to show up.
 
-        if (b == true) {
-            if (str.equalsIgnoreCase("POP3")) {
-                setIcon(image1);
-            } else if (str.equalsIgnoreCase("IMAP4")) {
-                setIcon(image2);
-            }
-        }
+		boldFont = UIManager.getFont("Label.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
 
-        setText(str);
+	}
 
-        return this;
-    }
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		// super.getTableCellRendererComponent( table, value, isSelected,
+		// hasFocus, row, column );
+		if (isBordered) {
+			if (isSelected) {
+				if (selectedBorder == null) {
+					selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+							5, table.getSelectionBackground());
+				}
+
+				// setBorder(selectedBorder);
+				setBackground(table.getSelectionBackground());
+				setForeground(table.getSelectionForeground());
+			} else {
+				if (unselectedBorder == null) {
+					unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+							5, table.getBackground());
+				}
+
+				setBackground(table.getBackground());
+
+				// setBorder(unselectedBorder);
+				setForeground(table.getForeground());
+			}
+		}
+
+		String str = null;
+
+		try {
+			str = (String) value;
+		} catch (ClassCastException ex) {
+			LOG.info(" filter renderer: " + ex.getMessage()); //$NON-NLS-1$
+			str = "";
+		}
+
+		if (b == true) {
+			if (str.equalsIgnoreCase("POP3")) {
+				setIcon(image1);
+			} else if (str.equalsIgnoreCase("IMAP4")) {
+				setIcon(image2);
+			}
+		}
+
+		setText(str);
+
+		return this;
+	}
 }

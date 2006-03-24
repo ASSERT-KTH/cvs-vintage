@@ -71,7 +71,7 @@ public class MarkActionRow extends DefaultActionRow {
 		addComponent(variantComboBox);
 	}
 
-	class ComboBoxRenderer extends DefaultListCellRenderer {
+	 class ComboBoxRenderer extends DefaultListCellRenderer {
 		public ComboBoxRenderer() {
 			super();
 		}

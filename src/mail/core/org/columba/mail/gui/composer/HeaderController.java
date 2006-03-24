@@ -17,7 +17,6 @@ package org.columba.mail.gui.composer;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IModelFacade;
@@ -38,10 +37,6 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class HeaderController {
 
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.composer");
-
 	private ComposerController controller;
 
 	private HeaderView view;
@@ -53,7 +48,7 @@ public class HeaderController {
 
 		view = new HeaderView(this);
 
-		//view.getTable().addKeyListener(this);
+		// view.getTable().addKeyListener(this);
 
 		IContactFacade facade;
 		try {
@@ -119,7 +114,7 @@ public class HeaderController {
 	}
 
 	public void installListener() {
-		//view.table.getModel().addTableModelListener(this);
+		// view.table.getModel().addTableModelListener(this);
 	}
 
 	public void updateComponents(boolean b) {
@@ -155,15 +150,15 @@ public class HeaderController {
 	}
 
 	private IHeaderItemList getHeaderItemList(int recipient) {
-		
-		IHeaderItemList list=null;
+
+		IHeaderItemList list = null;
 		try {
 			IModelFacade c = ServiceConnector.getModelFacade();
 			list = c.createHeaderItemList();
 		} catch (ServiceNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		String header = null;
 		String str = null;
 		switch (recipient) {
@@ -194,23 +189,21 @@ public class HeaderController {
 			if (s.length() == 0)
 				continue;
 
-				
 			IHeaderItem item = null;
-			if ( addressCollector != null) item = addressCollector.getHeaderItem(s);
+			if (addressCollector != null)
+				item = addressCollector.getHeaderItem(s);
 			if (item == null) {
-				
+
 				try {
 					IModelFacade c = ServiceConnector.getModelFacade();
 					item = c.createContactItem();
 					item.setDisplayName(s);
 					item.setHeader(header);
 				} catch (ServiceNotFoundException e) {
-					
+
 					e.printStackTrace();
 				}
-				
-				
-				
+
 			} else {
 				item.setHeader(header);
 			}

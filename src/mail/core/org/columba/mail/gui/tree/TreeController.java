@@ -17,7 +17,6 @@ package org.columba.mail.gui.tree;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import javax.swing.JPopupMenu;
 import javax.swing.event.TreeExpansionEvent;
@@ -39,12 +38,6 @@ import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
  * this class shows the the folder hierarchy
  */
 public class TreeController implements TreeWillExpandListener, ITreeController {
-
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.tree");
-
-	// private FolderTreeMouseListener mouseListener;
 
 	private IMailFolder selectedFolder;
 

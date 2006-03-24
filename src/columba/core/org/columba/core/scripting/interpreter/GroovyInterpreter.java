@@ -16,17 +16,17 @@
  */
 package org.columba.core.scripting.interpreter;
 
-import java.util.Map;
+import groovy.lang.GroovyClassLoader;
+
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
-import org.columba.core.scripting.model.ColumbaScript;
-import org.columba.core.scripting.ScriptLogger;
 import org.codehaus.groovy.control.CompilationFailedException;
-import groovy.lang.GroovyClassLoader;
+import org.columba.core.scripting.model.ColumbaScript;
 
 /**
     @author Celso Pinto (cpinto@yimports.com)

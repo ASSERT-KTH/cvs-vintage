@@ -34,14 +34,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -62,7 +60,6 @@ import org.columba.mail.gui.message.action.AddToAddressbookAction;
 import org.columba.mail.gui.message.action.ComposeMessageAction;
 import org.columba.mail.gui.message.action.OpenAttachmentAction;
 import org.columba.mail.gui.message.action.SaveAsAttachmentAction;
-import org.columba.mail.gui.util.AddressListRenderer;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
@@ -76,7 +73,6 @@ import org.frapuccino.dynamicitemlistpanel.DynamicItemListPanel;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -93,10 +89,6 @@ public class HeaderViewer extends JPanel {
 
 	private boolean visible;
 
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.message.viewer");
-
 	private HeaderPanel headerTextPane;
 
 	private boolean hasAttachment;
@@ -105,7 +97,7 @@ public class HeaderViewer extends JPanel {
 
 	private MessageController mediator;
 
-	// TODO: this should be changed into a "real" window
+	// TODO (@author fdietz):  this should be changed into a "real" window
 	private JPopupMenu attachmentViewerPopup = new JPopupMenu();
 
 	private static DateFormat DATE_FORMATTER = DateFormat.getDateTimeInstance(
@@ -309,7 +301,8 @@ public class HeaderViewer extends JPanel {
 		if (mediator instanceof ThreePaneMailFrameController) {
 			final ThreePaneMailFrameController c = (ThreePaneMailFrameController) mediator;
 			// get header from folder
-			final String title = (String) folder.getAttribute(uid, "columba.subject");
+			final String title = (String) folder.getAttribute(uid,
+					"columba.subject");
 
 			// awt-event-thread
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -471,8 +464,6 @@ public class HeaderViewer extends JPanel {
 
 	private void toggleAttachmentPopupVisibility() {
 		if (attachmentPopup == null) {
-			JFrame parent = mediator.getFrameController().getContainer()
-					.getFrame();
 			attachmentPopup = new JPopupMenu();
 
 			JPanel panel = createAttachmentViewerPanel();
@@ -634,8 +625,6 @@ public class HeaderViewer extends JPanel {
 		if (key == null)
 			throw new IllegalArgumentException("key == null");
 		BasicHeader bHeader = new BasicHeader(header);
-		Vector vector = new Vector();
-
 		// message doesn't contain this headerfield
 		if (header.get(key) == null) {
 			return new JComponent[0];
@@ -654,27 +643,20 @@ public class HeaderViewer extends JPanel {
 			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
 			return new JComponent[] { new JLabel(str) };
 		} else if (key.equals("To")) {
-			String[] str = AddressListRenderer.convertToStringArray(bHeader
-					.getTo());
+			
 			return createRecipientComponentArray(bHeader.getTo());
 		} else if (key.equals("Reply-To")) {
-			String[] str = AddressListRenderer.convertToStringArray(bHeader
-					.getReplyTo());
+			
 
 			return createRecipientComponentArray(bHeader.getReplyTo());
 		} else if (key.equals("Cc")) {
-			String[] str = AddressListRenderer.convertToStringArray(bHeader
-					.getCc());
+			
 			return createRecipientComponentArray(bHeader.getCc());
 		} else if (key.equals("Bcc")) {
-			String[] str = AddressListRenderer.convertToStringArray(bHeader
-					.getBcc());
-
+			
 			return createRecipientComponentArray(bHeader.getBcc());
 		} else if (key.equals("From")) {
-			String[] str = AddressListRenderer
-					.convertToStringArray(new Address[] { (Address) bHeader
-							.getFrom() });
+			
 			return createRecipientComponentArray(new Address[] { (Address) bHeader
 					.getFrom() });
 		} else if (key.equals("Date")) {
@@ -695,10 +677,6 @@ public class HeaderViewer extends JPanel {
 	}
 
 	private JComponent[] createRecipientComponentArray(Address[] addressArray) {
-		final Color LINK_COLOR = Color.blue;
-
-		final Border LINK_BORDER = BorderFactory.createEmptyBorder(0, 0, 1, 0);
-
 		Vector v = new Vector();
 		for (int j = 0; j < addressArray.length; j++) {
 			final Address adr = addressArray[j];
@@ -766,8 +744,8 @@ public class HeaderViewer extends JPanel {
 	}
 
 	private void showAddressListDialog() {
-		AddressListDialog dialog = new AddressListDialog(mediator
-				.getFrameController().getContainer().getFrame());
+		new AddressListDialog(mediator.getFrameController().getContainer()
+				.getFrame());
 
 	}
 
@@ -811,10 +789,6 @@ public class HeaderViewer extends JPanel {
 					"right:pref, 3dlu, pref, 3dlu, fill:pref:grow",
 					"top:pref:grow");
 			DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
-
-			CellConstraints c = new CellConstraints();
-
-			// for every existing headerfield
 
 			for (Iterator it = keys.keySet().iterator(); it.hasNext();) {
 				String key = (String) it.next();

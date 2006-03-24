@@ -51,8 +51,6 @@ public class SubjectDialog extends JDialog implements ActionListener {
     public void showDialog(String subject) {
         this.subject = subject;
 
-        //TODO: i18n
-        JLabel questionLabel = new JLabel("Please enter subject!");
         JLabel subjectLabel = new JLabel("Subject:");
 
         okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
@@ -66,7 +64,7 @@ public class SubjectDialog extends JDialog implements ActionListener {
         subjectTextField.selectAll();
         subjectTextField.getDocument().addDocumentListener(new MyDocumentListener());
 
-       //TODO: i18n
+       //TODO (@author fdietz):  i18n
         setTitle("Enter Subject...");
 
         //dialog.getContentPane().setLayout( new BoxLayout( dialog.getContentPane(), BoxLayout.Y_AXIS ) );
@@ -131,7 +129,7 @@ centerPanel.add( panel );
         getRootPane().setDefaultButton(okButton);
 
         setLocationRelativeTo(null);
-        show();
+        setVisible(true);
     }
 
     public boolean success() {

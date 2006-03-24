@@ -26,7 +26,6 @@ import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.gui.action.AbstractSelectableAction;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -72,11 +71,6 @@ public class ThreadedViewAction extends AbstractSelectableAction implements
 		}
 
 		JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
-
-		MailFolderCommandReference r = (MailFolderCommandReference) ((MailFrameMediator) frameMediator)
-				.getTreeSelection();
-
-		IMailbox folder = (IMailbox) r.getSourceFolder();
 
 		boolean enableThreadedView = item.isSelected();
 

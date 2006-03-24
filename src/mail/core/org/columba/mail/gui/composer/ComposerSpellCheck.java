@@ -18,35 +18,20 @@ package org.columba.mail.gui.composer;
 import java.io.File;
 
 import org.columba.core.gui.externaltools.ExternalToolsManager;
-import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
-import org.columba.mail.config.SpellcheckItem;
 import org.columba.mail.spellcheck.ASpellInterface;
 
 public class ComposerSpellCheck {
-	private ComposerController composerController;
 
-	private SpellcheckItem spellCheckConfig = null;
+	public ComposerSpellCheck() {
 
-	public ComposerSpellCheck(ComposerController composerController) {
-		this.composerController = composerController;
-
-		/*
-		 * spellCheckConfig =
-		 * MailInterface.config.getComposerOptionsConfig().getSpellcheckItem();
-		 * ASpellInterface.setAspellExeFilename(
-		 * spellCheckConfig.get("executable"));
-		 */
 	}
 
 	public String checkText(String text) {
-		ExternalToolsExtensionHandler handler = null;
 
 		try {
-			handler = (ExternalToolsExtensionHandler) PluginManager.getInstance()
-					.getHandler(ExternalToolsExtensionHandler.NAME);
 
-			File externalToolFile = ExternalToolsManager.getInstance().getLocationOfExternalTool("aspell");
+			File externalToolFile = ExternalToolsManager.getInstance()
+					.getLocationOfExternalTool("aspell");
 
 			if (externalToolFile != null) {
 				ASpellInterface

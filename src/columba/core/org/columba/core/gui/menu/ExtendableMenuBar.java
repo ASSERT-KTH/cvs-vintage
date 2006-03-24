@@ -17,19 +17,15 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.gui.util.ThrobberIcon;
+
 
 public class ExtendableMenuBar extends JMenuBar {
 

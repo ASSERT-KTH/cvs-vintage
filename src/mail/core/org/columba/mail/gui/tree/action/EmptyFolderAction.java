@@ -31,6 +31,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
+
 public class EmptyFolderAction extends AbstractColumbaAction
     implements ISelectionListener {
     public EmptyFolderAction(IFrameMediator frameMediator) {

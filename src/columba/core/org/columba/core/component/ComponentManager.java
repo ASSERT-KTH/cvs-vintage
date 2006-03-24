@@ -7,7 +7,6 @@ import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IPluginManager;
-import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ComponentExtensionHandler;
 import org.columba.core.services.ServiceRegistry;
 

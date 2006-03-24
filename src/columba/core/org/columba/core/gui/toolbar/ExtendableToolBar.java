@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import java.util.logging.Logger;
-
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
@@ -28,10 +26,8 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * 
  * @author fdietz
  */
-public class ExtendableToolBar extends JToolBar {
 
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.gui.toolbar");
+public class ExtendableToolBar extends JToolBar {
 
 	int insertPosition = 0;
 
@@ -39,7 +35,7 @@ public class ExtendableToolBar extends JToolBar {
 		super();
 
 		setRollover(true);
-		//setFloatable(true);
+		// setFloatable(true);
 
 	}
 

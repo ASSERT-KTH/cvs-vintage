@@ -22,6 +22,7 @@ import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 
 
+
 public class AddressbookListView extends JList {
     private AddressbookListModel model;
 

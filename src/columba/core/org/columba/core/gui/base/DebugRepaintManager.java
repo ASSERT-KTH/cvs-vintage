@@ -26,86 +26,86 @@ import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
 /**
- * Debugging calls to swing gui elements which are accessed outside the
- * java awt-event dispatcher thread.
+ * Debugging calls to swing gui elements which are accessed outside the java
+ * awt-event dispatcher thread.
  * 
  * @author fdietz
  */
 public class DebugRepaintManager extends RepaintManager {
-	
-	private static final java.util.logging.Logger LOG = 
-        java.util.logging.Logger.getLogger("org.columba.core.gui.base"); //$NON-NLS-1$
-	
+
 	private int tabCount = 0;
-    private boolean checkIsShowing = true;
-    
-    public DebugRepaintManager() {
-        super();
-    }
 
-    public DebugRepaintManager(boolean checkIsShowing) {
-        super();
-        this.checkIsShowing = checkIsShowing;
-    }
+	private boolean checkIsShowing = true;
 
-    public synchronized void addInvalidComponent(JComponent jComponent) {
-        checkThread(jComponent);
-        super.addInvalidComponent(jComponent);
-    }
+	public DebugRepaintManager() {
+		super();
+	}
 
-    private void checkThread(JComponent c) {
-        if (!SwingUtilities.isEventDispatchThread() && checkIsShowing(c)) {
-        	System.err.println("----------Wrong Thread START"); //$NON-NLS-1$
-            System.err.println(getStracktraceAsString(new Exception()));
-            dumpComponentTree(c);
-            System.err.println("----------Wrong Thread END"); //$NON-NLS-1$
-        }
-    }
+	public DebugRepaintManager(boolean checkIsShowing) {
+		super();
+		this.checkIsShowing = checkIsShowing;
+	}
 
-    private String getStracktraceAsString(Exception e) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(byteArrayOutputStream);
-        e.printStackTrace(printStream);
-        printStream.flush();
-        return byteArrayOutputStream.toString();
-    }
+	public synchronized void addInvalidComponent(JComponent jComponent) {
+		checkThread(jComponent);
+		super.addInvalidComponent(jComponent);
+	}
 
-    private boolean checkIsShowing(JComponent c) {
-        if (this.checkIsShowing == false) {
-            return true;
-        } else {
-            return c.isShowing();
-        }
-    }
+	private void checkThread(JComponent c) {
+		if (!SwingUtilities.isEventDispatchThread() && checkIsShowing(c)) {
+			System.err.println("----------Wrong Thread START"); //$NON-NLS-1$
+			System.err.println(getStracktraceAsString(new Exception()));
+			dumpComponentTree(c);
+			System.err.println("----------Wrong Thread END"); //$NON-NLS-1$
+		}
+	}
 
-    public synchronized void addDirtyRegion(JComponent jComponent, int i, int i1, int i2, int i3) {
-        checkThread(jComponent);
-        super.addDirtyRegion(jComponent, i, i1, i2, i3);
-    }
+	private String getStracktraceAsString(Exception e) {
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		PrintStream printStream = new PrintStream(byteArrayOutputStream);
+		e.printStackTrace(printStream);
+		printStream.flush();
+		return byteArrayOutputStream.toString();
+	}
 
-   private void dumpComponentTree(Component c) {
-        System.err.println("----------Component Tree"); //$NON-NLS-1$
-        resetTabCount();
-        for (; c != null; c = c.getParent()) {
-            printTabIndent();
-            System.err.println(c.toString());
-            printTabIndent();
-            System.err.println("Showing:" + c.isShowing() + " Visible: " + c.isVisible()); //$NON-NLS-2$
-            incrementTabCount();
-        }
-    }
+	private boolean checkIsShowing(JComponent c) {
+		if (this.checkIsShowing == false) {
+			return true;
+		} else {
+			return c.isShowing();
+		}
+	}
 
-    private void resetTabCount() {
-        this.tabCount = 0;
-    }
+	public synchronized void addDirtyRegion(JComponent jComponent, int i,
+			int i1, int i2, int i3) {
+		checkThread(jComponent);
+		super.addDirtyRegion(jComponent, i, i1, i2, i3);
+	}
 
-    private void incrementTabCount() {
-        this.tabCount++;
-    }
+	private void dumpComponentTree(Component c) {
+		System.err.println("----------Component Tree"); //$NON-NLS-1$
+		resetTabCount();
+		for (; c != null; c = c.getParent()) {
+			printTabIndent();
+			System.err.println(c.toString());
+			printTabIndent();
+			System.err
+					.println("Showing:" + c.isShowing() + " Visible: " + c.isVisible()); //$NON-NLS-2$
+			incrementTabCount();
+		}
+	}
 
-    private void printTabIndent() {
-        for (int i = 0; i < this.tabCount; i++) {
-        	System.err.print("\t");
-        }
-    }
+	private void resetTabCount() {
+		this.tabCount = 0;
+	}
+
+	private void incrementTabCount() {
+		this.tabCount++;
+	}
+
+	private void printTabIndent() {
+		for (int i = 0; i < this.tabCount; i++) {
+			System.err.print("\t");
+		}
+	}
 }

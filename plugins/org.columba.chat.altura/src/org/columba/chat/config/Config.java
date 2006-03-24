@@ -186,8 +186,4 @@ public class Config implements IConfig {
 			properties.put(key, value);
 	}
 
-	private void put(String key, char[] value) {
-		if (value != null)
-			properties.put(key, value);
-	}
 }

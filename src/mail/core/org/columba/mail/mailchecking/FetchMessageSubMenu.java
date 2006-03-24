@@ -28,6 +28,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Provides a menu item for each mail account enabling users to fetch new
  * messages.
  */
+
 public class FetchMessageSubMenu extends IMenu implements Observer {
     //private POP3ServerCollection popServer;
 

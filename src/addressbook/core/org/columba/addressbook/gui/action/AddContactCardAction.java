@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactEditorDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.dialog.ErrorDialog;
@@ -34,6 +33,7 @@ import org.columba.core.resourceloader.ImageLoader;
  * 
  * @author fdietz
  */
+@SuppressWarnings({"serial","serial"})
 public class AddContactCardAction extends DefaultTreeAction {
 	public AddContactCardAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
@@ -64,7 +64,7 @@ public class AddContactCardAction extends DefaultTreeAction {
 		AddressbookFolder folder = (AddressbookFolder) mediator.getTree()
 				.getSelectedFolder();
 
-		ContactModel model = new ContactModel();
+		
 
 		ContactEditorDialog dialog = new ContactEditorDialog(mediator.getView().getFrame());
 

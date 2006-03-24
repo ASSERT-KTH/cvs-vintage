@@ -38,7 +38,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -79,8 +78,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
 	private JSpinner portSpinner;
 
-	private JRadioButton esmtpRadioButton;
-
 	private JLabel loginLabel;
 
 	private JTextField loginTextField;
@@ -88,14 +85,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 	private JCheckBox secureCheckBox;
 
 	private JCheckBox needAuthCheckBox;
-
-	private JCheckBox bccyourselfCheckBox;
-
-	private JLabel bccanotherLabel;
-
-	private JTextField bccanotherTextField;
-
-	private JButton selectButton;
 
 	private JCheckBox storePasswordCheckBox;
 
@@ -148,8 +137,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
 			if (!(item.get(OutgoingItem.LOGIN_METHOD).equals(
 					Integer.toString(AuthenticationManager.NONE)) || item.get(
-					OutgoingItem.LOGIN_METHOD).equals(
-					OutgoingItem.NONE))) {
+					OutgoingItem.LOGIN_METHOD).equals(OutgoingItem.NONE))) {
 				needAuthCheckBox.setSelected(true);
 
 				storePasswordCheckBox.setEnabled(true);
@@ -184,10 +172,10 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 			}
 		} else {
 			item.setString(OutgoingItem.USER, loginTextField.getText());
-			item.setBoolean(OutgoingItem.SAVE_PASSWORD,
-					storePasswordCheckBox.isSelected());
-			item.setString(OutgoingItem.PORT, ((Integer) portSpinner
-					.getValue()).toString());
+			item.setBoolean(OutgoingItem.SAVE_PASSWORD, storePasswordCheckBox
+					.isSelected());
+			item.setString(OutgoingItem.PORT,
+					((Integer) portSpinner.getValue()).toString());
 			item.setString(OutgoingItem.HOST, hostTextField.getText());
 
 			item.setBoolean(OutgoingItem.ENABLE_SSL, secureCheckBox
@@ -203,21 +191,21 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
 			item.setBoolean(OutgoingItem.USE_DEFAULT_ACCOUNT,
 					defaultAccountCheckBox.isSelected());
-			
+
 			item.getRoot().notifyObservers();
 		}
 	}
 
 	protected void layoutComponents() {
-		//Create a FormLayout instance.
+		// Create a FormLayout instance.
 		FormLayout layout = new FormLayout(
 				"10dlu, 10dlu, max(60dlu;default), 3dlu, fill:max(150dlu;default):grow, 3dlu, default, 3dlu, default  ",
 
 				// 2 columns
-				""); // rows are added dynamically (no need to define them here)
+				""); // rows are added dynamically (no need to define them
+						// here)
 
-		JPanel topPanel = new JPanel();
-		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+		DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
 		// create EmptyBorder between components and dialog-frame
 		builder.setDefaultDialogBorder();
@@ -233,7 +221,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 				"account", "configuration"));
 		builder.nextLine();
 
-		//builder.setLeadingColumnOffset(1);
+		// builder.setLeadingColumnOffset(1);
 
 		builder.append(loginLabel, 2);
 		builder.append(loginTextField, 5);
@@ -241,7 +229,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
 		builder.append(hostLabel, 2);
 		builder.append(hostTextField);
-		//builder.nextLine();
+		// builder.nextLine();
 
 		builder.append(portLabel);
 		builder.append(portSpinner);
@@ -263,18 +251,19 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 				"default, 3dlu, left:pref:grow, 3dlu, left:pref:grow",
 
 				// 2 columns
-				"fill:default:grow"); // rows are added dynamically (no need to
+				"fill:default:grow"); // rows are added dynamically (no need
+										// to
 		// define them here)
 
 		// create a form builder
-		DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+		DefaultFormBuilder b = new DefaultFormBuilder(l, panel);
 		b.append(authenticationLabel, authenticationComboBox, checkAuthMethods);
-		//b.nextLine();
-		//b.append(loginLabel, loginTextField);
+		// b.nextLine();
+		// b.append(loginLabel, loginTextField);
 		builder.append(panel, 5);
 		builder.nextLine();
 
-		//builder.setLeadingColumnOffset(1);
+		// builder.setLeadingColumnOffset(1);
 		builder.append(secureCheckBox, 6);
 		builder.nextLine();
 
@@ -282,11 +271,12 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 		FormLayout l2 = new FormLayout("default, 3dlu, left:pref",
 
 		// 2 columns
-				"fill:default:grow"); // rows are added dynamically (no need to
+				"fill:default:grow"); // rows are added dynamically (no need
+										// to
 		// define them here)
 
 		// create a form builder
-		DefaultFormBuilder b2 = new DefaultFormBuilder(panel2, l2);
+		DefaultFormBuilder b2 = new DefaultFormBuilder(l2, panel2);
 		b2.setRowGroupingEnabled(true);
 		builder.append(panel2, 3);
 		builder.nextLine();
@@ -328,7 +318,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 		defaultAccountCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
 				.getString("dialog", "account", "use_default_account_settings"));
 
-		//defaultAccountCheckBox.setEnabled(false);
+		// defaultAccountCheckBox.setEnabled(false);
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
 
@@ -375,7 +365,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 		checkAuthMethods.setActionCommand("CHECK_AUTHMETHODS");
 		checkAuthMethods.addActionListener(this);
 
-		//authenticationComboBox.addActionListener(this);
+		// authenticationComboBox.addActionListener(this);
 		authenticationLabel.setLabelFor(authenticationComboBox);
 
 		loginLabel = new LabelWithMnemonic(MailResourceLoader.getString(
@@ -386,7 +376,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void updateAuthenticationComboBox() {
 		authenticationComboBox.removeAllItems();
@@ -413,9 +403,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 		String action = e.getActionCommand();
 
 		if (e.getSource() == authenticationComboBox) {
-			String selection = (String) authenticationComboBox
-					.getSelectedItem();
-
 			loginLabel.setEnabled(true);
 			loginTextField.setEnabled(true);
 			storePasswordCheckBox.setEnabled(true);
@@ -465,13 +452,12 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 		AccountItem account = (AccountItem) accountItem.clone();
 		OutgoingItem item = account.getSmtpItem();
 		item.setString(OutgoingItem.USER, loginTextField.getText());
-		item.setBoolean(OutgoingItem.SAVE_PASSWORD,
-				storePasswordCheckBox.isSelected());
-		item.setString(OutgoingItem.PORT, ((Integer) portSpinner
-				.getValue()).toString());
-		item.setString(OutgoingItem.HOST, hostTextField.getText());
-		item.setBoolean(OutgoingItem.ENABLE_SSL, secureCheckBox
+		item.setBoolean(OutgoingItem.SAVE_PASSWORD, storePasswordCheckBox
 				.isSelected());
+		item.setString(OutgoingItem.PORT, ((Integer) portSpinner.getValue())
+				.toString());
+		item.setString(OutgoingItem.HOST, hostTextField.getText());
+		item.setBoolean(OutgoingItem.ENABLE_SSL, secureCheckBox.isSelected());
 
 		return account;
 	}
@@ -507,21 +493,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 		}
 
 		updateAuthenticationComboBox();
-	}
-
-	/**
-	 * @param string
-	 * @return
-	 */
-	private List parseAuthCapas(String string) {
-		Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
-		tokenizer.find();
-
-		List mechanisms = new LinkedList();
-		while (tokenizer.find()) {
-			mechanisms.add(tokenizer.group());
-		}
-		return mechanisms;
 	}
 
 	public boolean isFinished() {

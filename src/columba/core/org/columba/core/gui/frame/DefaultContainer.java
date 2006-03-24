@@ -36,7 +36,6 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
-import javax.swing.text.View;
 
 import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
@@ -74,6 +73,7 @@ import org.flexdock.perspective.PerspectiveManager;
  * @author fdietz
  * 
  */
+
 public class DefaultContainer extends JFrame implements IContainer,
 		WindowListener, IFrameMediatorListener {
 
@@ -94,11 +94,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	private DefaultFrameController mediator;
 
-	private View view;
-
 	private ViewItem viewItem;
-
-	private String id = "core";
 
 	protected ExtendableMenuBar menubar;
 
@@ -124,10 +120,6 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		this.viewItem = mediator.getViewItem();
 		this.mediator = mediator;
-
-		String id = new Double(Math.random()).toString();
-
-		// dockingPort.setPersistentId(id);
 
 		defaultCloseOperation = true;
 

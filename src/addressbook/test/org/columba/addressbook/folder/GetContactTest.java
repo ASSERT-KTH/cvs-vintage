@@ -19,7 +19,6 @@ package org.columba.addressbook.folder;
 
 import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.VCARD;
 
 /**
  * @author fdietz

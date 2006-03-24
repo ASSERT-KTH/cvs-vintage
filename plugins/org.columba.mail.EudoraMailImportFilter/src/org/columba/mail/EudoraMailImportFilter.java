@@ -240,7 +240,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 			if (line.indexOf(':') != -1) {
 				// a header
 				String key = line.substring(0, line.indexOf(':'));
-				String header = decoder.decode(
+				String header = EncodedWord.decode(
 						(CharSequence) line.substring(line.indexOf(':') + 1)
 								.trim()).toString();
 

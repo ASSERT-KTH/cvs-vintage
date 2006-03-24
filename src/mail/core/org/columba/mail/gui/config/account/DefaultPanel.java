@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 
 
 
+
 public class DefaultPanel extends JPanel {
     /**
  * model->view

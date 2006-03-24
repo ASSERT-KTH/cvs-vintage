@@ -16,9 +16,9 @@
 package org.columba.core.command;
 
 
-import org.columba.api.command.IWorkerStatusController;
-
 import junit.framework.TestCase;
+
+import org.columba.api.command.IWorkerStatusController;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)

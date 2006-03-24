@@ -18,17 +18,14 @@
 package org.columba.calendar.ui.list;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
@@ -57,12 +54,6 @@ import com.miginfocom.util.gfx.GfxUtil;
  */
 public class CalendarListController implements ICalendarListView,
 		ListSelectionListener {
-
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.calendar.ui.tree");
-
-	private JPanel view;
 
 	private CheckableList list;
 
@@ -95,10 +86,8 @@ public class CalendarListController implements ICalendarListView,
 		// create default root nodes <Local> and <Web>
 		Category rootCategory = CategoryDepository.getRoot();
 
-		localCategory = rootCategory.addSubCategory(
-				"local", "Local");
-		webCategory = rootCategory.addSubCategory(
-				"web", "Web");
+		localCategory = rootCategory.addSubCategory("local", "Local");
+		webCategory = rootCategory.addSubCategory("web", "Web");
 
 		loadCalendarPreferences();
 
@@ -186,7 +175,6 @@ public class CalendarListController implements ICalendarListView,
 	public Category createCalendar(String calendarId, String name,
 			int colorInt, ICalendarItem.TYPE type) {
 
-		Category root = CategoryDepository.getRoot();
 		Category calendar = null;
 		if (type == ICalendarItem.TYPE.LOCAL)
 			calendar = localCategory.addSubCategory(calendarId, name);
@@ -248,8 +236,6 @@ public class CalendarListController implements ICalendarListView,
 		}
 
 		private void handleEvent(MouseEvent e) {
-			Point point = e.getPoint();
-
 			CheckableItemListTableModel model = (CheckableItemListTableModel) list
 					.getModel();
 

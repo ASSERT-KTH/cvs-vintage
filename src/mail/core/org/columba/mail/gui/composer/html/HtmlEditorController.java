@@ -60,7 +60,7 @@ public class HtmlEditorController extends AbstractEditorController implements
 		super(controller);
 
 		// create view (by passing null as document, the view creates it)
-		view = new HtmlEditorView(this, null);
+		view = new HtmlEditorView(null);
 
 		// FocusManager.getInstance().registerComponent(this);
 		view.addCaretListener(this);

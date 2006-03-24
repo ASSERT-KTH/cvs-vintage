@@ -42,6 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Creates a menu containing submenus with different charsets from which the
  * user can choose.
  */
+
 public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
 		CharsetListener {
 

@@ -41,6 +41,7 @@ import javax.swing.SwingConstants;
  * 
  * @author fdietz
  */
+
 public class ComboMenu extends JButton implements ActionListener {
 
 	protected JPopupMenu popupMenu;

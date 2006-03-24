@@ -53,13 +53,9 @@ public abstract class AbstractFolderOptionsPlugin implements IExtensionInterface
 	private String name;
 
 	/**
-	 * ID of plugin
-	 */
-	private String pluginId;
-
-	/**
 	 * Constructor
 	 * 
+	 * TODO (@author fdietz):  pluginID is never used locally
 	 * @param name
 	 *            name of plugin
 	 * @param pluginId
@@ -70,7 +66,6 @@ public abstract class AbstractFolderOptionsPlugin implements IExtensionInterface
 	public AbstractFolderOptionsPlugin(String name, String pluginId,
 			MailFrameMediator mediator) {
 		this.name = name;
-		this.pluginId = pluginId;
 		this.mediator = mediator;
 	}
 

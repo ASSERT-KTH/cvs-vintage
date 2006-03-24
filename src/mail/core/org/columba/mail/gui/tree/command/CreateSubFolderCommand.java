@@ -18,7 +18,6 @@
 package org.columba.mail.gui.tree.command;
 
 import java.text.MessageFormat;
-import java.util.Hashtable;
 
 import javax.swing.JOptionPane;
 
@@ -42,8 +41,6 @@ public class CreateSubFolderCommand extends Command {
 
 	private IMailFolder parentFolder;
 
-	private Hashtable attributes;
-
 	/**
 	 * Constructor for CreateSubFolderCommand.
 	 * 
@@ -57,24 +54,29 @@ public class CreateSubFolderCommand extends Command {
 	 * @see org.columba.api.command.Command#execute(Worker)
 	 */
 	public void execute(IWorkerStatusController worker) throws Exception {
-		parentFolder = (IMailFolder) ((IMailFolderCommandReference) getReference()).getSourceFolder();
+		parentFolder = (IMailFolder) ((IMailFolderCommandReference) getReference())
+				.getSourceFolder();
 
-		String name = ((IMailFolderCommandReference) getReference()).getFolderName();
-		String type = ((IMailFolderCommandReference) getReference()).getFolderType();
+		String name = ((IMailFolderCommandReference) getReference())
+				.getFolderName();
+		String type = ((IMailFolderCommandReference) getReference())
+				.getFolderType();
 
 		try {
-			if( type == null ) {
-				IMailFolder subFolder = FolderFactory.getInstance()
-				.createDefaultChild(parentFolder, name);				
+			if (type == null) {
+				FolderFactory.getInstance()
+						.createDefaultChild(parentFolder, name);
 			} else {
-				IMailFolder subFolder = FolderFactory.getInstance()
-				.createChild(parentFolder, name, type);
+				FolderFactory.getInstance()
+						.createChild(parentFolder, name, type);
 			}
 		} catch (FolderCreationException ex) {
-			// show error message 
-			JOptionPane.showMessageDialog(null, 
-					MessageFormat.format( MailResourceLoader.getString("dialog", "folder",
-							"error_no_subfolder_allowed"), new String[] {parentFolder.getName()} ),MailResourceLoader.getString("dialog", "folder",
+			// show error message
+			JOptionPane.showMessageDialog(null, MessageFormat.format(
+					MailResourceLoader.getString("dialog", "folder",
+							"error_no_subfolder_allowed"),
+					new String[] { parentFolder.getName() }),
+					MailResourceLoader.getString("dialog", "folder",
 							"error_title"), JOptionPane.ERROR_MESSAGE);
 		}
 	}

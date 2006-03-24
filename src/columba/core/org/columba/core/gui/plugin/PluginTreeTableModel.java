@@ -9,7 +9,6 @@ package org.columba.core.gui.plugin;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.plugin.PluginManager;
 import org.frapuccino.treetable.AbstractTreeTableModel;
 
 
@@ -77,9 +76,6 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
 
             // enable/disable tree node
             node.setEnabled(((Boolean) value).booleanValue());
-
-            // enable/disable plugin
-            String id = node.getId();
 
             // TODO implement
             /*

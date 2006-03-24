@@ -35,7 +35,7 @@ import javax.swing.TransferHandler;
  * and should only be used by components in the composer frame.
  * @author redsolo
  */
-class ComposerAttachmentTransferHandler extends TransferHandler {
+ class ComposerAttachmentTransferHandler extends TransferHandler {
 
     private AttachmentController attachmentController;
 

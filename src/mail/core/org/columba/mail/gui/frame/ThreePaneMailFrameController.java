@@ -73,8 +73,6 @@ import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MailboxInfo;
 import org.flexdock.docking.DockingConstants;
-import org.flexdock.perspective.LayoutSequence;
-import org.flexdock.perspective.Perspective;
 
 /**
  * @author fdietz
@@ -343,14 +341,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			isTreePopupEvent = false;
 
 		} else if (e instanceof TableSelectionChangedEvent) {
-			// messagelist table selection event
-			TableSelectionChangedEvent event = (TableSelectionChangedEvent) e;
-
-//			if (event.getUids() != null && event.getUids().length > 0) {
-//				// update message viewer view panel title
-//				messageViewerPanel.setTitle("Subject: not implemented yet");
-//			}
-
 			if (isTablePopupEvent == false)
 				// show message content
 				new ViewMessageAction(this).actionPerformed(null);

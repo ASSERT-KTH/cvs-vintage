@@ -35,10 +35,7 @@ public class AddressbookExitWorker {
     }
 
     public void saveAddressbookFolder(AbstractFolder parentFolder) {
-        int count = parentFolder.getChildCount();
         AbstractFolder child;
-        AbstractFolder folder;
-
         for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
             child = (AbstractFolder) e.nextElement();
 

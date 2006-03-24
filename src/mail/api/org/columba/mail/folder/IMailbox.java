@@ -278,7 +278,7 @@ public interface IMailbox extends IMailFolder {
 	/**
 	 * Is this mailbox read-only?
 	 * 
-	 * @return TODO
+	 * @return 
 	 * 
 	 */
 	public boolean isReadOnly();

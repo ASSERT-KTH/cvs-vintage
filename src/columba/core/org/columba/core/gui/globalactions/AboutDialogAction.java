@@ -30,6 +30,7 @@ import org.columba.core.resourceloader.ImageLoader;
  *
  * @author fdietz
  */
+
 public class AboutDialogAction extends AbstractColumbaAction {
     public AboutDialogAction(IFrameMediator frameMediator) {
         super(frameMediator,

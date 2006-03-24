@@ -16,8 +16,6 @@
 package org.columba.mail.folder.virtual;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
@@ -51,9 +49,6 @@ public class ActivateVirtualFolderCommand extends Command {
 	public static void activateAll(IMailFolder root) {
 		// Find all VirtualFolders and rewrite the FolderReference
 		FolderChildrenIterator it = new FolderChildrenIterator(root);
-
-		// Put all VirtualFolders in one list
-		List vfolderList = new ArrayList();
 
 		while (it.hasMoreChildren()) {
 			IMailFolder f = it.nextChild();

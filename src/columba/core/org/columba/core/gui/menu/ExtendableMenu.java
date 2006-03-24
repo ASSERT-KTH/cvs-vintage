@@ -28,6 +28,7 @@ import javax.swing.JSeparator;
 
 import org.columba.core.gui.base.CMenu;
 
+
 public class ExtendableMenu extends CMenu {
 
 	private MenuModel model;
@@ -41,7 +42,7 @@ public class ExtendableMenu extends CMenu {
 
 		this.id = id;
 
-		model = new MenuModel(id, label);
+		model = new MenuModel(id);
 
 		map.put(id, this);
 	}

@@ -22,22 +22,14 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.chat.Connection;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.columba.core.command.Command;
-import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Presence;
 
 public class ChangePresenceCommand extends Command {
-
-	private IChatFrameMediator mediator;
-
-	private String jabberId;
-
-	private Chat chat;
 
 	public ChangePresenceCommand(IChatFrameMediator mediator,
 			ICommandReference reference) {
 		super(reference);
 
-		this.mediator = mediator;
 	}
 
 	/**

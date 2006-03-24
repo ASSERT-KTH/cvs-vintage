@@ -16,7 +16,6 @@
 package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
-import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
@@ -25,6 +24,7 @@ import javax.swing.SwingConstants;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.util.MailResourceLoader;
+
 
 
 public class AttachmentRenderer extends DefaultLabelRenderer {

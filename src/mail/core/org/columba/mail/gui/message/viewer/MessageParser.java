@@ -8,7 +8,6 @@ import java.nio.charset.UnsupportedCharsetException;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
@@ -40,11 +39,11 @@ public class MessageParser {
 		body = HtmlParser.substituteEmailAddress(body);
 
 		// parse for quotings and color the darkgray
-		body = parser.markQuotings(body);
+		body = DocumentParser.markQuotings(body);
 
 		// add smilies
 		if (enableSmilies == true) {
-			body = parser.addSmilies(body);
+			body = DocumentParser.addSmilies(body);
 		}
 
 		// encapsulate bodytext in html-code

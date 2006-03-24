@@ -144,7 +144,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener, ISel
 				"fill:default:grow, 6px, fill:default:grow, 6px, fill:default:grow", //$NON-NLS-1$
 				"default"); //$NON-NLS-1$
 
-		PanelBuilder builder = new PanelBuilder(panel, layout);
+		PanelBuilder builder = new PanelBuilder(layout, panel);
 		CellConstraints cc = new CellConstraints();
 
 		builder.add(toButton, cc.xy(1, 1));
@@ -159,7 +159,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener, ISel
 				"fill:default:grow, 6px, fill:default:grow, 6px, fill:default:grow", //$NON-NLS-1$
 				"default"); //$NON-NLS-1$
 
-		PanelBuilder builder = new PanelBuilder(panel, layout);
+		PanelBuilder builder = new PanelBuilder(layout, panel);
 		CellConstraints cc = new CellConstraints();
 
 		builder.add(toRemoveButton, cc.xy(1, 1));
@@ -174,7 +174,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener, ISel
 		FormLayout layout = new FormLayout("default, 6px, fill:default:grow", //$NON-NLS-1$
 				"default, 12px, fill:default:grow, 6px, default, 6px, default"); //$NON-NLS-1$
 
-		PanelBuilder builder = new PanelBuilder(panel, layout);
+		PanelBuilder builder = new PanelBuilder(layout, panel);
 		CellConstraints cc = new CellConstraints();
 
 		builder.add(chooseLabel, cc.xy(1, 1));
@@ -192,7 +192,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener, ISel
 				"fill:default:grow", //$NON-NLS-1$
 				"default, 6px, fill:default:grow, 12px, default, 6px, fill:default:grow, 12px, default, 6px, fill:default:grow"); //$NON-NLS-1$
 
-		PanelBuilder builder = new PanelBuilder(panel, layout);
+		PanelBuilder builder = new PanelBuilder(layout, panel);
 		CellConstraints cc = new CellConstraints();
 
 		int y = 1;

@@ -43,6 +43,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
+
 public class DeleteMessageAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	public DeleteMessageAction(IFrameMediator frameMediator) {

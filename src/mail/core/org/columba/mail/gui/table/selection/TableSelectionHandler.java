@@ -58,10 +58,6 @@ public class TableSelectionHandler extends SelectionHandler implements
 		ListSelectionListener, ISelectionListener {
 	public static final String HANDLER_ID = "mail.table";
 
-	private final static MessageNode[] messageNodeArray = { null };
-
-	private TableController tableController;
-
 	private TableView view;
 
 	private LinkedList messages;
@@ -79,8 +75,6 @@ public class TableSelectionHandler extends SelectionHandler implements
 	 */
 	public TableSelectionHandler(TableController tableController) {
 		super(TableSelectionHandler.HANDLER_ID);
-
-		this.tableController = tableController;
 
 		this.view = tableController.getView();
 
@@ -118,14 +112,10 @@ public class TableSelectionHandler extends SelectionHandler implements
 		useLocalSelection = false;
 
 		/*
-		if (ref.getUids() != null) {
-			messages.clear();
-			for (int i = 0; i < ref.getUids().length; i++) {
-				Object uid = ref.getUids()[i];
-				messages.add(tableController.getMessageNode(uid));
-			}
-		}
-		*/
+		 * if (ref.getUids() != null) { messages.clear(); for (int i = 0; i <
+		 * ref.getUids().length; i++) { Object uid = ref.getUids()[i];
+		 * messages.add(tableController.getMessageNode(uid)); } }
+		 */
 
 	}
 
@@ -160,7 +150,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
 		if (lsm.isSelectionEmpty()) {
-			//no rows are selected
+			// no rows are selected
 
 		} else {
 			int[] rows = view.getSelectedRows();

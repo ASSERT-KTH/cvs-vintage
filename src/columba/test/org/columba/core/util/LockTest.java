@@ -1,8 +1,8 @@
 package org.columba.core.util;
 
-import org.columba.core.base.Lock;
-
 import junit.framework.TestCase;
+
+import org.columba.core.base.Lock;
 
 public class LockTest extends TestCase {
 

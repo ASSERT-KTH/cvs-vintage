@@ -22,47 +22,45 @@ import org.columba.core.config.IDefaultItem;
 import org.columba.core.xml.XmlElement;
 import org.frapuccino.checkablelist.CheckableItem;
 
-
 /**
  * @author fdietz
  */
 public class OptionsItem implements CheckableItem {
-    private String name;
-    private boolean selected;
-    private XmlElement element;
 
-    public OptionsItem(XmlElement element) {
-        this.element = element;
-    }
+	private XmlElement element;
 
-    public void setSelected(boolean b) {
-        element.addAttribute("overwrite", Boolean.toString(b));
-    }
+	public OptionsItem(XmlElement element) {
+		this.element = element;
+	}
 
-    /**
- * @see org.columba.core.gui.checkablelist.CheckableItem#isSelected()
- */
-    public boolean isSelected() {
-        IDefaultItem item = new DefaultItem(element);
+	public void setSelected(boolean b) {
+		element.addAttribute("overwrite", Boolean.toString(b));
+	}
 
-        return item.getBooleanWithDefault("overwrite", false);
-    }
+	/**
+	 * @see org.columba.core.gui.checkablelist.CheckableItem#isSelected()
+	 */
+	public boolean isSelected() {
+		IDefaultItem item = new DefaultItem(element);
 
-    /**
- * @see org.columba.core.gui.checkablelist.CheckableItem#getIcon()
- */
-    public Icon getIcon() {
-        return null;
-    }
+		return item.getBooleanWithDefault("overwrite", false);
+	}
 
-    public String toString() {
-        return element.getName();
-    }
+	/**
+	 * @see org.columba.core.gui.checkablelist.CheckableItem#getIcon()
+	 */
+	public Icon getIcon() {
+		return null;
+	}
 
-    /**
- * @return
- */
-    public XmlElement getElement() {
-        return element;
-    }
+	public String toString() {
+		return element.getName();
+	}
+
+	/**
+	 * @return
+	 */
+	public XmlElement getElement() {
+		return element;
+	}
 }

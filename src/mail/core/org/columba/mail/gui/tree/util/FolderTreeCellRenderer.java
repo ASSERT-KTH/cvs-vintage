@@ -36,6 +36,7 @@ import org.columba.ristretto.message.MailboxInfo;
 /**
  * This class is used for the mail folder tree.
  */
+
 public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	private static Icon expandedFolderIcon;
 

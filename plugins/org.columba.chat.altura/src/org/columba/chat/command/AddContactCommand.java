@@ -28,17 +28,12 @@ import org.jivesoftware.smack.XMPPException;
 
 public class AddContactCommand extends Command {
 
-	private IChatFrameMediator mediator;
-
-	private String jabberId;
-
 	private PopulateRoasterCommand populateCommand;
 
 	public AddContactCommand(IChatFrameMediator mediator,
 			ICommandReference reference) {
 		super(reference);
 
-		this.mediator = mediator;
 
 		populateCommand = new PopulateRoasterCommand(mediator, reference);
 

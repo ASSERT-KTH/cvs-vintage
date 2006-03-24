@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.FolderFactory;
-import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
@@ -37,6 +36,7 @@ import org.columba.core.resourceloader.ImageLoader;
  * 
  * @author fdietz
  */
+@SuppressWarnings({"serial","serial"})
 public class AddGroupCardAction extends DefaultTreeAction {
 	public AddGroupCardAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
@@ -78,16 +78,14 @@ public class AddGroupCardAction extends DefaultTreeAction {
 		if (dialog.getResult()) {
 
 			// add new group to folder
-			IGroupFolder groupFolder = FolderFactory.createGroupFolder(folder,
-					group);
+			FolderFactory.createGroupFolder(folder, group);
 
 			// get parent
 			AddressbookTreeNode parent = (AddressbookTreeNode) folder
 					.getParent();
 
 			// notify model
-			AddressbookTreeModel.getInstance()
-					.nodeStructureChanged(parent);
+			AddressbookTreeModel.getInstance().nodeStructureChanged(parent);
 
 		}
 	}

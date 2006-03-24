@@ -33,6 +33,7 @@ import org.columba.core.gui.base.DescendingIcon;
 /**
  * @author fdietz
  */
+
 public class DefaultHeaderRenderer extends DefaultTableCellRenderer {
 
 	private String name;

@@ -69,7 +69,5 @@ public class SelectAllAction extends AbstractColumbaAction implements
 	public void actionPerformed(ActionEvent evt) {
 		if (focusOwner == null)
 			return;
-
-		Object[] keys = focusOwner.getActionMap().keys();
 	}
 }

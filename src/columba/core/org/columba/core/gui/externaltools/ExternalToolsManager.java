@@ -2,11 +2,7 @@ package org.columba.core.gui.externaltools;
 
 import java.io.File;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
-import org.columba.api.plugin.IExtension;
 import org.columba.core.config.Config;
-import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -35,27 +31,11 @@ public class ExternalToolsManager {
 
 	private static ExternalToolsManager instance = new ExternalToolsManager();
 
-	private ExternalToolsExtensionHandler handler;
-
 	private ExternalToolsManager() {
 	}
 
 	public static ExternalToolsManager getInstance() {
 		return instance;
-	}
-
-	private ExternalToolsExtensionHandler getHandler() {
-		if (handler == null) {
-			try {
-				handler = (ExternalToolsExtensionHandler) PluginManager
-						.getInstance().getHandler(
-								ExternalToolsExtensionHandler.NAME);
-			} catch (PluginHandlerNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return handler;
 	}
 
 	/**
@@ -68,18 +48,6 @@ public class ExternalToolsManager {
 	 * @return location of tool
 	 */
 	public File getLocationOfExternalTool(String toolID) {
-		AbstractExternalToolsPlugin plugin = null;
-
-		try {
-			IExtension extension = getHandler().getExtension(toolID);
-
-			plugin = (AbstractExternalToolsPlugin) extension
-					.instanciateExtension(null);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-
-			return null;
-		}
 
 		// check configuration
 		XmlElement root = getConfiguration(toolID);
@@ -135,8 +103,6 @@ public class ExternalToolsManager {
 	public XmlElement getConfiguration(String id) {
 		XmlElement root = Config.getInstance().get("external_tools")
 				.getElement("tools");
-		boolean firsttime = false;
-
 		for (int i = 0; i < root.count(); i++) {
 			XmlElement child = root.getElement(i);
 

@@ -16,7 +16,6 @@
 package org.columba.core.pluginhandler;
 
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import org.columba.core.plugin.ExtensionHandler;
 
@@ -30,9 +29,6 @@ import org.columba.core.plugin.ExtensionHandler;
  * @author fdietz
  */
 public class ActionExtensionHandler extends ExtensionHandler {
-
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.pluginhandler");
 
 	public static final String XML_RESOURCE = "/org/columba/core/action/action.xml";
 

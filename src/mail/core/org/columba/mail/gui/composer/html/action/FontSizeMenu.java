@@ -33,6 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
+
 public class FontSizeMenu extends IMenu {
     public final static String[] SIZES = { "-2", "-1", "0", "+1", "+2", "+3" };
     ButtonGroup group;

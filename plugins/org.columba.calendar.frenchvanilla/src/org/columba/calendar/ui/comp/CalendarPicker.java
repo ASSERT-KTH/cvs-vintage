@@ -29,6 +29,7 @@ import org.columba.calendar.base.api.ICalendarItem;
 import org.columba.calendar.config.Config;
 import org.columba.calendar.config.api.ICalendarList;
 
+
 public class CalendarPicker extends JComboBox {
 
 	private Hashtable<String, String> table = new Hashtable<String, String>(10);

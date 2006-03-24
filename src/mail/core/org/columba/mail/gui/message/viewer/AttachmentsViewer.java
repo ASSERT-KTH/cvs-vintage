@@ -54,6 +54,7 @@ import org.frapuccino.swing.DynamicFileTransferHandler;
  * @author fdietz
  * 
  */
+
 public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 	private MimeTree mimePartTree;
@@ -286,6 +287,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 	 * @see org.columba.mail.gui.message.command.SaveAttachmentTemporaryCommand
 	 * @see org.frappucino.swing.DynamicFileTransferHandler
 	 */
+	
 	public class AttachmentTransferHandler extends DynamicFileTransferHandler {
 
 		/**

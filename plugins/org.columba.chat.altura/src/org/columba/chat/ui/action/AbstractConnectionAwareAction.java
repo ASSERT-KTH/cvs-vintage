@@ -19,7 +19,6 @@ package org.columba.chat.ui.action;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.MainInterface;
-import org.columba.chat.config.api.IAccount;
 import org.columba.chat.conn.api.ConnectionChangedEvent;
 import org.columba.chat.conn.api.IConnectionChangedListener;
 import org.columba.chat.conn.api.IConnection.STATUS;
@@ -41,7 +40,6 @@ public abstract class AbstractConnectionAwareAction extends
 	 * @see org.columba.chat.conn.api.IConnectionChangedListener#connectionChanged(org.columba.chat.conn.api.ConnectionChangedEvent)
 	 */
 	public void connectionChanged(ConnectionChangedEvent object) {
-		IAccount account = object.getAccount();
 		STATUS status = object.getStatus();
 
 		if (status == STATUS.ONLINE)

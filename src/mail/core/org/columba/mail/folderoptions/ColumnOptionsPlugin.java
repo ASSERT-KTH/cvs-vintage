@@ -59,27 +59,6 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 	}
 
 	/**
-	 * Find xml element with attribute name.
-	 * 
-	 * @param parent
-	 *            parent element
-	 * @param name
-	 *            name of attribute
-	 * @return child element
-	 */
-	private XmlElement findColumn(XmlElement parent, String name) {
-		for (int i = 0; i < parent.count(); i++) {
-			XmlElement child = parent.getElement(i);
-
-			if (child.getAttribute("name").equals(name)) {
-				return child;
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(IMailbox)
 	 */
 	public void saveOptionsToXml(IMailbox folder) {
@@ -88,9 +67,6 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 		TableController tableController = ((TableController) ((TableViewOwner) getMediator())
 				.getTableController());
 		TableView view = tableController.getView();
-
-		// for each column
-		int c = view.getColumnCount();
 
 		Enumeration enumeration = view.getColumnModel().getColumns();
 

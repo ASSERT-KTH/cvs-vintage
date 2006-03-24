@@ -108,21 +108,11 @@ public class TableViewTransferHandler extends TransferHandler {
 		 * (MessageReferencesTransfer) data; messageTransfer.setAction(action); }
 		 */
 
-		if (data instanceof MessageReferencesTransfer) {
-
-			MessageReferencesTransfer messageTransfer = (MessageReferencesTransfer) data;
-			IMailFolderCommandReference messageRefs = messageTransfer
-					.getFolderReferences();
-			/*
-			 * if (action == TransferHandler.MOVE) { // move MoveMessageCommand
-			 * command = new MoveMessageCommand(messageRefs);
-			 * CommandProcessor.getInstance().addOp(command); } else if (action ==
-			 * TransferHandler.COPY) { // copy CopyMessageCommand command = new
-			 * CopyMessageCommand(messageRefs);
-			 * CommandProcessor.getInstance().addOp(command); }
-			 */
-
-		}
+//		if (data instanceof MessageReferencesTransfer) {
+//
+//			MessageReferencesTransfer messageTransfer = (MessageReferencesTransfer) data;
+//
+//		}
 
 		/*
 		 * if ((action == TransferHandler.MOVE) && (data instanceof

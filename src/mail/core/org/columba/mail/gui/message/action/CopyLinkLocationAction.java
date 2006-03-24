@@ -33,6 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
+
 public class CopyLinkLocationAction extends AbstractColumbaAction implements
 		Observer {
 	ColumbaURL url = null;

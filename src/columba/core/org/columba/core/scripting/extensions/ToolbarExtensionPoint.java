@@ -20,7 +20,6 @@ package org.columba.core.scripting.extensions;
 import java.util.logging.Logger;
 
 import org.columba.api.gui.frame.IContainer;
-import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.toolbar.ExtendableToolBar;
@@ -52,10 +51,6 @@ public class ToolbarExtensionPoint extends AbstractExtensionPoint {
 		
 		// add toolbar button between last button and cancel button
 		getToolBar().add(action);
-	}
-
-	private IFrameMediator getDefaultFrameMediator() {
-		return getFirstContainer().getFrameMediator();
 	}
 
 	private IContainer getFirstContainer() {

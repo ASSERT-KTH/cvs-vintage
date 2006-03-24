@@ -44,8 +44,7 @@ public class GlobalOptionsAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        GeneralOptionsDialog dialog = new GeneralOptionsDialog(frameMediator.getView().getFrame());
-
+    	new GeneralOptionsDialog(frameMediator.getView().getFrame());
         /*
         ThemeSwitcher.updateFrame(frameMediator.getFrame());
         */

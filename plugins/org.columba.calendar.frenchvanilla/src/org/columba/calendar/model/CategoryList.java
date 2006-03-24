@@ -43,12 +43,12 @@ public class CategoryList implements ICategoryList {
 	}
 
 	public String getCategories() {
-		// TODO
+		// TODO (@author fdietz): add catgory support
 		return null;
 	}
 
 	public void setCategories(String categories) {
-		// TODO Auto-generated method stub
+		// TODO (Sauthor fdietz): add catgory support
 		
 	}
 

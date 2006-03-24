@@ -72,7 +72,6 @@ public class cPrintVariable extends cParagraph {
     }
 
     public String processCodeString() {
-        int pos = 0;
         StringBuffer result = new StringBuffer();
         boolean isDecoding = false;
         char c;

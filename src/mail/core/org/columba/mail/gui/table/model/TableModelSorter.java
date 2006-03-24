@@ -135,8 +135,6 @@ public class TableModelSorter implements ModelVisitor {
 	 *  
 	 */
 	public void sort(HeaderTableModel tableModel) {
-		String str = getSortingColumn();
-
 		/*
 		 * if (str.equals("In Order Received")) { // do not sort the table, just
 		 * use MessageNode rootNode = getRootNode(); } else {

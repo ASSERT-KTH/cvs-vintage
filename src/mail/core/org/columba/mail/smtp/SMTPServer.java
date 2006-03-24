@@ -42,7 +42,6 @@ import org.columba.mail.config.Identity;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.OutgoingItem;
 import org.columba.mail.config.PopItem;
-import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.AuthenticationManager;
@@ -127,11 +126,7 @@ public class SMTPServer implements Observer  {
 		// user's email address
 		fromAddress = identity.getAddress().getMailAddress();
 
-		// Sent Folder
-		SpecialFoldersItem specialFoldersItem = accountItem
-				.getSpecialFoldersItem();
-		Integer i = new Integer(specialFoldersItem.get("sent"));
-		int sentFolder = i.intValue();
+		
 
 		usingSSL = smtpItem.getBoolean("enable_ssl");
 		int authMethod = getLoginMethod();

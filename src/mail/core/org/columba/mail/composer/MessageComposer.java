@@ -23,12 +23,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -439,8 +434,6 @@ public class MessageComposer {
 
 		MimeTreeRenderer renderer = MimeTreeRenderer.getInstance();
 		SendableMessage message = new SendableMessage();
-		StringBuffer composedMessage = new StringBuffer();
-
 		SendableHeader header = initHeader();
 		MimePart root = null;
 
@@ -572,8 +565,6 @@ public class MessageComposer {
 			}
 
 		}
-
-		String composedBody;
 
 		root.getHeader().getHeader().merge(header.getHeader());
 

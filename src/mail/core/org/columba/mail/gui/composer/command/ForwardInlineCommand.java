@@ -109,7 +109,6 @@ public class ForwardInlineCommand extends ForwardCommand {
 			// setup charset and html
 			initMimeHeader(bodyPart);
 
-			StringBuffer bodyText;
 			bodyPartAddress = bodyPart.getAddress();
 
 			String quotedBodyText = createQuotedBody(bodyPart.getHeader(),

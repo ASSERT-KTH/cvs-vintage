@@ -33,7 +33,6 @@ import org.columba.calendar.ui.calendar.api.ActivitySelectionChangedEvent;
 import org.columba.calendar.ui.calendar.api.IActivitySelectionChangedListener;
 import org.columba.calendar.ui.calendar.api.ICalendarView;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
-import org.columba.calendar.ui.list.api.ICalendarListView;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
@@ -52,8 +51,6 @@ public class SaveAsAction extends AbstractColumbaAction implements
 
 	public void actionPerformed(ActionEvent e) {
 		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
-		ICalendarListView list = m.getListView();
-
 		ICalendarView c = m.getCalendarView();
 		IActivity activity = c.getSelectedActivity();
 

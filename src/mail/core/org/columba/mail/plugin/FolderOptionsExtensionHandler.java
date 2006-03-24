@@ -16,12 +16,8 @@
 package org.columba.mail.plugin;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Vector;
 
 import org.columba.core.plugin.ExtensionHandler;
-import org.columba.core.plugin.PluginManager;
-import org.columba.core.xml.XmlElement;
 
 /**
  * AbstractMessageFolder specific options.

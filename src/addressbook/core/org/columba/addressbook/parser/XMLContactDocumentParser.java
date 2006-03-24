@@ -19,7 +19,6 @@ package org.columba.addressbook.parser;
 
 import java.util.Iterator;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import org.columba.addressbook.model.AddressModel;
 import org.columba.addressbook.model.EmailModel;
@@ -40,10 +39,6 @@ import org.jdom.Element;
  * @author fdietz
  */
 public class XMLContactDocumentParser {
-
-	/** JDK 1.4+ logging framework logger, used for logging. */
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.calendar.store");
 
 	private Document doc;
 

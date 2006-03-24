@@ -38,6 +38,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
+
 public class FolderOptionsAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	/**

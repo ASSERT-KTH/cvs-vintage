@@ -34,6 +34,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * @author fdietz
  * 
  */
+
 public class AddContactAction extends AbstractConnectionAwareAction {
 
 	/**

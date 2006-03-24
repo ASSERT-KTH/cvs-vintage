@@ -40,6 +40,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 
+
 public class ColorMessageMenu extends IMenu implements ActionListener,
 		ISelectionListener {
 	// TODO (@author fdietz): add central place, which keeps a list of all possible

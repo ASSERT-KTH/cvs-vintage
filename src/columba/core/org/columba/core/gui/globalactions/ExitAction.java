@@ -27,6 +27,7 @@ import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.shutdown.ShutdownManager;
 
 
+
 public class ExitAction extends AbstractColumbaAction {
     public ExitAction(IFrameMediator controller) {
         super(controller,

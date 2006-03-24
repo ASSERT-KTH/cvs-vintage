@@ -124,7 +124,7 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 		} catch (FolderInconsistentException ex) {
 			Object[] options = new String[] { MailResourceLoader.getString("",
 					"global", "ok").replaceAll("&", ""), };
-			int result = JOptionPane.showOptionDialog(null, MailResourceLoader
+			JOptionPane.showOptionDialog(null, MailResourceLoader
 					.getString("dialog", "error", "message_deleted"), "Error",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
 					null, options, options[0]);

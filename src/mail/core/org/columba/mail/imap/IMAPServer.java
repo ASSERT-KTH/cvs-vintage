@@ -1010,8 +1010,6 @@ public class IMAPServer implements IMAPListener, Observer, IImapServer {
 	 */
 	public IMAPFlags[] fetchFlagsListStartFrom2(int startIdx, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
-		IStatusObservable observable = getObservable();
-
 		ensureSelectedState(folder);
 		if (selectedStatus.getMessages() - startIdx >= 0) {
 			SequenceSet set = new SequenceSet();

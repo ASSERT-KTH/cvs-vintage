@@ -36,6 +36,7 @@ import org.columba.ristretto.message.Address;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
+
 public class AccountView extends JComboBox {
     AccountController controller;
 
@@ -48,7 +49,7 @@ public class AccountView extends JComboBox {
 }
 
 
-class AccountListRenderer extends JLabel implements ListCellRenderer {
+ class AccountListRenderer extends JLabel implements ListCellRenderer {
     protected ImageIcon image1;
     protected ImageIcon image2;
 

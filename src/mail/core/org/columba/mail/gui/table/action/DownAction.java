@@ -40,6 +40,7 @@ import org.columba.mail.gui.table.model.MessageNode;
  * If you do so, the nextMessage down your key is selected and shown in the
  * message-view. If no more message down your key, then nothing changed.
  */
+
 public class DownAction extends AbstractColumbaAction {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */

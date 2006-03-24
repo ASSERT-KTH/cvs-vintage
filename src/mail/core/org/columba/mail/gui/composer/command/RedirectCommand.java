@@ -20,7 +20,6 @@ package org.columba.mail.gui.composer.command;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -32,9 +31,7 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.util.AddressListRenderer;
 import org.columba.mail.parser.text.HtmlParser;
-import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.InputStreamMimePart;
@@ -43,19 +40,17 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 /**
- * Redirect message, which is the same as 
- * forwarding without Quotationsmarks and
+ * Redirect message, which is the same as forwarding without Quotationsmarks and
  * the orginal sender is the new sender.
  * 
  * This is modified ForwardInlineCommand.
  * 
- * @author fdietz
- * modified by switt 
+ * @author fdietz modified by switt
  */
 public class RedirectCommand extends ForwardCommand {
 
 	protected final String[] headerfields = new String[] { "Subject", "Date",
-			"From", "To"};
+			"From", "To" };
 
 	/**
 	 * Constructor for RedirectCommand.
@@ -78,11 +73,12 @@ public class RedirectCommand extends ForwardCommand {
 		// get first selected message
 		Object[] uids = ((MailFolderCommandReference) getReference()).getUids();
 
-//		 ->set source reference in composermodel
-        // when replying this is the original sender's message
+		// ->set source reference in composermodel
+		// when replying this is the original sender's message
 		// you selected and replied to
-        MailFolderCommandReference ref = new MailFolderCommandReference(folder, uids);
-        model.setSourceReference(ref);
+		MailFolderCommandReference ref = new MailFolderCommandReference(folder,
+				uids);
+		model.setSourceReference(ref);
 
 		// setup to, references and account
 		initHeader(folder, uids);
@@ -95,7 +91,7 @@ public class RedirectCommand extends ForwardCommand {
 
 		// Which Bodypart shall be shown? (html/plain)
 		MimePart bodyPart = null;
-		Integer[] bodyPartAddress=null;
+		Integer[] bodyPartAddress = null;
 		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
 			bodyPart = mimePartTree.getFirstTextPart("html");
 		} else {
@@ -106,10 +102,10 @@ public class RedirectCommand extends ForwardCommand {
 			// setup charset and html
 			initMimeHeader(bodyPart);
 
-			StringBuffer bodyText;
 			bodyPartAddress = bodyPart.getAddress();
 
-			String quotedBodyText = createQuotedBody(folder, uids, bodyPartAddress);
+			String quotedBodyText = createQuotedBody(folder, uids,
+					bodyPartAddress);
 
 			/*
 			 * *20040210, karlpeder* Remove html comments - they are not
@@ -121,22 +117,22 @@ public class RedirectCommand extends ForwardCommand {
 
 			model.setBodyText(quotedBodyText);
 		}
-        
-		//  add all attachments
+
+		// add all attachments
 		MimeTree mt = folder.getMimePartTree(uids[0]);
 		Iterator it = mt.getAllLeafs().iterator();
 		while (it.hasNext()) {
 			MimePart mp = (MimePart) it.next();
 			Integer[] address = mp.getAddress();
 			// skip if bodypart (already added as quoted text)
-			if ( Arrays.equals(address, bodyPartAddress) ) continue;
-        	
+			if (Arrays.equals(address, bodyPartAddress))
+				continue;
+
 			// add attachment
 			InputStream stream = folder.getMimePartBodyStream(uids[0], address);
-			model.addMimePart(new InputStreamMimePart(mp.getHeader(),
-					stream));
+			model.addMimePart(new InputStreamMimePart(mp.getHeader(), stream));
 		}
-        
+
 	}
 
 	private void initMimeHeader(MimePart bodyPart) {
@@ -156,21 +152,19 @@ public class RedirectCommand extends ForwardCommand {
 		}
 	}
 
-	private void initHeader(IMailbox folder, Object[] uids)
-			throws Exception {
+	private void initHeader(IMailbox folder, Object[] uids) throws Exception {
 		// get headerfields
-		Header header = folder.getHeaderFields(uids[0],
-				new String[] { "Subject", "To","From" });
+		Header header = folder.getHeaderFields(uids[0], new String[] {
+				"Subject", "To", "From" });
 
 		BasicHeader rfcHeader = new BasicHeader(header);
 
 		// set subject ; mod:20040629 SWITT
 		model.setSubject(rfcHeader.getSubject());
-        
-		//set From for redirecting; new: 20040629 SWITT
-		model.setHeaderField("From",
-		rfcHeader.getFrom().toString()+ " (by way of " +
-		   rfcHeader.get("To") + ")");
+
+		// set From for redirecting; new: 20040629 SWITT
+		model.setHeaderField("From", rfcHeader.getFrom().toString()
+				+ " (by way of " + rfcHeader.get("To") + ")");
 	}
 
 	protected String createQuotedBody(IMailbox folder, Object[] uids,
@@ -181,24 +175,15 @@ public class RedirectCommand extends ForwardCommand {
 		// Quote original message - different methods for text and html
 		if (model.isHtml()) {
 			// Html: Insertion of text before and after original message
-			// get necessary headerfields
-			BasicHeader rfcHeader = new BasicHeader(folder.getHeaderFields(
-					uids[0], headerfields));
-			String subject = rfcHeader.getSubject();
-			String date = DateFormat.getDateTimeInstance(DateFormat.LONG,
-					DateFormat.MEDIUM).format(rfcHeader.getDate());
-			String from = AddressListRenderer.renderToHTMLWithLinks(
-					new Address[] { rfcHeader.getFrom()}).toString();
-			String to = AddressListRenderer.renderToHTMLWithLinks(
-					rfcHeader.getTo()).toString();
 
 			// build message orginal ; mod:2004629 SWITT
 			StringBuffer buf = new StringBuffer();
 			buf.append("<html><body>");
-			buf.append(HtmlParser.removeComments( // comments are not displayed
-												  // correctly in composer
-					HtmlParser.getHtmlBody(StreamUtils.readCharacterStream(bodyStream)
-							.toString())));
+			buf.append(HtmlParser.removeComments( // comments are not
+													// displayed
+					// correctly in composer
+					HtmlParser.getHtmlBody(StreamUtils.readCharacterStream(
+							bodyStream).toString())));
 			buf.append("</body></html>");
 
 			quotedBody = buf.toString();

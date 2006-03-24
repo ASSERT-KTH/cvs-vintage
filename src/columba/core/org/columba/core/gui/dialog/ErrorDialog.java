@@ -53,12 +53,13 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * Dialog showing an error message and the exception's stack trace on request.
  * <p>
- * TODO (@author fdietz): I've currently replaced MultiLineLabel with JLabel, because it totally 
- * destroys the layout. Somehow the MultiLineLabel doesn't respect the JDialog
- * size.
+ * TODO (@author fdietz): I've currently replaced MultiLineLabel with JLabel,
+ * because it totally destroys the layout. Somehow the MultiLineLabel doesn't
+ * respect the JDialog size.
  * 
  * @author fdietz
  */
+
 public class ErrorDialog extends JDialog implements ActionListener {
 	public static final String CMD_CLOSE = "CLOSE";
 
@@ -68,13 +69,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
 	private boolean bool = false;
 
-	private String stackTrace;
-
 	private JLabel imageLabel;
-
-	private JTextArea messageTextArea;
-
-	private JLabel stacktraceLabel;
 
 	private JTextArea stacktraceTextArea;
 
@@ -88,8 +83,6 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
 	private String message;
 
-	private String details;
-
 	private JToggleButton detailsButton;
 
 	private Throwable ex;
@@ -100,8 +93,8 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		this.message = message;
 		this.ex = ex;
 
-		setTitle(GlobalResourceLoader.getString("org.columba.core.i18n.dialog", "error",
-		"error_title"));
+		setTitle(GlobalResourceLoader.getString("org.columba.core.i18n.dialog",
+				"error", "error_title"));
 
 		initComponents();
 		layoutComponents();
@@ -123,7 +116,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		centerPanel.add(imageLabel, cc.xy(1, 1));
 
 		centerPanel.add(messageMultiLineLabel, cc.xywh(3, 1, 1, 1));
-		//centerPanel.add(label, cc.xywh(3, 1, 1, 1));
+		// centerPanel.add(label, cc.xywh(3, 1, 1, 1));
 
 		centerPanel.add(detailsButton, cc.xywh(1, 3, 1, 1));
 		if (showDetails) {
@@ -146,16 +139,15 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		label = new JLabel(message);
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 
-		stacktraceLabel = new JLabel("Details >>");
 		stacktraceTextArea = new JTextArea();
 
 		StringWriter stringWriter = new StringWriter();
 		ex.printStackTrace(new PrintWriter(stringWriter));
-		stackTrace = stringWriter.toString();
+
 		stacktraceTextArea.append(stringWriter.toString());
 		stacktraceTextArea.setEditable(false);
 
-		//TODO (@author fdietz): i18n
+		// TODO (@author fdietz): i18n
 		detailsButton = new JToggleButton("Details >>");
 		detailsButton.setSelected(false);
 		detailsButton.setActionCommand("DETAILS");
@@ -185,7 +177,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-		//buttonPanel.add(reportBugButton);
+		// buttonPanel.add(reportBugButton);
 		buttonPanel.add(closeButton);
 
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
@@ -226,7 +218,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 						.open(new URL(
 								"http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
 			} catch (MalformedURLException mue) {
-			} //does not occur
+			} // does not occur
 		} else if (command.equals("DETAILS")) {
 			layoutComponents();
 			pack();

@@ -63,6 +63,7 @@ import org.frapuccino.swing.SortedTreeModelDecorator;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
+
 public class CreateFolderDialog extends JDialog implements ActionListener {
 	protected boolean bool = false;
 

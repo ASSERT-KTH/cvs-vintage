@@ -64,6 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
+@SuppressWarnings({"serial","serial"})
 public class ExternalToolsDialog extends JDialog implements ActionListener,
 		ListSelectionListener {
 

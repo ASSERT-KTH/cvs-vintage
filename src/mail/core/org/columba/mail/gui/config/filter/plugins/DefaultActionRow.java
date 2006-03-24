@@ -94,11 +94,14 @@ public class DefaultActionRow implements IExtensionInterface {
 			d.showDialog(ex);
 		}
 
-		/*
-		 * actionComboBox = new JComboBox(names); actionComboBox.setRenderer(new
-		 * ActionComboBoxRenderer());
-		 */
-		comboMenu = new ComboMenu(pluginHandler.getPluginIdList());
+		
+		comboMenu = new ComboMenu();
+		String[] ids = pluginHandler.getPluginIdList();
+		for (String element : ids) {
+			// TODO localize filter action names
+			comboMenu.addMenuItem(element, element);
+		}
+		
 		comboMenu.setText(filterAction.getAction());
 		comboMenu.addItemListener(actionList);
 

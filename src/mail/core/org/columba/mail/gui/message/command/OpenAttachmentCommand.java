@@ -55,9 +55,6 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 
 	private File tempFile;
 
-	// true, if showing a message as attachment
-	private boolean inline = false;
-
 	private TempFolder tempFolder;
 
 	private Object tempMessageUid;
@@ -138,7 +135,6 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 				LOG
 						.warning("Could not create temporary email from the attachment.");
 			}
-			inline = true;
 
 		} else {
 
@@ -148,7 +144,6 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 			} else {
 				tempFile = TempFileStore.createTempFile();
 			}
-			inline = false;
 
 			int encoding = header.getContentTransferEncoding();
 

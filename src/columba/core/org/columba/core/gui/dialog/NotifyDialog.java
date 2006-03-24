@@ -36,8 +36,6 @@ import org.columba.core.resourceloader.ImageLoader;
 
 public class NotifyDialog extends JDialog {
 
-	private MultiLineLabel textField;
-
 	public NotifyDialog() {
 		super(FrameManager.getInstance().getActiveFrame(), true);
 	}
@@ -83,14 +81,14 @@ public class NotifyDialog extends JDialog {
 
 		JPanel panel = new JPanel();
 
-		//panel.add( buttons[1] );
+		// panel.add( buttons[1] );
 		panel.add(buttons[0]);
 
 		c.gridx = 0;
 		c.gridy = 5;
 		c.weightx = 1.0;
 
-		//c.gridwidth = GridBagConstraints.REMAINDER;
+		// c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridwidth = 1;
 		c.insets = new Insets(5, 10, 10, 10);
 		c.anchor = GridBagConstraints.SOUTHEAST;
@@ -100,7 +98,7 @@ public class NotifyDialog extends JDialog {
 		getContentPane().add(topLabel);
 		getContentPane().add(panel);
 
-		//dialog.getContentPane().add( buttons[1] );
+		// dialog.getContentPane().add( buttons[1] );
 		pack();
 		setLocationRelativeTo(null);
 
@@ -114,6 +112,6 @@ public class NotifyDialog extends JDialog {
 			}
 		});
 
-		show();
+		setVisible(true);
 	}
 }

@@ -22,13 +22,9 @@ import java.awt.Insets;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 
 public class WizardTextField extends JPanel {
-    private JTextField textField;
-    private JLabel label;
-    private JLabel example;
     private GridBagLayout layout;
     private int y = 0;
 

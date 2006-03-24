@@ -59,8 +59,6 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
     protected void convert() {
         // add initial messageframe treenode
         XmlElement root = getRoot();
-        String version = root.getAttribute("version");
-
         if (initialVersionWasApplied) {
             LOG.fine("converting configuration to new version...");
 

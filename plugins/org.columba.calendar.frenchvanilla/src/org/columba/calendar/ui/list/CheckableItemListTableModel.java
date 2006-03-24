@@ -27,6 +27,7 @@ import org.columba.calendar.base.api.ICalendarItem;
  * 
  * @author fdietz
  */
+
 public class CheckableItemListTableModel extends AbstractTableModel {
 	private Vector data;
 

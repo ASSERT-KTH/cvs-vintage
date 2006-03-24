@@ -33,6 +33,7 @@ import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+
 public class AddressListDialog extends JDialog implements ActionListener,
 		ListSelectionListener {
 
@@ -53,7 +54,7 @@ public class AddressListDialog extends JDialog implements ActionListener,
 	private int index;
 
 	private CheckableItemImpl selection;
-
+	
 	public AddressListDialog(Frame owner) throws HeadlessException {
 		super(owner, true);
 
@@ -124,7 +125,7 @@ public class AddressListDialog extends JDialog implements ActionListener,
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
 		ButtonBarBuilder builder2 = new ButtonBarBuilder(buttonPanel);
 		// builder.setDefaultButtonBarGapBorder();
@@ -176,7 +177,7 @@ public class AddressListDialog extends JDialog implements ActionListener,
 
 			selection = (CheckableItemImpl) ((CheckableItemListTableModel) list
 					.getModel()).getElement(index);
-
+			System.out.println("selection="+selection.toString());
 		}
 	}
 

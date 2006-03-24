@@ -109,13 +109,14 @@ public class DockableView extends AbstractDockable implements
 		public void actionPerformed(ActionEvent e) {
 			// FIXME: should we align the menu to the left instead?
 			// menu.show(b, b.getWidth() - menu.getWidth(), b.getHeight());
+			if ( menu != null)
 			menu.show(menuButton, 0, menuButton.getHeight());
 
 			// menu.setVisible(true);
 		}
 	}
 
-	class CloseAction extends AbstractAction {
+	 class CloseAction extends AbstractAction {
 		String id;
 
 		CloseAction(String id) {
@@ -167,7 +168,7 @@ public class DockableView extends AbstractDockable implements
 
 	}
 
-	class CloseIcon extends ImageIcon {
+	 class CloseIcon extends ImageIcon {
 
 		private CloseIcon() {
 			super();
@@ -176,8 +177,6 @@ public class DockableView extends AbstractDockable implements
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			Graphics2D g2 = (Graphics2D) g;
 
-			int size = c.getWidth();
-			int middle = size / 4;
 			int w = c.getWidth();
 			int h = c.getHeight();
 
@@ -252,10 +251,7 @@ public class DockableView extends AbstractDockable implements
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			Graphics2D g2 = (Graphics2D) g;
 
-			int size = c.getWidth();
-			int middle = size / 4;
-			int w = c.getWidth();
-			int h = c.getHeight();
+			
 
 			if (isActive())
 				g2.setColor(ACTIVE_LABEL_COLOR);

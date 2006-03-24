@@ -4,6 +4,7 @@ import java.util.EventObject;
 
 import org.columba.api.gui.frame.IFrameMediator;
 
+
 public class FrameEvent extends EventObject {
 
 	private String text;

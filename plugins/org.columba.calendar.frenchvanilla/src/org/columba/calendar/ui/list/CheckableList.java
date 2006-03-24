@@ -30,6 +30,7 @@ import javax.swing.table.TableModel;
  * 
  * @author fdietz
  */
+
 public class CheckableList extends JTable {
 
 	// private CheckableItemListTableModel model;

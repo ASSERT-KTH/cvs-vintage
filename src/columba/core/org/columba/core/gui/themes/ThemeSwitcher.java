@@ -45,31 +45,39 @@ import org.columba.core.xml.XmlElement;
  */
 public class ThemeSwitcher {
 
+	private static final String DEFAULT_LF = "Plastic";
+
 	public static void setTheme() {
 		// get configuration
 		XmlElement themeConfig = Config.getInstance().get("options")
 				.getElement("/options/gui/theme");
 
-		if( themeConfig == null) {
+		if (themeConfig == null) {
 			XmlElement themeParent = Config.getInstance().get("options")
-			.getElement("/options/gui");
+					.getElement("/options/gui");
 			themeConfig = new XmlElement("theme");
 			themeParent.addElement(themeConfig);
 		}
-		
+
 		String pluginName = null;
 		try {
 			// get plugin-handler
 			ThemeExtensionHandler handler = (ThemeExtensionHandler) PluginManager
 					.getInstance().getHandler(ThemeExtensionHandler.NAME);
 
+			pluginName = themeConfig.getAttribute("name");
+
 			// if no theme available -> set "Plastic" as default
-			pluginName = themeConfig.getAttribute("name", ThemeSwitcher.getPlatformDefaultTheme());
+			if (pluginName == null) {
+				pluginName = ThemeSwitcher.getPlatformDefaultTheme();
+				themeConfig.addAttribute("name", DEFAULT_LF);
+				themeConfig.addAttribute("theme", "Experience Blue");
+			}
 
 			AbstractThemePlugin theme = null;
 
 			IExtension extension = handler.getExtension(pluginName);
-			
+
 			// instanciate theme
 			theme = (AbstractThemePlugin) extension.instanciateExtension(null);
 
@@ -92,19 +100,17 @@ public class ThemeSwitcher {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	/*
-	 * Gets the platform specific default theme. This is in
-	 * all cases but MacOS X the Plastic theme. On MacOs X
-	 * we use the System L&F.
-	 * 
-	 */
+	} /*
+		 * Gets the platform specific default theme. This is in all cases but
+		 * MacOS X the Plastic theme. On MacOs X we use the System L&F.
+		 * 
+		 */
+
 	public static String getPlatformDefaultTheme() {
-		if( OSInfo.isMac()) {
+		if (OSInfo.isMac()) {
 			return UIManager.getSystemLookAndFeelClassName();
 		} else {
-			return "Plastic";
+			return DEFAULT_LF;
 		}
 	}
 

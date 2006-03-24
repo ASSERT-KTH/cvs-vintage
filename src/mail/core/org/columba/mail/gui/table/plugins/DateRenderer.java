@@ -30,69 +30,68 @@ import org.columba.mail.gui.table.model.MessageNode;
 
 
 public class DateRenderer extends DefaultLabelRenderer {
-    static SimpleDateFormat dfWeek = new SimpleDateFormat("EEE HH:mm",
-            Locale.getDefault());
-   
-    // use local date settings
-    DateFormat dfCommon = DateFormat.getDateInstance();
-    
-    static final long OneDay = 24 * 60 * 60 * 1000;
-    static TimeZone localTimeZone = TimeZone.getDefault();
-    private Font plainFont;
-    private Font boldFont;
+	static SimpleDateFormat dfWeek = new SimpleDateFormat("EEE HH:mm", Locale
+			.getDefault());
 
-    public DateRenderer() {
-        super();
+	// use local date settings
+	DateFormat dfCommon = DateFormat.getDateInstance();
 
-        //setOpaque(true); //MUST do this for background to show up.
-        boldFont = UIManager.getFont("Tree.font");
-        boldFont = boldFont.deriveFont(Font.BOLD);
+	static final long OneDay = 24 * 60 * 60 * 1000;
 
-        plainFont = UIManager.getFont("Tree.font");
-    }
+	static TimeZone localTimeZone = TimeZone.getDefault();
 
-    public void updateUI() {
-        super.updateUI();
+	private Font boldFont;
 
-        boldFont = UIManager.getFont("Tree.font");
-        boldFont = boldFont.deriveFont(Font.BOLD);
+	public DateRenderer() {
+		super();
 
-        plainFont = UIManager.getFont("Tree.font");
-    }
+		// setOpaque(true); //MUST do this for background to show up.
+		boldFont = UIManager.getFont("Tree.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
 
-    public static int getLocalDaysDiff(long t) {
-        return (int) (((System.currentTimeMillis() +
-        localTimeZone.getRawOffset()) -
-        (((t + localTimeZone.getRawOffset()) / OneDay) * OneDay)) / OneDay);
-    }
+	}
 
-    public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
-    	
-    	super.getTableCellRendererComponent(table, value, isSelected,
-                hasFocus, row, column);
-    	
-        if (value == null) {
-            setText("");
+	public void updateUI() {
+		super.updateUI();
 
-            return this;
-        }
+		boldFont = UIManager.getFont("Tree.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
 
-        Date date = (Date) ((MessageNode) value).getHeader().get("columba.date");
+	}
 
-        if (date == null) {
-            return this;
-        }
+	public static int getLocalDaysDiff(long t) {
+		return (int) (((System.currentTimeMillis() + localTimeZone
+				.getRawOffset()) - (((t + localTimeZone.getRawOffset()) / OneDay) * OneDay)) / OneDay);
+	}
 
-        int diff = getLocalDaysDiff(date.getTime());
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
 
-        //if ( today
-        if ((diff >= 0) && (diff < 7)) {
-            setText(dfWeek.format(date));
-        } else {
-            setText(dfCommon.format(date));
-        }
+		super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+				row, column);
 
-        return this;
-    }
+		if (value == null) {
+			setText("");
+
+			return this;
+		}
+
+		Date date = (Date) ((MessageNode) value).getHeader()
+				.get("columba.date");
+
+		if (date == null) {
+			return this;
+		}
+
+		int diff = getLocalDaysDiff(date.getTime());
+
+		// if ( today
+		if ((diff >= 0) && (diff < 7)) {
+			setText(dfWeek.format(date));
+		} else {
+			setText(dfCommon.format(date));
+		}
+
+		return this;
+	}
 }

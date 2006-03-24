@@ -23,7 +23,7 @@ import javax.swing.table.TableColumn;
 import org.columba.mail.config.AccountList;
 
 
-class AccountListTable extends JTable {
+ class AccountListTable extends JTable {
     public AccountListTable(AccountList accountList, AccountListDialog frame) {
         super(new AccountListDataModel(accountList));
 

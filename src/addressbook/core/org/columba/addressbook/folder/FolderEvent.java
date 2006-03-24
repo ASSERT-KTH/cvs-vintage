@@ -21,6 +21,7 @@ import java.util.EventObject;
 /**
  * Passed to listeners to notify them of changes.
  */
+
 public class FolderEvent extends EventObject implements IFolderEvent {
     protected Object changes;
     

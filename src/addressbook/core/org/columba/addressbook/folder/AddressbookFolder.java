@@ -25,6 +25,7 @@ import org.columba.addressbook.config.FolderItem;
  * @author fdietz
  *
  */
+
 public class AddressbookFolder extends LocalFolder {
 
     public AddressbookFolder(String name, String path) {

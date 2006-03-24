@@ -38,15 +38,12 @@ import org.columba.core.resourceloader.ImageLoader;
  */
 public class ThrobberIcon extends JPanel implements TaskManagerListener {
 
-	private static int DELAY = 10;
-
 	private TaskManager taskManager;
 
 	private AnimatedGIFComponent comp;
 
 	public ThrobberIcon() {
 		super();
-
 
 		setLayout(new BorderLayout());
 

@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -37,17 +36,11 @@ import javax.swing.ImageIcon;
 import org.columba.core.io.DiskIO;
 
 public class ImageLoader {
-	
-	private static final java.util.logging.Logger LOG = 
-        java.util.logging.Logger.getLogger("org.columba.core.resourceloader");
-	
+
+	private static final java.util.logging.Logger LOG = java.util.logging.Logger
+			.getLogger("org.columba.core.resourceloader");
+
 	static boolean ICON_SET = false;
-
-	private static ResourceBundle bundle;
-
-	private static Properties properties;
-
-	private static String iconset;
 
 	private static Hashtable hashtable = new Hashtable();
 
@@ -115,7 +108,7 @@ public class ImageLoader {
 
 		return icon;
 	}
-	
+
 	public static ImageIcon getImageIconResource(String name) {
 		URL url;
 

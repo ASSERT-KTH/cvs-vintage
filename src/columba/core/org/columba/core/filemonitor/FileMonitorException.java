@@ -20,6 +20,7 @@ package org.columba.core.filemonitor;
 /**
  * @author Celso Pinto <cpinto@yimports.com>
  */
+
 public class FileMonitorException
   extends Exception
 {

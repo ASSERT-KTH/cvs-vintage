@@ -29,6 +29,7 @@ import org.columba.core.command.CommandProcessor;
  * @author fdietz
  * 
  */
+
 public class DisconnectAction extends AbstractConnectionAwareAction {
 
 	/**

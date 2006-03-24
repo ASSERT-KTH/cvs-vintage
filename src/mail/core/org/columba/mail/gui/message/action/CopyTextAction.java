@@ -26,6 +26,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  *
  * @author fdietz
  */
+
 public class CopyTextAction extends AbstractColumbaAction {
     /**
      *

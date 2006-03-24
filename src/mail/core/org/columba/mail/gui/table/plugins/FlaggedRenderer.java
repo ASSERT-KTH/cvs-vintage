@@ -29,6 +29,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
 
+
 public class FlaggedRenderer extends DefaultLabelRenderer {
     boolean bool;
     ImageIcon image1;

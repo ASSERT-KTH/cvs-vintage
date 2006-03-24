@@ -68,6 +68,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * Shows a dialog for managing general options such as font settings.
  */
+
 public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
@@ -499,7 +500,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			lfButton.setEnabled(configID != null);
 		} else if (action.equals("THEME_OPTIONS")) {
-			String theme = (String) lfComboBox.getSelectedItem();
 			try {
 				ConfigurationDialog dialog = new ConfigurationDialog(configID);
 				dialog.setVisible(true);

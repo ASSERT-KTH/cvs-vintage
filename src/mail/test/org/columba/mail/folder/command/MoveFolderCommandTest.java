@@ -15,13 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.NullWorkerStatusController;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.MailboxTstFactory;
-import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.folder.temp.TempFolder;
 
 /**
  * Test cases for the MoveFolder command.

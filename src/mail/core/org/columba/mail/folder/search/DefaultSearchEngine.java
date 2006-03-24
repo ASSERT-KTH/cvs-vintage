@@ -38,7 +38,6 @@ import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.plugin.FilterExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.imap.IMAPException;
 
 /**
  * Divides search requests and passes them along to the optimized
@@ -260,8 +259,6 @@ public class DefaultSearchEngine {
 			// filter is disabled
 			return new Object[] {};
 		}
-
-		long startTime = System.currentTimeMillis();
 
 		List notDefaultEngineResult = null;
 		List defaultEngineResult = new LinkedList();

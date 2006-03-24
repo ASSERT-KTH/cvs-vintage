@@ -40,8 +40,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -74,7 +72,6 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.util.ColumbaURL;
-import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.FallbackCharsetDecoderInputStream;
@@ -98,9 +95,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	private static final Pattern CIDPattern = Pattern.compile("cid:([^\"]+)",
 			Pattern.CASE_INSENSITIVE);
 
-	// parser to transform text to html
-	private DocumentParser parser;
-
 	// stylesheet is created dynamically because
 	// user configurable fonts are used
 	private String css = "";
@@ -112,12 +106,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 	// name of font
 	private String name;
-
-	// size of font
-	private String size;
-
-	// overwrite look and feel font settings
-	private boolean overwrite;
 
 	/*
 	 * private String body;
@@ -176,7 +164,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			viewerPlugin = createHTMLViewerPluginInstance(selectedBrowser);
 			// in case of an error -> fall-back to Swing's built-in JTextPane
 			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false)) {
-				LOG.severe("Error while trying to load html viewer -> falling back to default");
+				LOG
+						.severe("Error while trying to load html viewer -> falling back to default");
 
 				viewerPlugin = createHTMLViewerPluginInstance("Default");
 				// usingJDIC = false;
@@ -198,10 +187,11 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 					.getInstance().getHandler(HTMLViewerExtensionHandler.NAME);
 
 			IExtension extension = handler.getExtension(pluginId);
-			if ( extension == null ) return null;
-			
+			if (extension == null)
+				return null;
+
 			plugin = (IHTMLViewerPlugin) extension.instanciateExtension(null);
-			
+
 			return plugin;
 		} catch (PluginHandlerNotFoundException e) {
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
@@ -260,14 +250,9 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		// register as configuration change listener
 		quote.addObserver(this);
 
-		// TODO (@author fdietz): use value in initStyleSheet()
-		String enabled = quote.getAttribute("enabled", "true");
-		String color = quote.getAttribute("color", "0");
-
 		// register for configuration changes
 		Font font = FontProperties.getTextFont();
 		name = font.getName();
-		size = new Integer(font.getSize()).toString();
 
 		XmlElement options = Config.getInstance().get("options").getElement(
 				"/options");
@@ -280,10 +265,11 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		// register interest on configuratin changes
 		fonts.addObserver(this);
-		
-		//XmlElement selectedBrowser = messageviewer.getElement(OptionsItem.SELECTED_BROWSER);
-		//selectedBrowser.addObserver(this);
-		
+
+		// XmlElement selectedBrowser =
+		// messageviewer.getElement(OptionsItem.SELECTED_BROWSER);
+		// selectedBrowser.addObserver(this);
+
 	}
 
 	/**
@@ -355,7 +341,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			// setText(body);
 
 		}
-		
+
 	}
 
 	private boolean isHTMLStrippingEnabled() {
@@ -375,17 +361,17 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		// read configuration from options.xml file
 		// create css-stylesheet string
 		// set font of html-element <P>
-		
-		/*css = "<style type=\"text/css\">\n" + "body {font-family:\"" + name
-				+ "\"; font-size:\"" + size + "pt; \"} \n"
-				+ "a { color: blue; text-decoration: underline }\n"
-				+ "font.quoting {color:#949494;} \n" + "</style>\n";*/
-				
+
+		/*
+		 * css = "<style type=\"text/css\">\n" + "body {font-family:\"" + name +
+		 * "\"; font-size:\"" + size + "pt; \"} \n" + "a { color: blue;
+		 * text-decoration: underline }\n" + "font.quoting {color:#949494;} \n" + "</style>\n";
+		 */
+
 		css = "<style type=\"text/css\">\n" + "body {font-family:\"" + name
-		+ "\";} \n"
-		+ "a { color: blue; text-decoration: underline }\n"
-		+ "font.quoting {color:#949494;} \n" + "</style>\n";
-		
+				+ "\";} \n" + "a { color: blue; text-decoration: underline }\n"
+				+ "font.quoting {color:#949494;} \n" + "</style>\n";
+
 	}
 
 	/*
@@ -398,16 +384,15 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	public void update(Observable arg0, Object arg1) {
 		Font font = FontProperties.getTextFont();
 		name = font.getName();
-		size = new Integer(font.getSize()).toString();
 
 		initStyleSheet();
 
 		// remove old renderer
 		remove(viewerPlugin.getContainer());
-		
+
 		// init new renderer
 		initHTMLViewerPlugin();
-		
+
 		// add new renderer
 		add(viewerPlugin.getContainer(), BorderLayout.CENTER);
 	}
@@ -594,9 +579,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		HTMLDocument doc = (HTMLDocument) pane.getDocument();
 
 		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
-		AttributeSet a = e.getAttributes();
-		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-
 		try {
 			url.setSender(doc.getText(e.getStartOffset(), (e.getEndOffset() - e
 					.getStartOffset())));

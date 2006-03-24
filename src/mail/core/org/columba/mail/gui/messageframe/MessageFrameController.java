@@ -21,13 +21,11 @@ package org.columba.mail.gui.messageframe;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.columba.api.gui.frame.IContainer;
-import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -52,11 +50,6 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class MessageFrameController extends AbstractMailFrameController
 		implements TableViewOwner {
-
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.messageframe");
-
-	private static final int MAX_SUBJECT_LENGTH = 50;
 
 	IMailFolderCommandReference treeReference;
 
@@ -153,7 +146,7 @@ public class MessageFrameController extends AbstractMailFrameController
 
 		panel.add(messageController, BorderLayout.CENTER);
 
-		ViewItem viewItem = getViewItem();
+		
 
 		return panel;
 	}

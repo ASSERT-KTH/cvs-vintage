@@ -1,6 +1,6 @@
 /*
- * $Revision: 1.2 $
- * $Date: 2004/08/22 15:55:07 $
+ * $Revision: 1.3 $
+ * $Date: 2006/03/24 17:07:30 $
  * $Author: fdietz $
  *
  * Copyright (C) 2001 C. Scott Willy
@@ -97,7 +97,7 @@ public class Validator {
         ValidationDialog validationDialog;
         validationDialog = new ValidationDialog(result.getOriginalWord(),
                 result.getSuggestions());
-        validationDialog.show();
+        validationDialog.setVisible(true);
 
         ValidationDialog.UserAction userAction = validationDialog.getUserAction();
 

@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import javax.swing.ImageIcon;
 
 
+@SuppressWarnings({"serial","serial"})
 public class AscendingIcon extends ImageIcon {
 	
     public AscendingIcon() {

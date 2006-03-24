@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -31,7 +30,6 @@ import javax.swing.tree.TreeNode;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.base.ListTools;
 import org.columba.core.command.Command;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.imap.IImapServer;
 import org.columba.ristretto.imap.ListInfo;
@@ -40,15 +38,12 @@ import org.columba.ristretto.imap.NamespaceCollection;
 import org.frapuccino.checkabletree.CheckableItemImpl;
 
 public class SynchronizeFolderListCommand extends Command {
-	private Pattern delimiterPattern;
 
 	private IMAPRootFolder root;
 
 	private IImapServer store;
 
 	private TreeNode node;
-
-	private String delimiter;
 
 	/**
 	 * @param references
@@ -74,7 +69,7 @@ public class SynchronizeFolderListCommand extends Command {
 	private List fetchUnsubscribedFolders(String reference) throws Exception {
 		NamespaceCollection namespaces;
 
-		//Does the server support the namespace extension?
+		// Does the server support the namespace extension?
 		if (store.isSupported("NAMESPACE")) {
 			namespaces = store.fetchNamespaces();
 		} else {
@@ -86,7 +81,7 @@ public class SynchronizeFolderListCommand extends Command {
 		ArrayList result = new ArrayList();
 		Iterator it;
 
-		//Process personal namespaces
+		// Process personal namespaces
 		if (namespaces.getPersonalNamespaceSize() > 0) {
 			it = namespaces.getPersonalIterator();
 			while (it.hasNext()) {
@@ -97,7 +92,7 @@ public class SynchronizeFolderListCommand extends Command {
 			}
 		}
 
-		//Process other users namespaces
+		// Process other users namespaces
 		if (namespaces.getOtherUserNamespaceSize() > 0) {
 			it = namespaces.getOtherUserIterator();
 			while (it.hasNext()) {
@@ -108,7 +103,7 @@ public class SynchronizeFolderListCommand extends Command {
 			}
 		}
 
-		//Process shared namespaces
+		// Process shared namespaces
 		if (namespaces.getSharedNamespaceSize() > 0) {
 			it = namespaces.getSharedIterator();
 			while (it.hasNext()) {
@@ -120,18 +115,19 @@ public class SynchronizeFolderListCommand extends Command {
 		}
 
 		// Handle special case in which INBOX has a NIL delimiter
-		// -> there  might exist a pseudo hierarchy under INBOX+delimiter
+		// -> there might exist a pseudo hierarchy under INBOX+delimiter
 		it = result.iterator();
-		while( it.hasNext() ) {
+		while (it.hasNext()) {
 			ListInfo info = (ListInfo) it.next();
-			if( info.getName().equalsIgnoreCase("INBOX")) {
-				if( info.getDelimiter() == null) {
-					result.addAll(Arrays.asList(store.list("", "INBOX" + store.getDelimiter() +'%')));
-				}				
+			if (info.getName().equalsIgnoreCase("INBOX")) {
+				if (info.getDelimiter() == null) {
+					result.addAll(Arrays.asList(store.list("", "INBOX"
+							+ store.getDelimiter() + '%')));
+				}
 				break;
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -139,10 +135,10 @@ public class SynchronizeFolderListCommand extends Command {
 		ListInfo[] lsub = store.fetchSubscribedFolders();
 
 		// Create list of unsubscribed folders
-		List subscribedFolders = new ArrayList(Arrays.asList(lsub));		
+		List subscribedFolders = new ArrayList(Arrays.asList(lsub));
 		// INBOX is always subscribed
-		subscribedFolders.add(new ListInfo("INBOX",null,0));
-		
+		subscribedFolders.add(new ListInfo("INBOX", null, 0));
+
 		List unsubscribedFolders = fetchUnsubscribedFolders("");
 		ListTools.substract(unsubscribedFolders, subscribedFolders);
 
@@ -150,25 +146,20 @@ public class SynchronizeFolderListCommand extends Command {
 		// and the unsubscribed folders in unsubscribedFolders
 		// Next step: Create a treestructure
 		CheckableItemImpl rootNode = new CheckableItemImpl(root.getName());
-		
-		// Initialize the Pattern
-		String pattern = "([^\\Q" + store.getDelimiter() + "\\E]+)\\Q"
-				+ store.getDelimiter() + "\\E?";
-		delimiterPattern = Pattern.compile(pattern);
-		delimiter = store.getDelimiter();
-
 
 		Iterator it = unsubscribedFolders.iterator();
 
 		while (it.hasNext()) {
-			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), rootNode);
+			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(),
+					rootNode);
 			node.setSelected(false);
 		}
 
 		it = subscribedFolders.iterator();
 
 		while (it.hasNext()) {
-			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), rootNode);
+			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(),
+					rootNode);
 			node.setSelected(true);
 		}
 		return rootNode;
@@ -176,17 +167,17 @@ public class SynchronizeFolderListCommand extends Command {
 
 	private ListInfoTreeNode insertTreeNode(ListInfo listInfo,
 			DefaultMutableTreeNode parent) {
-		//split the hierarchical name with at the delimiters
-		String[] hierarchy = listInfo.getName().split("\\" + listInfo.getDelimiter());
-		
+		// split the hierarchical name with at the delimiters
+		String[] hierarchy = listInfo.getName().split(
+				"\\" + listInfo.getDelimiter());
+
 		DefaultMutableTreeNode actParent = parent;
 		StringBuffer mailboxName = new StringBuffer();
-		
-		mailboxName.append(hierarchy[0]);
-		actParent = ensureChild(hierarchy[0], mailboxName.toString(),
-				actParent);
 
-		for( int i=1; i<hierarchy.length; i++) {
+		mailboxName.append(hierarchy[0]);
+		actParent = ensureChild(hierarchy[0], mailboxName.toString(), actParent);
+
+		for (int i = 1; i < hierarchy.length; i++) {
 			mailboxName.append(listInfo.getDelimiter());
 			mailboxName.append(hierarchy[i]);
 			actParent = ensureChild(hierarchy[i], mailboxName.toString(),

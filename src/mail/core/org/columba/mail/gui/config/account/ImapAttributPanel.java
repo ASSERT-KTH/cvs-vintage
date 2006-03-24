@@ -16,9 +16,7 @@
 package org.columba.mail.gui.config.account;
 
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.mail.config.ImapItem;
@@ -34,25 +32,9 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 public class ImapAttributPanel extends JPanel {
 	private ImapItem item;
 
-	private JCheckBox secureCheckBox;
-
-	private JCheckBox storePasswordCheckBox;
-
 	private JCheckBox automaticallyApplyFilterCheckBox;
 
-	private JCheckBox intervalCheckingCheckBox;
-
-	private JPanel jPanel1;
-
-	private JLabel intervalCheckingLabel;
-
-	private JLabel intervalCheckingLabel2;
-
-	private JTextField intervalCheckingTextField;
-
 	private JCheckBox cleanupCheckBox;
-
-	private JPanel cleanupPanel;
 
 	public ImapAttributPanel(ImapItem item) {
 		this.item = item;

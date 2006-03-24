@@ -20,7 +20,6 @@ import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.folder.IFolder;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.filter.MailFilterAction;
 import org.columba.mail.folder.command.MarkMessageCommand;
 
 /**

@@ -50,6 +50,7 @@ import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
 import org.columba.mail.plugin.FilterExtensionHandler;
 import org.columba.mail.plugin.FilterUIExtensionHandler;
 
+
 public class CriteriaList extends JPanel implements ActionListener,
 		ItemListener {
 	private Filter filter;

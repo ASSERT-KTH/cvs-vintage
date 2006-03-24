@@ -38,6 +38,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * 
  * @author fdietz
  */
+
 public class DeleteActivityAction extends AbstractColumbaAction implements
 		IActivitySelectionChangedListener {
 

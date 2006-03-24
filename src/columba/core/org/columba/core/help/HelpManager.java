@@ -17,7 +17,6 @@
 package org.columba.core.help;
 
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -26,14 +25,12 @@ import java.util.Locale;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.help.JHelp;
-import javax.help.SwingHelpUtilities;
 import javax.help.TextHelpModel;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 /**
  * @author fdietz
@@ -52,10 +49,6 @@ public class HelpManager {
 	private HelpSet hs = null;
 
 	private HelpBroker hb = null;
-
-	private String hsName = null; // name for the HelpSet
-
-	private String hsPath = null; // URL spec to the HelpSet
 
 	private JFrame frame;
 
@@ -126,8 +119,7 @@ public class HelpManager {
 				frame.setVisible(false);
 			}
 		});
-		
-		
+
 		// JMenu options = (JMenu) menuBar.add(new JMenu("Options"));
 		// options.setMnemonic('O');
 		frame.setJMenuBar(menuBar);

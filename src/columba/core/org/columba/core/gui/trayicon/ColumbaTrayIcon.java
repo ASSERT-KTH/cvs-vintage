@@ -18,7 +18,6 @@ package org.columba.core.gui.trayicon;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import javax.swing.Icon;
 import javax.swing.JPopupMenu;
@@ -38,9 +37,6 @@ import org.columba.core.shutdown.ShutdownManager;
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public class ColumbaTrayIcon {
-
-	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.trayicon");
 
 	private IFrameMediator frameMediator;
 

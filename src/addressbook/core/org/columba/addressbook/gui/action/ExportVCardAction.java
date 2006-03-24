@@ -36,6 +36,7 @@ import org.columba.api.gui.frame.IFrameMediator;
  * @author fdietz
  *  
  */
+
 public class ExportVCardAction extends DefaultTableAction {
 
 	/**

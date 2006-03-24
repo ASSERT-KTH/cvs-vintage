@@ -71,6 +71,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
+
 public class ExportDialog extends JDialog implements ActionListener {
 	private ButtonWithMnemonic exportButton;
 

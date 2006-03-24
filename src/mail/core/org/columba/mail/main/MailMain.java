@@ -135,15 +135,9 @@ public class MailMain implements IComponentPlugin {
 	public void registerCommandLineArguments() {
 		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
 
-		parser.addOption(OptionBuilder.withArgName("options").hasArg()
-				.withDescription(
-						GlobalResourceLoader.getString(RESOURCE_PATH, "global",
-								"cmdline_composer")).create("compose"));
+		parser.addOption(OptionBuilder.create("compose"));
 
-		Option mailOption = OptionBuilder.withArgName("mailurl").hasArg()
-				.withDescription(
-						GlobalResourceLoader.getString(RESOURCE_PATH, "global",
-								"cmdline_mail_withurl")).create("mail");
+		Option mailOption = OptionBuilder.create("mail");
 
 		mailOption.setOptionalArg(true);
 

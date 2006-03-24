@@ -20,10 +20,7 @@ package org.columba.core.htmlviewer;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
@@ -32,9 +29,9 @@ import javax.swing.JScrollPane;
 
 import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
 import org.columba.core.io.DiskIO;
-import org.columba.core.util.TempFileStore;
 import org.w3c.tidy.Tidy;
 import org.xhtmlrenderer.simple.XHTMLPanel;
+
 
 public class FlyingSaucerViewerPlugin extends JScrollPane implements
 		IHTMLViewerPlugin {

@@ -26,6 +26,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
+
 public class ExtendablePopupMenu extends JPopupMenu {
 
 	private MenuModel model;
@@ -38,14 +39,14 @@ public class ExtendablePopupMenu extends JPopupMenu {
 		super(label);
 		this.id = id;
 
-		model = new MenuModel(id, label);
+		model = new MenuModel(id);
 
 		map.put(id, this);
 	}
-	
+
 	public ExtendablePopupMenu(String id) {
 		super();
-		
+
 		this.id = id;
 
 		model = new MenuModel(id);
