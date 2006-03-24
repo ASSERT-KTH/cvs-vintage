@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.56 2006/03/19 16:06:48 mvw Exp $
+// $Id: FigTransition.java,v 1.57 2006/03/24 21:33:24 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,19 +126,6 @@ public class FigTransition extends FigEdgeModelElement {
                         NotationProviderFactory2.TYPE_TRANSITION, this, own);
         }
     }
-
-    /**
-     * The constructor that hooks the Fig into an existing UML element.
-     *
-     * @param edge the UML element
-     */
-    public FigTransition(Object edge) {
-        this(edge, ProjectManager.getManager().getCurrentProject()
-                .getActiveDiagram().getLayer());
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // event handlers
 
     /**
      * @see org.tigris.gef.presentation.FigEdge#setFig(org.tigris.gef.presentation.Fig)
