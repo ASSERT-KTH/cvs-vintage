@@ -1,4 +1,4 @@
-// $Id: UMLClassActiveCheckBox.java,v 1.5 2005/01/30 20:47:34 linus Exp $
+// $Id: UMLClassActiveCheckBox.java,v 1.6 2006/03/24 14:01:43 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class UMLClassActiveCheckBox extends UMLCheckBox2 {
      * Constructor for UMLGeneralizableElementRootCheckBox.
      */
     public UMLClassActiveCheckBox() {
-        super(Translator.localize("checkbox.active-uc"),
+        super(Translator.localize("checkbox.active-lc"),
                 ActionSetClassActive.getInstance(), "isActive");
     }
 

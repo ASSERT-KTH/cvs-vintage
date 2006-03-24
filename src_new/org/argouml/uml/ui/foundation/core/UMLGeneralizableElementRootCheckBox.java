@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizableElementRootCheckBox.java,v 1.9 2005/01/30 20:47:34 linus Exp $
+// $Id: UMLGeneralizableElementRootCheckBox.java,v 1.10 2006/03/24 14:01:43 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class UMLGeneralizableElementRootCheckBox extends UMLCheckBox2 {
      * Constructor for UMLGeneralizableElementRootCheckBox.
      */
     public UMLGeneralizableElementRootCheckBox() {
-        super(Translator.localize("label.root"),
+        super(Translator.localize("checkbox.root-lc"),
                 ActionSetGeneralizableElementRoot.getInstance(), "isRoot");
     }
 

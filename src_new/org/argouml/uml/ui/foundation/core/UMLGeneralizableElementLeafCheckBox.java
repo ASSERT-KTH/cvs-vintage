@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizableElementLeafCheckBox.java,v 1.10 2005/01/30 20:47:34 linus Exp $
+// $Id: UMLGeneralizableElementLeafCheckBox.java,v 1.11 2006/03/24 14:01:43 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class UMLGeneralizableElementLeafCheckBox extends UMLCheckBox2 {
      * Constructor for UMLGeneralizableElementLeafCheckBox.
      */
     public UMLGeneralizableElementLeafCheckBox() {
-        super(Translator.localize("label.leaf"),
+        super(Translator.localize("checkbox.leaf-lc"),
                 ActionSetGeneralizableElementLeaf.getInstance(), "isLeaf");
     }
 
