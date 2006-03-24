@@ -1,4 +1,4 @@
-// $Id: UmlHelper.java,v 1.3 2005/09/25 21:01:35 linus Exp $
+// $Id: UmlHelper.java,v 1.4 2006/03/24 22:26:49 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,9 +45,14 @@ public interface UmlHelper {
      * Returns the owner of some modelelement object. In most cases this will be
      * the owning namespace but in some cases it will be null (the root model)
      * or for instance the owning class with an attribute.
-     *
-     * @param handle the modelelement
+     * 
+     * @param handle
+     *            the modelelement
      * @return Object the owner
+     * @deprecated for 0.21 by tfmorris - use getModelElementContainer - this
+     *             was never implemented for MDR, so any use would throw a run
+     *             time exception. Will be removed quickly because of this.
+     * @see Facade#getModelElementContainer(Object)
      */
     Object getOwner(Object handle);
 
