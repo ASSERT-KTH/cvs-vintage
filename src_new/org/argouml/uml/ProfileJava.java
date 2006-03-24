@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.50 2006/03/21 07:40:24 tfmorris Exp $
+// $Id: ProfileJava.java,v 1.51 2006/03/24 18:15:56 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -365,6 +365,8 @@ public class ProfileJava extends Profile {
         //
         try {
             File modelFile = new File(modelFilename);
+            // TODO: This is in the wrong place.  It's not profile specific.
+            // It needs to be moved to main XMI reading code. - tfm 20060326
             if (modelFilename.endsWith("zip")) {
                 String filename = modelFile.getName();
                 String extension =
