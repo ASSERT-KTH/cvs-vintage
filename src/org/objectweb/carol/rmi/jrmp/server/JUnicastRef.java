@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JUnicastRef.java,v 1.12 2006/01/25 16:01:01 pelletib Exp $
+ * $Id: JUnicastRef.java,v 1.13 2006/03/24 15:01:12 sauthieg Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.server;
@@ -128,7 +128,7 @@ public class JUnicastRef extends UnicastRef {
     /**
      * wrap the call to send the contexts
      * @param obj the remote object to invoke
-     * @param method the method to invoque
+     * @param method the method to invoke
      * @param params the methid parametters
      * @param opnum the operation number
      */
@@ -148,73 +148,92 @@ public class JUnicastRef extends UnicastRef {
                 } else {
                     throw new Exception("Unsupported exception", t);
                 }
+            } catch (IllegalArgumentException iae) {
+                // Usually, this is the Exception returned when method's ClassLoader
+                // and locally stored Object does not match.
+                // So in this case we fall back to the Remote invokation, using the Remote Object
+                return performRemoteCall(method, params, opnum);
             }
         } else {
-            //System.out.println("remote (local ref="+localRef+") call on
-            // object id:"+localId);
-            Connection conn = ref.getChannel().newConnection();
-            java.rmi.server.RemoteCall call = null;
-            boolean reuse = true;
-            boolean alreadyFreed = false;
+            return performRemoteCall(method, params, opnum);
+        }
+    }
+
+    /**
+     * Perform a Remote Call.
+     * @param method the method to invoke
+     * @param params Method parmeters
+     * @param opnum operation number
+     * @return operation return value.
+     * @throws RemoteException
+     * @throws Exception
+     * @throws Error
+     */
+    private Object performRemoteCall(java.lang.reflect.Method method, Object[] params, long opnum) throws RemoteException, Exception, Error {
+        //System.out.println("remote (local ref="+localRef+") call on
+        // object id:"+localId);
+        Connection conn = ref.getChannel().newConnection();
+        java.rmi.server.RemoteCall call = null;
+        boolean reuse = true;
+        boolean alreadyFreed = false;
+
+        try {
+            call = new JRemoteCall(conn, ref.getObjID(), -1, opnum, cis);
+            try {
+                ObjectOutput out = call.getOutputStream();
+                marshalCustomCallData(out);
+                Class[] types = method.getParameterTypes();
+                for (int i = 0; i < types.length; i++) {
+                    marshalValue(types[i], params[i], out);
+                }
+            } catch (IOException e) {
+                throw new MarshalException("error marshalling arguments" + e);
+            }
+
+            // unmarshal return
+            call.executeCall();
 
             try {
-                call = new JRemoteCall(conn, ref.getObjID(), -1, opnum, cis);
-                try {
-                    ObjectOutput out = call.getOutputStream();
-                    marshalCustomCallData(out);
-                    Class[] types = method.getParameterTypes();
-                    for (int i = 0; i < types.length; i++) {
-                        marshalValue(types[i], params[i], out);
-                    }
-                } catch (IOException e) {
-                    throw new MarshalException("error marshalling arguments" + e);
+                Class rtype = method.getReturnType();
+                if (rtype == void.class) {
+                    return null;
                 }
+                ObjectInput in = call.getInputStream();
+                Object returnValue = unmarshalValue(rtype, in);
+                alreadyFreed = true;
+                ref.getChannel().free(conn, true);
 
-                // unmarshal return
-                call.executeCall();
+                return returnValue;
 
+            } catch (IOException e) {
+                throw new UnmarshalException("IOException unmarshalling return" + e);
+            } catch (ClassNotFoundException e) {
+                throw new UnmarshalException("ClassNotFoundException unmarshalling return" + e);
+            } finally {
                 try {
-                    Class rtype = method.getReturnType();
-                    if (rtype == void.class) {
-                        return null;
-                    }
-                    ObjectInput in = call.getInputStream();
-                    Object returnValue = unmarshalValue(rtype, in);
-                    alreadyFreed = true;
-                    ref.getChannel().free(conn, true);
-
-                    return returnValue;
-
+                    call.done();
                 } catch (IOException e) {
-                    throw new UnmarshalException("IOException unmarshalling return" + e);
-                } catch (ClassNotFoundException e) {
-                    throw new UnmarshalException("ClassNotFoundException unmarshalling return" + e);
-                } finally {
-                    try {
-                        call.done();
-                    } catch (IOException e) {
-                        reuse = false;
-                    }
-                }
-
-            } catch (RuntimeException e) {
-                if ((call == null) || (((StreamRemoteCall) call).getServerException() != e)) {
                     reuse = false;
                 }
-                throw e;
+            }
 
-            } catch (RemoteException e) {
+        } catch (RuntimeException e) {
+            if ((call == null) || (((StreamRemoteCall) call).getServerException() != e)) {
                 reuse = false;
-                throw e;
+            }
+            throw e;
 
-            } catch (Error e) {
-                reuse = false;
-                throw e;
+        } catch (RemoteException e) {
+            reuse = false;
+            throw e;
 
-            } finally {
-                if (!alreadyFreed) {
-                    ref.getChannel().free(conn, reuse);
-                }
+        } catch (Error e) {
+            reuse = false;
+            throw e;
+
+        } finally {
+            if (!alreadyFreed) {
+                ref.getChannel().free(conn, reuse);
             }
         }
     }
