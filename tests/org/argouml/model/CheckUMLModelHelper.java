@@ -1,4 +1,4 @@
-// $Id: CheckUMLModelHelper.java,v 1.8 2006/02/27 20:39:58 tfmorris Exp $
+// $Id: CheckUMLModelHelper.java,v 1.9 2006/03/25 00:47:48 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -63,13 +62,12 @@ public final class CheckUMLModelHelper {
 	// something meaningfull.
 	TestCase.assertTrue("toString() corrupt in " + c,
 		      mo.toString() != null);
-
+        
 	Model.getUmlFactory().delete(mo);
         Model.getPump().flushModelEvents();
-	WeakReference wo = new WeakReference(mo);
-	mo = null;
-	System.gc();
-	TestCase.assertTrue("Could not reclaim " + c, wo.get() == null);
+  
+	TestCase.assertTrue("Could not delete " + c, 
+                Model.getUmlFactory().isRemoved(mo));
     }
 
     /**
@@ -96,13 +94,10 @@ public final class CheckUMLModelHelper {
 	        name.equals(Model.getFacade().getUMLClassName(mo)));
 
 	Model.getUmlFactory().delete(mo);
-
-        WeakReference wo = new WeakReference(mo);
-
         Model.getPump().flushModelEvents();
-	mo = null;
-	System.gc();
-	TestCase.assertTrue("Could not reclaim " + c, wo.get() == null);
+
+        TestCase.assertTrue("Could not delete " + c, 
+                Model.getUmlFactory().isRemoved(mo));
     }
 
     /**

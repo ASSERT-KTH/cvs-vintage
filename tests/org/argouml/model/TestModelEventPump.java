@@ -1,4 +1,4 @@
-// $Id: TestModelEventPump.java,v 1.11 2005/11/10 02:09:19 tfmorris Exp $
+// $Id: TestModelEventPump.java,v 1.12 2006/03/25 00:47:48 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.model;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.ref.WeakReference;
 
 import junit.framework.TestCase;
 
@@ -98,20 +97,6 @@ public class TestModelEventPump extends TestCase {
             Model.getUmlFactory().delete(elem);
         }
         listener = null;
-    }
-
-
-    /**
-     * Tests if the association from a modelelement to the pump is thrown away
-     * after deletion of the element.
-     */
-    public void testCreateDelete() {
-        WeakReference ref = new WeakReference(elem);
-        Model.getUmlFactory().delete(elem);
-        Model.getPump().flushModelEvents();
-        elem = null;
-        System.gc();
-        assertNull(ref.get());
     }
 
     /**
