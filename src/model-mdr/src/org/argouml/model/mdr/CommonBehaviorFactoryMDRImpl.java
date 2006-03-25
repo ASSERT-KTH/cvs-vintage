@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactoryMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: CommonBehaviorFactoryMDRImpl.java,v 1.4 2006/03/25 00:50:29 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -377,7 +377,7 @@ public class CommonBehaviorFactoryMDRImpl extends AbstractUmlModelFactoryMDR
      */
     public Object buildSignal(Object feature) {
         if (!(feature instanceof BehavioralFeature)) {
-            return null;
+            throw new IllegalArgumentException();
         }
         
         Signal signal = (Signal) createSignal();

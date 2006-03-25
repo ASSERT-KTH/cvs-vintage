@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactoryMDRImpl.java,v 1.2 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: StateMachinesFactoryMDRImpl.java,v 1.3 2006/03/25 00:50:29 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -312,7 +312,8 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             ((CompositeState) compositeState).getSubvertex().add(state);
             return state;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a CompositeState");
     }
 
     /**
@@ -325,7 +326,8 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             state.setContainer((CompositeState) compositeState);
             return state;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a CompositeState");
     }
 
     /**
@@ -338,7 +340,8 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             state.setContainer((CompositeState) compositeState);
             return state;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a CompositeState");
     }
 
     /**
@@ -351,7 +354,8 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             state.setContainer((CompositeState) compositeState);
             return state;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a CompositeState");
     }
 
     /**
@@ -363,7 +367,8 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             state.setContainer((CompositeState) compositeState);
             return state;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a CompositeState");
     }
 
     /**
@@ -375,7 +380,8 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             state.setContainer((CompositeState) compositeState);
             return state;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a CompositeState");
     }
 
     /**
@@ -388,7 +394,8 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             state.setContainer((CompositeState) compositeState);
             return state;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a CompositeState");
     }
 
     /**
@@ -402,7 +409,7 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
             trans.setTarget((State) state);
             return trans;
         }
-        return null;        
+        throw new IllegalArgumentException("Argument must be a State");    
     }
 
     /**
@@ -417,7 +424,7 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
                     getStateMachinesHelper().getStateMachine(source));
             return trans;
         }
-        return null;
+        throw new IllegalArgumentException();
     }
 
     /**
