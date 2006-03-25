@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.6 2006/03/10 22:10:02 mvw Exp $
+// $Id: CollaborationsHelper.java,v 1.7 2006/03/25 00:50:02 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,15 @@ public interface CollaborationsHelper {
      * @param afrom the first classifierrole
      * @param ato the second classifierrole
      * @return MAssociationRole the association between them, or null if none
+     */
+    Object getAssociationRole(Object afrom, Object ato);
+    
+    /**
+     * @param afrom 
+     * @param ato 
+     * @return associationrole
+     * @deprecated for 0.21.2 by tfmorris, use getAssociationRole
+     * @see #getAssociationRole(Object, Object)
      */
     Object getAssocationRole(Object afrom, Object ato);
 

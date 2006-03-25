@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperMDRImpl.java,v 1.4 2006/03/10 22:10:08 mvw Exp $
+// $Id: CollaborationsHelperMDRImpl.java,v 1.5 2006/03/25 00:50:02 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -164,12 +164,12 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
     }
 
     /**
-     * @see org.argouml.model.CollaborationsHelper#getAssocationRole(java.lang.Object,
+     * @see org.argouml.model.CollaborationsHelper#getAssociationRole(java.lang.Object,
      *      java.lang.Object)
      */
-    public Object getAssocationRole(Object afrom, Object ato) {
+    public Object getAssociationRole(Object afrom, Object ato) {
         if (afrom == null || ato == null) {
-            return null;
+            throw new IllegalArgumentException();
         }
         ClassifierRole from = (ClassifierRole) afrom;
         ClassifierRole to = (ClassifierRole) ato;
@@ -190,6 +190,13 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
             }
         }
         return null;
+    }
+    
+    /**
+     * @see org.argouml.model.CollaborationsHelper#getAssocationRole(java.lang.Object, java.lang.Object)
+     */
+    public Object getAssocationRole(Object afrom, Object ato) {
+        return getAssociationRole(afrom, ato);
     }
 
     /**
