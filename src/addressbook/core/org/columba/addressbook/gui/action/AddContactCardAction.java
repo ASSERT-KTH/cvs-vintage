@@ -76,7 +76,7 @@ public class AddContactCardAction extends DefaultTreeAction {
 				if (Logging.DEBUG)
 					e.printStackTrace();
 
-				new ErrorDialog(e.getMessage(), e);
+				ErrorDialog.createDialog(e.getMessage(), e);
 			}
 
 		}

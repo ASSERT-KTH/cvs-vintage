@@ -29,7 +29,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.gui.base.ComboMenu;
-import org.columba.core.gui.dialog.NotifyDialog;
+import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.plugin.FilterActionExtensionHandler;
@@ -90,8 +90,7 @@ public class DefaultActionRow implements IExtensionInterface {
 			pluginHandler = (FilterActionExtensionHandler) PluginManager
 					.getInstance().getHandler(FilterActionExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
+			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}
 
 		

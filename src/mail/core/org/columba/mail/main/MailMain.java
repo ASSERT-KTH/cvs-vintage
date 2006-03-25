@@ -40,7 +40,6 @@ import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
-import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;

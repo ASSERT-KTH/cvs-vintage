@@ -156,7 +156,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 				if (Logging.DEBUG)
 					e1.printStackTrace();
 
-				new ErrorDialog(e1.getMessage(), e1);
+				ErrorDialog.createDialog(e1.getMessage(), e1);
 			}
 		} else {
 			filterDecorator.setContactItemMap(null);

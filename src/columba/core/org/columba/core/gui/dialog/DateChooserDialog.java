@@ -30,7 +30,6 @@ import javax.swing.JPanel;
 
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.DateChooser;
-import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
 /**
@@ -49,7 +48,7 @@ public class DateChooserDialog extends JDialog implements ActionListener {
     protected JDialog dialog;
     
     public DateChooserDialog() {
-        super(FrameManager.getInstance().getActiveFrame(), true);
+        super();
         
         //TODO (@author fdietz): i18n
         setTitle("Choose Date...");

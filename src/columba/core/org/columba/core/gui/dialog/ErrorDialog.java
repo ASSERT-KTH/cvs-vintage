@@ -20,8 +20,11 @@ package org.columba.core.gui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
@@ -41,11 +44,11 @@ import javax.swing.UIManager;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.MultiLineLabel;
-import org.columba.core.gui.frame.FrameManager;
-import org.columba.core.gui.util.URLController;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.frapuccino.swing.ActiveWindowTracker;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -61,6 +64,8 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 
 public class ErrorDialog extends JDialog implements ActionListener {
+	private static final String URL_FORUM = "http://columba.sourceforge.net/phpBB2/viewforum.php?f=15";
+
 	public static final String CMD_CLOSE = "CLOSE";
 
 	public static final String CMD_REPORT_BUG = "REPORT_BUG";
@@ -87,9 +92,35 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
 	private Throwable ex;
 
-	public ErrorDialog(String message, Throwable ex) {
-		super(FrameManager.getInstance().getActiveFrame(), true);
+	public static ErrorDialog createDialog(String message, Throwable ex) {
+		Window w = ActiveWindowTracker.findActiveWindow();
+		if (w instanceof Frame)
+			return new ErrorDialog((Frame) w, message, ex);
+		else if (w instanceof Dialog)
+			return new ErrorDialog((Dialog) w, message, ex);
+		else
+			return new ErrorDialog(message, ex);
+	}
 
+	private ErrorDialog(String message, Throwable ex) {
+		super();
+
+		init(message, ex);
+	}
+
+	private ErrorDialog(Dialog frame, String message, Throwable ex) {
+		super(frame, true);
+
+		init(message, ex);
+	}
+
+	private ErrorDialog(Frame frame, String message, Throwable ex) {
+		super(frame, true);
+
+		init(message, ex);
+	}
+
+	private void init(String message, Throwable ex) {
 		this.message = message;
 		this.ex = ex;
 
@@ -141,18 +172,24 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
 		stacktraceTextArea = new JTextArea();
 
-		StringWriter stringWriter = new StringWriter();
-		ex.printStackTrace(new PrintWriter(stringWriter));
-
-		stacktraceTextArea.append(stringWriter.toString());
-		stacktraceTextArea.setEditable(false);
-
+		if ( ex != null ) {
+			StringWriter stringWriter = new StringWriter();
+			ex.printStackTrace(new PrintWriter(stringWriter));
+	
+			stacktraceTextArea.append(stringWriter.toString());
+			stacktraceTextArea.setEditable(false);
+		}
+		
 		// TODO (@author fdietz): i18n
 		detailsButton = new JToggleButton("Details >>");
 		detailsButton.setSelected(false);
 		detailsButton.setActionCommand("DETAILS");
 		detailsButton.addActionListener(this);
-
+		
+		if ( ex == null ) {
+			detailsButton.setEnabled(false);
+		}
+		
 		closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
 				"global", "global", "close"));
 		closeButton.setActionCommand(CMD_CLOSE);
@@ -212,13 +249,11 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		} else if (CMD_REPORT_BUG.equals(command)) {
 			bool = false;
 
-			URLController c = new URLController();
 			try {
-				c
-						.open(new URL(
-								"http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
-			} catch (MalformedURLException mue) {
-			} // does not occur
+				ColumbaDesktop.getInstance().browse(new URL(URL_FORUM));
+			} catch (MalformedURLException e1) {
+			}
+
 		} else if (command.equals("DETAILS")) {
 			layoutComponents();
 			pack();

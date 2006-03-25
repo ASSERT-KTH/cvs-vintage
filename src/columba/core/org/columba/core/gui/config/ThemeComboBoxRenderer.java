@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
-import org.columba.core.gui.dialog.NotifyDialog;
+import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ThemeExtensionHandler;
 
@@ -40,8 +40,7 @@ public class ThemeComboBoxRenderer extends DefaultListCellRenderer {
 			pluginHandler = (ThemeExtensionHandler) PluginManager.getInstance()
 					.getHandler(ThemeExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
+			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}
 	}
 

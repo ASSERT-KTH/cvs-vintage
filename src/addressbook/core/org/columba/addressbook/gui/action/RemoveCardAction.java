@@ -101,7 +101,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 					if (Logging.DEBUG)
 						e.printStackTrace();
 
-					new ErrorDialog(e.getMessage(), e);
+					ErrorDialog.createDialog(e.getMessage(), e);
 				}
 			}
 

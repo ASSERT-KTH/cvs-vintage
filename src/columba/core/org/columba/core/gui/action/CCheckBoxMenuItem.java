@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.base;
+package org.columba.core.gui.action;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -23,7 +23,8 @@ import java.lang.reflect.Proxy;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 
-import org.columba.core.gui.action.AbstractSelectableAction;
+import org.columba.core.gui.base.ButtonStateAdapter;
+import org.columba.core.gui.base.MnemonicSetter;
 
 
 /**

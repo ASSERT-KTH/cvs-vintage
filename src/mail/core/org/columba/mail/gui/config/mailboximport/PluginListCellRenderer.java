@@ -23,7 +23,7 @@ import javax.swing.UIManager;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
-import org.columba.core.gui.dialog.NotifyDialog;
+import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.plugin.ImportExtensionHandler;
 
@@ -37,8 +37,7 @@ public class PluginListCellRenderer extends DefaultListCellRenderer {
 			pluginHandler = (ImportExtensionHandler) PluginManager.getInstance()
 					.getHandler(ImportExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
+			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}
 	}
 

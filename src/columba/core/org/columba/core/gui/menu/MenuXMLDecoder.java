@@ -30,7 +30,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.action.AbstractSelectableAction;
-import org.columba.core.gui.base.CCheckBoxMenuItem;
+import org.columba.core.gui.action.CCheckBoxMenuItem;
 import org.columba.core.gui.base.CMenuItem;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;

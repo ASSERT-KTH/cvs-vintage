@@ -111,7 +111,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 				if (Logging.DEBUG)
 					e.printStackTrace();
 
-				new ErrorDialog(e.getMessage(), e);
+				ErrorDialog.createDialog(e.getMessage(), e);
 			}
 
 			// 
@@ -127,7 +127,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 					if (Logging.DEBUG)
 						e1.printStackTrace();
 
-					new ErrorDialog(e1.getMessage(), e1);
+					ErrorDialog.createDialog(e1.getMessage(), e1);
 				}
 
 				if (folder instanceof GroupFolder)

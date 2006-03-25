@@ -33,7 +33,7 @@ public class DialogFacade {
      *            Exception class
      */
     public static void showExceptionDialog(Exception ex) {
-        new ErrorDialog(ex.getLocalizedMessage(), ex);
+    	ErrorDialog.createDialog(ex.getLocalizedMessage(), ex);
     }
     
     /**
@@ -43,7 +43,7 @@ public class DialogFacade {
      * @param ex			exception
      */
     public static void showErrorDialog(String message, Exception ex) {
-        new ErrorDialog(message, ex);
+    	ErrorDialog.createDialog(message, ex);
     }
     
     /**

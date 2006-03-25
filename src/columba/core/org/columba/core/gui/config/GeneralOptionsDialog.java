@@ -510,7 +510,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		Object source = event.getSource();
 		if (source == mainFontButton) {
-			FontSelectionDialog fontDialog = new FontSelectionDialog(null);
+			FontSelectionDialog fontDialog = new FontSelectionDialog(this, null);
 
 			if (fontDialog.showDialog() == FontSelectionDialog.APPROVE_OPTION) {
 				mainFont = fontDialog.getSelectedFont();
@@ -518,7 +518,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 				mainFontButton.setText(mainFont.getFontName());
 			}
 		} else if (source == textFontButton) {
-			FontSelectionDialog fontDialog = new FontSelectionDialog(null);
+			FontSelectionDialog fontDialog = new FontSelectionDialog(this, null);
 
 			if (fontDialog.showDialog() == FontSelectionDialog.APPROVE_OPTION) {
 				textFont = fontDialog.getSelectedFont();

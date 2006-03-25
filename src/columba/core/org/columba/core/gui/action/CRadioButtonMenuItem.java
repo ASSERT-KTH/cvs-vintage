@@ -13,12 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.core.gui.base;
+package org.columba.core.gui.action;
 
 import javax.swing.Action;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.base.MnemonicSetter;
 
 
 /**

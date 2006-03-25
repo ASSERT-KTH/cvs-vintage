@@ -172,7 +172,7 @@ public class ExceptionHandler implements IExceptionListener {
 		if (details == null)
 			details = e.toString();
 
-		new ErrorDialog(details, e);
+		ErrorDialog.createDialog(details, e);
 
 	}
 

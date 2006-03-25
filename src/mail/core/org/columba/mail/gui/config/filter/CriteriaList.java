@@ -43,7 +43,7 @@ import org.columba.api.plugin.IExtension;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
-import org.columba.core.gui.dialog.NotifyDialog;
+import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
@@ -72,8 +72,7 @@ public class CriteriaList extends JPanel implements ActionListener,
 			pluginUIHandler = (FilterUIExtensionHandler) PluginManager
 					.getInstance().getHandler(FilterUIExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
+			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}
 
 		this.filter = filter;

@@ -61,6 +61,7 @@ import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.StackProfiler;
 import org.columba.core.versioninfo.VersionInfo;
+import org.frapuccino.swing.ActiveWindowTracker;
 
 import sun.misc.URLClassPath;
 
@@ -253,7 +254,11 @@ public class Main {
 		if (Logging.DEBUG)
 			RepaintManager.setCurrentManager(new DebugRepaintManager());
 
+		// use heavy-weight popups to ensure they are always on top
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		
+		// keep track of active windows (used by dialogs which don't have a direct parent)
+		ActiveWindowTracker.class.getClass();
 		
 		// show splash screen
 		StartUpFrame frame = null;

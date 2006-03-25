@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.core.gui.base;
+package org.columba.core.gui.util;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -24,7 +24,6 @@ import javax.swing.Box;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
-import org.columba.core.gui.util.ThrobberIcon;
 
 /**
  * Utility class to add a throbber into the right-hand side corner

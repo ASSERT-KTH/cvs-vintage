@@ -24,7 +24,7 @@ import javax.swing.tree.DefaultTreeModel;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.core.config.Config;
-import org.columba.core.gui.dialog.NotifyDialog;
+import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
@@ -169,8 +169,7 @@ public class FolderTreeModel extends DefaultTreeModel {
 			handler = (FolderExtensionHandler) PluginManager.getInstance()
 					.getHandler(FolderExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
+			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}
 
 		// parent directory for mail folders

@@ -24,7 +24,7 @@ import javax.swing.UIManager;
 import org.columba.addressbook.plugin.ImportExtensionHandler;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
-import org.columba.core.gui.dialog.NotifyDialog;
+import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 
 
@@ -38,8 +38,7 @@ public class PluginListCellRenderer extends DefaultListCellRenderer {
             pluginHandler = (ImportExtensionHandler) PluginManager.getInstance().getHandler(
                     "org.columba.addressbook.import");
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
+        	ErrorDialog.createDialog(ex.getMessage(), ex);
         }
     }
 

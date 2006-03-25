@@ -18,13 +18,14 @@ package org.columba.mail.gui.composer;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IModelFacade;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.api.exception.ServiceNotFoundException;
-import org.columba.core.gui.dialog.NotifyDialog;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.parser.ListBuilder;
 import org.columba.mail.parser.ListParser;
@@ -88,9 +89,8 @@ public class HeaderController {
 				return true;
 		}
 
-		NotifyDialog dialog = new NotifyDialog();
-		dialog.showDialog(MailResourceLoader.getString("menu", "mainframe",
-				"composer_no_recipients_found")); //$NON-NLS-1$
+		JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
+				"menu", "mainframe", "composer_no_recipients_found"));
 
 		return false;
 	}

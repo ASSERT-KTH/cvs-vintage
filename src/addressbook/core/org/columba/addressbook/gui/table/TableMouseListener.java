@@ -77,7 +77,7 @@ public class TableMouseListener extends DoubleClickListener
         if (Logging.DEBUG)
           ex.printStackTrace();
 
-        new ErrorDialog(ex.getMessage(), ex);
+        ErrorDialog.createDialog(ex.getMessage(), ex);
       }
 
       ContactEditorDialog dialog = new ContactEditorDialog(mediator.getView().getFrame(),
@@ -96,7 +96,7 @@ public class TableMouseListener extends DoubleClickListener
           if (Logging.DEBUG)
             e1.printStackTrace();
 
-          new ErrorDialog(e1.getMessage(), e1);
+          ErrorDialog.createDialog(e1.getMessage(), e1);
         }
 
         if (folder instanceof GroupFolder)
