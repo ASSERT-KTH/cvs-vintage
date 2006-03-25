@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.155 2006/03/25 16:32:35 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.156 2006/03/25 17:40:43 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,7 +232,6 @@ public abstract class FigEdgeModelElement
      */
     public void setItemUID(ItemUID newId) {
         itemUid = newId;
-        throw new UnsupportedOperationException("Trying to prove this is ever called");
     }
 
     /**
