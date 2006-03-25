@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.17 2006/03/24 02:14:22 tfmorris Exp $
+// $Id: XMIParser.java,v 1.18 2006/03/25 23:29:49 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,6 +79,8 @@ public class XMIParser {
 
     private Collection elementsRead;
 
+    private String errorMessage;
+    
     /**
      * The constructor.
      *
@@ -148,8 +150,9 @@ public class XMIParser {
         
 
 
+        XmiReader reader = null;
         try {
-            XmiReader reader = Model.getXmiReader();
+            reader = Model.getXmiReader();
             
             if (Configuration.getBoolean(Argo.KEY_XMI_STRIP_DIAGRAMS, false)) {
                 reader.setIgnoredElements(new String[] {"UML:Diagram"});
@@ -176,6 +179,9 @@ public class XMIParser {
             }
             uUIDRefs = new HashMap(reader.getXMIUUIDToObjectMap());
         } catch (Exception ex) {
+            if (reader != null) {
+                errorMessage = reader.getErrorMessage();
+            }
             throw new OpenException(ex);
         }
         LOG.info("=======================================");
@@ -276,6 +282,10 @@ public class XMIParser {
      */
     public Collection getElementsRead() {
         return elementsRead;
+    }
+    
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     /**

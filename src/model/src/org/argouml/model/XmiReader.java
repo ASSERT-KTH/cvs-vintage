@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.9 2006/03/25 00:46:55 tfmorris Exp $
+// $Id: XmiReader.java,v 1.10 2006/03/25 23:29:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,4 +108,11 @@ public interface XmiReader {
      * @return the count
      */
     public int getIgnoredElementCount();
+    
+    /**
+     * Return a user friendly desription of any error during the last XMI read.
+     * 
+     * @return the error message
+     */
+    public String getErrorMessage();
 }

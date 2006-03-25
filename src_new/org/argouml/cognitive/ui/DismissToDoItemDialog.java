@@ -1,4 +1,4 @@
-// $Id: DismissToDoItemDialog.java,v 1.24 2005/11/13 17:57:06 mvw Exp $
+// $Id: DismissToDoItemDialog.java,v 1.25 2006/03/25 23:29:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -233,7 +233,6 @@ public class DismissToDoItemDialog extends ArgoDialog {
     }
 
     private void explain(ActionEvent e) {
-        //cat.debug("I can explain!");
         //TODO: make a new history item
         ToDoList list = Designer.theDesigner().getToDoList();
         try {
@@ -242,7 +241,7 @@ public class DismissToDoItemDialog extends ArgoDialog {
                     Designer.MODEL_TODOITEM_DISMISSED, null, null);
         }
         catch (UnresolvableException ure) {
-            LOG.error("Resolve failed (ure): " + ure);
+            LOG.error("Resolve failed (ure): ", ure);
             // TODO: Should be internationalized
             JOptionPane.showMessageDialog(
 		    this,
