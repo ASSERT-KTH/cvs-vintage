@@ -78,6 +78,10 @@ public class TableView extends TreeTable {
 		getTree().setLargeModel(true);
 	}
 
+	public boolean getScrollableTracksViewportHeight() { 
+        return getPreferredSize().height < getParent().getHeight(); 
+    } 
+	
 	public void resetRowHeight() {
 		setRowHeight(defaultRowHeight);
 	}
