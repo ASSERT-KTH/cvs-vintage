@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.184 2006/03/25 23:29:49 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.185 2006/03/25 23:51:27 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,6 @@ import org.argouml.cognitive.ui.ToDoPane;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.InvalidXmiException;
 import org.argouml.model.Model;
 import org.argouml.persistence.AbstractFilePersister;
 import org.argouml.persistence.LastLoadInfo;
