@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.9 2006/03/25 00:49:29 tfmorris Exp $
+// $Id: UmlFactory.java,v 1.10 2006/03/25 21:30:50 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,15 @@ public interface UmlFactory {
      */
     Object buildNode(Object elementType);
 
+    /**
+     * Checks if some type of UML model element is valid to
+     * connect other UML model elements.<p>
+     *
+     * @param connectionType  the UML object type of the connection
+     * @return true if valid
+     */
+    boolean isConnectionType(Object connectionType);
+    
     /**
      * Checks if some type of UML model element is valid to
      * connect two other existing UML model elements.<p>

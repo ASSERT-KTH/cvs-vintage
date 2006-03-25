@@ -1,4 +1,4 @@
-// $Id: UmlFactoryMDRImpl.java,v 1.5 2006/03/25 00:49:29 tfmorris Exp $
+// $Id: UmlFactoryMDRImpl.java,v 1.6 2006/03/25 21:30:50 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,9 +202,16 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
      * in one direction only.
      * </ul>
      * NOTE: This encodes not only what is legal in UML, but also what ArgoUML
-     * knows how to create, so not all legal connections are included.  Probably
-     * should be split into two pieces: 1) legal UML (here) and 2) supported
-     * (in ArgoUML application someplace) - tfm
+     * knows how to create, so not all legal connections are included. Probably
+     * should be split into two pieces: 1) legal UML (here) and 2) supported (in
+     * ArgoUML application someplace) - tfm
+     * <p>
+     * Most of these are subtypes of Relationship which includes Association,
+     * Dependency, Flow, Generalization, Extend, and Include. Dependency
+     * includes Binding, Abstraction, Usage, and Permission. AssociationRole and
+     * AssociationClass are Associations. The remaining items (Link, Transition,
+     * AssociationEnd, Message) are non-Relationship types which ArgoUML treats
+     * as connections/edges.
      */
     // TODO: This should be built by reflection from the metamodel - tfm
     //       Update for UML 1.4 metamodel if not replaced by reflection
@@ -263,9 +270,11 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
         {AssociationEnd.class, UmlClass.class, UmlAssociation.class, },
         {Message.class, ClassifierRole.class }, };
 
+
+
     /**
      * Don't allow external instantiation.
-     *
+     * 
      * @param implementation
      *            To get other helpers and factories.
      */
@@ -468,6 +477,13 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
         return modelElement;
     }
 
+    /**
+     * @see org.argouml.model.UmlFactory#isConnectionType(java.lang.Object)
+     */
+    public boolean isConnectionType(Object connectionType) {
+        // If our map has any entries for this type, it's a connection type
+        return (validConnectionMap.get(connectionType) != null);
+    }
 
     /**
      * @see org.argouml.model.UmlFactory#isConnectionValid(java.lang.Object, java.lang.Object, java.lang.Object)
