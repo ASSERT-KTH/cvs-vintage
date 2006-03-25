@@ -1,4 +1,4 @@
-// $Id: FigCallState.java,v 1.5 2006/03/22 21:10:51 mvw Exp $
+// $Id: FigCallState.java,v 1.6 2006/03/25 15:52:47 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,9 @@ import org.argouml.model.AssociationChangeEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.notation.NotationProviderFactory2;
+import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
+import org.tigris.gef.presentation.Fig;
 
 
 /**
@@ -137,6 +139,13 @@ public class FigCallState extends FigActionState {
     public Object clone() {
         FigCallState figClone = (FigCallState) super.clone();
         return figClone;
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.state.ui.FigStateVertex#makeSelection()
+     */
+    public Selection makeSelection() {
+        return new SelectionCallState(this);
     }
 
 } /* end class FigCallState */

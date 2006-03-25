@@ -1,4 +1,4 @@
-// $Id: SelectionActionState.java,v 1.30 2006/03/23 20:54:09 mvw Exp $
+// $Id: SelectionActionState.java,v 1.31 2006/03/25 15:52:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -212,7 +212,7 @@ public class SelectionActionState extends SelectionNodeClarifiers {
 	int cx = getContent().getX(), cy = getContent().getY();
 	int cw = getContent().getWidth(), ch = getContent().getHeight();
 	Object edgeType = null;
-	Object nodeType = Model.getMetaTypes().getActionState();
+        Object nodeType = getNewNodeType(hand.index);
 
 	Editor ce = Globals.curEditor();
 	GraphModel gm = ce.getGraphModel();
@@ -258,6 +258,16 @@ public class SelectionActionState extends SelectionNodeClarifiers {
 	            bx, by, reverse);
 	    ce.pushMode(m);
 	}
+    }
+
+    /**
+     * Overrule this for other kinds.
+     * 
+     * @param buttonCode unused
+     * @return the meta type class to be created when dragged and released
+     */
+    protected Object getNewNodeType(int buttonCode) {
+        return Model.getMetaTypes().getActionState();
     }
 
     /**
