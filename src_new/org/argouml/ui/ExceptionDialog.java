@@ -1,5 +1,5 @@
-// $Id: ExceptionDialog.java,v 1.7 2005/11/26 20:41:45 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ExceptionDialog.java,v 1.8 2006/03/25 22:18:58 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -62,7 +62,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public ExceptionDialog(Frame f, Throwable e) {
         this(f, "An error has occured.", e);
     }
-    
+
     /**
      * The constructor.
      *
@@ -73,10 +73,10 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public ExceptionDialog(Frame f, String message, Throwable e) {
         this(f, message, e, false);
     }
-    
+
     /**
      * The constructor.
-     * 
+     *
      * @param f   the <code>Frame</code> from which the dialog is displayed
      * @param message
      *            the message
@@ -100,7 +100,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
         // the introducing label
         northLabel = new JLabel(message);
-        northLabel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        northLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         getContentPane().add(northLabel, BorderLayout.NORTH);
 
         // the text box containing the problem messages
