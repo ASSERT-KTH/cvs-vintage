@@ -1,5 +1,5 @@
-// $Id: OffenderXMLHelper.java,v 1.2 2005/05/21 12:51:08 bobtarling Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: OffenderXMLHelper.java,v 1.3 2006/03/25 22:06:51 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,17 +25,18 @@
 package org.argouml.persistence;
 
 /**
- * Helper class to make an offender fit right in the XML file during save.
- *<P>
+ * Helper class to make an offender fit right in the XML file during save.<p>
+ *
  * An offender is a subject that is (partly) responsible for trigging a
  * critic. These need to be saved to keep track of in which contexts a
  * critic has been resolved.
  *
  * @author	Michael Stockman
  */
-public class OffenderXMLHelper
-{
-    /** A description of the offender */
+public class OffenderXMLHelper {
+    /**
+     * A description of the offender.
+     */
     private final String item;
 
     /**
@@ -47,7 +48,8 @@ public class OffenderXMLHelper
      */
     public OffenderXMLHelper(String offender) {
         if (offender == null) {
-            throw new IllegalArgumentException("An offender string must be supplied");
+            throw new IllegalArgumentException(
+                    "An offender string must be supplied");
         }
         item = offender;
     }
@@ -57,8 +59,7 @@ public class OffenderXMLHelper
      *
      * @return	The description as a String.
      */
-    public String getOffender()
-    {
+    public String getOffender() {
         return item;
     }
 }
