@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.56 2005/11/19 13:45:15 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.57 2006/03/25 21:33:51 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,13 +175,11 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	    }
 	    end0 = Model.getFacade().getType(associationEndRole0);
 	    end1 = Model.getFacade().getType(associationEndRole1);
-	}
-	if (Model.getFacade().isAGeneralization(edge)) {
+	} else if (Model.getFacade().isAGeneralization(edge)) {
 	    Object gen = /*(MGeneralization)*/ edge;
 	    end0 = Model.getFacade().getParent(gen);
 	    end1 = Model.getFacade().getChild(gen);
-	}
-	if (Model.getFacade().isADependency(edge)) {
+	} else if (Model.getFacade().isADependency(edge)) {
 	    Collection clients = Model.getFacade().getClients(edge);
 	    Collection suppliers = Model.getFacade().getSuppliers(edge);
 	    if (clients == null || suppliers == null) {
@@ -189,11 +187,13 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
             }
 	    end0 = (clients.toArray())[0];
 	    end1 = (suppliers.toArray())[0];
-	}
-	if (edge instanceof CommentEdge) {
+	} else if (edge instanceof CommentEdge) {
 	    end0 = ((CommentEdge) edge).getSource();
 	    end1 = ((CommentEdge) edge).getDestination();
-	}
+	} else {
+	    return false;       
+        }
+        
         // Both ends must be defined and nodes that are on the graph already.
         if (end0 == null || end1 == null) {
             LOG.error("Edge rejected. Its ends are not attached to anything");

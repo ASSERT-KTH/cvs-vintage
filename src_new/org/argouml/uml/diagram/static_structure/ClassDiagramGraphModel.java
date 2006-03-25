@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.85 2006/03/20 20:54:17 tfmorris Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.86 2006/03/25 21:33:52 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -339,6 +339,8 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
         } else if (edge instanceof CommentEdge) {
             sourceModelElement = ((CommentEdge) edge).getSource();
             destModelElement = ((CommentEdge) edge).getDestination();
+        } else {
+            return false;
         }
 
         if (sourceModelElement == null || destModelElement == null) {

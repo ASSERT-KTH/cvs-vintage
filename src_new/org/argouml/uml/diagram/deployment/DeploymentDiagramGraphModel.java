@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.50 2006/03/11 21:09:36 linus Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.51 2006/03/25 21:33:51 tfmorris Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,6 +252,8 @@ public class DeploymentDiagramGraphModel
         } else if (edge instanceof CommentEdge) {
             end0 = ((CommentEdge) edge).getSource();
             end1 = ((CommentEdge) edge).getDestination();
+        } else {
+            return false;
         }
 
         // Both ends must be defined and nodes that are on the graph already.

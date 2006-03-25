@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.61 2006/03/23 22:22:04 linus Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.62 2006/03/25 21:33:51 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -289,6 +289,8 @@ public class UseCaseDiagramGraphModel
         } else if (edge instanceof CommentEdge) {
             sourceModelElement = ((CommentEdge) edge).getSource();
             destModelElement = ((CommentEdge) edge).getDestination();
+        } else {
+            return false;
         }
 
         // Both ends must be defined and nodes that are on the graph already.
