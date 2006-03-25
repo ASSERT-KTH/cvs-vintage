@@ -1,4 +1,4 @@
-// $Id: ClassdiagramAssociationEdge.java,v 1.11 2005/09/07 21:03:53 linus Exp $
+// $Id: ClassdiagramAssociationEdge.java,v 1.12 2006/03/25 23:41:00 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,9 @@ public class ClassdiagramAssociationEdge extends ClassdiagramEdge {
      * @see org.argouml.uml.diagram.layout.LayoutedEdge#layout()
      */
     public void layout() {
+        // TODO: Multiple associations between the same pair of elements
+        // need to be special cased so that they don't overlap - tfm - 20060228
+        
         // self associations are special cases. No need to let the maze
         // runner find the way.
         if (getDestFigNode() == getSourceFigNode()) {

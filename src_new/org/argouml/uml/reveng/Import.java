@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.88 2006/03/13 11:41:55 linus Exp $
+// $Id: Import.java,v 1.89 2006/03/25 23:41:00 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -717,7 +717,7 @@ public class Import {
                 ProjectBrowser.getInstance().showStatus("Import done");
 
                 // Layout the modified diagrams.
-                if (doLayout) {
+                if (!isCancelled() && doLayout) {
                     st.mark("layout");
                     if (diagramInterface != null) {
                         for (int i = 0; i < diagramInterface
@@ -926,7 +926,8 @@ public class Import {
         }
 
         public void disposeDialog() {
-            setVisible(false); dispose();
+            setVisible(false); 
+            dispose();
         }
 
         /**
@@ -1117,7 +1118,7 @@ class ImportClasspathDialog extends JDialog {
                         }
                     } else if (e.getActionCommand().equals(
                             JFileChooser.CANCEL_SELECTION)) {
-                        ;// TODO: What shall we do here?
+                        // TODO: What shall we do here?
                     }
                 }
             });
