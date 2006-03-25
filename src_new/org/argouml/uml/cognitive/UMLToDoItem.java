@@ -1,4 +1,4 @@
-// $Id: UMLToDoItem.java,v 1.10 2005/08/15 09:29:24 mvw Exp $
+// $Id: UMLToDoItem.java,v 1.11 2006/03/25 14:59:33 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.Highlightable;
 import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
@@ -42,7 +43,6 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
-import org.tigris.gef.ui.Highlightable;
 
 
 /**

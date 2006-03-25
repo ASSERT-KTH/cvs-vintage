@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.238 2006/03/23 00:36:57 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.239 2006/03/25 14:59:33 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
 import org.argouml.application.events.ArgoNotationEventListener;
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.Highlightable;
 import org.argouml.cognitive.ItemUID;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
@@ -112,7 +113,8 @@ public abstract class FigNodeModelElement
         PropertyChangeListener,
         NotationContext,
         PathContainer,
-        ArgoNotationEventListener {
+        ArgoNotationEventListener,
+        Highlightable {
 
     /**
      * Logger.

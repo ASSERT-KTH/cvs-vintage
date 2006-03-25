@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.153 2006/03/22 01:51:39 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.154 2006/03/25 14:59:33 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
 import org.argouml.application.events.ArgoNotationEventListener;
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.Highlightable;
 import org.argouml.cognitive.ItemUID;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
@@ -98,7 +99,8 @@ public abstract class FigEdgeModelElement
         KeyListener,
         PropertyChangeListener,
         NotationContext,
-        ArgoNotationEventListener {
+        ArgoNotationEventListener,
+        Highlightable {
 
     private static final Logger LOG =
         Logger.getLogger(FigEdgeModelElement.class);
