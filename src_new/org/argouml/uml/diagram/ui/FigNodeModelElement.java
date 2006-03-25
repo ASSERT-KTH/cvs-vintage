@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.239 2006/03/25 14:59:33 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.240 2006/03/25 16:32:35 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.naming.OperationNotSupportedException;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JSeparator;
@@ -399,6 +400,7 @@ public abstract class FigNodeModelElement
      */
     public void setItemUID(ItemUID id) {
         itemUid = id;
+        throw new UnsupportedOperationException("Trying to prove this is ever called");
     }
 
     /**
