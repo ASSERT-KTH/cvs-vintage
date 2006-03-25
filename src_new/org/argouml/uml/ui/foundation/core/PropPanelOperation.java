@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.96 2006/03/23 21:28:08 mkl Exp $
+// $Id: PropPanelOperation.java,v 1.97 2006/03/25 00:46:54 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -182,6 +182,9 @@ public class PropPanelOperation extends PropPanelFeature {
             putValue(Action.SMALL_ICON, icon);
         }
         
+        /**
+         * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+         */
         public boolean shouldBeEnabled() {
         	Object target = TargetManager.getInstance().getModelTarget();
         	boolean result = true;

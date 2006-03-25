@@ -1,4 +1,4 @@
-// $Id: XmiReferenceProviderImpl.java,v 1.3 2006/03/24 02:14:22 tfmorris Exp $
+// $Id: XmiReferenceProviderImpl.java,v 1.4 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ class XmiReferenceProviderImpl implements XMIReferenceProvider {
     private Map mofIdToXmiId;
     
     /**
-     * Create a new reference provider which uses the given map for its lookups.
+     * Create a new reference provider which uses the given map for lookups.
      * 
      * @param idMap
      */
@@ -68,7 +68,8 @@ class XmiReferenceProviderImpl implements XMIReferenceProvider {
         if (ref == null) {
             return new XMIReferenceProvider.XMIReference(systemId, mofId);
         } else {
-            return new XMIReferenceProvider.XMIReference(systemId, ref.getXmiId());
+            return new XMIReferenceProvider.XMIReference(systemId, 
+                    ref.getXmiId());
         }
     }
 }

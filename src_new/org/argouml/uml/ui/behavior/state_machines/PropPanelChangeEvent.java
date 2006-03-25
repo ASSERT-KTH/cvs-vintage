@@ -1,4 +1,4 @@
-// $Id: PropPanelChangeEvent.java,v 1.16 2006/03/23 16:01:55 mkl Exp $
+// $Id: PropPanelChangeEvent.java,v 1.17 2006/03/25 00:46:56 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
@@ -34,7 +33,6 @@ import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
 import org.argouml.uml.ui.UMLExpressionModel2;
 import org.argouml.util.ConfigLoader;
-import org.tigris.swidgets.GridLayout2;
 
 /**
  * The properties panel for a ChangeEvent.

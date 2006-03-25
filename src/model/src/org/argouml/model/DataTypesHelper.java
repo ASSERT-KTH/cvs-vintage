@@ -1,4 +1,4 @@
-// $Id: DataTypesHelper.java,v 1.5 2005/11/12 23:53:37 linus Exp $
+// $Id: DataTypesHelper.java,v 1.6 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ public interface DataTypesHelper {
     /**
      * @param kind the pseudostate kind (Choice)
      * @return if this is a branch-choice kind
-     * @deprecated UML 1.3 only - use Choice
+     * @deprecated before 0.20 by tfmorris - UML 1.3 only - use Choice
      */
     boolean equalsBRANCHKind(Object kind);
 

@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperMDRImpl.java,v 1.3 2006/03/20 17:03:58 tfmorris Exp $
+// $Id: DataTypesHelperMDRImpl.java,v 1.4 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,11 +214,14 @@ public class DataTypesHelperMDRImpl implements DataTypesHelper {
      * @return string representing multiplicity range
      */
     private String multiplicityRangeToString(MultiplicityRange range) {
-        if (range.getLower() == range.getUpper())
+        if (range.getLower() == range.getUpper()) {
             return DataTypesFactoryMDRImpl.boundToString(range.getLower());
-        else
-            return DataTypesFactoryMDRImpl.boundToString(range.getLower()) + ".."
+        } else {
+            return DataTypesFactoryMDRImpl.boundToString(
+                    range.getLower())
+                    + ".."
                     + DataTypesFactoryMDRImpl.boundToString(range.getUpper());
+        }
     }
 
     /**

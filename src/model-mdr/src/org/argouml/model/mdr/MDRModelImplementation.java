@@ -1,4 +1,4 @@
-// $Id: MDRModelImplementation.java,v 1.3 2006/03/24 02:14:22 tfmorris Exp $
+// $Id: MDRModelImplementation.java,v 1.4 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -215,7 +215,8 @@ public class MDRModelImplementation implements ModelImplementation {
         String storageImplementation = System.getProperty(
                 "org.netbeans.mdr.storagemodel.StorageFactoryClassName",
                 "org.netbeans.mdr.persistence.memoryimpl.StorageFactoryImpl");
-        System.setProperty("org.netbeans.mdr.storagemodel.StorageFactoryClassName",
+        System.setProperty(
+                "org.netbeans.mdr.storagemodel.StorageFactoryClassName",
                 storageImplementation);
 
         /*
@@ -227,7 +228,8 @@ public class MDRModelImplementation implements ModelImplementation {
          * before it and its associated value are copied to an *internal*
          * property table separate from the system property table.
          */
-        System.setProperty("MDRStorageProperty.org.netbeans.mdr.persistence.memoryimpl.id",
+        System.setProperty(
+                "MDRStorageProperty.org.netbeans.mdr.persistence.memoryimpl.id",
                 UUIDManager.getInstance().getNewUUID());
         
         // Connect to the repository

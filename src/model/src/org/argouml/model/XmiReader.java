@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.8 2006/03/21 07:40:24 tfmorris Exp $
+// $Id: XmiReader.java,v 1.9 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,6 +89,7 @@ public interface XmiReader {
      * return false if unsupported.
      * 
      * @param elementNames array of element names which reader should ignore
+     * @return returns false if the operation is unsupported
      */
     public boolean setIgnoredElements(String[] elementNames);
     

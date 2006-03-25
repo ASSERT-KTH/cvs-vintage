@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.90 2006/03/14 22:57:35 linus Exp $
+// $Id: UMLDiagram.java,v 1.91 2006/03/25 00:46:56 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -575,6 +575,11 @@ public abstract class UMLDiagram
         }
     }
 
+    /**
+     * Get the selected action.
+     * 
+     * @return the selected action
+     */
     public Action getSelectedAction() {
         return selectedAction;
     }
@@ -698,12 +703,12 @@ public abstract class UMLDiagram
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.Relocatable#isRelocationAllowed(java.lang.Object)
+     * @see org.argouml.ui.explorer.Relocatable#isRelocationAllowed(java.lang.Object)
      */
     public abstract boolean isRelocationAllowed(Object base);
 
     /**
-     * @see org.argouml.uml.diagram.ui.Relocatable#relocate(java.lang.Object)
+     * @see org.argouml.ui.explorer.Relocatable#relocate(java.lang.Object)
      */
     public abstract boolean relocate(Object base);
 

@@ -1,4 +1,4 @@
-// $Id: XmiReaderImpl.java,v 1.3 2006/03/24 02:14:22 tfmorris Exp $
+// $Id: XmiReaderImpl.java,v 1.4 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,10 +145,11 @@ public class XmiReaderImpl implements XmiReader, UnknownElementsListener {
      * @throws UmlException
      *             if there is a problem
      */
-    public Collection parse(InputSource pIs, boolean profile) throws UmlException {
+    public Collection parse(InputSource pIs, boolean profile)
+            throws UmlException {
+
         Collection newElements = null;
         RefPackage extent = modelPackage;
-
 
         try {
             LOG.info("Loading '" + pIs.getSystemId() + "'");
@@ -189,7 +190,8 @@ public class XmiReaderImpl implements XmiReader, UnknownElementsListener {
             
             Collection startTopElements = getTopLevelElements();
             int numElements = startTopElements.size();
-            LOG.debug("Number of top level elements before import: " + numElements);
+            LOG.debug("Number of top level elements before import: " 
+                    + numElements);
 
             try {
                 newElements = 
@@ -229,7 +231,8 @@ public class XmiReaderImpl implements XmiReader, UnknownElementsListener {
 
                 // This indicates a malformed XMI file.  Log the error.
                 if (newElements.size() != numElements) {
-                    LOG.error("Mismatch between number of elements returned by XMIReader ("
+                    LOG.error("Mismatch between number of elements returned by"
+                            + " XMIReader ("
                             + newElements.size()
                             + ") and number of new top level elements found ("
                             + numElements + ")");
@@ -271,13 +274,15 @@ public class XmiReaderImpl implements XmiReader, UnknownElementsListener {
 
         if (profile) {
             if (newElements.size() != 1) {
-                LOG.error("Unexpected number of profile model elements (must be 1) : "
+                LOG.error("Unexpected number of profile model elements"
+                        + " (must be 1) : "
                         + newElements.size());
                 return null;
             } else {
                 RefObject model = (RefObject) newElements.iterator().next();
                 if (!(model instanceof Model)) {
-                    LOG.error("Profile XMI doesn't contain Model as top level element.");
+                    LOG.error("Profile XMI doesn't contain Model as top level"
+                            + " element.");
                     return null;
                 } else {
                     LOG.debug("Saving profile with MofID : " + model.refMofId());

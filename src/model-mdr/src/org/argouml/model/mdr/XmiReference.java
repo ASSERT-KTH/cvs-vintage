@@ -1,4 +1,4 @@
-// $Id: XmiReference.java,v 1.1 2006/03/24 02:14:22 tfmorris Exp $
+// $Id: XmiReference.java,v 1.2 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,9 +25,9 @@
 package org.argouml.model.mdr;
 
 class XmiReference {
-    final String systemId;
+    private final String systemId;
 
-    final String xmiId;
+    private final String xmiId;
 
     /**
      * Create a XMI id reference object.

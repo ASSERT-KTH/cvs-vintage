@@ -1,4 +1,4 @@
-// $Id: XmiWriterMDRImpl.java,v 1.3 2006/03/24 02:14:22 tfmorris Exp $
+// $Id: XmiWriterMDRImpl.java,v 1.4 2006/03/25 00:46:55 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,9 +80,14 @@ public class XmiWriterMDRImpl implements XmiWriter {
 
     /**
      * Create an XMI writer for the given model or extent.
-     * @param theParent The ModelImplementation
-     * @param theModel The Model to write.  If null, write all top-level model elements.
-     * @param theWriter The writer to write to
+     * 
+     * @param theParent
+     *            The ModelImplementation
+     * @param theModel
+     *            The Model to write. If null, write all top-level model
+     *            elements.
+     * @param theWriter
+     *            The writer to write to
      */
     public XmiWriterMDRImpl(MDRModelImplementation theParent, Object theModel,
             Writer theWriter) {
@@ -91,7 +96,8 @@ public class XmiWriterMDRImpl implements XmiWriter {
         this.writer = theWriter;
         config = new OutputConfig();
         config.setEncoding(ENCODING);
-        config.setReferenceProvider(new XmiReferenceProviderImpl(parent.getObjectToId()));
+        config.setReferenceProvider(new XmiReferenceProviderImpl(parent
+                .getObjectToId()));
         config.setHeaderProvider(new XmiHeaderProviderImpl());
     }
 
@@ -119,10 +125,12 @@ public class XmiWriterMDRImpl implements XmiWriter {
                         }
                     }
                 }
-                LOG.info("Saving " + elements.size() + " top level model elements");
+                LOG.info("Saving " + elements.size() 
+                        + " top level model elements");
             }
      
-            xmiWriter.write(new WriterOuputStream(writer), elements, XMI_VERSION);
+            xmiWriter.write(
+                    new WriterOuputStream(writer), elements, XMI_VERSION);
         } catch (IOException e) {
             throw new UmlException(e);
         }
