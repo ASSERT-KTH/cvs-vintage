@@ -28,6 +28,7 @@ import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.gui.util.WelcomeMessage;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.ristretto.message.Address;
@@ -52,11 +53,14 @@ class AccountCreator implements WizardModelListener {
         account.setName((String) data.getData("Identity.accountName"));
         account.getIdentity().setAddress((Address)data.getData("Identity.address"));
 
+        IMailFolder folder =null;
         if (type.equals("POP3")) {
             PopItem pop = account.getPopItem();
             pop.setString("host", (String) data.getData("IncomingServer.host"));
             pop.setString("user", (String) data.getData("IncomingServer.login"));
             POP3ServerCollection.getInstance().add(account);
+            
+            folder = FolderTreeModel.getInstance().getFolder(101);
         } else {
             ImapItem imap = account.getImapItem();
             imap.setString("host", (String) data.getData("IncomingServer.host"));
@@ -83,11 +87,22 @@ class AccountCreator implements WizardModelListener {
                 parentFolder.add(inbox);
                 parentFolder.getConfiguration().getRoot().addElement(
                         inbox.getConfiguration().getRoot());
+                folder = inbox;
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            
+            
         }
 
+        // add welcome message to new account inbox
+        try {
+			Address adr = (Address)data.getData("Identity.address");
+			WelcomeMessage.addWelcomeMessage(folder, adr.toString(), new Integer(account.getUid()).toString());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+        
         // add account to mail-checking manager
         MailCheckingManager.getInstance().add(account);
 
