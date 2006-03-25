@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperMDRImpl.java,v 1.4 2006/03/19 19:06:13 mvw Exp $
+// $Id: StateMachinesHelperMDRImpl.java,v 1.5 2006/03/25 00:52:29 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,7 +131,7 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
      *      java.lang.Object)
      */
     public void setEventAsTrigger(Object transition, Object event) {
-        if (transition == null || !(transition instanceof Transition)) {
+        if (!(transition instanceof Transition)) {
             throw new IllegalArgumentException("Transition either null or not "
                     + "an instance of MTransition");
         }
@@ -174,8 +174,8 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
             statemachines.remove(getStateMachine(oSubmachineState));
             return statemachines;
         }
-        return null;
-
+        throw new IllegalArgumentException(
+                "Argument must be a SubmachineState");
     }
 
     /**
@@ -239,7 +239,8 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
             }
             return col;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a StateVertex");
     }
 
     /**
@@ -283,7 +284,8 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
             }
             return retList;
         }
-        throw new IllegalArgumentException("Argument is not a composite state");
+        throw new IllegalArgumentException(
+                "Argument is not a composite state");
     }
 
     /**
@@ -613,7 +615,8 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
     public void setChangeExpression(Object handle, Object value) {
         if (handle instanceof ChangeEvent
                 && (value == null || value instanceof BooleanExpression)) {
-            ((ChangeEvent) handle).setChangeExpression((BooleanExpression) value);
+            ((ChangeEvent) handle)
+                    .setChangeExpression((BooleanExpression) value);
             return;
         }
         throw new IllegalArgumentException("handle: " + handle + " or value: "
@@ -635,7 +638,8 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
             }
             return path;
         }
-        return null;
+        throw new IllegalArgumentException(
+                "Argument must be a StateVertex");
     }
 
     /**
