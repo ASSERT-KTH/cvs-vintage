@@ -1,4 +1,4 @@
-// $Id: StateBodyNotation.java,v 1.5 2005/11/16 21:04:36 mvw Exp $
+// $Id: StateBodyNotation.java,v 1.6 2006/03/26 05:43:20 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,8 @@ public abstract class StateBodyNotation extends ValueHandler {
 
     /**
      * The constructor.
+     *
+     * @param state The state.
      */
     public StateBodyNotation(Object state) {
         if (!Model.getFacade().isAState(state)) {

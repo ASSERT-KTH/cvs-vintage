@@ -1,4 +1,4 @@
-// $Id: OperationNotation.java,v 1.3 2005/11/13 14:31:39 mvw Exp $
+// $Id: OperationNotation.java,v 1.4 2006/03/26 05:43:20 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,8 @@ public abstract class OperationNotation extends ValueHandler {
 
     /**
      * The constructor.
+     *
+     * @param operation The operation.
      */
     public OperationNotation(Object operation) {
         if (!Model.getFacade().isAOperation(operation)) {
