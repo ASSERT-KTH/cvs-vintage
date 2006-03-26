@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.47 2005/11/13 11:01:22 linus Exp $
+// $Id: FigComponentInstance.java,v 1.48 2006/03/26 13:38:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -269,7 +270,7 @@ public class FigComponentInstance extends FigNodeModelElement {
 
                 if (getLayer() != null) {
                     // elementOrdering(figures);
-                    List contents = getLayer().getContents();
+                    List contents = new ArrayList(getLayer().getContents());
                     Iterator it = contents.iterator();
                     while (it.hasNext()) {
                         Object o = it.next();
