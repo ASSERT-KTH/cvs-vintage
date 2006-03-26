@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.40 2006/03/20 22:24:41 mvw Exp $
+// $Id: FigActionState.java,v 1.41 2006/03/26 21:37:22 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,27 +232,28 @@ public class FigActionState extends FigStateVertex {
         super.modelChanged(mee);
         if (mee instanceof AddAssociationEvent
                 || mee instanceof AttributeChangeEvent) {
-            if (mee.getSource() == getOwner()
-                && mee.getPropertyName().equals("entry")) {
-                if (mee.getNewValue() != null) {
-                    addElementListener(mee.getNewValue(), "script");
-                }
-                updateNameText();
-                damage();
-            } else {
-                if (getOwner() != null
-                        && Model.getFacade().getEntry(getOwner()) == mee
-                                .getSource()) {
-                    updateNameText();
-                    damage();
-                }
-            }
-        } else if (mee instanceof RemoveAssociationEvent) {
-            if (mee.getOldValue() != null
-                    && mee.getPropertyName().equals("entry")) {
-                removeElementListener(mee.getOldValue());
-                updateNameText();
-                damage();
+            renderingChanged();
+            updateListeners(getOwner());
+            damage();
+        }
+    }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
+     */
+    protected void updateListeners(Object newOwner) {
+        Object oldOwner = getOwner();
+        if (oldOwner != null) {
+            removeAllElementListeners();
+        }
+        /* Now, let's register for events from all modelelements
+         * that change the body text: 
+         */
+        if (newOwner != null) {
+            addElementListener(newOwner, "entry");
+            Object entry = Model.getFacade().getEntry(newOwner);
+            if (entry != null) {
+                addElementListener(entry, "script");
             }
         }
     }
