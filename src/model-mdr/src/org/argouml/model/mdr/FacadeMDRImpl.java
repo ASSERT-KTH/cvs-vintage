@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.10 2006/03/25 00:52:29 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.11 2006/03/26 13:51:04 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2593,6 +2593,16 @@ class FacadeMDRImpl implements Facade {
     public Collection getDeploymentLocations(Object handle) {
         if (handle instanceof Component) {
             return ((Component) handle).getDeploymentLocation();
+        }
+        return illegalArgumentCollection(handle);
+    }
+
+    /**
+     * @see org.argouml.model.Facade#getDeployedComponents(java.lang.Object)
+     */
+    public Collection getDeployedComponents(Object handle) {
+        if (handle instanceof Node) {
+            return ((Node) handle).getDeployedComponent();
         }
         return illegalArgumentCollection(handle);
     }

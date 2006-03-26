@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.36 2006/03/19 19:06:33 mvw Exp $
+// $Id: Facade.java,v 1.37 2006/03/26 13:51:11 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1907,6 +1907,15 @@ public interface Facade {
      * @return the deferrable events collection
      */
     Collection getDeferrableEvents(Object handle);
+
+    /**
+     * Returns the collection of components that are
+     * deployed inside the given node.
+     * 
+     * @param handle the given node
+     * @return collection of components
+     */
+    Collection getDeployedComponents(Object handle);
 
     /**
      * Returns the context of some given statemachine or the context
