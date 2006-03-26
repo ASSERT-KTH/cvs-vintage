@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.91 2006/03/25 00:46:56 tfmorris Exp $
+// $Id: UMLDiagram.java,v 1.92 2006/03/26 20:59:49 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -525,9 +525,11 @@ public abstract class UMLDiagram
              */
             if (fig instanceof FigNodeModelElement) {
                 ((FigNodeModelElement) fig).updateListeners(owner);
+                ((FigNodeModelElement) fig).renderingChanged();
             }
             if (fig instanceof FigEdgeModelElement) {
                 ((FigEdgeModelElement) fig).updateListeners(owner);
+                ((FigEdgeModelElement) fig).renderingChanged();
             }
         }
     }
