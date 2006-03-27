@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: standard.xml,v 1.43 2006/02/10 18:48:13 tfmorris Exp $ -->
+<!-- $Id: standard.xml,v 1.44 2006/03/27 08:16:29 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -722,6 +722,16 @@ These style guides correspond to the default Java settings in Emacs:
       </author>
     </sect1info>
     <title>How to work with Eclipse 3</title>
+    <warning>
+      <para>
+These instructions on how to work with Eclipse 3 don't work anymore.
+We have now a recommended Eclipse setup with files included in the
+repository that you should use instead.
+</para>
+      <para>
+Tom Morris has promised to update this part of the Cookbook.
+</para>
+    </warning>
     <para>
 If you are running Eclipse 3
 you can find information on how to set
