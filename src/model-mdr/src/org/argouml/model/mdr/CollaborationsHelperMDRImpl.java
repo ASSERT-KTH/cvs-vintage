@@ -1,5 +1,5 @@
-// $Id: CollaborationsHelperMDRImpl.java,v 1.5 2006/03/25 00:50:02 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: CollaborationsHelperMDRImpl.java,v 1.6 2006/03/27 21:32:04 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -395,13 +395,15 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
             throw new IllegalArgumentException("In setBases: either the role "
                     + "or the collection bases is " + "null");
         }
-        Iterator it = nsmodel.getFacade().getBases(role).iterator();
-        while (it.hasNext()) {
-            removeBase(role, it.next());
-        }
-        it = bases.iterator();
-        while (it.hasNext()) {
-            addBase(role, it.next());
+        ((ClassifierRole) role).getBase().clear();
+        // The next code gives NoSuchElementException:
+//        Iterator it = nsmodel.getFacade().getBases(role).iterator();
+//        while (it.hasNext()) {
+//            removeBase(role, it.next());
+//        }
+        Iterator i = bases.iterator();
+        while (i.hasNext()) {
+            addBase(role, i.next());
         }
 
     }
