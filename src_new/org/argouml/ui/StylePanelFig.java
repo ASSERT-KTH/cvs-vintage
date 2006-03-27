@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.38 2006/03/23 08:27:50 mkl Exp $
+// $Id: StylePanelFig.java,v 1.39 2006/03/27 18:12:33 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,6 +198,7 @@ public class StylePanelFig
         } else {
             hasEditableBoundingBox(true);
         }
+        if (target == null) return;
 
         // The boundary box as held in the target fig, and as listed in
         // the
