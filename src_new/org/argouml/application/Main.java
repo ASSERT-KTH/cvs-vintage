@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.142 2006/02/27 14:53:35 bobtarling Exp $
+// $Id: Main.java,v 1.143 2006/03/27 13:09:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,7 +128,7 @@ public class Main {
         // then, print out some version info for debuggers...
         org.argouml.util.Tools.logVersionInfo();
 
-        SimpleTimer st = new SimpleTimer("Main.main");
+        SimpleTimer st = new SimpleTimer();
         st.mark("arguments");
 
         /* set properties for application behaviour */

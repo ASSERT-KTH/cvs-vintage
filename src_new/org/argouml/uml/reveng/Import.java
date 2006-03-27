@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.89 2006/03/25 23:41:00 tfmorris Exp $
+// $Id: Import.java,v 1.90 2006/03/27 13:09:01 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -605,7 +605,7 @@ public class Import {
             countFiles = filesLeft.size();
             countFilesThisPass = countFiles;
             nextPassFiles = new Vector();
-            st = new SimpleTimer("ImportRun");
+            st = new SimpleTimer();
             st.mark("start");
             cancelled = false;
             criticThreadWasOn = Designer.theDesigner().getAutoCritique();
