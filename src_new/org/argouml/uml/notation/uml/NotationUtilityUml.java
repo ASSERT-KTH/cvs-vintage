@@ -1,4 +1,4 @@
-// $Id: NotationUtilityUml.java,v 1.5 2006/03/26 10:49:02 mvw Exp $
+// $Id: NotationUtilityUml.java,v 1.6 2006/03/27 18:12:07 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,9 @@ public final class NotationUtilityUml {
     /**
      * The constructor.
      */
-    private NotationUtilityUml() {
+    private NotationUtilityUml() {}
+    
+    static {
         parameterCustomSep = new Vector();
         parameterCustomSep.add(MyTokenizer.SINGLE_QUOTED_SEPARATOR);
         parameterCustomSep.add(MyTokenizer.DOUBLE_QUOTED_SEPARATOR);
