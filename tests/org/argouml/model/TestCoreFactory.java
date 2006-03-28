@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.17 2006/03/25 00:47:48 tfmorris Exp $
+// $Id: TestCoreFactory.java,v 1.18 2006/03/28 07:03:30 linus Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,8 +159,10 @@ public class TestCoreFactory extends TestCase {
         Model.getUmlFactory().delete(class1);
         Model.getPump().flushModelEvents();
 
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class1));
-        assertTrue("binary association not removed", Model.getUmlFactory().isRemoved(assoc));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class1));
+        assertTrue("binary association not removed",
+                Model.getUmlFactory().isRemoved(assoc));
     }
 
     /**
@@ -177,7 +179,8 @@ public class TestCoreFactory extends TestCase {
                 Model.getCoreFactory().createAssociationEnd());
         Model.getUmlFactory().delete(class1);
         Model.getPump().flushModelEvents();
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class1));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class1));
         // Check to see if association still exists
         Collection ends = Model.getFacade().getAssociationEnds(class2);
         assertEquals(1, ends.size());
@@ -203,7 +206,8 @@ public class TestCoreFactory extends TestCase {
         Model.getUmlFactory().delete(class1);
         Model.getPump().flushModelEvents();
 
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class1));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class1));
         assertEquals("invalid supplier dependency not removed",
                 0, Model.getFacade().getSupplierDependencies(class2).size());
     }
@@ -241,7 +245,8 @@ public class TestCoreFactory extends TestCase {
         Model.getUmlFactory().delete(class1);
         Model.getPump().flushModelEvents();
 
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class1));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class1));
         assertEquals("valid client dependency removed",
                 1, Model.getFacade().getClientDependencies(class3).size());
         assertEquals("valid supplier dependency removed",
@@ -268,7 +273,8 @@ public class TestCoreFactory extends TestCase {
         Model.getUmlFactory().delete(class2);
         Model.getPump().flushModelEvents();
 
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class2));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class2));
         assertTrue("Invalid dependency not removed",
                 Model.getFacade().getClientDependencies(class3).isEmpty());
         assertTrue("Invalid dependency not removed",
@@ -296,7 +302,8 @@ public class TestCoreFactory extends TestCase {
         Model.getUmlFactory().delete(class1);
         Model.getPump().flushModelEvents();
 
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class1));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class1));
         assertEquals(
                 "Invalid dependency not removed",
                 0,
@@ -328,7 +335,8 @@ public class TestCoreFactory extends TestCase {
         Model.getUmlFactory().delete(class2);
         Model.getPump().flushModelEvents();
 
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class2));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class2));
         assertEquals(
                 "Invalid dependency not removed",
                 1,
@@ -351,9 +359,12 @@ public class TestCoreFactory extends TestCase {
         Model.getUmlFactory().delete(class1);
         Model.getPump().flushModelEvents();
 
-        assertTrue("class not removed", Model.getUmlFactory().isRemoved(class1));
-        assertTrue("assoc1 not removed", Model.getUmlFactory().isRemoved(assoc1));
-        assertTrue("assoc2 not removed", Model.getUmlFactory().isRemoved(assoc2));
+        assertTrue("class not removed",
+                Model.getUmlFactory().isRemoved(class1));
+        assertTrue("assoc1 not removed",
+                Model.getUmlFactory().isRemoved(assoc1));
+        assertTrue("assoc2 not removed",
+                Model.getUmlFactory().isRemoved(assoc2));
     }
 
     /**

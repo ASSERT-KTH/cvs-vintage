@@ -1,5 +1,5 @@
-// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.20 2005/11/10 04:20:39 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.21 2006/03/28 07:03:29 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,8 +34,15 @@ import org.argouml.model.Model;
  */
 public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
 
-    private UMLFeatureOwnerScopeCheckBox box = null;
-    private Object elem = null;
+    /**
+     * The box to test.
+     */
+    private UMLFeatureOwnerScopeCheckBox box;
+
+    /**
+     * The element to test.
+     */
+    private Object elem;
 
     /**
      * Constructor for TestUMLFeatureOwnerScopeCheckBox.
@@ -79,7 +86,7 @@ public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
 	}
         box.doClick();
         assertEquals(
-                Model.getScopeKind().getClassifier(), 
+                Model.getScopeKind().getClassifier(),
                 Model.getFacade().getOwnerScope(elem));
     }
 
