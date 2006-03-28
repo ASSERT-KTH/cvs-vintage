@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.84 2006/03/21 21:55:51 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.85 2006/03/28 19:07:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,15 +158,13 @@ public class UMLClassDiagram extends UMLDiagram {
             getActionAttribute(),
             getActionOperation(),
             getActionAssociationClass(),
-//            null, // uncomment this to test
-//            getDataTypeActions(), // uncomment this to test
+            null,
+            getDataTypeActions(),
         };
 
         return actions;
     }
 
-    // To enable models and subsystems,
-    // add getDataTypeActions() above.
     private Object[] getDataTypeActions() {
         Object[] actions = {
             getActionDataType(),

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: ExtensionMechanismsFactoryMDRImpl.java,v 1.4 2006/03/28 19:07:20 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -401,6 +401,16 @@ public class ExtensionMechanismsFactoryMDRImpl extends
                 .createTagDefinition();
         super.initialize(td);
         return td;
+    }
+    
+    /**
+     * @see org.argouml.model.ExtensionMechanismsFactory#createStereotype()
+     */
+    public Object createStereotype() {
+        Stereotype st = nsmodel.getUmlPackage().getCore().getStereotype()
+            .createStereotype();
+        super.initialize(st);
+        return st;
     }
 
     /**

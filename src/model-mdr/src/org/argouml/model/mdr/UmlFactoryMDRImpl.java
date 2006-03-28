@@ -1,4 +1,4 @@
-// $Id: UmlFactoryMDRImpl.java,v 1.6 2006/03/25 21:30:50 tfmorris Exp $
+// $Id: UmlFactoryMDRImpl.java,v 1.7 2006/03/28 19:07:20 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -473,6 +473,10 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
             throw new RuntimeException("Attempt to instantiate abstract type");
         } else if (elementType == metaTypes.getOperation()) {
             return getCore().createOperation();
+        } else if (elementType == metaTypes.getEnumeration()) {
+            return getCore().createEnumeration();
+        } else if (elementType == metaTypes.getStereotype()) {
+            return getExtensionMechanisms().createStereotype();
         }
         return modelElement;
     }

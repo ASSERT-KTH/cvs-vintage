@@ -1,4 +1,4 @@
-// $Id: FigEnumeration.java,v 1.1 2006/03/20 20:54:16 tfmorris Exp $
+// $Id: FigEnumeration.java,v 1.2 2006/03/28 19:07:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.EnumLiteralsCompartmentContainer;
 import org.argouml.uml.diagram.ui.FigEnumLiteralsCompartment;
 import org.argouml.uml.diagram.ui.FigStereotypesCompartment;
+import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
@@ -95,6 +96,13 @@ public class FigEnumeration extends FigDataType
         setEnumLiteralsVisible(true);
         literalsCompartment.populate();
         setBounds(getBounds());
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.static_structure.ui.FigDataType#makeSelection()
+     */
+    public Selection makeSelection() {
+        return new SelectionEnumeration(this);
     }
 
     /**

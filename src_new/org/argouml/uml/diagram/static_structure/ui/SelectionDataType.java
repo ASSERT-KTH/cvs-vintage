@@ -1,4 +1,4 @@
-// $Id: SelectionDataType.java,v 1.1 2006/03/21 19:14:42 mvw Exp $
+// $Id: SelectionDataType.java,v 1.2 2006/03/28 19:07:36 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,7 +160,7 @@ class SelectionDataType extends SelectionNodeClarifiers {
         int cx = getContent().getX(), cy = getContent().getY();
         int cw = getContent().getWidth(), ch = getContent().getHeight();
         Object edgeType = null;
-        Object nodeType = Model.getMetaTypes().getDataType();
+        Object nodeType = getNewNodeType(hand.index);
         int bx = mX, by = mY;
         boolean reverse = false;
         switch (hand.index) {
@@ -205,6 +205,10 @@ class SelectionDataType extends SelectionNodeClarifiers {
     protected Object getNewNode(int buttonCode) {
         Object ns = Model.getFacade().getNamespace(getContent().getOwner());
         return Model.getCoreFactory().buildDataType("", ns);
+    }
+
+    protected Object getNewNodeType(int buttonCode) {
+        return Model.getMetaTypes().getDataType();
     }
 
     /**

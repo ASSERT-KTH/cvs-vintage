@@ -1,4 +1,4 @@
-// $Id: FigStereotypeDeclaration.java,v 1.2 2006/03/23 21:46:40 linus Exp $
+// $Id: FigStereotypeDeclaration.java,v 1.3 2006/03/28 19:07:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,9 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
+import org.argouml.model.AssociationChangeEvent;
+import org.argouml.model.AttributeChangeEvent;
+import org.argouml.model.Model;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionCompartmentDisplay;
@@ -92,21 +95,20 @@ public class FigStereotypeDeclaration extends FigClassifierBox {
         enableSizeChecking(true);
     }
 
-
     /**
      * @see org.tigris.gef.presentation.Fig#makeSelection()
      */
     public Selection makeSelection() {
-        return new SelectionClass(this);
+        // TODO: Make a selectionclass.
+        return null;
     }
-
 
     /**
      * Build a collection of menu items relevant for a right-click
-     * popup menu on a Class.
+     * popup menu on a Stereotype.
      *
      * @param     me     a mouse event
-     * @return           a collection of menu items
+     * @return              a collection of menu items
      *
      * @see org.tigris.gef.ui.PopupGenerator#getPopUpActions(java.awt.event.MouseEvent)
      */
@@ -263,12 +265,36 @@ public class FigStereotypeDeclaration extends FigClassifierBox {
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
     protected void modelChanged(PropertyChangeEvent mee) {
-        if (getOwner() == null) {
-            return;
-        }
         super.modelChanged(mee);
+        if (mee instanceof AssociationChangeEvent 
+                || mee instanceof AttributeChangeEvent) {
+            renderingChanged();
+            updateListeners(getOwner());
+            damage();
+        }
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
+     */
+    protected void updateListeners(Object newOwner) {
+        Object oldOwner = getOwner();
+        if (oldOwner != null) {
+            removeAllElementListeners();
+        }
+        if (newOwner != null) {
+            addElementListener(newOwner);
+            // register for tagdefinitions:
+            Iterator it =
+                Model.getFacade().getTagDefinitions(newOwner).iterator();
+            while (it.hasNext()) {
+                Object td = it.next();
+                addElementListener(td, 
+                        new String[] {"name", "tagType", "multiplicity"});
+            }
+            /* TODO: constraints, ... */
+        }
+    }
 
 
     /**
