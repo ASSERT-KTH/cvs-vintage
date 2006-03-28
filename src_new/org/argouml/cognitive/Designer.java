@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.53 2006/03/24 05:54:11 linus Exp $
+// $Id: Designer.java,v 1.54 2006/03/28 20:02:01 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -388,6 +388,11 @@ public final class Designer
         if (!userWorking) {
 	    return;
 	}
+        // TODO: Should we be doing anything on deleted elements?
+        // This throws an exception on remove events. - skip for now - tfm
+        if ("remove".equals(reason)) {
+            return;
+        }
         LOG.debug("critiqueASAP:" + dm);
         int addQueueIndex = addQueue.indexOf(dm);
         if (addQueueIndex == -1) {
@@ -696,9 +701,9 @@ public final class Designer
     }
 
     /**
-     * Reply this Designer's ToDoList, a list of pending problems and
+     * @return this Designer's ToDoList, a list of pending problems and
      * issues that the designer might be interested in.
-     *
+     * 
      * @see ToDoList
      */
     public ToDoList getToDoList() {
