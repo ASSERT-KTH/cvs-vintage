@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.107 2006/03/28 20:01:13 tfmorris Exp $
+// $Id: GeneratorDisplay.java,v 1.108 2006/03/28 20:14:07 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -855,7 +855,8 @@ public class GeneratorDisplay extends Generator2 {
      * 
      * TODO: This function is replaced. Do not use it. 
      * 
-     * @deprecated by MVW before 0.21.2 use the following:
+     * @deprecated by MVW before 0.21.2. See issue 3546 and
+     * the cookbook for the replacement architecture.
      * @see org.argouml.notation.NotationProvider2#generateVisibility(java.lang.Object)
      */
     public String generateVisibility(Object o) {
