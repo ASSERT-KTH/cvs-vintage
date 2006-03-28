@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewEvent.java,v 1.11 2006/03/27 12:45:32 linus Exp $
+// $Id: PopupMenuNewEvent.java,v 1.12 2006/03/28 05:57:26 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class PopupMenuNewEvent extends JPopupMenu {
                 || role.equals(ActionNewEvent.Roles.TRIGGER)) {
             JMenu select = new JMenu();
             select.setText(Translator.localize("action.select"));
-            if (role == ActionNewEvent.Roles.DEFERRABLE_EVENT) {
+            if (role.equals(ActionNewEvent.Roles.DEFERRABLE_EVENT)) {
                 ActionAddEventAsDeferrableEvent.SINGLETON.setTarget(
                         list.getTarget());
                 select.add(ActionAddEventAsDeferrableEvent.SINGLETON);
