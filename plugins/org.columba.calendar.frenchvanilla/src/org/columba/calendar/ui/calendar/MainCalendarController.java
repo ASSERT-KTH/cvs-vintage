@@ -26,6 +26,7 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
@@ -261,13 +262,17 @@ public class MainCalendarController implements InteractionListener,
 		localDateAreaBean.getDateArea().setToolTipProvider(ttp);
 
 		((DefaultDateArea) localDateAreaBean.getDateArea())
-				.addInteractionListener(this);
+				.addMouseListener(new MyMouseListener());
 
-		((DefaultDateArea) localDateAreaBean.getDateArea())
-				.addActivityMoveListener(this);
+		// ((DefaultDateArea) localDateAreaBean.getDateArea())
+		// .addInteractionListener(this);
+
+		// ((DefaultDateArea) localDateAreaBean.getDateArea())
+		// .addActivityMoveListener(this);
 
 		((DefaultDateArea) localDateAreaBean.getDateArea())
 				.addActivityDragResizeListener(this);
+
 	}
 
 	private void initMonthlyDateArea() {
@@ -950,8 +955,8 @@ public class MainCalendarController implements InteractionListener,
 	public void interactionOccured(InteractionEvent e) {
 		Object value = e.getCommand().getValue();
 
-		System.out.println("interactionOccured="+value.toString());
-		
+		System.out.println("interactionOccured=" + value.toString());
+
 		if (MigUtil.equals(value, DefaultDateArea.AE_MOUSE_ENTERED)) {
 			// mouse hovers over activity
 			com.miginfocom.calendar.activity.Activity activity = ((ActivityView) e
@@ -968,27 +973,22 @@ public class MainCalendarController implements InteractionListener,
 			final Point p = ((MouseEvent) e.getSourceEvent()).getPoint();
 			Object commandValue = e.getCommand().getValue();
 
-//			if (DefaultDateArea.AE_CLICKED.equals(commandValue)
-//					|| DefaultDateArea.AE_DOUBLE_CLICKED.equals(commandValue)) {
+			// if (DefaultDateArea.AE_CLICKED.equals(commandValue)
+			// || DefaultDateArea.AE_DOUBLE_CLICKED.equals(commandValue)) {
 
-				if (o instanceof ActivityView) {
-					// retrieve new selection
-					selectedInternalActivitiy = ((ActivityView) o).getModel();
-
-					// remember selected activity
-					selectedActivity = new Activity(selectedInternalActivitiy);
-
-					// notify all listeners
-					fireSelectionChanged(new IActivity[] { selectedActivity });
-				} else {
-					// clicked on calendar - not activity
-					selectedInternalActivitiy = null;
-
-					selectedActivity = null;
-					// fireSelectionChanged(new Activity[] {});
-				}
-//			}
-
+			/*
+			 * if (o instanceof ActivityView) { // retrieve new selection
+			 * selectedInternalActivitiy = ((ActivityView) o).getModel(); //
+			 * remember selected activity selectedActivity = new
+			 * Activity(selectedInternalActivitiy); // notify all listeners
+			 * fireSelectionChanged(new IActivity[] { selectedActivity }); }
+			 * else { // clicked on calendar - not activity
+			 * selectedInternalActivitiy = null;
+			 * 
+			 * selectedActivity = null; // fireSelectionChanged(new Activity[]
+			 * {}); }
+			 */
+			// }
 			if (o instanceof ActivityView) {
 				// check if happens on the selected activity
 				if (DefaultDateArea.AE_POPUP_TRIGGER.equals(commandValue)) {
@@ -998,7 +998,7 @@ public class MainCalendarController implements InteractionListener,
 					// GenericStates.SELECTED_BIT, true);
 
 					// show context menu
-					menu.show(currentDateAreaBean.getDateArea(), p.x, p.y);
+					// menu.show(currentDateAreaBean.getDateArea(), p.x, p.y);
 
 				} else if (DefaultDateArea.AE_DOUBLE_CLICKED
 						.equals(commandValue)) {
@@ -1007,11 +1007,12 @@ public class MainCalendarController implements InteractionListener,
 				}
 			} else {
 				// check if happens in calendar, but not on activity
-				
+				System.out.println("---> event in calendar");
+
 				if (DefaultDateArea.AE_DOUBLE_CLICKED.equals(commandValue)) {
 
 					// double-click on empty calendar
-					mediator.fireCreateActivity(null);
+					// mediator.fireCreateActivity(null);
 				}
 			}
 		}
@@ -1034,8 +1035,8 @@ public class MainCalendarController implements InteractionListener,
 
 		int selectedStartDay = newVisRange.getStart().get(
 				java.util.Calendar.DAY_OF_YEAR);
-//		int selectedEndDay = newVisRange.getStart().get(
-//				java.util.Calendar.DAY_OF_YEAR);
+		// int selectedEndDay = newVisRange.getStart().get(
+		// java.util.Calendar.DAY_OF_YEAR);
 
 		int diff = selectedStartDay - today;
 
@@ -1167,4 +1168,63 @@ public class MainCalendarController implements InteractionListener,
 		}
 	}
 
+	class MyMouseListener extends MouseAdapter {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			handleEvent(e);
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			handlePopupEvent(e);
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			handlePopupEvent(e);
+		}
+
+		private void handlePopupEvent(MouseEvent e) {
+			Point p = e.getPoint();
+			if (e.isPopupTrigger()) {
+				// show context menu
+				menu.show(e.getComponent(), p.x, p.y);
+				System.out.println("--> popup");
+			} else
+				System.out.println("--> no popup");
+		}
+
+		private void handleEvent(MouseEvent e) {
+
+			Point p = e.getPoint();
+			ActivityView view = currentDateAreaBean.getDateArea()
+					.getActivityViewAt(p.x, p.y);
+
+			if (view != null) {
+				// retrieve new selection
+				selectedInternalActivitiy = ((ActivityView) view).getModel();
+
+				// remember selected activity
+				selectedActivity = new Activity(selectedInternalActivitiy);
+
+				// notify all listeners
+				fireSelectionChanged(new IActivity[] { selectedActivity });
+			} else {
+				// clicked on calendar - not activity
+				selectedInternalActivitiy = null;
+
+				fireSelectionChanged(new Activity[] {});
+			}
+
+			if (e.getClickCount() == 2) {
+				MutableDateRange range = currentDateAreaBean.getDateArea()
+						.getDateRangeForPoint(e.getPoint(), true, true, true);
+				mediator
+						.fireCreateActivity(new org.columba.calendar.model.DateRange(
+								range.getStart(), range.getEnd(true)));
+			}
+
+		}
+	}
 }

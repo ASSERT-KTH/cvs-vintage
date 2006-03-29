@@ -292,7 +292,7 @@ public class CalendarFrameMediator extends DockFrameController implements
 	}
 
 	public void fireCreateActivity(IDateRange range) {
-		new NewAppointmentAction(this).actionPerformed(null);
+		new NewAppointmentAction(this, range).actionPerformed(null);
 	}
 
 }

@@ -18,11 +18,14 @@
 package org.columba.calendar.ui.comp;
 
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.Calendar;
 
 import org.columba.calendar.model.api.IDateRange;
 
 import com.miginfocom.calendar.ThemeDatePicker;
+import com.miginfocom.calendar.theme.CalendarTheme;
+import com.miginfocom.theme.Theme;
 import com.miginfocom.theme.Themes;
 import com.miginfocom.util.dates.DateRangeI;
 import com.miginfocom.util.dates.ImmutableDateRange;
@@ -47,10 +50,21 @@ public class DatePicker extends ThemeDatePicker {
 
 		setThemeContext(DP_THEME_CTX1);
 
-		// setHomeButtonVisible(true);
+		Theme theme = Themes.getTheme(DP_THEME_CTX1);
+		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_BOUNDARY, new Integer(
+				DateRangeI.RANGE_TYPE_DAY));
+
+		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MIN_COUNT, new Integer(
+				1));
+		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MAX_COUNT, new Integer(
+				1));
+
+		setHomeButtonVisible(true);
 		setLeftRightButtonsVisible(true);
+		setDefaultDateStyle(DateFormat.DEFAULT);
+		setHideEndDate(true);
 		
-		setSelectedRange(new ImmutableDateRange());
+		setDate(Calendar.getInstance());
 	}
 
 	public void setDate(Calendar date) {
@@ -68,7 +82,7 @@ public class DatePicker extends ThemeDatePicker {
 	public void setSelectedColumbaDateRange(IDateRange range) {
 		ImmutableDateRange dr = new ImmutableDateRange(range.getStartTime()
 				.getTimeInMillis(), range.getEndTime().getTimeInMillis(),
-				false, null, null);
+				true, null, null);
 
 		setSelectedRange(dr);
 	}

@@ -18,11 +18,13 @@
 package org.columba.calendar.ui.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Calendar;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.calendar.command.AddEventCommand;
 import org.columba.calendar.command.CalendarCommandReference;
 import org.columba.calendar.model.Event;
+import org.columba.calendar.model.api.IDateRange;
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.calendar.store.api.ICalendarStore;
@@ -37,6 +39,14 @@ import org.columba.core.gui.action.AbstractColumbaAction;
  * 
  */
 public class NewAppointmentAction extends AbstractColumbaAction {
+
+	private IDateRange range;
+
+	public NewAppointmentAction(IFrameMediator frameMediator, IDateRange range) {
+		this(frameMediator);
+
+		this.range = range;
+	}
 
 	/**
 	 * @param frameMediator
@@ -59,6 +69,20 @@ public class NewAppointmentAction extends AbstractColumbaAction {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		IEvent model = new Event();
+		if (range != null) {
+			Calendar start = range.getStartTime();
+			int min = start.get(Calendar.MINUTE);
+			if (min < 30)
+				min = 0;
+			else
+				min = 30;
+			start.set(Calendar.MINUTE, min);
+
+			model.setDtStart(start);
+			Calendar c = (Calendar) start.clone();
+			c.add(Calendar.MINUTE, 30);
+			model.setDtEnt(c);
+		}
 
 		EditEventDialog dialog = new EditEventDialog(null, model);
 
