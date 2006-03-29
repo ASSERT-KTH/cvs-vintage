@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: Protocol.java,v 1.4 2006/02/24 09:21:20 benoitf Exp $
+ * $Id: Protocol.java,v 1.5 2006/03/29 07:51:31 duvauchn Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -118,6 +118,14 @@ public class Protocol {
         }
         this.properties = properties;
 
+        if (domainName == null) {
+        		domainName = "defaultDomain";
+        }
+
+        if (serverName == null) {
+        		serverName = "defaultServer";
+        }
+ 
         String prefixProtocol = CarolDefaultValues.CAROL_PREFIX + "." + name + ".";
 
         // PRODelegate
