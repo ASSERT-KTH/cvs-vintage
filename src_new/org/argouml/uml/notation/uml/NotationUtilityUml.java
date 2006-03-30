@@ -1,4 +1,4 @@
-// $Id: NotationUtilityUml.java,v 1.6 2006/03/27 18:12:07 mvw Exp $
+// $Id: NotationUtilityUml.java,v 1.7 2006/03/30 15:32:55 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,9 +129,7 @@ public final class NotationUtilityUml {
 
     /**
      * Finds a stereotype named name either in the subtree of the model rooted
-     * at root, or in the the ProfileJava model.<p>
-     *
-     * TODO: Should create the stereotype under root if it isn't found.
+     * at root, or in the the ProfileJava model.
      *
      * @param obj
      *            A ModelElement to find a suitable stereotype for.

@@ -1,4 +1,4 @@
-// $Id: FigStereotypeDeclaration.java,v 1.3 2006/03/28 19:07:36 mvw Exp $
+// $Id: FigStereotypeDeclaration.java,v 1.4 2006/03/30 15:32:56 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,8 +99,7 @@ public class FigStereotypeDeclaration extends FigClassifierBox {
      * @see org.tigris.gef.presentation.Fig#makeSelection()
      */
     public Selection makeSelection() {
-        // TODO: Make a selectionclass.
-        return null;
+        return new SelectionStereotype(this);
     }
 
     /**
