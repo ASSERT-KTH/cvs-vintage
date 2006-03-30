@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.39 2006/02/27 20:41:55 tfmorris Exp $
+// $Id: ActionAddDiagram.java,v 1.40 2006/03/30 20:11:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,14 +66,13 @@ public abstract class ActionAddDiagram extends UMLAction {
         Object ns = findNamespace();
 
         if (ns != null && isValidNamespace(ns)) {
+            super.actionPerformed(e);
             UMLDiagram diagram = createDiagram(ns);
             p.addMember(diagram);
             //TODO: make the explorer listen to project member property
             //changes...  to eliminate coupling on gui.
             ExplorerEventAdaptor.getInstance().modelElementAdded(ns);
             TargetManager.getInstance().setTarget(diagram);
-
-            super.actionPerformed(e);
         } else {
             LOG.error("No valid namespace found");
             throw new IllegalStateException("No valid namespace found");
