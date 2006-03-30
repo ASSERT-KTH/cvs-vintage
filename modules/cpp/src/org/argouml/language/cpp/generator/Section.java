@@ -1,4 +1,4 @@
-// $Id: Section.java,v 1.13 2005/08/03 17:31:29 aslo Exp $
+// $Id: Section.java,v 1.14 2006/03/30 23:45:33 euluis Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,13 @@ import org.argouml.uml.generator.AbstractSection;
  */
 public class Section extends AbstractSection {
 
+	/** No section. */
     public static final int SECT_NONE = 0;
+	/** Normal section. */
     public static final int SECT_NORMAL = 1;
+	/** Brief section. */
     public static final int SECT_BRIEF = 2;
+	/** The section to use according to user settings. */
     private static int useSections = SECT_NORMAL;
 
     static void setUseSect(int use) {

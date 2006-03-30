@@ -1,4 +1,4 @@
-// $Id: TestGeneratorCpp.java,v 1.16 2005/11/04 18:46:30 tfmorris Exp $
+// $Id: TestGeneratorCpp.java,v 1.17 2006/03/30 23:45:33 euluis Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,9 +76,6 @@ public class TestGeneratorCpp extends BaseTestGeneratorCpp {
     /** The AInterface interface */
     private Object aInterface;
 
-    /** The AInterface::foo() operation */
-    private Object aInterfaceFooOp;
-
     /** AClass realize AInterface realization */
     private Object aRealization;
 
@@ -111,7 +108,7 @@ public class TestGeneratorCpp extends BaseTestGeneratorCpp {
         aInterface = getFactory().buildInterface("AInterface");
         Object voidType = ProjectManager.getManager().getCurrentProject()
                 .findType("void");
-        aInterfaceFooOp = buildOperation(aInterface, voidType, "foo");
+        buildOperation(aInterface, voidType, "foo");
     }
 
     private void setUpAExtended() {
