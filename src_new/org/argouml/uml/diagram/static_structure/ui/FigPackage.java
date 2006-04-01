@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.95 2006/03/23 00:36:57 bobtarling Exp $
+// $Id: FigPackage.java,v 1.96 2006/04/01 21:06:38 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,9 @@ import java.beans.PropertyVetoException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
+
 import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
@@ -114,6 +116,10 @@ public class FigPackage extends FigNodeModelElement
 
     /**
      * The main constructor.
+     *
+     * @param node the UML package
+     * @param x the x coordinate of the location
+     * @param y the y coordinate of the location
      */
     public FigPackage(Object node, int x, int y) {
         setBigPort(

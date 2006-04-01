@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.85 2006/03/28 19:07:36 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.86 2006/04/01 21:06:38 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -530,7 +530,7 @@ public class UMLClassDiagram extends UMLDiagram {
         if (actionDataType == null) {
             actionDataType =
                 makeCreateNodeAction(Model.getMetaTypes().getDataType(),
-             "button.new-datatype");
+                    "button.new-datatype");
         }
         return actionDataType;
     }
@@ -542,7 +542,7 @@ public class UMLClassDiagram extends UMLDiagram {
         if (actionEnumeration == null) {
             actionEnumeration =
                 makeCreateNodeAction(Model.getMetaTypes().getEnumeration(),
-             "button.new-enumeration");
+                    "button.new-enumeration");
         }
         return actionEnumeration;
     }
@@ -554,7 +554,7 @@ public class UMLClassDiagram extends UMLDiagram {
         if (actionStereotype == null) {
             actionStereotype =
                 makeCreateNodeAction(Model.getMetaTypes().getStereotype(),
-             "button.new-stereotype");
+                    "button.new-stereotype");
         }
         return actionStereotype;
     }

@@ -1,4 +1,4 @@
-// $Id: FigEnumeration.java,v 1.2 2006/03/28 19:07:36 mvw Exp $
+// $Id: FigEnumeration.java,v 1.3 2006/04/01 21:06:38 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,7 +110,7 @@ public class FigEnumeration extends FigDataType
      * TODO: Is this actually needed? - tfm
      */
     public Object clone() {
-        FigEnumeration clone = (FigEnumeration)super.clone();
+        FigEnumeration clone = (FigEnumeration) super.clone();
         clone.literalsCompartment = 
             (FigEnumLiteralsCompartment) literalsCompartment.clone();
         return clone;
@@ -162,6 +162,9 @@ public class FigEnumeration extends FigDataType
         updateEnumLiterals();
     }
     
+    /**
+     * Update (i.e. redraw) the compartment with the literals.
+     */
     protected void updateEnumLiterals() {
         if (!literalsCompartment.isVisible()) {
             return;
@@ -257,7 +260,8 @@ public class FigEnumeration extends FigDataType
         currentHeight += nameHeight;
 
         if (getLiteralsCompartment().isVisible()) {
-            int literalsHeight = getLiteralsCompartment().getMinimumSize().height;
+            int literalsHeight = 
+                getLiteralsCompartment().getMinimumSize().height;
             literalsHeight += whitespace / 2;
             getLiteralsCompartment().setBounds(
                     x,

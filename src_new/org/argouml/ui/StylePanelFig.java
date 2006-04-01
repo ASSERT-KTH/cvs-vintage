@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.39 2006/03/27 18:12:33 mvw Exp $
+// $Id: StylePanelFig.java,v 1.40 2006/04/01 21:06:39 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -341,7 +341,7 @@ public class StylePanelFig
                 res.height = 6000 - res.y;
                 changed = true;
             }
-            if (res.x<0 || res.y<0 || res.width<0 || res.height<0) {
+            if (res.x < 0 || res.y < 0 || res.width < 0 || res.height < 0) {
                 throw new IllegalArgumentException();
             }
             if (changed) {

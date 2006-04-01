@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.33 2006/03/20 20:19:33 tfmorris Exp $
+// $Id: FigStateVertex.java,v 1.34 2006/04/01 21:06:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,13 +106,13 @@ public abstract class FigStateVertex extends FigNodeModelElement {
                 Fig f = ((Fig) getEnclosedFigs().elementAt(i));
                 lay.bringInFrontOf(f, this);
                 if (f instanceof FigNode) {
-                    FigNode fn = (FigNode)f;
+                    FigNode fn = (FigNode) f;
                     Iterator it = fn.getFigEdges().iterator();
                     while (it.hasNext()) {
                         lay.bringInFrontOf(((FigEdge) it.next()), this);
                     }
                     if (fn instanceof FigStateVertex) {
-                        ((FigStateVertex)fn).redrawEnclosedFigs();
+                        ((FigStateVertex) fn).redrawEnclosedFigs();
                     }
                 }
             }

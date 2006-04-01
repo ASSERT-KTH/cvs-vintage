@@ -1,4 +1,4 @@
-// $Id: SelectionStereotype.java,v 1.2 2006/03/30 15:45:42 mvw Exp $
+// $Id: SelectionStereotype.java,v 1.3 2006/04/01 21:06:38 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -209,13 +209,18 @@ public class SelectionStereotype extends SelectionNodeClarifiers {
             NotationUtilityUml.dealWithStereotypes(clazz, "metaclass", false);
             return clazz;
         case 11:
-            Object st = Model.getExtensionMechanismsFactory().createStereotype();
+            Object st = 
+                Model.getExtensionMechanismsFactory().createStereotype();
             Model.getCoreHelper().setNamespace(st, ns);
             return st;
         }
         return null;
     }
 
+    /**
+     * @param buttonCode the code for the pressed button
+     * @return the new object type
+     */
     protected Object getNewNodeType(int buttonCode) {
         switch (buttonCode) {
         case 10:

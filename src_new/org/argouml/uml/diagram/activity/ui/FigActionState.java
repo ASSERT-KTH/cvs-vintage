@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.41 2006/03/26 21:37:22 mvw Exp $
+// $Id: FigActionState.java,v 1.42 2006/04/01 21:06:38 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import java.util.Iterator;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
-import org.argouml.model.RemoveAssociationEvent;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.uml.diagram.state.ui.FigStateVertex;
@@ -61,6 +60,9 @@ public class FigActionState extends FigStateVertex {
 
     private FigRRect cover;
 
+    /**
+     * The notation provider for the textfield.
+     */
     protected NotationProvider4 notationProvider;
 
     ////////////////////////////////////////////////////////////////
