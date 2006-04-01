@@ -1,5 +1,5 @@
-// $Id: DiagramInterchangeFactory.java,v 1.3 2005/11/12 23:53:36 linus Exp $
-// Copyright (c) 2005 The Regents of the University of California. All
+// $Id: DiagramInterchangeFactory.java,v 1.4 2006/04/01 11:45:07 linus Exp $
+// Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -98,7 +98,7 @@ public interface DiagramInterchangeFactory {
     /**
      *
      * @param modelElement
-     * @param diagram
+     * @param diagramOrGraphElement
      * @return
      */
     Object buildUml1SemanticModelBridge(Object modelElement,

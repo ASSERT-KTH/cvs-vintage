@@ -1,5 +1,5 @@
-// $Id: ActionNewTimeEvent.java,v 1.12 2005/07/03 09:48:46 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ActionNewTimeEvent.java,v 1.13 2006/04/01 11:45:08 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -33,6 +33,9 @@ import org.argouml.model.Model;
  */
 public class ActionNewTimeEvent extends ActionNewEvent {
 
+    /**
+     * The instance.
+     */
     private static ActionNewTimeEvent singleton = new ActionNewTimeEvent();
 
     /**
@@ -44,7 +47,8 @@ public class ActionNewTimeEvent extends ActionNewEvent {
     }
 
     /**
-     * @see org.argouml.uml.ui.behavior.state_machines.ActionNewEvent#createEvent()
+     * @see org.argouml.uml.ui.behavior.state_machines.ActionNewEvent#createEvent(
+     *         java.lang.Object)
      */
     protected Object createEvent(Object ns) {
         return Model.getStateMachinesFactory().buildTimeEvent(ns);

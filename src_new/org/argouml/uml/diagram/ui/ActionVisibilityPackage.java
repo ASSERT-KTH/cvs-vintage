@@ -1,4 +1,4 @@
-// $Id: ActionVisibilityPackage.java,v 1.1 2006/01/25 23:23:14 tfmorris Exp $
+// $Id: ActionVisibilityPackage.java,v 1.2 2006/04/01 11:45:08 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ class ActionVisibilityPackage extends AbstractActionRadioMenuItem {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionRadioMenuItem#toggleValueOfTarget(java.lang.Object)
+     * @see org.argouml.uml.diagram.ui.AbstractActionRadioMenuItem#toggleValueOfTarget(java.lang.Object)
      */
     void toggleValueOfTarget(Object t) {
         Model.getCoreHelper().setVisibility(t,
@@ -51,7 +51,7 @@ class ActionVisibilityPackage extends AbstractActionRadioMenuItem {
      * Make use of the default visibility, which is public...
      * TODO: centralise this knowledge.
      *
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionRadioMenuItem#valueOfTarget(java.lang.Object)
+     * @see org.argouml.uml.diagram.ui.AbstractActionRadioMenuItem#valueOfTarget(java.lang.Object)
      */
     Object valueOfTarget(Object t) {
         Object v = Model.getFacade().getVisibility(t);

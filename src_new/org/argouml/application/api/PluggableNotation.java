@@ -1,4 +1,4 @@
-// $Id: PluggableNotation.java,v 1.6 2006/03/14 07:38:20 linus Exp $
+// $Id: PluggableNotation.java,v 1.7 2006/04/01 11:45:07 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ package org.argouml.application.api;
  * @deprecated by Linus Tolke (0.21.1 March 2006).
  *         Register with
  *         {@link org.argouml.uml.generator.GeneratorManager#addGenerator(
- *         Language, CodeGenerator}
+ *         Language, CodeGenerator)}
  *         from
  *         {@link org.argouml.moduleloader.ModuleInterface#enable()}.
  */

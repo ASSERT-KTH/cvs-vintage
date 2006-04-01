@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.87 2006/03/20 22:24:41 mvw Exp $
+// $Id: TabProps.java,v 1.88 2006/04/01 11:45:08 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,7 +172,7 @@ public class TabProps
     private boolean shouldBeEnabled = false;
     private JPanel blankPanel = new JPanel();
     private Hashtable panels = new Hashtable();
-    private JPanel lastPanel = null;
+    private JPanel lastPanel;
     private String panelClassBaseName = "";
 
     private Object target;
@@ -325,7 +325,7 @@ public class TabProps
     /**
      * Find the correct properties panel for the target.
      *
-     * @param targetClass the target class
+     * @param trgt the target class
      * @return the tab panel
      */
     private TabModelTarget findPanelFor(Object trgt) {
@@ -338,7 +338,8 @@ public class TabProps
         }
 
         /* 2nd attempt: If we didn't find the panel then
-         * use the factory to create a new one*/
+         * use the factory to create a new one
+	 */
         p = createPropPanel(trgt);
         if (p != null) {
             LOG.info("Factory created " + p.getClass().getName()
