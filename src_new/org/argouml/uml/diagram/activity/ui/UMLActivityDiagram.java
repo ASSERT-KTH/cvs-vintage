@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.85 2006/03/20 22:24:41 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.86 2006/04/01 16:32:57 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,7 @@ public class UMLActivityDiagram extends UMLDiagram {
             throw new IllegalArgumentException();
         }
 
-        if (namespace != null && Model.getFacade().getName(namespace) != null) {
+        if (Model.getFacade().getName(namespace) != null) {
             if (!Model.getFacade().getName(namespace).trim().equals("")) {
                 String name =
                     Model.getFacade().getName(namespace)
@@ -94,11 +94,7 @@ public class UMLActivityDiagram extends UMLDiagram {
                 } catch (PropertyVetoException pve) { }
             }
         }
-        if (namespace != null) {
-            setup(namespace, agraph);
-        } else {
-            throw new NullPointerException("Namespace may not be null");
-        }
+        setup(namespace, agraph);
     }
 
     /**
