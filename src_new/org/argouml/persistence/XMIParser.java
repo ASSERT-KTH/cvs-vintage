@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.18 2006/03/25 23:29:49 bobtarling Exp $
+// $Id: XMIParser.java,v 1.19 2006/04/01 16:30:11 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -231,27 +231,27 @@ public class XMIParser {
         DiagramFactory diagramFactory = DiagramFactory.getInstance();
         it = diagramsElement.iterator();
         while (it.hasNext()) {
-            Object element = it.next();
-            Object namespace = facade.getNamespace(element);
+            Object statemachine = it.next();
+            Object namespace = facade.getNamespace(statemachine);
             if (namespace == null) {
-                namespace = facade.getContext(element);
-                Model.getCoreHelper().setNamespace(element, namespace);
+                namespace = facade.getContext(statemachine);
+                Model.getCoreHelper().setNamespace(statemachine, namespace);
             }
             ArgoDiagram diagram = null;
-            if (facade.isAActivityGraph(element)) {
+            if (facade.isAActivityGraph(statemachine)) {
                 LOG.info("Creating activity diagram for "
-                        + facade.getUMLClassName(element)
-                        + "<<" + facade.getName(element) + ">>");
+                        + facade.getUMLClassName(statemachine)
+                        + "<<" + facade.getName(statemachine) + ">>");
                 diagram =
                     diagramFactory.createDiagram(UMLActivityDiagram.class,
-                                                 namespace, element);
+                                                 namespace, statemachine);
             } else {
                 LOG.info("Creating state diagram for "
-                        + facade.getUMLClassName(element)
-                        + "<<" + facade.getName(element) + ">>");
+                        + facade.getUMLClassName(statemachine)
+                        + "<<" + facade.getName(statemachine) + ">>");
                 diagram =
                     diagramFactory.createDiagram(UMLStateDiagram.class,
-                                                 namespace, element);
+                                                 namespace, statemachine);
             }
             if (diagram != null) {
                 proj.addMember(diagram);
