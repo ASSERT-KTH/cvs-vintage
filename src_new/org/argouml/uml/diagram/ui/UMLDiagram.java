@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.93 2006/04/01 16:31:34 mvw Exp $
+// $Id: UMLDiagram.java,v 1.94 2006/04/02 06:40:49 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -249,7 +249,7 @@ public abstract class UMLDiagram
             LOG.error(ns);
             throw new IllegalArgumentException("Given object not a namespace");
         }
-        if ((namespace != null) && (namespace != ns)) {
+        if (namespace != ns) {
             Model.getPump().removeModelEventListener(this, namespace);
         }
         namespace = ns;
@@ -408,6 +408,19 @@ public abstract class UMLDiagram
         return actions;
     }
 
+    /**
+     * Manages the selection of the default tool in a popup tool in the toolbar. <p>
+     * 
+     * I.e. in the diagram toolbar, you can have tools that can be opened,
+     * into a grid of tools. The last used tool is remembered, 
+     * and put at the top when the popup is closed, i.e.
+     * is the only tool that remains visible. This remembering is
+     * persistent, hence stored in the configuration file,
+     * under a certain key (i.e. name).
+     * 
+     * @param actions the array of actions that make up the popup
+     * @param key appendix for the key for the configuration file
+     */
     protected void manageDefault(Object[] actions, String key) {
         Action defaultAction = null;
         ConfigurationKey k =
