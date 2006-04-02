@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.43 2006/03/31 19:54:13 mvw Exp $
+// $Id: ActionStateDiagram.java,v 1.44 2006/04/02 08:58:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,15 +71,19 @@ public class ActionStateDiagram extends UndoableAction {
 
     private UMLDiagram createDiagram() {
         Project p = ProjectManager.getManager().getCurrentProject();
-        Object context = TargetManager.getInstance().getModelTarget();
+        Object target = TargetManager.getInstance().getModelTarget();
         Object machine = null;
-        Object model = p.getRoot();
+        Object namespace = p.getRoot(); // the root model
         if (Model.getStateMachinesHelper().isAddingStatemachineAllowed(
-              context)) {
-            machine = Model.getStateMachinesFactory().buildStateMachine(context);
+              target)) {
+            /* The target is a valid context. */
+            machine = Model.getStateMachinesFactory().buildStateMachine(target);
         } else {
             machine = Model.getStateMachinesFactory().createStateMachine();
-            Model.getCoreHelper().setNamespace(machine, model);
+            if (Model.getFacade().isANamespace(target)) {
+                namespace = target;
+            }
+            Model.getCoreHelper().setNamespace(machine, namespace);
             Model.getStateMachinesFactory()
                     .buildCompositeStateOnStateMachine(machine);
         }
