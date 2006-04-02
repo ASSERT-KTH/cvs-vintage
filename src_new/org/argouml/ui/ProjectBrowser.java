@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.186 2006/04/01 11:45:08 linus Exp $
+// $Id: ProjectBrowser.java,v 1.187 2006/04/02 15:36:56 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -732,16 +732,18 @@ public final class ProjectBrowser
     }
 
     /**
-     * Given a list of offenders, displays the according diagram.
-     * This method jumps to the diagram showing the offender,
+     * Given a list of targets, displays the according diagram.
+     * This method jumps to the diagram showing the targets,
      * and scrolls to make it visible.
      *
-     * @param dms vector of offenders
+     * @param targets Collection of targets to show
      */
-    public void jumpToDiagramShowing(Vector dms) {
-        if (dms.size() == 0) {
+    public void jumpToDiagramShowing(Collection targets) {
+    
+        if (targets == null || targets.size() == 0) {
             return;
         }
+        Vector dms = new Vector(targets);
         Object first = dms.elementAt(0);
         if (first instanceof Diagram && dms.size() > 1) {
             setTarget(first);
