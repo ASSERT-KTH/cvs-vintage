@@ -1,4 +1,4 @@
-// $Id: GoModelElementToContents.java,v 1.1 2006/03/31 19:53:32 mvw Exp $
+// $Id: GoModelElementToContents.java,v 1.2 2006/04/03 20:38:47 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,12 @@ import org.argouml.model.Model;
 
 /**
  * Rule for ModelElement -> Contents. <p>
- * 
- * The Contents = all the elements which, in the metamodel, 
+ *
+ * The Contents are all the elements which, in the metamodel,
  * are connected by a composite association.
- * This means, these are the elements that are deleted as a side-effect 
+ * This means, these are the elements that are deleted as a side-effect
  * when the parent gets deleted.
- * 
+ *
  * @author michiel
  */
 public class GoModelElementToContents extends AbstractPerspectiveRule {

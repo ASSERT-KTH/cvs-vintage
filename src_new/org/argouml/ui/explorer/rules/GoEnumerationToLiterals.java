@@ -1,5 +1,5 @@
-// $Id: GoEnumerationToLiterals.java,v 1.3 2005/12/14 22:18:56 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: GoEnumerationToLiterals.java,v 1.4 2006/04/03 20:38:47 linus Exp $
+// Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,6 +27,7 @@ package org.argouml.ui.explorer.rules;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
@@ -46,11 +47,12 @@ public class GoEnumerationToLiterals extends AbstractPerspectiveRule {
     }
 
     /**
-     * @see org.argouml.ui.explorer.rules.AbstractPerspectiveRule#getChildren(java.lang.Object)
+     * @see org.argouml.ui.explorer.rules.AbstractPerspectiveRule#getChildren(
+     *         java.lang.Object)
      */
     public Collection getChildren(Object parent) {
         if (Model.getFacade().isAEnumeration(parent)) {
-            ArrayList list = new ArrayList();
+            List list = new ArrayList();
 
             if (Model.getFacade().getEnumerationLiterals(parent) != null
                     && (Model.getFacade().getEnumerationLiterals(parent).size()
@@ -70,7 +72,8 @@ public class GoEnumerationToLiterals extends AbstractPerspectiveRule {
     }
 
     /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(
+     *         java.lang.Object)
      */
     public Set getDependencies(Object parent) {
         if (Model.getFacade().isAEnumeration(parent)) {

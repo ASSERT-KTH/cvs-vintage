@@ -1,5 +1,5 @@
-// $Id: GoNamespaceToOwnedElements.java,v 1.14 2005/12/20 20:46:44 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: GoNamespaceToOwnedElements.java,v 1.15 2006/04/03 20:38:47 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -47,12 +47,14 @@ public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule {
     }
 
     /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(
+     *         java.lang.Object)
      */
     public Collection getChildren(Object parent) {
 
-        if (!Model.getFacade().isANamespace(parent))
+        if (!Model.getFacade().isANamespace(parent)) {
             return null;
+        }
         Collection ownedElements = Model.getFacade().getOwnedElements(parent);
         Iterator it = ownedElements.iterator();
         Collection ret = new ArrayList();
@@ -76,7 +78,8 @@ public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule {
     }
 
     /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(
+     *         java.lang.Object)
      */
     public Set getDependencies(Object parent) {
         if (Model.getFacade().isANamespace(parent)) {

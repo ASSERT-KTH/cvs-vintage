@@ -1,5 +1,5 @@
-// $Id: PerspectiveRule.java,v 1.5 2005/01/09 14:58:32 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PerspectiveRule.java,v 1.6 2006/04/03 20:38:47 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,7 +39,7 @@ public interface PerspectiveRule {
     /**
      * @return the name of the rule, like "from->to".
      */
-    public String getRuleName();
+    String getRuleName();
 
     /**
      * Gets a collection of 'child' objects for the given 'parent' object in the
@@ -48,7 +48,7 @@ public interface PerspectiveRule {
      * @param parent the given parent
      * @return the children
      */
-    public Collection getChildren(Object parent);
+    Collection getChildren(Object parent);
 
     /**
      * Gets a collection of objects for any 'parent' object in the
@@ -58,5 +58,5 @@ public interface PerspectiveRule {
      * @param parent the parent
      * @return the dependent objects
      */
-    public Set getDependencies(Object parent);
+    Set getDependencies(Object parent);
 }

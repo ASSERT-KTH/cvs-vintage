@@ -1,5 +1,5 @@
-// $Id: IncomingDependencyNode.java,v 1.5 2005/01/09 14:58:32 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: IncomingDependencyNode.java,v 1.6 2006/04/03 20:38:47 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -35,10 +35,13 @@ import org.argouml.ui.explorer.WeakExplorerNode;
  */
 public class IncomingDependencyNode implements WeakExplorerNode {
 
+    /**
+     * The parent.
+     */
     private Object parent;
 
     /**
-     * Creates a new instance of DepedencyNode
+     * Creates a new instance of DepedencyNode.
      *
      * @param theParent the parent node
      */
