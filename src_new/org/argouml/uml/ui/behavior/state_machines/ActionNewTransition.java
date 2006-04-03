@@ -1,4 +1,4 @@
-// $Id: ActionNewTransition.java,v 1.8 2006/02/19 15:59:38 mvw Exp $
+// $Id: ActionNewTransition.java,v 1.9 2006/04/03 21:25:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,5 +76,16 @@ public class ActionNewTransition extends AbstractActionNewModelElement {
                 .buildTransition(getValue(SOURCE), getValue(DESTINATION));
         }
     }
+
+    /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
+    public boolean shouldBeEnabled() {
+        Object target = TargetManager.getInstance().getModelTarget();
+        return super.shouldBeEnabled() 
+            && !Model.getStateMachinesHelper().isTopState(target);
+    }
+    
+    
 
 }
