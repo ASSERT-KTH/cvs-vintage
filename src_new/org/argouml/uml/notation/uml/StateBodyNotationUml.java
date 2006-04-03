@@ -1,4 +1,4 @@
-// $Id: StateBodyNotationUml.java,v 1.7 2006/03/23 22:43:09 linus Exp $
+// $Id: StateBodyNotationUml.java,v 1.8 2006/04/03 19:24:50 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,7 +135,7 @@ public class StateBodyNotationUml extends StateBodyNotation {
      * @throws ParseException when there is a syntax problem,
      *         e.g. non-matching brackets () or []
      */
-    public void parseStateBody(Object st, String s) throws ParseException {
+    protected void parseStateBody(Object st, String s) throws ParseException {
         boolean foundEntry = false;
         boolean foundExit = false;
         boolean foundDo = false;
@@ -466,7 +466,7 @@ public class StateBodyNotationUml extends StateBodyNotation {
         }
     }
 
-    public String generateAction(Object m) {
+    protected String generateAction(Object m) {
         Collection c;
         Iterator it;
         String s;
