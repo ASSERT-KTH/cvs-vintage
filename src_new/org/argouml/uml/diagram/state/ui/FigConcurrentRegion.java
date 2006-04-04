@@ -1,5 +1,5 @@
-// $Id: FigConcurrentRegion.java,v 1.12 2005/12/28 09:30:11 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: FigConcurrentRegion.java,v 1.13 2006/04/04 17:27:27 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -158,9 +158,9 @@ public class FigConcurrentRegion extends FigState
                 ProjectBrowser.getInstance().getRemoveFromDiagramAction());
         popUpActions.add(new JSeparator());
         popUpActions.addElement(
-                ActionAddConcurrentRegion.getSingleton());
+                new ActionAddConcurrentRegion());
         popUpActions.addElement(
-                ActionDeleteConcurrentRegion.getSingleton());
+                new ActionDeleteConcurrentRegion());
         return popUpActions;
     }
 

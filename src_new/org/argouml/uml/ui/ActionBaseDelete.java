@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.11 2006/03/11 21:47:59 linus Exp $
+// $Id: ActionBaseDelete.java,v 1.12 2006/04/04 17:27:28 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,7 +141,7 @@ public abstract class ActionBaseDelete extends UMLAction {
                 }
                 newTarget = getNewTarget(target);
                 if (Model.getFacade().isAConcurrentRegion(target)) {
-                    ActionDeleteConcurrentRegion.getSingleton()
+                    new ActionDeleteConcurrentRegion()
                         .actionPerformed(ae);
                 } else {
                     p.moveToTrash(target);

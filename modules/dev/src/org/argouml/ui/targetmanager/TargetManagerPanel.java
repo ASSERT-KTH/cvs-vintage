@@ -1,4 +1,4 @@
-// $Id: TargetManagerPanel.java,v 1.2 2006/03/12 09:30:45 mvw Exp $
+// $Id: TargetManagerPanel.java,v 1.3 2006/04/04 17:27:32 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,20 +25,19 @@
 package org.argouml.ui.targetmanager;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import org.argouml.ui.targetmanager.TargetEvent;
-import org.argouml.ui.targetmanager.TargetListener;
-import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  * A debug panel for the TargetManager. It shows the actual Targets.
@@ -67,9 +66,27 @@ public class TargetManagerPanel extends JPanel implements TargetListener {
         
         lst = new JList(lm);
         setTarget(TargetManager.getInstance().getTargets());
-        add(new JScrollPane(lst));
+        add(new JScrollPane(lst), BorderLayout.CENTER);
         lst.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         TargetManager.getInstance().addTargetListener(this);
+        add(new JButton(new ClearAction("Clear")), BorderLayout.SOUTH);
+    }
+
+    class ClearAction extends AbstractAction {
+
+        /**
+         * @param name the name
+         */
+        public ClearAction(String name) {
+            super(name);
+        }
+
+        /**
+         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+         */
+        public void actionPerformed(ActionEvent e) {
+            lm.clear();
+        }
     }
 
     /**
@@ -102,8 +119,7 @@ public class TargetManagerPanel extends JPanel implements TargetListener {
     }
 
     private void setTarget(Collection c) {
-        lm.clear();
-        lm.addElement("Last event: " + lastEvent);
+        lm.addElement("***Last event: " + lastEvent);
         Iterator i = c.iterator();
         while (i.hasNext()) {
             lm.addElement(i.next());
