@@ -1,5 +1,5 @@
-// $Id: NavigateTargetForwardAction.java,v 1.5 2005/01/09 14:58:33 linus Exp $
-// Copyright (c) 2002-2005 The Regents of the University of California. All
+// $Id: NavigateTargetBackAction.java,v 1.1 2006/04/04 20:45:44 mvw Exp $
+// Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,51 +21,47 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-package org.argouml.ui.targetmanager;
+package org.argouml.ui.cmd;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.uml.ui.UMLAction;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
+import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
+import org.argouml.ui.targetmanager.TargetManager;
 
 /**
- * Navigates the target one target forward in history.
+ * Navigates the target one target back in history.
  *
  * @author jaap.branderhorst@xs4all.nl
  */
-public class NavigateTargetForwardAction extends UMLAction {
+ class NavigateTargetBackAction extends AbstractAction {
 
-    private static NavigateTargetForwardAction instance;
+     public NavigateTargetBackAction() {
+         super(Translator.localize("action.navigate-back"),
+                 ResourceLoaderWrapper.lookupIcon("action.navigate-back"));
+         // Set the tooltip string:
+         putValue(Action.SHORT_DESCRIPTION, 
+                 Translator.localize("action.navigate-back"));
+     }
 
-    /**
-     * @return the instance (singleton)
-     */
-    public static NavigateTargetForwardAction getInstance() {
-        if (instance == null) {
-            instance = new NavigateTargetForwardAction();
-        }
-        return instance;
-    }
-
-    private NavigateTargetForwardAction() {
-        super("action.navigate-forward", true, HAS_ICON);
-    }
-
-    /**
-     * @see
-     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent e) {
-        TargetManager.getInstance().navigateForward();
-    }
-
-    /**
-     * Action is possible only if navigateForwardPossible on targetManager
-     * returns true.
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() {
-        return super.shouldBeEnabled()
-            && TargetManager.getInstance().navigateForwardPossible();
-    }
-
+     /**
+      * @see
+      * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+      */
+     public void actionPerformed(ActionEvent e) {
+         TargetManager.getInstance().navigateBackward();
+     }
+     
+     /**
+      * Action is possible only if navigateForwardPossible on targetManager
+      * returns true.
+      * 
+      * @see javax.swing.Action#isEnabled()
+      */
+     public boolean isEnabled() {
+         return TargetManager.getInstance().navigateBackPossible();
+     }
 }
