@@ -1,4 +1,4 @@
-// $Id: ActionAddConcurrentRegion.java,v 1.6 2006/04/04 17:27:27 mvw Exp $
+// $Id: ActionAddConcurrentRegion.java,v 1.7 2006/04/04 17:29:39 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,6 +90,7 @@ public class ActionAddConcurrentRegion extends UndoableAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
+        super.actionPerformed(ae);
         try {
             /*Here the actions to divide a region*/
             Fig f = (Fig) TargetManager.getInstance().getFigTarget();
