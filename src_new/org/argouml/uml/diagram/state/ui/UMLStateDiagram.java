@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.87 2006/04/02 08:59:33 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.88 2006/04/05 18:18:02 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,10 @@ import org.tigris.gef.base.ModeCreatePolyEdge;
 
 
 /**
- * The correct name for this class is "UMLStatechartDiagram". See issue 2306.
- *
+ * The UML Statechart diagram. <p>
+ * 
+ * The correct name for this class would be 
+ * "UMLStatechartDiagram". See issue 2306.
  */
 public class UMLStateDiagram extends UMLDiagram {
     /**
@@ -245,7 +247,6 @@ public class UMLStateDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        // TODO Auto-generated method stub
         super.propertyChange(evt);
         if (evt.getSource() == theStateMachine) {
             Object newNamespace = 
