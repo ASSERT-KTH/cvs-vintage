@@ -26,11 +26,15 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
@@ -83,6 +87,7 @@ import com.miginfocom.calendar.datearea.ActivityMoveListener;
 import com.miginfocom.calendar.datearea.DateArea;
 import com.miginfocom.calendar.datearea.DefaultDateArea;
 import com.miginfocom.calendar.decorators.AbstractGridDecorator;
+import com.miginfocom.calendar.decorators.DateSeparatorDecorator;
 import com.miginfocom.calendar.grid.DateGrid;
 import com.miginfocom.calendar.grid.DefaultGridLineProvider;
 import com.miginfocom.calendar.grid.Grid;
@@ -95,6 +100,7 @@ import com.miginfocom.calendar.layout.TimeBoundsLayout;
 import com.miginfocom.util.MigUtil;
 import com.miginfocom.util.PropertyKey;
 import com.miginfocom.util.command.DefaultCommand;
+import com.miginfocom.util.dates.BoundaryRounder;
 import com.miginfocom.util.dates.DateFormatList;
 import com.miginfocom.util.dates.DateRange;
 import com.miginfocom.util.dates.DateRangeI;
@@ -264,8 +270,8 @@ public class MainCalendarController implements InteractionListener,
 		((DefaultDateArea) localDateAreaBean.getDateArea())
 				.addMouseListener(new MyMouseListener());
 
-		// ((DefaultDateArea) localDateAreaBean.getDateArea())
-		// .addInteractionListener(this);
+		((DefaultDateArea) localDateAreaBean.getDateArea())
+				.addInteractionListener(this);
 
 		// ((DefaultDateArea) localDateAreaBean.getDateArea())
 		// .addActivityMoveListener(this);
@@ -300,6 +306,27 @@ public class MainCalendarController implements InteractionListener,
 		// monthlyActivityAShapeBean
 		// .setPrimaryDimension(SwingUtilities.HORIZONTAL);
 
+		DateHeaderBean monthlyWestDateHeaderBean = new DateHeaderBean();
+		monthlyWestDateHeaderBean
+				.setHeaderRows(new CellDecorationRow[] {
+				// first row showing the hour
+				new CellDecorationRow(
+						DateRangeI.RANGE_TYPE_WEEK,
+						new DateFormatList("'w'w", null),
+						new AtFixed(20.0f),
+						new AbsRect(new AtStart(0.0f), new AtStart(0.0f),
+								new AtEnd(0.0f), new AtEnd(0.0f), null, null,
+								null),
+						(java.awt.Paint[]) null,
+						new java.awt.Paint[] { labelColor },
+						new DefaultRepetition(0, 1, null, null),
+						new java.awt.Font[] { UIManager.getFont("Label.font") },
+						new java.lang.Integer[] { null }, new AtStart(3.0f),
+						new AtStart(10.0f)), });
+
+		monthlyWestDateHeaderBean
+				.setTextAntiAlias(com.miginfocom.util.gfx.GfxUtil.AA_HINT_ON);
+
 		monthlyNorthDateHeaderBean
 				.setBackgroundPaint(new com.miginfocom.util.gfx.ShapeGradientPaint(
 						new java.awt.Color(240, 240, 240), new java.awt.Color(
@@ -322,13 +349,8 @@ public class MainCalendarController implements InteractionListener,
 		monthlyDateAreaBean.setDateAreaOuterBorder(BorderFactory
 				.createLineBorder(lightGrayColor));
 
-		// monthlyDateAreaBean.setHorizontalGridLinePaintEven(new UIColor(
-		// "controlShadow", null, null));
-		// monthlyDateAreaBean.setHorizontalGridLinePaintOdd(new UIColor(
-		// "controlShadow", null, null));
-
-		// monthlyDateAreaBean.setVisibleDateRangeString("20060101T000000000-20060131T235959999");
 		monthlyDateAreaBean.setNorthDateHeader(monthlyNorthDateHeaderBean);
+		// monthlyDateAreaBean.setWestDateHeader(monthlyWestDateHeaderBean);
 		monthlyDateAreaBean
 				.setPrimaryDimensionLayout(monthlyVerticalGridDimensionLayout);
 		monthlyDateAreaBean
@@ -378,6 +400,14 @@ public class MainCalendarController implements InteractionListener,
 
 				));
 
+		monthlyDateAreaBean.setPrimaryDimension(SwingConstants.HORIZONTAL);
+		monthlyDateAreaBean
+				.setPrimaryDimensionCellType(DateRangeI.RANGE_TYPE_DAY);
+		monthlyDateAreaBean.setPrimaryDimensionCellTypeCount(1);
+		monthlyDateAreaBean.setWrapBoundary(DateRangeI.RANGE_TYPE_WEEK);
+
+		DefaultDateArea dateArea = monthlyDateAreaBean.getDateArea();
+
 		// select current day
 		monthlyDateAreaBean.getDateArea()
 				.addDecorator(
@@ -406,33 +436,82 @@ public class MainCalendarController implements InteractionListener,
 							}
 						});
 
-		/*
-		 * monthlyDateAreaBean.getDateArea() .addDecorator( new
-		 * AbstractGridDecorator(monthlyDateAreaBean .getDateArea(), 20) {
-		 * public void doPaint(Graphics2D g2, Rectangle bounds) { DateGrid
-		 * dateGrid = (DateGrid) getGrid();
-		 * 
-		 * g2.setColor(Color.red); g2.drawString("hello", bounds.x, bounds.y); }
-		 * 
-		 * public void gridChanged(PropertyChangeEvent e) { }
-		 * 
-		 * public void dispose() { } });
-		 */
+		final DateFormat defaultFormat = new SimpleDateFormat("MMMM dd");
 
-		monthlyDateAreaBean.setPrimaryDimension(SwingConstants.HORIZONTAL);
-		monthlyDateAreaBean
-				.setPrimaryDimensionCellType(DateRangeI.RANGE_TYPE_DAY);
-		monthlyDateAreaBean.setPrimaryDimensionCellTypeCount(1);
-		monthlyDateAreaBean.setWrapBoundary(DateRangeI.RANGE_TYPE_WEEK);
+		monthlyDateAreaBean.getDateArea()
+				.addDecorator(
+						new AbstractGridDecorator(monthlyDateAreaBean
+								.getDateArea(), 20) {
+							public void doPaint(Graphics2D g2, Rectangle bounds) {
+								DateGrid dateGrid = (DateGrid) getGrid();
 
-		DefaultDateArea dateArea = monthlyDateAreaBean.getDateArea();
+								RenderingHints qualityHints = new RenderingHints(
+										RenderingHints.KEY_ANTIALIASING,
+										RenderingHints.VALUE_ANTIALIAS_ON);
+								g2.setRenderingHints(qualityHints);
 
+								g2.setFont(UIManager.getFont("Label.font")
+										.deriveFont(Font.BOLD));
+
+								for (int i = 0; i < dateGrid.getRowCount(); i++) {
+									for (int j = 0; j < dateGrid
+											.getColumnCount(); j++) {
+										Rectangle r = dateGrid.getBoundsOfCell(
+												i, j, Grid.SIZE_MODE_INSIDE,
+												true);
+										DateRangeI range = dateGrid
+												.getDateRangeForCell(i, j);
+										int day = range.getStart().get(
+												Calendar.DAY_OF_MONTH);
+										int weekday = range.getStart().get(
+												Calendar.DAY_OF_WEEK);
+										if (weekday == Calendar.SUNDAY)
+											g2
+													.setColor(new Color(255,
+															102, 102));
+										else if (weekday == Calendar.SATURDAY)
+											g2.setColor(darkGrayColor);
+										else
+											g2.setColor(darkDarkGrayColor);
+										String dayString = null;
+										if (day == 1) {
+											dayString = defaultFormat
+													.format(range.getStart()
+															.getTime());
+										} else
+											dayString = new Integer(day)
+													.toString();
+
+										Rectangle2D rect = g2.getFontMetrics()
+												.getStringBounds(dayString, g2);
+
+										int x2 = r.x + r.width - 1;
+										x2 -= Math.abs(rect.getWidth());
+										int y2 = r.y;
+										y2 += Math.abs(rect.getHeight());
+										g2.drawString(dayString, x2, y2);
+
+									}
+
+								}
+
+							}
+
+							public void gridChanged(PropertyChangeEvent e) {
+							}
+
+							public void dispose() {
+							}
+						});
+		monthlyDateAreaBean.getDateArea().addDecorator(
+				new DateSeparatorDecorator(monthlyDateAreaBean.getDateArea(),
+						70, DateRangeI.RANGE_TYPE_MONTH, new Color(255, 0, 0)));
 		dateArea.setActivitiesSupported(true);
 
-		AtFixed forcedSize = new AtFixed(20);
+		AtFixed forcedSize = new AtFixed(17);
 		TimeBoundsLayout layout = new TimeBoundsLayout(new AtFixed(2),
-				new AtStart(2), new AtEnd(-2), 2, forcedSize, forcedSize,
-				forcedSize);
+				new AtStart(17), new AtEnd(-2), 2, forcedSize, null, null,
+				null, new BoundaryRounder(DateRangeI.RANGE_TYPE_DAY));
 		dateArea.getActivityLayouts().clear();
 		dateArea.addActivityLayout(layout);
 
@@ -619,23 +698,22 @@ public class MainCalendarController implements InteractionListener,
 				));
 
 		// select current day
-		/*
-		 * dateAreaBean.getDateArea().addDecorator( new
-		 * AbstractGridDecorator(dateAreaBean.getDateArea(), 20) { public void
-		 * doPaint(Graphics2D g2, Rectangle bounds) { DateGrid dateGrid =
-		 * (DateGrid) getGrid();
-		 * 
-		 * DateRangeI dr = new DateRange(System .currentTimeMillis(),
-		 * DateRangeI.RANGE_TYPE_DAY, 1, null, null); Rectangle[] rects =
-		 * dateGrid.getBoundsForDateRange(dr, Grid.SIZE_MODE_INSIDE);
-		 * 
-		 * g2.setColor(new Color(250, 250, 250)); for (int i = 0; i <
-		 * rects.length; i++) g2.fill(rects[i]); }
-		 * 
-		 * public void gridChanged(PropertyChangeEvent e) { }
-		 * 
-		 * public void dispose() { } });
-		 */
+
+		// dateAreaBean.getDateArea().addDecorator(
+		// new CellLabelDecorator(dateAreaBean.getDateArea(), 20) {
+		// public void paintCell(java.awt.Graphics2D g2, int r, int c,
+		// java.awt.Rectangle b) {
+		// DateGrid dateGrid = (DateGrid) getGrid();
+		// DateRangeI dr = new DateRange(System
+		// .currentTimeMillis(),
+		// DateRangeI.RANGE_TYPE_DAY, 1, null, null);
+		// Rectangle[] rects = dateGrid.getBoundsForDateRange(dr,
+		// Grid.SIZE_MODE_INSIDE);
+		//
+		// g2.drawString("test", 0,0);
+		// //super.paintCell(g2, r, c, b);
+		// }
+		// });
 
 		// dateAreaBean.setActivityDepositoryContext();
 		dateAreaBean.getDateArea().setActivitiesSupported(true);
@@ -704,17 +782,6 @@ public class MainCalendarController implements InteractionListener,
 		}
 
 		DefaultDateArea dateArea = currentDateAreaBean.getDateArea();
-
-		// DefaultAShapeProvider defaultShapeFactory = ((AShapeRenderer)
-		// dateArea
-		// .getActivityViewRenderer()).getShapeProvider();
-		//
-		// if (days == 1)
-		// defaultShapeFactory.setShape(HORSHAPE, null);
-		// else
-		// defaultShapeFactory.setShape(VERSHAPE, null);
-		//
-		// dateArea.recreateActivityViews();
 
 		DateRange newVisRange = new DateRange(dateArea.getVisibleDateRange());
 
@@ -990,6 +1057,15 @@ public class MainCalendarController implements InteractionListener,
 			 */
 			// }
 			if (o instanceof ActivityView) {
+				// retrieve new selection
+				selectedInternalActivitiy = ((ActivityView) o).getModel();
+
+				// remember selected activity
+				selectedActivity = new Activity(selectedInternalActivitiy);
+
+				// notify all listeners
+				fireSelectionChanged(new IActivity[] { selectedActivity });
+
 				// check if happens on the selected activity
 				if (DefaultDateArea.AE_POPUP_TRIGGER.equals(commandValue)) {
 
@@ -998,7 +1074,7 @@ public class MainCalendarController implements InteractionListener,
 					// GenericStates.SELECTED_BIT, true);
 
 					// show context menu
-					// menu.show(currentDateAreaBean.getDateArea(), p.x, p.y);
+					menu.show(currentDateAreaBean.getDateArea(), p.x, p.y);
 
 				} else if (DefaultDateArea.AE_DOUBLE_CLICKED
 						.equals(commandValue)) {

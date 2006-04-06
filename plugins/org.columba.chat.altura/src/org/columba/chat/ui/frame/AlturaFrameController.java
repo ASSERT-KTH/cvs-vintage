@@ -25,6 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IDock;
+import org.columba.api.gui.frame.IDockable;
 import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.conversation.api.IConversationController;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
@@ -32,10 +34,9 @@ import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.presence.api.IPresenceController;
 import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.chat.ui.roaster.api.IRoasterController;
+import org.columba.chat.ui.util.ResourceLoader;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.frame.DockFrameController;
-import org.flexdock.docking.DockingConstants;
 
 /**
  * @author fdietz
@@ -50,9 +51,9 @@ public class AlturaFrameController extends DockFrameController implements
 
 	private ConversationController conversation;
 
-	private DockableView treePanel;
+	private IDockable treePanel;
 
-	private DockableView conversationPanel;
+	private IDockable conversationPanel;
 
 	/**
 	 * @param c
@@ -72,13 +73,7 @@ public class AlturaFrameController extends DockFrameController implements
 
 	}
 
-	public String[] getDockableIds() {
-		return new String[] { "roaster_tree", "conversation_view" };
-	}
-
-	public void registerDockables() {
-		// init dockable panels
-		treePanel = new DockableView("roaster_tree", "Roaster");
+	private void registerDockables() {
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
@@ -88,12 +83,12 @@ public class AlturaFrameController extends DockFrameController implements
 		leftPanel.add(treeScrollPane, BorderLayout.CENTER);
 		leftPanel.add(presence, BorderLayout.NORTH);
 
-		treePanel.setContentPane(leftPanel);
+		treePanel = registerDockable("roaster_tree", ResourceLoader.getString(
+				"global", "dockable_roaster"), leftPanel, null);
 
-		conversationPanel = new DockableView("conversation_view",
-				"Conversation");
-
-		conversationPanel.setContentPane(conversation);
+		conversationPanel = registerDockable("conversation_view",
+				ResourceLoader.getString("global", "dockable_conversation"),
+				conversation, null);
 
 	}
 
@@ -102,8 +97,9 @@ public class AlturaFrameController extends DockFrameController implements
 	 */
 	public void loadDefaultPosition() {
 
-		super.dock(conversationPanel, DockingConstants.CENTER_REGION);
-		conversationPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
+		super.dock(conversationPanel, IDock.REGION.CENTER);
+
+		super.dock(treePanel, conversationPanel, IDock.REGION.WEST, 0.3f);
 
 		super.setSplitProportion(conversationPanel, 0.35f);
 	}
@@ -145,6 +141,14 @@ public class AlturaFrameController extends DockFrameController implements
 				"/org/columba/chat/action/toolbar.xml");
 		container.extendToolbar(this, is2);
 
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.DefaultFrameController#getString(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String getString(String sPath, String sName, String sID) {
+		return ResourceLoader.getString(sPath, sID);
 	}
 
 }

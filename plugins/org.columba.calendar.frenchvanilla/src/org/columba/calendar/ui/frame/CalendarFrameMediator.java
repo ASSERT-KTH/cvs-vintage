@@ -26,6 +26,8 @@ import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
 import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IDock;
+import org.columba.api.gui.frame.IDockable;
 import org.columba.calendar.base.api.IActivity;
 import org.columba.calendar.model.api.IDateRange;
 import org.columba.calendar.ui.action.ActivityMovedAction;
@@ -40,10 +42,9 @@ import org.columba.calendar.ui.navigation.NavigationController;
 import org.columba.calendar.ui.navigation.api.DateRangeChangedEvent;
 import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
 import org.columba.calendar.ui.navigation.api.IDateRangeChangedListener;
+import org.columba.calendar.ui.util.ResourceLoader;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.frame.DockFrameController;
-import org.flexdock.docking.DockingConstants;
 
 /**
  * @author fdietz
@@ -60,11 +61,11 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	private ICalendarNavigationView navigationController;
 
-	private DockableView listPanel;
+	private IDockable listPanel;
 
-	private DockableView calendarPanel;
+	private IDockable calendarPanel;
 
-	private DockableView navigationPanel;
+	private IDockable navigationPanel;
 
 	/**
 	 * @param viewItem
@@ -101,25 +102,30 @@ public class CalendarFrameMediator extends DockFrameController implements
 		calendarController.createPopupMenu(this);
 	}
 
-	public void registerDockables() {
-		// init dockable panels
-		listPanel = new DockableView("calendar_tree", "Calendar");
-		JScrollPane treeScrollPane = new JScrollPane(listController.getView());
-		// set background of scrollpane, in case the list is smaller than the dockable
-		treeScrollPane.getViewport().setBackground(UIManager.getColor("List.background"));
-		treeScrollPane.setBackground(UIManager.getColor("List.background"));
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-		listPanel.setContentPane(treeScrollPane);
+	private void registerDockables() {
 
-		navigationPanel = new DockableView("navigation", "Navigation");
+		// calendar list
+		JScrollPane treeScrollPane = new JScrollPane(listController.getView());
+		// set background of scrollpane, in case the list is smaller than the
+		// dockable
+		treeScrollPane.getViewport().setBackground(
+				UIManager.getColor("List.background"));
+		treeScrollPane.setBackground(UIManager.getColor("List.background"));
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		listPanel = registerDockable("calendar_tree", ResourceLoader.getString(
+				"global", "dockable_calendarlist"), treeScrollPane, null);
+
 		JScrollPane tableScrollPane = new JScrollPane(navigationController
 				.getView());
 		tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		navigationPanel.setContentPane(tableScrollPane);
 
-		calendarPanel = new DockableView("main_calendar", "Main Calendar");
+		navigationPanel = registerDockable("navigation", ResourceLoader
+				.getString("global", "dockable_navigation"), tableScrollPane,
+				null);
 
-		calendarPanel.setContentPane(calendarController.getView());
+		calendarPanel = registerDockable("main_calendar", ResourceLoader
+				.getString("global", "dockable_maincalendar"),
+				calendarController.getView(), null);
 
 	}
 
@@ -128,18 +134,14 @@ public class CalendarFrameMediator extends DockFrameController implements
 	 */
 	public void loadDefaultPosition() {
 
-		super.dock(calendarPanel, DockingConstants.CENTER_REGION);
-		calendarPanel.dock(listPanel, DockingConstants.WEST_REGION, 0.2f);
-		listPanel.dock(navigationPanel, DockingConstants.SOUTH_REGION, 0.2f);
+		super.dock(calendarPanel, IDock.REGION.CENTER);
+		super.dock(listPanel, calendarPanel, IDock.REGION.WEST, 0.2f);
+		super.dock(navigationPanel, listPanel, IDock.REGION.SOUTH, 0.2f);
 
 		super.setSplitProportion(listPanel, 0.2f);
 		super.setSplitProportion(calendarPanel, 0.2f);
 	}
 
-	public String[] getDockableIds() {
-
-		return new String[] { "calendar_tree", "navigation", "main_calendar" };
-	}
 
 	/** *********************** container callbacks ************* */
 
@@ -293,6 +295,14 @@ public class CalendarFrameMediator extends DockFrameController implements
 
 	public void fireCreateActivity(IDateRange range) {
 		new NewAppointmentAction(this, range).actionPerformed(null);
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.DefaultFrameController#getString(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String getString(String sPath, String sName, String sID) {
+		return ResourceLoader.getString(sPath, sID);
 	}
 
 }

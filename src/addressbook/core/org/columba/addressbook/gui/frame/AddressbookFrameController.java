@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
@@ -37,11 +38,11 @@ import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IDock;
+import org.columba.api.gui.frame.IDockable;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.frame.DockFrameController;
 import org.columba.core.io.DiskIO;
-import org.flexdock.docking.DockingConstants;
 
 /**
  * 
@@ -57,9 +58,9 @@ public class AddressbookFrameController extends DockFrameController implements
 
 	protected FilterToolbar filterToolbar;
 
-	private DockableView contactListPanel;
+	private IDockable contactListPanel;
 
-	private DockableView treePanel;
+	private IDockable treePanel;
 
 	/**
 	 * Constructor for AddressbookController.
@@ -84,23 +85,27 @@ public class AddressbookFrameController extends DockFrameController implements
 		// initPerspective(this.perspective);
 	}
 
-	public String[] getDockableIds() {
-		return new String[] { "addressbook_foldertree",
-				"addressbook_contactlist" };
-	}
+	
 
-	public void registerDockables() {
-		treePanel = new DockableView("addressbook_foldertree", "Folder Tree");
+	private void registerDockables() {
+
 		JScrollPane treeScrollPane = new JScrollPane(tree.getView());
-		treePanel.setContentPane(treeScrollPane);
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+				
+		treePanel = registerDockable("addressbook_foldertree",
+				AddressbookResourceLoader.getString("global",
+						"dockable_foldertree"), treeScrollPane, null);
 
-		contactListPanel = new DockableView("addressbook_contactlist",
-				"Contact List");
 		JPanel p = new JPanel();
 		p.setLayout(new BorderLayout());
-		p.add(new JScrollPane(table.getView()), BorderLayout.CENTER);
+		JScrollPane tableScrollPane = new JScrollPane(table.getView());
+		tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		p.add(tableScrollPane, BorderLayout.CENTER);
 		p.add(filterToolbar, BorderLayout.NORTH);
-		contactListPanel.setContentPane(p);
+
+		contactListPanel = registerDockable("addressbook_contactlist",
+				AddressbookResourceLoader.getString("global",
+						"dockable_contactlist"), p, null);
 
 	}
 
@@ -154,19 +159,12 @@ public class AddressbookFrameController extends DockFrameController implements
 	}
 
 	public void loadDefaultPosition() {
-		super.dock(contactListPanel, DockingConstants.CENTER_REGION);
-		contactListPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
+		super.dock(contactListPanel, IDock.REGION.CENTER);
+		super.dock(treePanel, contactListPanel, IDock.REGION.WEST, 0.3f);
 
 		super.setSplitProportion(treePanel, 0.3f);
 		super.setSplitProportion(contactListPanel, 0.35f);
 	}
-
-	// public void initPerspective(Perspective p) {
-	// LayoutSequence sequence = p.getInitialSequence(true);
-	// sequence.add(treePanel);
-	// sequence.add(contactListPanel, treePanel, DockingConstants.EAST_REGION,
-	// 0.7f);
-	// }
 
 	/** *********************** container callbacks ************* */
 

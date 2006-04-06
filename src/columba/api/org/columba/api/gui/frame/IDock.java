@@ -1,32 +1,56 @@
 package org.columba.api.gui.frame;
 
+import java.util.Iterator;
+
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+
 
 /**
+ * A <code>IFrameMediator</code> supporting docking should also implement this
+ * interface, describing the dockable views residing in this frame mediator
+ * workspace.
  * 
- * @author Frederik
+ * @author fdietz
  */
 public interface IDock {
 
-	/**
-	 * Dock component.
-	 * 
-	 * @param component
-	 *            component
-	 * @param str
-	 *            <code>DockingConstants</code>
-	 */
-	//public abstract void dock(Dockable component, String str);
+	enum REGION {CENTER, NORTH, SOUTH, EAST, WEST};
 
 	/**
-	 * Set split proportion for component.
+	 * Return iterator of dockables.
 	 * 
-	 * @param component
-	 *            component
-	 * @param propertion
-	 *            percentage value
+	 * @return dockable iterator of <code>IDockable</code>
 	 */
-	//public abstract void setSplitProportion(Dockable component,
-			//float propertion);
+	public Iterator<IDockable> getDockableIterator();
 	
-	public String[] getDockableIds();
+	/**
+	 * Register new dockable at this docking container.
+	 * 
+	 * @param dockable
+	 */
+	public void registerDockable(IDockable dockable);
+	
+	/**
+	 * Register new dockable at this docking container.
+	 * 
+	 * @param id
+	 *            dockable id
+	 * @param name
+	 *            dockable human-readable name (used in menu item)
+	 * @param comp
+	 *            dockable view
+	 * @param popup
+	 *            popup menu, can be <code>null</code>
+	 */
+	public IDockable registerDockable(String id, String name, JComponent comp, JPopupMenu popup);
+	
+
+	public void dock(IDockable dockable, REGION region);
+	
+	public void dock(IDockable dockable, REGION region, float percentage);
+	
+	public void dock(IDockable dockable, IDockable parentDockable, REGION region, float percentage);
+	
+	public void setSplitProportion(IDockable dockable, float percentage);
 }

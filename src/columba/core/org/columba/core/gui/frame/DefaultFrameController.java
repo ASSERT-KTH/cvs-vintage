@@ -31,9 +31,9 @@ import org.columba.api.selection.ISelectionManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.selection.SelectionManager;
-import org.flexdock.docking.Dockable;
 
 /**
+ * 
  * @author fdietz
  * 
  */
@@ -76,13 +76,6 @@ public class DefaultFrameController implements IFrameMediator {
 		selectionManager = new SelectionManager();
 
 		tooltipMouseHandler = new TooltipMouseHandler(this);
-
-	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IFrameMediator#registerDockables()
-	 */
-	public void registerDockables() {
 
 	}
 
@@ -350,21 +343,12 @@ public class DefaultFrameController implements IFrameMediator {
 		return tooltipMouseHandler;
 	}
 
-	public void registerDockable(Dockable dockable) {
-		// TODO Auto-generated method stub
-
-	}
-
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#isInitialized()
 	 */
 	public boolean isInitialized() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	public String[] getDockableIds() {
-		return new String[0];
 	}
 
 }

@@ -29,6 +29,7 @@ import java.io.InputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -37,6 +38,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IDock;
+import org.columba.api.gui.frame.IDockable;
 import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.config.ViewItem;
@@ -109,11 +112,11 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 */
 	public boolean isTreePopupEvent;
 
-	private DockableView treePanel;
+	private IDockable folderTreeDockable;
 
-	private DockableView messageListPanel;
+	private IDockable messageListDockable;
 
-	private DockableView messageViewerPanel;
+	private IDockable messageViewerDockable;
 
 	/**
 	 * @param container
@@ -196,9 +199,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		registerDockables();
 
-		//initPerspective();
-		
-		initContextMenu();
+		tableController.createPopupMenu();
+		treeController.createPopupMenu();
+		messageController.createPopupMenu();
 	}
 
 	public void enableMessagePreview(boolean enable) {
@@ -320,7 +323,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 					fireTitleChanged(selectedFolders[0].getName());
 
 					// update message list view title
-					messageListPanel.setTitle(selectedFolders[0].getName());
+					messageListDockable.setTitle(selectedFolders[0].getName());
 
 					// simply demonstration of how to change the docking title
 					if (selectedFolders[0] instanceof IMailbox) {
@@ -330,9 +333,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						buf.append("Total Count: " + info.getExists());
 						// buf.append("Unread: " + info.getUnseen());
 						buf.append("    Recent: " + info.getRecent());
-						treePanel.setTitle(buf.toString());
+						folderTreeDockable.setTitle(buf.toString());
 					} else
-						treePanel.setTitle(selectedFolders[0].getName());
+						folderTreeDockable.setTitle(selectedFolders[0].getName());
 				} else {
 					fireTitleChanged("");
 				}
@@ -510,98 +513,70 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 */
 	public void loadDefaultPosition() {
 
-		 super.dock(messageListPanel, DockingConstants.CENTER_REGION);
-		 messageListPanel.dock(treePanel, DockingConstants.WEST_REGION, 0.3f);
-		 messageListPanel.dock(messageViewerPanel,DockingConstants.SOUTH_REGION, 0.3f);
-		
-		 super.setSplitProportion(treePanel, 0.3f);
-		 super.setSplitProportion(messageListPanel, 0.35f);
+		super.dock(messageListDockable, IDock.REGION.CENTER);
+
+		super.dock(folderTreeDockable, messageListDockable, IDock.REGION.WEST, 0.3f);
+
+		super.dock(messageViewerDockable, messageListDockable, IDock.REGION.SOUTH,
+				0.3f);
+
+		super.setSplitProportion(folderTreeDockable, 0.3f);
+		super.setSplitProportion(messageListDockable, 0.35f);
 	}
 
-//	public void initPerspective() {
-//		LayoutSequence sequence = p.getInitialSequence(true);
-//		sequence.add(treePanel);
-//		sequence.add(messageListPanel, treePanel, DockingConstants.EAST_REGION,
-//				0.6f);
-//		sequence.add(messageViewerPanel, messageListPanel,
-//				DockingConstants.SOUTH_REGION, 0.5f);
-//	}
+	private void registerDockables() {
 
-	
-	public String[] getDockableIds() {
-		
-		return new String[] {"mail_foldertree", "mail_messagelist","mail_messageviewer"};
-	}
-	
-	public void registerDockables() {
-		// init dockable panels
-		treePanel = new DockableView("mail_foldertree", "Folder Tree");
+		JPopupMenu popup = null;
 
-		treePanel.setPopupMenu(new SortFoldersMenu(this));
-
+		// mail folder tree
 		JScrollPane treeScrollPane = new JScrollPane(treeController.getView());
 		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		treePanel.setContentPane(treeScrollPane);
 
-		messageListPanel = new DockableView("mail_messagelist", "Message List");
+		// JPopupMenu popup = null;
+		// try {
+		// InputStream is = DiskIO
+		// .getResourceStream("org/columba/mail/action/table_dockmenu.xml");
+		// popup = new MenuXMLDecoder(this).createPopupMenu(is);
+		// } catch (IOException e1) {
+		// e1.printStackTrace();
+		// }
+
+		folderTreeDockable = registerDockable("mail_foldertree", MailResourceLoader.getString(
+				"global", "dockable_foldertree"), treeScrollPane,
+				new SortFoldersMenu(this));
+
+		// message list
 		JPanel p = new JPanel();
 		p.setLayout(new BorderLayout());
 		JScrollPane tableScrollPane = new JScrollPane(tableController.getView());
 		tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		p.add(tableScrollPane, BorderLayout.CENTER);
 		p.add(filterToolbar, BorderLayout.NORTH);
-		messageListPanel.setContentPane(p);
 
-		messageViewerPanel = new DockableView("mail_messageviewer",
-				"Message Viewer");
-
-		messageViewerPanel.setContentPane(messageController);
-
-		// simply example showing how-to add a new action to the menu
-		// JFrame frame = (JFrame) getContainer().getFrame();
-		// ColumbaMenu menu = (ColumbaMenu) frame.getJMenuBar();
-		// menu.addMenuItem("my_reply_action_id", new ReplyAction(this),
-		// ColumbaMenu.MENU_VIEW, ColumbaMenu.PLACEHOLDER_BOTTOM);
-	}
-
-	private void initContextMenu() {
-		InputStream is = null;
-		// FIXME: still playing around with menu items
-		// try {
-		// is = DiskIO
-		// .getResourceStream("org/columba/mail/action/tree_dockmenu.xml");
-		// treePanel
-		// .setPopupMenu(new MenuXMLDecoder(this).createPopupMenu(is));
-		// } catch (IOException e1) {
-		// }
-
+		popup = null;
 		try {
-			is = DiskIO
+			InputStream is = DiskIO
 					.getResourceStream("org/columba/mail/action/table_dockmenu.xml");
-			messageListPanel.setPopupMenu(new MenuXMLDecoder(this)
-					.createPopupMenu(is));
+			popup = new MenuXMLDecoder(this).createPopupMenu(is);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 
+		messageListDockable = registerDockable("mail_messagelist", MailResourceLoader.getString(
+				"global", "dockable_messagelist"), p, popup);
+
+		popup = null;
 		try {
-			is = DiskIO
+			InputStream is = DiskIO
 					.getResourceStream("org/columba/mail/action/message_dockmenu.xml");
-			messageViewerPanel.setPopupMenu(new MenuXMLDecoder(this)
-					.createPopupMenu(is));
+			popup = new MenuXMLDecoder(this).createPopupMenu(is);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 
-		tableController.createPopupMenu();
-		treeController.createPopupMenu();
-		messageController.createPopupMenu();
-
-		// PerspectiveManager.getInstance().display(treePanel);
-		// PerspectiveManager.getInstance().display(messageListPanel);
-		// PerspectiveManager.getInstance().display(messageViewerPanel);
-
-		
+		messageViewerDockable = registerDockable("mail_messageviewer", MailResourceLoader.getString(
+				"global", "dockable_messageviewer"),
+				messageController, popup);
 	}
 
 	/** *********************** container callbacks ************* */
@@ -631,9 +606,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	/**
 	 * @return Returns the messageViewerPanel.
 	 */
-	public DockableView getMessageViewerPanel() {
-		return messageViewerPanel;
+	public IDockable getMessageViewerDockable() {
+		return messageViewerDockable;
 	}
 
-	
 }

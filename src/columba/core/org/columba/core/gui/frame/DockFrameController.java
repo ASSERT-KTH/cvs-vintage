@@ -1,27 +1,38 @@
 package org.columba.core.gui.frame;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import org.columba.api.gui.frame.IDock;
+import org.columba.api.gui.frame.IDockable;
+import org.columba.api.gui.frame.IDock.REGION;
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.docking.XMLPersister;
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.state.PersistenceException;
-import org.flexdock.perspective.Perspective;
 
 public abstract class DockFrameController extends DefaultFrameController
 		implements IDock {
 
 	private DefaultDockingPort dockingPort = new DefaultDockingPort();
+
+	private ArrayList<IDockable> list = new ArrayList<IDockable>();
 
 	public DockFrameController(ViewItem viewItem) {
 		super(viewItem);
@@ -38,57 +49,15 @@ public abstract class DockFrameController extends DefaultFrameController
 	}
 
 	private void initComponents() {
-		// contentPanePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5,
-		// 5));
-		//
-		// contentPanePanel.setLayout(new BorderLayout());
 
 		dockingPort = new DefaultDockingPort();
 		dockingPort.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		// contentPanePanel.add(dockingPort, BorderLayout.CENTER);
-
-		// perspective = new Perspective(getId(), getId()+" Perspective");
-
-		// PerspectiveManager.getInstance().add(perspective);
-		// initPerspective(perspective);
-
 	}
 
 	public JPanel getContentPane() {
-		// System.out.println();
-		// System.out.println("----->> comp count="
-		// + dockingPort.getDockables().size());
-		// System.out.println();
-
-		// if (dockingPort.getComponentCount() == 0)
-		// loadDefaultPosition();
-
 		return dockingPort;
 	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IDock#dock(java.awt.Component,
-	 *      java.lang.String)
-	 */
-	public void dock(Dockable component, String str) {
-		dockingPort.dock(component, str);
-	}
-
-	/**
-	 * @see org.columba.api.gui.frame.IDock#setSplitProportion(java.awt.Component,
-	 *      float)
-	 */
-	public void setSplitProportion(Dockable component, float propertion) {
-		DockingManager.setSplitProportion(component, propertion);
-
-		System.out.println("------> setSplitPropertion()");
-	}
-
-	/**
-	 * Overwrite to specify default docking settings
-	 */
-	public abstract void loadDefaultPosition();
 
 	public void loadPositions() {
 		super.loadPositions();
@@ -144,16 +113,115 @@ public abstract class DockFrameController extends DefaultFrameController
 
 	}
 
-	public void initPerspective(Perspective p) {
-
-	}
-
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#isInitialized()
 	 */
 	public boolean isInitialized() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/**
+	 * @see org.columba.api.gui.frame.IDock#registerDockable(org.columba.api.gui.frame.IDockable)
+	 */
+	public void registerDockable(IDockable dockable) {
+
+		list.add(dockable);
+
+		dockingPort.dock(dockable.getView(), dockable.getId());
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IDock#registerDockable(java.lang.String,
+	 *      java.lang.String, javax.swing.JComponent, javax.swing.JPopupMenu)
+	 */
+	public IDockable registerDockable(String id, String name, JComponent comp,
+			JPopupMenu popup) {
+		IDockable dockable = new FrameMediatorDockable(id, name, comp, popup);
+
+		registerDockable(dockable);
+
+		return dockable;
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IDock#getDockableIterator()
+	 */
+	public Iterator<IDockable> getDockableIterator() {
+		return list.iterator();
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable,
+	 *      org.columba.api.gui.frame.IDock.REGION, float)
+	 */
+	public void dock(IDockable dockable, REGION region, float percentage) {
+		String regionString = convertRegion(region);
+
+		DockingManager.dock(dockable.getView(), dockingPort, regionString,
+				percentage);
+
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable,
+	 *      org.columba.api.gui.frame.IDock.REGION)
+	 */
+	public void dock(IDockable dockable, REGION region) {
+		String regionString = convertRegion(region);
+
+		DockingManager.dock((Component) dockable.getView(),
+				(DockingPort) dockingPort, regionString);
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable,
+	 *      org.columba.api.gui.frame.IDockable,
+	 *      org.columba.api.gui.frame.IDock.REGION, float)
+	 */
+	public void dock(IDockable dockable, IDockable parentDockable,
+			REGION region, float percentage) {
+		String regionString = convertRegion(region);
+
+		DockingManager.dock(dockable.getView(), parentDockable.getView(),
+				regionString, percentage);
+
+	}
+
+	/**
+	 * @see org.columba.api.gui.frame.IDock#setSplitProportion(org.columba.api.gui.frame.IDockable,
+	 *      float)
+	 */
+	public void setSplitProportion(IDockable dockable, float percentage) {
+		DockingManager.setSplitProportion(dockable.getView(), percentage);
+	}
+
+	// convert region enum to flexdock string
+	private String convertRegion(REGION region) {
+		String regionString = null;
+		if (region == REGION.CENTER)
+			regionString = DockingConstants.CENTER_REGION;
+		else if (region == REGION.WEST)
+			regionString = DockingConstants.WEST_REGION;
+		else if (region == REGION.EAST)
+			regionString = DockingConstants.EAST_REGION;
+		else if (region == REGION.NORTH)
+			regionString = DockingConstants.NORTH_REGION;
+		else if (region == REGION.SOUTH)
+			regionString = DockingConstants.SOUTH_REGION;
+		else
+			throw new IllegalArgumentException("unsupported region: "
+					+ region.toString());
+		return regionString;
+	}
+
+	/**
+	 * Overwrite to specify default docking settings.
+	 * <p>
+	 * Make use of the <code>dock(..)</code> and
+	 * <code>setSplitPropertion(..)</code> methods.
+	 * <p>
+	 * This method is called in case a formerly persisted state could not be
+	 * loaded correctly or no persisted state is available yet.
+	 */
+	public abstract void loadDefaultPosition();
 }

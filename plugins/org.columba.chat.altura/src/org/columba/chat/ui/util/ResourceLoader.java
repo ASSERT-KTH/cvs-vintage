@@ -18,18 +18,26 @@
 package org.columba.chat.ui.util;
 
 import java.net.URL;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 
 import org.columba.core.io.DiskIO;
+import org.columba.core.resourceloader.GlobalResourceLoader;
 
 public class ResourceLoader {
 
+	private static final String ICON_PATH = "org/columba/chat/icons";
+	private static final String imagePath = "/org/columba/chat/images/";
+	private static String i18nPath = "org.columba.chat.i18n";
+	
 	public static ImageIcon getImage(String resourceName) {
 		if (resourceName == null)
 			throw new IllegalArgumentException("resourceName == null");
 
-		String path = "/org/columba/chat/images/" + resourceName;
+		String path = ResourceLoader.imagePath + resourceName;
 
 		URL url = ResourceLoader.class.getResource(path);
 		if (url == null)
@@ -41,11 +49,11 @@ public class ResourceLoader {
 	}
 
 	public static ImageIcon getIcon(String name) {
-		return getIcon("org/columba/chat/icons", name, false);
+		return getIcon(ResourceLoader.ICON_PATH, name, false);
 	}
 
 	public static ImageIcon getSmallIcon(String name) {
-		return getIcon("org/columba/chat/icons", name, true);
+		return getIcon(ResourceLoader.ICON_PATH, name, true);
 	}
 
 	public static ImageIcon getIcon(String path, String name, boolean small) {
@@ -71,4 +79,22 @@ public class ResourceLoader {
 		return icon;
 	}
 
+	public static final String getString(String resourceBundleName,
+			String resourceName) {
+		ResourceBundle bundle = null;
+
+		String bundlePath = i18nPath + "."+ resourceBundleName;
+
+		try {
+			bundle = ResourceBundle.getBundle(bundlePath, Locale.getDefault());
+
+			return bundle.getString(resourceName);
+		} catch (MissingResourceException e) {
+			System.out.println(e.getMessage());
+			System.out.println("path="+bundlePath);
+			// fall-back to global resource loader
+			return GlobalResourceLoader.getString(null, resourceBundleName,
+					resourceName);
+		}
+	}
 }

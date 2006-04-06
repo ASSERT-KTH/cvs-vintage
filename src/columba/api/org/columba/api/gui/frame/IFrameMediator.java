@@ -24,7 +24,6 @@ import javax.swing.JPanel;
 import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.api.selection.ISelectionManager;
-import org.flexdock.docking.Dockable;
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -109,7 +108,5 @@ public interface IFrameMediator extends IExtensionInterface {
 	 * of an menuitem.
 	 */
 	public abstract MouseListener getMouseTooltipHandler();
-	
-	public abstract void registerDockable(Dockable dockable);
 
 }

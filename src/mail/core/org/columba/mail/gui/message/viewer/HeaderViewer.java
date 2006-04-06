@@ -307,7 +307,7 @@ public class HeaderViewer extends JPanel {
 			// awt-event-thread
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					c.getMessageViewerPanel().setTitle(title);
+					c.getMessageViewerDockable().setTitle(title);
 				}
 			});
 

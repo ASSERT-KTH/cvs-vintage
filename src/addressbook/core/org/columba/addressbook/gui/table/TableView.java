@@ -62,6 +62,10 @@ public class TableView extends JTable {
 		tc.setHeaderRenderer(createHeader("url"));
 	}
 
+	public boolean getScrollableTracksViewportHeight() { 
+        return getPreferredSize().height < getParent().getHeight(); 
+    } 
+	
 	/**
 	 * Create table header renderer. Names use semicolon ";" character to define
 	 * subtypes.

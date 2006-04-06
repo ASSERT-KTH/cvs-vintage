@@ -27,6 +27,18 @@ import javax.swing.JMenuItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 
+/**
+ * Extendable menubar.
+ * <p>
+ * Simply example showing how-to add a new action to the menu:
+ * <pre>
+ *	ColumbaMenu menu = (ColumbaMenu) frame.getJMenuBar();
+ *	menu.addMenuItem("my_reply_action_id", new ReplyAction(this),
+ *		              ColumbaMenu.MENU_VIEW, ColumbaMenu.PLACEHOLDER_BOTTOM);
+ * </pre>
+ * @author fdietz
+ *
+ */
 public class ExtendableMenuBar extends JMenuBar {
 
 	private static final Logger LOG = Logger
