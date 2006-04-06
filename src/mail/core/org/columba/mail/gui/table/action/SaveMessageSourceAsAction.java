@@ -52,9 +52,8 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
                 "menu_file_save_tooltip").replaceAll("&", ""));
 
         // icons
-        putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save.png"));
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon("document-save.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("document-save.png"));
 
         setEnabled(false);
         ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
@@ -78,7 +77,7 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
     /**
      * Handles enabling / disabling of menu/action depending
      * on selection
-     * @see org.columba.core.gui.util.ISelectionListener#connectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

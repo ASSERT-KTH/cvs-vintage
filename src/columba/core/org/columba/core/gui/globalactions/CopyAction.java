@@ -33,7 +33,6 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
-
 public class CopyAction extends AbstractColumbaAction implements
 		PropertyChangeListener {
 
@@ -48,10 +47,10 @@ public class CopyAction extends AbstractColumbaAction implements
 				"menu_edit_copy_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_copy-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-copy.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_copy.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("edit-copy.png"));
 
 		// short cut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C,

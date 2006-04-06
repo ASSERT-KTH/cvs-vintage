@@ -35,8 +35,8 @@ public class MailAccountAction extends AbstractColumbaAction {
 				"mainframe", "menu_edit_accountconfig").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("configure_16_mail.png"));
+//		putValue(SMALL_ICON, ImageLoader
+//				.getSmallImageIcon("configure_16_mail.png"));
 	}
 
 	/*

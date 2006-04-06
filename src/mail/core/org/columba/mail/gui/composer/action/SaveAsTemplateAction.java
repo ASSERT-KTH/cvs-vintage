@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -29,6 +28,7 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -46,7 +46,7 @@ public class SaveAsTemplateAction extends AbstractColumbaAction {
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"composer", "menu_file_savetemplate").replaceAll("&", ""));
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
+		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("internet-news-reader.png"));
 	}
 
 	/*

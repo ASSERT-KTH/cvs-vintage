@@ -42,10 +42,10 @@ public class SearchMessageAction extends AbstractColumbaAction {
                 "menu_edit_searchmessages").replaceAll("&", ""));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon("system-search.png"));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
+        putValue(LARGE_ICON, ImageLoader.getIcon("system-search.png"));
 
         // shortcut key
         putValue(ACCELERATOR_KEY,
@@ -58,7 +58,7 @@ public class SearchMessageAction extends AbstractColumbaAction {
     public void actionPerformed(ActionEvent evt) {
     	IMailbox searchFolder = (IMailbox) FolderTreeModel.getInstance().getFolder(106);
 
-        new SearchFrame((AbstractMailFrameController) getFrameMediator(),
+        SearchFrame frame = new SearchFrame((AbstractMailFrameController) getFrameMediator(),
                 searchFolder);
     }
 }

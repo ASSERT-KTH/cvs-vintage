@@ -45,10 +45,10 @@ public class PasteAction extends AbstractColumbaAction implements
 				"menu_edit_paste_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_paste-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-paste.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("edit-paste.png"));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V,

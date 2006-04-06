@@ -31,7 +31,6 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
-
 public class CutAction extends AbstractColumbaAction implements
 		PropertyChangeListener {
 
@@ -46,10 +45,10 @@ public class CutAction extends AbstractColumbaAction implements
 				"menu_edit_cut_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_cut-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-cut.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_cut.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("edit-cut.png"));
 
 		// disable toolbar text
 		setShowToolBarText(false);

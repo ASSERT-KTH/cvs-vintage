@@ -27,6 +27,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.composer.command.OpenMessageWithComposerCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -49,9 +50,9 @@ public class OpenMessageWithComposerAction extends AbstractColumbaAction
                 "menu_message_openwithcomposer_tooltip").replaceAll("&", ""));
 
         // icons
-        putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("openmessage_small.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("compose-message.png"));
+//        putValue(SMALL_ICON,
+//            MailImageLoader.getIcon("email_edit.png"));
+//        putValue(LARGE_ICON, MailImageLoader.getIcon("email_edit.png"));
 
         setEnabled(false);
 

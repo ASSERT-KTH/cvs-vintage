@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 
 import org.columba.core.gui.action.AbstractSelectableAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SecurityItem;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -33,7 +33,6 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-
 public class EncryptMessageAction extends AbstractSelectableAction {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
@@ -50,8 +49,8 @@ public class EncryptMessageAction extends AbstractSelectableAction {
                 "menu_message_encrypt").replaceAll("&", ""));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("encrypt_small.png"));
-
+        putValue(SMALL_ICON, MailImageLoader.getSmallIcon("lock.png"));
+        
         ComposerModel model = composerController.getModel();
         AccountItem account = model.getAccountItem();
         SecurityItem pgp = account.getPGPItem();

@@ -25,11 +25,12 @@ import org.columba.addressbook.folder.FolderFactory;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.addressbook.gui.util.ContactImageLoader;
+import org.columba.addressbook.gui.util.IconKeys;
 import org.columba.addressbook.model.Group;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Add new groupw card to selected addressbook.
@@ -50,8 +51,8 @@ public class AddGroupCardAction extends DefaultTreeAction {
 				"mainframe", "menu_file_addgroup_toolbar"));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("group_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("group.png"));
+		putValue(SMALL_ICON, ContactImageLoader.getSmallIcon(IconKeys.NEW_GROUP));
+		putValue(LARGE_ICON, ContactImageLoader.getIcon(IconKeys.NEW_GROUP));
 
 		setEnabled(false);
 	}

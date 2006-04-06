@@ -30,7 +30,7 @@ import org.columba.api.plugin.IExtension;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionExtensionHandler;
-import org.columba.core.resourceloader.ImageLoader;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -49,10 +49,10 @@ public class ReceiveSendAction extends AbstractColumbaAction {
 				"mainframe", "menu_file_receivesend_toolbar"));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-receive.png"));
+		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("mail-send-receive.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24-receive.png"));
+		putValue(LARGE_ICON, MailImageLoader.getIcon("mail-send-receive.png"));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));

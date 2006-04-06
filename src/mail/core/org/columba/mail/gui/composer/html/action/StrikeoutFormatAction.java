@@ -24,12 +24,12 @@ import java.util.logging.Logger;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractSelectableAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -58,9 +58,9 @@ public class StrikeoutFormatAction extends AbstractSelectableAction
                 "menu_format_strike_tooltip").replaceAll("&", ""));
 
         putValue(LARGE_ICON,
-            ImageLoader.getImageIcon("stock_text_strikethrough.png"));
+        		MailImageLoader.getIcon("format-text-strikethrough.png"));
         putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_text_strikethrough-16.png"));
+        		MailImageLoader.getSmallIcon("format-text-strikethrough.png"));
 
         // register for text selection changes
         ComposerController ctrl = (ComposerController) getFrameMediator();

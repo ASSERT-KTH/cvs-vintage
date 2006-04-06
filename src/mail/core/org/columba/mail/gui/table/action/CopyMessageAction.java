@@ -26,8 +26,8 @@ import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -41,7 +41,6 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-
 public class CopyMessageAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	public CopyMessageAction(IFrameMediator frameMediator) {
@@ -57,9 +56,9 @@ public class CopyMessageAction extends AbstractColumbaAction implements
 				"mainframe", "menu_message_copy_tooltip").replaceAll("&", ""));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("copymessage_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("copy-message.png"));
+//		putValue(SMALL_ICON, ImageLoader
+//				.getSmallImageIcon("copymessage_small.png"));
+//		putValue(LARGE_ICON, ImageLoader.getImageIcon("copy-message.png"));
 
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V,
 				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));

@@ -88,9 +88,9 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 	 */
 	private static final int ADDWORKER_TIMER_INTERVAL = 2000;
 
-	protected static Icon onlineIcon = ImageLoader.getImageIcon("online.png");
+	protected static Icon onlineIcon =  ImageLoader.getSmallIcon("connect.png");
 
-	protected static Icon offlineIcon = ImageLoader.getImageIcon("offline.png");
+	protected static Icon offlineIcon =  ImageLoader.getSmallIcon("disconnect.png");
 
 	/**
 	 * showing status messages
@@ -101,6 +101,8 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 	 * showing progress info
 	 */
 	private JProgressBar progressBar;
+
+	
 
 	/**
 	 * button opening task manager dialog
@@ -198,7 +200,7 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 		setMainLeftComponent(label);
 
 		addRightComponent(progressBar, 100);
-		// addRightComponent(taskButton, 30);
+		//addRightComponent(taskButton, 30);
 		addRightComponent(onlineButton, 30);
 	}
 

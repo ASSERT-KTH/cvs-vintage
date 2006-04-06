@@ -40,7 +40,6 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-
 public class ApplyFilterAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	public ApplyFilterAction(IFrameMediator frameMediator) {
@@ -52,8 +51,8 @@ public class ApplyFilterAction extends AbstractColumbaAction implements
 				"mainframe", "menu_folder_applyfilter").replaceAll("&", ""));
 
 		// icon
-		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("apply-filters-16.png"));
+//		putValue(SMALL_ICON, ImageLoader
+//				.getSmallImageIcon("apply-filters-16.png"));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A,

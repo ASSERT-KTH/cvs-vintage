@@ -38,7 +38,7 @@ public class ShowHomepageAction extends AbstractColumbaAction {
             GlobalResourceLoader.getString(null, null, "menu_help_homepage"));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_home_16.png"));
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon("go-home.png"));
     }
 
     /* (non-Javadoc)

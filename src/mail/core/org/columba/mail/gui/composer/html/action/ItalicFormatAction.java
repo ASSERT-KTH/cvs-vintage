@@ -27,12 +27,12 @@ import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractSelectableAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -60,9 +60,9 @@ public class ItalicFormatAction extends AbstractSelectableAction
             MailResourceLoader.getString("menu", "composer",
                 "menu_format_italic_tooltip").replaceAll("&", ""));
 
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_text_italic.png"));
+        putValue(LARGE_ICON, MailImageLoader.getIcon("format-text-italic.png"));
         putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_text_italic-16.png"));
+        		MailImageLoader.getSmallIcon("format-text-italic.png"));
 
         //shortcut key
         putValue(ACCELERATOR_KEY,

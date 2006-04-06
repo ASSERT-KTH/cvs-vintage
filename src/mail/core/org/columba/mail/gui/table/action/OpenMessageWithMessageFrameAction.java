@@ -29,6 +29,7 @@ import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -48,6 +49,9 @@ public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
 				"mainframe", "menu_message_opennew_tooltip")
 				.replaceAll("&", ""));
 
+//		 putValue(SMALL_ICON,
+//		            MailImageLoader.getIcon("email_open.png"));
+		 
 		setEnabled(false);
 
 		((MailFrameMediator) frameMediator)

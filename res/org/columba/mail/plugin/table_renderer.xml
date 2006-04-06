@@ -2,25 +2,25 @@
 
 <extensionlist>
  <extension id="Status"  class="org.columba.mail.gui.table.plugins.StatusRenderer">
-  <properties size="fixed" icon="mail-new.png" />
+  <properties size="fixed" icon="message-mail-unread-col.png" />
  </extension>
  <extension id="Attachment"  class="org.columba.mail.gui.table.plugins.AttachmentRenderer" >
-  <properties size="fixed" icon="attachment.png" />
+  <properties size="fixed" icon="attachment-col.png" />
  </extension>
  <extension id="Size" class="org.columba.mail.gui.table.plugins.SizeRenderer" >
  </extension>
  <extension id="Date" class="org.columba.mail.gui.table.plugins.DateRenderer" >
  </extension>
  <extension id="Flagged" class="org.columba.mail.gui.table.plugins.FlaggedRenderer" >
-  <properties size="fixed" icon="mark-as-important-16.png" />
+  <properties size="fixed" icon="flag-col.png" />
  </extension>
  <extension id="Priority"  class="org.columba.mail.gui.table.plugins.PriorityRenderer" >
-  <properties size="fixed" icon="priority-high.png" />
+  <properties size="fixed" icon="mark-as-important.png" />
  </extension>
  <extension id="From" class="org.columba.mail.gui.table.plugins.FromRenderer" >
  </extension>
  <extension id="Spam"  class="org.columba.mail.gui.table.plugins.SpamRenderer" >
-  <properties size="fixed" icon="spam-16.png"/>
+  <properties size="fixed" icon="mail-mark-junk-col.png"/>
  </extension>
  <extension id="To" class="org.columba.mail.gui.table.plugins.ToRenderer" >
  </extension>

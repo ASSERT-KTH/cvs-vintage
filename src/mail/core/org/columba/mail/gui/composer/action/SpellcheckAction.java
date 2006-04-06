@@ -22,8 +22,8 @@ import javax.swing.KeyStroke;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -44,11 +44,10 @@ public class SpellcheckAction extends AbstractColumbaAction {
                 "menu_message_spellCheck_tooltip").replaceAll("&", ""));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_spellcheck_24.png"));
+        putValue(LARGE_ICON, MailImageLoader.getIcon("spellcheck.png"));
 
         // small icon for menu
-        putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"));
+        putValue(SMALL_ICON, MailImageLoader.getSmallIcon("spellcheck.png"));
 
         // disable text in toolbar
         setShowToolBarText(false);

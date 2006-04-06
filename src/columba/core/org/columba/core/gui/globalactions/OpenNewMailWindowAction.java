@@ -32,7 +32,7 @@ public class OpenNewMailWindowAction extends AbstractColumbaAction {
 		super(controller, GlobalResourceLoader.getString(null, null,
 				"menu_file_new_mail"));
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-new.png"));
+		//putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-new.png"));
 
 	}
 

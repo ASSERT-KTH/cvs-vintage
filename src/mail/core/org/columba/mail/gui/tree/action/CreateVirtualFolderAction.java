@@ -45,7 +45,6 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-
 public class CreateVirtualFolderAction extends AbstractColumbaAction implements
 		ISelectionListener {
 
@@ -59,8 +58,8 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction implements
 				.replaceAll("&", ""));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("folder-saved-search.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("folder-saved-search.png"));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V,

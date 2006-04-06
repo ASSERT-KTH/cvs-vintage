@@ -31,52 +31,53 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
-public class SaveMessageBodyAsAction extends AbstractColumbaAction
-    implements ISelectionListener {
-    public SaveMessageBodyAsAction(IFrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_save"));
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_save_tooltip").replaceAll("&", ""));
-        putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save.png"));
+public class SaveMessageBodyAsAction extends AbstractColumbaAction implements
+		ISelectionListener {
+	public SaveMessageBodyAsAction(IFrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_message_save"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_message_save_tooltip").replaceAll("&", ""));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("document-save-as.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("document-save-as.png"));
 
-        // *20030614, karlpeder* only enabled when message(s) selected
-        setEnabled(false);
+		// *20030614, karlpeder* only enabled when message(s) selected
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator)
+				.registerTableSelectionListener(this);
+	}
 
-    /**
-     * Called for activation of the SaveMessageBodyAsAction
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        // get selected stuff
-    	IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+	/**
+	 * Called for activation of the SaveMessageBodyAsAction
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		// get selected stuff
+		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+				.getTableSelection();
 
-        // get active charset - necessary to decode msg for saving
-        Charset charset = ((CharsetOwnerInterface) getFrameMediator()).getCharset();
-        SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
-        CommandProcessor.getInstance().addOp(c);
-    }
+		// get active charset - necessary to decode msg for saving
+		Charset charset = ((CharsetOwnerInterface) getFrameMediator())
+				.getCharset();
+		SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
+		CommandProcessor.getInstance().addOp(c);
+	}
 
-    /**
-     * Ensures that the action is only enabled when at least
-     * one message is selected in the GUI.
-     * @see org.columba.core.gui.util.ISelectionListener#connectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-     */
-    public void selectionChanged(SelectionChangedEvent e) {
-        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-    }
+	/**
+	 * Ensures that the action is only enabled when at least one message is
+	 * selected in the GUI.
+	 * 
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+	}
 }

@@ -33,6 +33,7 @@ import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.TreeController;
+import org.columba.addressbook.gui.util.IconKeys;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.dialog.ErrorDialog;
@@ -58,9 +59,9 @@ public class RemoveCardAction extends DefaultTableAction implements
 				"mainframe", "menu_file_remove_toolbar"));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("stock_delete-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.DELETE_CONTACT));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.DELETE_CONTACT));
+
 
 		setEnabled(false);
 

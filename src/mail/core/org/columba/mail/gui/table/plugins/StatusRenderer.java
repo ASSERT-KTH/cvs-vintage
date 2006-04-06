@@ -25,91 +25,90 @@ import javax.swing.SwingConstants;
 
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
 
 public class StatusRenderer extends DefaultLabelRenderer {
 
-    boolean bool;
+	boolean bool;
 
-    ImageIcon image1;
+	ImageIcon image1;
 
-    ImageIcon image2;
+	ImageIcon image2;
 
-    ImageIcon image4;
+	ImageIcon image3;
 
-    ImageIcon image3;
+	ImageIcon image5;
 
-    ImageIcon image5;
+	ImageIcon image6;
 
-    ImageIcon image6;
+	ImageIcon image7;
 
-    ImageIcon image7;
+	public StatusRenderer() {
+		super();
 
-    public StatusRenderer() {
-        super();
+		setHorizontalAlignment(SwingConstants.CENTER);
 
-        setHorizontalAlignment(SwingConstants.CENTER);
+		// setOpaque(true);
+		image1 = MailImageLoader.getSmallIcon("tag-orange.png");
+		image2 = MailImageLoader.getSmallIcon("message-mail-replied.png");
+		image3 = ImageLoader.getSmallIcon("user-trash.png");
 
-        //setOpaque(true);
-        image1 = ImageLoader.getSmallImageIcon("reply_small.png");
-        image2 = ImageLoader.getSmallImageIcon("mail-new.png");
-        image3 = ImageLoader.getSmallImageIcon("stock_delete-16.png");
-        image4 = ImageLoader.getSmallImageIcon("mark-as-important-16.png");
-        image5 = ImageLoader.getSmallImageIcon("mail-read.png");
-        image6 = ImageLoader.getSmallImageIcon("mail-new.png");
-        image7 = ImageLoader.getSmallImageIcon("drafts-16.png");
-    }
+		image5 = MailImageLoader.getSmallIcon("message-mail-read.png");
+		image6 = MailImageLoader.getSmallIcon("message-mail-unread.png");
+		image7 = MailImageLoader.getSmallIcon("edit.png");
+	}
 
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
-        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                row, column);
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+				row, column);
 
-        if (value == null) {
-            setIcon(null);
+		if (value == null) {
+			setIcon(null);
 
-            return this;
-        }
+			return this;
+		}
 
-        setText("");
-        
-        if (value instanceof String) {
-            System.out
-                    .println("statusrenderer-> instanceof String not expected");
+		setText("");
 
-            return this;
-        }
+		if (value instanceof String) {
+			System.out
+					.println("statusrenderer-> instanceof String not expected");
 
-        Flags flags = ((ColumbaHeader) ((MessageNode) value).getHeader())
-                .getFlags();
+			return this;
+		}
 
-        if (flags.getDeleted()) {
-            setIcon(image3);
+		Flags flags = ((ColumbaHeader) ((MessageNode) value).getHeader())
+				.getFlags();
 
-            setToolTipText(MailResourceLoader.getString("header", "column",
-                    "expunged"));
-        } else if (flags.getAnswered()) {
-            setIcon(image1);
-            setToolTipText(MailResourceLoader.getString("header", "column",
-                    "answered"));
-        } else if (flags.getDraft()) {
-            setIcon(image7);
-            setToolTipText(MailResourceLoader.getString("header", "column",
-                    "draft"));
-        } else if (!flags.getSeen()) {
-            setIcon(image6);
-            setToolTipText(MailResourceLoader.getString("header", "column",
-                    "unread"));
-        } else if (flags.getSeen()) {
-            setIcon(image5);
-            setToolTipText(MailResourceLoader.getString("header", "column",
-                    "read"));
-        }  else {
-            setIcon(null);
-        }
+		if (flags.getDeleted()) {
+			setIcon(image3);
 
-        return this;
-    }
+			setToolTipText(MailResourceLoader.getString("header", "column",
+					"expunged"));
+		} else if (flags.getAnswered()) {
+			setIcon(image2);
+			setToolTipText(MailResourceLoader.getString("header", "column",
+					"answered"));
+		} else if (flags.getDraft()) {
+			setIcon(image7);
+			setToolTipText(MailResourceLoader.getString("header", "column",
+					"draft"));
+		} else if (!flags.getSeen()) {
+			setIcon(image6);
+			setToolTipText(MailResourceLoader.getString("header", "column",
+					"unread"));
+		} else if (flags.getSeen()) {
+			setIcon(image5);
+			setToolTipText(MailResourceLoader.getString("header", "column",
+					"read"));
+		} else {
+			setIcon(null);
+		}
+
+		return this;
+	}
 }

@@ -32,6 +32,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.ToggleMarkCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -52,10 +53,9 @@ public class ToggleFlaggedFlagAction extends AbstractColumbaAction implements
                 "&", ""));
 
         // icons
-        putValue(SMALL_ICON, ImageLoader
-                .getSmallImageIcon("mark-as-important-16.png"));
-        putValue(LARGE_ICON, ImageLoader
-                .getImageIcon("mark-as-important-16.png"));
+        putValue(SMALL_ICON, MailImageLoader.getSmallIcon("flag.png"));
+//        putValue(LARGE_ICON, ImageLoader
+//                .getImageIcon("mark-as-important-16.png"));
 
 //      shortcut key
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('f'));

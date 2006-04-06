@@ -22,6 +22,9 @@ import java.awt.event.ActionEvent;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactEditorDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
+import org.columba.addressbook.gui.util.ContactImageLoader;
+import org.columba.addressbook.gui.util.IconKeys;
+import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.dialog.ErrorDialog;
@@ -33,7 +36,6 @@ import org.columba.core.resourceloader.ImageLoader;
  * 
  * @author fdietz
  */
-@SuppressWarnings({"serial","serial"})
 public class AddContactCardAction extends DefaultTreeAction {
 	public AddContactCardAction(IFrameMediator frameController) {
 		super(frameController, AddressbookResourceLoader.getString("menu",
@@ -48,8 +50,8 @@ public class AddContactCardAction extends DefaultTreeAction {
 				"mainframe", "menu_file_addcontact_toolbar"));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
+		putValue(SMALL_ICON, ContactImageLoader.getSmallIcon(IconKeys.NEW_CONTACT));
+		putValue(LARGE_ICON, ContactImageLoader.getIcon(IconKeys.NEW_CONTACT));
 
 		setEnabled(false);
 	}

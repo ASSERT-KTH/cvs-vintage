@@ -27,7 +27,6 @@ import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.shutdown.ShutdownManager;
 
 
-
 public class ExitAction extends AbstractColumbaAction {
     public ExitAction(IFrameMediator controller) {
         super(controller,
@@ -39,10 +38,10 @@ public class ExitAction extends AbstractColumbaAction {
                                 .replaceAll("&", ""));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_exit-16.png"));
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon("system-log-out.png"));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_exit.png"));
+        putValue(LARGE_ICON, ImageLoader.getIcon("system-log-out.png"));
 
         // shortcut key
         putValue(ACCELERATOR_KEY,

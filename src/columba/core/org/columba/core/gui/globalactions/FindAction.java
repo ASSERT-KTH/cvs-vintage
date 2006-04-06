@@ -26,7 +26,6 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
 
-
 public class FindAction extends AbstractColumbaAction {
     public FindAction(IFrameMediator controller) {
         super(controller,
@@ -39,10 +38,10 @@ public class FindAction extends AbstractColumbaAction {
 
         // small icon for menu
         putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_search-16.png"));
+            ImageLoader.getSmallIcon("edit-find.png"));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_search.png"));
+        putValue(LARGE_ICON, ImageLoader.getIcon("edit-find.png"));
 
         // shortcut key
         putValue(ACCELERATOR_KEY,

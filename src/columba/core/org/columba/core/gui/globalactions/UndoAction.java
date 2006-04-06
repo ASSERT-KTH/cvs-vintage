@@ -47,10 +47,10 @@ public class UndoAction extends AbstractColumbaAction implements
 				"menu_edit_undo_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_undo-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-undo.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_undo.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("edit-undo.png"));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z,

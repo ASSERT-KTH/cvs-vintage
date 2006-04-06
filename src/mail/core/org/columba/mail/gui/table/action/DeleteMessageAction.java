@@ -43,7 +43,6 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-
 public class DeleteMessageAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	public DeleteMessageAction(IFrameMediator frameMediator) {
@@ -60,10 +59,10 @@ public class DeleteMessageAction extends AbstractColumbaAction implements
 
 		// icon for menu
 		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("stock_delete-16.png"));
+				.getSmallIcon("user-trash-full.png"));
 
 		// icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("user-trash-full.png"));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_D,

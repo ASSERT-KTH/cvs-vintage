@@ -28,6 +28,7 @@ import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.smtp.command.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -54,10 +55,12 @@ public class SendAction extends AbstractColumbaAction {
                 "menu_file_send_toolbar"));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
+        putValue(LARGE_ICON, MailImageLoader.getIcon("send.png"));
+      
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-16.png"));
+        putValue(SMALL_ICON, MailImageLoader.getSmallIcon("send.png"));
+       
 
         // shortcut key
         putValue(ACCELERATOR_KEY,

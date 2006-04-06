@@ -25,11 +25,11 @@ import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyToAllCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -53,8 +53,8 @@ public class ReplyToAllAction extends AbstractColumbaAction
 
         // icons
         putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("replytoall_small.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("reply-to-all.png"));
+        		MailImageLoader.getSmallIcon("mail-reply-all.png"));
+        putValue(LARGE_ICON, MailImageLoader.getIcon("mail-reply-all.png"));
 
         // set toolbar text
         putValue(TOOLBAR_NAME,

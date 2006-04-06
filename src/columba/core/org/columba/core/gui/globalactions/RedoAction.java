@@ -47,10 +47,10 @@ public class RedoAction extends AbstractColumbaAction implements
 				"menu_edit_redo_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_redo-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-redo.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_redo.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("edit-redo.png"));
 
 		// disable toolbar text
 		setShowToolBarText(false);

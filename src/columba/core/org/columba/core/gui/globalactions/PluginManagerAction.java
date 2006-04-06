@@ -21,6 +21,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.plugin.PluginManagerDialog;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.ImageLoader;
 
 
 /**
@@ -38,6 +39,12 @@ public class PluginManagerAction extends AbstractColumbaAction {
         putValue(SHORT_DESCRIPTION,
             GlobalResourceLoader.getString(null, null, "menu_edit_pluginmanager")
                                 .replaceAll("&", ""));
+        
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon("plugin.png"));
+        
+        putValue(LARGE_ICON, ImageLoader.getIcon("plugin.png"));
+        
+        
     }
 
     /* (non-Javadoc)

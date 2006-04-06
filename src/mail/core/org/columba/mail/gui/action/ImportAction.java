@@ -44,7 +44,7 @@ public class ImportAction extends AbstractColumbaAction
                 "menu_utilities_importmailbox").replaceAll("&", ""));
 
         // set small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_convert-16.png"));
+       // putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_convert-16.png"));
     }
 
     /* (non-Javadoc)

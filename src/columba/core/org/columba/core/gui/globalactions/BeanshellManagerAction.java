@@ -25,8 +25,8 @@ import java.awt.event.ActionEvent;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.scripting.ScriptManager;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.scripting.FileObserverThread;
-
 
 public class BeanshellManagerAction extends AbstractColumbaAction {
 
@@ -35,10 +35,14 @@ public class BeanshellManagerAction extends AbstractColumbaAction {
 
 	public BeanshellManagerAction() {
 		super(null, RES_MENU_ITEM);
+		
+		//putValue(SMALL_ICON, ImageLoader.getIcon("script.png"));
 	}
 
 	public BeanshellManagerAction(IFrameMediator mediator) {
 		super(mediator, RES_MENU_ITEM);
+		
+		//putValue(SMALL_ICON, ImageLoader.getIcon("script.png"));
 	}
 
 	public void actionPerformed(ActionEvent aEvent) {

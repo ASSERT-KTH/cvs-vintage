@@ -24,11 +24,11 @@ import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyWithTemplateCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -50,7 +50,8 @@ public class ReplyWithTemplateAction extends AbstractColumbaAction implements
 				"mainframe", "menu_message_replywithtemplate_tooltip")
 				.replaceAll("&", ""));
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
+		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("internet-news-reader.png"));
+		putValue(LARGE_ICON, MailImageLoader.getIcon("internet-news-reader.png"));
 
 		setEnabled(false);
 

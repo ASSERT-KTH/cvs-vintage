@@ -29,7 +29,6 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
-@SuppressWarnings({"serial","serial"})
 public class CancelAction extends AbstractColumbaAction implements
 		TaskManagerListener {
 
@@ -38,10 +37,10 @@ public class CancelAction extends AbstractColumbaAction implements
 				"menu_file_cancel"));
 
 		// small icon for JMenuItem
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_stop-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("process-stop.png"));
 
 		// big icon for JToolBar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_stop.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("process-stop.png"));
 
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
 

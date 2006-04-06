@@ -36,7 +36,7 @@ public class ShowHelpAction extends AbstractColumbaAction {
             GlobalResourceLoader.getString(null, null, "menu_help_help"));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_help_16.png"));
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon("help-browser.png"));
     }
 
     /* (non-Javadoc)

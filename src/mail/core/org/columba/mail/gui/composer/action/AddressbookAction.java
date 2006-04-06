@@ -23,9 +23,9 @@ import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.ISelectAddressDialog;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -34,7 +34,6 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-
 public class AddressbookAction extends AbstractColumbaAction {
 	public AddressbookAction(ComposerController composerController) {
 		super(composerController, MailResourceLoader.getString("menu",
@@ -46,10 +45,10 @@ public class AddressbookAction extends AbstractColumbaAction {
 				""));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
+		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("contact-new.png"));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("contact_small.png"));
+		putValue(LARGE_ICON, MailImageLoader.getIcon("contact-new.png"));
 
 		// disable text in toolbar
 		setShowToolBarText(false);

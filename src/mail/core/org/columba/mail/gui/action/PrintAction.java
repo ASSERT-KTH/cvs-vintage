@@ -47,10 +47,10 @@ public class PrintAction extends AbstractColumbaAction implements
 
 		// small icon for menu
 		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("stock_print-16.png"));
+				.getSmallIcon("printer.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_print.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("printer.png"));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P,
@@ -85,7 +85,7 @@ public class PrintAction extends AbstractColumbaAction implements
 	 * Ensures that the action is only enabled when at least one message is
 	 * selected in the GUI.
 	 * 
-	 * @see org.columba.core.gui.util.ISelectionListener#connectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

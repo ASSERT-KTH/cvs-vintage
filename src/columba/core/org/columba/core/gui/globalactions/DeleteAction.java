@@ -25,7 +25,6 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
-
 public class DeleteAction extends AbstractColumbaAction {
 	public DeleteAction(IFrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
@@ -36,10 +35,10 @@ public class DeleteAction extends AbstractColumbaAction {
 				"menu_edit_delete_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-delete.png"));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("edit-delete.png"));
 
 		// disable toolbar text
 		setShowToolBarText(false);

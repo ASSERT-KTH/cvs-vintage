@@ -26,6 +26,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.command.AddSenderToAddressbookCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -34,7 +35,6 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-
 public class AddSenderToAddressbookAction extends AbstractColumbaAction
 		implements ISelectionListener {
 	public AddSenderToAddressbookAction(IFrameMediator frameMediator) {
@@ -45,6 +45,12 @@ public class AddSenderToAddressbookAction extends AbstractColumbaAction
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "menu_message_addsender_tooltip").replaceAll("&",
 				""));
+
+		// icon for menu
+		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("contact-new.png"));
+
+		// icon for toolbar
+		putValue(LARGE_ICON, MailImageLoader.getIcon("contact-new.png"));
 
 		setEnabled(false);
 

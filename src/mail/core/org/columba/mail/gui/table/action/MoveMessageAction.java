@@ -57,10 +57,10 @@ public class MoveMessageAction extends AbstractColumbaAction implements
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Y,
 				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
-		// icons
-		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("movemessage_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("move-message.png"));
+//		// icons
+//		putValue(SMALL_ICON, ImageLoader
+//				.getSmallImageIcon("movemessage_small.png"));
+//		putValue(LARGE_ICON, ImageLoader.getImageIcon("move-message.png"));
 
 		// disable toolbar text
 		setShowToolBarText(false);

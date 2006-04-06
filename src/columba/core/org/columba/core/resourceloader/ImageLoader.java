@@ -17,19 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.resourceloader;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Hashtable;
-import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 
 import javax.swing.ImageIcon;
 
@@ -37,8 +26,7 @@ import org.columba.core.io.DiskIO;
 
 public class ImageLoader {
 
-	private static final java.util.logging.Logger LOG = java.util.logging.Logger
-			.getLogger("org.columba.core.resourceloader");
+
 
 	static boolean ICON_SET = false;
 
@@ -46,6 +34,9 @@ public class ImageLoader {
 
 	// ******** FOLLOWS STANDARD RESOURCE RETRIEVAL (file or jar protocol)
 	// ***************
+	/**
+	 * @deprecated
+	 */
 	public static ImageIcon getUnsafeImageIcon(String name) {
 		URL url;
 
@@ -66,8 +57,50 @@ public class ImageLoader {
 		return icon;
 	}
 
-	// this is revised and may be used !
+	public static ImageIcon getIcon(String name) {
+		return getIcon("org/columba/core/icons", name, false);
+	}
+
+	public static ImageIcon getSmallIcon(String name) {
+		return getIcon("org/columba/core/icons", name, true);
+	}
+
+	public static ImageIcon getIcon(String path, String name, boolean small) {
+		URL url;
+
+//		if (hashtable.containsKey(name) == true) {
+//			return (ImageIcon) hashtable.get(name);
+//		}
+
+		if (small)
+			url = DiskIO.getResourceURL(path + "/16x16/" + name);
+		else
+			url = DiskIO.getResourceURL(path + "/22x22/" + name);
+
+		if (url == null) {
+			path = "org/columba/core/icons";
+			name = "image-missing.png";
+			if ( small )
+				
+				url =  DiskIO.getResourceURL(path + "/16x16/" +name);
+			else
+				url = DiskIO.getResourceURL(path + "/22x22/" + name);
+		}
+
+		ImageIcon icon = new ImageIcon(url);
+
+		hashtable.put(name, icon);
+
+		return icon;
+	}
+
+	/**
+	 * @deprecated
+	 * @param name
+	 * @return
+	 */
 	public static ImageIcon getSmallImageIcon(String name) {
+
 		URL url;
 
 		if (hashtable.containsKey(name) == true) {
@@ -88,6 +121,11 @@ public class ImageLoader {
 		return icon;
 	}
 
+	/**
+	 * @deprecated
+	 * @param name
+	 * @return
+	 */
 	public static ImageIcon getImageIcon(String name) {
 		URL url;
 
@@ -109,6 +147,11 @@ public class ImageLoader {
 		return icon;
 	}
 
+	/**
+	 * @deprecated
+	 * @param name
+	 * @return
+	 */
 	public static ImageIcon getImageIconResource(String name) {
 		URL url;
 
@@ -124,67 +167,6 @@ public class ImageLoader {
 		hashtable.put(name, icon);
 
 		return icon;
-	}
-
-	// ******** FOLLOWS SPECIALIZED ZIP-FILE EXTRACTION
-	// *************************
-	// load image out of jar/zip file
-	public static synchronized Image loadImage(File zipFile, String entry) {
-		byte[] bytes = loadBytes(zipFile, entry);
-		Image image = Toolkit.getDefaultToolkit().createImage(bytes);
-
-		return image;
-	}
-
-	// load image out of jar/zip file
-	public static synchronized Properties loadProperties(File zipFile,
-			String entry) {
-		byte[] bytes = loadBytes(zipFile, entry);
-
-		ByteArrayInputStream input = new ByteArrayInputStream(bytes);
-
-		Properties properties = new Properties();
-
-		try {
-			properties.load(input);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return properties;
-	}
-
-	// load byte-array out of jar/zip file
-	protected static synchronized byte[] loadBytes(File zipFile, String entry) {
-		byte[] bytes = null;
-
-		try {
-			ZipFile zipfile = new ZipFile(zipFile);
-			ZipEntry zipentry = zipfile.getEntry(entry);
-
-			if (zipentry != null) {
-				long size = zipentry.getSize();
-
-				if (size > 0) {
-					bytes = new byte[(int) size];
-
-					InputStream in = new BufferedInputStream(zipfile
-							.getInputStream(zipentry));
-					in.read(bytes);
-					in.close();
-				}
-			}
-		} catch (ZipException e) {
-			LOG.severe(e.getMessage());
-
-			return null;
-		} catch (IOException e) {
-			LOG.severe(e.getMessage());
-
-			return null;
-		}
-
-		return bytes;
 	}
 
 }

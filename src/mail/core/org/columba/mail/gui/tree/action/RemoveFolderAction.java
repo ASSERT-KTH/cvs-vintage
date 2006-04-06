@@ -51,9 +51,8 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 				"mainframe", "menu_folder_removefolder").replaceAll("&", ""));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("stock_delete-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+//		putValue(SMALL_ICON, ImageLoader.getIcon("folder_delete.png"));
+//		putValue(LARGE_ICON, ImageLoader.getIcon("folder_delete.png"));
 
 		setEnabled(false);
 

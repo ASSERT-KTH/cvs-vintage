@@ -30,14 +30,13 @@ import org.columba.core.resourceloader.ImageLoader;
  *
  * @author fdietz
  */
-
 public class AboutDialogAction extends AbstractColumbaAction {
     public AboutDialogAction(IFrameMediator frameMediator) {
         super(frameMediator,
             GlobalResourceLoader.getString(null, null, "menu_help_about"));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_about-16.png"));
+       // putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_about-16.png"));
     }
 
     /* (non-Javadoc)

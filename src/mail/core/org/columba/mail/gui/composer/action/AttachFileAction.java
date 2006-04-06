@@ -23,6 +23,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -31,7 +32,6 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
-
 public class AttachFileAction extends AbstractColumbaAction {
     public AttachFileAction(ComposerController composerController) {
         super(composerController,
@@ -49,10 +49,10 @@ public class AttachFileAction extends AbstractColumbaAction {
                 "menu_message_attachFile_toolbar"));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_attach.png"));
+        putValue(LARGE_ICON, MailImageLoader.getIcon("mail-attachment.png"));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_attach-16.png"));
+        putValue(SMALL_ICON, MailImageLoader.getIcon("mail-attachment.png"));
 
         //shortcut key
         putValue(ACCELERATOR_KEY,

@@ -35,7 +35,7 @@ public class GlobalOptionsAction extends AbstractColumbaAction {
                 "menu_edit_generaloptions_tooltip").replaceAll("&", ""));
 
         putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_preferences-16.png"));
+            ImageLoader.getSmallIcon("preferences-system.png"));
 
         putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_preferences.png"));
     }

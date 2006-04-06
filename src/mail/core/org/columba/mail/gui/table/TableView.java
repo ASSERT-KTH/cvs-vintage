@@ -26,13 +26,13 @@ import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.plugins.BasicHeaderRenderer;
 import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.plugin.TableRendererExtensionHandler;
 import org.frapuccino.treetable.CustomTreeTableCellRenderer;
 import org.frapuccino.treetable.TreeTable;
@@ -61,7 +61,7 @@ public class TableView extends TreeTable {
 		this.headerTableModel = headerTableModel;
 
 		defaultRowHeight = getRowHeight();
-
+		
 		setModel(headerTableModel);
 
 		// load plugin handler used for the columns
@@ -74,7 +74,7 @@ public class TableView extends TreeTable {
 		}
 
 		getTree().setCellRenderer(new SubjectTreeRenderer(this));
-
+		
 		getTree().setLargeModel(true);
 	}
 
@@ -85,7 +85,7 @@ public class TableView extends TreeTable {
 	public void resetRowHeight() {
 		setRowHeight(defaultRowHeight);
 	}
-
+	
 	/**
 	 * Enable/Disable tree renderer for the subject column.
 	 * <p>
@@ -169,9 +169,9 @@ public class TableView extends TreeTable {
 					size, false);
 		} else {
 			IExtension extension = handler.getExtension(name);
-
+			
 			String image = extension.getMetadata().getAttribute("icon");
-			String fixed = extension.getMetadata().getAttribute("size");
+			String fixed = extension.getMetadata().getAttribute( "size");
 			boolean lockSize = false;
 
 			if (fixed != null) {
@@ -183,7 +183,7 @@ public class TableView extends TreeTable {
 
 			if (lockSize) {
 				registerRenderer(c, name, r, new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon(image)), size, lockSize);
+						MailImageLoader.getSmallIcon(image)), size, lockSize);
 			} else {
 				registerRenderer(c, name, r, new BasicHeaderRenderer(name,
 						sorter), size, lockSize);
@@ -217,10 +217,10 @@ public class TableView extends TreeTable {
 		}
 
 		// this is a hack for the multiline column
-		if (name.equals("MultiLine")) {
-			setRowHeight(getRowHeight() * 2);
-		}
-
+		if ( name.equals("MultiLine")) {
+			setRowHeight(getRowHeight()*2);
+		} 
+		
 		if (cell != null) {
 			tc.setCellRenderer(cell);
 		}

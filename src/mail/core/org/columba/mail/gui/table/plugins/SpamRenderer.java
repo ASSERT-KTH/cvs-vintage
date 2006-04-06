@@ -23,8 +23,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -36,7 +36,7 @@ public class SpamRenderer extends DefaultLabelRenderer {
         super();
 
         setHorizontalAlignment(SwingConstants.RIGHT);
-        image = ImageLoader.getSmallImageIcon("spam-16.png");
+        image = MailImageLoader.getSmallIcon("mail-mark-junk.png");
     }
 
     public void updateUI() {

@@ -54,7 +54,7 @@ public class SignMessageAction extends AbstractSelectableAction implements
                 "composer", "menu_message_sign").replaceAll("&", ""));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_sign.png"));
+        //putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_sign.png"));
 
         composerController.getAccountController().getView().addItemListener(
                 this);

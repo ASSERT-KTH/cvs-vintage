@@ -26,12 +26,12 @@ import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.ToggleMarkCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -52,8 +52,8 @@ public class ToggleDraftFlagAction extends AbstractColumbaAction implements
                 "&", ""));
 
         // icons
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("drafts-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("drafts-16.png"));
+        putValue(SMALL_ICON, MailImageLoader.getSmallIcon("edit.png"));
+//        putValue(LARGE_ICON, ImageLoader.getImageIcon("drafts-16.png"));
 
 //      shortcut key
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('d'));

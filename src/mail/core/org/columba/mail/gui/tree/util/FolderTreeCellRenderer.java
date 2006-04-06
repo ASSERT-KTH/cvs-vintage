@@ -31,12 +31,12 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * This class is used for the mail folder tree.
  */
-
 public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	private static Icon expandedFolderIcon;
 
@@ -54,17 +54,23 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 
 	private static Icon trashIcon;
 
+	private static Icon templateIcon;
+	private static Icon sentIcon;
+
 	static {
 		collapsedFolderIcon = ImageLoader
-				.getSmallImageIcon("folder-closed.png");
-		expandedFolderIcon = ImageLoader.getSmallImageIcon("folder-open.png");
-		virtualFolderIcon = ImageLoader.getSmallImageIcon("virtualfolder.png");
-		localRootFolderIcon = ImageLoader.getSmallImageIcon("16_computer.png");
+				.getSmallIcon("folder.png");
+		expandedFolderIcon = ImageLoader.getSmallIcon("folder-open.png");
+		virtualFolderIcon = ImageLoader.getSmallIcon("folder-saved-search.png");
+		localRootFolderIcon = ImageLoader.getSmallIcon("computer.png");
 		imapRootFolderIcon = ImageLoader
-				.getSmallImageIcon("stock_internet-16.png");
-		inboxIcon = ImageLoader.getSmallImageIcon("inbox-16.png");
-		outboxIcon = ImageLoader.getSmallImageIcon("outbox-16.png");
-		trashIcon = ImageLoader.getSmallImageIcon("stock_delete-16.png");
+				.getSmallIcon("network-server.png");
+		inboxIcon = MailImageLoader.getSmallIcon("folder-inbox-new.png");
+		outboxIcon = MailImageLoader.getSmallIcon("folder-outbox.png");
+		
+		templateIcon = MailImageLoader.getSmallIcon("folder-template.png");
+		sentIcon = MailImageLoader.getSmallIcon("folder-sent.png");
+		trashIcon = ImageLoader.getSmallIcon("user-trash.png");
 	}
 
 	private Font plainFont;
@@ -223,9 +229,13 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			if (folder.isInboxFolder()) {
 				return inboxIcon;
 			} else if (folder.getUid() == 103) {
-				// outbox
+				
 				return outboxIcon;
-			} else if (folder.isTrashFolder()) {
+			} else if (folder.getUid() == 107) {
+				return templateIcon;
+			}else if (folder.getUid() == 104) {
+				return sentIcon;
+			}else if (folder.isTrashFolder()) {
 				return trashIcon;
 			}
 		}

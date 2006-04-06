@@ -26,12 +26,12 @@ import javax.swing.text.StyleConstants;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractSelectableAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -40,7 +40,6 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz, Karl Peder Olesen (karlpeder)
  */
-
 public class CenterJustifyAction extends AbstractSelectableAction
     implements Observer, ContainerListener {
 
@@ -61,9 +60,9 @@ public class CenterJustifyAction extends AbstractSelectableAction
                 "menu_format_center_justify_tooltip").replaceAll("&", ""));
 
         putValue(LARGE_ICON,
-            ImageLoader.getImageIcon("stock_text_align_center.png"));
+        		MailImageLoader.getIcon("format-justify-center.png"));
         putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_text_align_center-16.png"));
+        		MailImageLoader.getSmallIcon("format-justify-center.png"));
 
         // register for text selection changes
         ComposerController ctrl = (ComposerController) getFrameMediator();

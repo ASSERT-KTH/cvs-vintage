@@ -26,12 +26,12 @@ import javax.swing.text.StyleConstants;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractSelectableAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -60,9 +60,9 @@ public class RightJustifyAction extends AbstractSelectableAction
                 "menu_format_right_justify_tooltip").replaceAll("&", ""));
 
         putValue(LARGE_ICON,
-            ImageLoader.getImageIcon("stock_text_align_right.png"));
+        		MailImageLoader.getIcon("format-justify-right.png"));
         putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_text_align_right-16.png"));
+        		MailImageLoader.getSmallIcon("format-justify-right.png"));
 
         // register for text selection changes
         ComposerController ctrl = (ComposerController) getFrameMediator();

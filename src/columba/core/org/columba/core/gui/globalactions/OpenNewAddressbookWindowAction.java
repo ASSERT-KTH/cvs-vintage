@@ -40,8 +40,8 @@ public class OpenNewAddressbookWindowAction extends AbstractColumbaAction {
 		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
 				"menu_file_new_addressbook_tooltip").replaceAll("&", ""));
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_book-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_book.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("addressbook.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("addressbook.png"));
 	}
 
 	/*

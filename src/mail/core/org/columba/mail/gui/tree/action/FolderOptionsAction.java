@@ -38,7 +38,6 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
-
 public class FolderOptionsAction extends AbstractColumbaAction implements
 		ISelectionListener {
 	/**
@@ -50,8 +49,8 @@ public class FolderOptionsAction extends AbstractColumbaAction implements
 				"menu_folder_folderoptions"));
 
 		// icon for menu
-		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("16_configure_folder.png"));
+//		putValue(SMALL_ICON, ImageLoader
+//				.getSmallImageIcon("16_configure_folder.png"));
 
 		setEnabled(false);
 

@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -47,6 +48,9 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
             MailResourceLoader.getString("menu", "composer",
                 "menu_file_savedraft"));
 
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon("document-save.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("document-save.png"));
+		
         // tooltip text
         putValue(SHORT_DESCRIPTION,
             MailResourceLoader.getString("menu", "composer",

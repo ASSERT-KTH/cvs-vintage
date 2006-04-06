@@ -53,8 +53,8 @@ public class ToggleExpungedFlagAction extends AbstractColumbaAction implements
 
         // icons
         putValue(SMALL_ICON, ImageLoader
-                .getSmallImageIcon("stock_delete-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
+                .getSmallIcon("user-trash-full.png"));
+        putValue(LARGE_ICON, ImageLoader.getIcon("user-trash-full.png"));
 
 //      shortcut key
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('e'));
