@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.97 2006/03/25 00:46:54 tfmorris Exp $
+// $Id: PropPanelOperation.java,v 1.98 2006/04/07 23:51:20 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateOwner;
 import org.argouml.uml.ui.UMLLinkedList;
+import org.argouml.uml.ui.UMLTextArea2;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
@@ -68,9 +69,13 @@ public class PropPanelOperation extends PropPanelFeature {
         addField(Translator.localize("label.parameters"),
                 new JScrollPane(new UMLLinkedList(
                 new UMLClassifierParameterListModel())));
-        
+
+        addField(Translator.localize("label.specification"), 
+                new JScrollPane(new UMLTextArea2(
+                        new UMLOperationSpecificationDocument())));
+
         addSeperator();
-        
+
         add(getVisibilityPanel());
 
         JPanel modifiersPanel = createBorderPanel(Translator.localize(
