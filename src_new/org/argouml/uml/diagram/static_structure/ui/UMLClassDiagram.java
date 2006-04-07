@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.86 2006/04/01 21:06:38 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.87 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,9 +175,10 @@ public class UMLClassDiagram extends UMLDiagram {
         return actions;
     }
 
-    // To enable models and subsystems,
+    // TODO: To enable models and subsystems,
     // replace getActionPackage() in the function getUmlActions() above
-    // with getPackageActions().
+    // with getPackageActions(). Work started by Markus I believe
+    // where does this stand? - Bob.
     private Object[] getPackageActions() {
         Object[] actions = {
             getActionPackage(),
@@ -313,9 +314,8 @@ public class UMLClassDiagram extends UMLDiagram {
     protected Action getActionAssociationClass() {
         if (actionAssociationClass == null) {
             actionAssociationClass =
-                makeCreateEdgeAction(
-                    Model.getMetaTypes().getAssociationClass(),
-                    "button.new-associationclass");
+                makeCreateAssociationClassAction(
+                        "button.new-associationclass");
         }
         return actionAssociationClass;
     }

@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.24 2006/03/27 12:14:30 linus Exp $
+// $Id: ActionAddNote.java,v 1.25 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,8 +99,8 @@ public class ActionAddNote extends UMLAction {
             Fig destFig = diagram.presentationFor(obj);
             if (destFig instanceof FigEdgeModelElement) {
                 FigEdgeModelElement destEdge = (FigEdgeModelElement) destFig;
-                destEdge.makeCommentPort();
-                destFig = destEdge.getCommentPort();
+                destEdge.makeEdgePort();
+                destFig = destEdge.getEdgePort();
                 destEdge.calcBounds();
             }
             if (Model.getFacade().isAModelElement(obj)
@@ -164,7 +164,7 @@ public class ActionAddNote extends UMLAction {
         }
 
         if (elemFig instanceof FigEdgeModelElement) {
-            elemFig = ((FigEdgeModelElement) elemFig).getCommentPort();
+            elemFig = ((FigEdgeModelElement) elemFig).getEdgePort();
         }
 
         if (elemFig instanceof FigNode) {

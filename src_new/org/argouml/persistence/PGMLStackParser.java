@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.18 2006/04/01 11:45:08 linus Exp $
+// $Id: PGMLStackParser.java,v 1.19 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,11 +163,12 @@ public class PGMLStackParser
 
         setCommonAttrs(f, attrList);
 
-        String owner = attrList.getValue("href");
-        if (owner != null && !owner.equals("") && !(f instanceof FigEdgeNote)) {
-            Object modelElement = findOwner(owner);
+        String href = attrList.getValue("href");
+        if (href != null && !href.equals("") && !(f instanceof FigEdgeNote)) {
+            Object modelElement = findOwner(href);
             if (modelElement == null) {
-                throw new SAXException("Found href of " + owner
+                LOG.error("Can't find href of " + href);
+                throw new SAXException("Found href of " + href
 				       + " with no matching element in model");
             }
             if (f.getOwner() != modelElement) {

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.109 2006/04/07 23:48:05 tfmorris Exp $
+// $Id: FigAssociation.java,v 1.110 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -217,7 +217,7 @@ public class FigAssociation extends FigEdgeModelElement {
                 }
             }
         }
-	super.setOwner(newOwner);
+        super.setOwner(newOwner);
     }
 
     /**
@@ -434,6 +434,7 @@ public class FigAssociation extends FigEdgeModelElement {
      * @param association
      */
     private void chooseArrowHeads(Object association) {
+        assert association != null;
         Object[] ends = 
             Model.getFacade().getConnections(association).toArray(); 
         Object ae0 = ends[0];

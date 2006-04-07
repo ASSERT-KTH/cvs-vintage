@@ -1,4 +1,4 @@
-// $Id: ActionSetAddAssociationEndMode.java,v 1.2 2005/10/27 12:45:15 bobtarling Exp $
+// $Id: ActionSetAddAssociationEndMode.java,v 1.3 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,12 +34,15 @@ import org.argouml.model.Model;
 import org.argouml.ui.CmdSetMode;
 
 /**
- * An extension of CmdSetMode to set the parameters for an association.
+ * An extension of CmdSetMode to create all the parts of an association
+ * class.
  *
  * @author Bob Tarling
  */
 
 public class ActionSetAddAssociationEndMode extends CmdSetMode {
+
+    private static final long serialVersionUID = 2908695768709766241L;
 
     /**
      * Construct a new ActionSetAddAssociationEndMode.<p>

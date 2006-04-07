@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.95 2006/04/02 08:57:04 mvw Exp $
+// $Id: UMLDiagram.java,v 1.96 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -669,6 +669,18 @@ public abstract class UMLDiagram
     protected Action makeCreateAssociationEndAction(String descr) {
 
         return new RadioAction(new ActionSetAddAssociationEndMode(descr));
+    }
+
+    /**
+     * Factory method to build an Action for creating an edge in the
+     * diagram.
+     *
+     * @param modelElement identifies the model element type to make
+     * @param descr the description to give this action.
+     * @return The action to create a new node.
+     */
+    protected Action makeCreateAssociationClassAction(String descr) {
+        return new RadioAction(new ActionSetAddAssociationClassMode(descr));
     }
 
     /**

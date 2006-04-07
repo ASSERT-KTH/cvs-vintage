@@ -1,4 +1,4 @@
-// $Id: FigClassAssociationClass.java,v 1.3 2005/01/09 14:58:56 linus Exp $
+// $Id: FigClassAssociationClass.java,v 1.4 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,8 @@ public class FigClassAssociationClass
     /**
      * The constructor.
      */
-    public FigClassAssociationClass() {
-        super();
+    public FigClassAssociationClass(Object owner, int x, int y, int w, int h) {
+        super(owner, x, y, w, h);
         enableSizeChecking(true);
     }
 
@@ -57,7 +57,7 @@ public class FigClassAssociationClass
      * @param ownerFig the owner fig
      */
     public FigClassAssociationClass(FigAssociationClass ownerFig) {
-        this();
+        super(null, ownerFig.getOwner());
         mainFig = ownerFig;
     }
 
@@ -75,17 +75,17 @@ public class FigClassAssociationClass
         mainFig = f;
     }
 
-    /**
-     * It not only damages itself but also its
-     * associated FigAssociationClass
-     */
-    public void damage() {
-        if (mainFig != null) {
-            mainFig.figDamaged();
-        }
-        super.damage();
-    }
-
+//    /**
+//     * It not only damages itself but also its
+//     * associated FigAssociationClass
+//     */
+//    public void damage() {
+//        if (mainFig != null) {
+//            mainFig.figDamaged();
+//        }
+//        super.damage();
+//    }
+//
     /**
      * It not only removes itself but also its
      * associated FigAssociationClass

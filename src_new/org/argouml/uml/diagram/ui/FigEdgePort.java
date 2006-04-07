@@ -1,4 +1,4 @@
-// $Id: FigCommentPort.java,v 1.5 2006/03/23 22:22:03 linus Exp $
+// $Id: FigEdgePort.java,v 1.1 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,13 +36,13 @@ import org.tigris.gef.presentation.FigCircle;
  *
  * @author Bob Tarling
  */
-public class FigCommentPort extends FigNodeModelElement {
+public class FigEdgePort extends FigNodeModelElement {
     private FigCircle bigPort;
 
     /**
      * Constructor.
      */
-    public FigCommentPort() {
+    public FigEdgePort() {
         bigPort = new FigCircle(0, 0, 10, 10, Color.black, Color.white);
         addFig(bigPort);
     }

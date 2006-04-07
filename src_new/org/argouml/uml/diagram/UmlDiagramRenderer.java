@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.20 2006/04/01 11:45:08 linus Exp $
+// $Id: UmlDiagramRenderer.java,v 1.21 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,9 +122,9 @@ public abstract class UmlDiagramRenderer
         } else if (Model.getFacade().isAStubState(node)) {
             return new FigStubState();
         } else if (Model.getFacade().isAAssociationClass(node)) {
-            figNode = new FigClassAssociationClass();
+            figNode = new FigClassAssociationClass(node, x, y, 10, 10);
         } else if (Model.getFacade().isAClass(node)) {
-            figNode = new FigClass();
+            figNode = new FigClass(node, x, y, 10, 10);
         } else if (Model.getFacade().isAInterface(node)) {
             figNode = new FigInterface();
         } else if (Model.getFacade().isAEnumeration(node)) {

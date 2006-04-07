@@ -1,4 +1,4 @@
-// $Id: FigEdgeHandler.java,v 1.6 2006/02/20 17:56:33 bobtarling Exp $
+// $Id: FigEdgeHandler.java,v 1.7 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@ package org.argouml.persistence;
 
 import java.util.StringTokenizer;
 
-import org.argouml.uml.diagram.ui.FigCommentPort;
+import org.argouml.uml.diagram.ui.FigEdgePort;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.persistence.pgml.PGMLStackParser;
 import org.tigris.gef.presentation.Fig;
@@ -148,8 +148,8 @@ public class FigEdgeHandler
         if (edge == null) {
             throw new IllegalStateException("Can't find a FigNode with id " + figId);
         }
-        edge.makeCommentPort();
-        return edge.getCommentPort();
+        edge.makeEdgePort();
+        return edge.getEdgePort();
     }
 
 
@@ -160,7 +160,7 @@ public class FigEdgeHandler
      * @return the Fig that is the port on the given FigNode
      */
     private Fig getPortFig(FigNode figNode) {
-        if (figNode instanceof FigCommentPort) {
+        if (figNode instanceof FigEdgePort) {
             // TODO: Can we just do this every time, no need for else - Bob
             return figNode;
         } else {

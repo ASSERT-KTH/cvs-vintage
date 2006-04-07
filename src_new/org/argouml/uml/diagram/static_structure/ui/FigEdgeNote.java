@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.32 2006/03/07 00:43:31 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.33 2006/04/07 23:57:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,7 @@ public class FigEdgeNote
 
         Fig destFig = theLayer.presentationFor(toNode);
         if (destFig instanceof FigEdgeModelElement) {
-            destFig = ((FigEdgeModelElement) destFig).getCommentPort();
+            destFig = ((FigEdgeModelElement) destFig).getEdgePort();
         }
         if (!(destFig instanceof FigNodeModelElement)) {
             throw new IllegalArgumentException(
@@ -126,7 +126,7 @@ public class FigEdgeNote
 
         Fig sourceFig = theLayer.presentationFor(fromNode);
         if (sourceFig instanceof FigEdgeModelElement) {
-            sourceFig = ((FigEdgeModelElement) sourceFig).getCommentPort();
+            sourceFig = ((FigEdgeModelElement) sourceFig).getEdgePort();
         }
         if (!(sourceFig instanceof FigNodeModelElement)) {
             throw new IllegalArgumentException(
