@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.8 2006/03/25 00:52:29 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.9 2006/04/07 19:14:43 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1239,8 +1239,10 @@ public class CoreHelperMDRImpl implements CoreHelper {
                             == getFirstSharedNamespace(modelElement, ns)) {
                 return false;
             }
-            if (ns instanceof Interface || ns instanceof Actor
-                    || ns instanceof UseCase) {
+            if (ns instanceof Interface || ns instanceof Actor) {
+                return false;
+            }else if (ns instanceof UseCase 
+                    && modelElement instanceof Classifier) {
                 return false;
             } else if (ns instanceof Component) {
                 return (modelElement instanceof Component
