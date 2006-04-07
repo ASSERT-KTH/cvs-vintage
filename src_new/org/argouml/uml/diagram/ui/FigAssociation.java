@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.108 2006/03/20 17:02:02 tfmorris Exp $
+// $Id: FigAssociation.java,v 1.109 2006/04/07 23:48:05 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -665,7 +665,11 @@ public class FigAssociation extends FigEdgeModelElement {
      */
     public void paint(Graphics g) {
         if (sourceArrowHead == null || destArrowHead == null) {
-	    chooseArrowHeads(getOwner()); 
+            if (getOwner() == null ) {
+                LOG.error("Trying to paint a FigAssociation without an owner. ");
+            } else {
+                chooseArrowHeads(getOwner()); 
+            }
         }
         if (sourceArrowHead != null && destArrowHead != null) {
 	    sourceArrowHead.setLineColor(getLineColor());
