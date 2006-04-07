@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.156 2006/03/25 17:40:43 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.157 2006/04/07 00:21:20 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -168,15 +168,8 @@ public abstract class FigEdgeModelElement
      *  itself as a listener. */
     public FigEdgeModelElement() {
 
-        nameFig = new FigText(10, 30, 90, 20);
-        nameFig.setFont(LABEL_FONT);
-        nameFig.setTextColor(Color.black);
+        nameFig = new FigSingleLineText(10, 30, 90, 20, false);
         nameFig.setTextFilled(false);
-        nameFig.setFilled(false);
-        nameFig.setLineWidth(0);
-        nameFig.setExpandOnly(false);
-        nameFig.setReturnAction(FigText.END_EDITING);
-        nameFig.setTabAction(FigText.END_EDITING);
 
         stereotypeFig = new FigStereotypesCompartment(10, 10, 90, 15);
 
