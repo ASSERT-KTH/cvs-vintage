@@ -1,4 +1,4 @@
-// $Id: StartBrowser.java,v 1.11 2005/01/09 14:59:13 linus Exp $
+// $Id: StartBrowser.java,v 1.12 2006/04/08 22:41:25 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.util.osdep;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 import org.apache.log4j.Logger;
 
@@ -38,18 +39,15 @@ public class StartBrowser {
     private static final Logger LOG = Logger.getLogger(StartBrowser.class);
 
     /**
-     * Open an Url in the system's default browser.
-     * <P>
-     * This will probably not be perfect for everyone but hopefully it is a
-     * good enough alternative.
+     * Open an URL in the system's default browser.
      *
-     * @param url the given URL
+     * @param url string containing the given URL
      */
     public static void openUrl(String url) {
 	try {
 	    if (OsUtil.isWin32()) {
-		Runtime.getRuntime()
-		    .exec("rundll32 url.dll,FileProtocolHandler " + url);
+		Runtime.getRuntime().exec(
+                        "rundll32 url.dll,FileProtocolHandler " + url);
 	    }
 	    else if (OsUtil.isMac()) {
 		try {
@@ -71,7 +69,6 @@ public class StartBrowser {
 		    };
 		    Runtime.getRuntime().exec(commline);
 		}
-		return;
 	    }
 	    else {
 		Process proc =
@@ -81,6 +78,7 @@ public class StartBrowser {
 			Runtime.getRuntime().exec("netscape " + url);
 		    }
 		} catch (InterruptedException ie) {
+                    LOG.error(ie);
 		}
 	    }
 	}
@@ -89,6 +87,15 @@ public class StartBrowser {
             LOG.error(ioe);
 	}
 
-	LOG.error("Could not open url: " + url);
     }
+    
+    /**
+     * Open an URL in the system's default browser.
+     *
+     * @param url the URL to open
+     */
+    public static void openUrl(URL url) {
+        openUrl(url.toString());
+    }
+
 }
