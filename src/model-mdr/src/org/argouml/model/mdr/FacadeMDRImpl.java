@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.11 2006/03/26 13:51:04 mvw Exp $
+// $Id: FacadeMDRImpl.java,v 1.12 2006/04/08 00:04:06 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1120,8 +1120,7 @@ class FacadeMDRImpl implements Facade {
             return AggregationKindEnum.AK_AGGREGATE
                     .equals(((AssociationEnd) handle).getAggregation());
         }
-        throw new RuntimeException("Don't know how to return aggregation for "
-                + handle);
+        return illegalArgumentBoolean(handle);
     }
 
     /**
@@ -3975,32 +3974,32 @@ class FacadeMDRImpl implements Facade {
             return ((AttributeLink) handle).getValue();
         }
         if (handle instanceof AggregationKind) {
-            return new Integer(((AggregationKind) handle).toString());
+            return Integer.valueOf(((AggregationKind) handle).toString());
         }
         if (handle instanceof OrderingKind) {
-            return new Integer(((OrderingKind) handle).toString());
+            return Integer.valueOf(((OrderingKind) handle).toString());
         }
         if (handle instanceof ParameterDirectionKind) {
-            return new Integer(((ParameterDirectionKind) handle).toString());
+            return Integer.valueOf(((ParameterDirectionKind) handle).toString());
         }
         if (handle instanceof VisibilityKind) {
-            return new Integer(((VisibilityKind) handle).toString());
+            return Integer.valueOf(((VisibilityKind) handle).toString());
         }
         if (handle instanceof ScopeKind) {
-            return new Integer(((ScopeKind) handle).toString());
+            return Integer.valueOf(((ScopeKind) handle).toString());
         }
         /*
          * if (handle instanceof MessageDirectionKind) { return new
          * Integer(((MessageDirectionKind) handle).getValue()); }
          */
         if (handle instanceof ChangeableKind) {
-            return new Integer(((ChangeableKind) handle).toString());
+            return Integer.valueOf(((ChangeableKind) handle).toString());
         }
         if (handle instanceof PseudostateKind) {
-            return new Integer(((PseudostateKind) handle).toString());
+            return Integer.valueOf(((PseudostateKind) handle).toString());
         }
         if (handle instanceof CallConcurrencyKind) {
-            return new Integer(((CallConcurrencyKind) handle).toString());
+            return Integer.valueOf(((CallConcurrencyKind) handle).toString());
         }
         return illegalArgumentObject(handle);
     }
