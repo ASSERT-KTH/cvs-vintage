@@ -1,4 +1,4 @@
-// $Id: ModelEventPumpMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: ModelEventPumpMDRImpl.java,v 1.4 2006/04/08 00:04:31 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -535,7 +535,7 @@ class ModelEventPumpMDRImpl extends AbstractModelEventPump implements
             }
             return;
         }
-        throw new RuntimeException(
+        throw new IllegalArgumentException(
                 "Don't know how to register class event for object "
                         + modelClass);
     }
@@ -561,7 +561,7 @@ class ModelEventPumpMDRImpl extends AbstractModelEventPump implements
             }
             return;
         }
-        throw new RuntimeException(
+        throw new IllegalArgumentException(
                 "Don't know how to unregister class event for object "
                         + modelClass);
     }

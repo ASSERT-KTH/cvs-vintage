@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.9 2006/04/07 19:14:43 mvw Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.10 2006/04/08 00:04:31 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.Model;
 import org.argouml.model.ModelManagementHelper;
+import org.argouml.model.NotImplementedException;
 import org.omg.uml.behavioralelements.activitygraphs.ActivityGraph;
 import org.omg.uml.behavioralelements.activitygraphs.ClassifierInState;
 import org.omg.uml.behavioralelements.activitygraphs.ObjectFlowState;
@@ -1241,7 +1242,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
             }
             if (ns instanceof Interface || ns instanceof Actor) {
                 return false;
-            }else if (ns instanceof UseCase 
+            } else if (ns instanceof UseCase 
                     && modelElement instanceof Classifier) {
                 return false;
             } else if (ns instanceof Component) {
@@ -2206,7 +2207,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
      *      java.util.Collection)
      */
     public void setRaisedSignals(Object handle, Collection raisedSignals) {
-        throw new RuntimeException("Not yet implemented.");
+        throw new NotImplementedException();
     }
 
     /**
@@ -2806,13 +2807,6 @@ public class CoreHelperMDRImpl implements CoreHelper {
             ((ComponentInstance) handle).getResident().addAll(residents);
             return;
         }
-        if (handle instanceof Node) {
-            throw new RuntimeException(
-                    "Not yet implemented. Check if this is used.");
-            // ((Node) handle).setResidents(residents);
-            // eventPump.flushModelEvents();
-            // return;
-        }
         throw new IllegalArgumentException("handle: " + handle);
     }
 
@@ -2972,7 +2966,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
      *      java.lang.String)
      */
     public void setUUID(Object handle, String uuid) {
-        throw new RuntimeException("Not implemented.");
+        throw new NotImplementedException();
     }
 
     /**
