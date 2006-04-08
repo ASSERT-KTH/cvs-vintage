@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.24 2006/03/24 22:59:57 tfmorris Exp $
+// $Id: CoreHelper.java,v 1.25 2006/04/08 20:26:36 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1166,6 +1166,14 @@ public interface CoreHelper {
      * @param specification the operation
      */
     void setSpecification(Object method, Object specification);
+
+    /**
+     * Set the specification of an Operation.
+     * 
+     * @param operation the operation
+     * @param specification the operation
+     */
+    void setSpecification(Object operation, String specification);
     
     /**
      * Sets the specifications of some association end.

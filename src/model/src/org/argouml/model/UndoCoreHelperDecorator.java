@@ -1,4 +1,4 @@
-// $Id: UndoCoreHelperDecorator.java,v 1.5 2006/03/16 19:17:00 mvw Exp $
+// $Id: UndoCoreHelperDecorator.java,v 1.6 2006/04/08 20:26:36 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -393,6 +393,19 @@ class UndoCoreHelperDecorator extends AbstractCoreHelperDecorator {
         }, specification, Model.getFacade().isSpecification(handle));
     }
 
+    /**
+     * @see org.argouml.model.CoreHelper#setSpecification(java.lang.Object, java.lang.String)
+     */
+    public void setSpecification(final Object handle, String specification) {
+        createMemento(new StringSetter() {
+            public void set(String value) {
+                getComponent().setSpecification(handle, value);
+            }
+        }, specification, Model.getFacade().getSpecification(handle));
+    }
+    /**
+     * @see org.argouml.model.CoreHelper#setSpecification(java.lang.Object, java.lang.Object)
+     */
     public void setSpecification(final Object handle, Object specification) {
         createMemento(new ObjectSetter() {
             public void set(Object value) {

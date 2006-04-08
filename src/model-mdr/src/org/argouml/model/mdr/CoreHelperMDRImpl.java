@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.11 2006/04/08 08:35:53 mvw Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.12 2006/04/08 20:26:36 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2879,6 +2879,18 @@ public class CoreHelperMDRImpl implements CoreHelper {
         throw new IllegalArgumentException("handle: " + handle);
     }
 
+
+    /**
+     * @see org.argouml.model.CoreHelper#setSpecification(java.lang.Object, java.lang.String)
+     */
+    public void setSpecification(Object operation, String specification) {
+        if (operation instanceof Operation) {
+            ((Operation) operation).setSpecification( specification);
+            return;
+        }
+        throw new IllegalArgumentException("operation: " + operation);
+    }
+    
     /**
      * @see org.argouml.model.CoreHelper#setSpecification(java.lang.Object, java.lang.Object)
      */
