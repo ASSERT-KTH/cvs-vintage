@@ -1,4 +1,4 @@
-// $Id: FigEdgeAssociationClass.java,v 1.10 2006/04/07 23:57:48 bobtarling Exp $
+// $Id: FigEdgeAssociationClass.java,v 1.11 2006/04/08 00:30:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -195,6 +195,6 @@ public class FigEdgeAssociationClass
         super.setSourceFigNode(fn);
     }
     
-    
-
+    public void renderingChanged() {
+    }
 } /* end class FigEdgeAssociationClass */
