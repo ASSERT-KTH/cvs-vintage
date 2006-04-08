@@ -1,4 +1,4 @@
-// $Id: PropPanelEnumerationLiteral.java,v 1.2 2005/12/15 14:22:46 mvw Exp $
+// $Id: PropPanelEnumerationLiteral.java,v 1.3 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,16 +48,18 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelEnumerationLiteral extends PropPanelModelElement {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 1486642919681744144L;
+
+    /**
+     * Construct a property panel for UML EnumerationLiterals.
      */
     public PropPanelEnumerationLiteral() {
         super("EnumerationLiteral", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
 
         JList lst = new OneRowLinkedList(new EnumerationListModel());
         addField(Translator.localize("label.enumeration"),
@@ -75,9 +77,12 @@ public class PropPanelEnumerationLiteral extends PropPanelModelElement {
  *
  * @author mvw@tigris.org
  */
-class EnumerationListModel
-    extends DefaultListModel
-    implements TargetListener {
+class EnumerationListModel extends DefaultListModel implements TargetListener {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5200714273864311332L;
 
     /**
      * Constructor for UMLCommentAnnotatedElementListModel.

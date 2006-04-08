@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.54 2006/03/12 10:42:03 linus Exp $
+// $Id: PropPanelObject.java,v 1.55 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelObject extends PropPanelInstance {
 
     /**
-     * Constructor.
+     * Construct a property panel for UML Object elements.
      */
     public PropPanelObject() {
 	super("Object", lookupIcon("Object"),
@@ -50,13 +50,10 @@ public class PropPanelObject extends PropPanelInstance {
 
 	addField(Translator.localize("label.name"), getNameTextField());
 
-	addField(Translator.localize("label.stereotype"),
-	    getStereotypeSelector());
-
 	addField(Translator.localize("label.namespace"),
 		     getNamespaceSelector());
 
-        addSeperator();
+        addSeparator();
 
 	addField(Translator.localize("label.stimili-sent"),
             getStimuliSenderScroll());
@@ -64,7 +61,7 @@ public class PropPanelObject extends PropPanelInstance {
 	addField(Translator.localize("label.stimili-received"),
             getStimuliReceiverScroll());
 
-	addSeperator();
+	addSeparator();
 
 	AbstractActionAddModelElement action =
 	    new ActionAddInstanceClassifier(

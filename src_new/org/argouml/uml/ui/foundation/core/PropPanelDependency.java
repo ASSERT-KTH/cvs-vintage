@@ -1,4 +1,4 @@
-// $Id: PropPanelDependency.java,v 1.33 2005/12/10 18:17:19 mvw Exp $
+// $Id: PropPanelDependency.java,v 1.34 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,11 @@ import org.tigris.swidgets.Orientation;
 public class PropPanelDependency extends PropPanelRelationship {
 
     /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 3665986064546532722L;
+
+    /**
      * The scrollpane with the modelelement that is the supplier of this
      * dependency
      */
@@ -62,12 +67,10 @@ public class PropPanelDependency extends PropPanelRelationship {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.suppliers"),
                 supplierScroll);

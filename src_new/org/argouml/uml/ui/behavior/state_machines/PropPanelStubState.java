@@ -1,4 +1,4 @@
-// $Id: PropPanelStubState.java,v 1.18 2005/09/08 18:23:59 mkl Exp $
+// $Id: PropPanelStubState.java,v 1.19 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,11 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelStubState extends PropPanelStateVertex {
 
     /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 5934039619236682498L;
+
+    /**
      * Constructor for PropPanelStubState.
      */
     public PropPanelStubState() {
@@ -46,8 +51,6 @@ public class PropPanelStubState extends PropPanelStateVertex {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         JComboBox referencestateBox =
@@ -60,7 +63,7 @@ public class PropPanelStubState extends PropPanelStateVertex {
                         Translator.localize("tooltip.nav-stubstate"),
                         referencestateBox));
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.incoming"),
                 getIncomingScroll());

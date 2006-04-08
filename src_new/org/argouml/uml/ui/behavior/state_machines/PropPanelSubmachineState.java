@@ -1,4 +1,4 @@
-// $Id: PropPanelSubmachineState.java,v 1.21 2005/12/09 17:30:11 mvw Exp $
+// $Id: PropPanelSubmachineState.java,v 1.22 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,13 @@ import org.tigris.swidgets.Orientation;
 public class PropPanelSubmachineState extends PropPanelCompositeState {
 
     /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 2384673708664550264L;
+
+    /**
+     * Construct a property panel for SubmachineState elements with the given params.
+     *
      * @param name the name of the properties panel
      * @param icon the icon to be shown next to the name
      * @param orientation the orientation of the panel
@@ -56,7 +63,7 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
     }
 
     /**
-     * Constructor for PropPanelSubmachineState.
+     * Construct a default property panel SubmachineState elements.
      */
     public PropPanelSubmachineState() {
         super("Submachine State", lookupIcon("SubmachineState"),
@@ -64,8 +71,6 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
         getTitleLabel().setText("Submachine State");
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         JComboBox submachineBox = new UMLComboBox2(
@@ -81,7 +86,7 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
         addField(Translator.localize("label.do-activity"),
                 getDoScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.incoming"),
                 getIncomingScroll());
@@ -90,7 +95,7 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
         addField(Translator.localize("label.internal-transitions"),
                 getInternalTransitionsScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.subvertex"),
                 new JScrollPane(new UMLMutableLinkedList(

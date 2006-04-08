@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.74 2006/03/15 14:40:14 linus Exp $
+// $Id: PropPanelDataType.java,v 1.75 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class PropPanelDataType extends PropPanelClassifier {
         new UMLClassOperationListModel();
 
     /**
-     * Constructor.
+     * Construct a property panel for UML DataType elements.
      *
      * @param title
      * @param icon
@@ -67,14 +67,12 @@ public class PropPanelDataType extends PropPanelClassifier {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
         add(getModifiersPanel());
         add(getNamespaceVisibilityPanel());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.client-dependencies"),
                 getClientDependencyScroll());
@@ -85,7 +83,7 @@ public class PropPanelDataType extends PropPanelClassifier {
         addField(Translator.localize("label.specializations"),
                 getSpecializationScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.operations"),
                 getOperationScroll());

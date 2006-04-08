@@ -1,4 +1,4 @@
-// $Id: PropPanelSynchState.java,v 1.6 2005/11/13 11:01:20 linus Exp $
+// $Id: PropPanelSynchState.java,v 1.7 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,11 +35,13 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelSynchState extends PropPanelStateVertex {
 
-    private static UMLSynchStateBoundDocument boundDocument =
-            new UMLSynchStateBoundDocument();
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -6671890304679263593L;
 
     /**
-     * The constructor.
+     * Construct a property panel for a Synch State.
      */
     public PropPanelSynchState() {
         super("Synch State",
@@ -48,14 +50,12 @@ public class PropPanelSynchState extends PropPanelStateVertex {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         addField(Translator.localize("label.bound"),
-                new UMLTextField2(boundDocument));
+                new UMLTextField2(new UMLSynchStateBoundDocument()));
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.incoming"),
                 getIncomingScroll());

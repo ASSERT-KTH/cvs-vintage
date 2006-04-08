@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierInState.java,v 1.5 2006/03/20 17:05:33 tfmorris Exp $
+// $Id: PropPanelClassifierInState.java,v 1.6 2006/04/08 22:36:07 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,6 +59,11 @@ import org.tigris.gef.undo.UndoableAction;
  */
 public class PropPanelClassifierInState extends PropPanelClassifier {
 
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 609338855898756817L;
+    
     private JComboBox typeComboBox;
     private JScrollPane statesScroll;
 
@@ -66,7 +71,7 @@ public class PropPanelClassifierInState extends PropPanelClassifier {
         new UMLClassifierInStateTypeComboBoxModel();
     
     /**
-     * The constructor.
+     * Construct a property panel for a ClassifierInState.
      */
     public PropPanelClassifierInState() {
         super("ClassifierInState", lookupIcon("ClassifierInState"),
@@ -77,7 +82,7 @@ public class PropPanelClassifierInState extends PropPanelClassifier {
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
         
-        addSeperator();
+        addSeparator();
         
         addField(Translator.localize("label.type"),
                 new UMLComboBoxNavigator(
@@ -115,7 +120,12 @@ public class PropPanelClassifierInState extends PropPanelClassifier {
 class ActionSetClassifierInStateType extends UndoableAction {
 
     /**
-     * Constructor for ActionSetClassifierInStateType.
+     * The serial version.
+     */
+    private static final long serialVersionUID = -7537482435346517599L;
+
+    /**
+     * Construct an action to set the type of a ClassifierInState.
      */
     ActionSetClassifierInStateType() {
         super();
@@ -154,7 +164,12 @@ class ActionSetClassifierInStateType extends UndoableAction {
 class UMLClassifierInStateTypeComboBoxModel extends UMLComboBoxModel2 {
 
     /**
-     * Constructor.
+     * The serial version.
+     */
+    private static final long serialVersionUID = 1705685511742198305L;
+
+    /**
+     * Construct a combobox model for a ClassifierInState's type.
      */
     public UMLClassifierInStateTypeComboBoxModel() {
         super("type", false);
@@ -231,9 +246,16 @@ class UMLClassifierInStateTypeComboBoxModel extends UMLComboBoxModel2 {
 
 class ActionAddCISState extends AbstractActionAddModelElement {
     
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -3892619042821099432L;
     private Object choiceClass = Model.getMetaTypes().getState();
     
     
+    /**
+     * Construct an action to add a new ClassifierInState.
+     */
     public ActionAddCISState() {
         super();
         setMultiSelect(true);
@@ -285,6 +307,14 @@ class ActionAddCISState extends AbstractActionAddModelElement {
 
 class ActionRemoveCISState extends AbstractActionRemoveElement {
 
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -1431919084967610562L;
+
+    /**
+     * Construct an action to remove a ClassifierInState.
+     */
     public ActionRemoveCISState() {
         super(Translator.localize("menu.popup.remove"));
     }
@@ -312,7 +342,12 @@ class ActionRemoveCISState extends AbstractActionRemoveElement {
 class UMLCISStateListModel extends UMLModelElementListModel2 {
     
     /**
-     * Constructor for UMLOFSStateListModel.
+     * The serial version.
+     */
+    private static final long serialVersionUID = -8786823179344335113L;
+
+    /**
+     * Construct a list model for ClassifierInState elements.
      */
     public UMLCISStateListModel() {
         super("inState");

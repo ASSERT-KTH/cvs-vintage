@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.19 2006/03/23 22:22:04 linus Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.20 2006/04/08 22:36:07 tfmorris Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class PropPanelObjectFlowState extends AbstractPropPanelState
         new UMLObjectFlowStateClassifierComboBoxModel();
 
     /**
-     * Constructor.
+     * Construct a property panel for ObjectFlowState elements.
      */
     public PropPanelObjectFlowState() {
         super("ObjectFlowState", lookupIcon("ObjectFlowState"), ConfigLoader
@@ -74,8 +74,6 @@ public class PropPanelObjectFlowState extends AbstractPropPanelState
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
 
@@ -102,7 +100,7 @@ public class PropPanelObjectFlowState extends AbstractPropPanelState
         addField(Translator.localize("label.instate"),
                 statesScroll);
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.incoming"),
                 getIncomingScroll());

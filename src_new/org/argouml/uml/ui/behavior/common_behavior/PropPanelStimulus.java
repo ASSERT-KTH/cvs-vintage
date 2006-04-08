@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.63 2006/03/14 16:35:28 mvw Exp $
+// $Id: PropPanelStimulus.java,v 1.64 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,12 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelStimulus extends PropPanelModelElement {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 81659498358156000L;
+
+    /**
+     * Construct a new property panel for a Stimulus.
      */
     public PropPanelStimulus() {
         super("Stimulus Properties", lookupIcon("Stimulus"),
@@ -55,10 +59,9 @@ public class PropPanelStimulus extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField("Action:", new UMLStimulusActionTextField(this,
-                new UMLStimulusActionTextProperty("name")));
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
+        addField(Translator.localize("label.action"),
+                new UMLStimulusActionTextField(this,
+                        new UMLStimulusActionTextProperty("name")));
 
         JList senderList = new UMLLinkedList(new UMLStimulusSenderListModel());
 	senderList.setVisibleRowCount(1);
@@ -129,8 +132,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
      * @param modelelement the given modelelement
      * @return true if it is acceptable, i.e. it is an association
      */
-    public boolean isAcceptibleAssociation(
-            Object/*MModelElement*/ modelelement) {
+    public boolean isAcceptableAssociation(Object modelelement) {
         return Model.getFacade().isAAssociation(modelelement);
     }
 

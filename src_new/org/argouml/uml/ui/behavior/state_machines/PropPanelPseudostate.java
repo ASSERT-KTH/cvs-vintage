@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.38 2005/11/13 11:01:20 linus Exp $
+// $Id: PropPanelPseudostate.java,v 1.39 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,20 +40,22 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelPseudostate extends PropPanelStateVertex {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 5822284822242536007L;
+
+    /**
+     * Construct a new property panel for a PseudoState (branch, fork, etc).
      */
     public PropPanelPseudostate() {
         super("Pseudostate", null, ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.incoming"),
                 getIncomingScroll());

@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.68 2006/02/20 17:59:00 mvw Exp $
+// $Id: PropPanelParameter.java,v 1.69 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,12 +41,17 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelParameter extends PropPanelModelElement {
 
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -1207518946939283220L;
+
     private JScrollPane behFeatureScroll;
 
     private static UMLParameterBehavioralFeatListModel behFeatureModel;
 
     /**
-     * The constructor.
+     * Construct a property panel for UML Parameter elements.
      */
     public PropPanelParameter() {
         super(
@@ -56,14 +61,10 @@ public class PropPanelParameter extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
-
         addField(Translator.localize("label.owner"),
                 getBehavioralFeatureScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.type"),
                 new UMLComboBox2(new UMLParameterTypeComboBoxModel(),

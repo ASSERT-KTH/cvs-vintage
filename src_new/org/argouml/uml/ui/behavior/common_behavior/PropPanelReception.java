@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.37 2006/03/23 16:01:54 mkl Exp $
+// $Id: PropPanelReception.java,v 1.38 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.ui.LookAndFeelMgr;
@@ -39,18 +38,21 @@ import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementLeafCheckBox;
 import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementRootCheckBox;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
-import org.tigris.swidgets.GridLayout2;
 
 /**
  * PropertyPanel for a Reception.
  */
 public class PropPanelReception extends PropPanelModelElement {
 
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -8572743081899344540L;
+    
     private JPanel modifiersPanel;
 
     /**
-     * The constructor.
-     *
+     * Construct a property panel for a Reception.
      */
     public PropPanelReception() {
         super("Reception", lookupIcon("Reception"), ConfigLoader
@@ -58,8 +60,6 @@ public class PropPanelReception extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
@@ -75,7 +75,7 @@ public class PropPanelReception extends PropPanelModelElement {
 
         add(modifiersPanel);
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.signal"),
                 new UMLReceptionSignalComboBox(this,

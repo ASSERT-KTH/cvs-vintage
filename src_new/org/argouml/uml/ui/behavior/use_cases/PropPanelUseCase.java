@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.72 2006/03/27 11:15:14 linus Exp $
+// $Id: PropPanelUseCase.java,v 1.73 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,33 +47,28 @@ import org.argouml.util.ConfigLoader;
  *
  * This is a type of Classifier, and like other Classifiers can have
  * attributes and operations (some processes use these to define
- * requirements). <em>Note</em>. ArgoUML does not currently support separate
+ * requirements).<p>
+ * <em>Note</em>. ArgoUML does not currently support separate
  * compartments on the display for this.<p>
  */
 public class PropPanelUseCase extends PropPanelClassifier {
 
     /**
-     * Constructor. Builds up the various fields required.<p>
+     * Construct a property panel for a UseCase.
      */
     public PropPanelUseCase() {
-        // Invoke the Classifier constructor, but passing in our name and
-        // representation and requesting 3 columns
         super("UseCase",
             lookupIcon("UseCase"),
             ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
     	addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
         add(getModifiersPanel());
 
-
-
-	addSeperator();
+	addSeparator();
 
 	addField(Translator.localize("label.generalizations"),
             getGeneralizationScroll());
@@ -90,7 +85,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
 	addField(Translator.localize("label.includes"),
 		 new JScrollPane(includesList));
 
-	addSeperator();
+	addSeparator();
 
 	JList extensionPoints =
 	    new UMLMutableLinkedList(

@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.29 2006/01/10 07:44:04 tfmorris Exp $
+// $Id: PropPanelComment.java,v 1.30 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,27 +43,29 @@ import org.argouml.util.ConfigLoader;
  * in the name of the Comment.<p>
  *
  * In UML 1.4 and beyond, the Comment has a "body"
- * attribute, to contain the comment string.
+ * attribute to contain the comment string, although 
+ * some UML tools continue to use the name attribute.
  */
 public class PropPanelComment extends PropPanelModelElement {
 
     /**
-     * Constructor for PropPanelComment.
+     * The serial version.
+     */
+    private static final long serialVersionUID = -8781239511498017147L;
+
+    /**
+     * Construct a property panel for a Comment.
      */
     public PropPanelComment() {
         super("Comment", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
-
         addField(Translator.localize("label.annotated-elements"),
             new JScrollPane(new UMLLinkedList(
                     new UMLCommentAnnotatedElementListModel())));
 
-        addSeperator();
+        addSeparator();
 
         UMLTextArea2 text = new UMLTextArea2(new UMLCommentBodyDocument());
         text.setLineWrap(true);
@@ -79,6 +81,11 @@ public class PropPanelComment extends PropPanelModelElement {
 
 class UMLCommentBodyDocument extends UMLPlainTextDocument {
     
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 3713801312285489580L;
+
     /**
      * Constructor for UMLModelElementNameDocument.
      */

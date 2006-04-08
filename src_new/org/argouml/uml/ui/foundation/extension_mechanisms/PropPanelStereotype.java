@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.56 2006/03/23 16:01:54 mkl Exp $
+// $Id: PropPanelStereotype.java,v 1.57 2006/04/08 22:36:07 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
@@ -42,12 +41,16 @@ import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementLeafCheckBox;
 import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementRootCheckBox;
 import org.argouml.uml.ui.foundation.core.UMLGeneralizableElementSpecializationListModel;
 import org.argouml.util.ConfigLoader;
-import org.tigris.swidgets.FlexiGridLayout;
 
 /**
  * The properties panel for a Stereotype.
  */
 public class PropPanelStereotype extends PropPanelModelElement {
+
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 8038077991746618130L;
 
     private static UMLGeneralizableElementSpecializationListModel
         specializationListModel =
@@ -68,7 +71,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
     private JScrollPane tagDefinitionScroll;
 
     /**
-     * Construct new stereotype properties tab
+     * Construct a stereotype properties panel.
      */
     public PropPanelStereotype() {
         super("Stereotype", lookupIcon("Stereotype"),
@@ -94,7 +97,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         
         add(getNamespaceVisibilityPanel());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.generalizations"),
                 getGeneralizationScroll());

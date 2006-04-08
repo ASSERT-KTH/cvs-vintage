@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.40 2006/03/09 18:47:14 mvw Exp $
+// $Id: PropPanelAssociationRole.java,v 1.41 2006/04/08 22:36:07 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,16 +45,18 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelAssociationRole extends PropPanelAssociation {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 7693759162647306494L;
+
+    /**
+     * Construct a property panel for an AssociationRole.
      */
     public PropPanelAssociationRole() {
         super("Association Role", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-		 getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
 		 getNamespaceScroll());
 
@@ -67,7 +69,7 @@ public class PropPanelAssociationRole extends PropPanelAssociation {
                 Translator.localize("label.association.navigate.tooltip"), 
                 baseComboBox));
 
-        addSeperator();
+        addSeparator();
 
         JList assocEndList = new UMLLinkedList(
                 new UMLAssociationRoleAssociationEndRoleListModel());

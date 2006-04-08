@@ -1,4 +1,4 @@
-// $Id: PropPanelLinkEnd.java,v 1.10 2005/11/13 11:01:16 linus Exp $
+// $Id: PropPanelLinkEnd.java,v 1.11 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,19 +41,20 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelLinkEnd extends PropPanelModelElement {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 666929091194719951L;
+
+    /**
+     * Contruct a property panel for a Link End.
      */
     public PropPanelLinkEnd() {
-        super("Linkend", lookupIcon("AssociationEnd"),
+        super("Link End", lookupIcon("AssociationEnd"),
                 ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("label.name"),
                 getNameTextField());
 
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
-
-        addSeperator();
+        addSeparator();
 
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionDeleteSingleModelElement());

@@ -1,4 +1,4 @@
-// $Id: PropPanelInteraction.java,v 1.32 2005/09/08 18:22:54 mkl Exp $
+// $Id: PropPanelInteraction.java,v 1.33 2006/04/08 22:36:07 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,16 +43,18 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelInteraction extends PropPanelModelElement {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 8965284617441796326L;
+
+    /**
+     * Construct a property panel for an Interaction.
      */
     public PropPanelInteraction() {
         super("Interaction", ConfigLoader.getTabPropsOrientation());
 
     	addField(Translator.localize("label.name"),
                 getNameTextField());
-    	addField(Translator.localize("label.stereotype"),
-		 getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
 		 getNamespaceScroll());
 
@@ -63,7 +65,7 @@ public class PropPanelInteraction extends PropPanelModelElement {
         addField(Translator.localize("label.context"),
                 contextScroll);
 
-        addSeperator();
+        addSeparator();
 
         JList messagesList =
 	    new UMLLinkedList(new UMLInteractionMessagesListModel());

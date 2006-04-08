@@ -1,4 +1,4 @@
-// $Id: PropPanelStateMachine.java,v 1.32 2006/03/17 19:45:30 mvw Exp $
+// $Id: PropPanelStateMachine.java,v 1.33 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,11 @@ import org.tigris.swidgets.Orientation;
 public class PropPanelStateMachine extends PropPanelModelElement {
 
     /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -2157218581140487530L;
+
+    /**
      * Constructor for PropPanelStateMachine.
      */
     public PropPanelStateMachine() {
@@ -72,8 +77,6 @@ public class PropPanelStateMachine extends PropPanelModelElement {
     protected void initialize() {
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
@@ -93,7 +96,7 @@ public class PropPanelStateMachine extends PropPanelModelElement {
         addField(Translator.localize("label.top-state"),
                 new JScrollPane(topList));
 
-        addSeperator();
+        addSeparator();
 
         // the transitions the statemachine has
         JList transitionList = new UMLLinkedList(

@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.44 2005/11/13 11:01:20 linus Exp $
+// $Id: PropPanelEvent.java,v 1.45 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,12 +70,10 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceScroll());
 
-        addSeperator();
+        addSeparator();
         addField(Translator.localize("label.parameters"),
                 getParameterScroll());
         JList transitionList = new UMLLinkedList(
@@ -84,7 +82,7 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
         addField(Translator.localize("label.transition"),
                 new JScrollPane(transitionList));
 
-        addSeperator();
+        addSeparator();
 
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionNewStereotype());

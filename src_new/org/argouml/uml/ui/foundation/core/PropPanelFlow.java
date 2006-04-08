@@ -1,4 +1,4 @@
-// $Id: PropPanelFlow.java,v 1.16 2005/04/12 23:34:17 bobtarling Exp $
+// $Id: PropPanelFlow.java,v 1.17 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,12 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelFlow extends PropPanelRelationship {
 
     /**
-     * Constructor for PropPanelFlow.
+     * The serial version.
+     */
+    private static final long serialVersionUID = 2967789232647658450L;
+
+    /**
+     * Construct a property panel for Flow elements.
      */
     public PropPanelFlow() {
         super("Flow", ConfigLoader.getTabPropsOrientation());
@@ -46,13 +51,11 @@ public class PropPanelFlow extends PropPanelRelationship {
     private void initialize() {
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceScroll());
         addField(Translator.localize("label.constraints"),
                 getConstraintScroll());
 
-        addSeperator();
+        addSeparator();
     }
 }

@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.63 2006/02/14 14:02:01 mvw Exp $
+// $Id: PropPanelGeneralization.java,v 1.64 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,14 +44,18 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelGeneralization extends PropPanelModelElement {
 
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 2577361208291292256L;
+
     private JTextField discriminatorTextField;
 
     private static UMLDiscriminatorNameDocument discriminatorDocument =
         new UMLDiscriminatorNameDocument();
 
     /**
-     * The constructor.
-     *
+     * Construct a property panel for Generalization elements.
      */
     public PropPanelGeneralization() {
         super("Generalization",
@@ -60,17 +64,12 @@ public class PropPanelGeneralization extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
-
         addField(Translator.localize("label.discriminator"),
                 getDiscriminatorTextField());
-
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
-        addSeperator();
+        addSeparator();
 
         UMLGeneralizationParentListModel parentListModel =
             new UMLGeneralizationParentListModel();

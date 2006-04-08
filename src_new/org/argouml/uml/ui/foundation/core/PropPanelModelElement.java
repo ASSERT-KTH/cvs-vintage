@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.105 2006/03/17 17:58:55 mvw Exp $
+// $Id: PropPanelModelElement.java,v 1.106 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,13 +138,10 @@ public abstract class PropPanelModelElement extends PropPanel {
         this("ModelElement", null, ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
-
         addField(Translator.localize("label.namespace"),
                 getNamespaceScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.supplier-dependencies"),
                 getSupplierDependencyScroll());
@@ -155,7 +152,7 @@ public abstract class PropPanelModelElement extends PropPanel {
         addField(Translator.localize("label.target-flows"),
                 getTargetFlowScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.constraints"),
                 getConstraintScroll());
@@ -171,7 +168,7 @@ public abstract class PropPanelModelElement extends PropPanel {
      */
     public void navigateUp() {
         TargetManager.getInstance().setTarget(
-                Model.getUmlHelper().getOwner(getTarget()));
+                Model.getFacade().getModelElementContainer(getTarget()));
     }
 
 
@@ -259,16 +256,6 @@ public abstract class PropPanelModelElement extends PropPanel {
                 this,
                 Translator.localize("label.namespace.navigate.tooltip"),
                 namespaceSelector);
-    }
-
-    /**
-     * Returns the stereotype selecter. This is a component which allows the
-     * user to select a single item as the stereotype.
-     *
-     * @return the stereotype selecter
-     */
-    protected JComponent getStereotypeSelector() {
-        return null;
     }
 
     /**

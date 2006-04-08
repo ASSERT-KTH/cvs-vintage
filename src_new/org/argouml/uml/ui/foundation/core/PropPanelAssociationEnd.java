@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.75 2006/03/23 21:13:26 mkl Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.76 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,11 @@ import org.tigris.swidgets.Orientation;
  * The properties panel for an association end.
  */
 public class PropPanelAssociationEnd extends PropPanelModelElement {
+
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = 9119453587506578751L;
 
     /**
      * The combobox that shows the type of this association end.
@@ -102,10 +107,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
 
     /**
      * The panel with the radiobuttons to set the visibility (public, protected,
-     * private) of this associationend. <p>
-     * TODO: There was a bug in NSUML where it equated the visibility of
-     * an AssociationEnd with the visibility of its associated element.
-     * Make sure that we are correctly following the UML spec. - tfm 20051109
+     * private) of this associationend.
      */
     private JPanel visibilityRadioButtonPanel;
 
@@ -184,8 +186,6 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
     protected void positionStandardControls() {
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
     }
 
     /**
@@ -197,7 +197,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         addField(Translator.localize("label.multiplicity"),
                 getMultiplicityComboBox());
 
-        addSeperator();
+        addSeparator();
 
         JPanel panel = createBorderPanel(Translator.localize(
                 "label.modifiers"));
@@ -212,7 +212,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
                 qualifiersScroll);
 
 
-        addSeperator();
+        addSeparator();
 
         add(aggregationRadioButtonpanel);
         add(changeabilityRadioButtonpanel);

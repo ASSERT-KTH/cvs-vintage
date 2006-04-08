@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.40 2005/11/13 11:01:20 linus Exp $
+// $Id: PropPanelTransition.java,v 1.41 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,8 +44,12 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelTransition extends PropPanelModelElement {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 7249233994894343728L;
+
+    /**
+     * Construct a new property panel for a Transition.
      */
     public PropPanelTransition() {
         super("Transition",
@@ -54,8 +58,6 @@ public class PropPanelTransition extends PropPanelModelElement {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         JList statemachineList = new UMLLinkedList(
                 new UMLTransitionStatemachineListModel());
         statemachineList.setVisibleRowCount(1);
@@ -66,7 +68,7 @@ public class PropPanelTransition extends PropPanelModelElement {
         addField(Translator.localize("label.state"),
                 new JScrollPane(stateList));
 
-        addSeperator();
+        addSeparator();
 
         JList sourceList =
             new UMLLinkedList(new UMLTransitionSourceListModel());

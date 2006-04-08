@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.72 2006/03/26 05:27:02 linus Exp $
+// $Id: PropPanelMessage.java,v 1.73 2006/04/08 22:36:07 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,16 +50,13 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelMessage extends PropPanelModelElement {
 
     /**
-     * The constructor.
-     *
+     * Construct a new property panel for a Message.
      */
     public PropPanelMessage() {
         super("Message", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         JList interactionList =
             new UMLLinkedList(new UMLMessageInteractionListModel());
         interactionList.setVisibleRowCount(1);
@@ -78,7 +75,7 @@ public class PropPanelMessage extends PropPanelModelElement {
         addField(Translator.localize("label.receiver"),
                 receiverScroll);
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.activator"),
         	 new UMLMessageActivatorComboBox(this,
@@ -109,7 +106,7 @@ public class PropPanelMessage extends PropPanelModelElement {
         extends AbstractActionNewModelElement {
 
         /**
-         * The constructor.
+         * Construct an action to add a new UML Action to the Message.
          */
         public ActionToolNewAction() {
             super("button.new-action");

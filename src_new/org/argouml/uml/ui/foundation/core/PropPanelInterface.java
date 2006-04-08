@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.60 2005/11/10 10:16:02 bobtarling Exp $
+// $Id: PropPanelInterface.java,v 1.61 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,28 +38,31 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelInterface extends PropPanelClassifier {
 
     /**
-     * The constructor.
+     * The serial version.
+     */
+    private static final long serialVersionUID = 849399652073446108L;
+
+    /**
+     * Construct a property panel for UML Interface elements.
      */
     public PropPanelInterface() {
 	super("Interface", ConfigLoader.getTabPropsOrientation());
 
 	addField(Translator.localize("label.name"), getNameTextField());
-	addField(Translator.localize("label.stereotype"),
-            getStereotypeSelector());
 	addField(Translator.localize("label.namespace"),
             getNamespaceSelector());
 
 	add(getModifiersPanel());
 	add(getNamespaceVisibilityPanel());
 
-	addSeperator();
+	addSeparator();
 
 	addField(Translator.localize("label.generalizations"),
             getGeneralizationScroll());
 	addField(Translator.localize("label.specializations"),
             getSpecializationScroll());
 
-	addSeperator();
+	addSeparator();
 
 	addField(Translator.localize("label.association-ends"),
             getAssociationEndScroll());

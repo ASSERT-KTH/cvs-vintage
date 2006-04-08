@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.52 2006/03/26 13:51:17 mvw Exp $
+// $Id: PropPanelComponent.java,v 1.53 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,12 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelComponent extends PropPanelClassifier {
 
     /**
-     * The constructor.
+     * The serial version.
+     */
+    private static final long serialVersionUID = 1551050121647608478L;
+
+    /**
+     * Construct a property panel for Component elements.
      */
     public PropPanelComponent() {
         super("Component",
@@ -50,20 +55,18 @@ public class PropPanelComponent extends PropPanelClassifier {
             ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
         add(getModifiersPanel());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.generalizations"),
                 getGeneralizationScroll());
         addField(Translator.localize("label.specializations"),
                 getSpecializationScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.client-dependencies"),
                 getClientDependencyScroll());

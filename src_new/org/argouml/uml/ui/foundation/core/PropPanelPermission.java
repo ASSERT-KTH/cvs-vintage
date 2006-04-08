@@ -1,4 +1,4 @@
-// $Id: PropPanelPermission.java,v 1.20 2005/09/08 18:55:14 mkl Exp $
+// $Id: PropPanelPermission.java,v 1.21 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,27 +36,28 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelPermission extends PropPanelDependency {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 5724713380091275451L;
+
+    /**
+     * Construct a property panel for UML Permission elements.
      */
     public PropPanelPermission() {
         super("Permission", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.suppliers"),
                 getSupplierScroll());
         addField(Translator.localize("label.clients"),
                 getClientScroll());
 
-        // TODO: add Mapping
         addAction(new ActionNavigateNamespace());
         addAction(new ActionDeleteSingleModelElement());
     }

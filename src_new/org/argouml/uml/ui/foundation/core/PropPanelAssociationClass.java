@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationClass.java,v 1.12 2005/11/13 11:01:18 linus Exp $
+// $Id: PropPanelAssociationClass.java,v 1.13 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,11 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelAssociationClass extends PropPanelClassifier {
 
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -7620821534700927917L;
+
     private JScrollPane attributeScroll;
 
     private JScrollPane operationScroll;
@@ -57,10 +62,8 @@ public class PropPanelAssociationClass extends PropPanelClassifier {
     private static UMLClassOperationListModel operationListModel =
             new UMLClassOperationListModel();
 
-    ////////////////////////////////////////////////////////////////
-    // contructors
     /**
-     * The constructor.
+     * Construct a property panel for AssociationClass elements.
      */
     public PropPanelAssociationClass() {
         super("AssociationClass", lookupIcon("AssociationClass"),
@@ -68,15 +71,13 @@ public class PropPanelAssociationClass extends PropPanelClassifier {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
         getModifiersPanel().add(new UMLClassActiveCheckBox());
         add(getModifiersPanel());
         add(getNamespaceVisibilityPanel());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.client-dependencies"),
                 getClientDependencyScroll());
@@ -93,7 +94,7 @@ public class PropPanelAssociationClass extends PropPanelClassifier {
         addField(Translator.localize("label.connections"),
                 assocEndScroll);
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.attributes"),
                 getAttributeScroll());

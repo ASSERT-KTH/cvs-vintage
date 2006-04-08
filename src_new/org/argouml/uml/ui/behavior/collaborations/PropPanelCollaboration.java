@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.29 2006/04/07 21:28:18 mvw Exp $
+// $Id: PropPanelCollaboration.java,v 1.30 2006/04/08 22:36:07 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,26 +35,25 @@ import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
 /**
- * Property panel for collaborations. This panel is not totally finished yet.
- * It is not possible at the moment to see any attributes or associations at the
- * panel except for name and stereotype. Since the other attributes are not
- * implemented correctly speaking in general terms, they are not implemented
- * in this class either.
+ * Property panel for collaborations. 
  *
  * @author jaap.branderhorst@xs4all.nl
  */
 public class PropPanelCollaboration extends PropPanelNamespace {
 
     /**
-     * Constructor for PropPanelCollaboration.
+     * The serial version.
+     */
+    private static final long serialVersionUID = 5642815840272293391L;
+
+    /**
+     * Construct a property panel for a Collaboration.
      */
     public PropPanelCollaboration() {
         super("Collaboration", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
@@ -72,7 +71,7 @@ public class PropPanelCollaboration extends PropPanelNamespace {
         addField(Translator.localize("label.represented-operation"),
             new JScrollPane(operationList));
 
-        addSeperator();
+        addSeparator();
 
         UMLLinkedList interactionList =
 	    new UMLLinkedList(new UMLCollaborationInteractionListModel());
@@ -86,7 +85,7 @@ public class PropPanelCollaboration extends PropPanelNamespace {
         addField(Translator.localize("label.constraining-elements"),
             new JScrollPane(constrainingList));
 
-        addSeperator();
+        addSeparator();
 
         // add the owned-elements field with ClassifierRoles and AssociationRoles
         addField(Translator.localize("label.owned-elements"),

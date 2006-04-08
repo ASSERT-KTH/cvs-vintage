@@ -1,4 +1,4 @@
-// $Id: PropPanelFinalState.java,v 1.19 2005/04/23 16:30:44 linus Exp $
+// $Id: PropPanelFinalState.java,v 1.20 2006/04/08 22:36:06 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,8 +35,12 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelFinalState extends AbstractPropPanelState {
 
     /**
-     * The constructor.
-     *
+     * The serial version.
+     */
+    private static final long serialVersionUID = 4111793068615402073L;
+
+    /**
+     * Construct a new property panel for a Final State.
      */
     public PropPanelFinalState() {
         super("Final State", lookupIcon("FinalState"),
@@ -44,15 +48,14 @@ public class PropPanelFinalState extends AbstractPropPanelState {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         addField(Translator.localize("label.entry"),
                 getEntryScroll());
-        // TODO: maybe we should add a doactivity
+        addField(Translator.localize("label.do-activity"),
+                getDoScroll());
 
-        addSeperator();
+        addSeparator();
 
         addField(Translator.localize("label.incoming"),
                 getIncomingScroll());
