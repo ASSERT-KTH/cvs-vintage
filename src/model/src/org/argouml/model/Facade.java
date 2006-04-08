@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.38 2006/03/29 06:55:16 tfmorris Exp $
+// $Id: Facade.java,v 1.39 2006/04/08 22:00:14 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1950,6 +1950,14 @@ public interface Facade {
      * @return the do activity
      */
     Object getDoActivity(Object handle);
+
+    /**
+     * The list of imported elements of the given package.
+     *
+     * @param pack package to retrieve from.
+     * @return A Collection with the imported elements.
+     */
+    Collection getImportedElements(Object pack);
 
     /**
      * Return the Links of a given Association.

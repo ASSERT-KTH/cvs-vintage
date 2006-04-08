@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.12 2006/04/08 00:04:06 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.13 2006/04/08 22:00:23 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1971,6 +1971,22 @@ class FacadeMDRImpl implements Facade {
      */
     public Object getImplementationLocation(Object handle) {
         return getContainer(handle);
+    }
+
+    /*
+     * @see org.argouml.model.Facade#getImportedElements(java.lang.Object)
+     */
+    public Collection getImportedElements(Object pack) {
+        if (!(pack instanceof UmlPackage)) {
+            return illegalArgumentCollection(pack);
+        }
+        try {
+            return ((UmlPackage) pack).getElementImport();
+            //TODO: or is it getImportedElement() ???
+        } catch (InvalidObjectException e) {
+            LOG.error("Queried a removed model element", e);
+            return Collections.unmodifiableCollection(Collections.EMPTY_LIST);
+        }
     }
 
     /**
