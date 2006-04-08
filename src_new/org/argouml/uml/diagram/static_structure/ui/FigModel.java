@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.23 2006/04/01 21:06:38 mvw Exp $
+// $Id: FigModel.java,v 1.24 2006/04/08 23:33:22 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.23 2006/04/01 21:06:38 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 

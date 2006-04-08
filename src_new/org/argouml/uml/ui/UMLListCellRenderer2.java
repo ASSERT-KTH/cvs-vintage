@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.35 2006/03/23 15:24:18 mkl Exp $
+// $Id: UMLListCellRenderer2.java,v 1.36 2006/04/08 23:33:23 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.35 2006/03/23 15:24:18 mkl Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;

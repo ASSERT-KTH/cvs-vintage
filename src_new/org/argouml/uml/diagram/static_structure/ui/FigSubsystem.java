@@ -1,4 +1,4 @@
-// $Id: FigSubsystem.java,v 1.19 2006/03/23 00:36:57 bobtarling Exp $
+// $Id: FigSubsystem.java,v 1.20 2006/04/08 23:33:22 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigSubsystem.java,v 1.19 2006/03/23 00:36:57 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
