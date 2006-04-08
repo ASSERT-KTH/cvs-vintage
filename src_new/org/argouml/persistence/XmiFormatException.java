@@ -1,5 +1,5 @@
-// $Id: VersionException.java,v 1.2 2006/04/08 23:31:19 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: XmiFormatException.java,v 1.1 2006/04/08 23:31:20 tfmorris Exp $
+// Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,17 +25,19 @@
 package org.argouml.persistence;
 
 /**
- * Exception indicating unsupported file version.
+ * Exception indicating some type of error reading an XMI file.
  * 
- * @author Bob Tarling
+ * @author Tom Morris
  */
-public class VersionException extends OpenException {
+public class XmiFormatException extends OpenException {
 
     /**
-     * Construct the exception the version information found.
-     * @param message the message
+     * Construct an XmiFormatException with a nested cause.
+     * 
+     * @param cause
      */
-    public VersionException(String message) {
-        super(message);
+    public XmiFormatException(Throwable cause) {
+        super(cause);
     }
+
 }

@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.19 2006/04/01 16:30:11 mvw Exp $
+// $Id: XMIParser.java,v 1.20 2006/04/08 23:31:20 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,8 +79,6 @@ public class XMIParser {
 
     private Collection elementsRead;
 
-    private String errorMessage;
-    
     /**
      * The constructor.
      *
@@ -179,9 +177,6 @@ public class XMIParser {
             }
             uUIDRefs = new HashMap(reader.getXMIUUIDToObjectMap());
         } catch (Exception ex) {
-            if (reader != null) {
-                errorMessage = reader.getErrorMessage();
-            }
             throw new OpenException(ex);
         }
         LOG.info("=======================================");
@@ -282,10 +277,6 @@ public class XMIParser {
      */
     public Collection getElementsRead() {
         return elementsRead;
-    }
-    
-    public String getErrorMessage() {
-        return errorMessage;
     }
 
     /**

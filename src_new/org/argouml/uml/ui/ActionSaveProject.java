@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.57 2006/03/13 19:45:34 mvw Exp $
+// $Id: ActionSaveProject.java,v 1.58 2006/04/08 23:31:19 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,8 +87,10 @@ public class ActionSaveProject extends AbstractAction {
     }
 
     /**
+     * Set the enabled state of the save action.
      * When we become enabled inform the user by highlighting the title bar
      * with an asterisk.
+     * @param enabled new state for save command
      */
     public void setEnabled(boolean enabled) {
         if (enabled == this.enabled) {
