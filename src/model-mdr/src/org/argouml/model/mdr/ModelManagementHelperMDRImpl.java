@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperMDRImpl.java,v 1.2 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: ModelManagementHelperMDRImpl.java,v 1.3 2006/04/08 00:04:51 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,8 +59,8 @@ class ModelManagementHelperMDRImpl implements ModelManagementHelper {
     /**
      * Logger.
      */
-    private static final Logger LOG = Logger.
-            getLogger(ModelManagementHelperMDRImpl.class);
+    private static final Logger LOG = Logger
+            .getLogger(ModelManagementHelperMDRImpl.class);
 
     /**
      * The model implementation.
