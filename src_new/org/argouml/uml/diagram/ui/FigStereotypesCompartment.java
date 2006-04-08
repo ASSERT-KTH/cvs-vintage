@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.19 2006/03/22 20:34:00 bobtarling Exp $
+// $Id: FigStereotypesCompartment.java,v 1.20 2006/04/08 22:19:24 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,10 @@ public class FigStereotypesCompartment extends FigCompartment {
             return;
         }
         
-        LOG.info("Populating stereotypes compartment for " + Model.getFacade().getName(modelElement));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Populating stereotypes compartment for "
+                    + Model.getFacade().getName(modelElement));
+        }
         
         int acounter = 1;
         Fig bigPort = this.getBigPort();
