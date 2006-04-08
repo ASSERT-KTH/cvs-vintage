@@ -1,4 +1,4 @@
-// $Id: UMLOperationSpecificationDocument.java,v 1.1 2006/04/07 23:51:20 tfmorris Exp $
+// $Id: UMLOperationSpecificationDocument.java,v 1.2 2006/04/08 22:34:22 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,14 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
 /**
- *
- * @author mkl
- *
+ * @author tfmorris
  */
 public class UMLOperationSpecificationDocument extends UMLPlainTextDocument {
+
+    /**
+     * The serial version.
+     */
+    private static final long serialVersionUID = -152721992761681537L;
 
     /**
      * Constructor.
@@ -46,7 +49,7 @@ public class UMLOperationSpecificationDocument extends UMLPlainTextDocument {
      */
     protected void setProperty(String text) {
         if (Model.getFacade().isAOperation(getTarget())) {
-            Model.getCommonBehaviorHelper().setSpecification(getTarget(), text);
+            Model.getCoreHelper().setSpecification(getTarget(), text);
         }
 
     }
