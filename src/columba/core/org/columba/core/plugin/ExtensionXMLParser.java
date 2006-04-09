@@ -42,6 +42,8 @@ public class ExtensionXMLParser {
 	private static final String XML_ATTRIBUTE_ENABLED = "enabled";
 
 	private static final String XML_ATTRIBUTE_CLASS = "class";
+	
+	private static final String XML_ATTRIBUTE_PARENT = "parent";
 
 	private static final String XML_ATTRIBUTE_ID = "id";
 
@@ -167,8 +169,8 @@ public class ExtensionXMLParser {
 	 * @param xmlResource
 	 * @return
 	 */
-	public Enumeration parseExtensionHandlerlist(String xmlResource) {
-		Vector vector = new Vector();
+	public Enumeration<ExtensionHandlerMetadata> parseExtensionHandlerlist(String xmlResource) {
+		Vector<ExtensionHandlerMetadata> vector = new Vector<ExtensionHandlerMetadata>();
 		XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(xmlResource));
 		xmlFile.load();
 
@@ -185,10 +187,10 @@ public class ExtensionXMLParser {
 			if (child.getName().equals("handler") == false)
 				continue;
 			String id = child.getAttribute(XML_ATTRIBUTE_ID);
-			String clazz = child.getAttribute(XML_ATTRIBUTE_CLASS);
+			String parent = child.getAttribute(XML_ATTRIBUTE_PARENT);
 
 			ExtensionHandlerMetadata metadata = new ExtensionHandlerMetadata(
-					id, clazz);
+					id, parent);
 
 			vector.add(metadata);
 		}

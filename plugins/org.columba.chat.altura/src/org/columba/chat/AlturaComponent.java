@@ -21,10 +21,10 @@ import java.io.InputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionExtensionHandler;
 
 /**
  * @author fdietz
@@ -52,8 +52,8 @@ public class AlturaComponent implements IComponentPlugin {
 			InputStream is = this.getClass().getResourceAsStream(
 					"/org/columba/chat/action/action.xml");
 
-			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
-					ActionExtensionHandler.NAME)).loadExternalExtensionsFromStream(metadata, is);
+			PluginManager.getInstance().getHandler(
+					IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION).loadExternalExtensionsFromStream(metadata, is);
 
 		} catch (PluginHandlerNotFoundException ex) {
 		}

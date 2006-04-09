@@ -25,13 +25,13 @@ import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.api.exception.PluginException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.logging.Logging;
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.command.ImportMessageCommand;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
-import org.columba.mail.plugin.ImportExtensionHandler;
 
 class MailboxImporter implements WizardModelListener {
 	protected DataModel data;
@@ -41,7 +41,7 @@ class MailboxImporter implements WizardModelListener {
 	}
 
 	public void wizardFinished(WizardModelEvent e) {
-		ImportExtensionHandler pluginHandler = (ImportExtensionHandler) data
+		IExtensionHandler pluginHandler = (IExtensionHandler) data
 				.getData("Plugin.handler");
 		AbstractMailboxImporter importer = null;
 		Object[] args = new Object[] { data.getData("Location.destination"),

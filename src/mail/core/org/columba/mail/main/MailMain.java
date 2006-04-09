@@ -28,6 +28,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.config.DefaultItem;
@@ -39,7 +40,6 @@ import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
@@ -86,17 +86,17 @@ public class MailMain implements IComponentPlugin {
 		renderer.addMimePartRenderer(new MultipartEncryptedRenderer());
 
 		// Init Plugins
-		PluginManager.getInstance().addHandlers(
+		/*PluginManager.getInstance().addHandlers(
 				"org/columba/mail/plugin/pluginhandler.xml");
 
 		try {
 			InputStream is = this.getClass().getResourceAsStream(
 					"/org/columba/mail/action/action.xml");
-			PluginManager.getInstance().getHandler(ActionExtensionHandler.NAME)
+			PluginManager.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION)
 					.loadExtensionsFromStream(is);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
-		}
+		}*/
 
 		
 		Runnable plugin = new SaveAllFoldersPlugin();

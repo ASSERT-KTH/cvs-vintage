@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<extensionlist>
- <extension id="MailComponent" class="org.columba.mail.main.MailMain" />
- <extension id="AddressbookComponent" class="org.columba.addressbook.main.AddressbookMain" />
-</extensionlist>

@@ -24,10 +24,10 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.dialog.DateChooserDialog;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.plugin.FilterExtensionHandler;
 
 public class DateCriteriaRow extends DefaultCriteriaRow implements
 		ActionListener {
@@ -39,7 +39,7 @@ public class DateCriteriaRow extends DefaultCriteriaRow implements
 
 	public static DateFormat dateFormat = DateFormat.getDateInstance();
 
-	public DateCriteriaRow(FilterExtensionHandler pluginHandler,
+	public DateCriteriaRow(IExtensionHandler pluginHandler,
 			CriteriaList criteriaList, FilterCriteria c) {
 		super(pluginHandler, criteriaList, c);
 	}

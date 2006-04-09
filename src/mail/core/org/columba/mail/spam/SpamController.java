@@ -22,10 +22,11 @@ import java.util.logging.Logger;
 import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.plugin.SpamExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 /**
  * High-level wrapper for the spam filter.
@@ -55,8 +56,8 @@ public class SpamController implements ISpamPlugin {
 	private SpamController() {
 
 		try {
-			SpamExtensionHandler handler = (SpamExtensionHandler) PluginManager
-					.getInstance().getHandler(SpamExtensionHandler.NAME);
+			IExtensionHandler handler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_SPAM);
 
 			IExtension extension = handler.getExtension("SpamAssassin");
 

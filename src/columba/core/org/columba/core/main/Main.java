@@ -55,8 +55,8 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ServiceExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.scripting.service.ServiceManager;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.StackProfiler;
@@ -138,12 +138,12 @@ public class Main {
 		File nativeDir;
 
 		String libDir;
-		if( OSInfo.isAMD64Bit() ) {
+		if (OSInfo.isAMD64Bit()) {
 			libDir = "amd64";
 		} else {
 			libDir = "lib";
 		}
-		
+
 		// Setup the path
 		// Platform maintainers: add your platform here
 		// see also initPlatformServices() method
@@ -256,10 +256,11 @@ public class Main {
 
 		// use heavy-weight popups to ensure they are always on top
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		
-		// keep track of active windows (used by dialogs which don't have a direct parent)
+
+		// keep track of active windows (used by dialogs which don't have a
+		// direct parent)
 		ActiveWindowTracker.class.getClass();
-		
+
 		// show splash screen
 		StartUpFrame frame = null;
 		if (showSplashScreen) {
@@ -312,7 +313,7 @@ public class Main {
 
 		profiler.push("plugins external");
 		// now load all available plugins
-		PluginManager.getInstance().initExternalPlugins();
+		//PluginManager.getInstance().initExternalPlugins();
 		profiler.pop("plugins external");
 
 		// hide splash screen
@@ -327,37 +328,19 @@ public class Main {
 			FrameManager.getInstance().openStoredViews();
 		}
 
-    /* initialize services before dismissing the splash screen */
-    ServiceExtensionHandler serviceHandler = null;
+		/* initialize services before dismissing the splash screen */
+		ServiceManager.getInstance().initServices();
 
-    try
-    {
-      serviceHandler = (ServiceExtensionHandler)PluginManager.getInstance().getHandler("org.columba.core.service");
-      serviceHandler.initServices();
-      ShutdownManager.getInstance().register(new Runnable()
-        {
-          public void run()
-          {
-            ServiceExtensionHandler serviceHandler = null;
-            try
-            {
-              serviceHandler = (ServiceExtensionHandler)PluginManager.getInstance().getHandler("org.columba.core.service");
-              serviceHandler.stopServices();
-              serviceHandler.disposeServices();
-            }
-            catch(PluginHandlerNotFoundException ex)
-            {
-              LOG.log(Level.SEVERE,"",ex);
-            }
-          }
-          
-        });
-    }
-    catch(PluginHandlerNotFoundException ex)
-    {
-      LOG.log(Level.SEVERE,"",ex);
-    }
-        
+		ShutdownManager.getInstance().register(new Runnable() {
+			public void run() {
+
+				ServiceManager.getInstance().stopServices();
+				ServiceManager.getInstance().disposeServices();
+
+			}
+
+		});
+
 		profiler.pop("frames");
 
 		// for ( int i=0; i<frameMediator.length; i++) {
@@ -374,10 +357,9 @@ public class Main {
 		ComponentManager.getInstance().postStartup();
 
 		profiler.pop("main");
-    
-    /* everything is up and running, start services */
-    if (serviceHandler != null)
-      serviceHandler.startServices();
+
+		/* everything is up and running, start services */
+		ServiceManager.getInstance().startServices();
 	}
 
 	/**

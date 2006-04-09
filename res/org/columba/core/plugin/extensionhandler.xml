@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE handlerlist SYSTEM "pluginhandler.dtd">
 
 <handlerlist>
  <handler id="org.columba.core.action" class="org.columba.core.pluginhandler.ActionExtensionHandler"/>

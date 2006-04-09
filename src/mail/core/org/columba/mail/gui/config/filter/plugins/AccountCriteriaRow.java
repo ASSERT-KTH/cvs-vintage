@@ -18,12 +18,12 @@ package org.columba.mail.gui.config.filter.plugins;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.plugin.FilterExtensionHandler;
 
 
 /**
@@ -38,7 +38,7 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
      * @param criteriaList the list containing criterias.
      * @param c the criteria for this filter.
      */
-    public AccountCriteriaRow(FilterExtensionHandler pluginHandler,
+    public AccountCriteriaRow(IExtensionHandler pluginHandler,
         CriteriaList criteriaList, FilterCriteria c) {
         super(pluginHandler, criteriaList, c);
     }

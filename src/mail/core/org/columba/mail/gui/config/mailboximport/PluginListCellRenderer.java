@@ -23,19 +23,20 @@ import javax.swing.UIManager;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.mail.plugin.ImportExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {
-	protected ImportExtensionHandler pluginHandler;
+	protected IExtensionHandler pluginHandler;
 
 	public PluginListCellRenderer() {
 		super();
 
 		try {
-			pluginHandler = (ImportExtensionHandler) PluginManager.getInstance()
-					.getHandler(ImportExtensionHandler.NAME);
+			pluginHandler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_IMPORT);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

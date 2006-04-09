@@ -25,11 +25,11 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.base.ComboMenu;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.plugin.FilterExtensionHandler;
 
 public class DefaultCriteriaRow implements IExtensionInterface {
 
@@ -45,13 +45,13 @@ public class DefaultCriteriaRow implements IExtensionInterface {
 
 	protected GridBagConstraints c = new GridBagConstraints();
 
-	FilterExtensionHandler pluginHandler;
+	IExtensionHandler pluginHandler;
 
 	protected int count;
 
 	private ComboMenu comboMenu;
 
-	public DefaultCriteriaRow(FilterExtensionHandler pluginHandler,
+	public DefaultCriteriaRow(IExtensionHandler pluginHandler,
 			CriteriaList criteriaList, FilterCriteria c) {
 		this.pluginHandler = pluginHandler;
 
@@ -130,7 +130,7 @@ public class DefaultCriteriaRow implements IExtensionInterface {
 	 * 
 	 * @return AbstractPluginHandler
 	 */
-	public FilterExtensionHandler getPluginHandler() {
+	public IExtensionHandler getPluginHandler() {
 		return pluginHandler;
 	}
 
@@ -140,7 +140,7 @@ public class DefaultCriteriaRow implements IExtensionInterface {
 	 * @param pluginHandler
 	 *            The pluginHandler to set
 	 */
-	public void setPluginHandler(FilterExtensionHandler pluginHandler) {
+	public void setPluginHandler(IExtensionHandler pluginHandler) {
 		this.pluginHandler = pluginHandler;
 	}
 

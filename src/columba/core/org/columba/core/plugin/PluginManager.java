@@ -19,6 +19,7 @@ package org.columba.core.plugin;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -65,7 +66,36 @@ public class PluginManager implements IPluginManager {
 	 */
 	private PluginManager() {
 		// load core plugin handlers
-		addHandlers("org/columba/core/plugin/pluginhandler.xml");
+		addHandlers("org/columba/core/plugin/extensionhandler.xml");
+
+		String path = "/org/columba/core/plugin/plugin.xml";
+		URL url = this.getClass().getResource(path);
+		try {
+			File file = new File(url.toURI());
+			addPlugin(file);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		addHandlers("org/columba/addressbook/plugin/extensionhandler.xml");
+		path = "/org/columba/addressbook/plugin/plugin.xml";
+		url = this.getClass().getResource(path);
+		try {
+			File file = new File(url.toURI());
+			addPlugin(file);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		addHandlers("org/columba/mail/plugin/extensionhandler.xml");
+		path = "/org/columba/mail/plugin/plugin.xml";
+		url = this.getClass().getResource(path);
+		try {
+			File file = new File(url.toURI());
+			addPlugin(file);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -123,50 +153,28 @@ public class PluginManager implements IPluginManager {
 			ExtensionHandlerMetadata metadata = (ExtensionHandlerMetadata) e
 					.nextElement();
 
-			IExtensionHandler handler = null;
-			try {
-				Class c = Class.forName(metadata.getClassName());
-				handler = (IExtensionHandler) c.newInstance();
-				addHandler(metadata.getId(), handler);
-			} catch (ClassNotFoundException ex) {
-				LOG.severe("Error while adding handler from " + xmlResource
-						+ ": " + ex.getMessage());
-				if (Logging.DEBUG)
-					ex.printStackTrace();
-			} catch (InstantiationException ex) {
-				LOG.severe("Error while adding handler from " + xmlResource
-						+ ": " + ex.getMessage());
-				if (Logging.DEBUG)
-					ex.printStackTrace();
-			} catch (IllegalAccessException ex) {
-				LOG.severe("Error while adding handler from " + xmlResource
-						+ ": " + ex.getMessage());
-				if (Logging.DEBUG)
-					ex.printStackTrace();
-			}
+			IExtensionHandler handler = new ExtensionHandler(metadata.getId(),
+					metadata.getParent());
+
+			addHandler(metadata.getId(), handler);
+
 		}
 	}
 
 	/**
+	 * This is using a <code>File</code> for historical reasons. This is
+	 * actually what the xml parser expects. It would be nice to change this
+	 * into using an <code>InputStream</code> instead.
+	 * 
 	 * @see org.columba.api.plugin.IPluginManager#addPlugin(java.io.File)
 	 */
-	public String addPlugin(File folder) {
-		LOG.fine("registering plugin: " + folder);
-
-		// load plugin.xml file
-		// skip if it doesn't exist
-		File xmlFile = new File(folder, FILENAME_PLUGIN_XML);
-
-		if (xmlFile == null || !xmlFile.exists()) {
-			return null;
-		}
-
+	public String addPlugin(File xmlFile) {
 		Hashtable hashtable = new Hashtable();
 
 		// parse "/plugin.xml" file
 		PluginMetadata pluginMetadata = new ExtensionXMLParser().parsePlugin(
 				xmlFile, hashtable);
-		pluginMetadata.setDirectory(folder);
+		pluginMetadata.setDirectory(xmlFile.getParentFile());
 
 		String id = pluginMetadata.getId();
 		pluginMap.put(id, pluginMetadata);
@@ -181,12 +189,12 @@ public class PluginManager implements IPluginManager {
 			// if we only initialize the core plugins, skip all unknown plugins
 			// (this is because the extension handlers still need to be
 			// registered)
-			if ((initCorePluginsOnly)
-					&& (extensionpointId.startsWith("org.columba.core") == false)) {
-
-				LOG.info("skipping all non-core extensions");
-				continue;
-			}
+//			if ((initCorePluginsOnly)
+//					&& (extensionpointId.startsWith("org.columba.core") == false)) {
+//
+//				LOG.info("skipping all non-core extensions");
+//				continue;
+//			}
 
 			Vector extensionVector = (Vector) hashtable.get(extensionpointId);
 
@@ -235,7 +243,17 @@ public class PluginManager implements IPluginManager {
 		// try to load all plugins
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
-			addPlugin(folder);
+
+			LOG.fine("registering plugin: " + folder);
+
+			File xmlFile = new File(folder, FILENAME_PLUGIN_XML);
+
+			if (xmlFile == null || !xmlFile.exists()) {
+				// skip if it doesn't exist
+				continue;
+			}
+
+			addPlugin(xmlFile);
 		}
 
 	}
@@ -254,7 +272,17 @@ public class PluginManager implements IPluginManager {
 		// try to load all plugins
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
-			addPlugin(folder);
+
+			LOG.fine("registering plugin: " + folder);
+
+			File xmlFile = new File(folder, FILENAME_PLUGIN_XML);
+
+			if (xmlFile == null || !xmlFile.exists()) {
+				// skip if it doesn't exist
+				continue;
+			}
+
+			addPlugin(xmlFile);
 		}
 
 	}

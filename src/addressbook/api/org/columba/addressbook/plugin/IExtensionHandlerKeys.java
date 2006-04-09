@@ -15,22 +15,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
+package org.columba.addressbook.plugin;
 
-import java.io.InputStream;
+public interface IExtensionHandlerKeys {
 
-import org.columba.core.plugin.ExtensionHandler;
-
-public class FilterActionUIExtensionHandler extends ExtensionHandler {
-	public static final String XML_RESOURCE = "/org/columba/mail/plugin/filter_actions_ui.xml";
-
-	public static final String NAME = "org.columba.mail.filteractionui";
-
-	public FilterActionUIExtensionHandler() {
-		super(NAME);
-
-		InputStream is = this.getClass().getResourceAsStream(XML_RESOURCE);
-		loadExtensionsFromStream(is);
-	}
+	public static final String ORG_COLUMBA_CONTACT_FOLDER = "org.columba.addressbook.folder";
+	public static final String ORG_COLUMBA_CONTACT_IMPORT = "rg.columba.addressbook.import";
 
 }

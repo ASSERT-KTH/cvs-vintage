@@ -52,6 +52,8 @@ import javax.swing.text.html.HTMLDocument;
 import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
 import org.columba.core.desktop.ColumbaDesktop;
@@ -61,7 +63,6 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.HTMLViewerExtensionHandler;
 import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -183,8 +184,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		IHTMLViewerPlugin plugin = null;
 		try {
 
-			HTMLViewerExtensionHandler handler = (HTMLViewerExtensionHandler) PluginManager
-					.getInstance().getHandler(HTMLViewerExtensionHandler.NAME);
+			IExtensionHandler handler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
 
 			IExtension extension = handler.getExtension(pluginId);
 			if (extension == null)

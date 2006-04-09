@@ -36,13 +36,14 @@ import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.action.AbstractSelectableAction;
 import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.toolbar.ToggleToolbarButton;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
@@ -75,7 +76,7 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 	 */
 	private boolean ignoreFormatAction = false;
 
-	private ActionExtensionHandler handler = null;
+	private IExtensionHandler handler = null;
 
 	/**
 	 * 
@@ -89,8 +90,8 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 		setFloatable(false);
 
 		try {
-			handler = (ActionExtensionHandler) PluginManager.getInstance()
-					.getHandler(ActionExtensionHandler.NAME);
+			handler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

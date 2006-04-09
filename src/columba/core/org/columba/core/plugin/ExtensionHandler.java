@@ -40,13 +40,17 @@ public class ExtensionHandler implements IExtensionHandler {
 			.getLogger("org.columba.core.plugin");
 
 	private String id;
-
+	private String parent;
+	
 	protected Hashtable map = new Hashtable();
 
 	/**
-	 * @param id
+	 * @param id		unique extension handler id
+	 * @param parent	unique id of this extension handlers parent, can be <code>null</code>
 	 */
-	public ExtensionHandler(String id) {
+	public ExtensionHandler(String id, String parent) {
+		if ( id == null ) throw new IllegalArgumentException("id == null");
+		
 		this.id = id;
 	}
 

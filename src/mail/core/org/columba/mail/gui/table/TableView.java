@@ -24,6 +24,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.gui.table.model.HeaderTableModel;
@@ -33,7 +34,7 @@ import org.columba.mail.gui.table.plugins.BasicHeaderRenderer;
 import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
 import org.columba.mail.gui.util.MailImageLoader;
-import org.columba.mail.plugin.TableRendererExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 import org.frapuccino.treetable.CustomTreeTableCellRenderer;
 import org.frapuccino.treetable.TreeTable;
 
@@ -48,7 +49,7 @@ public class TableView extends TreeTable {
 
 	private HeaderTableModel headerTableModel;
 
-	private TableRendererExtensionHandler handler;
+	private IExtensionHandler handler;
 
 	private TableModelSorter sorter;
 
@@ -66,9 +67,9 @@ public class TableView extends TreeTable {
 
 		// load plugin handler used for the columns
 		try {
-			handler = (TableRendererExtensionHandler) PluginManager
+			handler =  PluginManager
 					.getInstance().getHandler(
-							TableRendererExtensionHandler.NAME);
+							IExtensionHandlerKeys.ORG_COLUMBA_MAIL_TABLERENDERER);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}

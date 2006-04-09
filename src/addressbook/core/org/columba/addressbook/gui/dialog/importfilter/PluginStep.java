@@ -36,9 +36,9 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
-import org.columba.addressbook.plugin.ImportExtensionHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.gui.base.MultiLineLabel;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
@@ -46,14 +46,14 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 
 	private MultiLineLabel descriptionLabel;
 
-	private ImportExtensionHandler pluginHandler;
+	private IExtensionHandler pluginHandler;
 
 	public PluginStep(DataModel data) {
 		super(AddressbookResourceLoader.getString("dialog",
 				"addressbookimport", "plugin"), AddressbookResourceLoader
 				.getString("dialog", "addressbookimport", "plugin_description"));
 		this.data = data;
-		pluginHandler = (ImportExtensionHandler) data.getData("Plugin.handler");
+		pluginHandler = (IExtensionHandler) data.getData("Plugin.handler");
 	}
 
 	protected JComponent createComponent() {

@@ -23,13 +23,13 @@ import org.apache.commons.cli.Option;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
@@ -69,16 +69,16 @@ public class AddressbookMain implements IComponentPlugin {
 	 */
 	public void init() {
 		// init addressbook plugin handlers
-		PluginManager.getInstance().addHandlers(
-				"org/columba/addressbook/plugin/pluginhandler.xml");
+//		PluginManager.getInstance().addHandlers(
+//				"org/columba/addressbook/plugin/pluginhandler.xml");
 
-		try {
+	/*	try {
 			InputStream is = this.getClass().getResourceAsStream(
 					"/org/columba/addressbook/action/action.xml");
-			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
-					ActionExtensionHandler.NAME)).loadExtensionsFromStream(is);
+			 PluginManager.getInstance().getHandler(
+					IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION).loadExtensionsFromStream(is);
 		} catch (PluginHandlerNotFoundException ex) {
-		}
+		}*/
 
 		Runnable plugin = new SaveAllAddressbooksPlugin();
 		BackgroundTaskManager.getInstance().register(plugin);

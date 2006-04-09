@@ -29,9 +29,10 @@ import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.plugin.FolderExtensionHandler;
+import org.columba.addressbook.plugin.IExtensionHandlerKeys;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
@@ -103,11 +104,11 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 
 		Object[] args = { item };
 
-		FolderExtensionHandler handler = null;
+		IExtensionHandler handler = null;
 
 		try {
-			handler = (FolderExtensionHandler) PluginManager.getInstance()
-					.getHandler(FolderExtensionHandler.NAME);
+			handler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CONTACT_FOLDER);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

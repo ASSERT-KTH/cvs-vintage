@@ -18,16 +18,16 @@ package org.columba.mail.gui.config.filter.plugins;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.plugin.FilterExtensionHandler;
 
 public class BodyCriteriaRow extends DefaultCriteriaRow {
 	private JComboBox matchComboBox;
 
 	private JTextField textField;
 
-	public BodyCriteriaRow(FilterExtensionHandler pluginHandler,
+	public BodyCriteriaRow(IExtensionHandler pluginHandler,
 			CriteriaList criteriaList, FilterCriteria c) {
 		super(pluginHandler, criteriaList, c);
 	}

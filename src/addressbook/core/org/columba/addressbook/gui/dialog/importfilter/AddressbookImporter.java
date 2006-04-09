@@ -20,8 +20,8 @@ import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
-import org.columba.addressbook.plugin.ImportExtensionHandler;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 
 class AddressbookImporter implements WizardModelListener {
 	protected DataModel data;
@@ -31,7 +31,7 @@ class AddressbookImporter implements WizardModelListener {
 	}
 
 	public void wizardFinished(WizardModelEvent e) {
-		ImportExtensionHandler pluginHandler = (ImportExtensionHandler) data
+		IExtensionHandler pluginHandler =  (IExtensionHandler) data
 				.getData("Plugin.handler");
 		DefaultAddressbookImporter importer = null;
 		Object[] args = new Object[] { data.getData("Location.source"),

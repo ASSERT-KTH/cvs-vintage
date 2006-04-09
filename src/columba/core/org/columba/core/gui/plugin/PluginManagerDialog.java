@@ -52,6 +52,8 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.config.Config;
 import org.columba.core.gui.base.ButtonWithMnemonic;
@@ -60,7 +62,6 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ConfigExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
 /**
@@ -89,7 +90,7 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 
 	protected PluginTree table;
 
-	protected ConfigExtensionHandler configHandler;
+	protected IExtensionHandler configHandler;
 
 	protected PluginNode selectedNode;
 
@@ -99,8 +100,8 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 				"pluginmanager", "title"), true);
 
 		try {
-			configHandler = (ConfigExtensionHandler) PluginManager.getInstance()
-					.getHandler(ConfigExtensionHandler.NAME);
+			configHandler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -26,13 +26,14 @@ import javax.swing.JPanel;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.gui.base.ComboMenu;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.gui.config.filter.ActionList;
-import org.columba.mail.plugin.FilterActionExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 public class DefaultActionRow implements IExtensionInterface {
 	protected JPanel panel;
@@ -84,11 +85,11 @@ public class DefaultActionRow implements IExtensionInterface {
 
 		panel.setLayout(gridbag);
 
-		FilterActionExtensionHandler pluginHandler = null;
+		IExtensionHandler pluginHandler = null;
 
 		try {
-			pluginHandler = (FilterActionExtensionHandler) PluginManager
-					.getInstance().getHandler(FilterActionExtensionHandler.NAME);
+			pluginHandler = PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTION);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

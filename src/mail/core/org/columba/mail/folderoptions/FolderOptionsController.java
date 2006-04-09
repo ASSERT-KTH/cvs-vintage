@@ -15,8 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
+import java.util.Enumeration;
+
+import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
@@ -24,7 +28,7 @@ import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.TableController;
-import org.columba.mail.plugin.FolderOptionsExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 /**
  * Controller used by {@link TableController} to handle all folder-related
@@ -60,7 +64,7 @@ public class FolderOptionsController implements IFolderOptionsController {
 	/**
 	 * plugin handler for instanciating folder options plugins
 	 */
-	private FolderOptionsExtensionHandler handler;
+	private IExtensionHandler handler;
 
 	/**
 	 * Constructor
@@ -73,9 +77,8 @@ public class FolderOptionsController implements IFolderOptionsController {
 
 		// init plugin handler
 		try {
-			handler = (FolderOptionsExtensionHandler) PluginManager
-					.getInstance().getHandler(
-							FolderOptionsExtensionHandler.NAME);
+			handler = PluginManager.getInstance().getHandler(
+					IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FOLDEROPTIONS);
 		} catch (PluginHandlerNotFoundException e) {
 			// TODO (@author fdietz): show error dialoghere
 			e.printStackTrace();
@@ -115,13 +118,11 @@ public class FolderOptionsController implements IFolderOptionsController {
 	 */
 	public void load(IMailbox folder, int state) {
 		// get list of plugins
-		String[] ids = handler.getPluginIdList(state);
-
-		for (int i = 0; i < ids.length; i++) {
+		Enumeration e = handler.getExtensionEnumeration();
+		while (e.hasMoreElements()) {
+			IExtension extension = (IExtension) e.nextElement();
+			String stateString = extension.getMetadata().getAttribute("state");
 			try {
-				IExtension extension = handler.getExtension(ids[i]);
-				String stateString = extension.getMetadata().getAttribute(
-						"state");
 				AbstractFolderOptionsPlugin plugin = (AbstractFolderOptionsPlugin) extension
 						.instanciateExtension(new Object[] { mediator });
 
@@ -131,10 +132,10 @@ public class FolderOptionsController implements IFolderOptionsController {
 						&& (stateString.equals("after"))) {
 					plugin.loadOptionsFromXml(folder);
 				}
-			} catch (Exception e) {
-				// TODO (@author fdietz): add error dialog
-				e.printStackTrace();
+			} catch (PluginException e1) {
+				e1.printStackTrace();
 			}
+
 		}
 	}
 
@@ -160,13 +161,11 @@ public class FolderOptionsController implements IFolderOptionsController {
 	 */
 	public void load(int state) {
 		// get list of plugins
-		String[] ids = handler.getPluginIdList(state);
-
-		for (int i = 0; i < ids.length; i++) {
+		Enumeration e = handler.getExtensionEnumeration();
+		while (e.hasMoreElements()) {
+			IExtension extension = (IExtension) e.nextElement();
+			String stateString = extension.getMetadata().getAttribute("state");
 			try {
-				IExtension extension = handler.getExtension(ids[i]);
-				String stateString = extension.getMetadata().getAttribute(
-						"state");
 				AbstractFolderOptionsPlugin plugin = (AbstractFolderOptionsPlugin) extension
 						.instanciateExtension(new Object[] { mediator });
 
@@ -176,9 +175,9 @@ public class FolderOptionsController implements IFolderOptionsController {
 						&& (stateString.equals("after"))) {
 					plugin.loadOptionsFromXml(null);
 				}
-			} catch (Exception e) {
+			} catch (Exception e1) {
 				// TODO (@author fdietz): add error dialog
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
 		}
 	}
@@ -190,11 +189,11 @@ public class FolderOptionsController implements IFolderOptionsController {
 	 * found in options.xml and tree.xml:<br>
 	 * 
 	 * <pre>
-	 *        
 	 *         
-	 *           &lt;sorting column=&quot;Date&quot; order=&quot;true&quot; /&gt;
 	 *          
-	 *         
+	 *            &lt;sorting column=&quot;Date&quot; order=&quot;true&quot; /&gt;
+	 *           
+	 *          
 	 * </pre>
 	 * 
 	 * <p>

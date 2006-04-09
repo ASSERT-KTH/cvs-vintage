@@ -42,6 +42,7 @@ import javax.swing.JScrollPane;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.filter.FilterActionList;
@@ -51,8 +52,7 @@ import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.filter.MailFilterAction;
 import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
 import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
-import org.columba.mail.plugin.FilterActionExtensionHandler;
-import org.columba.mail.plugin.FilterActionUIExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 
 public class ActionList extends JPanel implements ActionListener, ItemListener {
@@ -140,13 +140,13 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 
 		panel.setLayout(gridbag);
 
-		FilterActionExtensionHandler pluginHandler = null;
-		FilterActionUIExtensionHandler pluginUIHandler = null;
+		IExtensionHandler pluginHandler = null;
+		IExtensionHandler pluginUIHandler = null;
 		try {
-			pluginHandler = (FilterActionExtensionHandler) PluginManager
-					.getInstance().getHandler(FilterActionExtensionHandler.NAME);
-			pluginUIHandler = (FilterActionUIExtensionHandler) PluginManager
-			.getInstance().getHandler(FilterActionUIExtensionHandler.NAME);
+			pluginHandler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTION);
+			pluginUIHandler =PluginManager
+			.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTIONUI);
 		} catch (PluginHandlerNotFoundException ex) {
 			if (Logging.DEBUG) {
 				ex.printStackTrace();

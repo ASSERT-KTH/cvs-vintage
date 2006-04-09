@@ -19,6 +19,7 @@ package org.columba.mail.filter;
 
 import org.columba.api.command.ICommand;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.Filter;
@@ -27,7 +28,6 @@ import org.columba.core.filter.FilterActionList;
 import org.columba.core.folder.IFolder;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.plugin.FilterActionExtensionHandler;
 
 /**
  * @author fdietz
@@ -43,7 +43,7 @@ public class FilterCompoundCommand extends CompoundCommand {
 		super();
 
 		// get plugin handler for filter actions
-		FilterActionExtensionHandler pluginHandler = (FilterActionExtensionHandler) PluginManager
+		IExtensionHandler pluginHandler =  PluginManager
 				.getInstance().getHandler("org.columba.mail.filteraction");
 
 		// get list of all filter actions

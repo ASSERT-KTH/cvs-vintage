@@ -37,10 +37,10 @@ import net.javaprog.ui.wizard.DefaultDataLookup;
 
 import org.columba.api.exception.PluginException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.logging.Logging;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
-import org.columba.mail.plugin.ImportExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
@@ -48,7 +48,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 
 	protected MultiLineLabel descriptionLabel;
 
-	private ImportExtensionHandler pluginHandler;
+	private IExtensionHandler pluginHandler;
 
 	public PluginStep(DataModel data) {
 		super(
@@ -56,7 +56,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 						"plugin"), MailResourceLoader.getString("dialog",
 						"mailboximport", "plugin_description"));
 		this.data = data;
-		pluginHandler = (ImportExtensionHandler) data.getData("Plugin.handler");
+		pluginHandler = (IExtensionHandler) data.getData("Plugin.handler");
 	}
 
 	protected JComponent createComponent() {

@@ -46,6 +46,8 @@ import org.columba.api.gui.frame.event.IContainerListener;
 import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.statusbar.IStatusBar;
 import org.columba.api.statusbar.IStatusBarExtension;
 import org.columba.core.command.TaskManager;
@@ -61,8 +63,6 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.Extension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionExtensionHandler;
-import org.columba.core.pluginhandler.StatusBarExtensionHandler;
 import org.columba.core.resourceloader.ImageLoader;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.drag.effects.EffectsManager;
@@ -261,8 +261,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 		setContentPane(m.getContentPane());
 
 		try {
-			StatusBarExtensionHandler handler = (StatusBarExtensionHandler) PluginManager
-					.getInstance().getHandler(StatusBarExtensionHandler.NAME);
+			IExtensionHandler handler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_STATUSBAR);
 			Enumeration e = handler.getExtensionEnumeration();
 			while (e.hasMoreElements()) {
 				Extension ext = (Extension) e.nextElement();
@@ -328,8 +328,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 		setContentPane(m.getContentPane());
 
 		try {
-			StatusBarExtensionHandler handler = (StatusBarExtensionHandler) PluginManager
-					.getInstance().getHandler(StatusBarExtensionHandler.NAME);
+			IExtensionHandler handler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_STATUSBAR);
 			Enumeration e = handler.getExtensionEnumeration();
 			while (e.hasMoreElements()) {
 				Extension ext = (Extension) e.nextElement();
@@ -546,8 +546,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 		new MenuXMLDecoder(mediator).extendMenuBar(menubar, is);
 
 		try {
-			ActionExtensionHandler handler = (ActionExtensionHandler) PluginManager
-					.getInstance().getHandler(ActionExtensionHandler.NAME);
+			IExtensionHandler handler = PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
 			Enumeration e = handler.getExternalExtensionsEnumeration();
 			while (e.hasMoreElements()) {
 				IExtension extension = (IExtension) e.nextElement();

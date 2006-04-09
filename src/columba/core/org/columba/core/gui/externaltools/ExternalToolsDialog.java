@@ -44,13 +44,14 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.DoubleClickListener;
 import org.columba.core.gui.base.InfoViewerDialog;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.resourceloader.ImageLoader;
 
@@ -70,7 +71,7 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
-	ExternalToolsExtensionHandler handler;
+	IExtensionHandler handler;
 
 	protected JButton helpButton;
 
@@ -94,8 +95,8 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 		setTitle("External Tools");
 
 		try {
-			handler = (ExternalToolsExtensionHandler) PluginManager.getInstance()
-					.getHandler(ExternalToolsExtensionHandler.NAME);
+			handler = PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_EXTERNALTOOLS);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

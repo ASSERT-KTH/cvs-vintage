@@ -23,22 +23,23 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ThemeExtensionHandler;
 
 /**
  * Renders UI themes.
  */
 public class ThemeComboBoxRenderer extends DefaultListCellRenderer {
-	protected ThemeExtensionHandler pluginHandler;
+	protected IExtensionHandler pluginHandler;
 
 	public ThemeComboBoxRenderer() {
 		super();
 
 		try {
-			pluginHandler = (ThemeExtensionHandler) PluginManager.getInstance()
-					.getHandler(ThemeExtensionHandler.NAME);
+			pluginHandler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

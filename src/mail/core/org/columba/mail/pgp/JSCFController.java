@@ -24,10 +24,10 @@ import java.util.logging.Logger;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.gui.externaltools.ExternalToolsManager;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SecurityItem;
 import org.waffel.jscf.JSCFConnection;
@@ -108,11 +108,11 @@ public class JSCFController {
 
 			// getting the path to gpg
 
-			ExternalToolsExtensionHandler handler = null;
+			IExtensionHandler handler = null;
 			String path = null;
 			try {
 				LOG.fine("try to get the handler");
-				handler = (ExternalToolsExtensionHandler) PluginManager
+				handler =  PluginManager
 						.getInstance().getHandler(
 								"org.columba.core.externaltools");
 				LOG.fine("recived Handler ... getting path from it");

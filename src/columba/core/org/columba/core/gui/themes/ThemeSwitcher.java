@@ -24,12 +24,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.base.OSInfo;
 import org.columba.core.config.Config;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ThemeExtensionHandler;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -62,8 +63,8 @@ public class ThemeSwitcher {
 		String pluginName = null;
 		try {
 			// get plugin-handler
-			ThemeExtensionHandler handler = (ThemeExtensionHandler) PluginManager
-					.getInstance().getHandler(ThemeExtensionHandler.NAME);
+			IExtensionHandler handler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
 
 			pluginName = themeConfig.getAttribute("name");
 

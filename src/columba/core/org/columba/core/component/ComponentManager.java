@@ -6,15 +6,16 @@ import org.apache.commons.cli.CommandLine;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.IPluginManager;
-import org.columba.core.pluginhandler.ComponentExtensionHandler;
 import org.columba.core.services.ServiceRegistry;
 
 public class ComponentManager implements IComponentPlugin {
 
 	private static ComponentManager instance = new ComponentManager();
 
-	private ComponentExtensionHandler extensionHandler;
+	private IExtensionHandler extensionHandler;
 
 	private ComponentManager() {
 		initDefaultPlugins();
@@ -24,7 +25,7 @@ public class ComponentManager implements IComponentPlugin {
 		return instance;
 	}
 
-	private ComponentExtensionHandler getExtensionHandler() {
+	private IExtensionHandler getExtensionHandler() {
 		if (extensionHandler == null) {
 			try {
 				// retrieve plugin manager instance
@@ -36,8 +37,8 @@ public class ComponentManager implements IComponentPlugin {
 					e.printStackTrace();
 				}
 
-				extensionHandler = (ComponentExtensionHandler) pm
-						.getHandler(ComponentExtensionHandler.NAME);
+				extensionHandler =  pm
+						.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_COMPONENT);
 			} catch (PluginHandlerNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -53,7 +54,7 @@ public class ComponentManager implements IComponentPlugin {
 		try {
 			component = (IComponentPlugin) extension.instanciateExtension(null);
 		} catch (Exception e) {
-			getExtensionHandler().handlePluginError(id);
+			e.printStackTrace();
 		}
 
 		return component;
@@ -141,8 +142,8 @@ public class ComponentManager implements IComponentPlugin {
 	}
 
 	private void initDefaultPlugins() {
-		getPlugin("MailComponent");
-		getPlugin("AddressbookComponent");
+		//getPlugin("MailComponent");
+		//getPlugin("AddressbookComponent");
 	}
 
 }

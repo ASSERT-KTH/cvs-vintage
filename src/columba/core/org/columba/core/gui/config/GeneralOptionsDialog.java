@@ -44,6 +44,8 @@ import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.base.ButtonWithMnemonic;
@@ -57,8 +59,6 @@ import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ConfigExtensionHandler;
-import org.columba.core.pluginhandler.ThemeExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
@@ -88,7 +88,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 	private String theme = null;
 
-	private ThemeExtensionHandler handler;
+	private IExtensionHandler handler;
 
 	// fonts
 	protected JCheckBox overwriteCheckBox;
@@ -117,7 +117,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 	protected JFrame frame;
 
-	protected ConfigExtensionHandler configHandler;
+	protected IExtensionHandler configHandler;
 
 	// HTTP proxy
 	protected JLabel proxyLabel;
@@ -139,16 +139,16 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		try {
 			// get theme plugin-handler
-			handler = (ThemeExtensionHandler) PluginManager.getInstance()
-					.getHandler(ThemeExtensionHandler.NAME);
+			handler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
 
 		try {
 			// get config plugin-handler
-			configHandler = (ConfigExtensionHandler) PluginManager
-					.getInstance().getHandler(ConfigExtensionHandler.NAME);
+			configHandler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}

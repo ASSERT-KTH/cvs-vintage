@@ -28,13 +28,14 @@ import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.action.AbstractSelectableAction;
 import org.columba.core.gui.action.CCheckBoxMenuItem;
 import org.columba.core.gui.base.CMenuItem;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -85,7 +86,7 @@ public class MenuXMLDecoder {
 
 	private static final String MENUBAR = "menubar";
 
-	private ActionExtensionHandler pluginHandler;
+	private IExtensionHandler pluginHandler;
 
 	private IFrameMediator mediator;
 
@@ -95,8 +96,8 @@ public class MenuXMLDecoder {
 		this.mediator = mediator;
 
 		try {
-			pluginHandler = (ActionExtensionHandler) PluginManager
-					.getInstance().getHandler(ActionExtensionHandler.NAME);
+			pluginHandler = PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

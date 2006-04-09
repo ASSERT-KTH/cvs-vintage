@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.api.command.IStatusObservable;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.base.ListTools;
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.Filter;
@@ -36,7 +37,7 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
-import org.columba.mail.plugin.FilterExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -130,8 +131,8 @@ public class DefaultSearchEngine {
 		AbstractFilter instance = null;
 
 		try {
-			FilterExtensionHandler handler = (FilterExtensionHandler) PluginManager
-					.getInstance().getHandler(FilterExtensionHandler.NAME);
+			IExtensionHandler handler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
 			IExtension extension = handler.getExtension(type);
 
 			instance = (AbstractFilter) extension.instanciateExtension(null);

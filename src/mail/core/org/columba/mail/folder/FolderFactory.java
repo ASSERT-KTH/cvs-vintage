@@ -25,10 +25,11 @@ import java.util.regex.Pattern;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.plugin.FolderExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 /**
  * Factory for creating subfolders. Implemented as a singelton. Use
@@ -43,7 +44,7 @@ public class FolderFactory {
 
 	private static FolderFactory instance;
 
-	private FolderExtensionHandler handler;
+	private IExtensionHandler handler;
 
 	// parent directory for mail folders
 	// for example: ".columba/mail/"
@@ -52,8 +53,8 @@ public class FolderFactory {
 
 	protected FolderFactory() throws PluginHandlerNotFoundException {
 		// Get the handler
-		handler = (FolderExtensionHandler) PluginManager.getInstance().getHandler(
-				FolderExtensionHandler.NAME);
+		handler = PluginManager.getInstance().getHandler(
+				IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FOLDER);
 
 	}
 

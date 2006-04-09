@@ -29,9 +29,10 @@ import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -46,11 +47,11 @@ public class ExternalToolsWizardLauncher {
 
 	public void launchWizard(final String pluginID, boolean firstTime) {
 		final AbstractExternalToolsPlugin plugin;
-		ExternalToolsExtensionHandler handler = null;
+		IExtensionHandler handler = null;
 
 		try {
-			handler = (ExternalToolsExtensionHandler) PluginManager.getInstance()
-					.getHandler(ExternalToolsExtensionHandler.NAME);
+			handler = PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_EXTERNALTOOLS);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

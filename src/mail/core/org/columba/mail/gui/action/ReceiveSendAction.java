@@ -27,9 +27,9 @@ import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
@@ -72,8 +72,8 @@ public class ReceiveSendAction extends AbstractColumbaAction {
 
 			Action sendAllAction;
 
-			IExtension extension = ((ActionExtensionHandler) PluginManager
-					.getInstance().getHandler(ActionExtensionHandler.NAME))
+			IExtension extension = PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION)
 					.getExtension("SendAll");
 			sendAllAction = (Action) extension
 					.instanciateExtension(new Object[] { getFrameMediator() });

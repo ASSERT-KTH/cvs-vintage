@@ -22,9 +22,10 @@ import javax.swing.JList;
 import javax.swing.UIManager;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
-import org.columba.mail.plugin.FilterExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 /**
  * @author frd
@@ -34,7 +35,7 @@ import org.columba.mail.plugin.FilterExtensionHandler;
  */
 
 public class CriteriaComboBoxRenderer extends DefaultListCellRenderer {
-	protected FilterExtensionHandler pluginHandler;
+	protected IExtensionHandler pluginHandler;
 
 	/**
 	 * 
@@ -43,8 +44,8 @@ public class CriteriaComboBoxRenderer extends DefaultListCellRenderer {
 		super();
 
 		try {
-			pluginHandler = (FilterExtensionHandler) PluginManager.getInstance()
-					.getHandler(FilterExtensionHandler.NAME);
+			pluginHandler = PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

@@ -44,13 +44,13 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.HTMLViewerExtensionHandler;
 import org.columba.mail.config.ComposerItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OptionsItem;
@@ -283,7 +283,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		selectedBrowserLabel = new JLabel("Message Renderer");
 		Vector<String> v = new Vector<String>();
 		try {
-			IExtensionHandler handler = PluginManager.getInstance().getHandler(HTMLViewerExtensionHandler.NAME);
+			IExtensionHandler handler = PluginManager.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
 			Enumeration e = handler.getExtensionEnumeration();
 			while (e.hasMoreElements()) {
 				IExtension ext = (IExtension) e.nextElement();

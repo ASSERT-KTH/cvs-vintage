@@ -37,10 +37,11 @@ import org.columba.api.exception.PluginException;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ConfigExtensionHandler;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
 /**
@@ -65,8 +66,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		// modal dialog
 		super((JFrame) null, true);
 
-		ConfigExtensionHandler h = (ConfigExtensionHandler) PluginManager
-				.getInstance().getHandler(ConfigExtensionHandler.NAME);
+		IExtensionHandler h =  PluginManager
+				.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
 
 		IExtension extension = h.getExtension(pluginId);
 		try {

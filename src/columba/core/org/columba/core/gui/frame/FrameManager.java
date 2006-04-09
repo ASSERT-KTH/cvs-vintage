@@ -34,11 +34,12 @@ import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IFrameManager;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.FrameExtensionHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 
@@ -68,7 +69,7 @@ public class FrameManager implements IFrameManager {
 	protected XmlElement defaultViews = Config.getInstance().get("views")
 			.getElement("/views/defaultviews");
 
-	protected FrameExtensionHandler handler;
+	protected IExtensionHandler handler;
 
 	private static FrameManager instance = new FrameManager();
 
@@ -87,8 +88,8 @@ public class FrameManager implements IFrameManager {
 
 		// get plugin handler for handling frames
 		try {
-			handler = (FrameExtensionHandler) PluginManager.getInstance()
-					.getHandler(FrameExtensionHandler.NAME);
+			handler = PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_FRAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}

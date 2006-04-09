@@ -19,6 +19,8 @@ package org.columba.core.gui.globalactions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
@@ -27,11 +29,13 @@ import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.gui.menu.IMenu;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.FrameExtensionHandler;
 
 /**
  * @author fdietz
@@ -41,7 +45,7 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 	private ButtonGroup group;
 
-	private FrameExtensionHandler handler;
+	private IExtensionHandler handler;
 
 	/**
 	 * @param controller
@@ -60,15 +64,15 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		boolean isManagedFrame = false;
 
 		try {
-			handler = (FrameExtensionHandler) PluginManager.getInstance()
-					.getHandler(FrameExtensionHandler.NAME);
+			handler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_FRAME);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
 
 		String[] managedFrames = null;
 		if (id != null) {
-			managedFrames = handler.getManagedFrames();
+			managedFrames = getManagedFrames(handler);
 			for (int i = 0; i < managedFrames.length; i++) {
 				if (id.equals(managedFrames[i]))
 					isManagedFrame = true;
@@ -91,6 +95,24 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 	}
 
+	public String[] getManagedFrames(IExtensionHandler handler) {
+
+		Vector result = new Vector();
+		Enumeration _enum = handler.getExtensionEnumeration();
+		while (_enum.hasMoreElements()) {
+			IExtension extension = (IExtension) _enum.nextElement();
+			String managed = extension.getMetadata().getAttribute("managed");
+			if (managed == null)
+				managed = "false";
+
+			if (managed.equals("true"))
+				result.add(extension.getMetadata().getId());
+
+		}
+
+		return (String[]) result.toArray(new String[0]);
+
+	}
 	/**
 	 * @return
 	 */

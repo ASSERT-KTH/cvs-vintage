@@ -28,10 +28,10 @@ import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.mail.plugin.ImportExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -45,10 +45,10 @@ public class ImportWizardLauncher {
     }
 
     public void launchWizard() {
-        final ImportExtensionHandler pluginHandler;
+        final IExtensionHandler pluginHandler;
 
         try {
-            pluginHandler = (ImportExtensionHandler) PluginManager.getInstance().getHandler(
+            pluginHandler =  PluginManager.getInstance().getHandler(
                     "org.columba.mail.import");
         } catch (PluginHandlerNotFoundException ex) {
             throw new RuntimeException(ex);

@@ -21,21 +21,21 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
 
-import org.columba.addressbook.plugin.ImportExtensionHandler;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {
-    protected ImportExtensionHandler pluginHandler;
+    protected IExtensionHandler pluginHandler;
 
     public PluginListCellRenderer() {
         super();
 
         try {
-            pluginHandler = (ImportExtensionHandler) PluginManager.getInstance().getHandler(
+            pluginHandler = PluginManager.getInstance().getHandler(
                     "org.columba.addressbook.import");
         } catch (PluginHandlerNotFoundException ex) {
         	ErrorDialog.createDialog(ex.getMessage(), ex);

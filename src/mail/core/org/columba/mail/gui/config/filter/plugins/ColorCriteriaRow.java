@@ -19,11 +19,11 @@ import java.awt.Color;
 
 import javax.swing.JComboBox;
 
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.base.ColorComboBox;
 import org.columba.core.gui.base.ColorItem;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.plugin.FilterExtensionHandler;
 
 /**
  * A criteria row for Color filter.
@@ -47,7 +47,7 @@ public class ColorCriteriaRow extends DefaultCriteriaRow {
 	 * @param c
 	 *            the filter criteria to load/save data
 	 */
-	public ColorCriteriaRow(FilterExtensionHandler pluginHandler,
+	public ColorCriteriaRow(IExtensionHandler pluginHandler,
 			CriteriaList criteriaList, FilterCriteria c) {
 		super(pluginHandler, criteriaList, c);
 	}

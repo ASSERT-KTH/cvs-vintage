@@ -18,10 +18,10 @@ package org.columba.mail.gui.config.filter.plugins;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.plugin.FilterExtensionHandler;
 
 public class CustomHeaderfieldCriteriaRow extends DefaultCriteriaRow {
 	private JComboBox matchComboBox;
@@ -30,7 +30,7 @@ public class CustomHeaderfieldCriteriaRow extends DefaultCriteriaRow {
 
 	private JTextField headerTextField;
 
-	public CustomHeaderfieldCriteriaRow(FilterExtensionHandler pluginHandler,
+	public CustomHeaderfieldCriteriaRow(IExtensionHandler pluginHandler,
 			CriteriaList criteriaList, FilterCriteria c) {
 		super(pluginHandler, criteriaList, c);
 	}

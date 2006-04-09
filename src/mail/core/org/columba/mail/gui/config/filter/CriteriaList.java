@@ -40,6 +40,7 @@ import javax.swing.JScrollPane;
 
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
@@ -47,8 +48,7 @@ import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
-import org.columba.mail.plugin.FilterExtensionHandler;
-import org.columba.mail.plugin.FilterUIExtensionHandler;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 
 public class CriteriaList extends JPanel implements ActionListener,
@@ -59,18 +59,18 @@ public class CriteriaList extends JPanel implements ActionListener,
 
 	private JPanel panel;
 
-	private FilterExtensionHandler pluginHandler;
+	private IExtensionHandler pluginHandler;
 
-	private FilterUIExtensionHandler pluginUIHandler;
+	private IExtensionHandler pluginUIHandler;
 
 	public CriteriaList(Filter filter) {
 		super();
 
 		try {
-			pluginHandler = (FilterExtensionHandler) PluginManager.getInstance()
-					.getHandler(FilterExtensionHandler.NAME);
-			pluginUIHandler = (FilterUIExtensionHandler) PluginManager
-					.getInstance().getHandler(FilterUIExtensionHandler.NAME);
+			pluginHandler =  PluginManager.getInstance()
+					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
+			pluginUIHandler =  PluginManager
+					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERUI);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}
