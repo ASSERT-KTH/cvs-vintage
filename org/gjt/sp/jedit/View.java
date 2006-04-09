@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.128 2006/03/03 16:18:05 ezust Exp $
+ * @version $Id: View.java,v 1.129 2006/04/09 03:57:32 vanza Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1380,7 +1380,7 @@ public class View extends JFrame implements EBComponent
 	private String getSplitConfig()
 	{
 		StringBuffer splitConfig = new StringBuffer();
-		
+
 		if(splitPane != null)
 			getSplitConfig(splitPane,splitConfig);
 		else
@@ -1390,7 +1390,7 @@ public class View extends JFrame implements EBComponent
 				getBuffer().getPath()));
 			splitConfig.append("\" buffer");
 		}
-		
+
 		return splitConfig.toString();
 	} //}}}
 
@@ -1451,7 +1451,7 @@ public class View extends JFrame implements EBComponent
 			// this should never throw an exception.
 			throw new InternalError();
 		}
-		
+
 		dockableWindowManager.revalidate();
 		dockableWindowManager.repaint();
 	} //}}}
@@ -1785,6 +1785,8 @@ loop:		for(;;)
 	{
 		public void windowActivated(WindowEvent evt)
 		{
+			boolean editPaneChanged =
+				(jEdit.getActiveView() != View.this);
 			jEdit.setActiveView(View.this);
 
 			// People have reported hangs with JDK 1.4; might be
@@ -1797,6 +1799,12 @@ loop:		for(;;)
 					jEdit.checkBufferStatus(View.this);
 				}
 			});
+
+			if (editPaneChanged)
+			{
+				EditBus.send(new ViewUpdate(View.this,ViewUpdate
+					.EDIT_PANE_CHANGED));
+			}
 		}
 
 		public void windowClosing(WindowEvent evt)
