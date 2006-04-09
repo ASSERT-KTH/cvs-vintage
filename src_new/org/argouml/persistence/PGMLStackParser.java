@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.19 2006/04/07 23:57:48 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.20 2006/04/09 00:41:31 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -154,7 +154,7 @@ public class PGMLStackParser
         // http://argouml.tigris.org/issues/show_bug.cgi?id=4021 have been
 	// resolved
 
-        //super.setAttrs(f, attrList);
+        super.setAttrs(f, attrList);
 
         String name = attrList.getValue("name");
         if (name != null && !name.equals("")) {
@@ -164,7 +164,7 @@ public class PGMLStackParser
         setCommonAttrs(f, attrList);
 
         String href = attrList.getValue("href");
-        if (href != null && !href.equals("") && !(f instanceof FigEdgeNote)) {
+        if (href != null && !href.equals("")) {
             Object modelElement = findOwner(href);
             if (modelElement == null) {
                 LOG.error("Can't find href of " + href);
@@ -174,7 +174,7 @@ public class PGMLStackParser
             if (f.getOwner() != modelElement) {
                 f.setOwner(modelElement);
             } else {
-                LOG.info("Ignoring href on " + f.getClass().getName()
+                LOG.debug("Ignoring href on " + f.getClass().getName()
 			 + " as it's already set");
             }
         }
