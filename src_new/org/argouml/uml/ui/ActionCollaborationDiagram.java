@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.48 2006/03/11 21:47:59 linus Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.49 2006/04/09 15:04:49 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,26 +48,25 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         super("action.collaboration-diagram");
     }
 
-    /**
+    /*
      * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(Object)
      */
     public UMLDiagram createDiagram(Object namespace) {
-        if (!Model.getFacade().isANamespace(namespace)) {
-            LOG.error("No namespace as argument");
-            LOG.error(namespace);
-            throw new IllegalArgumentException(
-                "The argument " + namespace + "is not a namespace.");
-        }
+        /* Given Namespace is ignored. 
+         * TODO: do not extend ActionAddDiagram. */
         Object target = TargetManager.getInstance().getModelTarget();
         Object collaboration = null;
         if (Model.getFacade().isAOperation(target)) {
+            Object ns = Model.getFacade().getNamespace(
+                    Model.getFacade().getOwner(target));
             collaboration =
                 Model.getCollaborationsFactory()
-                        .buildCollaboration(namespace, target);
+                        .buildCollaboration(ns, target);
         } else if (Model.getFacade().isAClassifier(target)) {
+            Object ns = Model.getFacade().getNamespace(target);
             collaboration =
-                Model.getCollaborationsFactory()
-                        .buildCollaboration(namespace, target);
+                Model.getCollaborationsFactory().buildCollaboration(
+                        ns, target);
         }
         return (UMLDiagram) DiagramFactory.getInstance().createDiagram(
                 UMLCollaborationDiagram.class,
