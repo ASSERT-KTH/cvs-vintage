@@ -41,7 +41,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.48 2005/05/12 21:35:36 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.49 2006/04/09 16:38:41 ezust Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -101,8 +101,6 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 		panel.add(Box.createHorizontalStrut(12));
 
-		GUIUtilities.requestFocus(this,filenameField);
-
 		ok = new JButton();
 		getRootPane().setDefaultButton(ok);
 
@@ -137,6 +135,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 		pack();
 		GUIUtilities.loadGeometry(this,"vfs.browser.dialog");
+		GUIUtilities.requestFocus(this,filenameField);
 		setVisible(true);
 	} //}}}
 
