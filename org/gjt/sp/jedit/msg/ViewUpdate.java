@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a view-related change occurs.
  * @author Slava Pestov
- * @version $Id: ViewUpdate.java,v 1.4 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: ViewUpdate.java,v 1.5 2006/04/09 04:02:21 vanza Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -48,6 +48,12 @@ public class ViewUpdate extends EBMessage
 	 * @since jEdit 4.1pre1
 	 */
 	public static final Object EDIT_PANE_CHANGED = "EDIT_PANE_CHANGED";
+
+	/**
+	 * Active view changed.
+	 * @since jEdit 4.3pre4
+	 */
+	public static final Object ACTIVATED = "VIEW_ACTIVATED";
 
 	//{{{ ViewUpdate constructor
 	/**

@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.129 2006/04/09 03:57:32 vanza Exp $
+ * @version $Id: View.java,v 1.130 2006/04/09 04:02:21 vanza Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1803,7 +1803,7 @@ loop:		for(;;)
 			if (editPaneChanged)
 			{
 				EditBus.send(new ViewUpdate(View.this,ViewUpdate
-					.EDIT_PANE_CHANGED));
+					.ACTIVATED));
 			}
 		}
 
