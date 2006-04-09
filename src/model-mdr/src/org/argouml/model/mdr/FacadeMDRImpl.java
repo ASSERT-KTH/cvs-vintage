@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.13 2006/04/08 22:00:23 mvw Exp $
+// $Id: FacadeMDRImpl.java,v 1.14 2006/04/09 00:43:15 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1980,9 +1980,30 @@ class FacadeMDRImpl implements Facade {
         if (!(pack instanceof UmlPackage)) {
             return illegalArgumentCollection(pack);
         }
+        Collection results = new ArrayList();
         try {
-            return ((UmlPackage) pack).getElementImport();
-            //TODO: or is it getImportedElement() ???
+            /*
+             * This code manually processes the ElementImports of a Package,
+             * but we need to check whether MDR already does something
+             * similar automatically as part of its namespace processing.
+             * - tfm - 20060408
+             */
+            Collection imports = ((UmlPackage) pack).getElementImport();
+            for (Iterator it = imports.iterator(); it.hasNext();) {
+                ElementImport ei = (ElementImport) it.next();
+                ModelElement element = ei.getImportedElement();
+                String alias = ei.getAlias();
+                VisibilityKind visibility = ei.getVisibility();
+                // TODO: Add code to do import processing
+                if (!(visibility.equals(element.getVisibility()))) {
+                    // redefine visibilty -- unless MDR does it automatically
+                }
+                if (alias != null && !("".equals(alias))) {
+                    // redefine name using alias -- or does MDR do this for us?
+                }
+                results.add(element);
+            }
+            return results;
         } catch (InvalidObjectException e) {
             LOG.error("Queried a removed model element", e);
             return Collections.unmodifiableCollection(Collections.EMPTY_LIST);
