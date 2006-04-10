@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.30 2006/04/08 22:36:07 tfmorris Exp $
+// $Id: PropPanelCollaboration.java,v 1.31 2006/04/10 18:58:44 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,9 @@ public class PropPanelCollaboration extends PropPanelNamespace {
 
         addSeparator();
 
-        // add the owned-elements field with ClassifierRoles and AssociationRoles
+        /* Add the owned-elements field 
+         * with ClassifierRoles and AssociationRoles:
+         */
         addField(Translator.localize("label.owned-elements"),
                 getOwnedElementsScroll());
         
