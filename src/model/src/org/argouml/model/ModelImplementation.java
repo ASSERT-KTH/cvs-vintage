@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.14 2005/11/12 23:53:37 linus Exp $
+// $Id: ModelImplementation.java,v 1.15 2006/04/10 18:47:20 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -142,6 +142,7 @@ public interface ModelImplementation {
      * Getter for EventAdapter.
      *
      * @return the event adapter
+     * @deprecated for 0.21.2 by tfmorris - use getPump and ModelEventPump methods
      */
     EventAdapter getEventAdapter();
 

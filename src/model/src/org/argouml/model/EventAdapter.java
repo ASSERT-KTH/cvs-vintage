@@ -1,4 +1,4 @@
-// $Id: EventAdapter.java,v 1.3 2005/06/06 09:57:11 linus Exp $
+// $Id: EventAdapter.java,v 1.4 2006/04/10 18:47:20 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,22 +29,23 @@ import java.beans.PropertyChangeListener;
 /**
  * Adapts events triggered by the underlying model into PropertyChangeEvents
  * for the application.<p>
- *
- * TODO: Explain what kind of events are considered, and how they are adapted.
- * Couldn't this be done in the ModelEventPump that also fires
- * PropertyChangeEvents?
- *
+ * 
  * @author Bob Tarling
+ * @deprecated for 0.21.2 by tfmorris - use ModelEventPump interface
  */
 public interface EventAdapter {
 
     /**
      * @param pcl the property change listener to be added
+     * @deprecated for 0.21.2 by tfmorris - use ModelEventPump.addClassModelEventListener
+     * @see ModelEventPump#addClassModelEventListener(PropertyChangeListener, Object, String[])
      */
     void addPropertyChangeListener(PropertyChangeListener pcl);
 
     /**
      * @param pcl the property change listener to be removed
+     * @deprecated for 0.21.2 by tfmorris - use ModelEventPump.removeClassModelEventListener
+     * @see ModelEventPump#removeClassModelEventListener(PropertyChangeListener, Object, String[])
      */
     void removePropertyChangeListener(PropertyChangeListener pcl);
 }

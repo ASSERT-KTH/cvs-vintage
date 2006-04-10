@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.22 2005/10/31 01:52:05 tfmorris Exp $
+// $Id: Model.java,v 1.23 2006/04/10 18:47:20 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -310,6 +310,7 @@ public final class Model {
      * Getter for EventAdapter.
      *
      * @return the event adapter
+     * @deprecated for 0.21.2 by tfmorris - use getPump() and ModelEventPump methods
      */
     public static EventAdapter getEventAdapter() {
         return impl.getEventAdapter();

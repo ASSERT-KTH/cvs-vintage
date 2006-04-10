@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.11 2005/11/12 23:53:37 linus Exp $
+// $Id: ModelEventPump.java,v 1.12 2006/04/10 18:47:20 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,34 +139,43 @@ public interface ModelEventPump {
     // Operations that work on classes of objects:
 
     /**
-     * Adds a listener that listens to all events that are named
-     * eventNames and that occur to instances of the given
-     * modelClass.<p>
-     *
-     * @param listener is the listener to add.
-     * @param modelClass is the given model class
-     * @param propertyNames The property names the listener wishes to
-     * receive events for
-     * @throws IllegalArgumentException if one of the arguments is null or if
-     * the modelClass is not a subclass of MBase.
-     * @throws IllegalStateException if the listener is already registred.
+     * Adds a listener that listens to all events that are named eventNames and
+     * that occur to instances of the given modelClass.
+     * <p>
+     * 
+     * @param listener
+     *            is the listener to add.
+     * @param modelClass
+     *            is the given model class
+     * @param propertyNames
+     *            The property names the listener wishes to receive events for.
+     *            If null or an empty array, all events will be returned.
+     * @throws IllegalArgumentException
+     *             if one of the arguments is null or if the modelClass is not a
+     *             valid metamodel class.
+     * @throws IllegalStateException
+     *             if the listener is already registred.
      */
     void addClassModelEventListener(PropertyChangeListener listener,
 				    Object modelClass,
 				    String[] propertyNames);
 
     /**
-     * Adds a listener that listens to the event that is named
-     * eventName and that occur to instances of the given
-     * modelClass.<p>
-     *
-     * @param listener is the listener to add.
-     * @param modelClass is the given model class
-     * @param propertyName The property name the listener wishes to
-     * receive events for
-     * @throws IllegalArgumentException if one of the arguments is null or if
-     * the modelClass is not a subclass of MBase.
-     * @throws IllegalStateException if the listener is already registred.
+     * Adds a listener that listens to the event that is named eventName and
+     * that occur to instances of the given modelClass.
+     * <p>
+     * 
+     * @param listener
+     *            is the listener to add.
+     * @param modelClass
+     *            is the given model class
+     * @param propertyName
+     *            The property name the listener wishes to receive events for.
+     * @throws IllegalArgumentException
+     *             if one of the arguments is null or if the modelClass is not a
+     *             valid metamodel class.
+     * @throws IllegalStateException
+     *             if the listener is already registred.
      */
     void addClassModelEventListener(PropertyChangeListener listener,
 				    Object modelClass,
