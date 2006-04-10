@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.23 2006/03/13 21:34:38 mvw Exp $
+// $Id: UMLExpressionBodyField.java,v 1.24 2006/04/10 16:59:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,8 @@ import org.argouml.ui.LookAndFeelMgr;
  *
  */
 public class UMLExpressionBodyField extends JTextArea
-    implements DocumentListener, UMLUserInterfaceComponent, PropertyChangeListener {
+    implements DocumentListener, UMLUserInterfaceComponent, 
+    PropertyChangeListener {
 
     /**
      * Logger.
@@ -84,6 +85,7 @@ public class UMLExpressionBodyField extends JTextArea
     public void targetReasserted() {
     }
 
+    /* TODO: This does not work - no event arrives. */
     public void propertyChange(PropertyChangeEvent event) {
         LOG.debug("UMLExpressionBodyField: propertySet" + event);
         update();
