@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.74 2006/04/08 22:36:06 tfmorris Exp $
+// $Id: PropPanelPackage.java,v 1.75 2006/04/10 17:55:35 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ScrollList;
@@ -141,20 +140,6 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addAction(new ActionNewStereotype());
         addAction(new ActionNewTagDefinition());
         addAction(new ActionDeleteSingleModelElement());
-    }
-
-    /**
-     * Add a package to the current package.
-     */
-    public void addPackage() {
-        Object target = getTarget();
-        if (Model.getFacade().isAPackage(target)) {
-            Object/*MPackage*/ newPackage =
-                Model.getModelManagementFactory().createPackage();
-            Object/*MPackage*/ currentPackage = target;
-            Model.getCoreHelper().addOwnedElement(currentPackage, newPackage);
-            TargetManager.getInstance().setTarget(newPackage);
-        }
     }
 
     /**
