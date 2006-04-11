@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.31 2006/04/10 18:58:44 mvw Exp $
+// $Id: PropPanelCollaboration.java,v 1.32 2006/04/11 18:34:47 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,8 @@ import javax.swing.JScrollPane;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
+import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelNamespace;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
@@ -57,19 +59,31 @@ public class PropPanelCollaboration extends PropPanelNamespace {
         addField(Translator.localize("label.namespace"),
                 getNamespaceSelector());
 
-        UMLLinkedList classifierList =
-	    new UMLLinkedList(
-                new UMLCollaborationRepresentedClassifierListModel());
-        classifierList.setVisibleRowCount(1);
+        // the represented classifier
+        UMLComboBox2 representedClassifierComboBox =
+            new UMLComboBox2(
+                     new UMLCollaborationRepresentedClassifierComboBoxModel(),
+                     new ActionSetRepresentedClassifierCollaboration());
         addField(Translator.localize("label.represented-classifier"),
-            new JScrollPane(classifierList));
+                new UMLComboBoxNavigator(
+                        this,
+                        Translator.localize(
+                                "label.represented-classifier."
+                                + "navigate.tooltip"),
+                        representedClassifierComboBox));
 
-        UMLLinkedList operationList =
-	    new UMLLinkedList(
-                new UMLCollaborationRepresentedOperationListModel());
-        operationList.setVisibleRowCount(1);
+        // the represented operation
+        UMLComboBox2 representedOperationComboBox =
+            new UMLComboBox2(
+                     new UMLCollaborationRepresentedOperationComboBoxModel(),
+                     new ActionSetRepresentedOperationCollaboration());
         addField(Translator.localize("label.represented-operation"),
-            new JScrollPane(operationList));
+                new UMLComboBoxNavigator(
+                        this,
+                        Translator.localize(
+                                "label.represented-operation."
+                                + "navigate.tooltip"),
+                        representedOperationComboBox));
 
         addSeparator();
 
