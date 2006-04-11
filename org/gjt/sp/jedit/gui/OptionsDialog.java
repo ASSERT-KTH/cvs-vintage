@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.42 2006/03/03 16:18:05 ezust Exp $
+ * @version $Id: OptionsDialog.java,v 1.43 2006/04/11 23:03:50 ezust Exp $
  * 
  */
 public abstract class OptionsDialog extends EnhancedDialog
@@ -304,6 +304,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 		JScrollPane scroller = new JScrollPane(paneTree,
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 			JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller.setMinimumSize(new Dimension(100, 0));
 		splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 			scroller,stage);
 		content.add(splitter, BorderLayout.CENTER);
