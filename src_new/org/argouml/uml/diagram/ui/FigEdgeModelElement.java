@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.159 2006/04/07 23:57:48 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.160 2006/04/11 17:08:09 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,7 @@ public abstract class FigEdgeModelElement
         ArgoNotationEventListener,
         Highlightable {
 
-    protected static final Logger LOG =
+    private static final Logger LOG =
         Logger.getLogger(FigEdgeModelElement.class);
 
     private DiElement diElement = null;

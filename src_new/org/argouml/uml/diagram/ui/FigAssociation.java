@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.110 2006/04/07 23:57:48 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.111 2006/04/11 17:08:09 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AddAssociationEvent;
@@ -86,7 +87,8 @@ public class FigAssociation extends FigEdgeModelElement {
     private FigText srcOrdering, destOrdering;
 
     private ArrowHead sourceArrowHead, destArrowHead;
-
+    
+    private final static Logger LOG = Logger.getLogger(FigAssociation.class);
 
 
     /**
