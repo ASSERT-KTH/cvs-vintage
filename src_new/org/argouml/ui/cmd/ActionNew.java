@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.2 2006/03/13 19:45:35 mvw Exp $
+// $Id: ActionNew.java,v 1.3 2006/04/11 22:40:09 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 
@@ -42,8 +43,7 @@ import org.argouml.ui.targetmanager.TargetManager;
  */
 class ActionNew extends AbstractAction {
 
-    ////////////////////////////////////////////////////////////////
-    // constructors
+    private static final long serialVersionUID = -3943153836514178100L;
 
     /**
      * The constructor.
@@ -64,6 +64,9 @@ class ActionNew extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+        Model.getPump().flushModelEvents();
+        Model.getPump().stopPumpingEvents();
+        Model.getPump().flushModelEvents();
         Project p = ProjectManager.getManager().getCurrentProject();
 
         if (!ProjectBrowser.getInstance().askConfirmationAndSave()) {
@@ -71,13 +74,14 @@ class ActionNew extends AbstractAction {
         }
 
         ProjectBrowser.getInstance().clearDialogs();
-	Designer.disableCritiquing();
-	Designer.clearCritiquing();
-	// clean the history
-	TargetManager.getInstance().cleanHistory();
-        p.remove();
-	p = ProjectManager.getManager().makeEmptyProject();
-	TargetManager.getInstance().setTarget(p.getDiagrams().toArray()[0]);
-	Designer.enableCritiquing();
+        Designer.disableCritiquing();
+        Designer.clearCritiquing();
+        // clean the history
+        TargetManager.getInstance().cleanHistory();
+            p.remove();
+        p = ProjectManager.getManager().makeEmptyProject();
+        TargetManager.getInstance().setTarget(p.getDiagrams().toArray()[0]);
+        Designer.enableCritiquing();
+        Model.getPump().startPumpingEvents();
     }
 } /* end class ActionNew */
