@@ -1,4 +1,4 @@
-// $Id: PerspectiveComboBox.java,v 1.6 2005/01/09 14:58:13 linus Exp $
+// $Id: PerspectiveComboBox.java,v 1.7 2006/04/11 14:56:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,10 @@ public class PerspectiveComboBox
 
     /** Creates a new instance of PerspectiveCombobox */
     public PerspectiveComboBox() {
-
+        /* The default nr of rows is 8, 
+         * but since we have 9 perspectives by default now, 
+         * setting to 9 is nicer. */
+        this.setMaximumRowCount(9);
         PerspectiveManager.getInstance().addListener(this);
     }
 
