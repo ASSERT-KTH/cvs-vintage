@@ -1,5 +1,5 @@
-// $Id: PropPanelModelElement.java,v 1.106 2006/04/08 22:36:06 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PropPanelModelElement.java,v 1.107 2006/04/12 18:57:38 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -250,7 +250,7 @@ public abstract class PropPanelModelElement extends PropPanel {
         if (namespaceSelector == null) {
             namespaceSelector = new UMLSearchableComboBox(
                     namespaceComboBoxModel,
-                    ActionSetModelElementNamespace.getInstance(), true);
+                    new ActionSetModelElementNamespace(), true);
         }
         return new UMLComboBoxNavigator(
                 this,
