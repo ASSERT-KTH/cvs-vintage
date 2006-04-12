@@ -1,4 +1,4 @@
-// $Id: ActionNewDiagram.java,v 1.1 2006/04/05 18:19:49 mvw Exp $
+// $Id: ActionNewDiagram.java,v 1.2 2006/04/12 21:21:20 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -76,4 +77,43 @@ abstract class ActionNewDiagram extends UndoableAction {
      * @return the new diagram
      */
     protected abstract UMLDiagram createDiagram();
+    
+    /**
+     * Utility function to create a collaboration.
+     * 
+     * @return a new collaboration
+     */
+    protected static Object createCollaboration() {
+        Project p = ProjectManager.getManager().getCurrentProject();
+        Object target = TargetManager.getInstance().getModelTarget();
+        Object collaboration = null;
+        Object namespace = p.getRoot(); // the root model
+        if (Model.getFacade().isAOperation(target)) {
+            Object ns = Model.getFacade().getNamespace(
+                    Model.getFacade().getOwner(target));
+            collaboration =
+                Model.getCollaborationsFactory().buildCollaboration(ns, target);
+        } else if (Model.getFacade().isAClassifier(target)) {
+            Object ns = Model.getFacade().getNamespace(target);
+            collaboration =
+                Model.getCollaborationsFactory().buildCollaboration(ns, target);
+        } else {
+            collaboration =
+                Model.getCollaborationsFactory().createCollaboration();
+            if (Model.getFacade().isANamespace(target)) {
+                namespace = target;
+            } else {
+                if (Model.getFacade().isAModelElement(target)) {
+                    Object ns = Model.getFacade().getNamespace(target);
+                    if (Model.getFacade().isANamespace(ns)) {
+                        namespace = ns;
+                    }
+                }
+            }
+            Model.getCoreHelper().setNamespace(collaboration, namespace);
+            Model.getCoreHelper().setName(collaboration, 
+                    "unattachedCollaboration");
+        }
+        return collaboration;
+    }
 }

@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.56 2006/03/25 21:33:52 tfmorris Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.57 2006/04/12 21:21:20 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,7 +158,7 @@ public class SequenceDiagramGraphModel
             return false;
         }
         return !getNodes().contains(node)
-          && Model.getFacade().getNamespace(node) == getCollaboration();
+              && Model.getFacade().getNamespace(node) == getCollaboration();
     }
 
     /**
@@ -495,9 +495,22 @@ public class SequenceDiagramGraphModel
 
     private Object getDefaultStateMachine() {
         if (defaultStateMachine == null) {
-            Object ns =
+            Object clsfr =
                 Model.getFacade().getRepresentedClassifier(getCollaboration());
-            Iterator it = Model.getFacade().getOwnedElements(ns).iterator();
+            if (clsfr == null) {
+                Object oper = Model.getFacade().getRepresentedOperation(
+                        getCollaboration());
+                if (oper != null) clsfr = Model.getFacade().getOwner(oper);
+            }
+            if (clsfr == null) {
+                Object ns = Model.getFacade().getNamespace(getCollaboration());
+                clsfr = Model.getCoreFactory().buildClass(ns);
+            }
+            if (clsfr == null) {
+                throw new IllegalStateException("Can not create a Classifier");
+            }
+            Collection c = Model.getFacade().getOwnedElements(clsfr);
+            Iterator it = c.iterator();
             while (it.hasNext()) {
                 Object child = it.next();
                 if (Model.getFacade().isAStateMachine(child)) {
@@ -507,7 +520,7 @@ public class SequenceDiagramGraphModel
             }
             if (defaultStateMachine == null) {
                 defaultStateMachine =
-                    Model.getStateMachinesFactory().buildStateMachine(ns);
+                    Model.getStateMachinesFactory().buildStateMachine(clsfr);
                 Model.getStateMachinesFactory()
                     .buildCompositeStateOnStateMachine(defaultStateMachine);
             }
