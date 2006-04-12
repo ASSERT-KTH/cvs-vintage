@@ -1,4 +1,4 @@
-// $Id: ExceptionDialog.java,v 1.11 2006/04/08 23:29:50 tfmorris Exp $
+// $Id: ExceptionDialog.java,v 1.12 2006/04/12 22:35:30 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,7 +118,8 @@ public class ExceptionDialog extends JDialog implements ActionListener {
             }
         });
 
-        PrintWriter pw = new PrintWriter(new StringWriter());
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
         
         if (highlightCause && e.getCause() != null) {
             // Instructions with clickable link for user
@@ -135,7 +136,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         e.printStackTrace(pw);
         // These shouldn't really be <br> instead of <p> elements, but 
         // the lines all get run together when pasted into a browser window.
-        textArea.setText(pw.toString().replaceAll("\n","<p>"));
+        textArea.setText(sw.toString().replaceAll("\n","<p>"));
         textArea.setCaretPosition(0);
         
         JPanel centerPanel = new JPanel(new BorderLayout());
