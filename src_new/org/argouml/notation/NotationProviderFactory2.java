@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.10 2006/03/27 21:32:10 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.11 2006/04/13 19:54:07 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,6 +105,12 @@ public final class NotationProviderFactory2 {
      * classifierrole.
      */
     public static final int TYPE_CLASSIFIERROLE = 13;
+    
+    /**
+     * TYPE_MESSAGE the text shown on a Message 
+     * in a Collaborations diagram.
+     */
+    public static final int TYPE_MESSAGE = 14;
 
     /**
      * defaultLanguage the Notation language used by default, i.e. UML

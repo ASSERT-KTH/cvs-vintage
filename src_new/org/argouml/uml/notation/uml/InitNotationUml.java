@@ -1,4 +1,4 @@
-// $Id: InitNotationUml.java,v 1.10 2006/03/27 21:32:10 mvw Exp $
+// $Id: InitNotationUml.java,v 1.11 2006/04/13 19:54:07 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,6 +70,8 @@ public class InitNotationUml {
                 name, CallStateNotationUml.class);
         npf.addNotationProvider(NotationProviderFactory2.TYPE_CLASSIFIERROLE,
                 name, ClassifierRoleNotationUml.class);
+        npf.addNotationProvider(NotationProviderFactory2.TYPE_MESSAGE,
+                name, MessageNotationUml.class);
 
         NotationProviderFactory2.getInstance().setDefaultNotation(name);
     }
