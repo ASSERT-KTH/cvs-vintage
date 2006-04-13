@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactoryMDRImpl.java,v 1.3 2006/03/25 00:50:29 tfmorris Exp $
+// $Id: StateMachinesFactoryMDRImpl.java,v 1.4 2006/04/13 03:00:42 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -390,7 +390,6 @@ public class StateMachinesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
     public Object buildSubmachineState(Object compositeState) {
         if (compositeState instanceof CompositeState) {
             SubmachineState state = (SubmachineState) createSubmachineState();
-            state.setStateMachine(null);
             state.setContainer((CompositeState) compositeState);
             return state;
         }
