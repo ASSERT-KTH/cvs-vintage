@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.10 2006/03/25 21:30:50 tfmorris Exp $
+// $Id: UmlFactory.java,v 1.11 2006/04/13 03:13:08 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,13 +121,4 @@ public interface UmlFactory {
      */
     boolean isRemoved(Object o);
 
-    /**
-     * Adds all interested (and centralized) listeners to the given
-     * modelelement handle.
-     *
-     * @deprecated by Linus Tolke as of 0.19.3. This is not used and poor
-     *       design so strive to remove it.
-     * @param handle the modelelement the listeners are interested in
-     */
-    void addListenersToModelElement(Object handle);
 }
