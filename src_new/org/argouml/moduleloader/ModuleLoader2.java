@@ -1,4 +1,4 @@
-// $Id: ModuleLoader2.java,v 1.11 2006/03/14 22:57:37 linus Exp $
+// $Id: ModuleLoader2.java,v 1.12 2006/04/13 16:47:23 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -560,6 +560,8 @@ public final class ModuleLoader2 {
 	} catch (IOException e) {
 	    LOG.debug("Unable to open " + file, e);
 	}
+
+        // TODO: use JarFile.entries() so manifest isn't mandatory
 
 	if (jarfile != null) {
 	    try {
