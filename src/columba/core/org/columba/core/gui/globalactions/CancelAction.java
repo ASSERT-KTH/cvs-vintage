@@ -27,6 +27,7 @@ import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class CancelAction extends AbstractColumbaAction implements
@@ -37,10 +38,10 @@ public class CancelAction extends AbstractColumbaAction implements
 				"menu_file_cancel"));
 
 		// small icon for JMenuItem
-		putValue(SMALL_ICON, ImageLoader.getSmallIcon("process-stop.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.CANCEL));
 
 		// big icon for JToolBar
-		putValue(LARGE_ICON, ImageLoader.getIcon("process-stop.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.CANCEL));
 
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
 

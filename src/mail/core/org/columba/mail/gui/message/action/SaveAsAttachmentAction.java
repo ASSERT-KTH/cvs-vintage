@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -53,8 +54,8 @@ public class SaveAsAttachmentAction extends AbstractColumbaAction {
 
 		// icons
 		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("stock_save_as-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save_as.png"));
+				.getSmallIcon(IconKeys.DOCUMENT_SAVE_AS));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.DOCUMENT_SAVE_AS));
 
 	}
 	
@@ -71,8 +72,8 @@ public class SaveAsAttachmentAction extends AbstractColumbaAction {
 
 		// icons
 		putValue(SMALL_ICON, ImageLoader
-				.getSmallImageIcon("stock_save_as-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save_as.png"));
+				.getSmallIcon(IconKeys.DOCUMENT_SAVE_AS));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.DOCUMENT_SAVE_AS));
 
 	}
 	

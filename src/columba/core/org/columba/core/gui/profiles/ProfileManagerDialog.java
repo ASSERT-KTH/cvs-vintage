@@ -54,6 +54,7 @@ import org.columba.core.gui.base.DoubleClickListener;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
@@ -127,7 +128,7 @@ public class ProfileManagerDialog extends JDialog implements ActionListener,
 						RESOURCE_PATH, "profiles", "header_title"),
 						GlobalResourceLoader.getString(RESOURCE_PATH,
 								"profiles", "header_description"), ImageLoader
-								.getImageIcon("system-config-users-32.png")),
+								.getIcon(IconKeys.USER)),
 				BorderLayout.NORTH);
 	}
 

@@ -20,17 +20,17 @@ import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 
 public class PriorityRenderer extends DefaultLabelRenderer {
-    private ImageIcon image1 = ImageLoader.getSmallImageIcon(
+    private ImageIcon image1 = MailImageLoader.getSmallIcon(
             "priority-high.png");
     private ImageIcon image2 = null;
     private ImageIcon image3 = null;
-    private ImageIcon image4 = ImageLoader.getSmallImageIcon("priority-low.png");
+    private ImageIcon image4 = MailImageLoader.getSmallIcon("priority-low.png");
 
     public PriorityRenderer() {
         super();

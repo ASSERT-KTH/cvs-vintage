@@ -53,6 +53,7 @@ import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -141,7 +142,7 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 								GlobalResourceLoader.getString(RESOURCE_PATH,
 										"externaltools", "header_description"),
 								ImageLoader
-										.getImageIcon("programs-development-32.png")),
+										.getIcon(IconKeys.PREFERENCES)),
 						BorderLayout.NORTH);
 
 		getContentPane().add(createPanel(), BorderLayout.CENTER);

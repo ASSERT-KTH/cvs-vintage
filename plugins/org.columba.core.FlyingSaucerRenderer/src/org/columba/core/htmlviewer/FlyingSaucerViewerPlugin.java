@@ -38,7 +38,7 @@ public class FlyingSaucerViewerPlugin extends JScrollPane implements
 
 	private XHTMLPanel panel = new XHTMLPanel();
 	
-	URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
+	URL baseUrl = DiskIO.getResourceURL("org/columba/core/icons/MISC/");
 
 	public FlyingSaucerViewerPlugin() {
 		super();

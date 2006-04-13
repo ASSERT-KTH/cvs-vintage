@@ -31,6 +31,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.base.UndoDocument;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class RedoAction extends AbstractColumbaAction implements
@@ -47,10 +48,10 @@ public class RedoAction extends AbstractColumbaAction implements
 				"menu_edit_redo_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-redo.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.EDIT_REDO));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getIcon("edit-redo.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.EDIT_REDO));
 
 		// disable toolbar text
 		setShowToolBarText(false);

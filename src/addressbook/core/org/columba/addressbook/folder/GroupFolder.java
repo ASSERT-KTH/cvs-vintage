@@ -28,6 +28,7 @@ import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroup;
 import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
@@ -44,7 +45,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	private IGroup group;
 
 	private ImageIcon groupImageIcon = ImageLoader
-			.getSmallImageIcon("group_small.png");
+	.getSmallIcon(IconKeys.USER);
 
 	/**
 	 * @param name
@@ -170,9 +171,9 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.AddressbookTreeNode#getIcon()
+	 * @see org.columba.addressbook.folder.AddressbookTreeNode#getCollapsedIcon()
 	 */
-	public ImageIcon getIcon() {
+	public ImageIcon getCollapsedIcon() {
 		return groupImageIcon;
 	}
 }

@@ -42,6 +42,7 @@ import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
@@ -210,7 +211,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 				new DialogHeaderPanel(MailResourceLoader.getString("dialog",
 						"filter", "header_title"), MailResourceLoader
 						.getString("dialog", "filter", "header_description"),
-						ImageLoader.getSmallImageIcon("system-search-32.png")),
+						ImageLoader.getIcon(IconKeys.SEARCH)),
 				BorderLayout.NORTH);
 	}
 
@@ -225,7 +226,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		searchButton = new JButton(MailResourceLoader.getString("dialog",
 				"filter", "search"));
-		searchButton.setIcon(ImageLoader.getImageIcon("stock_search-16.png"));
+		searchButton.setIcon(ImageLoader.getIcon(IconKeys.SEARCH));
 		searchButton.addActionListener(this);
 		searchButton.setActionCommand("SEARCH");
 		buttonPanel.add(searchButton);

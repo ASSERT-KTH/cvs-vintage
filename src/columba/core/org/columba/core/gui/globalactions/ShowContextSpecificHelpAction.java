@@ -25,7 +25,6 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.help.HelpManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
-import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Brings up helpful information for a specific item.
@@ -39,9 +38,7 @@ public class ShowContextSpecificHelpAction extends AbstractColumbaAction {
         super(frameMediator, GlobalResourceLoader.getString(null, null,
             "menu_help_context"));
 
-        putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_extended-help-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_extended-help.png"));
+       
         putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
             "menu_help_context_tooltip"));
 

@@ -27,18 +27,19 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.base.Lock;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
 public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
 		implements IFolder, IExtensionInterface {
-	protected final static ImageIcon collapsedIcon = ImageLoader
-			.getSmallImageIcon("folder.png");
+	protected final static ImageIcon expandedIcon = ImageLoader
+			.getSmallIcon(IconKeys.FOLDER_OPEN);
 
 	private static int nextFolderUid = 0;
 
-	protected ImageIcon icon = ImageLoader
-			.getSmallImageIcon("stock_book-16.png");
+	protected ImageIcon collapsedIcon = ImageLoader
+			.getSmallIcon(IconKeys.FOLDER);
 
 	protected FolderItem node;
 
@@ -84,8 +85,8 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
 		return node;
 	}
 
-	public ImageIcon getIcon() {
-		return icon;
+	public ImageIcon getCollapsedIcon() {
+		return collapsedIcon;
 	}
 
 	public final static FolderItem getDefaultItem(String className,
@@ -122,12 +123,9 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
 		return null;
 	}
 
-	public ImageIcon getCollapsedIcon() {
-		return collapsedIcon;
-	}
 
 	public ImageIcon getExpandedIcon() {
-		return collapsedIcon;
+		return expandedIcon;
 	}
 
 	/*

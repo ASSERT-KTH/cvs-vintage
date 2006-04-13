@@ -51,10 +51,6 @@ public class SubscribeFolderAction extends AbstractColumbaAction implements
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "menu_folder_subscribe").replaceAll("&", ""));
 
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("remotehost.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("remotehost.png"));
-
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S,
 				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));

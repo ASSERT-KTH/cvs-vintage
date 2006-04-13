@@ -21,10 +21,10 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.connectionstate.ConnectionStateImpl;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.smtp.command.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -49,7 +49,7 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
 				.replaceAll("&", ""));
 
 		// icon
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
+		putValue(LARGE_ICON, MailImageLoader.getIcon("send.png"));
 
 		// shortcut key
 		// no shortcut here, because F10 conflicts with system accelerator key

@@ -31,7 +31,6 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.gui.menu.IMenu;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
@@ -59,7 +58,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
 				"menu_view_sort"), "menu_view_sort");
 
-		setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
+	
 
 		((MailFrameMediator) controller).registerTreeSelectionListener(this);
 

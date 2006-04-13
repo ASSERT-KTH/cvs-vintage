@@ -18,15 +18,16 @@ package org.columba.mail.gui.config.subscribe;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.frapuccino.checkabletree.CheckableItemImpl;
 
 
 public class ListInfoTreeNode extends CheckableItemImpl {
-    protected final static ImageIcon collapsedIcon = ImageLoader.getSmallImageIcon(
-            "folder-closed.png");
-    protected final static ImageIcon expandedIcon = ImageLoader.getSmallImageIcon(
-            "folder-open.png");
+    protected final static ImageIcon collapsedIcon = ImageLoader.getSmallIcon(
+            IconKeys.FOLDER);
+    protected final static ImageIcon expandedIcon = ImageLoader.getSmallIcon(
+            IconKeys.FOLDER_OPEN);
     private String mailbox;
 
     /**
@@ -52,7 +53,7 @@ public class ListInfoTreeNode extends CheckableItemImpl {
     }
 
     /**
- * @see org.columba.core.gui.checkabletree.CheckableItem#getIcon()
+ * @see org.columba.core.gui.checkabletree.CheckableItem#getCollapsedIcon()
  */
     public Icon getIcon() {
         return collapsedIcon;

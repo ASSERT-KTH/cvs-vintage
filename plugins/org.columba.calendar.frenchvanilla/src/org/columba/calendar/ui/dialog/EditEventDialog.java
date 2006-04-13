@@ -48,6 +48,7 @@ import org.columba.calendar.ui.comp.TimePicker;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -124,7 +125,7 @@ public class EditEventDialog extends JDialog implements ActionListener {
 		getContentPane().add(
 				new DialogHeaderPanel("New Appointment",
 						"Edit Appointment Properties", ImageLoader
-								.getImageIcon("system-config-users-32.png")),
+								.getIcon(IconKeys.USER)),
 				BorderLayout.NORTH);
 		getContentPane().add(createPanel(), BorderLayout.CENTER);
 		getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);

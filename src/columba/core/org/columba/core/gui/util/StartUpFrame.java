@@ -32,7 +32,7 @@ public class StartUpFrame extends Frame {
         super();
 
         try {
-            window = new TransparentWindow(ImageLoader.getImageIcon(
+            window = new TransparentWindow(ImageLoader.getMiscIcon(
                         "startup.png"));
 
             Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();

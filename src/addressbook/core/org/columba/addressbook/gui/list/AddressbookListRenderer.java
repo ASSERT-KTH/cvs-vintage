@@ -28,13 +28,14 @@ import org.columba.addressbook.gui.util.ToolTipFactory;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 @SuppressWarnings({"serial","serial"})
 public class AddressbookListRenderer extends JLabel implements ListCellRenderer {
-	ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");
+	ImageIcon image1 = ImageLoader.getSmallIcon(IconKeys.EDIT_CONTACT);
 
-	ImageIcon image2 = ImageLoader.getSmallImageIcon("group_small.png");
+	ImageIcon image2 = ImageLoader.getSmallIcon(org.columba.core.resourceloader.IconKeys.USER);
 
 	public AddressbookListRenderer() {
 		setOpaque(true);

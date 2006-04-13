@@ -32,7 +32,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.ToggleMarkCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.gui.util.MailImageLoader;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

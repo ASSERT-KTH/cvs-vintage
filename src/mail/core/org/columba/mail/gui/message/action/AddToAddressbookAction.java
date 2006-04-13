@@ -25,6 +25,7 @@ import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.frame.MessageViewOwner;
@@ -55,7 +56,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 
 		setEnabled(false);
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.CONTACT_NEW));
 
 		// listen for URL changes
 		((MessageViewOwner) controller).getMessageController().addURLObserver(
@@ -73,7 +74,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 
 		setEnabled(true);
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.CONTACT_NEW));
 	}
 
 	/*

@@ -23,6 +23,7 @@ import javax.swing.KeyStroke;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 
@@ -38,10 +39,10 @@ public class FindAction extends AbstractColumbaAction {
 
         // small icon for menu
         putValue(SMALL_ICON,
-            ImageLoader.getSmallIcon("edit-find.png"));
+            ImageLoader.getSmallIcon(IconKeys.EDIT_FIND));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getIcon("edit-find.png"));
+        putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.EDIT_FIND));
 
         // shortcut key
         putValue(ACCELERATOR_KEY,

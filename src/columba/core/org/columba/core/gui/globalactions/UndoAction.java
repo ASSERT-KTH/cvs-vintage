@@ -31,6 +31,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.base.UndoDocument;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class UndoAction extends AbstractColumbaAction implements
@@ -47,10 +48,10 @@ public class UndoAction extends AbstractColumbaAction implements
 				"menu_edit_undo_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-undo.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.EDIT_UNDO));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getIcon("edit-undo.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.EDIT_UNDO));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z,

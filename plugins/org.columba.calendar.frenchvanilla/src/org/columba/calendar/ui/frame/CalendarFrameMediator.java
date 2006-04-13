@@ -30,6 +30,7 @@ import org.columba.api.gui.frame.IDock;
 import org.columba.api.gui.frame.IDockable;
 import org.columba.calendar.base.api.IActivity;
 import org.columba.calendar.model.api.IDateRange;
+import org.columba.calendar.resourceloader.ResourceLoader;
 import org.columba.calendar.ui.action.ActivityMovedAction;
 import org.columba.calendar.ui.action.EditActivityAction;
 import org.columba.calendar.ui.action.NewAppointmentAction;
@@ -42,7 +43,6 @@ import org.columba.calendar.ui.navigation.NavigationController;
 import org.columba.calendar.ui.navigation.api.DateRangeChangedEvent;
 import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
 import org.columba.calendar.ui.navigation.api.IDateRangeChangedListener;
-import org.columba.calendar.ui.util.ResourceLoader;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.DockFrameController;
 

@@ -253,21 +253,21 @@ public class AttachmentView extends IconPanel {
 		 */
 		public ImageIcon getImageIcon(String contentType, String contentSubtype) {
 			StringBuffer buf = new StringBuffer();
-			buf.append("mime/gnome-");
+			buf.append("gnome-");
 			buf.append(contentType);
 			buf.append("-");
 			buf.append(contentSubtype);
 			buf.append(".png");
 
-			ImageIcon icon = ImageLoader.getUnsafeImageIcon(buf.toString());
+			ImageIcon icon = ImageLoader.getMimetypeIcon(buf.toString());
 
 			if (icon == null) {
-				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-"
+				icon = ImageLoader.getMimetypeIcon("gnome-"
 						+ contentType + ".png");
 			}
 
 			if (icon == null) {
-				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-text.png");
+				icon = ImageLoader.getMimetypeIcon("gnome-text.png");
 			}
 
 			return icon;

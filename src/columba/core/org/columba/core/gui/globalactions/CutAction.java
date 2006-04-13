@@ -29,6 +29,7 @@ import javax.swing.TransferHandler;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class CutAction extends AbstractColumbaAction implements
@@ -45,10 +46,10 @@ public class CutAction extends AbstractColumbaAction implements
 				"menu_edit_cut_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-cut.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.EDIT_CUT));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getIcon("edit-cut.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.EDIT_CUT));
 
 		// disable toolbar text
 		setShowToolBarText(false);

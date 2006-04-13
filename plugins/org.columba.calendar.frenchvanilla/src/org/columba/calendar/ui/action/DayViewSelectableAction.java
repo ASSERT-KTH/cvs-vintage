@@ -20,8 +20,8 @@ package org.columba.calendar.ui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.calendar.resourceloader.ResourceLoader;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
-import org.columba.calendar.ui.util.ResourceLoader;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.action.AbstractSelectableAction;
 
@@ -42,7 +42,7 @@ public class DayViewSelectableAction extends AbstractSelectableAction {
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Day");
 		setShowToolBarText(true);
 		
-		putValue(AbstractColumbaAction.LARGE_ICON, ResourceLoader.getImageIcon("dayview.jpg"));
+		putValue(AbstractColumbaAction.LARGE_ICON, ResourceLoader.getIcon("dayview.jpg"));
 	}
 
 	/**

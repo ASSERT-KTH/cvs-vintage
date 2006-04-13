@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.AccountItem;
 import org.columba.ristretto.message.Address;
@@ -55,8 +56,8 @@ public class AccountView extends JComboBox {
 
     public AccountListRenderer() {
         setOpaque(true);
-        image1 = ImageLoader.getSmallImageIcon("16_computer.png");
-        image2 = ImageLoader.getSmallImageIcon("stock_internet-16.png");
+        image1 = ImageLoader.getSmallIcon(IconKeys.COMPUTER);
+        image2 = ImageLoader.getSmallIcon(IconKeys.SERVER);
     }
 
     public Component getListCellRendererComponent(JList list, Object value,

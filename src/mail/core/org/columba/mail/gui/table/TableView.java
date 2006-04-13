@@ -33,8 +33,8 @@ import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.plugins.BasicHeaderRenderer;
 import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
-import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.plugin.IExtensionHandlerKeys;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.frapuccino.treetable.CustomTreeTableCellRenderer;
 import org.frapuccino.treetable.TreeTable;
 

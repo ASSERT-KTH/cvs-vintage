@@ -26,10 +26,11 @@ import org.columba.calendar.command.CalendarCommandReference;
 import org.columba.calendar.model.Event;
 import org.columba.calendar.model.api.IDateRange;
 import org.columba.calendar.model.api.IEvent;
+import org.columba.calendar.resourceloader.IconKeys;
+import org.columba.calendar.resourceloader.ResourceLoader;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.calendar.store.api.ICalendarStore;
 import org.columba.calendar.ui.dialog.EditEventDialog;
-import org.columba.calendar.ui.util.ResourceLoader;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
@@ -59,9 +60,9 @@ public class NewAppointmentAction extends AbstractColumbaAction {
 		setShowToolBarText(true);
 
 		putValue(AbstractColumbaAction.LARGE_ICON, ResourceLoader
-				.getImageIcon("new_appointment-32.png"));
+				.getIcon(IconKeys.NEW_APPOINTMENT));
 		putValue(AbstractColumbaAction.SMALL_ICON, ResourceLoader
-				.getImageIcon("new_appointment.png"));
+				.getSmallIcon(IconKeys.NEW_APPOINTMENT));
 	}
 
 	/**

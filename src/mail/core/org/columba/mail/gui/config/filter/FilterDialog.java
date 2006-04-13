@@ -43,6 +43,7 @@ import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -203,13 +204,13 @@ public class FilterDialog extends JDialog implements ActionListener {
 
 		addCriteriaButton = new ButtonWithMnemonic(MailResourceLoader
 				.getString("dialog", "filter", "add_criteria"));
-		addCriteriaButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
+		addCriteriaButton.setIcon(ImageLoader.getIcon(IconKeys.LIST_ADD));
 		addCriteriaButton.addActionListener(this);
 		addCriteriaButton.setActionCommand("ADD_CRITERIA");
 
 		addActionButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"dialog", "filter", "add_action"));
-		addActionButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
+		addActionButton.setIcon(ImageLoader.getIcon(IconKeys.LIST_REMOVE));
 		addActionButton.addActionListener(this);
 		addActionButton.setActionCommand("ADD_ACTION");
 

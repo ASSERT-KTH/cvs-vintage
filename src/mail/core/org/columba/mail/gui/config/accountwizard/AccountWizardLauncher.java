@@ -25,6 +25,7 @@ import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.help.HelpManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -55,7 +56,7 @@ public class AccountWizardLauncher {
 
         Wizard wizard = new Wizard(model,
                 MailResourceLoader.getString("dialog", "accountwizard", "title"),
-                ImageLoader.getSmallImageIcon("stock_preferences.png"));
+                ImageLoader.getSmallIcon(IconKeys.PREFERENCES));
         wizard.setStepListRenderer(null);
         CSH.setHelpIDString(wizard, "getting_started_1");
         JavaHelpSupport.enableHelp(wizard,

@@ -29,7 +29,7 @@ import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.gui.util.MailImageLoader;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

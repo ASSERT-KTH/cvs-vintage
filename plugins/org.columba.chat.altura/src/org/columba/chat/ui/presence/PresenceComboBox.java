@@ -35,9 +35,9 @@ import javax.swing.UIManager;
 import org.columba.api.statusbar.IStatusBarExtension;
 import org.columba.chat.command.ChangePresenceCommand;
 import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.resourceloader.ResourceLoader;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.columba.chat.ui.presence.api.IPresenceController;
-import org.columba.chat.ui.util.ResourceLoader;
 import org.columba.core.command.CommandProcessor;
 import org.jivesoftware.smack.packet.Presence;
 
@@ -52,16 +52,16 @@ public class PresenceComboBox extends JPanel implements ItemListener,
 
 	private JComboBox comboBox;
 
-	private ImageIcon available = ResourceLoader.getImage("online.png");
+	private ImageIcon available = ResourceLoader.getMiscIcon("online.png");
 
 	private ImageIcon extendedaway = ResourceLoader
-			.getImage("extended_away.png");
+			.getMiscIcon("extended_away.png");
 
-	private ImageIcon away = ResourceLoader.getImage("away.png");
+	private ImageIcon away = ResourceLoader.getMiscIcon("away.png");
 
-	private ImageIcon busy = ResourceLoader.getImage("unavailable.png");
+	private ImageIcon busy = ResourceLoader.getMiscIcon("unavailable.png");
 
-	private ImageIcon offline = ResourceLoader.getImage("offline.png");
+	private ImageIcon offline = ResourceLoader.getMiscIcon("offline.png");
 
 	private IChatFrameMediator mediator;
 

@@ -26,6 +26,7 @@ import org.columba.core.config.GuiItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.base.ImageUtil;
 import org.columba.core.help.HelpManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -66,7 +67,7 @@ public class ToolBarButtonFactory {
 				.getValue(AbstractColumbaAction.LARGE_ICON);
 		if (icon == null) {
 			// toolbar buttons always need an icon
-			button.setIcon(ImageLoader.getImageIcon("brokenimage.png"));
+			button.setIcon(ImageLoader.getIcon(IconKeys.IMAGE_MISSING));
 		}
 
 		if (icon != null) {

@@ -23,7 +23,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SecurityItem;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.util.MailImageLoader;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 

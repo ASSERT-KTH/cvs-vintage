@@ -24,8 +24,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
 import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 

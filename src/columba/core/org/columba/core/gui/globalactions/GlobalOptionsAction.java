@@ -21,6 +21,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.config.GeneralOptionsDialog;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 
@@ -35,9 +36,9 @@ public class GlobalOptionsAction extends AbstractColumbaAction {
                 "menu_edit_generaloptions_tooltip").replaceAll("&", ""));
 
         putValue(SMALL_ICON,
-            ImageLoader.getSmallIcon("preferences-system.png"));
+            ImageLoader.getSmallIcon(IconKeys.PREFERENCES));
 
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_preferences.png"));
+        putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.PREFERENCES));
     }
 
     /* (non-Javadoc)

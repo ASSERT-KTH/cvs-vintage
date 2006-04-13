@@ -43,12 +43,6 @@ public class CloseComposerAction extends AbstractColumbaAction {
             MailResourceLoader.getString("menu", "mainframe", "menu_file_close")
                               .replaceAll("&", ""));
 
-        // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_exit.png"));
-
-        // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_exit-16.png"));
-
         // shortcut key
         putValue(ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));

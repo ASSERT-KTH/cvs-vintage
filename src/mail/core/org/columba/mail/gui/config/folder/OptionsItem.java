@@ -47,7 +47,7 @@ public class OptionsItem implements CheckableItem {
 	}
 
 	/**
-	 * @see org.columba.core.gui.checkablelist.CheckableItem#getIcon()
+	 * @see org.columba.core.gui.checkablelist.CheckableItem#getCollapsedIcon()
 	 */
 	public Icon getIcon() {
 		return null;

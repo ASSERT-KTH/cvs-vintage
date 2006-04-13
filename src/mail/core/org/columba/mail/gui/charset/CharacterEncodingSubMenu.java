@@ -93,7 +93,7 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
 		super(mediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_view_charset"), "menu_view_charset");
 
-		setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
+		//setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
 
 		group = new ButtonGroup();
 

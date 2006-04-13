@@ -44,7 +44,7 @@ public class ColumbaTrayIcon {
 	 * Default icon for the TrayIcon.
 	 */
 	public static final Icon DEFAULT_ICON = ImageLoader
-			.getImageIcon("trayicon.png");
+			.getMiscIcon("trayicon.png");
 
 	private static ColumbaTrayIcon instance = new ColumbaTrayIcon();
 

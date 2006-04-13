@@ -48,8 +48,8 @@ public class ThrobberIcon extends JPanel implements TaskManagerListener {
 		setLayout(new BorderLayout());
 
 		comp = new AnimatedGIFComponent(ImageLoader
-				.getImageIcon("Throbber.gif").getImage(), ImageLoader
-				.getImageIcon("Throbber.png").getImage());
+				.getMiscIcon("Throbber.gif").getImage(), ImageLoader
+				.getMiscIcon("Throbber.png").getImage());
 		add(comp, BorderLayout.CENTER);
 
 		// register interested on changes in the running worker list

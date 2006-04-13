@@ -21,6 +21,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -52,8 +53,8 @@ public class OpenAttachmentAction extends AbstractColumbaAction {
 				"mainframe", "attachmentopen_tooltip").replaceAll("&", ""));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
-		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.FOLDER_OPEN));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.FOLDER_OPEN));
 
 		setEnabled(ColumbaDesktop.getInstance().supportsOpen());
 		
@@ -70,8 +71,8 @@ public class OpenAttachmentAction extends AbstractColumbaAction {
 				"mainframe", "attachmentopen_tooltip").replaceAll("&", ""));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
-		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
+		putValue(SMALL_ICON, ImageLoader.getIcon(IconKeys.FOLDER_OPEN));
+		putValue(LARGE_ICON, ImageLoader.getSmallIcon(IconKeys.FOLDER_OPEN));
 
 		setEnabled(ColumbaDesktop.getInstance().supportsOpen());
 		

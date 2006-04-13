@@ -79,7 +79,7 @@ public class SendMessageDialog extends JDialog implements
 
 	protected void initComponents() {
 		label = new JLabel("Sending message...");
-		label.setIcon(ImageLoader.getSmallImageIcon("sending.png"));
+		label.setIcon(ImageLoader.getIcon("send.png"));
 
 		progressBar = new JProgressBar();
 		progressBar.setPreferredSize(new Dimension(300, 20));

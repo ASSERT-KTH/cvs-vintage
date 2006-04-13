@@ -27,9 +27,9 @@ import org.columba.chat.config.api.IAccount;
 import org.columba.chat.conn.api.ConnectionChangedEvent;
 import org.columba.chat.conn.api.IConnectionChangedListener;
 import org.columba.chat.conn.api.IConnection.STATUS;
+import org.columba.chat.resourceloader.ResourceLoader;
 import org.columba.chat.ui.dialog.AccountDialog;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
-import org.columba.chat.ui.util.ResourceLoader;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 

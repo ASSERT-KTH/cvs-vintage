@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.core.gui.frame.FrameManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.io.CharSequenceSource;
@@ -118,7 +119,7 @@ public abstract class AbstractMailboxImporter implements IExtensionInterface{
             JOptionPane.showMessageDialog(null,
                 "Message import was successful!", "Information",
                 JOptionPane.INFORMATION_MESSAGE,
-                ImageLoader.getImageIcon("stock_dialog_info_48.png"));
+                ImageLoader.getIcon(IconKeys.DIALOG_INFO));
         }
     }
 

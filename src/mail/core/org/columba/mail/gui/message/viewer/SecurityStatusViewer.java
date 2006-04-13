@@ -113,7 +113,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 
 		switch (value) {
 		case SecurityStatusViewer.DECRYPTION_SUCCESS: {
-			image = ImageLoader.getImageIcon("pgp-signature-ok.png");
+			image = ImageLoader.getMiscIcon("signature-ok.png");
 
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_decrypt_success"));
@@ -124,7 +124,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 		}
 
 		case SecurityStatusViewer.DECRYPTION_FAILURE: {
-			image = ImageLoader.getImageIcon("pgp-signature-bad.png");
+			image = ImageLoader.getMiscIcon("signature-bad.png");
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_encrypt_fail"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",
@@ -134,7 +134,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 		}
 
 		case SecurityStatusViewer.VERIFICATION_SUCCESS: {
-			image = ImageLoader.getImageIcon("pgp-signature-ok.png");
+			image = ImageLoader.getMiscIcon("signature-ok.png");
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_verify_success"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",
@@ -144,7 +144,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 		}
 
 		case SecurityStatusViewer.VERIFICATION_FAILURE: {
-			image = ImageLoader.getImageIcon("pgp-signature-bad.png");
+			image = ImageLoader.getMiscIcon("signature-bad.png");
 
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_verify_fail"));
@@ -155,7 +155,7 @@ public class SecurityStatusViewer extends JPanel implements ICustomViewer,
 		}
 
 		case SecurityStatusViewer.NO_KEY: {
-			image = ImageLoader.getImageIcon("pgp-signature-nokey.png");
+			image = ImageLoader.getMiscIcon("signature-nokey.png");
 			icon.setToolTipText(MailResourceLoader.getString("menu",
 					"mainframe", "security_verify_nokey"));
 			text.setText(transformToHTML(MailResourceLoader.getString("menu",

@@ -95,6 +95,8 @@ public class FilterDecorator extends TableModelDecorator {
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if ( getRealModel().getRowCount()  == 0 ) return null;
+		
 		return getRealModel().getValueAt(
 				((Integer) list.get(rowIndex)).intValue(), columnIndex);
 	}

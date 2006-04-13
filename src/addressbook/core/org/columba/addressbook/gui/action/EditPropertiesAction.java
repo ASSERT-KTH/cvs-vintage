@@ -36,14 +36,12 @@ import org.columba.addressbook.gui.focus.FocusOwner;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.logging.Logging;
-import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Edit properties of selected contact or group.
@@ -64,9 +62,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 		putValue(TOOLBAR_NAME, AddressbookResourceLoader.getString("menu",
 				"mainframe", "menu_file_properties_toolbar"));
 
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
+		
 
 		setEnabled(false);
 

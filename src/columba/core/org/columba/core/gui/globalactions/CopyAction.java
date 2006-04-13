@@ -31,6 +31,7 @@ import javax.swing.TransferHandler;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class CopyAction extends AbstractColumbaAction implements
@@ -47,10 +48,10 @@ public class CopyAction extends AbstractColumbaAction implements
 				"menu_edit_copy_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-copy.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.EDIT_COPY));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getIcon("edit-copy.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.EDIT_COPY));
 
 		// short cut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C,

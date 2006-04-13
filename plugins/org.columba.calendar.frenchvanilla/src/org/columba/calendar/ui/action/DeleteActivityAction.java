@@ -32,6 +32,8 @@ import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
+import org.columba.core.resourceloader.ImageLoader;
 
 /**
  * Delete selected activity.
@@ -48,6 +50,10 @@ public class DeleteActivityAction extends AbstractColumbaAction implements
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Remove");
 		setShowToolBarText(true);
 
+		putValue(AbstractColumbaAction.SMALL_ICON,  ImageLoader.getSmallIcon(IconKeys.EDIT_DELETE));
+		putValue(AbstractColumbaAction.LARGE_ICON,  ImageLoader.getIcon(IconKeys.EDIT_DELETE));
+	
+		
 		setEnabled(false);
 
 		ICalendarMediator m = (ICalendarMediator) getFrameMediator();

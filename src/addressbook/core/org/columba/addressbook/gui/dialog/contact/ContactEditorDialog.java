@@ -50,6 +50,7 @@ import org.columba.addressbook.model.InstantMessagingModel;
 import org.columba.addressbook.model.LabelModel;
 import org.columba.addressbook.model.PhoneModel;
 import org.columba.core.desktop.ColumbaDesktop;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 import com.jgoodies.forms.factories.Borders;
@@ -449,7 +450,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 				image = new ImageIcon(sourceModel.getPhoto());
 			// fall back to default image
 			if (image == null)
-				image = ImageLoader.getImageIcon("malehead.png");
+				image = ImageLoader.getMiscIcon("malehead.png");
 			pictureButton.setIcon(image);
 
 			// we support up to 4 email addresses
@@ -929,7 +930,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		panel1 = new JPanel();
 		homepageTextField = new JTextField();
 		homepageButton = new JButton(ImageLoader
-				.getImageIcon("stock_internet-16.png"));
+				.getSmallIcon(IconKeys.INTERNET));
 		homepageButton.setMargin(new Insets(0, 0, 0, 0));
 		homepageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -947,7 +948,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		panel5 = new JPanel();
 		weblogTextField = new JTextField();
 		weblogButton = new JButton(ImageLoader
-				.getImageIcon("stock_internet-16.png"));
+				.getSmallIcon(IconKeys.INTERNET));
 		weblogButton.setMargin(new Insets(0, 0, 0, 0));
 		weblogButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -964,7 +965,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		panel6 = new JPanel();
 		calendarTextField = new JTextField();
 		calendarButton = new JButton(ImageLoader
-				.getImageIcon("stock_internet-16.png"));
+				.getSmallIcon(IconKeys.INTERNET));
 		calendarButton.setMargin(new Insets(0, 0, 0, 0));
 		calendarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -981,7 +982,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		panel8 = new JPanel();
 		freebusyTextField = new JTextField();
 		freebusyButton = new JButton(ImageLoader
-				.getImageIcon("stock_internet-16.png"));
+				.getSmallIcon(IconKeys.INTERNET));
 		freebusyButton.setMargin(new Insets(0, 0, 0, 0));
 		freebusyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

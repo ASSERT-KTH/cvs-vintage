@@ -18,7 +18,9 @@ package org.columba.mail.gui.composer;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
+import org.columba.mail.resourceloader.MailImageLoader;
 
 /**
  * Popup menu for the attachment view.
@@ -48,14 +50,14 @@ public class AttachmentMenu extends JPopupMenu {
 	 *            the attachment controller.
 	 */
 	private void initComponents(AttachmentController c) {
-		menuItem = new JMenuItem("Attach File..", ImageLoader
-				.getSmallImageIcon("stock_attach-16.png"));
+		menuItem = new JMenuItem("Attach File..", MailImageLoader
+				.getSmallIcon("mail-attachment.png"));
 		menuItem.setActionCommand("ADD");
 		menuItem.addActionListener(c.getActionListener());
 		add(menuItem);
 		addSeparator();
 		menuItem = new JMenuItem("Remove Selected Attachments", ImageLoader
-				.getSmallImageIcon("stock_delete-16.png"));
+				.getSmallIcon(IconKeys.EDIT_DELETE));
 		menuItem.setActionCommand("REMOVE");
 		menuItem.addActionListener(c.getActionListener());
 		add(menuItem);

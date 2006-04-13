@@ -162,7 +162,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 	protected void initComponents() {
 
 		// Set the icon and the title
-		this.setIconImage(ImageLoader.getImageIcon("icon16.png").getImage());
+		this.setIconImage(ImageLoader.getMiscIcon("icon16.png").getImage());
 		windowname = "Columba";
 
 		setTitle("");

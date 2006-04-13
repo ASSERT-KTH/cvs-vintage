@@ -33,6 +33,7 @@ import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -95,7 +96,7 @@ public class ExternalToolsWizardLauncher {
 
 		// TODO (@author fdietz): i18n
 		Wizard wizard = new Wizard(model, "External Tools Configuration",
-				ImageLoader.getSmallImageIcon("stock_preferences.png"));
+				ImageLoader.getSmallIcon(IconKeys.PREFERENCES));
 		wizard.setStepListRenderer(null);
 		CSH.setHelpIDString(wizard, "extending_columba_2");
 		JavaHelpSupport.enableHelp(wizard, HelpManager.getInstance()

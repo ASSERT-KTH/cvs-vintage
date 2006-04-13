@@ -56,7 +56,7 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 	private void postView() {
 		// setup base url in order to be able to display images
 		// in html-component
-		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
+		URL baseUrl = DiskIO.getResourceURL("org/columba/core/icons/MISC/");
 
 		((HTMLDocument) textPane.getDocument()).setBase(baseUrl);
 

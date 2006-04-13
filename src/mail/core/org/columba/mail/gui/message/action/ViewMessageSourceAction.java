@@ -43,7 +43,7 @@ public class ViewMessageSourceAction extends AbstractColumbaAction implements
 				"mainframe", "menu_view_source_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("viewsource.png"));
+		putValue(SMALL_ICON, ImageLoader.getMiscIcon("viewsource.png"));
 
 		// short cut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_U,

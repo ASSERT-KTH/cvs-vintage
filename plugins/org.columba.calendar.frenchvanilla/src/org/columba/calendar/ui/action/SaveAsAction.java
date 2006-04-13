@@ -36,6 +36,8 @@ import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
+import org.columba.core.resourceloader.ImageLoader;
 
 public class SaveAsAction extends AbstractColumbaAction implements
 		IActivitySelectionChangedListener {
@@ -45,6 +47,9 @@ public class SaveAsAction extends AbstractColumbaAction implements
 
 		setEnabled(false);
 
+		putValue(AbstractColumbaAction.SMALL_ICON,  ImageLoader.getSmallIcon(IconKeys.DOCUMENT_SAVE_AS));
+		putValue(AbstractColumbaAction.LARGE_ICON,  ImageLoader.getIcon(IconKeys.DOCUMENT_SAVE_AS));
+		
 		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
 		m.getCalendarView().addSelectionChangedListener(this);
 	}

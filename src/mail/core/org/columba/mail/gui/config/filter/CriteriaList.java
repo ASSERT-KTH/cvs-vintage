@@ -46,6 +46,7 @@ import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
 import org.columba.mail.plugin.IExtensionHandlerKeys;
@@ -179,7 +180,7 @@ public class CriteriaList extends JPanel implements ActionListener,
 			panel.add(column.getContentPane());
 
 			JButton addButton = new JButton(ImageLoader
-					.getSmallImageIcon("stock_add_16.png"));
+					.getIcon(IconKeys.LIST_ADD));
 			addButton.setActionCommand("ADD");
 			addButton.setMargin(new Insets(0, 0, 0, 0));
 			addButton.addActionListener(new ActionListener() {
@@ -189,7 +190,7 @@ public class CriteriaList extends JPanel implements ActionListener,
 			});
 
 			JButton removeButton = new JButton(ImageLoader
-					.getSmallImageIcon("stock_remove_16.png"));
+					.getIcon(IconKeys.LIST_REMOVE));
 			removeButton.setMargin(new Insets(0, 0, 0, 0));
 			removeButton.setActionCommand(Integer.toString(i));
 

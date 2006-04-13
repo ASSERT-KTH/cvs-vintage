@@ -49,7 +49,7 @@ public class ShutdownDialog extends JFrame implements ActionListener {
                 "exit_title"));
 
         JLabel icon = new JLabel();
-        icon.setIcon(ImageLoader.getImageIcon("out-of-office-48.png"));
+        icon.setIcon(ImageLoader.getMiscIcon("out-of-office-48.png"));
 
         JLabel text = new JLabel(GlobalResourceLoader.getString(RESOURCE_PATH,
                     "session", "exit_msg"));

@@ -51,6 +51,7 @@ import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.Logging;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.versioninfo.VersionInfo;
 
@@ -83,7 +84,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         //Font font = MainInterface.columbaTheme.getControlTextFont();
         Font font = UIManager.getFont("Label.font");
         
-        JLabel imageLabel = new JLabel(ImageLoader.getImageIcon("startup.png"));
+        JLabel imageLabel = new JLabel(ImageLoader.getMiscIcon("startup.png"));
         c.gridx = 0;
         c.gridy = 0;
         c.anchor = GridBagConstraints.WEST;
@@ -354,7 +355,7 @@ public class AboutDialog extends JDialog implements ActionListener {
             maxMemoryTextField = new JFormattedTextField();
             
             JButton gcButton = new JButton(
-                ImageLoader.getImageIcon("stock_delete-16.png"));
+                ImageLoader.getSmallIcon(IconKeys.EDIT_DELETE));
             
             JLabel currentMemoryLabel = new JLabel("Used:");
             c.gridx = 0;

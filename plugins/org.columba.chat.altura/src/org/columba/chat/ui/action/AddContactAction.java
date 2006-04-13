@@ -25,8 +25,8 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.chat.base.Parser;
 import org.columba.chat.command.AddContactCommand;
 import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.resourceloader.ResourceLoader;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
-import org.columba.chat.ui.util.ResourceLoader;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 

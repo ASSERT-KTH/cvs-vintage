@@ -31,6 +31,7 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -69,7 +70,7 @@ public class ImportWizardLauncher {
 
         Wizard wizard = new Wizard(model,
                 MailResourceLoader.getString("dialog", "mailboximport", "title"),
-                ImageLoader.getSmallImageIcon("stock_convert.png"));
+                ImageLoader.getIcon(IconKeys.PREFERENCES));
         wizard.setStepListRenderer(null);
         CSH.setHelpIDString(wizard, "organising_and_managing_your_email_1");
         JavaHelpSupport.enableHelp(wizard,

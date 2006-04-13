@@ -17,13 +17,11 @@ package org.columba.addressbook.gui.tree.util;
 
 import java.awt.Component;
 
-import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.addressbook.folder.AddressbookTreeNode;
-import org.columba.core.resourceloader.ImageLoader;
 
 @SuppressWarnings({"serial","serial"})
 public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -34,10 +32,6 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
 	boolean isBordered = true;
 
 	boolean bool;
-
-	ImageIcon image;
-
-	ImageIcon groupImageIcon = ImageLoader.getSmallImageIcon("group_small.png");
 
 	public AddressbookTreeCellRenderer(boolean bool) {
 		super();
@@ -59,7 +53,7 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
 		}
 
 		setText(folder.getName());
-		setIcon(folder.getIcon());
+		setIcon(folder.getCollapsedIcon());
 
 		return this;
 	}

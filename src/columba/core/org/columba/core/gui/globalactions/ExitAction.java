@@ -23,6 +23,7 @@ import javax.swing.KeyStroke;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.shutdown.ShutdownManager;
 
@@ -38,10 +39,10 @@ public class ExitAction extends AbstractColumbaAction {
                                 .replaceAll("&", ""));
 
         // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallIcon("system-log-out.png"));
+        putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.EXIT));
 
         // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getIcon("system-log-out.png"));
+        putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.EXIT));
 
         // shortcut key
         putValue(ACCELERATOR_KEY,

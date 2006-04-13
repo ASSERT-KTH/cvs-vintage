@@ -53,7 +53,7 @@ public class ConversationController extends JTabbedPane implements
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.chat.ui.conversation");
 
-	private Map<String, IChatMediator> chatMap;
+	private Map<String, IChatMediator> chatMap = new Hashtable<String, IChatMediator>();
 
 	private MessageListener messageListener = new MessageListener();
 

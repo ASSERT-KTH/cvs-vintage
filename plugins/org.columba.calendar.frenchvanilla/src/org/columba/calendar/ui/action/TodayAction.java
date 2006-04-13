@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -40,8 +41,8 @@ public class TodayAction extends AbstractColumbaAction {
 		putValue(AbstractColumbaAction.TOOLBAR_NAME, "Today");
 		setShowToolBarText(false);
 		
-		putValue(AbstractColumbaAction.LARGE_ICON, ImageLoader.getImageIcon("stock_home_24.png"));
-		putValue(AbstractColumbaAction.SMALL_ICON, ImageLoader.getImageIcon("stock_home_16.png"));
+		putValue(AbstractColumbaAction.LARGE_ICON, ImageLoader.getIcon(IconKeys.HOME));
+		putValue(AbstractColumbaAction.SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.HOME));
 	}
 
 	/**

@@ -29,6 +29,7 @@ import javax.swing.TransferHandler;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.GlobalResourceLoader;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class PasteAction extends AbstractColumbaAction implements
@@ -45,10 +46,10 @@ public class PasteAction extends AbstractColumbaAction implements
 				"menu_edit_paste_tooltip").replaceAll("&", ""));
 
 		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallIcon("edit-paste.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.EDIT_PASTE));
 
 		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getIcon("edit-paste.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.EDIT_PASTE));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V,

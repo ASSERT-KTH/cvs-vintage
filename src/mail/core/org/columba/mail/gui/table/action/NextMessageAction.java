@@ -22,6 +22,7 @@ import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -56,7 +57,8 @@ public class NextMessageAction extends AbstractColumbaAction implements
 				""));
 
 		// icons
-		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("next-message.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.GO_NEXT));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.GO_NEXT));
 
 		// shortcut key
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));

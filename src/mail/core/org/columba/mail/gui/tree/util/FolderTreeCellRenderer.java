@@ -31,7 +31,7 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
-import org.columba.mail.gui.util.MailImageLoader;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.ristretto.message.MailboxInfo;
 
 /**

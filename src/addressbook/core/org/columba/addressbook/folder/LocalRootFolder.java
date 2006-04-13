@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 
@@ -28,14 +29,14 @@ import org.columba.core.resourceloader.ImageLoader;
  * @author
  */
 public class LocalRootFolder extends AddressbookTreeNode {
-    protected ImageIcon localIcon = ImageLoader.getSmallImageIcon(
-            "localhost.png");
+    protected ImageIcon localIcon = ImageLoader.getSmallIcon(
+            IconKeys.COMPUTER);
 
     public LocalRootFolder(FolderItem item) {
         super(item);
     }
 
-    public ImageIcon getIcon() {
+    public ImageIcon getCollapsedIcon() {
         return localIcon;
     }
 

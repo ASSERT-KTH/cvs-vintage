@@ -22,6 +22,7 @@ import java.util.Observer;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
@@ -45,7 +46,7 @@ public class OpenAction extends AbstractColumbaAction implements Observer {
 
 		setEnabled(false);
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.FOLDER_OPEN));
 
 		// listen for URL changes
 		((MessageViewOwner) controller).getMessageController().addURLObserver(

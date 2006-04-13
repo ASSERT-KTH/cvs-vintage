@@ -38,6 +38,7 @@ import org.columba.core.command.TaskManagerListener;
 import org.columba.core.command.Worker;
 import org.columba.core.connectionstate.ConnectionStateImpl;
 import org.columba.core.gui.base.JStatusBar;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -88,9 +89,9 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 	 */
 	private static final int ADDWORKER_TIMER_INTERVAL = 2000;
 
-	protected static Icon onlineIcon =  ImageLoader.getSmallIcon("connect.png");
+	protected static Icon onlineIcon =  ImageLoader.getSmallIcon(IconKeys.ONLINE);
 
-	protected static Icon offlineIcon =  ImageLoader.getSmallIcon("disconnect.png");
+	protected static Icon offlineIcon =  ImageLoader.getSmallIcon(IconKeys.OFFLINE);
 
 	/**
 	 * showing status messages
@@ -107,7 +108,7 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 	/**
 	 * button opening task manager dialog
 	 */
-	private JButton taskButton;
+	//private JButton taskButton;
 
 	/**
 	 * Currently displayed worker
@@ -117,7 +118,7 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 	/**
 	 * manager of all running tasks
 	 */
-	private TaskManager taskManager;
+    private TaskManager taskManager;
 
 	/**
 	 * connection state button
@@ -188,14 +189,14 @@ public class StatusBar extends JStatusBar implements TaskManagerListener,
 		progressBar.setBorderPainted(false);
 		progressBar.setValue(0);
 
-		taskButton = new JButton();
-		taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
-		taskButton.setToolTipText("Show list of running tasks");
-		taskButton.setRolloverEnabled(true);
-		taskButton.setActionCommand("TASKMANAGER");
-		taskButton.addActionListener(this);
-
-		taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+//		taskButton = new JButton();
+//		taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
+//		taskButton.setToolTipText("Show list of running tasks");
+//		taskButton.setRolloverEnabled(true);
+//		taskButton.setActionCommand("TASKMANAGER");
+//		taskButton.addActionListener(this);
+//
+//		taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
 		setMainLeftComponent(label);
 

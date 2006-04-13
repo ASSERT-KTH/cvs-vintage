@@ -22,6 +22,7 @@ import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 
@@ -31,8 +32,8 @@ import org.columba.core.resourceloader.ImageLoader;
  * @author fdietz
  */
 public class TypeRenderer extends DefaultLabelRenderer {
-    ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");
-    ImageIcon image2 = ImageLoader.getSmallImageIcon("group_small.png");
+    ImageIcon image1 = ImageLoader.getSmallIcon(IconKeys.CONTACT_NEW);
+    ImageIcon image2 = ImageLoader.getSmallIcon(IconKeys.USER);
 
     /**
  *  

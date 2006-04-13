@@ -134,7 +134,7 @@ public class PGPPassphraseDialog implements ActionListener {
 		GridBagConstraints mainConstraints = new GridBagConstraints();
 
 		JLabel iconLabel = new JLabel(ImageLoader
-				.getImageIcon("pgp-signature-nokey.png"));
+				.getMiscIcon("signature-nokey.png"));
 		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
 		mainConstraints.weightx = 1.0;
 		mainConstraints.gridwidth = GridBagConstraints.RELATIVE;

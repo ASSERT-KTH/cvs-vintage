@@ -35,6 +35,7 @@ import javax.swing.border.CompoundBorder;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -88,7 +89,7 @@ public class DialogHeaderPanel extends JPanel {
 		add(leftPanel, BorderLayout.WEST);
 
 		if (icon == null)
-			icon = ImageLoader.getImageIcon("configuration-32.png");
+			icon = ImageLoader.getIcon(IconKeys.PREFERENCES);
 
 		JLabel iconLabel = new JLabel(icon);
 

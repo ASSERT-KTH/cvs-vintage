@@ -23,9 +23,9 @@ import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.ISelectAddressDialog;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -45,10 +45,10 @@ public class AddressbookAction extends AbstractColumbaAction {
 				""));
 
 		// large icon for toolbar
-		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("contact-new.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon("contact-new.png"));
 
 		// small icon for menu
-		putValue(LARGE_ICON, MailImageLoader.getIcon("contact-new.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon("contact-new.png"));
 
 		// disable text in toolbar
 		setShowToolBarText(false);

@@ -31,7 +31,7 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
-import org.columba.mail.gui.util.MailImageLoader;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

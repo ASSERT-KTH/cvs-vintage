@@ -18,7 +18,6 @@
 package org.columba.core.resourceloader;
 
 import java.net.URL;
-import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
 
@@ -26,51 +25,31 @@ import org.columba.core.io.DiskIO;
 
 public class ImageLoader {
 
-
-
-	static boolean ICON_SET = false;
-
-	private static Hashtable hashtable = new Hashtable();
-
-	// ******** FOLLOWS STANDARD RESOURCE RETRIEVAL (file or jar protocol)
-	// ***************
-	/**
-	 * @deprecated
-	 */
-	public static ImageIcon getUnsafeImageIcon(String name) {
+	private static final String ICON_PATH = "org/columba/core/icons";
+	
+	public static ImageIcon getMimetypeIcon(String name) {
 		URL url;
 
-		if (hashtable.containsKey(name) == true) {
-			return (ImageIcon) hashtable.get(name);
-		}
-
-		url = DiskIO.getResourceURL("org/columba/core/images/" + name);
-
-		if (url == null) {
-			return null;
-		}
+		url = DiskIO.getResourceURL(ICON_PATH + "/MIMETYPE/" + name);
+		
+		if (url == null) 
+			url = getFallback(false);
 
 		ImageIcon icon = new ImageIcon(url);
-
-		hashtable.put(name, icon);
 
 		return icon;
 	}
 
 	public static ImageIcon getIcon(String name) {
-		return getIcon("org/columba/core/icons", name, false);
+		return getIcon(ImageLoader.ICON_PATH, name, false);
 	}
 
 	public static ImageIcon getSmallIcon(String name) {
-		return getIcon("org/columba/core/icons", name, true);
+		return getIcon(ImageLoader.ICON_PATH, name, true);
 	}
 
 	public static ImageIcon getIcon(String path, String name, boolean small) {
 		URL url;
-
-//		if (hashtable.containsKey(name) == true) {
-//			return (ImageIcon) hashtable.get(name);
-//		}
 
 		if (small)
 			url = DiskIO.getResourceURL(path + "/16x16/" + name);
@@ -78,95 +57,40 @@ public class ImageLoader {
 			url = DiskIO.getResourceURL(path + "/22x22/" + name);
 
 		if (url == null) {
-			path = "org/columba/core/icons";
-			name = "image-missing.png";
-			if ( small )
-				
-				url =  DiskIO.getResourceURL(path + "/16x16/" +name);
-			else
-				url = DiskIO.getResourceURL(path + "/22x22/" + name);
+			url = getFallback(small);
 		}
 
 		ImageIcon icon = new ImageIcon(url);
-
-		hashtable.put(name, icon);
 
 		return icon;
 	}
 
-	/**
-	 * @deprecated
-	 * @param name
-	 * @return
-	 */
-	public static ImageIcon getSmallImageIcon(String name) {
-
+	public static ImageIcon getMiscIcon(String name) {
 		URL url;
+		String path = ImageLoader.ICON_PATH;
 
-		if (hashtable.containsKey(name) == true) {
-			return (ImageIcon) hashtable.get(name);
-		}
-
-		url = DiskIO.getResourceURL("org/columba/core/images/" + name);
+		url = DiskIO.getResourceURL(path + "/MISC/" + name);
 
 		if (url == null) {
-			url = DiskIO
-					.getResourceURL("org/columba/core/images/brokenimage_small.png");
+			url = getFallback(true);
 		}
 
 		ImageIcon icon = new ImageIcon(url);
-
-		hashtable.put(name, icon);
 
 		return icon;
 	}
 
-	/**
-	 * @deprecated
-	 * @param name
-	 * @return
-	 */
-	public static ImageIcon getImageIcon(String name) {
+	private static URL getFallback(boolean small) {
+		String path;
+		String name;
 		URL url;
-
-		if (hashtable.containsKey(name) == true) {
-			return (ImageIcon) hashtable.get(name);
-		}
-
-		url = DiskIO.getResourceURL("org/columba/core/images/" + name);
-
-		if (url == null) {
-			url = DiskIO
-					.getResourceURL("org/columba/core/images/brokenimage.png");
-		}
-
-		ImageIcon icon = new ImageIcon(url);
-
-		hashtable.put(name, icon);
-
-		return icon;
-	}
-
-	/**
-	 * @deprecated
-	 * @param name
-	 * @return
-	 */
-	public static ImageIcon getImageIconResource(String name) {
-		URL url;
-
-		url = DiskIO.getResourceURL(name);
-
-		if (url == null) {
-			url = DiskIO
-					.getResourceURL("org/columba/core/images/brokenimage.png");
-		}
-
-		ImageIcon icon = new ImageIcon(url);
-
-		hashtable.put(name, icon);
-
-		return icon;
+		path = ImageLoader.ICON_PATH;
+		name = "image-missing.png";
+		if (small)
+			url = DiskIO.getResourceURL(path + "/16x16/" + name);
+		else
+			url = DiskIO.getResourceURL(path + "/22x22/" + name);
+		return url;
 	}
 
 }

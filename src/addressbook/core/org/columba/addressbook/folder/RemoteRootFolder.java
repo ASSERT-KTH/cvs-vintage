@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 
@@ -28,7 +29,7 @@ import org.columba.core.resourceloader.ImageLoader;
  * @author fdietz
  */
 public class RemoteRootFolder extends AddressbookTreeNode {
-    ImageIcon remoteIcon = ImageLoader.getSmallImageIcon("remotehost.png");
+    ImageIcon remoteIcon = ImageLoader.getSmallIcon(IconKeys.SERVER);
 
     /**
  * Constructor for RemoteRootFolder.
@@ -44,7 +45,7 @@ public class RemoteRootFolder extends AddressbookTreeNode {
     public void createChildren(IWorkerStatusController worker) {
     }
 
-    public ImageIcon getIcon() {
+    public ImageIcon getCollapsedIcon() {
         return remoteIcon;
     }
 }

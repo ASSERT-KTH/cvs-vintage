@@ -22,11 +22,12 @@ import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.resourceloader.IconKeys;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.command.AddSenderToAddressbookCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.gui.util.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -47,10 +48,10 @@ public class AddSenderToAddressbookAction extends AbstractColumbaAction
 				""));
 
 		// icon for menu
-		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("contact-new.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.CONTACT_NEW));
 
 		// icon for toolbar
-		putValue(LARGE_ICON, MailImageLoader.getIcon("contact-new.png"));
+		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.CONTACT_NEW));
 
 		setEnabled(false);
 

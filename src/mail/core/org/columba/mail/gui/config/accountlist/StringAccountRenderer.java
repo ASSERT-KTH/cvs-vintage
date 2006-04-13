@@ -24,6 +24,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 public class StringAccountRenderer extends JLabel implements TableCellRenderer {
@@ -39,10 +40,10 @@ public class StringAccountRenderer extends JLabel implements TableCellRenderer {
 
 	private Font boldFont;
 
-	private ImageIcon image1 = ImageLoader.getSmallImageIcon("16_computer.png");
+	private ImageIcon image1 = ImageLoader.getSmallIcon(IconKeys.COMPUTER);
 
 	private ImageIcon image2 = ImageLoader
-			.getSmallImageIcon("stock_internet-16.png");
+			.getSmallIcon(IconKeys.SERVER);
 
 	private boolean b;
 

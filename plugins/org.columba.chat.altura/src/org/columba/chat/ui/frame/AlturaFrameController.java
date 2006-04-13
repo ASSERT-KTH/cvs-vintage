@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IDock;
 import org.columba.api.gui.frame.IDockable;
+import org.columba.chat.resourceloader.ResourceLoader;
 import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.conversation.api.IConversationController;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
@@ -34,7 +35,6 @@ import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.presence.api.IPresenceController;
 import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.chat.ui.roaster.api.IRoasterController;
-import org.columba.chat.ui.util.ResourceLoader;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.DockFrameController;
 

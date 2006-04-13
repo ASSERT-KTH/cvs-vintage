@@ -27,6 +27,7 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
 /**
@@ -62,7 +63,7 @@ public class ImportWizardLauncher {
         Wizard wizard = new Wizard(model,
                 AddressbookResourceLoader.getString("dialog",
                     "addressbookimport", "title"),
-                ImageLoader.getSmallImageIcon("stock_convert.png"));
+                ImageLoader.getSmallIcon(IconKeys.PREFERENCES));
         wizard.setStepListRenderer(null);
         wizard.pack();
         wizard.setLocationRelativeTo(null);

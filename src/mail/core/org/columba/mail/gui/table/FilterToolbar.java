@@ -40,7 +40,6 @@ import org.columba.core.folder.IFolder;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.ComboMenu;
 import org.columba.core.gui.util.CTextField;
-import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.filter.MailFilterFactory;
@@ -50,6 +49,7 @@ import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -113,18 +113,18 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 				switch (i) {
 				case 7:
-					m.setIcon(ImageLoader.getSmallImageIcon("mail-new.png"));
+					m.setIcon(MailImageLoader.getSmallIcon("message-mail-unread.png"));
 					break;
 				case 8:
-					m.setIcon(ImageLoader
-							.getSmallImageIcon("mark-as-important-16.png"));
+					m.setIcon(MailImageLoader
+							.getSmallIcon("flag.png"));
 					break;
 				case 9:
-					m.setIcon(ImageLoader
-							.getSmallImageIcon("priority-high.png"));
+					m.setIcon(MailImageLoader
+							.getSmallIcon("priority-high.png"));
 					break;
 				case 10:
-					m.setIcon(ImageLoader.getSmallImageIcon("spam-16.png"));
+					m.setIcon(MailImageLoader.getSmallIcon("mail-mark-junk.png"));
 					break;
 				}
 			}
