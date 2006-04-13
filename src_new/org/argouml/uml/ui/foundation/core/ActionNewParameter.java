@@ -1,4 +1,4 @@
-// $Id: ActionNewParameter.java,v 1.14 2006/02/20 17:59:00 mvw Exp $
+// $Id: ActionNewParameter.java,v 1.15 2006/04/13 03:38:31 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 
 import javax.swing.Action;
 
@@ -68,11 +67,9 @@ public class ActionNewParameter extends AbstractActionNewModelElement {
                 ProjectManager.getManager().getCurrentProject();
             Object model = currentProject.getModel();
             Object intType = currentProject.findType("int");
-            Collection propertyChangeListeners =
-                currentProject.findFigsForMember(target);
             TargetManager.getInstance().setTarget(
                 Model.getCoreFactory().buildParameter(
-                    target, model, intType, propertyChangeListeners));
+                    target, model, intType));
         }
     }
 }

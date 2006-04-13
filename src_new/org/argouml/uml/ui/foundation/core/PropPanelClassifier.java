@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.63 2006/03/23 21:13:26 mkl Exp $
+// $Id: PropPanelClassifier.java,v 1.64 2006/04/13 03:38:31 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,16 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -138,16 +141,13 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
     public void addOperation() {
         Object target = getTarget();
         if (Model.getFacade().isAClassifier(target)) {
-            Collection propertyChangeListeners = ProjectManager.getManager()
-                .getCurrentProject().findFigsForMember(target);
             Object model = ProjectManager.getManager()
                 .getCurrentProject().getModel();
             Object voidType = ProjectManager.getManager()
                 .getCurrentProject().findType("void");
             Object newOper =
                 Model.getCoreFactory().buildOperation(
-                    /*(MClassifier)*/ target, model, voidType,
-                    propertyChangeListeners);
+                    target, model, voidType);
             TargetManager.getInstance().setTarget(newOper);
         }
     }
@@ -158,16 +158,12 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
     public void addAttribute() {
         Object target = getTarget();
         if (Model.getFacade().isAClassifier(target)) {
+            Project project = ProjectManager.getManager().getCurrentProject();
             Object cls = /*(MClassifier)*/ target;
-            Collection propertyChangeListeners = ProjectManager.getManager()
-                .getCurrentProject().findFigsForMember(cls);
-            Object intType = ProjectManager.getManager()
-                .getCurrentProject().findType("int");
-            Object model = ProjectManager.getManager()
-                .getCurrentProject().getModel();
-            Object attr =
-                Model.getCoreFactory().buildAttribute(cls, model,
-                        intType, propertyChangeListeners);
+            Object intType = project.findType("int");
+            Object model = project.getModel();
+            Object attr = 
+                Model.getCoreFactory().buildAttribute(cls, model, intType);
             TargetManager.getInstance().setTarget(attr);
         }
     }

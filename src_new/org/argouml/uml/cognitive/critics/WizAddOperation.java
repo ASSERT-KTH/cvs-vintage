@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.16 2005/02/19 23:22:37 mvw Exp $
+// $Id: WizAddOperation.java,v 1.17 2006/04/13 03:38:30 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,6 @@ public class WizAddOperation extends UMLWizard {
 		newName = step1.getText();
 	    }
 	    Object me = getModelElement();
-	    Collection propertyChangeListeners =
-	        ProjectManager.getManager()
-	        	.getCurrentProject().findFigsForMember(me);
 	    Object model =
 	        ProjectManager.getManager()
 	        	.getCurrentProject().getModel();
@@ -73,7 +70,7 @@ public class WizAddOperation extends UMLWizard {
 	        ProjectManager.getManager()
 	        	.getCurrentProject().findType("void");
 	    Model.getCoreFactory().buildOperation(me, model,
-	            voidType, newName, propertyChangeListeners);
+	            voidType, newName);
         }
     }
 

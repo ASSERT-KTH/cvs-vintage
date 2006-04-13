@@ -1,4 +1,4 @@
-// $Id: WizAddInstanceVariable.java,v 1.15 2005/02/13 12:55:15 mvw Exp $
+// $Id: WizAddInstanceVariable.java,v 1.16 2006/04/13 03:38:30 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,9 +66,6 @@ public class WizAddInstanceVariable extends UMLWizard {
                 newName = step1.getText();
             }
             Object me = getModelElement();
-            Collection propertyChangeListeners =
-                ProjectManager.getManager()
-                	.getCurrentProject().findFigsForMember(me);
             Object intType =
                 ProjectManager.getManager()
                 	.getCurrentProject().findType("int");
@@ -77,8 +74,7 @@ public class WizAddInstanceVariable extends UMLWizard {
                 	.getCurrentProject().getModel();
             attr =
                 Model.getCoreFactory()
-                	.buildAttribute(me, model, intType,
-                	        propertyChangeListeners);
+                	.buildAttribute(me, model, intType);
             Model.getCoreHelper().setName(attr, newName);
         }
     }

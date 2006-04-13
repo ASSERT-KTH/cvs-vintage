@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.192 2006/04/03 19:24:50 mvw Exp $
+// $Id: ParserDisplay.java,v 1.193 2006/04/13 03:38:30 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -461,14 +461,11 @@ public final class ParserDisplay {
             s = text.substring(start, end).trim();
             if (s.length() > 0) {
                 // yes, there are more:
-                Collection propertyChangeListeners =
-                    currentProject.findFigsForMember(classifier);
                 Object model = currentProject.getModel();
                 Object voidType = currentProject.findType("void");
                 Object newOp =
                     Model.getCoreFactory()
-                    	.buildOperation(classifier, model, voidType,
-                    	        propertyChangeListeners);
+                    	.buildOperation(classifier, model, voidType);
                 if (newOp != null) {
                     try {
                         parseOperation(s, newOp);
@@ -929,14 +926,10 @@ public final class ParserDisplay {
             Object voidType =
                 ProjectManager.getManager()
                 	.getCurrentProject().findType("void");
-            Collection propertyChangeListeners =
-                ProjectManager.getManager()
-                	.getCurrentProject().findFigsForMember(op);
             param =
                 Model.getCoreFactory()
                 	.buildParameter(
-                	        op, model, voidType,
-                	        propertyChangeListeners);
+                	        op, model, voidType);
         }
         Model.getCoreHelper().setType(param, type);
     }
@@ -2401,9 +2394,6 @@ public final class ParserDisplay {
             // parameters and operations to the figs that represent
             // them
             Object cls = /* (MClassifier) */it.next();
-            Collection propertyChangeListeners =
-                ProjectManager.getManager()
-                	.getCurrentProject().findFigsForMember(cls);
             Object model =
                 ProjectManager.getManager()
                 	.getCurrentProject().getModel();
@@ -2412,8 +2402,7 @@ public final class ParserDisplay {
                 	.getCurrentProject().findType("void");
             Object op =
                 Model.getCoreFactory()
-                	.buildOperation(cls, model, voidType,
-                	        propertyChangeListeners);
+                	.buildOperation(cls, model, voidType);
 
             try {
                 parseOperation(expr, op);

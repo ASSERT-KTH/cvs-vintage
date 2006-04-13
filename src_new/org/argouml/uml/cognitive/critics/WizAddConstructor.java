@@ -1,4 +1,4 @@
-// $Id: WizAddConstructor.java,v 1.21 2005/12/20 07:54:44 tfmorris Exp $
+// $Id: WizAddConstructor.java,v 1.22 2006/04/13 03:38:30 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,9 +79,6 @@ public class WizAddConstructor extends UMLWizard {
 	    }
 	    Object me = getModelElement();
 	    savedTargets = TargetManager.getInstance().getTargets();
-	    Collection propertyChangeListeners =
-	        ProjectManager.getManager()
-	        	.getCurrentProject().findFigsForMember(me);
 	    Object model =
 	        ProjectManager.getManager().getCurrentProject()
 	        	.getModel();
@@ -90,7 +87,7 @@ public class WizAddConstructor extends UMLWizard {
 	        	.findType("void");
 	    oper =
 	        Model.getCoreFactory().buildOperation(me, model,
-	                voidType, newName, propertyChangeListeners);
+	                voidType, newName);
 	    Model.getCoreHelper()
 	        .addStereotype(oper, getCreateStereotype(oper));
 	    TargetManager.getInstance().setTargets(savedTargets);

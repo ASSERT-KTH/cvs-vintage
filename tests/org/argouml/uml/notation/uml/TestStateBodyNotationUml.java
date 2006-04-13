@@ -1,4 +1,4 @@
-// $Id: TestStateBodyNotationUml.java,v 1.2 2006/02/25 09:46:22 mvw Exp $
+// $Id: TestStateBodyNotationUml.java,v 1.3 2006/04/13 03:38:31 tfmorris Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,11 +60,10 @@ public class TestStateBodyNotationUml extends TestCase {
             Model.getModelManagementFactory().createModel();
         Project p = ProjectManager.getManager().getCurrentProject();
         aClass = Model.getCoreFactory().buildClass(model);
-        Collection propertyChangeListeners = p.findFigsForMember(aClass);
         Object mdl = p.getModel();
         Object voidType = p.findType("void");
         Model.getCoreFactory().buildOperation(aClass, mdl,
-                voidType, "myOper", propertyChangeListeners);
+                voidType, "myOper");
         aStateMachine = Model.getStateMachinesFactory()
             .buildStateMachine(aClass);
         Object top = Model.getFacade().getTop(aStateMachine);

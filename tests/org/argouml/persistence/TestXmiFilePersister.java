@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.13 2005/11/10 04:20:39 tfmorris Exp $
+// $Id: TestXmiFilePersister.java,v 1.14 2006/04/13 03:38:31 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.persistence;
 
 import java.io.File;
-import java.util.Collection;
 
 import junit.framework.TestCase;
 
@@ -59,9 +58,6 @@ public class TestXmiFilePersister extends TestCase {
         try {
             Project p = ProjectManager.getManager().makeEmptyProject();
             Object clazz = Model.getCoreFactory().buildClass(p.getModel());
-            Collection propertyChangeListeners =
-                ProjectManager.getManager()
-                	.getCurrentProject().findFigsForMember(clazz);
             Object model =
                 ProjectManager.getManager()
                 	.getCurrentProject().getModel();
@@ -69,8 +65,7 @@ public class TestXmiFilePersister extends TestCase {
                 ProjectManager.getManager()
                 	.getCurrentProject().findType("void");
             Object oper =
-                Model.getCoreFactory().buildOperation(clazz, model,
-                        voidType, propertyChangeListeners);
+                Model.getCoreFactory().buildOperation(clazz, model,voidType);
             Model.getCoreHelper().setType(
                     Model.getFacade().getParameter(oper, 0),
                     p.findType("String"));

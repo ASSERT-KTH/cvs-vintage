@@ -1,4 +1,4 @@
-// $Id: TestTabDiagram.java,v 1.16 2005/06/18 17:52:07 linus Exp $
+// $Id: TestTabDiagram.java,v 1.17 2006/04/13 03:38:30 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.util.Collection;
 import java.util.Date;
 
 import junit.framework.TestCase;
@@ -142,12 +141,9 @@ public class TestTabDiagram extends TestCase {
 
                 // real test
                 long currentTime = (new Date()).getTime();
-                Collection propertyChangeListeners =
-                    project.findFigsForMember(clazz);
                 Object model = project.getModel();
                 Object voidType = project.findType("void");
-                Model.getCoreFactory().buildOperation(clazz, model,
-                        voidType, propertyChangeListeners);
+                Model.getCoreFactory().buildOperation(clazz, model,voidType);
                 System.out.println(
                     "Time needed for adding operation: "
                         + ((new Date()).getTime() - currentTime));

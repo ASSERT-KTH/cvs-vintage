@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.75 2006/04/08 22:36:06 tfmorris Exp $
+// $Id: PropPanelDataType.java,v 1.76 2006/04/13 03:38:31 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -128,9 +127,6 @@ public class PropPanelDataType extends PropPanelClassifier {
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
             if (Model.getFacade().isAClassifier(target)) {
-                Collection propertyChangeListeners =
-                    ProjectManager.getManager()
-                    	.getCurrentProject().findFigsForMember(target);
                 Object model =
                     ProjectManager.getManager()
                     	.getCurrentProject().getModel();
@@ -139,8 +135,7 @@ public class PropPanelDataType extends PropPanelClassifier {
                     	.getCurrentProject().findType("void");
                 Object newOper =
                     Model.getCoreFactory()
-                    	.buildOperation(target, model, voidType,
-                    	        propertyChangeListeners);
+                    	.buildOperation(target, model, voidType);
                 // due to Well Defined rule [2.5.3.12/1]
                 Model.getCoreHelper().setQuery(newOper, true);
                 TargetManager.getInstance().setTarget(newOper);

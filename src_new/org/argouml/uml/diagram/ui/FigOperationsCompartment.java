@@ -1,4 +1,4 @@
-// $Id: FigOperationsCompartment.java,v 1.17 2006/03/11 07:51:39 tfmorris Exp $
+// $Id: FigOperationsCompartment.java,v 1.18 2006/04/13 03:38:30 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,12 +134,10 @@ public class FigOperationsCompartment extends FigFeaturesCompartment {
         Object classifier = getGroup().getOwner();
         Project project = ProjectManager.getManager().getCurrentProject();
 
-        Collection propertyChangeListeners =
-            project.findFigsForMember(classifier);
         Object model = project.getModel();
         Object voidType = project.findType("void");
         Object oper = Model.getCoreFactory().buildOperation(classifier, model,
-                voidType, propertyChangeListeners);
+                voidType);
         populate();
         TargetManager.getInstance().setTarget(oper);
 

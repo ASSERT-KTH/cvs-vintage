@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.29 2006/03/15 14:40:14 linus Exp $
+// $Id: PropPanelSubsystem.java,v 1.30 2006/04/13 03:38:31 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.model_management;
 
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 
 import javax.swing.Action;
 import javax.swing.JList;
@@ -93,12 +92,11 @@ public class PropPanelSubsystem extends PropPanelPackage {
             Object target = TargetManager.getInstance().getModelTarget();
             if (Model.getFacade().isAClassifier(target)) {
                 Project p = ProjectManager.getManager().getCurrentProject();
-                Collection pCListeners = p.findFigsForMember(target);
                 Object model = p.getModel();
                 Object voidType = p.findType("void");
                 Object newOper =
                     Model.getCoreFactory()
-                        .buildOperation(target, model, voidType, pCListeners);
+                        .buildOperation(target, model, voidType);
                 TargetManager.getInstance().setTarget(newOper);
                 super.actionPerformed(e);
             }

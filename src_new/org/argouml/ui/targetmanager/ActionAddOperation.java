@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.6 2006/03/13 19:45:34 mvw Exp $
+// $Id: ActionAddOperation.java,v 1.7 2006/04/13 03:38:30 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.ui.targetmanager;
 
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 
 import javax.swing.Action;
 
@@ -76,13 +75,11 @@ class ActionAddOperation extends UndoableAction {
             return;
         }
 
-        Collection propertyChangeListeners =
-            project.findFigsForMember(classifier);
         Object model = project.getModel();
         Object voidType = project.findType("void");
         Object oper =
             Model.getCoreFactory().buildOperation(
-                classifier, model, voidType, propertyChangeListeners);
+                classifier, model, voidType);
         TargetManager.getInstance().setTarget(oper);
 
     }
