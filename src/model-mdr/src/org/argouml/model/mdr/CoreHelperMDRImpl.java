@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.13 2006/04/08 20:56:37 mvw Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.14 2006/04/13 16:59:20 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import javax.jmi.reflect.InvalidObjectException;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.CoreHelper;
+import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.model.ModelManagementHelper;
 import org.argouml.model.NotImplementedException;
@@ -1079,8 +1080,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
                 return ((AssociationEnd) relationship).getAssociation();
             }
         } catch (InvalidObjectException e) {
-            LOG.error("Queried a removed model element", e);
-            return null;
+            throw new InvalidElementException(e);
         }
         return null;
     }
@@ -1311,7 +1311,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
             }
             return true;
         } catch (InvalidObjectException e) {
-            return false;
+            throw new InvalidElementException(e);
         }
     }
 
@@ -1694,8 +1694,11 @@ public class CoreHelperMDRImpl implements CoreHelper {
      */
     public void removeOwnedElement(Object handle, Object value) {
         if (handle instanceof Namespace && value instanceof ModelElement) {
-            ((Namespace) handle).getOwnedElement().remove(value);
-            ((ModelElement) value).setNamespace(null);
+            ModelElement elem = (ModelElement) value;
+            if (!(elem.getNamespace().equals(handle))) {
+                throw new IllegalStateException("ModelElement isn't in Namespace");
+            }
+            elem.setNamespace(null);
             return;
         }
         throw new IllegalArgumentException("handle: " + handle + " or value: "
