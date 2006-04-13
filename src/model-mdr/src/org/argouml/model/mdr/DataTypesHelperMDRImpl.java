@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperMDRImpl.java,v 1.4 2006/03/25 00:46:55 tfmorris Exp $
+// $Id: DataTypesHelperMDRImpl.java,v 1.5 2006/04/13 03:34:57 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import javax.jmi.reflect.InvalidObjectException;
 
 import org.argouml.model.DataTypesHelper;
+import org.argouml.model.InvalidElementException;
 import org.omg.uml.foundation.core.ModelElement;
 import org.omg.uml.foundation.core.TaggedValue;
 import org.omg.uml.foundation.datatypes.Expression;
@@ -115,7 +116,7 @@ public class DataTypesHelperMDRImpl implements DataTypesHelper {
             }
             return PseudostateKindEnum.PK_INITIAL.equals(kind);
         } catch (InvalidObjectException e) {
-            return false;
+            throw new InvalidElementException(e);
         }
     }
 

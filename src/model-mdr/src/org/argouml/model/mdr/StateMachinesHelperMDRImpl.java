@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperMDRImpl.java,v 1.5 2006/03/25 00:52:29 tfmorris Exp $
+// $Id: StateMachinesHelperMDRImpl.java,v 1.6 2006/04/13 03:34:57 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import javax.jmi.reflect.InvalidObjectException;
 
+import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.model.StateMachinesHelper;
 import org.omg.uml.behavioralelements.commonbehavior.Action;
@@ -85,7 +86,7 @@ public class StateMachinesHelperMDRImpl implements StateMachinesHelper {
                 return ((Transition) trans).getSource();
             }
         } catch (InvalidObjectException e) {
-            return null;
+            throw new InvalidElementException(e);
         }
         throw new IllegalArgumentException("bad argument to "
                 + "getSource() - " + trans);

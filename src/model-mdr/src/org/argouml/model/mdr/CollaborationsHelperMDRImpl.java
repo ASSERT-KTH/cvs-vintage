@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperMDRImpl.java,v 1.7 2006/04/08 20:56:37 mvw Exp $
+// $Id: CollaborationsHelperMDRImpl.java,v 1.8 2006/04/13 03:34:57 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import javax.jmi.reflect.InvalidObjectException;
 
 import org.argouml.model.CollaborationsHelper;
 import org.argouml.model.CoreHelper;
+import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.model.ModelManagementHelper;
 import org.omg.uml.behavioralelements.collaborations.AssociationEndRole;
@@ -456,7 +457,7 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
                 return returnList;
             }
         } catch (InvalidObjectException e) {
-            return Collections.EMPTY_LIST;
+            throw new InvalidElementException(e);
         }
         throw new IllegalArgumentException("Cannot get available contents on "
                 + arole);
@@ -475,7 +476,7 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
                 throw new IllegalArgumentException("Illegal type " + role);
             }
         } catch (InvalidObjectException e) {
-            return Collections.unmodifiableCollection(Collections.EMPTY_LIST);
+            throw new InvalidElementException(e);
         }
     }
 
