@@ -1,4 +1,4 @@
-// $Id: UseCasesHelperMDRImpl.java,v 1.3 2006/03/25 00:52:29 tfmorris Exp $
+// $Id: UseCasesHelperMDRImpl.java,v 1.4 2006/04/13 03:22:42 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -405,8 +405,8 @@ public class UseCasesHelperMDRImpl implements UseCasesHelper {
     public void setCondition(Object handle, Object booleanExpression) {
         if (handle instanceof Extend
                 && booleanExpression instanceof BooleanExpression) {
-            ((Extend) handle).
-                    setCondition((BooleanExpression) booleanExpression);
+            ((Extend) handle)
+                    .setCondition((BooleanExpression) booleanExpression);
             return;
         }
         throw new IllegalArgumentException("handle: " + handle

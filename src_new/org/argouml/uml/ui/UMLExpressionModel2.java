@@ -1,4 +1,4 @@
-// $Id: UMLExpressionModel2.java,v 1.7 2005/06/01 00:12:42 bobtarling Exp $
+// $Id: UMLExpressionModel2.java,v 1.8 2006/04/13 03:22:42 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,22 +53,10 @@ public abstract class UMLExpressionModel2  {
      */
     public void targetChanged() {
         mustRefresh = true;
+        expression = null;
     }
 
-//    /**
-//     * @param event the event
-//     * @return true if the property is affected
-//     */
-//    public boolean propertySet(MElementEvent event) {
-//        boolean isAffected = false;
-//        String eventName = event.getName();
-//        if (eventName != null && eventName.equals(propertyName)) {
-//            isAffected = true;
-//            mustRefresh = true;
-//        }
-//        return isAffected;
-//    }
-//
+
     /**
      * @return the expression
      */
@@ -164,7 +152,9 @@ public abstract class UMLExpressionModel2  {
      * @param body the body text of the expression
      */
     private void setExpression(String lang, String body) {
-        if (expression == null) {
+        // Expressions are DataTypes, not independent model elements
+        // be careful not to reuse them
+        if (mustRefresh || expression == null) {
             expression = newExpression();
         }
         expression = Model.getDataTypesHelper().setLanguage(expression, lang);

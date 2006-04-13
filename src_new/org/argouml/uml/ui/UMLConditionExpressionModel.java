@@ -1,4 +1,4 @@
-// $Id: UMLConditionExpressionModel.java,v 1.11 2005/11/13 11:01:14 linus Exp $
+// $Id: UMLConditionExpressionModel.java,v 1.12 2006/04/13 03:22:42 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,8 +65,7 @@ public class UMLConditionExpressionModel extends UMLExpressionModel2 {
         if (target == null) {
             throw new IllegalStateException("There is no target for " + getContainer());
         }
-        Model.getUseCasesHelper()
-        	.setCondition(target, expression);
+        Model.getUseCasesHelper().setCondition(target, expression);
     }
 
     /**
