@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.16 2006/04/13 16:59:20 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.17 2006/04/13 18:02:46 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,10 +167,6 @@ import org.omg.uml.modelmanagement.UmlPackage;
  * threads, this could occur when trying to update a diagram while handling
  * another MDR event.  All methods really need to be protected by try/catch blocks,
  * not just the ones which have been demonstrated to cause problems. - tfm
- * IMO it should be part of the contract that the passed object is valid. If not
- * we should throw an IllegalArgumentException. Returning null simply changes
- * the danger to us getting a NullPointerException. I've introduced error
- * logging for now until we can track down the areas of misuse - Bob
  */
 class FacadeMDRImpl implements Facade {
 
