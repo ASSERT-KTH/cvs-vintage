@@ -31,6 +31,7 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
+import org.columba.mail.resourceloader.IconKeys;
 import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -51,7 +52,7 @@ public class NewMessageAction extends AbstractColumbaAction {
 				"mainframe", "menu_message_new_toolbar"));
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "menu_message_new_tooltip").replaceAll("&", ""));
-		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("mail-message-new.png"));
+		putValue(SMALL_ICON, MailImageLoader.getSmallIcon(IconKeys.MESSAGE_NEW));
 		putValue(LARGE_ICON, MailImageLoader.getIcon("compose.png"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M,
 				ActionEvent.CTRL_MASK));
