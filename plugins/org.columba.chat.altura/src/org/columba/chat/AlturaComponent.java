@@ -52,7 +52,7 @@ public class AlturaComponent implements IComponentPlugin {
 			InputStream is = this.getClass().getResourceAsStream(
 					"/org/columba/chat/action/action.xml");
 
-			PluginManager.getInstance().getHandler(
+			PluginManager.getInstance().getExtensionHandler(
 					IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION).loadExternalExtensionsFromStream(metadata, is);
 
 		} catch (PluginHandlerNotFoundException ex) {

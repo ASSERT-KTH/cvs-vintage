@@ -44,7 +44,7 @@ public class FilterCompoundCommand extends CompoundCommand {
 
 		// get plugin handler for filter actions
 		IExtensionHandler pluginHandler =  PluginManager
-				.getInstance().getHandler("org.columba.mail.filteraction");
+				.getInstance().getExtensionHandler("org.columba.mail.filteraction");
 
 		// get list of all filter actions
 		FilterActionList list = filter.getFilterActionList();

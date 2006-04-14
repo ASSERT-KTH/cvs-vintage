@@ -53,7 +53,7 @@ public class FolderFactory {
 
 	protected FolderFactory() throws PluginHandlerNotFoundException {
 		// Get the handler
-		handler = PluginManager.getInstance().getHandler(
+		handler = PluginManager.getInstance().getExtensionHandler(
 				IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FOLDER);
 
 	}

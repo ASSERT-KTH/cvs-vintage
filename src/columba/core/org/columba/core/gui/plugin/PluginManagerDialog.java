@@ -101,7 +101,7 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 
 		try {
 			configHandler =  PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

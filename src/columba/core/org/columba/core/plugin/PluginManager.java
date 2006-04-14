@@ -32,7 +32,7 @@ import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IPluginManager;
 import org.columba.api.plugin.PluginMetadata;
-import org.columba.core.logging.Logging;
+import org.columba.core.io.DiskIO;
 import org.columba.core.util.PluginFinder;
 
 /**
@@ -50,7 +50,9 @@ public class PluginManager implements IPluginManager {
 	private static final String FILENAME_PLUGIN_XML = "plugin.xml";
 
 	private static final String FILENAME_CONFIG_XML = "config.xml";
-
+	
+	private static final String FILENAME_EXTENSIONHANDLER_XML = "extensionhandler.xml";
+	
 	private Hashtable handlerMap = new Hashtable();
 
 	private Hashtable pluginMap = new Hashtable();
@@ -59,43 +61,12 @@ public class PluginManager implements IPluginManager {
 
 	private File[] pluginFolders;
 
-	private boolean initCorePluginsOnly = true;
-
 	/**
 	 * 
 	 */
 	private PluginManager() {
-		// load core plugin handlers
-		addHandlers("org/columba/core/plugin/extensionhandler.xml");
-
-		String path = "/org/columba/core/plugin/plugin.xml";
-		URL url = this.getClass().getResource(path);
-		try {
-			File file = new File(url.toURI());
-			addPlugin(file);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		addHandlers("org/columba/addressbook/plugin/extensionhandler.xml");
-		path = "/org/columba/addressbook/plugin/plugin.xml";
-		url = this.getClass().getResource(path);
-		try {
-			File file = new File(url.toURI());
-			addPlugin(file);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		addHandlers("org/columba/mail/plugin/extensionhandler.xml");
-		path = "/org/columba/mail/plugin/plugin.xml";
-		url = this.getClass().getResource(path);
-		try {
-			File file = new File(url.toURI());
-			addPlugin(file);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		// find all possible plugin directories
+		pluginFolders = PluginFinder.searchPlugins();
 	}
 
 	/**
@@ -106,10 +77,10 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.api.plugin.IPluginManager#addHandler(java.lang.String,
+	 * @see org.columba.api.plugin.IPluginManager#addExtensionHandler(java.lang.String,
 	 *      org.columba.api.plugin.IExtensionHandler)
 	 */
-	public void addHandler(String id, IExtensionHandler handler) {
+	public void addExtensionHandler(String id, IExtensionHandler handler) {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 		if (handler == null)
@@ -122,9 +93,9 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.api.plugin.IPluginManager#getHandler(java.lang.String)
+	 * @see org.columba.api.plugin.IPluginManager#getExtensionHandler(java.lang.String)
 	 */
-	public IExtensionHandler getHandler(String id)
+	public IExtensionHandler getExtensionHandler(String id)
 			throws PluginHandlerNotFoundException {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
@@ -136,19 +107,22 @@ public class PluginManager implements IPluginManager {
 
 	}
 
+	
 	/**
-	 * Add a list of handlers specified in path to the plugin manager.
-	 * 
-	 * @param path
-	 *            xml-file validating against pluginhandler.dtd
+	 * @see org.columba.api.plugin.IPluginManager#addExtensionHandlers(java.lang.String)
 	 */
+	public void addExtensionHandlers(String xmlResource) {
+		URL url = DiskIO.getResourceURL(xmlResource);
+		if ( url == null ) return;
+		
+		addExtensionHandlers(url);
+	}
+	
 	/**
-	 * @see org.columba.api.plugin.IPluginManager#addHandlers(java.lang.String)
+	 * @see org.columba.api.plugin.IPluginManager#addExtensionHandlers(java.net.URL)
 	 */
-	public void addHandlers(String xmlResource) {
-		Enumeration e = new ExtensionXMLParser()
-				.parseExtensionHandlerlist(xmlResource);
-
+	public void addExtensionHandlers(URL url) {
+		Enumeration e = new ExtensionXMLParser().parseExtensionHandlerlist(url);
 		while (e.hasMoreElements()) {
 			ExtensionHandlerMetadata metadata = (ExtensionHandlerMetadata) e
 					.nextElement();
@@ -156,10 +130,11 @@ public class PluginManager implements IPluginManager {
 			IExtensionHandler handler = new ExtensionHandler(metadata.getId(),
 					metadata.getParent());
 
-			addHandler(metadata.getId(), handler);
+			addExtensionHandler(metadata.getId(), handler);
 
 		}
 	}
+	
 
 	/**
 	 * This is using a <code>File</code> for historical reasons. This is
@@ -189,12 +164,12 @@ public class PluginManager implements IPluginManager {
 			// if we only initialize the core plugins, skip all unknown plugins
 			// (this is because the extension handlers still need to be
 			// registered)
-//			if ((initCorePluginsOnly)
-//					&& (extensionpointId.startsWith("org.columba.core") == false)) {
-//
-//				LOG.info("skipping all non-core extensions");
-//				continue;
-//			}
+			// if ((initCorePluginsOnly)
+			// && (extensionpointId.startsWith("org.columba.core") == false)) {
+			//
+			// LOG.info("skipping all non-core extensions");
+			// continue;
+			// }
 
 			Vector extensionVector = (Vector) hashtable.get(extensionpointId);
 
@@ -202,7 +177,7 @@ public class PluginManager implements IPluginManager {
 
 			// we have a plugin-handler for this kind of extension
 			try {
-				handler = getHandler(extensionpointId);
+				handler = getExtensionHandler(extensionpointId);
 				Enumeration e2 = extensionVector.elements();
 				while (e2.hasMoreElements()) {
 					ExtensionMetadata extensionMetadata = (ExtensionMetadata) e2
@@ -226,46 +201,12 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.api.plugin.IPluginManager#initCorePlugins()
+	 * @see org.columba.api.plugin.IPluginManager#initExternalPlugins()
 	 */
-	public void initCorePlugins() {
-
-		initCorePluginsOnly = true;
-
-		// find all possible plugin directories
-		pluginFolders = PluginFinder.searchPlugins();
-
-		// if no plugin directory exists -> return
-		if (pluginFolders == null) {
-			return;
-		}
-
-		// try to load all plugins
-		for (int i = 0; i < pluginFolders.length; i++) {
-			File folder = pluginFolders[i];
-
-			LOG.fine("registering plugin: " + folder);
-
-			File xmlFile = new File(folder, FILENAME_PLUGIN_XML);
-
-			if (xmlFile == null || !xmlFile.exists()) {
-				// skip if it doesn't exist
-				continue;
-			}
-
-			addPlugin(xmlFile);
-		}
-
-	}
-
 	public void initExternalPlugins() {
-		initCorePluginsOnly = false;
-
-		// find all possible plugin directories
-		pluginFolders = PluginFinder.searchPlugins();
 
 		// if no plugin directory exists -> return
-		if (pluginFolders == null) {
+		if (pluginFolders == null || pluginFolders.length == 0) {
 			return;
 		}
 
@@ -273,7 +214,7 @@ public class PluginManager implements IPluginManager {
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
 
-			LOG.fine("registering plugin: " + folder);
+			
 
 			File xmlFile = new File(folder, FILENAME_PLUGIN_XML);
 
@@ -282,6 +223,8 @@ public class PluginManager implements IPluginManager {
 				continue;
 			}
 
+			LOG.fine("registering plugin: " + folder);
+			
 			addPlugin(xmlFile);
 		}
 
@@ -349,27 +292,61 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.api.plugin.IPluginManager#getPluginIds()
-	 */
-	public String[] getPluginIds() {
-		Vector result = new Vector();
-		Enumeration e = pluginMap.elements();
-		while (e.hasMoreElements()) {
-			PluginMetadata metadata = (PluginMetadata) e.nextElement();
-
-			String id = metadata.getId();
-
-			result.add(id);
-		}
-
-		return (String[]) result.toArray(new String[0]);
-	}
-
-	/**
 	 * @see org.columba.api.plugin.IPluginManager#getPluginMetadataEnumeration()
 	 */
 	public Enumeration getPluginMetadataEnumeration() {
 		return pluginMap.elements();
 	}
+
+	/**
+	 * @see org.columba.api.plugin.IPluginManager#addPlugin(java.lang.String)
+	 */
+	public String addPlugin(String resourcePath) {
+		if (resourcePath == null)
+			throw new IllegalArgumentException("resourcePath == null");
+
+		URL url = this.getClass().getResource(resourcePath);
+		try {
+			File file = new File(url.toURI());
+			return addPlugin(file);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.columba.api.plugin.IPluginManager#initExternalExtensionHandlers()
+	 */
+	public void initExternalExtensionHandlers() {
+		// if no plugin directory exists -> return
+		if (pluginFolders == null || pluginFolders.length == 0) {
+			return;
+		}
+
+		// try to load all plugins
+		for (int i = 0; i < pluginFolders.length; i++) {
+			File folder = pluginFolders[i];
+
+			
+
+			File xmlFile = new File(folder, FILENAME_EXTENSIONHANDLER_XML);
+
+			if (xmlFile == null || !xmlFile.exists()) {
+				// skip if it doesn't exist
+				continue;
+			}
+
+			try {
+				URL url = xmlFile.toURL();
+				LOG.fine("registering extension handler: " + folder);
+				addExtensionHandlers(url);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	
 
 }

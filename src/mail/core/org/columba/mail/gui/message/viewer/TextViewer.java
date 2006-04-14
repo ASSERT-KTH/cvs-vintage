@@ -185,7 +185,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		try {
 
 			IExtensionHandler handler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
 
 			IExtension extension = handler.getExtension(pluginId);
 			if (extension == null)

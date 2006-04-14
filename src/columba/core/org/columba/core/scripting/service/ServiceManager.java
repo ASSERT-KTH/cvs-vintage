@@ -41,7 +41,7 @@ public class ServiceManager {
 
 	private ServiceManager() {
 		try {
-			handler = PluginManager.getInstance().getHandler(
+			handler = PluginManager.getInstance().getExtensionHandler(
 					IExtensionHandlerKeys.ORG_COLUMBA_CORE_SERVICE);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();

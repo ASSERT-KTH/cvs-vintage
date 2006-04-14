@@ -140,7 +140,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		try {
 			// get theme plugin-handler
 			handler =  PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
@@ -148,7 +148,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		try {
 			// get config plugin-handler
 			configHandler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}

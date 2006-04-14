@@ -38,7 +38,7 @@ public class ComponentManager implements IComponentPlugin {
 				}
 
 				extensionHandler =  pm
-						.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_COMPONENT);
+						.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_COMPONENT);
 			} catch (PluginHandlerNotFoundException e) {
 				e.printStackTrace();
 			}

@@ -67,7 +67,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		super((JFrame) null, true);
 
 		IExtensionHandler h =  PluginManager
-				.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
+				.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
 
 		IExtension extension = h.getExtension(pluginId);
 		try {

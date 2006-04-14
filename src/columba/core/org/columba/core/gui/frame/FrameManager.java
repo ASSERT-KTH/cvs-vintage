@@ -89,7 +89,7 @@ public class FrameManager implements IFrameManager {
 		// get plugin handler for handling frames
 		try {
 			handler = PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_FRAME);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_FRAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}

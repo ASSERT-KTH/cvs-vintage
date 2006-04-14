@@ -45,7 +45,7 @@ public class CriteriaComboBoxRenderer extends DefaultListCellRenderer {
 
 		try {
 			pluginHandler = PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

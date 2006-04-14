@@ -52,7 +52,7 @@ public class ExternalToolsWizardLauncher {
 
 		try {
 			handler = PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_EXTERNALTOOLS);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_EXTERNALTOOLS);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

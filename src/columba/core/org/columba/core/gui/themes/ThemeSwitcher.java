@@ -64,7 +64,7 @@ public class ThemeSwitcher {
 		try {
 			// get plugin-handler
 			IExtensionHandler handler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
 
 			pluginName = themeConfig.getAttribute("name");
 

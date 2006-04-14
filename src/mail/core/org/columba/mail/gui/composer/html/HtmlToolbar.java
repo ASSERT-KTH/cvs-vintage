@@ -91,7 +91,7 @@ public class HtmlToolbar extends JToolBar implements ActionListener, Observer,
 
 		try {
 			handler =  PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

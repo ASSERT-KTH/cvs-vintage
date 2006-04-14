@@ -36,7 +36,7 @@ public class PluginListCellRenderer extends DefaultListCellRenderer {
 
 		try {
 			pluginHandler =  PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_IMPORT);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_IMPORT);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

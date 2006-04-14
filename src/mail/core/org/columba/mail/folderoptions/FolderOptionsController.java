@@ -77,7 +77,7 @@ public class FolderOptionsController implements IFolderOptionsController {
 
 		// init plugin handler
 		try {
-			handler = PluginManager.getInstance().getHandler(
+			handler = PluginManager.getInstance().getExtensionHandler(
 					IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FOLDEROPTIONS);
 		} catch (PluginHandlerNotFoundException e) {
 			// TODO (@author fdietz): show error dialoghere

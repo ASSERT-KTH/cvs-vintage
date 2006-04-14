@@ -168,7 +168,7 @@ public class FolderTreeModel extends DefaultTreeModel {
 
 		try {
 			handler = PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FOLDER);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FOLDER);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

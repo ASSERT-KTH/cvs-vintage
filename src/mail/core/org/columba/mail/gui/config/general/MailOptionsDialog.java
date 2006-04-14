@@ -283,7 +283,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		selectedBrowserLabel = new JLabel("Message Renderer");
 		Vector<String> v = new Vector<String>();
 		try {
-			IExtensionHandler handler = PluginManager.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
+			IExtensionHandler handler = PluginManager.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
 			Enumeration e = handler.getExtensionEnumeration();
 			while (e.hasMoreElements()) {
 				IExtension ext = (IExtension) e.nextElement();

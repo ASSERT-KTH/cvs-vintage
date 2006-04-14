@@ -60,7 +60,7 @@ public class ToolBarXMLDecoder {
 
 		try {
 			pluginHandler = PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

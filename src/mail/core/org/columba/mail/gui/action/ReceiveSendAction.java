@@ -73,7 +73,7 @@ public class ReceiveSendAction extends AbstractColumbaAction {
 			Action sendAllAction;
 
 			IExtension extension = PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION)
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION)
 					.getExtension("SendAll");
 			sendAllAction = (Action) extension
 					.instanciateExtension(new Object[] { getFrameMediator() });

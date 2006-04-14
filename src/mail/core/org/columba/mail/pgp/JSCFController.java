@@ -113,7 +113,7 @@ public class JSCFController {
 			try {
 				LOG.fine("try to get the handler");
 				handler =  PluginManager
-						.getInstance().getHandler(
+						.getInstance().getExtensionHandler(
 								"org.columba.core.externaltools");
 				LOG.fine("recived Handler ... getting path from it");
 				path = ExternalToolsManager.getInstance()

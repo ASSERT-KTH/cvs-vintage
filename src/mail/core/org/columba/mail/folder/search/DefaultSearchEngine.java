@@ -132,7 +132,7 @@ public class DefaultSearchEngine {
 
 		try {
 			IExtensionHandler handler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
 			IExtension extension = handler.getExtension(type);
 
 			instance = (AbstractFilter) extension.instanciateExtension(null);

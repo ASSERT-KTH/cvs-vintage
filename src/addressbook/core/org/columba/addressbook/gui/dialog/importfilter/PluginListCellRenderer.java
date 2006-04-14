@@ -35,7 +35,7 @@ public class PluginListCellRenderer extends DefaultListCellRenderer {
         super();
 
         try {
-            pluginHandler = PluginManager.getInstance().getHandler(
+            pluginHandler = PluginManager.getInstance().getExtensionHandler(
                     "org.columba.addressbook.import");
         } catch (PluginHandlerNotFoundException ex) {
         	ErrorDialog.createDialog(ex.getMessage(), ex);

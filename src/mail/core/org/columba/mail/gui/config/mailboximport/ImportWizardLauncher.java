@@ -49,7 +49,7 @@ public class ImportWizardLauncher {
         final IExtensionHandler pluginHandler;
 
         try {
-            pluginHandler =  PluginManager.getInstance().getHandler(
+            pluginHandler =  PluginManager.getInstance().getExtensionHandler(
                     "org.columba.mail.import");
         } catch (PluginHandlerNotFoundException ex) {
             throw new RuntimeException(ex);

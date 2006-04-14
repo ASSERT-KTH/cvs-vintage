@@ -63,7 +63,7 @@ public class CalendarComponent implements IComponentPlugin {
 			InputStream is = this.getClass().getResourceAsStream(
 					"/org/columba/calendar/action/action.xml");
 
-			PluginManager.getInstance().getHandler(
+			PluginManager.getInstance().getExtensionHandler(
 					IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION).loadExternalExtensionsFromStream(metadata, is);
 
 		} catch (PluginHandlerNotFoundException ex) {

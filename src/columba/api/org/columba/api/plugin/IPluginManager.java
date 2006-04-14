@@ -38,7 +38,7 @@ public interface IPluginManager {
 	 * @param id		handler id
 	 * @param handler	extension handler
 	 */
-	public void addHandler(String id, IExtensionHandler handler);
+	public void addExtensionHandler(String id, IExtensionHandler handler);
 	
 	/**
 	 * Retrieve extension handler.
@@ -47,7 +47,15 @@ public interface IPluginManager {
 	 * @return			extension handler
 	 * @throws PluginHandlerNotFoundException
 	 */
-	public IExtensionHandler getHandler(String id) throws PluginHandlerNotFoundException;
+	public IExtensionHandler getExtensionHandler(String id) throws PluginHandlerNotFoundException;
+	
+	/**
+	 * Add internal plugin to plugin manager.
+	 * 
+	 * @param resourcePath	"/" separated path to resource on the classpath
+	 * @return				plugin id
+	 */
+	public String addPlugin(String resourcePath);
 	
 	/**
 	 * Add plugin to plugin manager.
@@ -82,13 +90,6 @@ public interface IPluginManager {
 	public URL getInfoURL(String id);
 	
 	/**
-	 * Get array of available plugin ids.
-	 * 
-	 * @return	array of plugin ids
-	 */
-	public String[] getPluginIds();
-	
-	/**
 	 * Get enumeration of plugin metadata.
 	 * 
 	 * @return		plugin metadata enumeration
@@ -96,20 +97,29 @@ public interface IPluginManager {
 	public Enumeration getPluginMetadataEnumeration();
 	
 	/**
-	 * initialize all core plugins in "/plugin" folder. 
+	 * Initialize external externsion handlers
+	 * 
+	 * Lookup extensionhandler.xml in all plugin directories and
+	 * register them.
 	 */
-	public void initCorePlugins();
+	public void initExternalExtensionHandlers();
 	
 	/**
-	 * initialize all other plugins in "/plugin" folder.
-	 *
+	 * initialize all external plugins in "/plugin" folder. 
 	 */
 	public void initExternalPlugins();
 	
 	/**
-	 * Add handlers from xml resource.
+	 * Add handlers from xml resource path on the classpath
 	 * 
-	 * @param xmlResource	xml resource
+	 * @param xmlResource	xml resource path
 	 */
-	public void addHandlers(String xmlResource);
+	public void addExtensionHandlers(String xmlResource);
+	
+	/**
+	 * Add handlers from URL.
+	 * 
+	 * @param url	url to extensionhandler.xml
+	 */
+	public void addExtensionHandlers(URL url);
 }

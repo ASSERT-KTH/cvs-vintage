@@ -39,7 +39,7 @@ public class ThemeComboBoxRenderer extends DefaultListCellRenderer {
 
 		try {
 			pluginHandler =  PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

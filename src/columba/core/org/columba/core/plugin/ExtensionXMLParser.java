@@ -3,6 +3,7 @@ package org.columba.core.plugin;
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -12,7 +13,6 @@ import java.util.Vector;
 import org.columba.api.plugin.ExtensionHandlerMetadata;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.PluginMetadata;
-import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -42,7 +42,7 @@ public class ExtensionXMLParser {
 	private static final String XML_ATTRIBUTE_ENABLED = "enabled";
 
 	private static final String XML_ATTRIBUTE_CLASS = "class";
-	
+
 	private static final String XML_ATTRIBUTE_PARENT = "parent";
 
 	private static final String XML_ATTRIBUTE_ID = "id";
@@ -166,13 +166,28 @@ public class ExtensionXMLParser {
 	/**
 	 * Parse extension handler list.
 	 * 
-	 * @param xmlResource
+	 * @param url
+	 *            URL to extensionhandler.xml file
+	 * @return enumeration of extension handler meta data
+	 */
+	public Enumeration<ExtensionHandlerMetadata> parseExtensionHandlerlist(
+			URL url) {
+
+		XmlIO xmlFile = new XmlIO(url);
+		xmlFile.load();
+
+		return parseExtensionHandlerList(xmlFile);
+
+	}
+
+	/**
+	 * @param vector
+	 * @param xmlFile
 	 * @return
 	 */
-	public Enumeration<ExtensionHandlerMetadata> parseExtensionHandlerlist(String xmlResource) {
+	private Enumeration<ExtensionHandlerMetadata> parseExtensionHandlerList(
+			XmlIO xmlFile) {
 		Vector<ExtensionHandlerMetadata> vector = new Vector<ExtensionHandlerMetadata>();
-		XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(xmlResource));
-		xmlFile.load();
 
 		XmlElement list = xmlFile.getRoot().getElement(XML_ELEMENT_HANDLERLIST);
 		if (list == null) {

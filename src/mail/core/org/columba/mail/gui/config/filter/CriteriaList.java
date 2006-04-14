@@ -69,9 +69,9 @@ public class CriteriaList extends JPanel implements ActionListener,
 
 		try {
 			pluginHandler =  PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTER);
 			pluginUIHandler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERUI);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERUI);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

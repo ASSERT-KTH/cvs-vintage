@@ -68,7 +68,7 @@ public class TableView extends TreeTable {
 		// load plugin handler used for the columns
 		try {
 			handler =  PluginManager
-					.getInstance().getHandler(
+					.getInstance().getExtensionHandler(
 							IExtensionHandlerKeys.ORG_COLUMBA_MAIL_TABLERENDERER);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();

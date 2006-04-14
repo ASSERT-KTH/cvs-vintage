@@ -108,7 +108,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 
 		try {
 			handler =  PluginManager.getInstance()
-					.getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CONTACT_FOLDER);
+					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CONTACT_FOLDER);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

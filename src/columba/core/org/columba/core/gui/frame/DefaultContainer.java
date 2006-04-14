@@ -262,7 +262,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		try {
 			IExtensionHandler handler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_STATUSBAR);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_STATUSBAR);
 			Enumeration e = handler.getExtensionEnumeration();
 			while (e.hasMoreElements()) {
 				Extension ext = (Extension) e.nextElement();
@@ -329,7 +329,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		try {
 			IExtensionHandler handler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_STATUSBAR);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_STATUSBAR);
 			Enumeration e = handler.getExtensionEnumeration();
 			while (e.hasMoreElements()) {
 				Extension ext = (Extension) e.nextElement();
@@ -547,7 +547,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		try {
 			IExtensionHandler handler = PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
 			Enumeration e = handler.getExternalExtensionsEnumeration();
 			while (e.hasMoreElements()) {
 				IExtension extension = (IExtension) e.nextElement();

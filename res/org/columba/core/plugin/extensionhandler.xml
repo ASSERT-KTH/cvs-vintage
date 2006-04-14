@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <handlerlist>
- <handler id="org.columba.core.action" class="org.columba.core.pluginhandler.ActionExtensionHandler"/>
- <handler id="org.columba.core.config" class="org.columba.core.pluginhandler.ConfigExtensionHandler"/>
- <handler id="org.columba.core.frame" class="org.columba.core.pluginhandler.FrameExtensionHandler"/>
- <handler id="org.columba.core.theme" class="org.columba.core.pluginhandler.ThemeExtensionHandler"/>
- <handler id="org.columba.core.view" class="org.columba.core.pluginhandler.ViewExtensionHandler"/>
- <handler id="org.columba.core.externaltools" class="org.columba.core.pluginhandler.ExternalToolsExtensionHandler"/>
- <handler id="org.columba.core.component" class="org.columba.core.pluginhandler.ComponentExtensionHandler"/>
- <handler id="org.columba.core.htmlviewer" class="org.columba.core.pluginhandler.HTMLViewerExtensionHandler"/>
- <handler id="org.columba.core.service" class="org.columba.core.pluginhandler.ServiceExtensionHandler"/>
- <handler id="org.columba.core.statusbar" class="org.columba.core.pluginhandler.StatusBarExtensionHandler"/>
+ <handler id="org.columba.core.action" />
+ <handler id="org.columba.core.config" />
+ <handler id="org.columba.core.frame" />
+ <handler id="org.columba.core.theme" />
+ <handler id="org.columba.core.view" />
+ <handler id="org.columba.core.externaltools" />
+ <handler id="org.columba.core.component" />
+ <handler id="org.columba.core.htmlviewer" />
+ <handler id="org.columba.core.service" />
+ <handler id="org.columba.core.statusbar" />
 </handlerlist>

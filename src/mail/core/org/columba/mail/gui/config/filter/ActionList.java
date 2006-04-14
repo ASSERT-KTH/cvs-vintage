@@ -145,9 +145,9 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 		IExtensionHandler pluginUIHandler = null;
 		try {
 			pluginHandler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTION);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTION);
 			pluginUIHandler =PluginManager
-			.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTIONUI);
+			.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTIONUI);
 		} catch (PluginHandlerNotFoundException ex) {
 			if (Logging.DEBUG) {
 				ex.printStackTrace();

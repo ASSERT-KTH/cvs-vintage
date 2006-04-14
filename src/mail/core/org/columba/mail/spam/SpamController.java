@@ -57,7 +57,7 @@ public class SpamController implements ISpamPlugin {
 
 		try {
 			IExtensionHandler handler =  PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_SPAM);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_SPAM);
 
 			IExtension extension = handler.getExtension("SpamAssassin");
 

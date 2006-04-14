@@ -89,7 +89,7 @@ public class DefaultActionRow implements IExtensionInterface {
 
 		try {
 			pluginHandler = PluginManager
-					.getInstance().getHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTION);
+					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_MAIL_FILTERACTION);
 		} catch (PluginHandlerNotFoundException ex) {
 			ErrorDialog.createDialog(ex.getMessage(), ex);
 		}

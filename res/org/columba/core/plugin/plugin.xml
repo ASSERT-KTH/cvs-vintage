@@ -87,7 +87,7 @@
  <extension id="JDIC" class="org.columba.core.gui.htmlviewer.JDICHTMLViewerPlugin" /> 
 </extensionlist>
 
-<extensionlist id="org.columba.core.services">
+<extensionlist id="org.columba.core.service">
     <extension id="BeanshellService" singleton="true" class="org.columba.core.scripting.BeanshellService" />
 </extensionlist>
 

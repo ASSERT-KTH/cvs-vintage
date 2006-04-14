@@ -283,7 +283,7 @@ public class Main {
 		ShutdownManager.getInstance().register(task);
 
 		profiler.push("plugins core");
-		PluginManager.getInstance().initCorePlugins();
+		initPlugins();
 		profiler.pop("plugins core");
 
 		ServiceRegistry.getInstance().register(IPluginManager.class,
@@ -313,7 +313,7 @@ public class Main {
 
 		profiler.push("plugins external");
 		// now load all available plugins
-		//PluginManager.getInstance().initExternalPlugins();
+		// PluginManager.getInstance().initExternalPlugins();
 		profiler.pop("plugins external");
 
 		// hide splash screen
@@ -360,6 +360,51 @@ public class Main {
 
 		/* everything is up and running, start services */
 		ServiceManager.getInstance().startServices();
+	}
+
+	/**
+	 * initialize all extension handlers from core, mail and contacts.
+	 * Additionally, load all internally shipped plugins and last but not least,
+	 * load all external plugins residing in /plugin directory.
+	 */
+	private void initPlugins() {
+		
+		//
+		// first load all externsion handlers
+		//
+		
+		// load core extension handlers
+		PluginManager.getInstance().addExtensionHandlers(
+				"org/columba/core/plugin/extensionhandler.xml");
+
+		// load addressbook extension handler
+		PluginManager.getInstance().addExtensionHandlers(
+				"org/columba/addressbook/plugin/extensionhandler.xml");
+
+		// load mail extension handler
+		PluginManager.getInstance().addExtensionHandlers(
+				"org/columba/mail/plugin/extensionhandler.xml");
+
+		// load all internal core plugins
+		String path = "/org/columba/core/plugin/plugin.xml";
+		PluginManager.getInstance().addPlugin(path);
+
+		//
+		// following internal components plugin registration
+		//
+
+		// load all internal addressbook plugins
+		path = "/org/columba/addressbook/plugin/plugin.xml";
+		PluginManager.getInstance().addPlugin(path);
+
+		// load all internal mail plugins
+		path = "/org/columba/mail/plugin/plugin.xml";
+		PluginManager.getInstance().addPlugin(path);
+
+		//
+		// now load all external plugins residing in /plugins directory
+		//
+		PluginManager.getInstance().initExternalPlugins();
 	}
 
 	/**
