@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.75 2006/04/10 17:55:35 mvw Exp $
+// $Id: PropPanelPackage.java,v 1.76 2006/04/15 18:52:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,16 +108,7 @@ public class PropPanelPackage extends PropPanelNamespace  {
 
         add(getNamespaceVisibilityPanel());
 
-        modifiersPanel = createBorderPanel(Translator.localize(
-                    "label.modifiers"));
-
-        modifiersPanel.add(
-                            new UMLGeneralizableElementAbstractCheckBox());
-        modifiersPanel.add(
-                            new UMLGeneralizableElementLeafCheckBox());
-        modifiersPanel.add(
-                            new UMLGeneralizableElementRootCheckBox());
-        add(modifiersPanel);
+        add(getModifiersPanel());
         
         addSeparator();
         
@@ -142,6 +133,25 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addAction(new ActionDeleteSingleModelElement());
     }
 
+    /**
+     * Returns the Modifiers panel.
+     * 
+     * @return a panel with modifiers
+     */
+    public JPanel getModifiersPanel() {
+        if (modifiersPanel == null) {
+            modifiersPanel = createBorderPanel(Translator.localize(
+                "label.modifiers"));
+            modifiersPanel.add(
+                    new UMLGeneralizableElementAbstractCheckBox());
+            modifiersPanel.add(
+                    new UMLGeneralizableElementLeafCheckBox());
+            modifiersPanel.add(
+                    new UMLGeneralizableElementRootCheckBox());
+        }
+        return modifiersPanel;
+    }
+    
     /**
      * Returns the generalizationScroll.
      * @return JScrollPane
