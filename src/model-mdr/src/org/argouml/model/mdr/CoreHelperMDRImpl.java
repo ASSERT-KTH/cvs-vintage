@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.14 2006/04/13 16:59:20 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.15 2006/04/15 17:54:38 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1275,6 +1275,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
                         || modelElement instanceof Constraint
                         || modelElement instanceof Dependency
                         || modelElement instanceof Collaboration
+                        || modelElement instanceof StateMachine
                         || modelElement instanceof DataType
                         || modelElement instanceof Interface)) {
                     return false;
@@ -1467,7 +1468,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
     public Collection getAllPossibleNamespaces(Object modelElement,
             Object model) {
         ModelElement m = (ModelElement) modelElement;
-        List ret = new ArrayList();
+        Collection ret = new HashSet();
         if (m == null) {
             return ret;
         }
