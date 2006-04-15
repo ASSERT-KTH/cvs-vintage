@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.96 2006/04/07 23:57:48 bobtarling Exp $
+// $Id: UMLDiagram.java,v 1.97 2006/04/15 18:14:34 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,16 +82,21 @@ import org.tigris.toolbar.toolbutton.ToolButton;
  * UML modelelement of which the diagram depends.
  * For a class diagram is that its namespace.
  * For a collaboration diagram is that the Collaboration UML object.
+ * For a sequence diagram is that the collaboration.
+ * For a deployment diagram is that the namespace.
  * For a statechart diagram is that the statemachine.
  * For a activitydiagram is that the activitygraph.
  * Override the getOwner method to return the owner. <p>
+ *
+ *The "owner" is shown in the diagram's properties
+ *panel as the "home model". <p>
  *
  * TODO: MVW: I am not sure of the following:<p>
  * The "namespace" of the diagram is e.g. used when creating new elements
  * that are shown on the diagram; they will have their namespace set
  * according this. It is NOT necessarily equal to the "owner". <p>
  *
- * MVW: I am sure about the following: <p>
+ * MVW: I doubt all following:
  * The "namespace" of the diagram is e.g. used to register a listener
  * to the UML model, to be notified if this element is removed;
  * which will imply that this diagram has to be deleted, too. <p>
