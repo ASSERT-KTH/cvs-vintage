@@ -1,5 +1,5 @@
-// $Id: PropPanelOperation.java,v 1.99 2006/04/08 22:34:22 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PropPanelOperation.java,v 1.100 2006/04/15 18:57:35 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -93,17 +93,17 @@ public class PropPanelOperation extends PropPanelFeature {
 
         addSeparator();
 
-        addField(Translator.localize("label.specification"), 
-                new JScrollPane(new UMLTextArea2(
-                        new UMLOperationSpecificationDocument())));
-
         addField(Translator.localize("label.raisedsignals"),
                new JScrollPane(new UMLLinkedList(
-               new UMLOperationRaisedSignalsListModel())));
+                       new UMLOperationRaisedSignalsListModel())));
 
         addField(Translator.localize("label.methods"),
                new JScrollPane(new UMLLinkedList(
-               new UMLOperationMethodsListModel())));
+                       new UMLOperationMethodsListModel())));
+
+        addField(Translator.localize("label.specification"), 
+                new JScrollPane(new UMLTextArea2(
+                        new UMLOperationSpecificationDocument())));
 
         addAction(new ActionNavigateOwner());
         addAction(TargetManager.getInstance().getAddOperationAction());
