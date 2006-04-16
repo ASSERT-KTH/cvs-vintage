@@ -1,20 +1,22 @@
 package org.columba.core.plugin;
 
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.ListIterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.columba.api.plugin.ExtensionHandlerMetadata;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.PluginMetadata;
-import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 /**
  * Convenience methods for parsing the various xml-file resources.
@@ -65,22 +67,22 @@ public class ExtensionXMLParser {
 	 */
 	public Enumeration loadExtensionsFromStream(InputStream is,
 			PluginMetadata pluginMetadata, boolean internal) {
-		Vector vector = new Vector();
+		Vector<Extension> vector = new Vector<Extension>();
 
-		XmlIO xmlFile = new XmlIO();
-		xmlFile.load(is);
-		XmlElement parent = xmlFile.getRoot().getElement(
-				XML_ELEMENT_EXTENSIONLIST);
-		if (parent == null) {
+		Document doc = retrieveDocument(is);
+
+		Element parent = doc.getRootElement();
+	
+		if (parent == null || !parent.getName().equals(XML_ELEMENT_EXTENSIONLIST)) {
 			LOG.severe("missing <extensionlist> element");
 			return null;
 		}
 
-		ListIterator iterator = parent.getElements().listIterator();
-		XmlElement extensionXmlElement;
+		Iterator iterator = parent.getChildren().listIterator();
+		Element extensionXmlElement;
 
 		while (iterator.hasNext()) {
-			extensionXmlElement = (XmlElement) iterator.next();
+			extensionXmlElement = (Element) iterator.next();
 
 			ExtensionMetadata metadata = parseExtensionMetadata(extensionXmlElement);
 
@@ -101,29 +103,34 @@ public class ExtensionXMLParser {
 	 * @return
 	 */
 	public ExtensionMetadata parseExtensionMetadata(
-			XmlElement extensionXmlElement) {
-		String id = extensionXmlElement.getAttribute(XML_ATTRIBUTE_ID);
+			Element extensionXmlElement) {
+		String id = extensionXmlElement.getAttributeValue(XML_ATTRIBUTE_ID);
 		if (id == null) {
 			LOG.severe("missing attribute \"id\"");
 			return null;
 		}
 
-		String clazz = extensionXmlElement.getAttribute("class");
+		String clazz = extensionXmlElement.getAttributeValue("class");
 		if (clazz == null) {
 			LOG.severe("missing attribute \"class\"");
 			return null;
 		}
 
 		String enabledString = extensionXmlElement
-				.getAttribute(XML_ATTRIBUTE_ENABLED);
+				.getAttributeValue(XML_ATTRIBUTE_ENABLED);
 		String singletonString = extensionXmlElement
-				.getAttribute(XML_ATTRIBUTE_SINGLETON);
+				.getAttributeValue(XML_ATTRIBUTE_SINGLETON);
 
-		XmlElement attributesElement = extensionXmlElement
-				.getElement(XML_ELEMENT_PROPERTIES);
-		Hashtable attributes = null;
-		if (attributesElement != null)
-			attributes = attributesElement.getAttributes();
+		Element attributesElement = extensionXmlElement
+				.getChild(XML_ELEMENT_PROPERTIES);
+		Map<String, String> attributes = new Hashtable<String, String>();
+		if (attributesElement != null) {
+			List list = attributesElement.getAttributes();
+			for (int i=0; i<list.size(); i++) {
+				Attribute a = (Attribute) list.get(i);
+				attributes.put(a.getName(), a.getValue());
+			}
+		}
 
 		ExtensionMetadata metadata = null;
 		if (attributes != null)
@@ -146,15 +153,15 @@ public class ExtensionXMLParser {
 	 * @param pluginElement
 	 * @return
 	 */
-	public PluginMetadata parsePluginMetadata(XmlElement pluginElement) {
+	public PluginMetadata parsePluginMetadata(Element pluginElement) {
 
-		String id = pluginElement.getAttribute(XML_ATTRIBUTE_ID);
-		String name = pluginElement.getAttribute(XML_ATTRIBUTE_NAME);
-		String version = pluginElement.getAttribute(XML_ATTRIBUTE_VERSION);
-		String enabled = pluginElement.getAttribute(XML_ATTRIBUTE_ENABLED);
-		String category = pluginElement.getAttribute(XML_ATTRIBUTE_CATEGORY);
+		String id = pluginElement.getAttributeValue(XML_ATTRIBUTE_ID);
+		String name = pluginElement.getAttributeValue(XML_ATTRIBUTE_NAME);
+		String version = pluginElement.getAttributeValue(XML_ATTRIBUTE_VERSION);
+		String enabled = pluginElement.getAttributeValue(XML_ATTRIBUTE_ENABLED);
+		String category = pluginElement.getAttributeValue(XML_ATTRIBUTE_CATEGORY);
 		String description = pluginElement
-				.getAttribute(XML_ATTRIBUTE_DESCRIPTION);
+				.getAttributeValue(XML_ATTRIBUTE_DESCRIPTION);
 
 		PluginMetadata pluginMetadata = new PluginMetadata(id, name,
 				description, version, category, new Boolean(enabled)
@@ -164,45 +171,30 @@ public class ExtensionXMLParser {
 	}
 
 	/**
-	 * Parse extension handler list.
-	 * 
-	 * @param url
-	 *            URL to extensionhandler.xml file
-	 * @return enumeration of extension handler meta data
-	 */
-	public Enumeration<ExtensionHandlerMetadata> parseExtensionHandlerlist(
-			URL url) {
-
-		XmlIO xmlFile = new XmlIO(url);
-		xmlFile.load();
-
-		return parseExtensionHandlerList(xmlFile);
-
-	}
-
-	/**
 	 * @param vector
 	 * @param xmlFile
 	 * @return
 	 */
-	private Enumeration<ExtensionHandlerMetadata> parseExtensionHandlerList(
-			XmlIO xmlFile) {
+	public  Enumeration<ExtensionHandlerMetadata> parseExtensionHandlerList(
+			InputStream is) {
 		Vector<ExtensionHandlerMetadata> vector = new Vector<ExtensionHandlerMetadata>();
 
-		XmlElement list = xmlFile.getRoot().getElement(XML_ELEMENT_HANDLERLIST);
-		if (list == null) {
+		Document doc = retrieveDocument(is);
+		
+		Element list = doc.getRootElement();
+		if (list == null || !list.getName().equals(XML_ELEMENT_HANDLERLIST)) {
 			LOG.severe("element <handlerlist> expected.");
 			return vector.elements();
 		}
 
-		Iterator it = list.getElements().iterator();
+		Iterator it = list.getChildren().listIterator();
 		while (it.hasNext()) {
-			XmlElement child = (XmlElement) it.next();
+			Element child = (Element) it.next();
 			// skip non-matching elements
 			if (child.getName().equals("handler") == false)
 				continue;
-			String id = child.getAttribute(XML_ATTRIBUTE_ID);
-			String parent = child.getAttribute(XML_ATTRIBUTE_PARENT);
+			String id = child.getAttributeValue(XML_ATTRIBUTE_ID);
+			String parent = child.getAttributeValue(XML_ATTRIBUTE_PARENT);
 
 			ExtensionHandlerMetadata metadata = new ExtensionHandlerMetadata(
 					id, parent);
@@ -216,48 +208,41 @@ public class ExtensionXMLParser {
 	/**
 	 * "plugin.xml" file parse.
 	 * 
-	 * @param pluginXmlFile
-	 *            "plugin.xml" containing the plugin metadata
+	 * @param is	inputstream of "plugin.xml" file
 	 * @param hashtable
 	 *            hashtable will be filled with Vector of all extensions
 	 * @return plugin metadata
 	 */
-	public PluginMetadata parsePlugin(File pluginXmlFile, Hashtable hashtable) {
-		XmlIO config = new XmlIO();
+	public PluginMetadata parsePlugin(InputStream is, Hashtable hashtable) {
+		Document doc = retrieveDocument(is);
 
-		try {
-			config.setURL(pluginXmlFile.toURL());
-		} catch (MalformedURLException mue) {
-		}
-
-		config.load();
-
-		XmlElement pluginElement = config.getRoot().getElement("/plugin");
+		Element pluginElement = doc.getRootElement();
 
 		PluginMetadata pluginMetadata = new ExtensionXMLParser()
 				.parsePluginMetadata(pluginElement);
 
 		// loop through all extensions this plugin uses
-		for (int j = 0; j < pluginElement.count(); j++) {
-			XmlElement extensionListXmlElement = pluginElement.getElement(j);
-
+		Iterator it = pluginElement.getChildren().listIterator();
+		while (it.hasNext() ) {
+			Element extensionListXmlElement = (Element) it.next();
+			
 			// skip if no <extensionlist> element found
 			if (extensionListXmlElement.getName().equals(
 					XML_ELEMENT_EXTENSIONLIST) == false)
 				continue;
 
 			String extensionpointId = extensionListXmlElement
-					.getAttribute(XML_ATTRIBUTE_ID);
+					.getAttributeValue(XML_ATTRIBUTE_ID);
 			if (extensionpointId == null) {
 				LOG.severe("missing extension point id attribute");
 				continue;
 			}
 
-			Vector vector = new Vector();
+			Vector<ExtensionMetadata> vector = new Vector<ExtensionMetadata>();
 
-			for (int k = 0; k < extensionListXmlElement.count(); k++) {
-				XmlElement extensionXmlElement = extensionListXmlElement
-						.getElement(k);
+			Iterator it2 = extensionListXmlElement.getChildren().listIterator();
+			while (it2.hasNext() ) {
+				Element extensionXmlElement = (Element) it2.next();
 
 				// skip if no <extension> element found
 				if (extensionXmlElement.getName().equals(XML_ELEMENT_EXTENSION) == false)
@@ -274,5 +259,23 @@ public class ExtensionXMLParser {
 		}
 
 		return pluginMetadata;
+	}
+	
+	
+	// retrieve JDom Document from inputstream
+	private static Document retrieveDocument(InputStream is) {
+		SAXBuilder builder = new SAXBuilder();
+		builder.setIgnoringElementContentWhitespace(true);
+		Document doc = null;
+		try {
+			doc = builder.build(is);
+		} catch (JDOMException e) {
+			LOG.severe(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			LOG.severe(e.getMessage());
+			e.printStackTrace();
+		}
+		return doc;
 	}
 }

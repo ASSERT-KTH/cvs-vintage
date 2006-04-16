@@ -17,7 +17,12 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -33,7 +38,6 @@ import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IPluginManager;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.io.DiskIO;
-import org.columba.core.util.PluginFinder;
 
 /**
  * Plugin manager is a singleton registry for all plugins and all extension
@@ -50,12 +54,12 @@ public class PluginManager implements IPluginManager {
 	private static final String FILENAME_PLUGIN_XML = "plugin.xml";
 
 	private static final String FILENAME_CONFIG_XML = "config.xml";
-	
-	private static final String FILENAME_EXTENSIONHANDLER_XML = "extensionhandler.xml";
-	
-	private Hashtable handlerMap = new Hashtable();
 
-	private Hashtable pluginMap = new Hashtable();
+	private static final String FILENAME_EXTENSIONHANDLER_XML = "extensionhandler.xml";
+
+	private Hashtable<String, IExtensionHandler> handlerMap = new Hashtable<String, IExtensionHandler>();
+
+	private Hashtable<String, PluginMetadata> pluginMap = new Hashtable<String, PluginMetadata>();
 
 	private static PluginManager instance = new PluginManager();
 
@@ -107,53 +111,43 @@ public class PluginManager implements IPluginManager {
 
 	}
 
-	
 	/**
-	 * @see org.columba.api.plugin.IPluginManager#addExtensionHandlers(java.lang.String)
-	 */
-	public void addExtensionHandlers(String xmlResource) {
-		URL url = DiskIO.getResourceURL(xmlResource);
-		if ( url == null ) return;
-		
-		addExtensionHandlers(url);
-	}
-	
-	/**
-	 * @see org.columba.api.plugin.IPluginManager#addExtensionHandlers(java.net.URL)
-	 */
-	public void addExtensionHandlers(URL url) {
-		Enumeration e = new ExtensionXMLParser().parseExtensionHandlerlist(url);
-		while (e.hasMoreElements()) {
-			ExtensionHandlerMetadata metadata = (ExtensionHandlerMetadata) e
-					.nextElement();
-
-			IExtensionHandler handler = new ExtensionHandler(metadata.getId(),
-					metadata.getParent());
-
-			addExtensionHandler(metadata.getId(), handler);
-
-		}
-	}
-	
-
-	/**
-	 * This is using a <code>File</code> for historical reasons. This is
-	 * actually what the xml parser expects. It would be nice to change this
-	 * into using an <code>InputStream</code> instead.
-	 * 
 	 * @see org.columba.api.plugin.IPluginManager#addPlugin(java.io.File)
 	 */
 	public String addPlugin(File xmlFile) {
 		Hashtable hashtable = new Hashtable();
 
 		// parse "/plugin.xml" file
+		BufferedInputStream buf;
+		try {
+			buf = new BufferedInputStream(new FileInputStream(xmlFile));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			// cancel
+			return null;
+		}
+
 		PluginMetadata pluginMetadata = new ExtensionXMLParser().parsePlugin(
-				xmlFile, hashtable);
+				buf, hashtable);
 		pluginMetadata.setDirectory(xmlFile.getParentFile());
 
 		String id = pluginMetadata.getId();
 		pluginMap.put(id, pluginMetadata);
 
+		// register all extensions
+		parseExtensions(hashtable, pluginMetadata);
+
+		return id;
+	}
+
+	/**
+	 * @param hashtable
+	 *            hashtable with String id and Vector of
+	 *            <code>ExtensionMetadata</code>
+	 * @param pluginMetadata
+	 */
+	private void parseExtensions(Hashtable hashtable,
+			PluginMetadata pluginMetadata) {
 		// loop through all extensions this plugin uses
 		// -> search the corresponding extension handler
 		// -> register the extension at the extension handler
@@ -196,8 +190,6 @@ public class PluginManager implements IPluginManager {
 			}
 
 		}
-
-		return id;
 	}
 
 	/**
@@ -214,8 +206,6 @@ public class PluginManager implements IPluginManager {
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
 
-			
-
 			File xmlFile = new File(folder, FILENAME_PLUGIN_XML);
 
 			if (xmlFile == null || !xmlFile.exists()) {
@@ -224,7 +214,7 @@ public class PluginManager implements IPluginManager {
 			}
 
 			LOG.fine("registering plugin: " + folder);
-			
+
 			addPlugin(xmlFile);
 		}
 
@@ -305,14 +295,37 @@ public class PluginManager implements IPluginManager {
 		if (resourcePath == null)
 			throw new IllegalArgumentException("resourcePath == null");
 
-		URL url = this.getClass().getResource(resourcePath);
+		// retrieve inputstream from resource
+		InputStream is;
 		try {
-			File file = new File(url.toURI());
-			return addPlugin(file);
-		} catch (URISyntaxException e) {
+			is = DiskIO.getResourceStream(resourcePath);
+		} catch (IOException e) {
 			e.printStackTrace();
+			// cancel
+			return null;
 		}
-		return null;
+
+		// parse plugin metadata
+		Hashtable hashtable = new Hashtable();
+		PluginMetadata pluginMetadata = new ExtensionXMLParser().parsePlugin(
+				new BufferedInputStream(is), hashtable);
+
+		String id = pluginMetadata.getId();
+
+		// 
+		// Note: We intentionally don't remember internal plugins, because
+		// we don't want them to appear in the plugin manager currently.
+		// 
+		// TODO: improve plugin manager dialog to support internal plugins
+		// which can't be removed, etc.
+
+		// remember plugin metadata
+		// pluginMap.put(id, pluginMetadata);
+
+		// register all extensions
+		parseExtensions(hashtable, pluginMetadata);
+
+		return id;
 	}
 
 	/**
@@ -324,11 +337,9 @@ public class PluginManager implements IPluginManager {
 			return;
 		}
 
-		// try to load all plugins
+		// try to load extensin handlers of all plugins
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
-
-			
 
 			File xmlFile = new File(folder, FILENAME_EXTENSIONHANDLER_XML);
 
@@ -337,16 +348,52 @@ public class PluginManager implements IPluginManager {
 				continue;
 			}
 
+			BufferedInputStream buf;
 			try {
-				URL url = xmlFile.toURL();
+				buf = new BufferedInputStream(new FileInputStream(xmlFile));
 				LOG.fine("registering extension handler: " + folder);
-				addExtensionHandlers(url);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				addExtensionHandlers(buf);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+				// cancel
+				continue;
 			}
+
 		}
 	}
 
-	
+	/**
+	 * @see org.columba.api.plugin.IPluginManager#addExtensionHandlers(java.io.InputStream)
+	 */
+	public void addExtensionHandlers(InputStream is) {
+		Enumeration<ExtensionHandlerMetadata> e = new ExtensionXMLParser()
+				.parseExtensionHandlerList(is);
+		while (e.hasMoreElements()) {
+			ExtensionHandlerMetadata metadata = e.nextElement();
+
+			IExtensionHandler handler = new ExtensionHandler(metadata.getId(),
+					metadata.getParent());
+
+			addExtensionHandler(metadata.getId(), handler);
+
+		}
+	}
+
+	/**
+	 * @see org.columba.api.plugin.IPluginManager#addExtensionHandlers(java.lang.String)
+	 */
+	public void addExtensionHandlers(String resourcePath) {
+		// retrieve inputstream from resource
+		InputStream is;
+		try {
+			is = DiskIO.getResourceStream(resourcePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+			// cancel
+			return;
+		}
+		
+		addExtensionHandlers(is);
+	}
 
 }

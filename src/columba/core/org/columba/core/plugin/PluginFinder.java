@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.core.util;
+package org.columba.core.plugin;
 
 import java.io.File;
 import java.util.ArrayList;

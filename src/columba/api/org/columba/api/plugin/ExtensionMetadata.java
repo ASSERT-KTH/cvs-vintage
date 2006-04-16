@@ -18,6 +18,7 @@
 package org.columba.api.plugin;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 public class ExtensionMetadata {
 
@@ -26,9 +27,9 @@ public class ExtensionMetadata {
 	private boolean enabled=true;
 	private boolean singleton=false;
 	
-	private Hashtable attributes;
+	private Map<String, String> attributes;
 	
-	public ExtensionMetadata(String id, String classname, Hashtable attributes) {
+	public ExtensionMetadata(String id, String classname, Map<String, String> attributes) {
 		this(id, classname);
 		
 		if ( attributes == null ) throw new IllegalArgumentException("attributes == null");
@@ -46,7 +47,7 @@ public class ExtensionMetadata {
 
 		
  
-		attributes = new Hashtable();
+		attributes = new Hashtable<String, String>();
 	}
 
 	/**

@@ -370,7 +370,7 @@ public class Main {
 	private void initPlugins() {
 		
 		//
-		// first load all externsion handlers
+		// first load all extension handlers
 		//
 		
 		// load core extension handlers
@@ -386,7 +386,7 @@ public class Main {
 				"org/columba/mail/plugin/extensionhandler.xml");
 
 		// load all internal core plugins
-		String path = "/org/columba/core/plugin/plugin.xml";
+		String path = "org/columba/core/plugin/plugin.xml";
 		PluginManager.getInstance().addPlugin(path);
 
 		//
@@ -394,11 +394,11 @@ public class Main {
 		//
 
 		// load all internal addressbook plugins
-		path = "/org/columba/addressbook/plugin/plugin.xml";
+		path = "org/columba/addressbook/plugin/plugin.xml";
 		PluginManager.getInstance().addPlugin(path);
 
 		// load all internal mail plugins
-		path = "/org/columba/mail/plugin/plugin.xml";
+		path = "org/columba/mail/plugin/plugin.xml";
 		PluginManager.getInstance().addPlugin(path);
 
 		//

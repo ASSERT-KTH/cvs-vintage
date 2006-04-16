@@ -18,6 +18,7 @@
 package org.columba.api.plugin;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -50,7 +51,8 @@ public interface IPluginManager {
 	public IExtensionHandler getExtensionHandler(String id) throws PluginHandlerNotFoundException;
 	
 	/**
-	 * Add internal plugin to plugin manager.
+	 * Add internal plugin to plugin manager. This plugin is already in the
+	 * classpath usually (example: contact, mail components).
 	 * 
 	 * @param resourcePath	"/" separated path to resource on the classpath
 	 * @return				plugin id
@@ -58,7 +60,8 @@ public interface IPluginManager {
 	public String addPlugin(String resourcePath);
 	
 	/**
-	 * Add plugin to plugin manager.
+	 * Add external plugin to plugin manager. External, meaning that this plugin
+	 * resides in the plugin/ directory, which is not on the classpath.
 	 * 
 	 * @param folder	directory containing folder
 	 * @return			plugin id
@@ -98,28 +101,33 @@ public interface IPluginManager {
 	
 	/**
 	 * Initialize external externsion handlers
-	 * 
+	 * <p>
 	 * Lookup extensionhandler.xml in all plugin directories and
 	 * register them.
 	 */
 	public void initExternalExtensionHandlers();
 	
 	/**
-	 * initialize all external plugins in "/plugin" folder. 
+	 * Initialize all external plugins in "/plugin" folder.
+	 * <p>
+	 * Parse <code>plugin.xml</code> and register all extension. 
 	 */
 	public void initExternalPlugins();
 	
-	/**
-	 * Add handlers from xml resource path on the classpath
-	 * 
-	 * @param xmlResource	xml resource path
-	 */
-	public void addExtensionHandlers(String xmlResource);
 	
 	/**
-	 * Add handlers from URL.
+	 * Add internal handlers from resource path pointing to a
+	 * <code>extensionhandler.xml</code>.
 	 * 
-	 * @param url	url to extensionhandler.xml
+	 * @param resourcePath 	path to a resource inside the classpath
 	 */
-	public void addExtensionHandlers(URL url);
+	public void addExtensionHandlers(String resourcePath);
+	
+	/**
+	 * Add external handlers from inputstream of a <code>extensionhandler.xml</code>
+	 * file.
+	 * 
+	 * @param is	inputstream to extensionhandler.xml
+	 */
+	public void addExtensionHandlers(InputStream is);
 }
