@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.calendar.ui.navigation;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.GregorianCalendar;
 
 import javax.swing.JComponent;
@@ -30,10 +28,8 @@ import org.columba.calendar.ui.navigation.api.DateRangeChangedEvent;
 import org.columba.calendar.ui.navigation.api.ICalendarNavigationView;
 import org.columba.calendar.ui.navigation.api.IDateRangeChangedListener;
 
-import com.miginfocom.calendar.datearea.ThemeDateAreaContainer;
-import com.miginfocom.calendar.theme.CalendarTheme;
-import com.miginfocom.theme.Theme;
-import com.miginfocom.theme.Themes;
+import com.miginfocom.calendar.datearea.DateArea;
+import com.miginfocom.util.dates.BoundaryRounder;
 import com.miginfocom.util.dates.DateChangeEvent;
 import com.miginfocom.util.dates.DateChangeListener;
 import com.miginfocom.util.dates.DateRangeI;
@@ -57,39 +53,40 @@ public class NavigationController implements ICalendarNavigationView {
 
 	private EventListenerList listenerList = new EventListenerList();
 
-	private ThemeDateAreaContainer view;
+	private com.miginfocom.beans.DateAreaBean dateAreaBean;
 
 	public NavigationController() {
 
-		initThemes();
+		dateAreaBean = DateAreaBeanFactory.initDateArea();
 
-		view = new ThemeDateAreaContainer();
-
-		view.setThemeContext(MINI_CONTEXT);
+		// enable selection
+		dateAreaBean.setSelectionType(DateArea.SELECTION_TYPE_NORMAL);
 
 		long startMillis = new GregorianCalendar(2006, 0, 0).getTimeInMillis();
 		long endMillis = new GregorianCalendar(2006, 12, 31).getTimeInMillis();
 		ImmutableDateRange dr = new ImmutableDateRange(startMillis, endMillis,
 				false, null, null);
 
-		view.getDateArea().setVisibleDateRange(dr);
-		view.repaint();
+		dateAreaBean.getDateArea().setVisibleDateRange(dr);
+		dateAreaBean.repaint();
 
-		view.getDateArea().addDateChangeListener(new DateChangeListener() {
-			public void dateRangeChanged(DateChangeEvent e) {
-				if (e.getType() == DateChangeEvent.SELECTED) {
+		dateAreaBean.getDateArea().addDateChangeListener(
+				new DateChangeListener() {
+					public void dateRangeChanged(DateChangeEvent e) {
+						if (e.getType() == DateChangeEvent.SELECTED) {
+							System.out.println("selection changed");
 
-					fireSelectionChanged(new DateRange(e.getNewRange()
-							.getStartMillis(), e.getNewRange().getEndMillis(
-							false)));
+							fireSelectionChanged(new DateRange(e.getNewRange()
+									.getStartMillis(), e.getNewRange()
+									.getEndMillis(false)));
 
-				}
-			}
-		}, false);
+						}
+					}
+				}, false);
 	}
 
 	public JComponent getView() {
-		return view;
+		return dateAreaBean;
 	}
 
 	/**
@@ -102,7 +99,8 @@ public class NavigationController implements ICalendarNavigationView {
 	/**
 	 * Removes a previously registered listener.
 	 */
-	public void removeSelectionChangedListener(IDateRangeChangedListener listener) {
+	public void removeSelectionChangedListener(
+			IDateRangeChangedListener listener) {
 		listenerList.remove(IDateRangeChangedListener.class, listener);
 	}
 
@@ -125,23 +123,7 @@ public class NavigationController implements ICalendarNavigationView {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	private void initThemes() {
-		try {
-			InputStream is = getClass().getResourceAsStream(
-					"/org/columba/calendar/themes/DemoAppOverview.tme");
-			Themes.loadTheme(is, MINI_CONTEXT, true, true);
-			is.close();
-
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-
 	public void setSelectionMode(int mode) {
-		Theme theme = Themes.getTheme(NavigationController.MINI_CONTEXT);
 
 		int selectionBoundary = -1;
 		int unitCount = -1;
@@ -169,13 +151,10 @@ public class NavigationController implements ICalendarNavigationView {
 			break;
 		}
 
-		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_BOUNDARY, new Integer(
-				selectionBoundary));
-
-		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MIN_COUNT, new Integer(
-				unitCount));
-		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MAX_COUNT, new Integer(
-				unitCount));
+		dateAreaBean.setSelectionBoundaryType(selectionBoundary);
+		dateAreaBean.getDateArea().setSelectionRounder(
+				new BoundaryRounder(selectionBoundary, true, true, false,
+						unitCount, unitCount, null));
 
 	}
 

@@ -17,72 +17,70 @@
 //All Rights Reserved.
 package org.columba.calendar.ui.comp;
 
-import java.io.InputStream;
+import java.awt.Dimension;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.columba.calendar.model.api.IDateRange;
+import org.columba.calendar.ui.navigation.DateAreaBeanFactory;
 
-import com.miginfocom.calendar.ThemeDatePicker;
-import com.miginfocom.calendar.theme.CalendarTheme;
-import com.miginfocom.theme.Theme;
-import com.miginfocom.theme.Themes;
+import com.miginfocom.calendar.datearea.DateArea;
+import com.miginfocom.util.dates.BoundaryRounder;
 import com.miginfocom.util.dates.DateRangeI;
 import com.miginfocom.util.dates.ImmutableDateRange;
 
-@SuppressWarnings({"serial","serial"})
-public class DatePicker extends ThemeDatePicker {
+public class DatePicker extends com.miginfocom.calendar.DatePicker {
 
-	private static final String DP_THEME_CTX1 = "datePicker1";
+	private com.miginfocom.beans.DateAreaBean dateAreaBean;
 
 	public DatePicker() {
 		super();
 
-		try {
-			InputStream is = getClass().getResourceAsStream(
-					"/org/columba/calendar/themes/DatePicker1.tme");
-			Themes.loadTheme(is, DP_THEME_CTX1, true, true);
-			is.close();
+		dateAreaBean = DateAreaBeanFactory.initDateArea();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// enable selection
+		dateAreaBean.setSelectionType(DateArea.SELECTION_TYPE_NORMAL);
 
-		setThemeContext(DP_THEME_CTX1);
+		long startMillis = new GregorianCalendar(2006, 0, 0).getTimeInMillis();
+		long endMillis = new GregorianCalendar(2006, 12, 31).getTimeInMillis();
+		ImmutableDateRange dr = new ImmutableDateRange(startMillis, endMillis,
+				false, null, null);
+		dateAreaBean.getDateArea().setVisibleDateRange(dr);
+		dateAreaBean.setPreferredSize(new Dimension(200, 400));
 
-		Theme theme = Themes.getTheme(DP_THEME_CTX1);
-		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_BOUNDARY, new Integer(
-				DateRangeI.RANGE_TYPE_DAY));
-
-		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MIN_COUNT, new Integer(
-				1));
-		theme.putValue(CalendarTheme.KEY_FEEL_SELECTION_MAX_COUNT, new Integer(
-				1));
+		dateAreaBean.setSelectionBoundaryType(DateRangeI.RANGE_TYPE_DAY);
+		dateAreaBean.getDateArea().setSelectionRounder(
+				new BoundaryRounder(DateRangeI.RANGE_TYPE_DAY, true, true,
+						false, 1, 1, null));
+		dateAreaBean.repaint();
+		setDateAreaContainer(dateAreaBean);
 
 		setHomeButtonVisible(true);
 		setLeftRightButtonsVisible(true);
 		setDefaultDateStyle(DateFormat.DEFAULT);
 		setHideEndDate(true);
-		
+
 		setDate(Calendar.getInstance());
 	}
 
 	public void setDate(Calendar date) {
-		ImmutableDateRange dr = new ImmutableDateRange(date.getTimeInMillis(), date.getTimeInMillis(), false, null, null);
+		ImmutableDateRange dr = new ImmutableDateRange(date.getTimeInMillis(),
+				date.getTimeInMillis(), false, null, null);
 
 		setSelectedRange(dr);
 	}
-	
+
 	public Calendar getDate() {
 		DateRangeI range = getSelectedRange();
-		
+
 		return range.getStart();
 	}
 
 	public void setSelectedColumbaDateRange(IDateRange range) {
 		ImmutableDateRange dr = new ImmutableDateRange(range.getStartTime()
-				.getTimeInMillis(), range.getEndTime().getTimeInMillis(),
-				true, null, null);
+				.getTimeInMillis(), range.getEndTime().getTimeInMillis(), true,
+				null, null);
 
 		setSelectedRange(dr);
 	}

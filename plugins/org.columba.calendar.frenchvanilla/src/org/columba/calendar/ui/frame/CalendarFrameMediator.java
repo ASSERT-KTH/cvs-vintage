@@ -115,12 +115,12 @@ public class CalendarFrameMediator extends DockFrameController implements
 		listPanel = registerDockable("calendar_tree", ResourceLoader.getString(
 				"global", "dockable_calendarlist"), treeScrollPane, null);
 
-		JScrollPane tableScrollPane = new JScrollPane(navigationController
-				.getView());
-		tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+//		JScrollPane tableScrollPane = new JScrollPane(navigationController
+//				.getView());
+//		tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
 		navigationPanel = registerDockable("navigation", ResourceLoader
-				.getString("global", "dockable_navigation"), tableScrollPane,
+				.getString("global", "dockable_navigation"), navigationController.getView(),
 				null);
 
 		calendarPanel = registerDockable("main_calendar", ResourceLoader
