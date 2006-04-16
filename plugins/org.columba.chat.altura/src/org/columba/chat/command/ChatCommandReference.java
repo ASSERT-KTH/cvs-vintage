@@ -29,11 +29,15 @@ public class ChatCommandReference extends DefaultCommandReference {
 	}
 
 	public ChatCommandReference(Presence presence) {
+		if ( presence == null ) throw new IllegalArgumentException("presence == null");
+		
 		this.presence = presence;
 	}
 
 	public ChatCommandReference(String jabberId) {
-		super();
+		if ( jabberId == null ) throw new IllegalArgumentException("jabberId == null");
+		
+		this.jabberId = jabberId;
 	}
 
 	/**

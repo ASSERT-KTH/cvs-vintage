@@ -33,8 +33,12 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
 import org.columba.api.statusbar.IStatusBarExtension;
+import org.columba.chat.MainInterface;
 import org.columba.chat.command.ChangePresenceCommand;
 import org.columba.chat.command.ChatCommandReference;
+import org.columba.chat.conn.api.ConnectionChangedEvent;
+import org.columba.chat.conn.api.IConnectionChangedListener;
+import org.columba.chat.conn.api.IConnection.STATUS;
 import org.columba.chat.resourceloader.ResourceLoader;
 import org.columba.chat.ui.frame.api.IChatFrameMediator;
 import org.columba.chat.ui.presence.api.IPresenceController;
@@ -46,7 +50,7 @@ import org.jivesoftware.smack.packet.Presence;
  * 
  */
 public class PresenceComboBox extends JPanel implements ItemListener,
-		IPresenceController, IStatusBarExtension {
+		IPresenceController, IStatusBarExtension, IConnectionChangedListener {
 
 	private JLabel label;
 
@@ -97,7 +101,11 @@ public class PresenceComboBox extends JPanel implements ItemListener,
 
 		comboBox.addItemListener(this);
 
-		// addItemListener(this);
+		setEnabled(false);
+		comboBox.setEnabled(false);
+		label.setEnabled(false);
+		
+		MainInterface.connection.addConnectionChangedListener(this);
 	}
 
 	// private void addStatus(String tooltip, ImageIcon icon) {
@@ -186,4 +194,22 @@ public class PresenceComboBox extends JPanel implements ItemListener,
 		}
 	}
 
+	/**
+	 * @see org.columba.chat.conn.api.IConnectionChangedListener#connectionChanged(org.columba.chat.conn.api.ConnectionChangedEvent)
+	 */
+	public void connectionChanged(ConnectionChangedEvent object) {
+		// IAccount account = object.getAccount();
+		STATUS status = object.getStatus();
+
+		if (status == STATUS.ONLINE) {
+			setEnabled(true);
+			comboBox.setEnabled(true);
+			label.setEnabled(true);
+		} else if (status == STATUS.OFFLINE) {
+			setEnabled(false);
+			comboBox.setEnabled(false);
+			label.setEnabled(false);
+
+		}
+	}
 }

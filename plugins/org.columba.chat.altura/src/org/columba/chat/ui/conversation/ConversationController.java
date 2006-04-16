@@ -75,6 +75,8 @@ public class ConversationController extends JTabbedPane implements
 	 * @see org.columba.chat.ui.conversation.IConversationController#addChat(java.lang.String)
 	 */
 	public IChatMediator addChat(String jabberId, Chat chat) {
+		if ( jabberId == null ) throw new IllegalArgumentException("jabberId == null");
+		
 
 		ChatMediator m = null;
 		if (chatMap.containsKey(jabberId)) {
@@ -189,6 +191,8 @@ public class ConversationController extends JTabbedPane implements
 	}
 
 	public boolean exists(String jabberId) {
+		if ( jabberId == null ) throw new IllegalArgumentException("jabberId == null");
+		
 		if (chatMap.containsKey(jabberId))
 			return true;
 
