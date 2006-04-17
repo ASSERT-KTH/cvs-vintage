@@ -135,7 +135,7 @@ public class PluginManager implements IPluginManager {
 		pluginMap.put(id, pluginMetadata);
 
 		// register all extensions
-		parseExtensions(hashtable, pluginMetadata);
+		parseExtensions(hashtable, pluginMetadata, false);
 
 		return id;
 	}
@@ -147,23 +147,13 @@ public class PluginManager implements IPluginManager {
 	 * @param pluginMetadata
 	 */
 	private void parseExtensions(Hashtable hashtable,
-			PluginMetadata pluginMetadata) {
+			PluginMetadata pluginMetadata, boolean internal) {
 		// loop through all extensions this plugin uses
 		// -> search the corresponding extension handler
 		// -> register the extension at the extension handler
 		Enumeration e = hashtable.keys();
 		while (e.hasMoreElements()) {
 			String extensionpointId = (String) e.nextElement();
-
-			// if we only initialize the core plugins, skip all unknown plugins
-			// (this is because the extension handlers still need to be
-			// registered)
-			// if ((initCorePluginsOnly)
-			// && (extensionpointId.startsWith("org.columba.core") == false)) {
-			//
-			// LOG.info("skipping all non-core extensions");
-			// continue;
-			// }
 
 			Vector extensionVector = (Vector) hashtable.get(extensionpointId);
 
@@ -178,7 +168,8 @@ public class PluginManager implements IPluginManager {
 							.nextElement();
 					Extension pluginExtension = new Extension(pluginMetadata,
 							extensionMetadata);
-
+					pluginExtension.setInternal(internal);
+					
 					String extensionId = pluginExtension.getMetadata().getId();
 					// if extension wasn't already registered
 					if (handler.exists(extensionId) == false)
@@ -323,7 +314,7 @@ public class PluginManager implements IPluginManager {
 		// pluginMap.put(id, pluginMetadata);
 
 		// register all extensions
-		parseExtensions(hashtable, pluginMetadata);
+		parseExtensions(hashtable, pluginMetadata, true);
 
 		return id;
 	}

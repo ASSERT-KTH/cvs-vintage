@@ -143,17 +143,17 @@ public class Extension implements IExtension {
 
 						// use default Java classlodaer
 						
-						try {
-							plugin = new DefaultPluginLoader().loadPlugin(id,
-									className, arguments);
-							if (plugin != null)
-								return plugin;
-
-						} catch (Exception e) {
-							handleException(e);
-						} catch (Error e) {
-							handleException(e);
-						}
+//						try {
+//							plugin = new DefaultPluginLoader().loadPlugin(id,
+//									className, arguments);
+//							if (plugin != null)
+//								return plugin;
+//
+//						} catch (Exception e) {
+//							handleException(e);
+//						} catch (Error e) {
+//							handleException(e);
+//						}
 						
 
 						// use external Java URL classloader
@@ -350,4 +350,7 @@ public class Extension implements IExtension {
 		return url;
 	}
 
+	public void setInternal(boolean internal) {
+		this.internalPlugin = internal;
+	}
 }

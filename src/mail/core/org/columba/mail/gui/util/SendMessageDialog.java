@@ -37,7 +37,7 @@ import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.command.WorkerStatusChangedEvent;
 import org.columba.core.command.Command;
 import org.columba.core.gui.base.ButtonWithMnemonic;
-import org.columba.core.resourceloader.ImageLoader;
+import org.columba.mail.resourceloader.MailImageLoader;
 
 /**
  * Dialog shows progress while sending message.
@@ -79,7 +79,7 @@ public class SendMessageDialog extends JDialog implements
 
 	protected void initComponents() {
 		label = new JLabel("Sending message...");
-		label.setIcon(ImageLoader.getIcon("send.png"));
+		label.setIcon(MailImageLoader.getIcon("send.png"));
 
 		progressBar = new JProgressBar();
 		progressBar.setPreferredSize(new Dimension(300, 20));

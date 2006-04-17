@@ -114,6 +114,11 @@ public class ComponentManager implements IComponentPlugin {
 			IComponentPlugin p;
 			try {
 				p = (IComponentPlugin) ext.instanciateExtension(null);
+				
+				if ( p == null ) {
+					System.out.println("extension="+ext.getMetadata().getId());
+					return;
+				}
 				p.registerCommandLineArguments();
 			} catch (Exception e) {
 				e.printStackTrace();
