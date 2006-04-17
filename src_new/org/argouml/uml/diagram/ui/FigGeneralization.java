@@ -1,4 +1,4 @@
-// $Id: FigGeneralization.java,v 1.24 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: FigGeneralization.java,v 1.25 2006/04/17 19:02:38 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -188,9 +188,13 @@ public class FigGeneralization extends FigEdgeModelElement {
 	    // happen that there is a generalization without a child
 	    // or parent.
 	    if (subType == null || superType == null) {
+	        // TODO: We should warn the user we have removed something - tfm
 	        removeFromDiagram();
 		return;
 	    }
+	    // TODO: This can fail when called from the single argument
+	    // form of the constructor because getLayer() returns null. - tfm
+	    // see for example project attached to issue 4121
 	    FigNode subTypeFN = (FigNode) getLayer().presentationFor(subType);
 	    FigNode superTypeFN =
 		(FigNode) getLayer().presentationFor(superType);
