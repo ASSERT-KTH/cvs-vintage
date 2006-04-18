@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.7 2006/04/18 20:39:18 tfmorris Exp $
+// $Id: ModelManagementHelper.java,v 1.8 2006/04/18 21:07:40 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,7 +187,25 @@ public interface ModelManagementHelper {
      * @return true if the child is allready in the ownership relationship
      */
     boolean isCyclicOwnership(Object parent, Object child);
-    
+
+    /**
+     * This method removes the import 
+     * of a modelelement from a package.
+     *
+     * @param handle is the package
+     * @param me is the modelelement that was imported
+     */
+    void removeImportedElement(Object handle, Object me);
+
+    /**
+     * Set the complete collection of imported elements 
+     * for a package.
+     * 
+     * @param pack the package to import in
+     * @param imports the collection of modelelements to import
+     */
+    void setImportedElements(Object pack, Collection imports);
+
     /**
      * This method calculates the "contents" additional operation 
      * from the standard: <p>

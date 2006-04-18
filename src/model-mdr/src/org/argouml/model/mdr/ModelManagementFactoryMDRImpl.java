@@ -1,5 +1,5 @@
-// $Id: ModelManagementFactoryMDRImpl.java,v 1.2 2006/03/07 22:34:22 tfmorris Exp $
-// Copyright (c) 2005 The Regents of the University of California. All
+// $Id: ModelManagementFactoryMDRImpl.java,v 1.3 2006/04/18 21:07:46 mvw Exp $
+// Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,6 +27,7 @@ package org.argouml.model.mdr;
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelImplementation;
 import org.argouml.model.ModelManagementFactory;
+import org.omg.uml.foundation.core.ModelElement;
 import org.omg.uml.foundation.core.Namespace;
 import org.omg.uml.modelmanagement.ElementImport;
 import org.omg.uml.modelmanagement.Model;
@@ -114,6 +115,22 @@ public final class ModelManagementFactoryMDRImpl extends
                 getElementImport().createElementImport();
         super.initialize(myElementImport);
         return myElementImport;
+    }
+    
+    /*
+     * @see org.argouml.model.ModelManagementFactory#buildElementImport(
+     * java.lang.Object, java.lang.Object)
+     */
+    public Object buildElementImport(Object pack, Object me) {
+        if (pack instanceof UmlPackage && me instanceof ModelElement) {
+            ElementImport ei = (ElementImport) createElementImport();
+            ei.setImportedElement((ModelElement) me);
+            ei.setUmlPackage((UmlPackage) pack);
+            return ei;
+        }
+        throw new IllegalArgumentException(
+                "To build an ElementImport we need a "
+                + "Package and a ModelElement.");
     }
 
     /**
