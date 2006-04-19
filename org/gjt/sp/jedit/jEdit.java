@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.257 2006/01/23 23:04:24 ezust Exp $
+ * @version $Id: jEdit.java,v 1.258 2006/04/19 23:56:52 ezust Exp $
  */
 public class jEdit
 {
@@ -3443,7 +3443,7 @@ public class jEdit
 
 				boolean restoreFiles = restore
 					&& jEdit.getBooleanProperty("restore")
-					&& (getBufferCount() == 0 ||
+					&& (count == 0 ||
 					jEdit.getBooleanProperty("restore.cli"));
 
 				if(gui || count != 0)
