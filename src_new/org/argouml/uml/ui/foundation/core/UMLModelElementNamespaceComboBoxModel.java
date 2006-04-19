@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.42 2006/03/12 13:13:18 linus Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.43 2006/04/19 05:31:18 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,8 +70,9 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
     protected void buildModelList() {
         Object model =
             ProjectManager.getManager().getCurrentProject().getRoot();
-        Object t = getTarget();
-        Collection c = Model.getCoreHelper().getAllPossibleNamespaces(t, model);
+        Object target = getTarget();
+        Collection c = 
+            Model.getCoreHelper().getAllPossibleNamespaces(target, model);
 
         /* These next lines for the case that the current namespace
          * is not a valid one... Which ofcourse should not happen,
@@ -80,8 +81,8 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
         /* TODO: Enhance the isValidNamespace function so
          * that this never happens.
          */
-        if (t != null) {
-            Object namespace = Model.getFacade().getNamespace(t);
+        if (target != null) {
+            Object namespace = Model.getFacade().getNamespace(target);
             if (!c.contains(namespace)) {
                 c.add(namespace);
                 LOG.warn("The current namespace is not a valid one!");
