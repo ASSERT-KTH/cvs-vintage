@@ -29,6 +29,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -77,7 +78,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.91 2006/04/09 03:57:32 vanza Exp $
+ * @version $Id: GUIUtilities.java,v 1.92 2006/04/19 23:50:16 ezust Exp $
  */
 public class GUIUtilities
 {
@@ -1373,8 +1374,27 @@ public class GUIUtilities
 		{
 			Dimension size = popup.getPreferredSize();
 
-			Rectangle screenSize = win.getGraphicsConfiguration()
-				.getBounds();
+			Rectangle screenSize = new Rectangle();
+            
+			GraphicsEnvironment ge = GraphicsEnvironment
+				.getLocalGraphicsEnvironment();
+			
+			GraphicsDevice[] devices = ge.getScreenDevices();
+			
+			for (int j = 0; j < devices.length; j++) 
+			{ 
+				GraphicsDevice device = devices[j];
+                
+				GraphicsConfiguration[] gc =
+					device.getConfigurations();
+                
+				for (int i=0; i < gc.length; i++) 
+				{
+					screenSize =
+						screenSize.union(
+							gc[i].getBounds());
+				}
+			} 
 
 			if(x + offsetX + size.width + win.getX() > screenSize.width
 				&& x + offsetX + win.getX() >= size.width)
