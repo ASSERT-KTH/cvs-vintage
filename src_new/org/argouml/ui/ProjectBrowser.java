@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.189 2006/04/11 23:10:53 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.190 2006/04/19 19:32:42 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1219,10 +1219,6 @@ public final class ProjectBrowser
             Designer.enableCritiquing();
             success = false;
         } else {
-            Model.getPump().flushModelEvents();
-            Model.getPump().stopPumpingEvents();
-            Model.getPump().flushModelEvents();
-            
             // Hide save action during load. Otherwise we get the
             // * appearing in title bar as models are updated
             Action saveAction = this.saveAction;
@@ -1344,8 +1340,6 @@ public final class ProjectBrowser
                 UndoManager.getInstance().empty();
                 Designer.enableCritiquing();
                 
-                Model.getPump().flushModelEvents();
-                Model.getPump().startPumpingEvents();
                 // Make sure save action is always reinstated
                 this.saveAction = saveAction;
                 ProjectManager.getManager().setSaveAction(saveAction);
