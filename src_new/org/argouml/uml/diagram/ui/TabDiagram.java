@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.62 2006/02/26 16:25:03 linus Exp $
+// $Id: TabDiagram.java,v 1.63 2006/04/19 22:05:37 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -189,10 +189,6 @@ public class TabDiagram
         newTarget.setAsTarget();
 
         setToolBar(newTarget.getJToolBar());
-        // This call fixes a seemingly-harmless NPE when we switch to a
-        // sequence diagram; I have no idea why
-        // --Michael MacDonald
-        javax.swing.RepaintManager.currentManager(this).paintDirtyRegions();
         graph.removeGraphSelectionListener(this);
         graph.setDiagram(newTarget);
         graph.addGraphSelectionListener(this);
