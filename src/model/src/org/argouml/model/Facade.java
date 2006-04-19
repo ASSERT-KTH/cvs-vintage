@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.39 2006/04/08 22:00:14 mvw Exp $
+// $Id: Facade.java,v 1.40 2006/04/19 20:46:32 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1958,6 +1958,14 @@ public interface Facade {
      * @return A Collection with the imported elements.
      */
     Collection getImportedElements(Object pack);
+
+    /**
+     * Returns the imported element from a ElementImport.
+     * 
+     * @param elementImport the given ElementImport
+     * @return the ModelElement that was imported
+     */
+    Object getImportedElement(Object elementImport);
 
     /**
      * Return the Links of a given Association.

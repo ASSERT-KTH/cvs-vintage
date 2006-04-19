@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.8 2006/04/18 21:07:40 mvw Exp $
+// $Id: ModelManagementHelper.java,v 1.9 2006/04/19 20:46:32 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,6 +97,16 @@ public interface ModelManagementHelper {
      * @return a collection of all behavioralfeatures in the given namespace
      */
     Collection getAllBehavioralFeatures(Object ns);
+    
+    /**
+     * Returns a collection of ModelElements 
+     * that may possibly be imported in the given package.
+     * 
+     * @param pack the given package
+     * @return a collection with modelelements 
+     * that may possibly be imported in the given package
+     */
+    Collection getAllPossibleImports(Object pack);
 
     /**
      * Get the modelelement a given path below a given root-namespace.
