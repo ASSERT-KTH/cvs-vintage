@@ -1,4 +1,4 @@
-// $Id: ActionSetAddAssociationMode.java,v 1.1 2005/10/26 17:00:39 bobtarling Exp $
+// $Id: ActionSetAddAssociationMode.java,v 1.2 2006/04/19 05:28:58 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,11 @@ import org.tigris.gef.base.ModeCreatePolyEdge;
 public class ActionSetAddAssociationMode extends CmdSetMode {
 
     /**
+     * Serial version generated for rev. 1.2
+     */
+    private static final long serialVersionUID = -3869448253653259670L;
+
+    /**
      * Construct a new ActionAddAssociation.<p>
      *
      * @param aggregationKind the required aggregation for the association.
@@ -52,11 +57,10 @@ public class ActionSetAddAssociationMode extends CmdSetMode {
      */
     public ActionSetAddAssociationMode(Object aggregationKind, boolean unidirectional,
 				String name) {
-        //super(ModeCreateAssociation.class, "edgeClass",
         super(ModeCreatePolyEdge.class, "edgeClass",
 	      Model.getMetaTypes().getAssociation(), name);
         _modeArgs.put("aggregation", aggregationKind);
-        _modeArgs.put("unidirectional", new Boolean(unidirectional));
+        _modeArgs.put("unidirectional", Boolean.valueOf(unidirectional));
     }
 }
 

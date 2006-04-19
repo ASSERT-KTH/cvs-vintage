@@ -1,4 +1,4 @@
-// $Id: ActionModifierRoot.java,v 1.4 2006/04/01 11:45:08 linus Exp $
+// $Id: ActionModifierRoot.java,v 1.5 2006/04/19 05:28:58 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,18 @@ import org.argouml.model.Model;
 
 class ActionModifierRoot extends AbstractActionCheckBoxMenuItem {
     /**
+     * Serial version generated for rev. 1.5
+     */
+    private static final long serialVersionUID = -5465416932632977463L;
+
+    /**
      * The constructor.
      *
      * @param o the target
      */
     public ActionModifierRoot(Object o) {
         super("checkbox.root-uc", NO_ICON);
-        putValue("SELECTED", new Boolean(valueOfTarget(o)));
+        putValue("SELECTED", Boolean.valueOf(valueOfTarget(o)));
     }
 
     /**

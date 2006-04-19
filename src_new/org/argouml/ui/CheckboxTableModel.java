@@ -1,4 +1,4 @@
-// $Id: CheckboxTableModel.java,v 1.3 2006/03/25 22:16:43 linus Exp $
+// $Id: CheckboxTableModel.java,v 1.4 2006/04/19 05:28:59 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class CheckboxTableModel extends AbstractTableModel {
         elements = new Object[labels.length][3];
         for (int i = 0; i < elements.length; i++) {
             elements[i][0] = labels[i];
-            elements[i][1] = new Boolean(true);
+            elements[i][1] = Boolean.TRUE;
             if (data != null && i < data.length) {
                 elements[i][2] = data[i];
             } else {

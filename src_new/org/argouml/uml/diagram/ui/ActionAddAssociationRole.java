@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.13 2005/11/13 11:01:09 linus Exp $
+// $Id: ActionAddAssociationRole.java,v 1.14 2006/04/19 05:28:58 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,11 @@ import org.tigris.gef.util.ResourceLoader;
 public class ActionAddAssociationRole extends CmdSetMode {
 
     /**
+     * Serial versoin generated for rev 1.14
+     */
+    private static final long serialVersionUID = -2842826831538374107L;
+
+    /**
      * Construct a new ActionAddAssociationRole.
      *
      * @param aggregationKind the required aggregation for the association.
@@ -59,7 +64,7 @@ public class ActionAddAssociationRole extends CmdSetMode {
               Model.getMetaTypes().getAssociationRole(),
               name);
         _modeArgs.put("aggregation", aggregationKind);
-        _modeArgs.put("unidirectional", new Boolean(unidirectional));
+        _modeArgs.put("unidirectional", Boolean.valueOf(unidirectional));
     }
 
     /**
@@ -80,7 +85,7 @@ public class ActionAddAssociationRole extends CmdSetMode {
                 Model.getMetaTypes().getAssociationRole(),
                 name);
         _modeArgs.put("aggregation", aggregationKind);
-        _modeArgs.put("unidirectional", new Boolean(unidirectional));
+        _modeArgs.put("unidirectional", Boolean.valueOf(unidirectional));
         Icon icon = ResourceLoader.lookupIconResource(iconName, iconName);
         if (icon != null) {
             putValue(Action.SMALL_ICON, icon);

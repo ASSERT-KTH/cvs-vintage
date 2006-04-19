@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.242 2006/03/26 22:44:29 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.243 2006/04/19 05:28:58 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.naming.OperationNotSupportedException;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JSeparator;
@@ -420,6 +419,7 @@ public abstract class FigNodeModelElement
     
     /**
      * Get the Rectangle in which the model elements name is displayed
+     * @return bounding box for name
      */
     public Rectangle getNameBounds() {
         return nameFig.getBounds();
@@ -1227,7 +1227,7 @@ public abstract class FigNodeModelElement
                 NotationProviderFactory2.getInstance().getNotationProvider(
                         NotationProviderFactory2.TYPE_NAME, this, own);
             notationProviderName.putValue(
-                    "pathVisible", new Boolean(isPathVisible()));
+                    "pathVisible", Boolean.valueOf(isPathVisible()));
         }
     }
 
@@ -1282,7 +1282,7 @@ public abstract class FigNodeModelElement
         MutableGraphSupport.enableSaveAction();
         pathVisible = visible;
         if (notationProviderName != null) {
-            notationProviderName.putValue("pathVisible", new Boolean(visible));
+            notationProviderName.putValue("pathVisible", Boolean.valueOf(visible));
         }
         if (readyToEdit) {
             renderingChanged();

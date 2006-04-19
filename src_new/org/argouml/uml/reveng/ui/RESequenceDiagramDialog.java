@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.13 2006/03/11 22:23:16 bobtarling Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.14 2006/04/19 05:28:59 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,7 +220,7 @@ public class RESequenceDiagramDialog
 
         if (e.getSource() == getOkButton()) {
             for (int i = 0; i < callTable.getRowCount(); i++) {
-                if (Boolean.TRUE.equals((Boolean) callTable.getValueAt(i, 1))) {
+                if (Boolean.TRUE.equals(callTable.getValueAt(i, 1))) {
                     buildAction((String) callTable.getValueAt(i, 0));
                 }
             }

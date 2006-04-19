@@ -1,4 +1,4 @@
-// $Id: ActionModifierAbstract.java,v 1.4 2006/04/01 11:45:08 linus Exp $
+// $Id: ActionModifierAbstract.java,v 1.5 2006/04/19 05:28:58 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,12 @@ package org.argouml.uml.diagram.ui;
 import org.argouml.model.Model;
 
 class ActionModifierAbstract extends AbstractActionCheckBoxMenuItem {
+    
+    /**
+     * Serial version generated for rev. 1.5
+     */
+    private static final long serialVersionUID = 2005311943576318145L;
+
     /**
      * The constructor.
      *
@@ -34,7 +40,7 @@ class ActionModifierAbstract extends AbstractActionCheckBoxMenuItem {
      */
     public ActionModifierAbstract(Object o) {
         super("checkbox.abstract-uc", NO_ICON);
-        putValue("SELECTED", new Boolean(valueOfTarget(o)));
+        putValue("SELECTED", Boolean.valueOf(valueOfTarget(o)));
     }
 
     /**

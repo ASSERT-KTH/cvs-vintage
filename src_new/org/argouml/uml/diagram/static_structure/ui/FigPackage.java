@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.96 2006/04/01 21:06:38 mvw Exp $
+// $Id: FigPackage.java,v 1.97 2006/04/19 05:28:59 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,7 +198,7 @@ public class FigPackage extends FigNodeModelElement
         super.initNotationProviders(own);
         if (Model.getFacade().isAPackage(own)) {
             notationProviderName.putValue("visibilityVisible",
-                new Boolean(isVisibilityVisible()));
+                Boolean.valueOf(isVisibilityVisible()));
         }
     }
 
@@ -798,7 +798,7 @@ public class FigPackage extends FigNodeModelElement
         visibilityVisible = isVisible;
         if (notationProviderName != null) {
             notationProviderName.putValue("visibilityVisible",
-                new Boolean(isVisible));
+                Boolean.valueOf(isVisible));
         }
         renderingChanged();
         damage();

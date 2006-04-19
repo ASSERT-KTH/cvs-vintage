@@ -1,4 +1,4 @@
-// $Id: ValueHandler.java,v 1.5 2006/03/26 05:34:28 linus Exp $
+// $Id: ValueHandler.java,v 1.6 2006/04/19 05:28:59 tfmorris Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,8 +77,7 @@ public abstract class ValueHandler implements NotationProvider4 {
      * @see org.argouml.notation.NotationProvider4#putValue(java.lang.String, boolean)
      */
     public void putValue(String key, boolean newValue) {
-        Boolean b = new Boolean(newValue);
-        putValue(key, b);
+        putValue(key, Boolean.valueOf(newValue));
     }
 
     /**

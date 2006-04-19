@@ -1,4 +1,4 @@
-// $Id: ActionVisibilityPackage.java,v 1.2 2006/04/01 11:45:08 linus Exp $
+// $Id: ActionVisibilityPackage.java,v 1.3 2006/04/19 05:28:58 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,18 @@ import org.argouml.model.Model;
 
 class ActionVisibilityPackage extends AbstractActionRadioMenuItem {
     /**
+     * Serial version generated for rev 1.3
+     */
+    private static final long serialVersionUID = 8048943592787710460L;
+
+    /**
      * The constructor.
      *
      * @param o the target
      */
     public ActionVisibilityPackage(Object o) {
         super("checkbox.visibility.package-uc", NO_ICON);
-        putValue("SELECTED", new Boolean(
+        putValue("SELECTED", Boolean.valueOf(
             Model.getVisibilityKind().getPackage()
                 .equals(valueOfTarget(o))));
     }

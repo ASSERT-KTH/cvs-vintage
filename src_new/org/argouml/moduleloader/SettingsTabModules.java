@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.11 2006/02/12 21:50:39 linus Exp $
+// $Id: SettingsTabModules.java,v 1.12 2006/04/19 05:28:59 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,7 +105,7 @@ public class SettingsTabModules extends SettingsTabHelper {
 	    for (int i = 0; i < elements.length; i++) {
 		elements[i][0] = arr[i];
 		elements[i][1] =
-		    new Boolean(ModuleLoader2.isSelected((String) arr[i]));
+		    Boolean.valueOf(ModuleLoader2.isSelected((String) arr[i]));
 	    }
 	}
 
