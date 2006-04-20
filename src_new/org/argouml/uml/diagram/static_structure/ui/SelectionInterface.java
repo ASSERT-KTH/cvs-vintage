@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.35 2006/02/26 01:35:25 linus Exp $
+// $Id: SelectionInterface.java,v 1.36 2006/04/20 18:24:34 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,12 @@ public class SelectionInterface extends SelectionNodeClarifiers {
      */
     private static final Logger LOG =
         Logger.getLogger(SelectionInterface.class);
+
+    /**
+     * Remember the pressed button, 
+     * for the case where the mouse is released not above a fig.
+     */
+    private int code;
 
     private static Icon realiz =
         ResourceLoaderWrapper.lookupIconResource("Realization");
@@ -171,11 +177,11 @@ public class SelectionInterface extends SelectionNodeClarifiers {
             LOG.warn("invalid handle number");
             break;
         }
+        code = hand.index;
         if (edgeType != null && nodeType != null) {
             Editor ce = Globals.curEditor();
             ModeCreateEdgeAndNode m =
-                new ModeCreateEdgeAndNode(ce, edgeType,
-                    nodeType, false);
+                new ModeCreateEdgeAndNode(ce, edgeType, false, this);
             m.setup((FigNode) getContent(), getContent().getOwner(), bx, by,
                     reverse);
             ce.pushMode(m);
@@ -205,6 +211,9 @@ public class SelectionInterface extends SelectionNodeClarifiers {
      * @see org.tigris.gef.base.SelectionButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
+        if (buttonCode < 10) {
+            buttonCode = code;
+        }
         if (buttonCode == 10) {
             return Model.getCoreFactory().buildInterface();
         } else {

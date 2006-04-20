@@ -1,5 +1,5 @@
-// $Id: SelectionClassifierRole.java,v 1.22 2005/09/07 21:03:52 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: SelectionClassifierRole.java,v 1.23 2006/04/20 18:24:35 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -206,7 +206,7 @@ public class SelectionClassifierRole extends SelectionNodeClarifiers {
 	}
 	if (edgeType != null && nodeType != null) {
 	    ModeCreateEdgeAndNode m =
-		new ModeCreateEdgeAndNode(ce, edgeType, nodeType, false);
+		new ModeCreateEdgeAndNode(ce, edgeType, false, this);
 	    m.setup((FigNode) getContent(), getContent().getOwner(),
 	            bx, by, reverse);
 	    ce.pushMode(m);
