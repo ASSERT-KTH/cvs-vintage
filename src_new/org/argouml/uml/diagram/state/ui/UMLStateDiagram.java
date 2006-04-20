@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.89 2006/04/11 19:10:58 tfmorris Exp $
+// $Id: UMLStateDiagram.java,v 1.90 2006/04/20 20:53:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,7 +251,8 @@ public class UMLStateDiagram extends UMLDiagram {
         if (evt.getSource() == theStateMachine 
                 && "namespace".equals(evt.getPropertyName())) {
             Object newNamespace = evt.getNewValue();
-            if (getNamespace() != newNamespace) {
+            if (newNamespace != null // this in case we are being deleted 
+                    && getNamespace() != newNamespace) {
                 /* The namespace of the statemachine is changed! */
                 setNamespace(newNamespace);
                 ((UMLMutableGraphSupport)getGraphModel())
