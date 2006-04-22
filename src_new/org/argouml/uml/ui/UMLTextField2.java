@@ -1,4 +1,4 @@
-// $Id: UMLTextField2.java,v 1.14 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLTextField2.java,v 1.15 2006/04/22 00:55:51 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,11 +42,16 @@ public class UMLTextField2
     implements PropertyChangeListener, TargettableModelView {
 
     /**
+     * Serial version generated for rev 1.15
+     */
+    private static final long serialVersionUID = -5740838103900828073L;
+
+    /**
      * Constructor for UMLTextField2.
      *
      * @param doc the plain text document
      */
-    public UMLTextField2(UMLPlainTextDocument doc) {
+    public UMLTextField2(UMLDocument doc) {
         super(doc, null, 0);
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addCaretListener(ActionCopy.getInstance());
@@ -59,14 +64,14 @@ public class UMLTextField2
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        ((UMLPlainTextDocument) getDocument()).propertyChange(evt);
+        ((UMLDocument) getDocument()).propertyChange(evt);
     }
 
     /**
      * @see org.argouml.ui.targetmanager.TargettableModelView#getTargettableModel()
      */
     public TargetListener getTargettableModel() {
-       return (TargetListener) getDocument();
+       return (UMLDocument) getDocument();
     }
 
 }

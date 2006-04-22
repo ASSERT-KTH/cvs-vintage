@@ -1,4 +1,4 @@
-// $Id: UMLTagDefinitionComboBoxModel.java,v 1.6 2006/03/24 05:36:05 linus Exp $
+// $Id: UMLTagDefinitionComboBoxModel.java,v 1.7 2006/04/22 00:55:51 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ public class UMLTagDefinitionComboBoxModel  extends UMLComboBoxModel2 {
      * Constructor for UMLTagDefinitionComboBoxModel.
      */
     public UMLTagDefinitionComboBoxModel() {
+        // TODO: no such event named tagdefinition
         super("tagdefinition", false);
     }
 
@@ -126,7 +127,7 @@ public class UMLTagDefinitionComboBoxModel  extends UMLComboBoxModel2 {
             Object owner = Model.getFacade().getOwner(tagDef);
             if (owner != null && !stereotypes.contains(owner)) {
                 notValids.add(tagDef);
-            }
+        }
         }
         availableTagDefs.removeAll(notValids);
         return availableTagDefs;

@@ -1,4 +1,4 @@
-// $Id: UMLTextArea2.java,v 1.8 2006/03/24 13:24:16 mkl Exp $
+// $Id: UMLTextArea2.java,v 1.9 2006/04/22 00:55:51 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTextArea2.java,v 1.8 2006/03/24 13:24:16 mkl Exp $
 package org.argouml.uml.ui;
 
 import java.beans.PropertyChangeEvent;
@@ -42,12 +41,16 @@ import org.argouml.ui.targetmanager.TargettableModelView;
 public class UMLTextArea2 extends JTextArea
     implements PropertyChangeListener, TargettableModelView {
 
+    /**
+     * Serial version generated for rev 1.9
+     */
+    private static final long serialVersionUID = -9172093001792636086L;
 
     /**
      * Constructor for UMLTextArea2.
      * @param doc the plain text document
      */
-    public UMLTextArea2(UMLPlainTextDocument doc) {
+    public UMLTextArea2(UMLDocument doc) {
         super(doc);
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addCaretListener(ActionCopy.getInstance());
@@ -60,14 +63,14 @@ public class UMLTextArea2 extends JTextArea
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        ((UMLPlainTextDocument) getDocument()).propertyChange(evt);
+        ((UMLDocument) getDocument()).propertyChange(evt);
     }
 
     /**
      * @see org.argouml.ui.targetmanager.TargettableModelView#getTargettableModel()
      */
     public TargetListener getTargettableModel() {
-        return ((TargetListener) getDocument());
+        return ((UMLDocument) getDocument());
     }
 
 }
