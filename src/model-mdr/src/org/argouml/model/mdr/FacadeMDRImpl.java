@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.18 2006/04/19 20:46:50 mvw Exp $
+// $Id: FacadeMDRImpl.java,v 1.19 2006/04/22 01:08:54 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3811,7 +3811,12 @@ class FacadeMDRImpl implements Facade {
                         .multiplicityToString(handle);
             }
         } catch (InvalidObjectException e) {
-            throw new InvalidElementException(e);
+            String uuid = getUUID(handle);
+            if (uuid != null) {
+                throw new InvalidElementException("UUID: " + uuid, e);
+            } else {
+                throw new InvalidElementException(e);
+            }
         }
         throw new IllegalArgumentException(
                 "Must have an MDR element supplied. Received a "
