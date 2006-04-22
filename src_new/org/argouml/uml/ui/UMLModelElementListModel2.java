@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.41 2006/03/15 20:00:48 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.42 2006/04/22 21:14:47 tfmorris Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -333,8 +333,9 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
     protected boolean isValidEvent(PropertyChangeEvent e) {
         boolean valid = false;
         if (!(getChangedElement(e) instanceof Collection)) {
-            valid = isValidElement(getChangedElement(e));
-            if (!valid && e.getNewValue() == null && e.getOldValue() != null) {
+            if ((e.getNewValue() == null && e.getOldValue() != null)
+                    // Don't test changed element if it was deleted
+                    || isValidElement(getChangedElement(e))) {
                 valid = true; // we tried to remove a value
             }
         } else {
