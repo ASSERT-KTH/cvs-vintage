@@ -1,4 +1,4 @@
-// $Id: ActionDeleteModelElements.java,v 1.4 2006/04/21 18:37:33 mvw Exp $
+// $Id: ActionDeleteModelElements.java,v 1.5 2006/04/22 06:28:13 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui;
 import org.argouml.ui.targetmanager.TargetManager;
 
 /**
- * Action for removing (moving to trash) objects from the model. 
+ * Action for removing objects from the model. 
  * Objects can be Modelelements, Diagrams (argodiagram and it's children),
  * Figs without owner,... <p>
  *
@@ -35,6 +35,11 @@ import org.argouml.ui.targetmanager.TargetManager;
  * @author jaap.branderhorst@xs4all.nl extensions
  */
 public class ActionDeleteModelElements extends ActionBaseDelete {
+
+    /**
+     * Generated serial version for rev 1.4
+     */
+    private static final long serialVersionUID = -5728400220151823726L;
 
     /**
      * @return the complete array of targets

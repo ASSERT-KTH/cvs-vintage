@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.45 2006/04/04 20:45:44 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.46 2006/04/22 06:28:13 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -357,17 +357,6 @@ public class GenericArgoMenuBar extends JMenuBar implements
     protected void initMenus() {
         int menuShortcut = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-        // These are currently not used.
-        /*
-         * KeyStroke ctrlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
-         * menuShortcut); KeyStroke ctrlEquals =
-         * KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, menuShortcut); KeyStroke
-         * f3 = KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0); KeyStroke altLeft =
-         * KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_MASK);
-         * KeyStroke altRight = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,
-         * KeyEvent.ALT_MASK);
-         */
-
         // ------------------------------------- File Menu
         initMenuFile(menuShortcut);
 
@@ -440,11 +429,7 @@ public class GenericArgoMenuBar extends JMenuBar implements
 
         file.add(new ActionImportXMI());
         file.add(new ActionExportXMI());
-        // _import = new JMenu(menuLocalize("action.import"));
-        // JMenuItem importProjectAsItem =
-        // _import.add(ActionImportFromSources.SINGLETON);
-        // appendPluggableMenus(_import,
-        // PluggableMenu.KEY_FILE_IMPORT);
+
         JMenuItem importFromSources = file.add(ActionImportFromSources
                 .getInstance());
         setMnemonic(importFromSources, "Import");
