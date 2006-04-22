@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.7 2006/04/08 20:56:26 mvw Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.8 2006/04/22 00:43:01 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -195,7 +195,6 @@ public interface ExtensionMechanismsHelper {
     /**
      * Sets a value of some taggedValue.
      *
-     * @deprecated use addTaggedValue
      * @param handle is the tagged value
      * @param value is the value
      */
