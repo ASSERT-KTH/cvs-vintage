@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.22 2006/04/10 18:47:20 tfmorris Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.23 2006/04/22 20:45:40 tfmorris Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,54 +156,41 @@ public final class ExplorerEventAdaptor
             return;
         }
 
-        // We don't care if the save state has changed
-        if (pce.getPropertyName().equals(
-                ProjectManager.SAVE_STATE_PROPERTY_NAME)) {
-            return;
-        }
-
-        // project events
-        if (pce.getPropertyName()
-                .equals(ProjectManager.CURRENT_PROJECT_PROPERTY_NAME)) {
-            if (pce.getNewValue() != null) {
-                treeModel.structureChanged();
-            }
-            return;
-        }
-
-        // notation events
-        if (Notation.KEY_USE_GUILLEMOTS.isChangedProperty(pce)
-            || Notation.KEY_SHOW_STEREOTYPES.isChangedProperty(pce)) {
-            treeModel.structureChanged();
-        }
-
         // uml model events
-        if (pce instanceof RemoveAssociationEvent) {
+        if (pce instanceof AttributeChangeEvent) {
+            // TODO: Can this be made more restrictive?
+            // Do we care about any attributes other than name? - tfm
+            treeModel.modelElementChanged(pce.getSource());
+        } else if (pce instanceof RemoveAssociationEvent) {
             // TODO: This should really be coded the other way round,
-            // to only act on properties that are recognized, rather
-            // than exclude one or more, but I don't know what they
-            // all are - tfm
+            // to only act on associations which are important for
+            // representing the current perspective (and to only act
+            // on a single end of the association) - tfm
             if (!("namespace".equals(pce.getPropertyName()))) {
                 treeModel.modelElementChanged(((RemoveAssociationEvent) pce)
                         .getChangedValue());
             }
-        }
-
-        if (pce instanceof AddAssociationEvent) {
+        } else if (pce instanceof AddAssociationEvent) {
             if (!("namespace".equals(pce.getPropertyName()))) {
                 treeModel.modelElementAdded(
                         ((AddAssociationEvent) pce).getSource());
             }
-        }
-
-        if (pce instanceof AttributeChangeEvent) {
-            treeModel.modelElementChanged(pce.getSource());
-        }
-
-        if (pce instanceof DeleteInstanceEvent) {
+        } else if (pce instanceof DeleteInstanceEvent) {
             treeModel.modelElementRemoved(((DeleteInstanceEvent) pce)
                     .getSource());
+        } else if (pce.getPropertyName()
+                .equals(ProjectManager.CURRENT_PROJECT_PROPERTY_NAME)) {
+            // project events
+            if (pce.getNewValue() != null) {
+                treeModel.structureChanged();
+            }
+            return;
+        } else if (Notation.KEY_USE_GUILLEMOTS.isChangedProperty(pce)
+            || Notation.KEY_SHOW_STEREOTYPES.isChangedProperty(pce)) {
+            // notation events
+            treeModel.structureChanged();
         }
+
 
     }
 }
