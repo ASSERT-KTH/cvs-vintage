@@ -1,4 +1,4 @@
-// $Id: UMLModelElementTaggedValueProxy.java,v 1.1 2006/04/22 00:55:51 tfmorris Exp $
+// $Id: UMLModelElementTaggedValueProxy.java,v 1.2 2006/04/22 01:27:36 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class UMLModelElementTaggedValueProxy implements UMLDocument {
      */
     public UMLModelElementTaggedValueProxy(String taggedValue) {
         tagName = taggedValue;
-        document = new UMLModelElementTaggedValueDocument();
+        document = new UMLModelElementTaggedValueDocument("");
     }
 
     /**
