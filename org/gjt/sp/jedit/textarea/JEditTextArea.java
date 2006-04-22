@@ -61,7 +61,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.367 2006/04/11 23:03:51 ezust Exp $
+ * @version $Id: JEditTextArea.java,v 1.368 2006/04/22 22:35:17 ezust Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -846,7 +846,7 @@ public class JEditTextArea extends JComponent
 	 * @param screenLine The screen line
 	 * @since jEdit 4.0pre6
 	 */
-	private int getPhysicalLineOfScreenLine(int screenLine)
+	public int getPhysicalLineOfScreenLine(int screenLine)
 	{
 		return chunkCache.getLineInfo(screenLine).physicalLine;
 	} //}}}
