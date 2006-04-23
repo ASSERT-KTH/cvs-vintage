@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.194 2006/04/15 16:49:27 mvw Exp $
+// $Id: ParserDisplay.java,v 1.195 2006/04/23 18:07:03 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -591,7 +591,7 @@ public final class ParserDisplay {
      *         blank string. <em>Note</em>. The string ":" can be used to set
      *         both name and location to null.
      */
-    public Object parseExtensionPoint(String text) {
+    private Object parseExtensionPoint(String text) {
 
         // If we are given the null string, return immediately
 
@@ -973,7 +973,7 @@ public final class ParserDisplay {
      *             when it detects an error in the attribute string. See also
      *             ParseError.getErrorOffset().
      */
-    public void parseAttribute(
+    protected void parseAttribute(
             String text,
             Object attribute) throws ParseException {
         String multiplicity = null;
