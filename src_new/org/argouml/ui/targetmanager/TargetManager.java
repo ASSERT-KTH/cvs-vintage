@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.58 2006/03/20 20:54:17 tfmorris Exp $
+// $Id: TargetManager.java,v 1.59 2006/04/23 18:09:19 mvw Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -832,8 +832,12 @@ public final class TargetManager {
         if (targets.size() == 1) {
             Object target = determineModelTarget(targets.get(0));
             if ((Model.getFacade().isAClass(target)
+                    || Model.getFacade().isAUseCase(target)
                     || (Model.getFacade().isAFeature(target)
-                    && Model.getFacade().isAClass(
+                        && Model.getFacade().isAClass(
+                            Model.getFacade().getOwner(target)))
+                    || (Model.getFacade().isAFeature(target)
+                        && Model.getFacade().isAUseCase(
                             Model.getFacade().getOwner(target)))
                     || Model.getFacade().isAAssociationEnd(target))) {
                 addAttributeEnabled = true;

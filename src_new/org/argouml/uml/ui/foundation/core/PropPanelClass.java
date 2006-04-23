@@ -1,5 +1,5 @@
-// $Id: PropPanelClass.java,v 1.80 2006/04/08 22:36:06 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PropPanelClass.java,v 1.81 2006/04/23 18:09:19 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,13 +24,10 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import javax.swing.JScrollPane;
-
 import org.argouml.i18n.Translator;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.ScrollList;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
@@ -43,16 +40,6 @@ public class PropPanelClass extends PropPanelClassifier {
      * The serial version.
      */
     private static final long serialVersionUID = -8288739384387629966L;
-
-    private JScrollPane attributeScroll;
-
-    private JScrollPane operationScroll;
-
-    private static UMLClassAttributeListModel attributeListModel =
-        new UMLClassAttributeListModel();
-
-    private static UMLClassOperationListModel operationListModel =
-        new UMLClassOperationListModel();
 
     /**
      * Construct a property panel for UML Class elements.
@@ -100,30 +87,6 @@ public class PropPanelClass extends PropPanelClassifier {
         addAction(new ActionNewClass());
         addAction(new ActionNewStereotype());
         addAction(new ActionDeleteSingleModelElement());
-    }
-
-    /**
-     * Returns the operationScroll.
-     *
-     * @return JScrollPane
-     */
-    public JScrollPane getOperationScroll() {
-        if (operationScroll == null) {
-            operationScroll = new ScrollList(operationListModel);
-        }
-        return operationScroll;
-    }
-
-    /**
-     * Returns the attributeScroll.
-     *
-     * @return JScrollPane
-     */
-    public JScrollPane getAttributeScroll() {
-        if (attributeScroll == null) {
-            attributeScroll = new ScrollList(attributeListModel);
-        }
-        return attributeScroll;
     }
 
 } /* end class PropPanelClass */
