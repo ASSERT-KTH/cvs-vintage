@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.50 2006/03/23 14:24:10 mkl Exp $
+// $Id: ExplorerTree.java,v 1.51 2006/04/23 09:37:35 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,6 @@ import org.tigris.gef.presentation.Fig;
  * This class is the JTree for the explorer. It provides:<p>
  * <pre>
  *  - selection/target management
- *  - generate a name for all nodes
  *  - mouse listener for the pop up </pre>
  *
  * @author  alexb
