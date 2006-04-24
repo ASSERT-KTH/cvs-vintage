@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.19 2006/04/22 01:08:54 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.20 2006/04/24 06:36:35 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1813,6 +1813,22 @@ class FacadeMDRImpl implements Facade {
             return ((Argument) handle).getValue();
         }
         return illegalArgumentObject(handle);
+    }
+
+    /**
+     * @see org.argouml.model.Facade#getExtendedElements(java.lang.Object)
+     */
+    public Collection getExtendedElements(Object handle) {
+        if (!(handle instanceof Stereotype)) {
+            return illegalArgumentCollection(handle);
+        }
+        try {
+            return implementation.getUmlPackage().getCore()
+                    .getAStereotypeExtendedElement()
+                        .getExtendedElement((Stereotype) handle);
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.40 2006/04/19 20:46:32 mvw Exp $
+// $Id: Facade.java,v 1.41 2006/04/24 06:36:35 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1476,6 +1476,15 @@ public interface Facade {
      */
     Object getExpression(Object handle);
 
+    /**
+     * Return all extended elements in the current repository for
+     * the given stereotype.
+     * 
+     * @param handle stereotype for which to return extended elements
+     * @return collection of model elements extended by given stereotype
+     */
+    public Collection getExtendedElements(Object handle);
+    
     /**
      * Returns all extends of a use case or extension point.
      *
