@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.50 2006/04/03 21:02:38 linus Exp $
+// $Id: ArgoDiagram.java,v 1.51 2006/04/25 07:26:18 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,5 +292,22 @@ public class ArgoDiagram extends Diagram {
         }
         return description;
     }
+    
+    /**
+     * Find the all Figs that visualise the given model element in
+     * this layer, or null if there is none.
+     * TODO: once GEF includes this same method in Diagram then the can go
+     */
+    public List presentationsFor(Object obj) {
+        ArrayList presentations = new ArrayList();
+        int figCount = getLayer().getContents().size();
+        for(int figIndex = 0; figIndex < figCount; ++figIndex) {
+            Fig fig = (Fig)getLayer().getContents().get(figIndex);
+            if(fig.getOwner() == obj) {
+                presentations.add(fig);
+            }
+        }
 
+        return presentations;
+    }
 } /* end class ArgoDiagram */
