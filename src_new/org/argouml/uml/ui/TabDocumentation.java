@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.38 2006/04/25 20:57:26 mvw Exp $
+// $Id: TabDocumentation.java,v 1.39 2006/04/26 14:57:17 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-
-import java.awt.BorderLayout;
 
 import javax.swing.JScrollPane;
 
