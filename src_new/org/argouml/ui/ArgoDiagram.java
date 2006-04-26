@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.51 2006/04/25 07:26:18 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.52 2006/04/26 21:44:33 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.tigris.gef.base.Editor;
 import org.tigris.gef.graph.MutableGraphSupport;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
+import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigNode;
 
 /**
@@ -272,6 +273,15 @@ public class ArgoDiagram extends Diagram {
                         "Removed: " + figDescription(f)
                         + " model element no longer in the repository\n";
                 }
+                // The fix
+                f.removeFromDiagram();
+            }
+
+            // 3. Make sure the only FigGroups on a diagram are also FigNodes
+            if (f instanceof FigGroup && !(f instanceof FigNode)) {
+                // The report
+                report +=
+                    "Removed: " + figDescription(f) + " a FigGroup should not be on the diagram\n";
                 // The fix
                 f.removeFromDiagram();
             }
