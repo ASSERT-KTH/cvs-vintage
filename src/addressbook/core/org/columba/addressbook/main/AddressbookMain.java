@@ -57,7 +57,7 @@ public class AddressbookMain implements IComponentPlugin {
 			try {
 				FrameManager.getInstance().openView("Addressbook");
 
-				Main.getInstance().setRestoreLastSession(false);
+				ColumbaCmdLineParser.getInstance().setRestoreLastSession(false);
 			} catch (PluginLoadingFailedException e) {
 				LOG.severe(e.getLocalizedMessage());
 			}

@@ -34,6 +34,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -131,6 +132,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	// ID of configuration plugin of this theme plugin
 	protected String configID;
 
+	private boolean restartRequired = false;
+
+	private String oldLookAndFeelName;
+
 	public GeneralOptionsDialog(JFrame frame) {
 		super(frame, GlobalResourceLoader.getString(RESOURCE_PATH, "general",
 				"dialog_title"), true);
@@ -139,16 +144,16 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		try {
 			// get theme plugin-handler
-			handler =  PluginManager.getInstance()
-					.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
+			handler = PluginManager.getInstance().getExtensionHandler(
+					IExtensionHandlerKeys.ORG_COLUMBA_CORE_THEME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
 
 		try {
 			// get config plugin-handler
-			configHandler =  PluginManager
-					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
+			configHandler = PluginManager.getInstance().getExtensionHandler(
+					IExtensionHandlerKeys.ORG_COLUMBA_CORE_CONFIG);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
@@ -170,6 +175,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		if (b) {
 			// look and feel
 			theme = item.getString(GuiItem.THEME, GuiItem.NAME);
+			oldLookAndFeelName = theme;
 
 			lfComboBox.setSelectedItem(theme);
 
@@ -252,6 +258,11 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			// look and feel
 			item.setString(GuiItem.THEME, GuiItem.NAME, (String) lfComboBox
 					.getSelectedItem());
+
+			// remember if Look And Feel has been changed
+			if (!oldLookAndFeelName.equals((String) lfComboBox
+					.getSelectedItem()))
+				restartRequired = true;
 
 			// get language configuration
 			XmlElement locale = Config.getInstance().get("options").getElement(
@@ -471,8 +482,16 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			// TODO (@author fdietz): until we can get all the settings update
 			// immediately
 			// we just open a message box, telling the user to restart
-			// switch to new theme
-			ThemeSwitcher.setTheme();
+
+			if (restartRequired) {
+				JOptionPane
+						.showInternalMessageDialog(this,
+								"You have to restart Columba for the changes to take effect!");
+
+				// switch to new theme
+				ThemeSwitcher.setTheme();
+
+			}
 
 			// notify frame to update
 			IContainer[] m = FrameManager.getInstance().getOpenFrames();
@@ -484,10 +503,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			// set fonts
 			FontProperties.setFont();
 
-			/*
-			 * JOptionPane.showInternalMessageDialog( frame, "You have to
-			 * restart Columba for the changes to take effect!");
-			 */
 		} else if (action.equals("CANCEL")) {
 			setVisible(false);
 		} else if (action.equals("THEME")) {

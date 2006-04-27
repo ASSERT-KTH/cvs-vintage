@@ -26,6 +26,8 @@ import java.util.logging.Logger;
  * <p>
  * Note, that this classloader tries to find the correct constructor based on
  * the arguments.
+ * <p>
+ * Currently, this is not used.
  * 
  * @author fdietz
  */
@@ -82,13 +84,13 @@ public class ExternalClassLoader extends URLClassLoader {
 	}
 
 	public Object instanciate(String className, Object[] args) throws Exception {
-
-		Class actClass = findClass(className);
+	
+		Class actClass = loadClass(className, false);
 
 		Constructor constructor = null;
 
 		// we can't just load the first constructor
-		// -> go find the correct constructor based
+		// -> go find the correct constructor
 		// -> based on the arguments
 		if ((args == null) || (args.length == 0)) {
 

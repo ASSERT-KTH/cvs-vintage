@@ -29,7 +29,7 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 
 public class ResourceLoader {
 
-	private static final String ICON_PATH = "org/columba/chat/icons";
+	private static final String ICON_PATH = "/org/columba/chat/icons";
 
 	private static String i18nPath = "org.columba.chat.i18n";
 
@@ -37,7 +37,7 @@ public class ResourceLoader {
 		if (resourceName == null)
 			throw new IllegalArgumentException("resourceName == null");
 
-		URL url = DiskIO.getResourceURL(ResourceLoader.ICON_PATH + "/MISC/"
+		URL url = ResourceLoader.class.getResource(ResourceLoader.ICON_PATH + "/MISC/"
 				+ resourceName);
 
 		if (url == null)
@@ -60,9 +60,9 @@ public class ResourceLoader {
 		URL url;
 
 		if (small)
-			url = DiskIO.getResourceURL(path + "/16x16/" + name);
+			url = ResourceLoader.class.getResource(path + "/16x16/" + name);
 		else
-			url = DiskIO.getResourceURL(path + "/22x22/" + name);
+			url = ResourceLoader.class.getResource(path + "/22x22/" + name);
 
 		if (url == null)
 			url = getFallback(small);
@@ -80,13 +80,12 @@ public class ResourceLoader {
 		String path;
 		String name;
 		URL url;
-		path = "org/columba/core/icons";
+		path = "/org/columba/core/icons";
 		name = "image-missing.png";
 		if (small)
-
-			url = DiskIO.getResourceURL(path + "/16x16/" + name);
+			url = ResourceLoader.class.getResource(path + "/16x16/" + name);
 		else
-			url = DiskIO.getResourceURL(path + "/22x22/" + name);
+			url = ResourceLoader.class.getResource(path + "/22x22/" + name);
 		return url;
 	}
 

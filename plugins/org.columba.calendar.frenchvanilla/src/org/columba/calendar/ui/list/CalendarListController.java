@@ -107,14 +107,12 @@ public class CalendarListController implements ICalendarListView,
 	 * create the PopupMenu
 	 */
 	public void createPopupMenu(ICalendarMediator mediator) {
-		try {
-			InputStream is = DiskIO
-					.getResourceStream("org/columba/calendar/action/contextmenu_list.xml");
 
-			menu = new MenuXMLDecoder(mediator).createPopupMenu(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		InputStream is = this.getClass().getResourceAsStream(
+				"/org/columba/calendar/action/contextmenu_list.xml");
+
+		menu = new MenuXMLDecoder(mediator).createPopupMenu(is);
+
 	}
 
 	public void valueChanged(ListSelectionEvent e) {

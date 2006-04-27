@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import groovy.lang.GroovyClassLoader;
-
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
@@ -32,6 +30,7 @@ import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.logging.Logging;
+import org.columba.core.main.Main;
 
 /**
  * An extension providing the metadata of an extension and the runtime context
@@ -111,55 +110,38 @@ public class Extension implements IExtension {
 		} else {
 
 			try {
+
 				if (isInternal())
-					if (className.endsWith(".groovy")) {
-						// use Groovy classloader
-						plugin = instanciateGroovyClass(arguments,
-								pluginDirectory, className);
-					} else {
-						// use default Java classlodaer
-						plugin = new DefaultPluginLoader().loadPlugin(id,
-								className, arguments);
-					}
+
+					// use default Java classlodaer
+					plugin = instanciateJavaClass(className, arguments);
+
 				else {
-
+					//
 					// external plugin
-					// -> use external classloader
-					if (className.endsWith(".groovy")) {
-						// use Groovy classloader, wrapped in external URL
-						// classloader
-						// TODO (@author fdietz):  still needs to be wrapped in external URL
-						// classloader,
-						// nevertheless, it seems to work this way - but don't
-						// know why?!
-						plugin = instanciateGroovyClass(arguments,
-								pluginDirectory, className);
-					} else {
+					//				
 
-						// just in case that someone who developers on a plugin
-						// adds the plugin files to his classpath, we try to
-						// load
-						// them with the default classloader
+					// just in case that someone who developers on a plugin
+					// adds the plugin files to his classpath, we try to
+					// load
+					// them with the default classloader
 
-						// use default Java classlodaer
-						
-//						try {
-//							plugin = new DefaultPluginLoader().loadPlugin(id,
-//									className, arguments);
-//							if (plugin != null)
-//								return plugin;
+					// use default Java classlodaer
+
+//					try {
+//						plugin = instanciateJavaClass(className, arguments);
+//						if (plugin != null)
+//							return plugin;
 //
-//						} catch (Exception e) {
-//							handleException(e);
-//						} catch (Error e) {
-//							handleException(e);
-//						}
-						
+//					} catch (Exception e) {
+//						//handleException(e);
+//					} catch (Error e) {
+//						//handleException(e);
+//					}
 
-						// use external Java URL classloader
-						plugin = instanciateExternalJavaClass(arguments,
-								pluginDirectory, className);
-					}
+					// use external Java URL classloader
+					plugin = instanciateExternalJavaClass(arguments,
+							pluginDirectory, className);
 
 				}
 
@@ -195,6 +177,8 @@ public class Extension implements IExtension {
 	/**
 	 * Instanciate external Java class which is specified using the
 	 * <code>plugin.xml</code> descriptor file.
+	 * <p>
+	 * Currently, this is not used!
 	 * 
 	 * @param arguments
 	 *            class constructor arguments
@@ -221,47 +205,77 @@ public class Extension implements IExtension {
 			e.printStackTrace();
 		}
 
-		ExternalClassLoader loader = new ExternalClassLoader(urls);
+		//
+		// @author: fdietz
+		// WORKAROUND:
+		// we simply append URLs to the existing global class loader
+		// and use the same for instanciation
+		// Note, that we don't create a new classloader for every class
+		// we instanciate. This implies that we don't support hot-swapping
+		// of changed classes, currently.
 
-		plugin = (IExtensionInterface) loader.instanciate(className, arguments);
+		// append URLs to global classloader
+		Main.mainClassLoader.addURLs(urls);
+
+		plugin = instanciateJavaClass(className, arguments);
+
+		// create new class loader using the global class loader as parent
+		// ExternalClassLoader loader = new ExternalClassLoader(urls,
+		// Main.mainClassLoader);
+		// plugin = (IExtensionInterface) loader.instanciate(className,
+		// arguments);
 
 		return plugin;
 	}
 
-	/**
-	 * Instaciate groovy script class.
-	 * 
-	 * @param arguments
-	 *            class arguments
-	 * @param pluginDirectory
-	 *            plugin directory
-	 * @param className
-	 *            groovy classname
-	 * @return extension interface
-	 * @throws Exception
-	 */
-	private IExtensionInterface instanciateGroovyClass(Object[] arguments,
-			File pluginDirectory, String className) throws Exception {
-		IExtensionInterface plugin;
-		GroovyClassLoader gcl = new GroovyClassLoader(getClass()
-				.getClassLoader());
+	private IExtensionInterface instanciateJavaClass(String className,
+			Object[] arguments) throws Exception {
 
-		if (!className.endsWith(".groovy"))
-			className = className + ".groovy";
+		if (className == null)
+			throw new IllegalArgumentException("className == null");
 
-		File groovyFile = new File(pluginDirectory, className);
+		IExtensionInterface plugin = null;
 
-		Class clazz = gcl.parseClass(groovyFile);
-		Constructor constr = ClassLoaderHelper
-				.findConstructor(arguments, clazz);
+		// use our global class loader
+		ClassLoader loader = Main.mainClassLoader;
 
-		Object object = null;
-		if (constr != null)
-			object = constr.newInstance(arguments);
-		else
-			object = clazz.newInstance();
+		Class actClass;
 
-		plugin = (IExtensionInterface) object;
+		actClass = loader.loadClass(className);
+
+		//
+		// we can't just load the first constructor
+		// -> go find the correct constructor based
+		// -> based on the arguments
+		//
+		if ((arguments == null) || (arguments.length == 0)) {
+
+			plugin = (IExtensionInterface) actClass.newInstance();
+
+		} else {
+			Constructor constructor;
+
+			constructor = ClassLoaderHelper
+					.findConstructor(arguments, actClass);
+
+			// couldn't find correct constructor
+			if (constructor == null) {
+				LOG.severe("Couldn't find constructor for " + className
+						+ " with matching argument-list: ");
+				for (int i = 0; i < arguments.length; i++) {
+					LOG.severe("argument[" + i + "]=" + arguments[i]);
+				}
+
+				return null;
+			} else {
+
+				plugin = (IExtensionInterface) constructor
+						.newInstance(arguments);
+
+			}
+
+		}
+
 		return plugin;
 	}
 

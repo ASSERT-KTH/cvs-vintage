@@ -161,7 +161,7 @@ public class MailMain implements IComponentPlugin {
 
 					controller.setComposerModel(model);
 
-					Main.getInstance().setRestoreLastSession(false);
+					ColumbaCmdLineParser.getInstance().setRestoreLastSession(false);
 				} catch (ParserException e1) {
 					LOG.warning(e1.getLocalizedMessage());
 				}
@@ -169,7 +169,7 @@ public class MailMain implements IComponentPlugin {
 				try {
 					FrameManager.getInstance().openView("ThreePaneMail");
 
-					Main.getInstance().setRestoreLastSession(false);
+					ColumbaCmdLineParser.getInstance().setRestoreLastSession(false);
 				} catch (PluginLoadingFailedException e) {
 					LOG.severe(e.getLocalizedMessage());
 				}
@@ -186,7 +186,7 @@ public class MailMain implements IComponentPlugin {
 
 			controller.setComposerModel(model);
 
-			Main.getInstance().setRestoreLastSession(false);
+			ColumbaCmdLineParser.getInstance().setRestoreLastSession(false);
 		}
 	}
 

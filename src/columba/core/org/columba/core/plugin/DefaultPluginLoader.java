@@ -22,6 +22,14 @@ import java.util.logging.Logger;
 
 import org.columba.api.plugin.IExtensionInterface;
 
+/**
+ * Use default classloader to instanciate a class using a constructor
+ * with matching arguments.
+ * <p>
+ * Currently, this is not used.
+ * 
+ * @author fdietz
+ */
 public class DefaultPluginLoader  {
 
 	private static final Logger LOG = Logger

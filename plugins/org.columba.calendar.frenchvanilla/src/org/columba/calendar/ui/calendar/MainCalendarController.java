@@ -121,7 +121,7 @@ public class MainCalendarController implements InteractionListener,
 
 		// start with week view
 		currentDateAreaBean = dateAreaBean;
-		
+
 		setViewMode(currentViewMode);
 
 		panel.repaint();
@@ -141,14 +141,12 @@ public class MainCalendarController implements InteractionListener,
 	 * create the PopupMenu
 	 */
 	public void createPopupMenu(ICalendarMediator mediator) {
-		try {
-			InputStream is = DiskIO
-					.getResourceStream("org/columba/calendar/action/contextmenu_calendar.xml");
 
-			menu = new MenuXMLDecoder(mediator).createPopupMenu(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		InputStream is = this.getClass().getResourceAsStream(
+				"/org/columba/calendar/action/contextmenu_calendar.xml");
+
+		menu = new MenuXMLDecoder(mediator).createPopupMenu(is);
+
 	}
 
 	private DateAreaBean initComponents(boolean dailyView) {
@@ -214,9 +212,10 @@ public class MainCalendarController implements InteractionListener,
 		int viewMode = -1;
 
 		int days = -1;
-		
-		DateRange newVisRange = new DateRange(currentDateAreaBean.getDateArea().getVisibleDateRangeCorrected());
-		
+
+		DateRange newVisRange = new DateRange(currentDateAreaBean.getDateArea()
+				.getVisibleDateRangeCorrected());
+
 		switch (mode) {
 		case ICalendarView.VIEW_MODE_DAY:
 
@@ -266,7 +265,6 @@ public class MainCalendarController implements InteractionListener,
 
 	}
 
-	
 	public void printDebug(DateRange dateRange) {
 		Calendar todayCalendar = Calendar.getInstance();
 		int today = todayCalendar.get(java.util.Calendar.DAY_OF_YEAR);

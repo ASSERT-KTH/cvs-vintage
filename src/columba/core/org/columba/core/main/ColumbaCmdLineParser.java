@@ -38,83 +38,89 @@ public class ColumbaCmdLineParser {
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
 
 	private CommandLineParser parser;
+
 	private Options options;
-	
+
 	private String[] args;
 
 	private static ColumbaCmdLineParser instance;
 
 	private CommandLine commandLine;
 
-	
+	// switch for restoring last session of Columba.
+	// if true, restores all windows. 
+	private boolean restoreLastSession = true;
+
 	private ColumbaCmdLineParser() {
 		parser = new BasicParser();
 		options = new Options();
 	}
-	
+
 	/**
 	 * Gets the instance of the ColumbaCmdLineParser.
 	 * 
 	 * @return the singleton instance
 	 */
 	public static ColumbaCmdLineParser getInstance() {
-		if( instance == null) {
+		if (instance == null) {
 			instance = new ColumbaCmdLineParser();
 		}
-		
+
 		return instance;
 	}
-	
+
 	/**
 	 * Adds an option to the CommandlineParser
 	 * 
-	 * @param option a new command line argument.
-	 */	
-	public void addOption( Option option ) {
+	 * @param option
+	 *            a new command line argument.
+	 */
+	public void addOption(Option option) {
 		options.addOption(option);
 	}
-	
+
 	/**
 	 * Adds an OptionGroup to the CommandlineParser.
 	 * 
 	 * @param optionGroup
 	 */
-	public void addOptionGroup( OptionGroup option) {
-		options.addOptionGroup( option );
+	public void addOptionGroup(OptionGroup option) {
+		options.addOptionGroup(option);
 	}
-	
+
 	/**
 	 * Parses the commandline.
 	 * 
-	 * @param args the arguments 
+	 * @param args
+	 *            the arguments
 	 * @return the parsed CommandLine
 	 * @throws ParseException
 	 */
 	public CommandLine parse(String[] args) throws ParseException {
 		commandLine = parser.parse(options, args);
-		
+
 		return commandLine;
 	}
-	
+
 	/**
-	 * Gets the previously parsed Commandline. 
+	 * Gets the previously parsed Commandline.
 	 * 
 	 * @see #parse(String[])
 	 * 
 	 * @return the last parsed commandline
 	 */
-	public CommandLine getParsedCommandLine() {		
+	public CommandLine getParsedCommandLine() {
 		return commandLine;
 	}
-	
+
 	/**
 	 * prints the usage of the program with commandline arguments.
 	 */
 	public void printUsage() {
 		// automatically generate the help statement
-	     HelpFormatter formatter = new HelpFormatter();
-	     formatter.printHelp( GlobalResourceLoader.getString(RESOURCE_PATH,
-				"global", "cmdline_usage"), options );
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp(GlobalResourceLoader.getString(RESOURCE_PATH,
+				"global", "cmdline_usage"), options);
 
 	}
 
@@ -123,6 +129,18 @@ public class ColumbaCmdLineParser {
 	 */
 	public String[] getArgs() {
 		return args;
+	}
+
+	/**
+	 * @param restoreLastSession
+	 *            The restoreLastSession to set.
+	 */
+	public void setRestoreLastSession(boolean restoreLastSession) {
+		this.restoreLastSession = restoreLastSession;
+	}
+
+	public boolean getRestoreLastSession() {
+		return this.restoreLastSession;
 	}
 
 }
