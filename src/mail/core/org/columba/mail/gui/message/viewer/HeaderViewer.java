@@ -277,7 +277,7 @@ public class HeaderViewer extends JPanel {
 			JButton moreButton = createAttachmentMoreButton();
 
 			DynamicItemListPanel p = new DynamicItemListPanel(2, null, true);
-			p.setShowLastSeparator(false);
+//			p.setShowLastSeparator(false);
 			p.setOpaque(false);
 
 			for (int j = 0; j < value.length; j++) {
