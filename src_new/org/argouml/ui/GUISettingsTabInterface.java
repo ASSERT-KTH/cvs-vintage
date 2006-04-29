@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.32 2006/04/29 16:02:23 linus Exp $
+// $Id: GUISettingsTabInterface.java,v 1.1 2006/04/29 16:02:23 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,50 +24,52 @@
 
 package org.argouml.ui;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
-import org.argouml.application.helpers.ResourceLoaderWrapper;
-import org.argouml.i18n.Translator;
+import javax.swing.JPanel;
 
 /**
- * Action for starting the Argo settings window.
+ * An interface which must be implemented as the UI for
+ * tabs used on the settings panel.<p>
  *
- * @author Thomas N
+ * Tabs will only need to load data during {@link #handleSettingsTabRefresh}
+ * and should only save data during {@link #handleSettingsTabSave}.
+ * Changes can be made during editing of the tabs, but the tab must
+ * be able to undo any change if requested
+ * through {@link #handleSettingsTabCancel}.<p>
+ *
  * @author Thierry Lach
  * @since 0.9.4
+ * @author Linus Tolke (moved this into the GUI subsystem)
+ * @since 0.21.3 (it is part of the GUI subsystem)
  */
-public class ActionSettings extends AbstractAction {
+public interface GUISettingsTabInterface {
 
     /**
-     * The settings dialog.
+     * Save any fields changed.
      */
-    private ArgoDialog dialog;
+    void handleSettingsTabSave();
 
     /**
-     * Constructor.
+     * Cancel any changes.
      */
-    public ActionSettings() {
-        super(Translator.localize("action.settings"),
-                ResourceLoaderWrapper.lookupIcon("action.settings"));
-    }
+    void handleSettingsTabCancel();
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(
-     *         java.awt.event.ActionEvent)
+     * Load or reload field settings.
      */
-    public void actionPerformed(ActionEvent event) {
-        if (dialog == null) {
-            dialog = new SettingsDialog();
-        }
-        dialog.show();
-    }
-
+    void handleSettingsTabRefresh();
 
     /**
-     * The serial version.
+     * Gets the unlocalized settings tab name.
+     *
+     * @return the unlocalized settings tab name
      */
-    private static final long serialVersionUID = -3646595772633674514L;
-}
+    String getTabKey();
 
+    /**
+     * Gets the JPanel which implements the tab.
+     *
+     * @return the JPanel which implements the tab
+     */
+    JPanel getTabPanel();
+
+} /* End interface GUISettingsTabInterface */

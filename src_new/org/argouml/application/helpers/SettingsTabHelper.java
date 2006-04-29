@@ -1,4 +1,4 @@
-// $Id: SettingsTabHelper.java,v 1.10 2005/01/09 14:58:03 linus Exp $
+// $Id: SettingsTabHelper.java,v 1.11 2006/04/29 16:02:23 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,8 @@ import org.argouml.i18n.Translator;
  *
  * @author Thierry Lach
  * @since  0.9.4
+ * @deprecated as of 0.21.3 by Linus Tolke. Replace by explicit calls to Swing
+ *         and copy the {@link #getTabPanel()} into your class.
  */
 public abstract class SettingsTabHelper extends JPanel
     implements SettingsTabPanel, PluggableSettingsTab {
@@ -70,7 +72,7 @@ public abstract class SettingsTabHelper extends JPanel
      * @return a new label with a localized text for the given key
      */
     protected JLabel createLabel(String key) {
-    	return new JLabel(localize(key));
+    	return new JLabel(Translator.localize(key));
     }
 
     /**
@@ -80,7 +82,7 @@ public abstract class SettingsTabHelper extends JPanel
      * @return a new checkbox with localized text
      */
     protected JCheckBox createCheckBox(String key) {
-    	JCheckBox j = new JCheckBox(localize(key));
+    	JCheckBox j = new JCheckBox(Translator.localize(key));
 	return j;
     }
 
@@ -94,7 +96,7 @@ public abstract class SettingsTabHelper extends JPanel
      */
     protected JRadioButton createRadioButton(ButtonGroup bg, String key,
 					     boolean selected) {
-	JRadioButton j = new JRadioButton(localize(key), selected);
+	JRadioButton j = new JRadioButton(Translator.localize(key), selected);
 	bg.add(j);
 	return j;
     }

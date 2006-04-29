@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.2 2005/11/13 00:19:00 linus Exp $
+// $Id: SettingsTabNotation.java,v 1.3 2006/04/29 16:02:23 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,6 +214,11 @@ public class SettingsTabNotation extends SettingsTabHelper {
      * @see org.argouml.application.api.SettingsTabPanel#getTabKey()
      */
     public String getTabKey() { return "tab.notation"; }
+
+    /**
+     * @see org.argouml.application.api.SettingsTabPanel#getTabPanel()
+     */
+    public JPanel getTabPanel() { return this; }
 
     /**
      * The UID.

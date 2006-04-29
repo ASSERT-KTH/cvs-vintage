@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.31 2006/03/14 07:38:20 linus Exp $
+// $Id: ModuleLoader.java,v 1.32 2006/04/29 16:02:24 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,33 +147,8 @@ public class ModuleLoader {
     public void initialize() {
         // TODO: Move to specific registration.
         loadClassFromLoader(getClass().getClassLoader(),
-                "module.settings.preferences",
-                "org.argouml.ui.SettingsTabPreferences",
-                true);
-        // TODO: Move to specific registration.
-        loadClassFromLoader(getClass().getClassLoader(),
-                "module.settings.environment",
-                "org.argouml.ui.SettingsTabEnvironment",
-                true);
-        // TODO: Move to specific registration.
-        loadClassFromLoader(getClass().getClassLoader(),
-                "module.settings.user",
-                "org.argouml.ui.SettingsTabUser",
-                true);
-        // TODO: Move to specific registration.
-        loadClassFromLoader(getClass().getClassLoader(),
                 "module.settings.notation",
                 "org.argouml.notation.ui.SettingsTabNotation",
-                true);
-        // TODO: Move to specific registration.
-        loadClassFromLoader(getClass().getClassLoader(),
-                "module.settings.appearance",
-                "org.argouml.ui.SettingsTabAppearance",
-                true);
-        // TODO: Move to specific registration.
-        loadClassFromLoader(getClass().getClassLoader(),
-                "module.settings.modules",
-                "org.argouml.moduleloader.SettingsTabModules",
                 true);
         // TODO: Move to specific registration.
         loadClassFromLoader(getClass().getClassLoader(),

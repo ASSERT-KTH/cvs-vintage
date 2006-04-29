@@ -1,4 +1,4 @@
-// $Id: ModuleLoader2.java,v 1.12 2006/04/13 16:47:23 tfmorris Exp $
+// $Id: ModuleLoader2.java,v 1.13 2006/04/29 16:02:23 linus Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import java.util.jar.Manifest;
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.i18n.Translator;
+import org.argouml.ui.GUI;
 
 /**
  * This is the module loader that loads modules implementing the
@@ -100,6 +101,7 @@ public final class ModuleLoader2 {
      */
     private ModuleLoader2() {
 	moduleStatus = new HashMap();
+        GUI.getInstance().addSettingsTab(new SettingsTabModules());
     }
 
     /**
