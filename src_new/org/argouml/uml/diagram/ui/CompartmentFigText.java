@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.27 2006/03/15 14:18:06 linus Exp $
+// $Id: CompartmentFigText.java,v 1.28 2006/04/29 21:50:32 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.diagram.ui;
 import java.awt.Color;
 
 import org.apache.log4j.Logger;
+import org.argouml.notation.NotationProvider4;
 import org.tigris.gef.presentation.Fig;
 
 /**
@@ -56,7 +57,11 @@ public class CompartmentFigText extends FigSingleLineText {
      */
     private Fig           refFig;
 
-
+    /**
+     * The notation provider for the text shown in this compartment.
+     */
+    private NotationProvider4 notationProvider;
+    
     /**
      * Record whether we are currently highlighted.<p>
      */
@@ -73,22 +78,30 @@ public class CompartmentFigText extends FigSingleLineText {
      * <em>Warning</em>. Won't work properly if <code>aFig</code> is
      * null. A warning is printed.<p>
      *
-     * @param x     X coordinate of the top left of the FigText.
+     * @param x      X coordinate of the top left of the FigText.
      *
-     * @param y     Y coordinate of the top left of the FigText.
+     * @param y      Y coordinate of the top left of the FigText.
      *
-     * @param w     Width of the FigText.
+     * @param w      Width of the FigText.
      *
-     * @param h     Height of the FigText.
+     * @param h      Height of the FigText.
      *
      * @param aFig  The figure describing the whole compartment
+     * 
+     * @param np    The notationProvider. 
+     *                      See NotationProviderFactory2.
      */
-    public CompartmentFigText(int x, int y, int w, int h, Fig aFig) {
+    public CompartmentFigText(int x, int y, int w, int h, Fig aFig, 
+            NotationProvider4 np) {
         super(x, y, w, h, true);
+
+        if (np == null) {
+            LOG.warn("Need a NotationProvider for CompartmentFigText.");
+        }
+        notationProvider = np;
 
         // Set the enclosing compartment fig. Warn if its null (which will
         // break).
-
         refFig = aFig;
 
         if (refFig == null) {
@@ -150,4 +163,11 @@ public class CompartmentFigText extends FigSingleLineText {
      * The UID.
      */
     private static final long serialVersionUID = 3830572062785308980L;
+
+    /**
+     * @return Returns the notationProvider for the text in this compartment.
+     */
+    public NotationProvider4 getNotationProvider() {
+        return notationProvider;
+    }
 } /* End of class CompartmentFigText */

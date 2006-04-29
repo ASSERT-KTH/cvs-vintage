@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationUml.java,v 1.12 2006/03/26 10:49:02 mvw Exp $
+// $Id: ModelElementNameNotationUml.java,v 1.13 2006/04/29 21:50:32 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.notation.NotationHelper;
 import org.argouml.ui.ProjectBrowser;
-import org.argouml.uml.generator.GeneratorDisplay;
 import org.argouml.uml.notation.ModelElementNameNotation;
 import org.argouml.util.MyTokenizer;
 
@@ -85,6 +84,9 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
     public String getParsingHelp() {
         if (Model.getFacade().isAStateVertex(myModelElement)) {
             return "parsing.help.fig-statename";
+        }
+        if (Model.getFacade().isAUseCase(myModelElement)) {
+            return "parsing.help.fig-usecase";
         }
         return "parsing.help.fig-nodemodelelement";
     }

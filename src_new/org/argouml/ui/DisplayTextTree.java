@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.59 2006/04/23 09:37:35 mvw Exp $
+// $Id: DisplayTextTree.java,v 1.60 2006/04/29 21:50:32 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,9 +159,12 @@ public class DisplayTextTree extends JTree {
                         name = signature;
                     }
                 } else if (Model.getFacade().isAExtensionPoint(value)) {
-                    name =
-                        GeneratorDisplay.getInstance()
-                            .generateExtensionPoint(value);
+                    NotationProvider4 notationProvider =
+                        NotationProviderFactory2.getInstance().getNotationProvider(
+                                    NotationProviderFactory2.TYPE_EXTENSION_POINT,
+                                    NotationHelper.getDefaultNotationContext(),
+                                    value);
+                    name = notationProvider.toString();
                 } else if (Model.getFacade().isAComment(value)) {
                     /*
                      * From UML 1.4 onwards, the text of the comment

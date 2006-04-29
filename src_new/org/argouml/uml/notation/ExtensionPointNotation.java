@@ -1,16 +1,16 @@
-// $Id: ModelElementNameNotation.java,v 1.5 2006/04/29 21:50:32 mvw Exp $
-// Copyright (c) 2005-2006 The Regents of the University of California. All
+// $Id: ExtensionPointNotation.java,v 1.1 2006/04/29 21:50:32 mvw Exp $
+// Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
+// and this paragraph appear in all copies. This software program and
 // documentation are copyrighted by The Regents of the University of
 // California. The software program and documentation are supplied "AS
 // IS", without any accompanying services from The Regents. The Regents
 // does not warrant that the operation of the program will be
 // uninterrupted or error-free. The end-user understands that the program
 // was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
 // UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
 // ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -28,30 +28,29 @@ import org.argouml.model.Model;
 
 /**
  * This abstract class forms the basis of all Notation providers
- * for the text shown in the Fig that represents the name of the modelelement.
- * Subclass this for all languages.
- *
- * @author mvw@tigris.org
+ * for the text shown in the extension point compartment of a 
+ * UseCase. Subclass this for all languages.
+ * 
+ * @author michiel
  */
-public abstract class ModelElementNameNotation extends ValueHandler {
+public abstract class ExtensionPointNotation extends ValueHandler {
 
     /**
-     * The modelelement we represent.
+     * The Extension Point.
      */
-    protected Object myModelElement;
-
+    protected Object myEP;
 
     /**
      * The constructor.
      *
-     * @param modelElement  The modelelement we represent.
+     * @param ep the represented extensionpoint
      */
-    public ModelElementNameNotation(Object modelElement) {
-        if (!Model.getFacade().isAModelElement(modelElement)) {
-            throw new IllegalArgumentException("This is not a ModelElement.");
+    public ExtensionPointNotation(Object ep) {
+        if (!Model.getFacade().isAExtensionPoint(ep)) {
+            throw new IllegalArgumentException(
+                    "This is not an ExtensionPoint.");
         }
-        myModelElement = modelElement;
+        myEP = ep;
     }
-
 
 }
