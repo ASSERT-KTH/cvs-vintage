@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
+import java.util.Iterator;
+
 import org.columba.addressbook.folder.IContactFolder;
 import org.columba.addressbook.folder.IFolder;
 
@@ -59,4 +61,9 @@ public interface IFolderFacade {
 	 */
 	IFolder getFolder(String name);
 
+	/**
+	 * Return iterator of <code>IFolder</code>
+	 * @return	iterator of <code>IFolder</code>
+	 */
+	Iterator<IFolder> getFolderIterator();
 }

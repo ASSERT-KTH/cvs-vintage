@@ -171,9 +171,9 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.AddressbookTreeNode#getCollapsedIcon()
+	 * @see org.columba.addressbook.folder.AddressbookTreeNode#getIcon()
 	 */
-	public ImageIcon getCollapsedIcon() {
+	public ImageIcon getIcon() {
 		return groupImageIcon;
 	}
 }

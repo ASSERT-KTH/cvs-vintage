@@ -20,8 +20,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.facade.IDialogFacade;
-import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
@@ -40,7 +38,7 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz
  */
-@SuppressWarnings({"serial","serial"})
+@SuppressWarnings( { "serial", "serial" })
 public class AddToAddressbookAction extends AbstractColumbaAction implements
 		Observer {
 	private String emailAddress;
@@ -83,22 +81,6 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		IDialogFacade dialogFacade = null;
-		try {
-			dialogFacade = ServiceConnector.getDialogFacade();
-		} catch (ServiceNotFoundException e) {
-			e.printStackTrace();
-			return;
-		}
-		// ask the user which addressbook he wants to save this address to
-		ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
-
-		org.columba.addressbook.folder.IFolder selectedFolder = dialog
-				.getSelectedFolder();
-
-		if (selectedFolder == null) {
-			return;
-		}
 
 		IContactFacade contactFacade = null;
 		try {
@@ -116,10 +98,8 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 				// create Address from URL
 				address = Address.parse(url.getSender());
 
-			//Address address = Address.parse(url.getSender());
 			// add contact to addressbook
-			contactFacade.addContact(selectedFolder.getUid(), address
-					.toString());
+			contactFacade.addContact(address.toString());
 		} catch (ParserException e) {
 			e.printStackTrace();
 		}
@@ -133,7 +113,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 	public void update(Observable arg0, Object arg1) {
 
 		url = ((URLObservable) arg0).getUrl();
-		
+
 		// only enable this action, if this is a mailto: URL
 		if (url == null)
 			setEnabled(false);

@@ -15,21 +15,16 @@
 //All Rights Reserved.
 package org.columba.addressbook.main;
 
-import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
-import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
@@ -93,9 +88,6 @@ public class AddressbookMain implements IComponentPlugin {
 		ServiceRegistry.getInstance().register(
 				org.columba.addressbook.facade.IConfigFacade.class,
 				"org.columba.addressbook.facade.ConfigFacade");
-		ServiceRegistry.getInstance().register(
-				org.columba.addressbook.facade.IDialogFacade.class,
-				"org.columba.addressbook.facade.DialogFacade");
 		ServiceRegistry.getInstance().register(
 				org.columba.addressbook.facade.IModelFacade.class,
 				"org.columba.addressbook.facade.ModelFacade");

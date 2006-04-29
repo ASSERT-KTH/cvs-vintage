@@ -18,11 +18,15 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.IContactFolder;
+import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.EmailModel;
+import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.parser.ParserUtil;
 import org.columba.core.logging.Logging;
 import org.columba.ristretto.message.Address;
@@ -50,42 +54,48 @@ public final class ContactFacade implements IContactFacade {
 		if (address.length() == 0)
 			return;
 
+		AbstractFolder selectedFolder = (AbstractFolder) AddressbookTreeModel
+				.getInstance().getFolder(uid);
+
+		IContactModel card = createContactModel(address);
+
+		try {
+			if (selectedFolder.exists(card.getPreferredEmail()) == null)
+				selectedFolder.add(card);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private ContactModel createContactModel(String address) {
 		Address adr;
 		try {
 			adr = Address.parse(address);
 		} catch (ParserException e1) {
 			if (Logging.DEBUG)
 				e1.printStackTrace();
-			return;
+			return null;
 		}
 
 		LOG.info("address:" + address); //$NON-NLS-1$
 
-		AbstractFolder selectedFolder = (AbstractFolder) AddressbookTreeModel
-				.getInstance().getFolder(uid);
-		try {
-			if (selectedFolder.exists(adr.getMailAddress()) == null) {
-				ContactModel card = new ContactModel();
+		ContactModel card = new ContactModel();
 
-				String fn = adr.getShortAddress();
+		String fn = adr.getShortAddress();
 
-				card.setFormattedName(fn);
-				// backwards compatibility
-				card.setSortString(fn);
-				card.addEmail(new EmailModel(adr.getMailAddress(), EmailModel.TYPE_WORK));
+		card.setFormattedName(fn);
+		// backwards compatibility
+		card.setSortString(fn);
+		card
+				.addEmail(new EmailModel(adr.getMailAddress(),
+						EmailModel.TYPE_WORK));
 
-				String[] result = ParserUtil.tryBreakName(fn);
-				card.setGivenName(result[0]);
-				card.setFamilyName(result[1]);
-				card.setAdditionalNames(result[2]);
-				selectedFolder.add(card);
-
-			}
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
+		String[] result = ParserUtil.tryBreakName(fn);
+		card.setGivenName(result[0]);
+		card.setFamilyName(result[1]);
+		card.setAdditionalNames(result[2]);
+		return card;
 	}
 
 	/**
@@ -107,6 +117,58 @@ public final class ContactFacade implements IContactFacade {
 	 */
 	public void addContactToPersonalAddressbook(String address) {
 		addContact(101, address);
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#addContact(int,
+	 *      java.lang.String[])
+	 */
+	public void addContact(int uid, String[] address) {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		IContactFolder folder = (IContactFolder) model.getFolder(uid);
+
+		for (int i = 0; i < address.length; i++) {
+			IContactModel card = createContactModel(address[i]);
+
+			try {
+				if (folder.exists(card.getPreferredEmail()) == null)
+					folder.add(card);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#addContact(java.lang.String[])
+	 */
+	public void addContact(String[] address) {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		SelectAddressbookFolderDialog dialog = new SelectAddressbookFolderDialog(
+				model);
+		if (dialog.success()) {
+			IFolder folder = dialog.getSelectedFolder();
+			int uid = folder.getUid();
+
+			addContact(uid, address);
+		} else
+			return;
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#addContact(java.lang.String)
+	 */
+	public void addContact(String address) {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		SelectAddressbookFolderDialog dialog = new SelectAddressbookFolderDialog(
+				model);
+		if (dialog.success()) {
+			IFolder folder = dialog.getSelectedFolder();
+			int uid = folder.getUid();
+
+			addContact(uid, address);
+		} else
+			return;
 	}
 
 }

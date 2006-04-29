@@ -36,7 +36,7 @@ public class LocalRootFolder extends AddressbookTreeNode {
         super(item);
     }
 
-    public ImageIcon getCollapsedIcon() {
+    public ImageIcon getIcon() {
         return localIcon;
     }
 

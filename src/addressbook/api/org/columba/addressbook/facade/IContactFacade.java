@@ -34,6 +34,31 @@ public interface IContactFacade {
 	 */
 	void addContact(int uid, String address);
 
+	
+	/**
+	 * Add new contact to addressbook. Implementation should prompt
+	 * user for a destination addressbook.
+	 * 
+	 * @param address	new email address
+	 */
+	void addContact(String address);
+	
+	/**
+	 * Add new contacts to addressbook.
+	 * 
+	 * @param uid		addressbook unique id
+	 * @param address	array containing new email addresses
+	 */
+	void addContact(int uid, String[] address);
+	
+	/**
+	 * Add new contacts to addressbook. Implementation should prompt user
+	 * for a destination addressbook.
+	 * 
+	 * @param address	array containing new email addresses
+	 */
+	void addContact(String[] address);
+	
 	/**
 	 * Add new contact to "Collected Addresses".
 	 * 

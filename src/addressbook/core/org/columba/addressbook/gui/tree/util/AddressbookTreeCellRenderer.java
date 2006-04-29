@@ -53,7 +53,7 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
 		}
 
 		setText(folder.getName());
-		setIcon(folder.getCollapsedIcon());
+		setIcon(folder.getIcon());
 
 		return this;
 	}

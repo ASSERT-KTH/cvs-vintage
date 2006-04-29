@@ -17,9 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.util.Vector;
+
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.facade.IDialogFacade;
-import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.exception.ServiceNotFoundException;
@@ -65,22 +65,6 @@ public class AddSenderToAddressbookCommand extends Command {
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-		IDialogFacade dialogFacade = null;
-		try {
-			dialogFacade = ServiceConnector.getDialogFacade();
-		} catch (ServiceNotFoundException e) {
-			e.printStackTrace();
-			return;
-		}
-		// ask the user which addressbook he wants to save this address to
-		ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
-
-		selectedFolder = dialog.getSelectedFolder();
-
-		if (selectedFolder == null) {
-			return;
-		}
-
 		IContactFacade contactFacade = null;
 		try {
 			contactFacade = ServiceConnector.getContactFacade();
@@ -89,6 +73,7 @@ public class AddSenderToAddressbookCommand extends Command {
 			return;
 		}
 
+		Vector<String> v = new Vector<String>();
 		// for each message
 		for (int i = 0; i < uids.length; i++) {
 			// get header of message
@@ -98,9 +83,11 @@ public class AddSenderToAddressbookCommand extends Command {
 			// get sender
 			String sender = (String) header.get("From");
 
-			// add sender to addressbook
-			contactFacade.addContact(selectedFolder.getUid(), sender);
+			v.add(sender);
 		}
+
+		// add sender to addressbook
+		contactFacade.addContact(v.toArray(new String[0]));
 	}
 
 }

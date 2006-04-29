@@ -45,7 +45,7 @@ public class RemoteRootFolder extends AddressbookTreeNode {
     public void createChildren(IWorkerStatusController worker) {
     }
 
-    public ImageIcon getCollapsedIcon() {
+    public ImageIcon getIcon() {
         return remoteIcon;
     }
 }

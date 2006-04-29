@@ -85,7 +85,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
 		return node;
 	}
 
-	public ImageIcon getCollapsedIcon() {
+	public ImageIcon getIcon() {
 		return collapsedIcon;
 	}
 

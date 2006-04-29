@@ -21,37 +21,13 @@ import javax.swing.ImageIcon;
 
 /**
  * @author fdietz
- *
+ * 
  */
 public interface IFolder {
-	ImageIcon getCollapsedIcon();
+	ImageIcon getIcon();
 
-	ImageIcon getExpandedIcon();
-
-	/*
-	 * public void setName(String s) { name = s; } public String getName() {
-	 * return name; }
-	 */int getUid();
-
-	/**
-	 * Returns the node.
-	 * 
-	 * @return FolderItem
-	 */
-	//XmlElement getNode();
-
-	/**
-	 * Sets the node.
-	 * 
-	 * @param node
-	 *            The node to set
-	 */
-	//void setNode(FolderItem node);
+	int getUid();
 
 	String getName();
 
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-	 */
-	void setName(String newName);
 }

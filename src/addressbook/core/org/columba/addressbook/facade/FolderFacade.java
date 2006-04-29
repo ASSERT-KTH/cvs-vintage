@@ -16,6 +16,9 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
+import java.util.Iterator;
+import java.util.Vector;
+
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.IContactFolder;
 import org.columba.addressbook.folder.IFolder;
@@ -66,5 +69,26 @@ public class FolderFacade implements IFolderFacade {
 			return (AbstractFolder) model.getFolder(name);
 
 		return null;
+	}
+
+	public Iterator<IFolder> getFolderIterator() {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		Vector<IFolder> v = new Vector<IFolder>();
+		
+		Object parent = model.getRoot();
+		
+		getChildren(model, parent, v);
+		
+		return v.listIterator();
+	}
+	
+	private void getChildren(AddressbookTreeModel model, Object parent, Vector<IFolder> v) {
+		int childCount = model.getChildCount(parent);
+		for ( int i=0; i<childCount; i++) {
+			Object child = model.getChild(parent, i);
+			v.add((IFolder) child);
+			
+			getChildren(model, child, v);
+		}
 	}
 }

@@ -53,7 +53,7 @@ public class ListInfoTreeNode extends CheckableItemImpl {
     }
 
     /**
- * @see org.columba.core.gui.checkabletree.CheckableItem#getCollapsedIcon()
+ * @see org.columba.core.gui.checkabletree.CheckableItem#getIcon()
  */
     public Icon getIcon() {
         return collapsedIcon;
