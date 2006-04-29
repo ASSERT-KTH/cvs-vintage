@@ -1,5 +1,5 @@
-// $Id: TestTabDiagram.java,v 1.17 2006/04/13 03:38:30 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: TestTabDiagram.java,v 1.18 2006/04/29 10:45:45 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -143,7 +143,7 @@ public class TestTabDiagram extends TestCase {
                 long currentTime = (new Date()).getTime();
                 Object model = project.getModel();
                 Object voidType = project.findType("void");
-                Model.getCoreFactory().buildOperation(clazz, model,voidType);
+                Model.getCoreFactory().buildOperation(clazz, model, voidType);
                 System.out.println(
                     "Time needed for adding operation: "
                         + ((new Date()).getTime() - currentTime));

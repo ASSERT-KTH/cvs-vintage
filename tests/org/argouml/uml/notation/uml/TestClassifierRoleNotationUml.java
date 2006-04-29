@@ -1,4 +1,4 @@
-// $Id: TestClassifierRoleNotationUml.java,v 1.1 2006/04/03 19:24:57 mvw Exp $
+// $Id: TestClassifierRoleNotationUml.java,v 1.2 2006/04/29 10:45:46 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,9 @@ import junit.framework.TestCase;
 import org.argouml.model.Model;
 
 /**
- * Test ClassifierRoleNotationUml (formerly ParserDisplay): parsing classifier-role.
- *  
+ * Test ClassifierRoleNotationUml (formerly ParserDisplay):
+ * parsing classifier-role.
+ *
  * @author Michiel
  */
 public class TestClassifierRoleNotationUml extends TestCase {
@@ -69,7 +70,7 @@ public class TestClassifierRoleNotationUml extends TestCase {
         cr = Model.getCollaborationsFactory().createClassifierRole();
         checkNameClassifierRole(cr, clro03, "roname");
     }
-    
+
     /**
      * Test the Base of the ClassifierRole.
      */
@@ -126,7 +127,7 @@ public class TestClassifierRoleNotationUml extends TestCase {
         try {
             ClassifierRoleNotationUml crn = new ClassifierRoleNotationUml(ro);
             crn.parseClassifierRole(ro, text);
-            assertTrue("didn't throw for " + text, false);
+            fail("didn't throw for " + text);
         } catch (ParseException pe) {
             assertTrue(text + " threw ParseException " + pe, prsEx);
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationRepresentedOperationComboBoxModel.java,v 1.1 2006/04/11 18:34:42 mvw Exp $
+// $Id: TestUMLCollaborationRepresentedOperationComboBoxModel.java,v 1.2 2006/04/29 10:45:46 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,8 +86,10 @@ public class TestUMLCollaborationRepresentedOperationComboBoxModel
      * Test setting the represented operation.
      */
     public void testSetRepresentedOperation() {
-        /* Now the model should contain 
-         * the one operation + the "" for clearing. */
+        /*
+         * Now the model should contain
+         * the one operation + the "" for clearing.
+         */
         assertEquals(2, model.getSize());
         assertEquals(oper, model.getElementAt(0));
     }
@@ -96,8 +98,8 @@ public class TestUMLCollaborationRepresentedOperationComboBoxModel
      * Test removing the represented operation.
      */
     public void testExtraRepresentedOperation() {
-        Object oper = Model.getCoreFactory().createOperation();
-        Model.getCollaborationsHelper().setRepresentedOperation(elem, oper);
+        Object op = Model.getCoreFactory().createOperation();
+        Model.getCollaborationsHelper().setRepresentedOperation(elem, op);
         /* Simulate a target change. */
         model.targetSet(new TargetEvent(this, null, null, new Object[] {elem}));
         Model.getPump().flushModelEvents();

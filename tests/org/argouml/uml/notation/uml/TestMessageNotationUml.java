@@ -1,4 +1,4 @@
-// $Id: TestMessageNotationUml.java,v 1.1 2006/04/15 16:49:32 mvw Exp $
+// $Id: TestMessageNotationUml.java,v 1.2 2006/04/29 10:45:45 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import org.argouml.model.Model;
 
 /**
  * Test class to test the parsing of a message.<p>
- * 
+ *
  * Formerly called TestParseMessage. <p>
  *
  * For some reason these tests require the ProjectBrowser loaded when running.
