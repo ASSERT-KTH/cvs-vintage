@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.66 2006/03/13 19:45:34 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.67 2006/04/29 22:33:49 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.persistence.AbstractFilePersister;
 import org.argouml.persistence.PersistenceManager;
+import org.argouml.ui.GUI;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
 
@@ -160,9 +161,7 @@ public class ActionOpenProject extends AbstractAction
                     if (ProjectBrowser.getInstance()
                             .loadProject(theFile, true)) {
                         // notification of menu bar
-                        GenericArgoMenuBar menuBar =
-                            (GenericArgoMenuBar) pb.getJMenuBar();
-                        menuBar.addFileSaved(theFile.getCanonicalPath());
+                        GUI.getInstance().addFileSaved(theFile);
                     }
                 }
             }

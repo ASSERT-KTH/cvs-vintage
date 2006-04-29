@@ -1,4 +1,4 @@
-// $Id: ActionImportXMI.java,v 1.5 2005/11/13 11:01:13 linus Exp $
+// $Id: ActionImportXMI.java,v 1.6 2006/04/29 22:33:49 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,9 +127,7 @@ public class ActionImportXMI extends AbstractAction {
 
                 if (ProjectBrowser.getInstance().loadProject(theFile, true)) {
                     // notification of menu bar
-                    GenericArgoMenuBar menuBar =
-                        (GenericArgoMenuBar) pb.getJMenuBar();
-                    menuBar.addFileSaved(theFile.getCanonicalPath());
+                    pb.addFileSaved(theFile);
                 }
             }
         } catch (IOException ignore) {

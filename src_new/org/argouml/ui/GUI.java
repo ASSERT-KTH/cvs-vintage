@@ -1,4 +1,4 @@
-// $Id: GUI.java,v 1.1 2006/04/29 16:02:23 linus Exp $
+// $Id: GUI.java,v 1.2 2006/04/29 22:33:49 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.ui;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -84,5 +86,15 @@ public final class GUI {
      */
     public List getSettingsTabs() {
         return Collections.unmodifiableList(settingsTabs);
+    }
+
+    /**
+     * Register a file in the menubar.
+     *
+     * @param file The File.
+     * @throws IOException if we cannot get the filename.
+     */
+    public void addFileSaved(File file) throws IOException {
+        ProjectBrowser.getInstance().addFileSaved(file);
     }
 }
