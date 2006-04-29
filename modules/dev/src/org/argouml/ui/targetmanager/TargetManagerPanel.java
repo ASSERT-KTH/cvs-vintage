@@ -1,4 +1,4 @@
-// $Id: TargetManagerPanel.java,v 1.3 2006/04/04 17:27:32 mvw Exp $
+// $Id: TargetManagerPanel.java,v 1.4 2006/04/29 11:02:37 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,19 +41,28 @@ import javax.swing.JScrollPane;
 
 /**
  * A debug panel for the TargetManager. It shows the actual Targets.
- * 
+ *
  * @author Michiel
  */
 public class TargetManagerPanel extends JPanel implements TargetListener {
 
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = -4827194145585220207L;
-    
+
     private DefaultListModel lm = new DefaultListModel();
     private JList lst;
     private String lastEvent;
-    
-    private static TargetManagerPanel INSTANCE = new TargetManagerPanel();
-    
+
+    /**
+     * The instance.
+     */
+    private static final TargetManagerPanel INSTANCE = new TargetManagerPanel();
+
+    /**
+     * @return the instance.
+     */
     public static TargetManagerPanel getInstance() {
         return INSTANCE;
     }
@@ -63,7 +72,7 @@ public class TargetManagerPanel extends JPanel implements TargetListener {
      */
     public TargetManagerPanel() {
         setLayout(new BorderLayout());
-        
+
         lst = new JList(lm);
         setTarget(TargetManager.getInstance().getTargets());
         add(new JScrollPane(lst), BorderLayout.CENTER);
