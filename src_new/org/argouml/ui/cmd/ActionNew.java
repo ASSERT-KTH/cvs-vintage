@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.3 2006/04/11 22:40:09 bobtarling Exp $
+// $Id: ActionNew.java,v 1.4 2006/04/29 10:29:11 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +43,6 @@ import org.argouml.ui.targetmanager.TargetManager;
  */
 class ActionNew extends AbstractAction {
 
-    private static final long serialVersionUID = -3943153836514178100L;
-
     /**
      * The constructor.
      */
@@ -53,7 +51,7 @@ class ActionNew extends AbstractAction {
         super(Translator.localize("action.new"),
                 ResourceLoaderWrapper.lookupIcon("action.new"));
         // Set the tooltip string:
-        putValue(Action.SHORT_DESCRIPTION, 
+        putValue(Action.SHORT_DESCRIPTION,
                 Translator.localize("action.new"));
     }
 
@@ -78,10 +76,15 @@ class ActionNew extends AbstractAction {
         Designer.clearCritiquing();
         // clean the history
         TargetManager.getInstance().cleanHistory();
-            p.remove();
+        p.remove();
         p = ProjectManager.getManager().makeEmptyProject();
         TargetManager.getInstance().setTarget(p.getDiagrams().toArray()[0]);
         Designer.enableCritiquing();
         Model.getPump().startPumpingEvents();
     }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = -3943153836514178100L;
 } /* end class ActionNew */

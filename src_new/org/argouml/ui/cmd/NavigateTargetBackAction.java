@@ -1,4 +1,4 @@
-// $Id: NavigateTargetBackAction.java,v 1.1 2006/04/04 20:45:44 mvw Exp $
+// $Id: NavigateTargetBackAction.java,v 1.2 2006/04/29 10:29:11 linus Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,6 +21,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
 package org.argouml.ui.cmd;
 
 import java.awt.event.ActionEvent;
@@ -37,31 +38,39 @@ import org.argouml.ui.targetmanager.TargetManager;
  *
  * @author jaap.branderhorst@xs4all.nl
  */
- class NavigateTargetBackAction extends AbstractAction {
+class NavigateTargetBackAction extends AbstractAction {
 
-     public NavigateTargetBackAction() {
-         super(Translator.localize("action.navigate-back"),
-                 ResourceLoaderWrapper.lookupIcon("action.navigate-back"));
-         // Set the tooltip string:
-         putValue(Action.SHORT_DESCRIPTION, 
-                 Translator.localize("action.navigate-back"));
-     }
+    /**
+     * The constructor.
+     */
+    public NavigateTargetBackAction() {
+        super(Translator.localize("action.navigate-back"),
+                ResourceLoaderWrapper.lookupIcon("action.navigate-back"));
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION,
+                Translator.localize("action.navigate-back"));
+    }
 
-     /**
-      * @see
-      * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-      */
-     public void actionPerformed(ActionEvent e) {
-         TargetManager.getInstance().navigateBackward();
-     }
-     
-     /**
-      * Action is possible only if navigateForwardPossible on targetManager
-      * returns true.
-      * 
-      * @see javax.swing.Action#isEnabled()
-      */
-     public boolean isEnabled() {
-         return TargetManager.getInstance().navigateBackPossible();
-     }
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(
+     *         java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent e) {
+        TargetManager.getInstance().navigateBackward();
+    }
+
+    /**
+     * Action is possible only if navigateForwardPossible on targetManager
+     * returns true.
+     *
+     * @see javax.swing.Action#isEnabled()
+     */
+    public boolean isEnabled() {
+        return TargetManager.getInstance().navigateBackPossible();
+    }
+
+    /**
+     * The UID.
+     */
+    private static final long serialVersionUID = 33340548502483040L;
 }
