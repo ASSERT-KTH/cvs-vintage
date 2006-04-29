@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.47 2006/04/13 19:54:06 mvw Exp $
+// $Id: FigMessage.java,v 1.48 2006/04/29 21:34:18 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,18 +30,13 @@ import java.awt.Graphics;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
-import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.notation.Notation;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.collaboration.ui.FigAssociationRole;
-import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;

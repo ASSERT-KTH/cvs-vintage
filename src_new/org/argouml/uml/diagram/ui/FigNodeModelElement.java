@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.243 2006/04/19 05:28:58 tfmorris Exp $
+// $Id: FigNodeModelElement.java,v 1.244 2006/04/29 21:34:18 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1399,7 +1399,9 @@ public abstract class FigNodeModelElement
     }
 
     /**
-     * Rerenders the fig if needed. This functionality was originally
+     * Rerenders the fig. <p>
+     * 
+     * This functionality was originally
      * the functionality of modelChanged but modelChanged takes the
      * event now into account.
      */
