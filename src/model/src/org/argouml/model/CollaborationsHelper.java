@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.7 2006/03/25 00:50:02 tfmorris Exp $
+// $Id: CollaborationsHelper.java,v 1.8 2006/04/29 09:08:11 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,10 +70,10 @@ public interface CollaborationsHelper {
      * @return MAssociationRole the association between them, or null if none
      */
     Object getAssociationRole(Object afrom, Object ato);
-    
+
     /**
-     * @param afrom 
-     * @param ato 
+     * @param afrom the first classifierrole
+     * @param ato the second classifierrole
      * @return associationrole
      * @deprecated for 0.21.2 by tfmorris, use getAssociationRole
      * @see #getAssociationRole(Object, Object)
@@ -176,9 +176,9 @@ public interface CollaborationsHelper {
 
     /**
      * Returns all possible bases for the given element. <p>
-     * TODO: Beware: this function does not return the actual base! 
+     * TODO: Beware: this function does not return the actual base!
      * Is that by design or a bug?
-     * 
+     *
      * @param role the given classifierrole or associationrole
      * @return all available bases
      */

@@ -1,4 +1,4 @@
-// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.6 2006/04/08 20:56:26 mvw Exp $
+// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.7 2006/04/29 09:08:11 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -181,7 +181,7 @@ public abstract class AbstractExtensionMechanismsHelperDecorator
         impl.removeBaseClass(handle, baseClass);
     }
 
-    
+
     /**
      * @see org.argouml.model.ExtensionMechanismsHelper#setIcon(
      *         java.lang.Object,
@@ -233,7 +233,7 @@ public abstract class AbstractExtensionMechanismsHelperDecorator
         impl.setTaggedValue(handle, taggedValues);
     }
 
-    /*
+    /**
      * @see org.argouml.model.ExtensionMechanismsHelper#hasStereoType(java.lang.Object, java.lang.String)
      */
     public boolean hasStereoType(Object handle, String name) {
