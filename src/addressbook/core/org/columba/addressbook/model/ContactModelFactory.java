@@ -17,9 +17,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.model;
 
-import java.awt.Image;
 import java.util.Date;
 import java.util.Iterator;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import org.columba.addressbook.parser.ParserUtil;
 import org.columba.addressbook.parser.SyntaxException;
@@ -150,7 +152,7 @@ public class ContactModelFactory {
 			parser.set(VCARD.NOTE, contactModel.getNote());
 
 		// base64 encode photo byte[] to string
-		Image image = contactModel.getPhoto();
+		ImageIcon image = contactModel.getPhoto();
 		if (image != null)
 			parser.set(VCARD.PHOTO, ParserUtil
 					.createBase64StringFromImage(image));
@@ -227,7 +229,7 @@ public class ContactModelFactory {
 		model.setNote(parser.get(VCARD.NOTE));
 
 		String imageString = parser.get(VCARD.PHOTO);
-		Image image = ParserUtil.createImageFromBase64String(imageString);
+		ImageIcon image = ParserUtil.createImageFromBase64String(imageString);
 		model.setPhoto(image);
 
 		// comma-separated category list

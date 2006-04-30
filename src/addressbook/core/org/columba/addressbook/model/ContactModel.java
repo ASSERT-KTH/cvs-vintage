@@ -17,10 +17,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.model;
 
-import java.awt.Image;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
+
+import javax.swing.ImageIcon;
 
 import org.columba.core.base.UUIDGenerator;
 
@@ -73,7 +74,7 @@ public class ContactModel implements IContactModel {
 
 	private Date birthday;
 
-	private Image photo;
+	private ImageIcon photo;
 
 	private String category;
 
@@ -357,10 +358,9 @@ public class ContactModel implements IContactModel {
 		return sortString;
 	}
 
-	public Image getPhoto() {
+	public ImageIcon getPhoto() {
 		return photo;
 	}
-
 
 	/**
 	 * @param birthday
@@ -374,7 +374,7 @@ public class ContactModel implements IContactModel {
 	 * @param photo
 	 *            The photo to set.
 	 */
-	public void setPhoto(Image photo) {
+	public void setPhoto(ImageIcon photo) {
 		this.photo = photo;
 	}
 

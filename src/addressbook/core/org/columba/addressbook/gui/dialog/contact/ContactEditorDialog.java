@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -444,9 +445,9 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			freebusyTextField.setText(sourceModel.getFreeBusy());
 			calendarTextField.setText(sourceModel.getCalendar());
 
-			ImageIcon image = null;
+			Icon image = null;
 			if (sourceModel.getPhoto() != null)
-				image = new ImageIcon(sourceModel.getPhoto());
+				image = sourceModel.getPhoto();
 			// fall back to default image
 			if (image == null)
 				image = ImageLoader.getMiscIcon("malehead.png");
@@ -576,6 +577,13 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			fillAddressModel(AddressModel.TYPE_OTHER, destModel);
 
 			destModel.setNote(notesTextArea.getText());
+			
+			Icon icon = pictureButton.getIcon();
+			if ( icon != null) {
+				destModel.setPhoto((ImageIcon)icon);
+			}
+			
+			
 		}
 	}
 

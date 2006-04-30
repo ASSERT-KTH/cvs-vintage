@@ -17,9 +17,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.model;
 
-import java.awt.Image;
 import java.util.Date;
 import java.util.Iterator;
+
+import javax.swing.ImageIcon;
 
 /**
  * Contact model.
@@ -64,7 +65,7 @@ public interface IContactModel {
 	
 	public abstract String getSortString();
 	
-	public abstract Image getPhoto();
+	public abstract ImageIcon getPhoto();
 	
 	public abstract String getHomePage();
 	public abstract String getWeblog();

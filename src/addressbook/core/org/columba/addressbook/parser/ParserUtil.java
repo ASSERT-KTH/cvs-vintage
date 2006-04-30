@@ -17,9 +17,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import javax.swing.ImageIcon;
 
 public class ParserUtil {
 
@@ -92,14 +93,14 @@ public class ParserUtil {
 		return buf.toString();
 	}
 
-	public static Image createImageFromBase64String(String s) {
+	public static ImageIcon createImageFromBase64String(String s) {
 
 		// TODO implement me!
 
 		return null;
 	}
 
-	public static String createBase64StringFromImage(Image image) {
+	public static String createBase64StringFromImage(ImageIcon image) {
 
 		// TODO implement me!
 
