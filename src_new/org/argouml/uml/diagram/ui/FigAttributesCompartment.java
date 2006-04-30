@@ -1,4 +1,4 @@
-// $Id: FigAttributesCompartment.java,v 1.19 2006/04/29 21:50:32 mvw Exp $
+// $Id: FigAttributesCompartment.java,v 1.20 2006/04/30 08:27:55 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,18 @@ public class FigAttributesCompartment extends FigFeaturesCompartment {
      */
     protected int getNotationType() {
         return NotationProviderFactory2.TYPE_ATTRIBUTE;
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#addExtraVisualisations(java.lang.Object, org.argouml.uml.diagram.ui.CompartmentFigText)
+     */
+    protected void addExtraVisualisations(Object umlObject, 
+            CompartmentFigText comp) {
+        // underline, if static
+        comp.setUnderline(
+                Model.getScopeKind().
+                getClassifier().equals(Model.getFacade().
+                        getOwnerScope(umlObject)));
     }
 
     /**
