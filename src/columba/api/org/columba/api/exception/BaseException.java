@@ -17,21 +17,27 @@
 //All Rights Reserved.
 package org.columba.api.exception;
 
-public class PluginException extends BaseException {
+/**
+ * Base exception and parent of all other exceptions introduced
+ * in Columba.
+ * 
+ * @author fdietz
+ */
+public class BaseException extends Exception {
 
-	public PluginException() {
+	public BaseException() {
 		super();
 	}
 
-	public PluginException(String message) {
+	public BaseException(String message) {
 		super(message);
 	}
 
-	public PluginException(String message, Throwable cause) {
+	public BaseException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public PluginException(Throwable cause) {
+	public BaseException(Throwable cause) {
 		super(cause);
 	}
 

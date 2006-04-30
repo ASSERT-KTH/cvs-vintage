@@ -92,14 +92,14 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#getHeaderItemMap()
 	 */
-	public IContactItemMap getContactItemMap() throws Exception {
+	public IContactItemMap getContactItemMap() throws StoreException {
 		return headerItemList;
 	}
 
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#add(IContactModel)
 	 */
-	public void add(Object uid, IContactItem item) throws Exception {
+	public void add(Object uid, IContactItem item) throws StoreException {
 		getContactItemMap().add(uid, item);
 
 	}
@@ -107,7 +107,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws Exception {
+	public void remove(Object uid) throws StoreException {
 		getContactItemMap().remove(uid);
 
 	}
@@ -116,7 +116,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactItem item) throws Exception {
+	public void modify(Object uid, IContactItem item) throws StoreException {
 		getContactItemMap().remove(item);
 		getContactItemMap().add(uid, item);
 
@@ -125,14 +125,14 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#save()
 	 */
-	public void save() throws Exception {
+	public void save() throws StoreException {
 
 	}
 
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#load()
 	 */
-	public void load() throws Exception {
+	public void load() throws StoreException {
 
 	}
 
@@ -189,13 +189,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 				add(new Integer(i), item);
 
 				folder.setNextMessageUid(i + 1);
-			} catch (WrongFileFormatException ex) {
-				if (Logging.DEBUG)
-					ex.printStackTrace();
-				// delete corrupt file
-				newFile.delete();
-
-			} catch (Exception ex) {
+			}  catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}

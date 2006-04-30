@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.connector;
 
-import org.columba.addressbook.facade.IConfigFacade;
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.facade.IModelFacade;
@@ -45,13 +44,7 @@ public final class ServiceConnector {
 		return (IFolderFacade) ServiceRegistry.getInstance().getService(
 				IFolderFacade.class);
 	}
-
-	public static IConfigFacade getConfigFacade()
-			throws ServiceNotFoundException {
-		return (IConfigFacade) ServiceRegistry.getInstance().getService(
-				IConfigFacade.class);
-	}
-
+	
 	public static IModelFacade getModelFacade() throws ServiceNotFoundException {
 		return (IModelFacade) ServiceRegistry.getInstance().getService(
 				IModelFacade.class);

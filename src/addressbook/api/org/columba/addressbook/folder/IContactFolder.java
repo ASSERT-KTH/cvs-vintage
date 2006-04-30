@@ -38,17 +38,17 @@ public interface IContactFolder extends IContactStorage{
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	IContactItemMap getContactItemMap() throws Exception;
+	IContactItemMap getContactItemMap() throws StoreException;
 
 	/**
 	 * save header-cache (HeaderItemList)
 	 */
-	void save() throws Exception;
+	void save() throws StoreException;
 
 	/**
 	 * load header-cache (HeaderItemList)
 	 */
-	void load() throws Exception;
+	void load() throws StoreException;
 
 	/**
 	 * Get all contact *and* group items of this folder.
@@ -58,5 +58,5 @@ public interface IContactFolder extends IContactStorage{
 	 * 
 	 * @return
 	 */
-	IHeaderItemList getHeaderItemList() throws Exception;
+	IHeaderItemList getHeaderItemList() throws StoreException;
 }

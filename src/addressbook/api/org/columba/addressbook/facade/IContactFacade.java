@@ -17,7 +17,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import org.columba.addressbook.gui.autocomplete.IAddressCollector;
+import java.util.List;
+
+import org.columba.addressbook.folder.StoreException;
+import org.columba.addressbook.model.IHeaderItem;
 
 /**
  * Provides high-level contact management methods.
@@ -32,7 +35,7 @@ public interface IContactFacade {
 	 * @param uid		addressbook unique id
 	 * @param address	new email address
 	 */
-	void addContact(int uid, String address);
+	void addContact(String uid, String address) throws StoreException;
 
 	
 	/**
@@ -41,7 +44,7 @@ public interface IContactFacade {
 	 * 
 	 * @param address	new email address
 	 */
-	void addContact(String address);
+	void addContact(String address) throws StoreException;
 	
 	/**
 	 * Add new contacts to addressbook.
@@ -49,7 +52,7 @@ public interface IContactFacade {
 	 * @param uid		addressbook unique id
 	 * @param address	array containing new email addresses
 	 */
-	void addContact(int uid, String[] address);
+	void addContact(String uid, String[] address) throws StoreException;
 	
 	/**
 	 * Add new contacts to addressbook. Implementation should prompt user
@@ -57,27 +60,28 @@ public interface IContactFacade {
 	 * 
 	 * @param address	array containing new email addresses
 	 */
-	void addContact(String[] address);
+	void addContact(String[] address) throws StoreException;
 	
 	/**
 	 * Add new contact to "Collected Addresses".
 	 * 
 	 * @param address	new email address
 	 */
-	void addContactToCollectedAddresses(String address);
+	void addContactToCollectedAddresses(String address) throws StoreException;
 
 	/**
 	 * Add new contact to "Personal Addressbook".
 	 * 
 	 * @param address	new email address
 	 */
-	void addContactToPersonalAddressbook(String address);
-	
-	/**
-	 * Get address collector used for autocompletion.
-	 * 
-	 * @return		address collector
-	 */
-	IAddressCollector getAddressCollector();
+	void addContactToPersonalAddressbook(String address) throws StoreException;
 
+	/**
+	 * Retrieve all <code>IHeaderItem</code> from contact folder
+	 * with selected unique id.
+	 * 
+	 * @param uid	contact folder unique id
+	 * @return		list of <code>IHeaderItem</code>
+	 */
+	public List<IHeaderItem> getAllHeaderItems(String uid) throws StoreException;
 }

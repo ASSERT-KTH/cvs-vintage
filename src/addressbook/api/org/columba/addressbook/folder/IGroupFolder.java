@@ -29,41 +29,41 @@ public interface IGroupFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	Object add(IContactModel contact) throws Exception;
+	Object add(IContactModel contact) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#count()
 	 */
-	int count();
+	int count() throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#exists(java.lang.Object)
 	 */
-	boolean exists(Object uid);
+	boolean exists(Object uid) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	IContactModel get(Object uid) throws Exception;
+	IContactModel get(Object uid) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	void modify(Object uid, IContactModel contact) throws Exception;
+	void modify(Object uid, IContactModel contact) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
-	void remove(Object uid) throws Exception;
+	void remove(Object uid) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	IContactItemMap getContactItemMap() throws Exception;
+	IContactItemMap getContactItemMap() throws StoreException;
 
 	/**
 	 * @return Returns the group.
 	 */
-	IGroup getGroup();
+	IGroup getGroup() throws StoreException;
 }

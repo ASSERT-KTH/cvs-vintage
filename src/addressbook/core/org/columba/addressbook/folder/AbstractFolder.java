@@ -165,7 +165,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	public IContactItemMap getContactItemMap() throws Exception {
+	public IContactItemMap getContactItemMap() throws StoreException {
 		return cacheStorage.getContactItemMap();
 	}
 
@@ -176,7 +176,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 * @return				contact UID, if exists. Otherwise, null
 	 * @throws Exception
 	 */
-	public Object exists(String contact) throws Exception{
+	public Object exists(String contact) throws StoreException{
 		Iterator it = getContactItemMap().iterator();
 		while ( it.hasNext()) {
 			ContactItem item = (ContactItem) it.next();
@@ -194,14 +194,14 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * save header-cache (HeaderItemList)
 	 */
-	public void save() throws Exception {
+	public void save() throws StoreException {
 
 	}
 
 	/**
 	 * load header-cache (HeaderItemList)
 	 */
-	public void load() throws Exception {
+	public void load() throws StoreException {
 
 	}
 
@@ -240,7 +240,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	public Object add(IContactModel contact) throws Exception {
+	public Object add(IContactModel contact) throws StoreException {
 		Object uid = generateNextMessageUid();
 
 		IContactItem item = new ContactItem(contact);
@@ -258,7 +258,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactModel contact) throws Exception {
+	public void modify(Object uid, IContactModel contact) throws StoreException {
 
 		IContactItem item = new ContactItem(contact);
 
@@ -272,7 +272,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws Exception {
+	public void remove(Object uid) throws StoreException {
 		cacheStorage.remove(uid);
 
 		fireItemRemoved(uid);
@@ -281,19 +281,19 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public abstract IContactModel get(Object uid) throws Exception;
+	public abstract IContactModel get(Object uid) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#count()
 	 */
-	public int count() {
+	public int count()  throws StoreException {
 		return cacheStorage.count();
 	}
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#exists(java.lang.Object)
 	 */
-	public boolean exists(Object uid) {
+	public boolean exists(Object uid) throws StoreException  {
 		return cacheStorage.exists(uid);
 	}
 
@@ -305,7 +305,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 * 
 	 * @return
 	 */
-	public IHeaderItemList getHeaderItemList() throws Exception {
+	public IHeaderItemList getHeaderItemList() throws StoreException {
 		// create list containing all contact item of this folder
 		IHeaderItemList list = new HeaderItemList(getContactItemMap());
 

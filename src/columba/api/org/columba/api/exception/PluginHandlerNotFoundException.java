@@ -14,7 +14,7 @@ import org.columba.api.plugin.IPluginManager;
  * 
  * @author fdietz
  */
-public class PluginHandlerNotFoundException extends Exception {
+public class PluginHandlerNotFoundException extends BaseException {
 	/**
 	 * 
 	 */

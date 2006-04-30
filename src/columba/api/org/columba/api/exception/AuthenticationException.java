@@ -20,7 +20,7 @@ package org.columba.api.exception;
  * Thrown if a client fails to authenticate with a server.
  */
 
-public class AuthenticationException extends Exception {
+public class AuthenticationException extends BaseException {
     public AuthenticationException() {
         super();
     }

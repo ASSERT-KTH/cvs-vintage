@@ -148,7 +148,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		return null;
 	}
 
-	public IFolder getFolder(String name) {
+	public IFolder getFolderByName(String name) {
 		AddressbookTreeNode root = (AddressbookTreeNode) getRoot();
 
 		for (Enumeration e = root.breadthFirstEnumeration(); e

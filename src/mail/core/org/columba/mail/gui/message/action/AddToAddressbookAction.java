@@ -20,6 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.folder.StoreException;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
@@ -101,6 +102,8 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 			// add contact to addressbook
 			contactFacade.addContact(address.toString());
 		} catch (ParserException e) {
+			e.printStackTrace();
+		} catch (StoreException e) {
 			e.printStackTrace();
 		}
 	}

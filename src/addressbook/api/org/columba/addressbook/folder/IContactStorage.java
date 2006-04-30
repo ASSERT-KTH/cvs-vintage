@@ -27,19 +27,19 @@ import org.columba.addressbook.model.IContactModel;
  */
 public interface IContactStorage extends IFolder{
 
-	int count();
+	int count() throws StoreException ;
 
-	Object exists(String contact) throws Exception;
+	Object exists(String contact) throws StoreException;
 	
-	boolean exists(Object uid) throws Exception;
+	boolean exists(Object uid) throws StoreException;
 
-	IContactModel get(Object uid) throws Exception;
+	IContactModel get(Object uid) throws StoreException;
 
-	void remove(Object uid) throws Exception;
+	void remove(Object uid) throws StoreException;
 
-	void modify(Object uid, IContactModel contact) throws Exception;
+	void modify(Object uid, IContactModel contact) throws StoreException;
 
-	Object add(IContactModel contact) throws Exception;
+	Object add(IContactModel contact) throws StoreException;
 	
 	
 }

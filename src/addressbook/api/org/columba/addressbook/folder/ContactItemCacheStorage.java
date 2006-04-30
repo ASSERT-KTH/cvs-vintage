@@ -34,19 +34,19 @@ import org.columba.addressbook.model.IContactItemMap;
  */
 public interface ContactItemCacheStorage {
 
-	IContactItemMap getContactItemMap() throws Exception;
+	IContactItemMap getContactItemMap() throws StoreException;
 	
-	void add(Object uid, IContactItem item) throws Exception;
+	void add(Object uid, IContactItem item) throws StoreException;
 	
-	void remove(Object uid) throws Exception;
+	void remove(Object uid) throws StoreException;
 	
-	void modify(Object uid, IContactItem item) throws Exception;
+	void modify(Object uid, IContactItem item) throws StoreException;
 	
-	int count();
+	int count() throws StoreException;
 	
-	boolean exists(Object uid);
+	boolean exists(Object uid) throws StoreException;
 	
-	void save() throws Exception;
+	void save() throws StoreException;
 	
 	void load() throws Exception;
 }

@@ -21,7 +21,7 @@ package org.columba.api.exception;
  * @author fdietz
  *
  */
-public class ServiceNotFoundException extends Exception {
+public class ServiceNotFoundException extends BaseException {
 
 	/**
 	 * 

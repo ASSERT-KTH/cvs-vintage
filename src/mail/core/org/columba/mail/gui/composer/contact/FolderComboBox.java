@@ -37,7 +37,7 @@ public class FolderComboBox extends JComboBox {
 		IFolderFacade folderFacade = null;
 		try {
 			folderFacade = ServiceConnector.getFolderFacade();
-			Iterator<IFolder> it = folderFacade.getFolderIterator();
+			Iterator<IFolder> it = folderFacade.getFolderIterator().listIterator();
 
 			while (it.hasNext()) {
 				addItem(it.next());

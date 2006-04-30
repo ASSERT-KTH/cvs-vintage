@@ -15,23 +15,33 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.api.exception;
+package org.columba.addressbook.folder;
 
-public class PluginException extends BaseException {
+import org.columba.api.exception.BaseException;
 
-	public PluginException() {
+/**
+ * Internal exception of a contact store.
+ * <p> 
+ * The backend implementation could be file-based, database, LDAP, etc. but
+ * these implementation details shouldn't be exposed by exceptions.
+ *    
+ * @author fdietz
+ */
+public class StoreException extends BaseException {
+
+	public StoreException() {
 		super();
 	}
 
-	public PluginException(String message) {
+	public StoreException(String message) {
 		super(message);
 	}
 
-	public PluginException(String message, Throwable cause) {
+	public StoreException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public PluginException(Throwable cause) {
+	public StoreException(Throwable cause) {
 		super(cause);
 	}
 

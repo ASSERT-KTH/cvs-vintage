@@ -18,9 +18,11 @@
 package org.columba.addressbook.folder;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.columba.addressbook.model.ContactModelFactory;
 import org.columba.addressbook.model.IContactModel;
+import org.columba.addressbook.parser.SyntaxException;
 import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
@@ -47,14 +49,19 @@ public class XmlDataStorage implements DataStorage {
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#load(java.lang.Object)
 	 */
-	public IContactModel load(Object uid) throws Exception {
+	public IContactModel load(Object uid) throws StoreException {
 		File file = getFile(uid);
 
 		Document doc = XmlNewIO.load(file);
 
 		if ( doc == null) return null;
 		
-		IContactModel model = ContactModelFactory.unmarshall(doc, ((Integer) uid).toString());	
+		IContactModel model;
+		try {
+			model = ContactModelFactory.unmarshall(doc, ((Integer) uid).toString());
+		}  catch (SyntaxException e) {
+			throw new StoreException(e);
+		}	
 
 		return model;
 	}
@@ -63,7 +70,7 @@ public class XmlDataStorage implements DataStorage {
 	 * @param uid
 	 * @return
 	 */
-	private File getFile(Object uid) throws Exception {
+	private File getFile(Object uid) throws StoreException {
 		File file = new File(folder.getDirectoryFile().toString() + "/"
 				+ (uid.toString()) + ".xml");
 		return file;
@@ -73,12 +80,21 @@ public class XmlDataStorage implements DataStorage {
 	 * @see org.columba.addressbook.folder.DataStorage#save(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void save(Object uid, IContactModel contact) throws Exception {
+	public void save(Object uid, IContactModel contact) throws StoreException {
 		File file = getFile(uid);
 
-		Document doc = ContactModelFactory.marshall(contact);
+		Document doc;
+		try {
+			doc = ContactModelFactory.marshall(contact);
+		} catch (SyntaxException e) {
+			throw new StoreException(e);
+		}
 		
-		XmlNewIO.save(doc, file);
+		try {
+			XmlNewIO.save(doc, file);
+		} catch (IOException e) {
+			throw new StoreException(e);
+		}
 
 	}
 
@@ -86,7 +102,7 @@ public class XmlDataStorage implements DataStorage {
 	 * @see org.columba.addressbook.folder.DataStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactModel contact) throws Exception {
+	public void modify(Object uid, IContactModel contact) throws StoreException {
 		save(uid, contact);
 
 	}
@@ -94,7 +110,7 @@ public class XmlDataStorage implements DataStorage {
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws Exception {
+	public void remove(Object uid) throws StoreException {
 		File file = getFile(uid);
 		file.delete();
 

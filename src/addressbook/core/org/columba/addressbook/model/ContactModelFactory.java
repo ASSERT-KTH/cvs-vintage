@@ -178,7 +178,7 @@ public class ContactModelFactory {
 
 	@SuppressWarnings("deprecation")
 	public static IContactModel unmarshall(Document document, String id)
-			throws SyntaxException, IllegalArgumentException {
+			throws SyntaxException {
 
 		if (document == null)
 			throw new IllegalArgumentException("document == null");

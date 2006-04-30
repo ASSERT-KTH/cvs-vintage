@@ -51,7 +51,7 @@ public class XmlNewIO {
 		return null;
 	}
 
-	public static void save(Document doc, File file) throws Exception {
+	public static void save(Document doc, File file) throws IOException {
 		XMLOutputter outp = new XMLOutputter();
 
 		outp.output(doc, new FileOutputStream(file));

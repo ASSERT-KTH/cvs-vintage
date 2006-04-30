@@ -48,7 +48,7 @@ public abstract class LocalFolder extends AbstractFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	public Object add(IContactModel contact) throws Exception {
+	public Object add(IContactModel contact) throws StoreException {
 		Object uid = super.add(contact);
 
 		getDataStorageInstance().save(uid, contact);
@@ -59,7 +59,7 @@ public abstract class LocalFolder extends AbstractFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public IContactModel get(Object uid) throws Exception {
+	public IContactModel get(Object uid) throws StoreException {
 		return getDataStorageInstance().load(uid);
 	}
 
@@ -67,7 +67,7 @@ public abstract class LocalFolder extends AbstractFolder {
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactModel contact) throws Exception {
+	public void modify(Object uid, IContactModel contact) throws StoreException {
 		super.modify(uid, contact);
 
 		getDataStorageInstance().modify(uid, contact);
@@ -77,7 +77,7 @@ public abstract class LocalFolder extends AbstractFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws Exception {
+	public void remove(Object uid) throws StoreException {
 		super.remove(uid);
 
 		getDataStorageInstance().remove(uid);

@@ -17,21 +17,21 @@
 //All Rights Reserved.
 package org.columba.api.exception;
 
-public class PluginException extends BaseException {
+public class BaseRuntimeException extends RuntimeException {
 
-	public PluginException() {
+	public BaseRuntimeException() {
 		super();
 	}
 
-	public PluginException(String message) {
+	public BaseRuntimeException(String message) {
 		super(message);
 	}
 
-	public PluginException(String message, Throwable cause) {
+	public BaseRuntimeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public PluginException(Throwable cause) {
+	public BaseRuntimeException(Throwable cause) {
 		super(cause);
 	}
 

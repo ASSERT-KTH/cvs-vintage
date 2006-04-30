@@ -22,11 +22,12 @@ import javax.swing.JOptionPane;
 
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IModelFacade;
-import org.columba.addressbook.gui.autocomplete.IAddressCollector;
+import org.columba.addressbook.folder.StoreException;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
+import org.columba.mail.gui.composer.util.AddressCollector;
 import org.columba.mail.parser.ListBuilder;
 import org.columba.mail.parser.ListParser;
 import org.columba.mail.util.MailResourceLoader;
@@ -42,33 +43,42 @@ public class HeaderController {
 
 	private HeaderView view;
 
-	private IAddressCollector addressCollector;
+	private AddressCollector addressCollector;
 
 	public HeaderController(ComposerController controller) {
 		this.controller = controller;
 
 		view = new HeaderView(this);
 
-		// view.getTable().addKeyListener(this);
-
-		IContactFacade facade;
-		try {
-			facade = ServiceConnector.getContactFacade();
-			addressCollector = facade.getAddressCollector();
-		} catch (ServiceNotFoundException e) {
-			e.printStackTrace();
-		}
+		addressCollector = AddressCollector.getInstance();
 
 		if (addressCollector != null) {
 			// clear autocomplete hashmap
 			addressCollector.clear();
 
-			// fill hashmap with all available contacts and groups
-			addressCollector.addAllContacts(101, true);
-			addressCollector.addAllContacts(102, true);
-		}
-		view.initAutocompletion();
+			try {
+				IContactFacade facade = ServiceConnector.getContactFacade();
 
+				// fill hashmap with all available contacts and groups
+				try {
+
+					// personal addressbook 
+					List<IHeaderItem> list = facade.getAllHeaderItems("101");
+					addressCollector.addAllContacts(list, true);
+
+					// collected addresses
+					List<IHeaderItem> list2 = facade.getAllHeaderItems("102");
+					addressCollector.addAllContacts(list2, true);
+				} catch (StoreException e) {
+					e.printStackTrace();
+				}
+
+			} catch (ServiceNotFoundException e) {
+			}
+
+		}
+
+		view.initAutocompletion();
 	}
 
 	public ComposerController getComposerController() {

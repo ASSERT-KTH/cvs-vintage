@@ -27,8 +27,8 @@ import org.columba.addressbook.model.IContactModel;
  */
 public interface DataStorage {
 
-	IContactModel load(Object uid) throws Exception;
-	void save(Object uid, IContactModel contact) throws Exception;
-	void modify(Object uid, IContactModel contact) throws Exception;
-	void remove(Object uid) throws Exception;
+	IContactModel load(Object uid) throws StoreException;
+	void save(Object uid, IContactModel contact) throws StoreException;
+	void modify(Object uid, IContactModel contact) throws StoreException;
+	void remove(Object uid) throws StoreException;
 }

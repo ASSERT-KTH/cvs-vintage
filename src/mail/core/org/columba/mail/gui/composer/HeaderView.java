@@ -23,11 +23,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.gui.autocomplete.IAddressCollector;
-import org.columba.api.exception.ServiceNotFoundException;
-import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.action.AddressbookAction;
+import org.columba.mail.gui.composer.util.AddressCollector;
 import org.frapuccino.addresscombobox.CommaSeparatedAutoCompleter;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -68,14 +65,7 @@ public class HeaderView extends JPanel implements ActionListener {
 	 */
 	public void initAutocompletion() {
 
-		IAddressCollector addressCollector = null;
-		IContactFacade facade;
-		try {
-			facade = ServiceConnector.getContactFacade();
-			addressCollector = facade.getAddressCollector();
-		} catch (ServiceNotFoundException e) {
-			e.printStackTrace();
-		}
+		AddressCollector addressCollector = AddressCollector.getInstance();
 
 		if (addressCollector != null) {
 			// pass contact data along to AddressComboBox
@@ -86,9 +76,6 @@ public class HeaderView extends JPanel implements ActionListener {
 			new CommaSeparatedAutoCompleter(bccComboBox, Arrays
 					.asList(addressCollector.getAddresses()), true);
 
-			// toComboBox.setItemProvider(addressCollector);
-			// ccComboBox.setItemProvider(addressCollector);
-			// bccComboBox.setItemProvider(addressCollector);
 		}
 	}
 

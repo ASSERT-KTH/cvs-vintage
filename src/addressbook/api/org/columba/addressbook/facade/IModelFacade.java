@@ -39,8 +39,6 @@ public interface IModelFacade {
 
 	IGroupItem createGroupItem();
 
-	IContactModel createContact();
-
 	IHeaderList createHeaderList();
 
 }
