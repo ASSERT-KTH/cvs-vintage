@@ -1,4 +1,4 @@
-// $Id: FigEnumLiteralsCompartment.java,v 1.2 2006/04/29 21:50:32 mvw Exp $
+// $Id: FigEnumLiteralsCompartment.java,v 1.3 2006/04/30 12:35:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,9 @@ import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.ui.targetmanager.TargetManager;
 
 /**
+ * The Fig for the compartment of an Enumeration 
+ * that shows a list of enumerationliterals.
+ * 
  * @author Tom Morris
  */
 public class FigEnumLiteralsCompartment extends FigFeaturesCompartment {
@@ -63,8 +66,8 @@ public class FigEnumLiteralsCompartment extends FigFeaturesCompartment {
      * @see org.argouml.uml.diagram.ui.FigFeaturesCompartment#getNotationType()
      */
     protected int getNotationType() {
-        /* TODO: Make a dedicated notation that supports "name1;name2"
-         * and maybe other notation... */
+        /* TODO: Make a dedicated notation that supports 
+         * parsing "name1;name2" and maybe other notation... */
         return NotationProviderFactory2.TYPE_NAME;
     }
 
@@ -77,9 +80,9 @@ public class FigEnumLiteralsCompartment extends FigFeaturesCompartment {
      */
     public void createFeature() {
         Object enumeration = getGroup().getOwner();
-        Object attr = Model.getCoreFactory().buildEnumerationLiteral(
+        Object literal = Model.getCoreFactory().buildEnumerationLiteral(
                 "",  enumeration);
         populate();
-        TargetManager.getInstance().setTarget(attr);
+        TargetManager.getInstance().setTarget(literal);
     }
 }
