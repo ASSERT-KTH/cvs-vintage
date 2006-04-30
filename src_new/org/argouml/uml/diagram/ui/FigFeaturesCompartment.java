@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.24 2006/04/30 08:27:55 mvw Exp $
+// $Id: FigFeaturesCompartment.java,v 1.25 2006/04/30 09:12:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.argouml.model.Model;
 import org.argouml.notation.NotationContext;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
