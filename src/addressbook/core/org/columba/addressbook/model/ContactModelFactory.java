@@ -146,18 +146,6 @@ public class ContactModelFactory {
 			parser.addAddress(m);
 		}
 
-		// <label>
-		// <type>
-		// <label>CDATA[formatted value]</label>
-		// </type>
-		// ..
-		// </label>
-		it = contactModel.getLabelIterator();
-		while (it.hasNext()) {
-			LabelModel m = (LabelModel) it.next();
-			parser.addLabel(m);
-		}
-
 		if (contactModel.getNote() != null)
 			parser.set(VCARD.NOTE, contactModel.getNote());
 
@@ -234,11 +222,6 @@ public class ContactModelFactory {
 		it = parser.getAddressIterator();
 		while (it.hasNext()) {
 			model.addAddress((AddressModel) it.next());
-		}
-
-		it = parser.getLabelIterator();
-		while (it.hasNext()) {
-			model.addLabel((LabelModel) it.next());
 		}
 
 		model.setNote(parser.get(VCARD.NOTE));

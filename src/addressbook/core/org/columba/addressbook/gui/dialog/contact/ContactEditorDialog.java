@@ -47,7 +47,6 @@ import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IEmailModel;
 import org.columba.addressbook.model.InstantMessagingModel;
-import org.columba.addressbook.model.LabelModel;
 import org.columba.addressbook.model.PhoneModel;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.resourceloader.IconKeys;
@@ -428,7 +427,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			formattedNameTextField.setText(sourceModel.getFormattedName());
 
 			fillSortStringComboBox();
-			if ( sourceModel.getSortString() != null) {
+			if (sourceModel.getSortString() != null) {
 				fileunderComboBox.setSelectedItem(sourceModel.getSortString());
 			}
 
@@ -525,21 +524,6 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 				fillAddressView(m);
 			}
 
-			// we support up to 3 label entries (work/private/other)
-			it = sourceModel.getLabelIterator();
-			if (it.hasNext()) {
-				LabelModel l = (LabelModel) it.next();
-				fillLabelView(l);
-			}
-			if (it.hasNext()) {
-				LabelModel l = (LabelModel) it.next();
-				fillLabelView(l);
-			}
-			if (it.hasNext()) {
-				LabelModel l = (LabelModel) it.next();
-				fillLabelView(l);
-			}
-
 			notesTextArea.setText(sourceModel.getNote());
 
 		} else {
@@ -591,11 +575,6 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			fillAddressModel(AddressModel.TYPE_HOME, destModel);
 			fillAddressModel(AddressModel.TYPE_OTHER, destModel);
 
-			// we support 3 label types (work/home/other)
-			fillLabelModel(LabelModel.TYPE_WORK, destModel);
-			fillLabelModel(LabelModel.TYPE_HOME, destModel);
-			fillLabelModel(LabelModel.TYPE_OTHER, destModel);
-
 			destModel.setNote(notesTextArea.getText());
 		}
 	}
@@ -616,8 +595,8 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			} else if (ln.length() == 0 && fn.length() != 0) {
 				fileunderComboBox.addItem(fn);
 			}
-			
-			if( fileunderComboBox.getModel().getSize() > 0)
+
+			if (fileunderComboBox.getModel().getSize() > 0)
 				fileunderComboBox.setSelectedIndex(0);
 		}
 	}
@@ -695,24 +674,6 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * Fill label model using values from ui-controls
-	 * 
-	 * @param type
-	 * @param destModel
-	 */
-	private void fillLabelModel(int type, ContactModel destModel) {
-		LabelModel model = null;
-		if (type == LabelModel.TYPE_WORK)
-			model = new LabelModel(workAddressTextArea.getText(), type);
-		else if (type == LabelModel.TYPE_HOME)
-			model = new LabelModel(privateAddressTextArea.getText(), type);
-		else if (type == LabelModel.TYPE_OTHER)
-			model = new LabelModel(otherAddressTextArea.getText(), type);
-
-		destModel.addLabel(model);
-	}
-
-	/**
 	 * Fill address model using values from ui-controls.
 	 * 
 	 * @param type
@@ -726,21 +687,22 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 					workCountryTextField.getText(), workPOBoxTextField
 							.getText(), workStateProvinceCountyTextField
 							.getText(), workZipPostalCodeTextField.getText(),
-					type);
+					workAddressTextArea.getText(), type);
 		else if (type == AddressModel.TYPE_HOME)
 			// "street" is missing
 			model = new AddressModel(privateCityTextField.getText(), "",
 					privateCountryTextField.getText(), privatePOBoxTextField
 							.getText(), privateStateProvinceCountyTextField
 							.getText(),
-					privateZipPostalCodeTextField.getText(), type);
+					privateZipPostalCodeTextField.getText(),
+					privateAddressTextArea.getText(), type);
 		else if (type == AddressModel.TYPE_OTHER)
 			// "street" is missing
 			model = new AddressModel(otherCityTextField.getText(), "",
 					otherCountryTextField.getText(), otherPOBoxTextField
 							.getText(), otherStateProvinceCountyTextField
 							.getText(), otherZipPostalCodeTextField.getText(),
-					type);
+					otherAddressTextArea.getText(), type);
 
 		destModel.addAddress(model);
 	}
@@ -785,22 +747,6 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * Fill all label ui-controls from model.
-	 * 
-	 * @param l
-	 *            label model
-	 */
-	private void fillLabelView(LabelModel l) {
-		if (l.getType() == LabelModel.TYPE_WORK) {
-			workAddressTextArea.setText(l.getLabel());
-		} else if (l.getType() == LabelModel.TYPE_HOME) {
-			privateAddressTextArea.setText(l.getLabel());
-		} else if (l.getType() == LabelModel.TYPE_OTHER) {
-			otherAddressTextArea.setText(l.getLabel());
-		}
-	}
-
-	/**
 	 * Fill all address ui-controls from model.
 	 * 
 	 * @param m
@@ -814,6 +760,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			workStateProvinceCountyTextField
 					.setText(m.getStateProvinceCounty());
 			workZipPostalCodeTextField.setText(m.getZipPostalCode());
+			workAddressTextArea.setText(m.getLabel());
 		} else if (m.getType() == AddressModel.TYPE_HOME) {
 			privateCityTextField.setText(m.getCity());
 			privateCountryTextField.setText(m.getCountry());
@@ -821,6 +768,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			privateStateProvinceCountyTextField.setText(m
 					.getStateProvinceCounty());
 			privateZipPostalCodeTextField.setText(m.getZipPostalCode());
+			privateAddressTextArea.setText(m.getLabel());
 		} else if (m.getType() == AddressModel.TYPE_OTHER) {
 			otherCityTextField.setText(m.getCity());
 			otherCountryTextField.setText(m.getCountry());
@@ -828,6 +776,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			otherStateProvinceCountyTextField.setText(m
 					.getStateProvinceCounty());
 			otherZipPostalCodeTextField.setText(m.getZipPostalCode());
+			otherAddressTextArea.setText(m.getLabel());
 		}
 	}
 
@@ -881,9 +830,13 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		nicknameLabel = new JLabel();
 		nicknameTextField = new JTextField();
 		fileunderLabel = new JLabel();
+		fileunderLabel.setEnabled(false);
 		fileunderComboBox = new JComboBox();
+		fileunderComboBox.setEnabled(false);
 		categoriesButton = new JButton();
+		categoriesButton.setEnabled(false);
 		categoriesTextField = new JTextField();
+		categoriesTextField.setEnabled(false);
 		emailSeparator = compFactory.createSeparator(bundle
 				.getString("emailSeparator.text"));
 		String[] emailTypes = new String[] { "Work", "Home", "Other" };
@@ -896,6 +849,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		emailComboBox4 = new JComboBox(emailTypes);
 		emailTextField4 = new JTextField();
 		preferHtmlCheckBox = new JCheckBox();
+		preferHtmlCheckBox.setEnabled(false);
 		telephoneSeparator = compFactory.createSeparator(bundle
 				.getString("telephoneSeparator.text"));
 		String[] phoneTypes = new String[] { "Business Phone",
@@ -947,8 +901,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		weblogLabel = new JLabel();
 		panel5 = new JPanel();
 		weblogTextField = new JTextField();
-		weblogButton = new JButton(ImageLoader
-				.getSmallIcon(IconKeys.INTERNET));
+		weblogButton = new JButton(ImageLoader.getSmallIcon(IconKeys.INTERNET));
 		weblogButton.setMargin(new Insets(0, 0, 0, 0));
 		weblogButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

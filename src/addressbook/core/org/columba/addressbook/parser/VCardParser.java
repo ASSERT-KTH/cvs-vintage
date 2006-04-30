@@ -17,9 +17,11 @@ package org.columba.addressbook.parser;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.Iterator;
 
 import net.wimpi.pim.Pim;
+import net.wimpi.pim.contact.basicimpl.AddressImpl;
 import net.wimpi.pim.contact.basicimpl.CommunicationsImpl;
 import net.wimpi.pim.contact.basicimpl.ContactImpl;
 import net.wimpi.pim.contact.basicimpl.EmailAddressImpl;
@@ -28,12 +30,14 @@ import net.wimpi.pim.contact.basicimpl.OrganizationalIdentityImpl;
 import net.wimpi.pim.contact.basicimpl.PersonalIdentityImpl;
 import net.wimpi.pim.contact.io.ContactMarshaller;
 import net.wimpi.pim.contact.io.ContactUnmarshaller;
+import net.wimpi.pim.contact.model.Address;
 import net.wimpi.pim.contact.model.Communications;
 import net.wimpi.pim.contact.model.EmailAddress;
 import net.wimpi.pim.contact.model.OrganizationalIdentity;
 import net.wimpi.pim.contact.model.PersonalIdentity;
 import net.wimpi.pim.factory.ContactIOFactory;
 
+import org.columba.addressbook.model.AddressModel;
 import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactModel;
@@ -79,6 +83,8 @@ public class VCardParser {
 		// set last name
 
 		identity.setLastname(c.getFamilyName());
+		
+		identity.setBirthDate(c.getBirthday());
 
 		// add all additional names (middle names)
 		String[] s = ParserUtil.getArrayOfString(c.getAdditionalNames(), ",");
@@ -121,6 +127,20 @@ public class VCardParser {
 			communications.addEmailAddress(adr);
 		}
 
+		// add all addresses
+		Iterator it2 = c.getAddressIterator();
+		while (it2.hasNext()) {
+			AddressModel model = (AddressModel) it2.next();
+			Address adr = new AddressImpl();
+			adr.setCity(model.getCity());
+			adr.setPostalCode(model.getZipPostalCode());
+			adr.setPostBox(model.getPoBox());
+			adr.setRegion(model.getStateProvinceCounty());
+			adr.setStreet(model.getStreet());
+			adr.setLabel(model.getLabel());
+			exportContact.addAddress(adr);
+		}
+		
 		OrganizationalIdentity organizationalIdentity = new OrganizationalIdentityImpl();
 		exportContact.setOrganizationalIdentity(organizationalIdentity);
 		organizationalIdentity.setOrganization(new OrganizationImpl());
@@ -128,6 +148,8 @@ public class VCardParser {
 		// set name of organization
 		organizationalIdentity.getOrganization().setName(c.getOrganisation());
 
+		exportContact.setNote(c.getNote());
+		
 		// save contact to outputstream
 		marshaller.marshallContact(out, exportContact);
 	}
@@ -152,17 +174,7 @@ public class VCardParser {
 		OrganizationalIdentity organisationalIdentity = importContact
 				.getOrganizationalIdentity();
 
-		// name of organisation
-		c.setOrganisation(organisationalIdentity.getOrganization().getName());
-
-		/*
-		 * not supported in ui anyway!
-		 * 
-		 * c.set(VCARD.ROLE, organisationalIdentity.getRole());
-		 * c.set(VCARD.TITLE, organisationalIdentity.getTitle());
-		 * 
-		 */
-
+		
 		if (importContact.hasPersonalIdentity()) {
 			PersonalIdentity identity = importContact.getPersonalIdentity();
 			
@@ -194,6 +206,12 @@ public class VCardParser {
 
 			// formatted name
 			c.setFormattedName(identity.getFormattedName());
+			
+			// birthday
+			Date birthday = importContact.getPersonalIdentity().getBirthDate();
+			if ( birthday != null)
+				c.setBirthday(birthday);
+			
 		}
 
 		// url to website/homepage
@@ -210,7 +228,37 @@ public class VCardParser {
 						EmailModel.TYPE_WORK));
 			}
 		}
+		
+		// address list
+		if ( importContact.listAddresses().length > 0 ) {
+			// not that the editor ui only supports max of 3 addresses to edit
+			Address[] addresses = importContact.listAddresses(); 
+			for ( int i=0; i<addresses.length; i++) {
+				Address a = addresses[i];
+				
+				int type = -1;
+				if ( a.isHome())
+					type = AddressModel.TYPE_HOME;
+				else if ( a.isWork())
+					type = AddressModel.TYPE_WORK;
+				else
+					type = AddressModel.TYPE_OTHER;
+				
+				
+				AddressModel adr = new AddressModel(a.getPostBox(), a.getStreet(), a.getCity(), a.getPostalCode(), a.getRegion(), a.getCountry(), a.getLabel(), type );
+				
+				c.addAddress(adr);
+			}
+		}
 
+		// name of organisation
+		c.setOrganisation(organisationalIdentity.getOrganization().getName());
+		
+		c.setTitle(organisationalIdentity.getTitle());
+		c.setProfession(organisationalIdentity.getRole());
+	
+		c.setNote(importContact.getNote());
+		
 		return c;
 	}
 

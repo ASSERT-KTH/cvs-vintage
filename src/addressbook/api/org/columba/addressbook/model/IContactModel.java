@@ -32,8 +32,6 @@ public interface IContactModel {
 	
 	public abstract Iterator getAddressIterator();
 	
-	public abstract Iterator getLabelIterator();
-	
 	public abstract Iterator getEmailIterator();
 	public abstract String getPreferredEmail();
 	

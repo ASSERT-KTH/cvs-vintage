@@ -85,8 +85,6 @@ public class ContactModel implements IContactModel {
 
 	private Vector addressVector = new Vector();
 
-	private Vector labelVector = new Vector();
-
 	private String note;
 
 	public ContactModel() {
@@ -421,17 +419,6 @@ public class ContactModel implements IContactModel {
 
 	public Iterator getAddressIterator() {
 		return addressVector.iterator();
-	}
-
-	public void addLabel(LabelModel model) {
-		if (model == null)
-			throw new IllegalArgumentException("model == null");
-
-		labelVector.add(model);
-	}
-
-	public Iterator getLabelIterator() {
-		return labelVector.iterator();
 	}
 
 	public String getTitle() {

@@ -24,7 +24,6 @@ import org.columba.addressbook.model.AddressModel;
 import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IEmailModel;
 import org.columba.addressbook.model.InstantMessagingModel;
-import org.columba.addressbook.model.LabelModel;
 import org.columba.addressbook.model.PhoneModel;
 import org.columba.addressbook.model.VCARD;
 import org.jdom.CDATA;
@@ -175,7 +174,7 @@ public class XMLContactDocumentParser {
 	}
 
 	public Iterator getAddressIterator() {
-		Vector v = new Vector();
+		Vector<AddressModel> v = new Vector<AddressModel>();
 
 		Element child = getParentElement().getChild(VCARD.ADR);
 		// if not specified return empty iterator
@@ -211,49 +210,23 @@ public class XMLContactDocumentParser {
 			Element e6 = typeElement.getChild(VCARD.ADR_COUNTRY);
 			if (e6 != null)
 				country = e6.getText();
-
-			v.add(new AddressModel(poBox, street, locality, postalCode, region,
-					country, typeElement.getName()));
-
-		}
-
-		return v.iterator();
-
-	}
-
-	public Iterator getLabelIterator() {
-		Vector v = new Vector();
-
-		Element child = getParentElement().getChild(VCARD.LABEL);
-		// if not specified return empty iterator
-		if (child == null)
-			return v.iterator();
-
-		Iterator it = child.getChildren().iterator();
-		// iterate over all type elements
-		while (it.hasNext()) {
-			Element typeElement = (Element) it.next();
-			if (typeElement.getContent() != null && typeElement.getContent().size() > 0) {
-				CDATA cdata = (CDATA) typeElement.getContent().get(0);
-				v.add(new LabelModel(cdata.getText(), typeElement.getName()));
+			String label = "";
+			Element e7 = typeElement.getChild(VCARD.LABEL);
+			if ( e7 != null) {
+				if (e7.getContent() != null && e7.getContent().size() > 0) {
+					CDATA cdata = (CDATA) typeElement.getContent().get(0);
+					if ( cdata != null)
+						label = cdata.getText();
+				}
 			}
+			
+			v.add(new AddressModel(poBox, street, locality, postalCode, region,
+					country, label, typeElement.getName()));
+
 		}
 
 		return v.iterator();
-	}
 
-	public void addLabel(LabelModel m) {
-		// create <adr>, if it doesn't exist
-		Element child = getParentElement().getChild(VCARD.LABEL);
-		if (child == null) {
-			child = new Element(VCARD.LABEL);
-			getParentElement().addContent(child);
-		}
-
-		// create <type> element
-		Element prefixchild = new Element(m.getTypeString());
-		prefixchild.addContent(new CDATA(m.getLabel()));
-		child.addContent(prefixchild);
 	}
 
 	public void addAddress(AddressModel m) {
@@ -291,6 +264,11 @@ public class XMLContactDocumentParser {
 		Element countryElement = new Element(VCARD.ADR_COUNTRY);
 		countryElement.setText(m.getCountry());
 		prefixchild.addContent(countryElement);
+		
+		// create a CDATA section for the label
+		Element labelElement = new Element(VCARD.LABEL);
+		labelElement.addContent(new CDATA(m.getLabel()));
+		prefixchild.addContent(labelElement);
 
 	}
 

@@ -38,11 +38,13 @@ public class AddressModel {
 	private String stateProvinceCounty;
 
 	private String country;
+	
+	private String label;
 
 	int type;
 
 	public AddressModel(String poBox, String street, String city,
-			String zipPostalCode, String stateProvinceCounty, String country,
+			String zipPostalCode, String stateProvinceCounty, String country, String label, 
 			String type) {
 
 		// TODO: throw IllegalArgumentException in case a variable == null
@@ -63,11 +65,11 @@ public class AddressModel {
 		this.zipPostalCode = zipPostalCode;
 		this.stateProvinceCounty = stateProvinceCounty;
 		this.country = country;
-
+		this.label = label;
 	}
 
 	public AddressModel(String poBox, String street, String city,
-			String zipPostalCode, String stateProvinceCounty, String country,
+			String zipPostalCode, String stateProvinceCounty, String country, String label,
 			int type) {
 		
 		// TODO: throw IllegalArgumentException in case a variable == null
@@ -82,6 +84,7 @@ public class AddressModel {
 		this.stateProvinceCounty = stateProvinceCounty;
 		this.country = country;
 		this.type = type;
+		this.label = label;
 	}
 
 	public String getTypeString() {
@@ -142,5 +145,12 @@ public class AddressModel {
 	 */
 	public String getStreet() {
 		return street;
+	}
+	
+	/**
+	 * @return Returns the label.
+	 */
+	public String getLabel() {
+		return label;
 	}
 }

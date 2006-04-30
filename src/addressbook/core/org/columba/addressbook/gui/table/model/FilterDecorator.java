@@ -56,8 +56,9 @@ public class FilterDecorator extends TableModelDecorator {
 	 */
 	public void setContactItemMap(IContactItemMap list) {
 		super.setContactItemMap(list);
-
-		filter();
+		
+		if ( list != null)
+			filter();
 	}
 
 	protected void filter() {
