@@ -17,7 +17,9 @@
 //All Rights Reserved.
 package org.columba.calendar.store.api;
 
-public class StoreException extends Exception {
+import org.columba.api.exception.BaseRuntimeException;
+
+public class StoreException extends BaseRuntimeException {
 
 	public StoreException() {
 		super();
