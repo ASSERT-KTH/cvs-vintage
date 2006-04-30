@@ -1,4 +1,4 @@
-// $Id: NotationUtilityJava.java,v 1.1 2006/04/30 16:59:55 mvw Exp $
+// $Id: NotationUtilityJava.java,v 1.2 2006/04/30 19:38:10 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
