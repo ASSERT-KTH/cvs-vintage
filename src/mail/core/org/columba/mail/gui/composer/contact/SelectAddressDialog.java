@@ -42,10 +42,10 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.folder.IContactFolder;
+import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.api.exception.ServiceNotFoundException;
-import org.columba.core.folder.IFolder;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.DoubleClickListener;
 import org.columba.mail.connector.ServiceConnector;
@@ -328,7 +328,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		chooseLabel = new JLabel(MailResourceLoader.getString("dialog",
 				"selectaddressdialog", "addressbook")); //$NON-NLS-1$
 
-		chooseComboBox = new FolderComboBox();
+		chooseComboBox = new FolderComboBox(false);
 		
 		chooseComboBox.setActionCommand("CHOOSE"); //$NON-NLS-1$
 		chooseComboBox.addActionListener(this);
@@ -459,12 +459,11 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			// folder selection changed
 			JComboBox cb = (JComboBox)e.getSource();
-			IFolder selectedFolder = (IFolder) cb.getSelectedItem();
-			IContactFolder contactFolder = (IContactFolder) selectedFolder;
+				
+			IContactFolder contactFolder = (IContactFolder) cb.getSelectedItem();
 			
 			if (contactFolder != null) {
 				try {
-					// ContactItemMap list = selectedFolder.getContactItemMap();
 					IHeaderItemList itemList = contactFolder
 							.getHeaderItemList();
 					addressbookList.setHeaderItemList(itemList);
