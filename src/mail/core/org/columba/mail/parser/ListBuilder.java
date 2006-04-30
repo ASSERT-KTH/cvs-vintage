@@ -68,7 +68,7 @@ public class ListBuilder {
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			String s = (String) it.next();
-			IFolder f = folderFacade.getFolder(s);
+			IFolder f = folderFacade.getFolderByName(s);
 
 			// if its a group item
 			if (f != null) {
