@@ -73,7 +73,10 @@ public class AboutDialog extends JDialog implements ActionListener {
     protected AboutDialog() {
         super((JFrame) null, GlobalResourceLoader.getString(
             RESOURCE_BUNDLE_PATH, "about", "title"));
-        
+        init();
+    }
+      
+    protected void init() {
         tabbedPane = new JTabbedPane();
         
         JPanel authorPanel = new JPanel(new GridBagLayout());
