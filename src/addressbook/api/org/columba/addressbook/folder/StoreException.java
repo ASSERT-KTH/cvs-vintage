@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.api.exception.BaseException;
+import org.columba.api.exception.BaseRuntimeException;
 
 /**
  * Internal exception of a contact store.
@@ -27,7 +27,7 @@ import org.columba.api.exception.BaseException;
  *    
  * @author fdietz
  */
-public class StoreException extends BaseException {
+public class StoreException extends BaseRuntimeException {
 
 	public StoreException() {
 		super();
