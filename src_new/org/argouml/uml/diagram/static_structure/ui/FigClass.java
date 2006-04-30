@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.215 2006/04/29 21:50:32 mvw Exp $
+// $Id: FigClass.java,v 1.216 2006/04/30 09:13:16 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -756,7 +756,6 @@ public class FigClass extends FigClassifierBox
         setBounds(rect.x, rect.y, rect.width, rect.height);
     }
 
-
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
      */
@@ -786,6 +785,15 @@ public class FigClass extends FigClassifierBox
             Iterator it2 = c.iterator();
             while (it2.hasNext()) {
                 addElementListener(it2.next());
+            }
+            if (isPathVisible()) {
+                c = Model.getModelManagementHelper()
+                    .getAllSurroundingNamespaces(newOwner);
+                Iterator itpv = c.iterator();
+                while (itpv.hasNext()) {
+                    addElementListener(itpv.next(), 
+                            new String[] {"name", "namespace", "ownedElement"});
+                }
             }
         }
     }
