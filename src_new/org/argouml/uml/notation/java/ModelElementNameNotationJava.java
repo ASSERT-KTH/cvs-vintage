@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationJava.java,v 1.6 2006/04/30 16:59:55 mvw Exp $
+// $Id: ModelElementNameNotationJava.java,v 1.7 2006/04/30 19:06:45 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.notation.java;
 
 import java.util.Stack;
 
-import org.argouml.language.java.generator.GeneratorJava;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.notation.ModelElementNameNotation;
