@@ -43,6 +43,8 @@ public class ContactModel implements IContactModel {
 
 	private String profession;
 
+	private String manager;
+	
 	private String sortString;
 
 	private String familyName;
@@ -478,4 +480,11 @@ public class ContactModel implements IContactModel {
 		return null;
 	}
 
+	public String getManager() {
+		return manager;
+	}
+
+	public void setManager(String manager) {
+		this.manager = manager;
+	}
 }

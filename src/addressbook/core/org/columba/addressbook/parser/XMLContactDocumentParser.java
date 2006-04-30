@@ -214,7 +214,7 @@ public class XMLContactDocumentParser {
 			Element e7 = typeElement.getChild(VCARD.LABEL);
 			if ( e7 != null) {
 				if (e7.getContent() != null && e7.getContent().size() > 0) {
-					CDATA cdata = (CDATA) typeElement.getContent().get(0);
+					CDATA cdata = (CDATA) e7.getContent().get(0);
 					if ( cdata != null)
 						label = cdata.getText();
 				}

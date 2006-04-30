@@ -435,7 +435,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			professionTextField.setText(sourceModel.getProfession());
 			titleTextField.setText(sourceModel.getTitle());
 
-			companyTextField.setText(sourceModel.getOrganisation());
+		    managerTextField.setText(sourceModel.getManager());
 			departmentTextField.setText(sourceModel.getDepartment());
 			officeTextField.setText(sourceModel.getOffice());
 
@@ -539,7 +539,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			destModel.setProfession(professionTextField.getText());
 			destModel.setTitle(titleTextField.getText());
 
-			destModel.setOrganisation(companyTextField.getText());
+			destModel.setManager(managerTextField.getText());
 			destModel.setDepartment(departmentTextField.getText());
 			destModel.setOffice(officeTextField.getText());
 
@@ -555,13 +555,13 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			fillEmailModel(emailTextField4, emailComboBox4, destModel);
 
 			// we support up to 4 phones
-			fillTelephoneModel(telephoneTextField1, telephoneComboBox1,
+			fillPhoneModel(telephoneTextField1, telephoneComboBox1,
 					destModel);
-			fillTelephoneModel(telephoneTextField2, telephoneComboBox2,
+			fillPhoneModel(telephoneTextField2, telephoneComboBox2,
 					destModel);
-			fillTelephoneModel(telephoneTextField3, telephoneComboBox3,
+			fillPhoneModel(telephoneTextField3, telephoneComboBox3,
 					destModel);
-			fillTelephoneModel(telephoneTextField4, telephoneComboBox4,
+			fillPhoneModel(telephoneTextField4, telephoneComboBox4,
 					destModel);
 
 			// we support up to 4 im
@@ -605,25 +605,25 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			ContactModel destModel2) {
 		if (imTextField.getText() != null) {
 			if (imComboBox.getSelectedIndex() == 0)
-				destModel.addPhone(new PhoneModel(imTextField.getText(),
+				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
 						InstantMessagingModel.TYPE_JABBER));
 			else if (imComboBox.getSelectedIndex() == 1)
-				destModel.addPhone(new PhoneModel(imTextField.getText(),
+				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
 						InstantMessagingModel.TYPE_AIM));
 			else if (imComboBox.getSelectedIndex() == 2)
-				destModel.addPhone(new PhoneModel(imTextField.getText(),
+				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
 						InstantMessagingModel.TYPE_YAHOO));
 			else if (imComboBox.getSelectedIndex() == 3)
-				destModel.addPhone(new PhoneModel(imTextField.getText(),
+				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
 						InstantMessagingModel.TYPE_MSN));
 			else if (imComboBox.getSelectedIndex() == 4)
-				destModel.addPhone(new PhoneModel(imTextField.getText(),
+				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
 						InstantMessagingModel.TYPE_ICQ));
 		}
 
 	}
 
-	private void fillTelephoneModel(JTextField telephoneTextField,
+	private void fillPhoneModel(JTextField telephoneTextField,
 			JComboBox telephoneComboBox, ContactModel destModel2) {
 		if (telephoneTextField.getText() != null) {
 			if (telephoneComboBox.getSelectedIndex() == 0)
@@ -635,8 +635,49 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			else if (telephoneComboBox.getSelectedIndex() == 2)
 				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
 						PhoneModel.TYPE_BUSINESS_FAX));
-
-			// TODO finish for all left phone types
+			else if (telephoneComboBox.getSelectedIndex() == 3)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_CALLBACK_PHONE));
+			else if (telephoneComboBox.getSelectedIndex() == 4)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_CAR_PHONE));
+			else if (telephoneComboBox.getSelectedIndex() == 5)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_COMPANY_PHONE));
+			else if (telephoneComboBox.getSelectedIndex() == 6)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_HOME_PHONE));
+			else if (telephoneComboBox.getSelectedIndex() == 7)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_HOME_FAX));
+			else if (telephoneComboBox.getSelectedIndex() == 8)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_ISDN));
+			else if (telephoneComboBox.getSelectedIndex() == 9)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_MOBILE_PHONE));
+			else if (telephoneComboBox.getSelectedIndex() == 10)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_OTHER_PHONE));
+			else if (telephoneComboBox.getSelectedIndex() == 11)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_OTHER_FAX));
+			else if (telephoneComboBox.getSelectedIndex() == 12)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_PAGER));
+			else if (telephoneComboBox.getSelectedIndex() == 13)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_PRIMARY_PHONE));
+			else if (telephoneComboBox.getSelectedIndex() == 14)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_RADIO));
+			else if (telephoneComboBox.getSelectedIndex() == 15)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_TELEX));
+			else if (telephoneComboBox.getSelectedIndex() == 16)
+				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
+						PhoneModel.TYPE_TTY));
+		
 		}
 
 	}
@@ -667,9 +708,35 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			telephoneComboBox.setSelectedIndex(1);
 		else if (m.getType() == PhoneModel.TYPE_BUSINESS_FAX)
 			telephoneComboBox.setSelectedIndex(2);
-
-		// TODO finish for all left phone types
-
+		else if (m.getType() == PhoneModel.TYPE_CALLBACK_PHONE)
+			telephoneComboBox.setSelectedIndex(3);
+		else if (m.getType() == PhoneModel.TYPE_CAR_PHONE)
+			telephoneComboBox.setSelectedIndex(4);
+		else if (m.getType() == PhoneModel.TYPE_COMPANY_PHONE)
+			telephoneComboBox.setSelectedIndex(5);
+		else if (m.getType() == PhoneModel.TYPE_HOME_PHONE)
+			telephoneComboBox.setSelectedIndex(6);
+		else if (m.getType() == PhoneModel.TYPE_HOME_FAX)
+			telephoneComboBox.setSelectedIndex(7);
+		else if (m.getType() == PhoneModel.TYPE_ISDN)
+			telephoneComboBox.setSelectedIndex(8);
+		else if (m.getType() == PhoneModel.TYPE_MOBILE_PHONE)
+			telephoneComboBox.setSelectedIndex(9);
+		else if (m.getType() == PhoneModel.TYPE_OTHER_PHONE)
+			telephoneComboBox.setSelectedIndex(10);
+		else if (m.getType() == PhoneModel.TYPE_OTHER_FAX)
+			telephoneComboBox.setSelectedIndex(11);
+		else if (m.getType() == PhoneModel.TYPE_PAGER)
+			telephoneComboBox.setSelectedIndex(12);
+		else if (m.getType() == PhoneModel.TYPE_PRIMARY_PHONE)
+			telephoneComboBox.setSelectedIndex(13);
+		else if (m.getType() == PhoneModel.TYPE_RADIO)
+			telephoneComboBox.setSelectedIndex(14);
+		else if (m.getType() == PhoneModel.TYPE_TELEX)
+			telephoneComboBox.setSelectedIndex(15);
+		else if (m.getType() == PhoneModel.TYPE_TTY)
+			telephoneComboBox.setSelectedIndex(16);
+	
 		telephoneTextField.setText(m.getNumber());
 	}
 
@@ -683,14 +750,14 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		AddressModel model = null;
 		if (type == AddressModel.TYPE_WORK)
 			// "street" is missing
-			model = new AddressModel(workCityTextField.getText(), "",
+			model = new AddressModel(workCityTextField.getText(), workStreetTextField.getText(),
 					workCountryTextField.getText(), workPOBoxTextField
 							.getText(), workStateProvinceCountyTextField
 							.getText(), workZipPostalCodeTextField.getText(),
 					workAddressTextArea.getText(), type);
 		else if (type == AddressModel.TYPE_HOME)
 			// "street" is missing
-			model = new AddressModel(privateCityTextField.getText(), "",
+			model = new AddressModel(privateCityTextField.getText(), privateStreetTextField.getText(),
 					privateCountryTextField.getText(), privatePOBoxTextField
 							.getText(), privateStateProvinceCountyTextField
 							.getText(),
@@ -698,7 +765,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 					privateAddressTextArea.getText(), type);
 		else if (type == AddressModel.TYPE_OTHER)
 			// "street" is missing
-			model = new AddressModel(otherCityTextField.getText(), "",
+			model = new AddressModel(otherCityTextField.getText(), otherStreetTextField.getText(),
 					otherCountryTextField.getText(), otherPOBoxTextField
 							.getText(), otherStateProvinceCountyTextField
 							.getText(), otherZipPostalCodeTextField.getText(),

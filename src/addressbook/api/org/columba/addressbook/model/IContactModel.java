@@ -45,7 +45,7 @@ public interface IContactModel {
 	
 	public abstract String getProfession();
 	public abstract String getTitle();
-	
+	public abstract String getManager();
 	public abstract String getOrganisation();
 	public abstract String getDepartment();
 	public abstract String getOffice();
