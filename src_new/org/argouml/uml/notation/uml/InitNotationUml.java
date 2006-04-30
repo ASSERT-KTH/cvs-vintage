@@ -1,4 +1,4 @@
-// $Id: InitNotationUml.java,v 1.12 2006/04/29 21:50:32 mvw Exp $
+// $Id: InitNotationUml.java,v 1.13 2006/04/30 16:59:55 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.argouml.notation.NotationProviderFactory2;
 public class InitNotationUml {
 
     /**
-     * static initializer, register all appropriate critics.
+     * static initializer, register all appropriate notations.
      */
     public static void init() {
         NotationProviderFactory2 npf = NotationProviderFactory2.getInstance();

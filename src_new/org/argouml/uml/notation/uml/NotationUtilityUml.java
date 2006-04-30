@@ -1,4 +1,4 @@
-// $Id: NotationUtilityUml.java,v 1.9 2006/04/29 21:50:32 mvw Exp $
+// $Id: NotationUtilityUml.java,v 1.10 2006/04/30 16:59:55 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -875,7 +875,7 @@ public final class NotationUtilityUml {
      * @param st a stereotype UML object or a collection of stereotypes
      * @return a string representing the given stereotype
      */
-    static String generateStereotype(Object st) {
+    public static String generateStereotype(Object st) {
         if (st == null)
             return "";
         if (Model.getFacade().isAModelElement(st)) {
