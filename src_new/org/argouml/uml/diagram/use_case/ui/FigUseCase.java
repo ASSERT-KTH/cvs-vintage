@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.85 2006/04/29 21:50:32 mvw Exp $
+// $Id: FigUseCase.java,v 1.86 2006/05/01 13:25:11 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1351,6 +1351,9 @@ public class FigUseCase extends FigNodeModelElement
      */
     protected void updateStereotypeText() {
         super.updateStereotypeText();
+        if (getOwner() == null) {
+            return;
+        }
         if (!Model.getFacade().getStereotypes(getOwner()).isEmpty()) {
             getStereotypeFig().setBounds((bigPort.getX()
 					  + bigPort.getWidth() / 2
