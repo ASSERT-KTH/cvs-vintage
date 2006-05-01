@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: build-release.sh,v 1.16 2006/02/20 21:28:44 linus Exp $
+# $Id: build-release.sh,v 1.17 2006/05/01 10:22:54 linus Exp $
 
 # The purpose of this shellscript is to make all the release work.
 
@@ -18,9 +18,9 @@ then
     exit 1;
 fi
 
-if test ! -d ../svn/argouml-downloads/trunk/www
+if test ! -d ../svn/argouml-downloads/www
 then
-    echo The output directory ../svn/argouml-downloads/trunk/www does not exist.
+    echo The output directory ../svn/argouml-downloads/www does not exist.
     exit 1;
 fi
 
