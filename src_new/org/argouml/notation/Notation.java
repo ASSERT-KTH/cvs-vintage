@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.6 2006/05/01 08:00:01 mvw Exp $
+// $Id: Notation.java,v 1.7 2006/05/01 14:05:48 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -729,7 +729,7 @@ public final class Notation implements PropertyChangeListener {
      * @param o    The UML element to generate for.
      * @return     The generated string.
      */
-    public static String generate(NotationName nn, Object o) {
+    private static String generate(NotationName nn, Object o) {
         if (o == null) {
             return "";
 	}
