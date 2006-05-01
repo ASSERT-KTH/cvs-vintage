@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.225 2006/04/29 16:36:36 linus Exp $
+<!-- $Id: build.xml,v 1.226 2006/05/01 07:56:12 linus Exp $
 This requires ANT 1.6.2
 
 Introduction
@@ -1070,13 +1070,27 @@ For details see http://www.clarkware.com/software/JDepend.html.
     </antcall>
 
     <antcall target="checkstyle-cond">
-      <param name="source.dir" value="${argo.root.dir}/../argouml-emf/src"/>
+      <param name="source.dir"
+             value="${argo.root.dir}/../argouml-andromda/src"/>
     </antcall>
     <antcall target="checkstyle-cond">
-      <param name="source.dir" value="${argo.root.dir}/../argouml-nb/src"/>
+      <param name="source.dir"
+             value="${argo.root.dir}/../argouml-classfile/src"/>
     </antcall>
     <antcall target="checkstyle-cond">
-      <param name="source.dir" value="${argo.root.dir}/../argouml-i18n-zh/src"/>
+      <param name="source.dir" value="${argo.root.dir}/../argouml-cpp/src"/>
+    </antcall>
+    <antcall target="checkstyle-cond">
+      <param name="source.dir" value="${argo.root.dir}/../argouml-csharp/src"/>
+    </antcall>
+    <antcall target="checkstyle-cond">
+      <param name="source.dir" value="${argo.root.dir}/../argouml-idl/src"/>
+    </antcall>
+    <antcall target="checkstyle-cond">
+      <param name="source.dir" value="${argo.root.dir}/../argouml-php/src"/>
+    </antcall>
+    <antcall target="checkstyle-cond">
+      <param name="source.dir" value="${argo.root.dir}/../argouml-python/src"/>
     </antcall>
   </target>
 
