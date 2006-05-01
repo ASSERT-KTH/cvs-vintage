@@ -183,14 +183,14 @@ public final class ContactFacade implements IContactFacade {
 	public List<IHeaderItem> getAllHeaderItems(String uid) throws StoreException{
 		if ( uid == null ) throw new IllegalArgumentException("uid == null");
 		
-		Vector v = new Vector();
+		Vector<IHeaderItem> v = new Vector<IHeaderItem>();
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		IFolder f = model.getFolder(Integer.parseInt(uid));
 		if ( f == null ) return v;
 		
 		IContactFolder folder = (IContactFolder) f;
 		try {
-			return folder.getHeaderItemList().getList();
+			return  folder.getHeaderItemList().getList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -35,4 +35,8 @@
  <extension id="ExportVCard" class="org.columba.addressbook.gui.action.ExportVCardAction"/>
 </extensionlist>
 
+<extensionlist id="org.columba.core.newitem">
+ <extension id="AddContactCard" class="org.columba.addressbook.gui.action.AddContactCardAction"/>
+</extensionlist>
+
 </plugin>

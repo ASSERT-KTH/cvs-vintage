@@ -382,4 +382,9 @@ The order of the following plugins is intentional. Do not change the order of ap
  </extension>
 </extensionlist>
 
+
+<extensionlist id="org.columba.core.newitem">
+ <extension id="NewMessage" class="org.columba.mail.gui.action.NewMessageAction"/>
+</extensionlist>
+
 </plugin>

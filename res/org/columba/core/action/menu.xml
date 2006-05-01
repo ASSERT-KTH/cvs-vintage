@@ -3,11 +3,14 @@
 <menubar>
 
 	<menu id="menu_file">
+        <imenu id="NewSubmenu" />
+<!--
 	    <menu id="menu_file_new">
 	    	<menuitem id="OpenNewMailWindow"/>
 	    	<menuitem id="OpenNewAddressbookWindow"/>	    	
 	    	<placeholder id="open" />
 	    </menu>	    
+-->
 		<separator/>
 		<placeholder id="top" />	
 		

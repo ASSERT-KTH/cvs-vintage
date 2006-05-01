@@ -91,4 +91,11 @@ public interface IExtensionHandlerKeys {
 
 	public static final String ORG_COLUMBA_CORE_SERVICE = "org.columba.core.service";
 
+	/**
+	 * Actions can be registered. These actions should be representing "new item".
+	 * For example "New Mail", "New Contact", "New Appointment". 
+	 * <p>
+	 * They will be promptly presented in the "File->New" menu and the toolbar.
+	 */
+	public static final String ORG_COLUMBA_CORE_NEWITEM = "org.columba.core.newitem";
 }

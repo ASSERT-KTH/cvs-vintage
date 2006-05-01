@@ -11,4 +11,5 @@
  <handler id="org.columba.core.htmlviewer" />
  <handler id="org.columba.core.service" />
  <handler id="org.columba.core.statusbar" />
+ <handler id="org.columba.core.newitem" />
 </handlerlist>
