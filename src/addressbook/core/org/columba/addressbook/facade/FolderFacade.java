@@ -95,4 +95,12 @@ public class FolderFacade implements IFolderFacade {
 			getChildren(model, child, v);
 		}
 	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IFolderFacade#getRootFolder()
+	 */
+	public IFolder getRootFolder() {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		return (IFolder) model.getRoot();
+	}
 }

@@ -66,4 +66,12 @@ public interface IFolderFacade {
 	 * @return	iterator of <code>IFolder</code>
 	 */
 	List<IFolder> getFolderIterator();
+	
+	/**
+	 * Return root folder. This might come in handy when traversing
+	 * the whole tree structure.
+	 * 
+	 * @return	root folder
+	 */
+	IFolder getRootFolder();
 }

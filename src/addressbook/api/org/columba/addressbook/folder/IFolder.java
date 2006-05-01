@@ -18,12 +18,13 @@
 package org.columba.addressbook.folder;
 
 import javax.swing.ImageIcon;
+import javax.swing.tree.TreeNode;
 
 /**
  * @author fdietz
  * 
  */
-public interface IFolder {
+public interface IFolder extends TreeNode{
 	ImageIcon getIcon();
 
 	int getUid();
