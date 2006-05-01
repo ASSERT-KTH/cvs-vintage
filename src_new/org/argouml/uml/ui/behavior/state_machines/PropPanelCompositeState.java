@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.33 2006/04/08 22:36:06 tfmorris Exp $
+// $Id: PropPanelCompositeState.java,v 1.34 2006/05/01 14:38:20 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,6 +112,11 @@ public class PropPanelCompositeState extends AbstractPropPanelState {
         deleteConcurrentRegion = new ActionDeleteConcurrentRegion();
         addAction(deleteConcurrentRegion);
     }
+    
+    protected void updateExtraButtons() {
+        addConcurrentRegion.setEnabled(addConcurrentRegion.isEnabled());
+        deleteConcurrentRegion.setEnabled(deleteConcurrentRegion.isEnabled());
+    }
 
     /**
      * Initialize the panel with its specific fields, in casu
@@ -128,8 +133,7 @@ public class PropPanelCompositeState extends AbstractPropPanelState {
      */
     public void setTarget(Object t) {
         super.setTarget(t);
-        addConcurrentRegion.setEnabled(addConcurrentRegion.isEnabled());
-        deleteConcurrentRegion.setEnabled(deleteConcurrentRegion.isEnabled());
+        updateExtraButtons();
         Object target = TargetManager.getInstance().getModelTarget();
         if (Model.getFacade().isAConcurrentRegion(target)) {
             getTitleLabel().setText("Concurrent Region");

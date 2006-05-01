@@ -1,5 +1,5 @@
-// $Id: PropPanelSubmachineState.java,v 1.22 2006/04/08 22:36:06 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: PropPanelSubmachineState.java,v 1.23 2006/05/01 14:38:20 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -107,6 +107,13 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
      * @see org.argouml.uml.ui.behavior.state_machines.PropPanelStateVertex#addExtraButtons()
      */
     protected void addExtraButtons() {
+        // Intentionally do nothing.
+    }
+
+    /**
+     * @see org.argouml.uml.ui.behavior.state_machines.PropPanelCompositeState#updateExtraButtons()
+     */
+    protected void updateExtraButtons() {
         // Intentionally do nothing.
     }
 
