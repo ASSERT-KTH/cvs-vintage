@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationUml.java,v 1.13 2006/04/29 21:50:32 mvw Exp $
+// $Id: ModelElementNameNotationUml.java,v 1.14 2006/05/01 14:07:35 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,6 +87,9 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
         }
         if (Model.getFacade().isAUseCase(myModelElement)) {
             return "parsing.help.fig-usecase";
+        }
+        if (((Boolean) getValue("edge")).booleanValue()) {
+            return "parsing.help.fig-edgemodelelement";
         }
         return "parsing.help.fig-nodemodelelement";
     }
