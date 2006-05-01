@@ -1,4 +1,4 @@
-// $Id: FigSubmachineState.java,v 1.14 2006/03/03 23:51:31 tfmorris Exp $
+// $Id: FigSubmachineState.java,v 1.15 2006/05/01 14:37:19 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.util.Iterator;
 
 import org.argouml.model.Model;
 import org.argouml.notation.Notation;
+import org.argouml.uml.diagram.ui.FigSingleLineText;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRRect;
@@ -39,7 +40,7 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 /**
- * Class to display graphics for a UML MSubmachineState in a diagram.
+ * Class to display graphics for a UML SubmachineState in a diagram.
  *
  * @author pepargouml@yahoo.es
  */
@@ -79,16 +80,10 @@ public class FigSubmachineState extends FigState {
                         getInitialY() + 2 + getNameFig().getBounds().height + 1,
                         Color.black);
 
-        include = new FigText(10, 10, 90, 21, true);
-        include.setFont(getLabelFont());
-        include.setTextColor(Color.black);
-        include.setReturnAction(FigText.END_EDITING);
-        include.setTabAction(FigText.END_EDITING);
+        include = new FigSingleLineText(10, 10, 90, 21, true);
         include.setText(placeString());
-        include.setLineWidth(0);
         include.setBounds(getInitialX() + 2, getInitialY() + 2,
                 getInitialWidth() - 4, include.getBounds().height);
-        include.setFilled(false);
         include.setEditable(false);
         include.setBotMargin(4); // leave some space below the "include"
 
