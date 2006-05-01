@@ -1,4 +1,4 @@
-// $Id: TestZargoFilePersister.java,v 1.7 2005/01/17 20:26:18 bobtarling Exp $
+// $Id: TestZargoFilePersister.java,v 1.8 2006/05/01 09:10:23 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,8 +70,11 @@ public class TestZargoFilePersister extends TestCase {
      */
     private Project doLoad(String filename) throws OpenException {
         URL url = TestZargoFilePersister.class.getResource(filename);
+        assertTrue("Unintended failure: resource to be tested is not found: "
+                + filename + ", converted to URL: " + url, url != null);
         ZargoFilePersister persister = new ZargoFilePersister();
-        Project p = persister.doLoad(new File(url.getFile()));
+        String name = url.getFile();
+        Project p = persister.doLoad(new File(name));
         assertTrue("Load Status for " + filename + ".",
                LastLoadInfo.getInstance().getLastLoadStatus());
         return p;
