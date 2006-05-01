@@ -32,6 +32,7 @@ import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -57,10 +58,8 @@ public class MoveMessageAction extends AbstractColumbaAction implements
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Y,
 				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
-//		// icons
-//		putValue(SMALL_ICON, ImageLoader
-//				.getSmallImageIcon("movemessage_small.png"));
-//		putValue(LARGE_ICON, ImageLoader.getImageIcon("move-message.png"));
+		putValue(SMALL_ICON, MailImageLoader.getSmallIcon("message-move.png"));
+		putValue(LARGE_ICON, MailImageLoader.getIcon("message-move.png"));
 
 		// disable toolbar text
 		setShowToolBarText(false);
