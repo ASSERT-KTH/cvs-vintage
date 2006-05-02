@@ -1,4 +1,4 @@
-// $Id: FigGraphEdge.java,v 1.3 2006/03/06 23:42:45 bobtarling Exp $
+// $Id: FigGraphEdge.java,v 1.4 2006/05/02 18:23:10 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.diagram.ui;
 
 import org.apache.log4j.Logger;
-import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.FigEdgePoly;
 
 /**
@@ -43,8 +42,8 @@ public abstract class FigGraphEdge
      *
      * @return the SelectionRerouteEdge.
      */
-    public Selection makeSelection() {
-        return new SelectionRerouteEdge(this);
-    }
+//    public Selection makeSelection() {
+//        return new SelectionRerouteEdge(this);
+//    }
 
 } /* end class FigEdgeModelElement */

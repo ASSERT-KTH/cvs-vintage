@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.161 2006/05/01 14:07:35 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.162 2006/05/02 18:23:10 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,6 +82,7 @@ import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
+import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdgePoly;
 import org.tigris.gef.presentation.FigNode;
@@ -445,6 +446,16 @@ public abstract class FigEdgeModelElement
             }
         }
         return null;
+    }
+
+    /**
+     * Returns a {@link SelectionRerouteEdge} object that manages selection
+     * and rerouting of the edge.
+     *
+     * @return the SelectionRerouteEdge.
+     */
+    public Selection makeSelection() {
+        return new SelectionRerouteEdge(this);
     }
 
     /**
