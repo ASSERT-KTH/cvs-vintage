@@ -1,4 +1,4 @@
-// $Id: FigStubState.java,v 1.7 2006/03/11 07:51:11 tfmorris Exp $
+// $Id: FigStubState.java,v 1.8 2006/05/02 19:51:27 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,7 @@ public class FigStubState extends FigStateVertex {
         
         facade = Model.getFacade();
         stateMHelper = Model.getStateMachinesHelper();
+
         setBigPort(new FigRect(x, y, width, height));
         getBigPort().setLineWidth(0);
         getBigPort().setFilled(false);
@@ -318,8 +319,8 @@ public class FigStubState extends FigStateVertex {
      * Call superclass then add reference text
      */
     public void renderingChanged() {
-        super.renderingChanged();
         updateReferenceText();
+        super.renderingChanged();
     }
     
     /**
