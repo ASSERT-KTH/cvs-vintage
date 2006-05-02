@@ -1,4 +1,4 @@
-// $Id: PropPanelStubState.java,v 1.19 2006/04/08 22:36:06 tfmorris Exp $
+// $Id: PropPanelStubState.java,v 1.20 2006/05/02 19:50:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,8 +51,10 @@ public class PropPanelStubState extends PropPanelStateVertex {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
+
         addField(Translator.localize("label.container"),
                 getContainerScroll());
+
         JComboBox referencestateBox =
                 new UMLComboBox2(
                         new UMLStubStateComboBoxModel(),
@@ -67,6 +69,7 @@ public class PropPanelStubState extends PropPanelStateVertex {
 
         addField(Translator.localize("label.incoming"),
                 getIncomingScroll());
+
         addField(Translator.localize("label.outgoing"),
                 getOutgoingScroll());
     }

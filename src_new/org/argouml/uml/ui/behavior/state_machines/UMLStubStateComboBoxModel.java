@@ -1,4 +1,4 @@
-// $Id: UMLStubStateComboBoxModel.java,v 1.2 2005/02/05 18:49:26 mvw Exp $
+// $Id: UMLStubStateComboBoxModel.java,v 1.3 2006/05/02 19:50:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import java.util.Iterator;
 /**
  * @author pepargouml@yahoo.es
  */
-
 public class UMLStubStateComboBoxModel extends UMLComboBoxModel2 {
 
     /**

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.112 2006/04/18 19:03:20 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.113 2006/05/02 19:52:35 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,6 @@ import org.tigris.gef.presentation.ArrowHeadComposite;
 import org.tigris.gef.presentation.ArrowHeadDiamond;
 import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.ArrowHeadNone;
-import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigText;
 
 
@@ -88,7 +87,7 @@ public class FigAssociation extends FigEdgeModelElement {
 
     private ArrowHead sourceArrowHead, destArrowHead;
     
-    private final static Logger LOG = Logger.getLogger(FigAssociation.class);
+    private static final Logger LOG = Logger.getLogger(FigAssociation.class);
 
 
     /**
