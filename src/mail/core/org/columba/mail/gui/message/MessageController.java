@@ -35,6 +35,7 @@ import javax.swing.border.LineBorder;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
@@ -228,6 +229,8 @@ public class MessageController extends JPanel implements CharsetListener,
 		}
 
 		MimeTree mimePartTree = folder.getMimePartTree(uid);
+		if( mimePartTree == null) throw new CommandCancelledException("Message does not exist anymore."); 
+		
 		MimePart mp = chooseBodyPart(mimePartTree);
 		if (mp != null)
 			bodytextViewer.view(folder, uid, mp.getAddress(), this
