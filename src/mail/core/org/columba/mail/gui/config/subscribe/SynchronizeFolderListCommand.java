@@ -114,9 +114,8 @@ public class SynchronizeFolderListCommand extends Command {
 			}
 		}
 
-		it = result.iterator();
-		while (it.hasNext()) {
-			ListInfo info = (ListInfo) it.next();
+		for(int i=0; i<result.size(); i++ ) {
+			ListInfo info = (ListInfo) result.get(i);
 			// Handle special case in which INBOX has a NIL delimiter
 			// -> there might exist a pseudo hierarchy under INBOX+delimiter
 			if (info.getName().equalsIgnoreCase("INBOX") && info.getDelimiter() == null) {
