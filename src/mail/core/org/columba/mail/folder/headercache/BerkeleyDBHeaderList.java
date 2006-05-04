@@ -20,6 +20,7 @@ package org.columba.mail.folder.headercache;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -82,7 +83,7 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 		listeners = new ArrayList();
 	}
 
-	private void openEnvironment() {
+	private void openEnvironment() throws DatabaseException {
 		if( environment != null) return;
 		if( !databaseFile.exists()) databaseFile.mkdir();
 		
@@ -90,18 +91,19 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 		environmentConfig.setAllowCreate(true);
 		// perform other environment configurations
 		try {
-			environment = new Environment(databaseFile, environmentConfig);
+			environment = new Environment(databaseFile, environmentConfig);			
 		} catch (DatabaseException e) {
-			LOG.severe(e.getMessage());
+			LOG.severe(e.getMessage());			
 			fireHeaderListCorrupted();
+			throw e;
 		}
+		
 		
 	}
 	
-	private void openDatabase() {
+	private synchronized void openDatabase() throws DatabaseException{
 		if( db != null ) return;
 		openEnvironment();
-
 		try {
 			databaseConfig = new DatabaseConfig();
 			databaseConfig.setAllowCreate(true);
@@ -110,16 +112,16 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 		} catch (DatabaseException e) {
 			LOG.severe(e.getMessage());
 			fireHeaderListCorrupted();
+			throw e;
 		}		
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.headercache.HeaderList#add(org.columba.mail.message.IColumbaHeader, java.lang.Object)
 	 */
-	public void add(IColumbaHeader header, Object uid) {
-		openDatabase();
-		
+	public void add(IColumbaHeader header, Object uid) {		
 		try {
+			openDatabase();
 			header.getAttributes().put("columba.uid", uid);
 			
 			db.put(null, getDatabaseEntry(uid), getDatabaseEntry(header));
@@ -187,8 +189,8 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#containsValue(java.lang.Object)
 	 */
 	public boolean exists(Object uid) {
-		openDatabase();
 		try {
+			openDatabase();
 			return db.get(null, getDatabaseEntry(uid), new DatabaseEntry(), LockMode.DEFAULT).equals(OperationStatus.SUCCESS);
 		} catch (DatabaseException e) {
 			LOG.fine(e.getMessage());
@@ -200,9 +202,9 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#count()
 	 */
 	public int count() {
-		openDatabase();
 
 		try {
+			openDatabase();
 			return (int) ((BtreeStats)db.getStats(null)).getLeafNodeCount();
 		} catch (DatabaseException e) {
 			LOG.severe(e.getMessage());
@@ -216,16 +218,16 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#get(java.lang.Object)
 	 */
 	public IColumbaHeader get(Object uid) {
-		openDatabase();
 		
 		DatabaseEntry result = new DatabaseEntry();
 		try {
+			openDatabase();
 			OperationStatus status = db.get(null, getDatabaseEntry(uid), result, LockMode.DEFAULT);
 			if( status.equals(OperationStatus.SUCCESS) ) {
 				return (IColumbaHeader)headerBinding.entryToObject(result);
 			}
 		} catch (DatabaseException e) {
-			LOG.fine(e.getMessage());
+			LOG.severe(e.getMessage());
 		}
 		return null;		
 	}
@@ -235,21 +237,19 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#getUids()
 	 */
 	public Object[] getUids() {
-		openDatabase();
-		if( keyType == Integer.class ) {
-			return new StoredKeySet(db, integerBinding, false).toArray();
-		} else if( keyType == String.class) {
-			return new StoredKeySet(db, stringBinding, false).toArray();			
-		}
-		
-		throw new IllegalArgumentException("keyType not implemented!");
+		return keySet().toArray();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.headercache.HeaderList#keySet()
 	 */
 	public Set keySet() {
-		openDatabase();
+		try {
+			openDatabase();
+		} catch (DatabaseException e) {
+			LOG.severe(e.getMessage());
+			return new HashSet();
+		}
 		
 		if( keyType == Integer.class ) {
 			return new StoredKeySet(db, integerBinding, false);
@@ -264,18 +264,19 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#remove(java.lang.Object)
 	 */
 	public IColumbaHeader remove(Object uid) {
-		openDatabase();
-		
-		IColumbaHeader header = get(uid);
 		try {
+			openDatabase();
+			
+			IColumbaHeader header = get(uid);
 			db.delete(null, getDatabaseEntry(uid));
+
+			return header;
 		} catch (DatabaseException e) {
-			LOG.fine(e.getMessage());
+			LOG.severe(e.getMessage());
 
 			return null;
 		}
 		
-		return header;
 	}
 
 	/* (non-Javadoc)
@@ -289,7 +290,12 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#headerIterator()
 	 */
 	public ICloseableIterator headerIterator() {
-		openDatabase();
+		try {
+			openDatabase();
+		} catch (DatabaseException e) {
+			LOG.severe(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		return new BerkeleyDBIterator( (StoredIterator)new StoredValueSet(db,headerBinding, false).iterator());
 	}
 
@@ -297,7 +303,12 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#keyIterator()
 	 */
 	public ICloseableIterator keyIterator() {
-		openDatabase();
+		try {
+			openDatabase();
+		} catch (DatabaseException e) {
+			LOG.severe(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		return new BerkeleyDBIterator( (StoredIterator)new StoredKeySet(db, integerBinding, false).iterator());
 	}
 
@@ -305,7 +316,12 @@ public class BerkeleyDBHeaderList implements IPersistantHeaderList {
 	 * @see org.columba.mail.folder.headercache.HeaderList#update(java.lang.Object, org.columba.mail.message.IColumbaHeader)
 	 */
 	public void update(Object uid, IColumbaHeader header) {
-		openDatabase();
+		try {
+			openDatabase();
+		} catch (DatabaseException e) {
+			LOG.severe(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		DatabaseEntry key = getDatabaseEntry(uid);
 		
 		try {
