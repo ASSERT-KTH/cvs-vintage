@@ -16,7 +16,6 @@
 package org.columba.mail.main;
 
 import java.awt.BorderLayout;
-import java.io.InputStream;
 import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
@@ -26,9 +25,7 @@ import javax.swing.JPanel;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
-import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.config.DefaultItem;
@@ -38,12 +35,10 @@ import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
-import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginManager;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
+import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.OutgoingItem;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.ActivateVirtualFolderCommand;
 import org.columba.mail.gui.composer.ComposerController;
@@ -204,8 +199,8 @@ public class MailMain implements IComponentPlugin {
 
 		// Check Internet Connection
 		if (MailConfig.getInstance().getAccountList().count() > 0) {
-			OutgoingItem testConnection = MailConfig.getInstance()
-					.getAccountList().get(0).getSmtpItem();
+			IncomingItem testConnection = MailConfig.getInstance()
+					.getAccountList().getDefaultAccount().getIncomingItem();
 			ConnectionStateImpl.getInstance().setTestConnection(
 					testConnection.get("host"),
 					testConnection.getInteger("port"));
