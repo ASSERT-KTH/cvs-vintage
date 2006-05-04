@@ -726,11 +726,15 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		Object[] destUids = getServer().copy(destFolder, uids, this);
 
-		if (destUids.length != uids.length) {
+		if (destUids.length < uids.length) {
 			LOG
-					.warning("Some messages could not be copied because they do not exist anymore!");
+					.warning("Some messages could not be copied because they do not exist anymore!");			
 		}
 
+		// Check if maybe no message at all got copied
+		// In this case we are finished here
+		if( destUids.length == 0) return;
+		
 		// update headerlist of destination-folder
 		// -> this is necessary to reflect the changes visually
 		// but only do it if the target folder is still in sync!
@@ -748,19 +752,24 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		if (((Integer) destUids[0]).intValue() == largestDestUid.intValue() + 1) {
 			int j = 0;
 			for (int i = 0; i < uids.length; i++) {
-				IColumbaHeader destHeader = (IColumbaHeader) srcHeaderList.get(
-						uids[i]).clone();
+				IColumbaHeader destHeader = srcHeaderList.get(
+						uids[i]);
 				// Was this message actually copied?
-				destHeader.set("columba.uid", destUids[j]);
-				destHeaderList.add(destHeader, destUids[j]);
+				if(destHeader != null) {
+					// Copy the header
+					destHeader = (IColumbaHeader) destHeader.clone();
+				
+					destHeader.set("columba.uid", destUids[j]);
+					destHeaderList.add(destHeader, destUids[j]);
 
-				// We need IMAPFlags
-				IMAPFlags flags = new IMAPFlags(destHeader.getFlags()
-						.getFlags());
-				flags.setUid(destUids[j]);
+					// We need IMAPFlags
+					IMAPFlags flags = new IMAPFlags(destHeader.getFlags()
+							.getFlags());
+					flags.setUid(destUids[j]);
 
-				destFolder.fireMessageAdded(flags.getUid(), flags);
-				j++;
+					destFolder.fireMessageAdded(flags.getUid(), flags);
+					j++;
+				}
 			}
 		}
 
