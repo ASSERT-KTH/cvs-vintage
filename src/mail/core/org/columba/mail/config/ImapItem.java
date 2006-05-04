@@ -15,11 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
-import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 
-public class ImapItem extends DefaultItem {
+public class ImapItem extends IncomingItem {
 	
     public static final String AUTOMATICALLY_APPLY_FILTER = "automatically_apply_filter";
 

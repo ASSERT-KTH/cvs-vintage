@@ -21,7 +21,7 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 
-public class PopItem extends DefaultItem {
+public class PopItem extends IncomingItem {
 	
     public static final String DOWNLOAD_LIMIT = "download_limit";
 	public static final String ENABLE_DOWNLOAD_LIMIT = "enable_download_limit";

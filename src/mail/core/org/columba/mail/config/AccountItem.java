@@ -130,6 +130,14 @@ public class AccountItem extends DefaultItem {
         return pop;
     }
 
+    public IncomingItem getIncomingItem() {
+    	if( isPopAccount() ) {
+    		return getPopItem();
+    	} else {
+    		return getImapItem();
+    	}
+    }
+    
     public OutgoingItem getSmtpItem() {
         if (smtp == null) {
             smtp = new OutgoingItem(getRoot().getElement("smtpserver"));
