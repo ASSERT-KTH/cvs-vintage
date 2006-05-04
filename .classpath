@@ -31,7 +31,6 @@
 	<classpathentry kind="src" path="src/mail/api"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="src" path="src/columba/test"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/frapuccino"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/usermanual.jar"/>
@@ -56,7 +55,6 @@
 	<classpathentry kind="lib" path="plugins/org.columba.core.WinLAFLookAndFeel/lib/winlaf-0.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/bsh-2.0b2.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-1.4.3.jar"/>
-	<classpathentry exported="true" sourcepath="/ristretto" kind="lib" path="lib/ristretto-1.2_RC1-all.jar"/>
 	<classpathentry kind="lib" path="lib/tagsoup-1.0rc3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flexdock-0.4.1.jar"/>
 	<classpathentry sourcepath="/frapuccino" kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
@@ -69,5 +67,6 @@
 	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/core-renderer.jar"/>
 	<classpathentry kind="lib" path="lib/looks-2.0.1.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/migcalendar-5.6.jar"/>
+	<classpathentry kind="lib" path="lib/ristretto-1.2-all.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -114,17 +114,23 @@ public class SynchronizeFolderListCommand extends Command {
 			}
 		}
 
-		// Handle special case in which INBOX has a NIL delimiter
-		// -> there might exist a pseudo hierarchy under INBOX+delimiter
 		it = result.iterator();
 		while (it.hasNext()) {
 			ListInfo info = (ListInfo) it.next();
-			if (info.getName().equalsIgnoreCase("INBOX")) {
-				if (info.getDelimiter() == null) {
+			// Handle special case in which INBOX has a NIL delimiter
+			// -> there might exist a pseudo hierarchy under INBOX+delimiter
+			if (info.getName().equalsIgnoreCase("INBOX") && info.getDelimiter() == null) {
 					result.addAll(Arrays.asList(store.list("", "INBOX"
 							+ store.getDelimiter() + '%')));
-				}
 				break;
+			}
+			
+			// If this folder has children add them
+			// TODO: In the future we should try to fetch additional children on demand
+			// when the tree of the dialog is opened
+			if( info.getParameter(ListInfo.HASCHILDREN)) {
+				result.addAll(Arrays.asList(store.list("", info.getName()
+						+ store.getDelimiter() + '%')));				
 			}
 		}
 
