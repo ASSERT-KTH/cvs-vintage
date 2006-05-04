@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.20 2006/04/09 00:41:31 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.21 2006/05/04 22:51:32 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,8 @@ public class PGMLStackParser
             "org.argouml.uml.diagram.static_structure.ui.FigComment");
         addTranslation("org.argouml.uml.diagram.state.ui.FigState",
             "org.argouml.uml.diagram.state.ui.FigSimpleState");
+        addTranslation("org.argouml.uml.diagram.ui.FigCommentPort",
+            "org.argouml.uml.diagram.ui.FigEdgePort");
     }
 
     /**
