@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.113 2006/05/02 19:52:35 mvw Exp $
+// $Id: FigAssociation.java,v 1.114 2006/05/05 18:32:48 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,6 +133,7 @@ public class FigAssociation extends FigEdgeModelElement {
         srcOrdering.setLineWidth(0);
         srcOrdering.setReturnAction(FigText.END_EDITING);
         srcOrdering.setJustification(FigText.JUSTIFY_CENTER);
+        srcOrdering.setEditable(false); // parsing not (yet) implemented
 
         srcGroup.addFig(srcRole);
         srcGroup.addFig(srcOrdering);
@@ -165,6 +166,7 @@ public class FigAssociation extends FigEdgeModelElement {
         destOrdering.setLineWidth(0);
         destOrdering.setReturnAction(FigText.END_EDITING);
         destOrdering.setJustification(FigText.JUSTIFY_CENTER);
+        destOrdering.setEditable(false); // parsing not (yet) implemented
 
         destGroup.addFig(destRole);
         destGroup.addFig(destOrdering);
