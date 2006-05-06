@@ -19,9 +19,6 @@ package org.columba.addressbook.facade;
 
 import java.util.List;
 
-import org.columba.addressbook.folder.IContactFolder;
-import org.columba.addressbook.folder.IFolder;
-
 /**
  * Provides access to contact and group folders.
  * 
@@ -32,46 +29,51 @@ public interface IFolderFacade {
 	/**
 	 * Get a Folder object
 	 * 
-	 * @param uid 		unique id of folder
-	 * @return Folder	selected folder
+	 * @param uid
+	 *            unique id of folder
+	 * @return Folder selected folder
 	 */
 	IFolder getFolder(String uid);
 
 	/**
-	 * Get a reference to the system addressbook which automatically
-	 * collects addresses
+	 * Get "Collected Addresses" contact folder.
+	 * <p>
+	 * This is a special type of contact folder which could be used to
+	 * automatically collect all most frequently used contacts. This information
+	 * can later be used to prefill lists or autocomplete forms.
 	 * 
-	 * @return Folder		collected address contact store
+	 * @return Folder collected address contact store
 	 */
-	IContactFolder getCollectedAddresses();
-	
-	
+	IFolder getCollectedAddresses();
+
 	/**
 	 * Get "Personal Addressbook" folder.
 	 * 
-	 * @return	local addressbook folder
+	 * @return local addressbook folder
 	 */
-	IContactFolder getLocalAddressbook();
+	IFolder getLocalAddressbook();
 
 	/**
 	 * Get folder with <code>name</code>.
 	 * 
-	 * @param name		name of folder
-	 * @return			selected folder
+	 * @param name
+	 *            name of folder
+	 * @return selected folder
 	 */
 	IFolder getFolderByName(String name);
 
 	/**
 	 * Return iterator of <code>IFolder</code>
-	 * @return	iterator of <code>IFolder</code>
-	 */
-	List<IFolder> getFolderIterator();
-	
-	/**
-	 * Return root folder. This might come in handy when traversing
-	 * the whole tree structure.
 	 * 
-	 * @return	root folder
+	 * @return iterator of <code>IFolder</code>
+	 */
+	List<IFolder> getAllFolders();
+
+	/**
+	 * Return root folder. This might come in handy when traversing the whole
+	 * tree structure.
+	 * 
+	 * @return root folder
 	 */
 	IFolder getRootFolder();
 }

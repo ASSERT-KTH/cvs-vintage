@@ -15,21 +15,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
+package org.columba.addressbook.facade;
 
-import org.columba.addressbook.model.IContactModel;
-import org.columba.api.exception.StoreException;
+public interface IContactItem extends IHeaderItem {
 
-/**
- * Contact storage backend.
- * 
- * @author fdietz
- *
- */
-public interface DataStorage {
-
-	IContactModel load(String uid) throws StoreException;
-	void save(String uid, IContactModel contact) throws StoreException;
-	void modify(String uid, IContactModel contact) throws StoreException;
-	void remove(String uid) throws StoreException;
+	public String getFirstname();
+	public void setFirstname(String firstname);
+	
+	public String getLastname();
+	public void setLastname(String lastname);
+	
+	public String getAddress();
+	public void setAddress(String address);
+	
+	public IContactItem clone();
+	
 }

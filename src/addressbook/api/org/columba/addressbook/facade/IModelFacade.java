@@ -17,12 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.IGroupItem;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.mail.message.IHeaderList;
 
 /**
  * Builder for creating contact models.
@@ -31,14 +25,10 @@ import org.columba.mail.message.IHeaderList;
  */
 public interface IModelFacade {
 
-	IHeaderItemList createHeaderItemList();
-
 	IHeaderItem createHeaderItem();
 
 	IContactItem createContactItem();
 
 	IGroupItem createGroupItem();
-
-	IHeaderList createHeaderList();
 
 }

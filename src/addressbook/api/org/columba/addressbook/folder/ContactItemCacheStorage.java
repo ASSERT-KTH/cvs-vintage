@@ -17,8 +17,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
+import java.util.Map;
+
+import org.columba.addressbook.model.IContactModelPartial;
+import org.columba.api.exception.StoreException;
 
 /**
  * Contact item cache storage.
@@ -34,17 +36,19 @@ import org.columba.addressbook.model.IContactItemMap;
  */
 public interface ContactItemCacheStorage {
 
-	IContactItemMap getContactItemMap() throws StoreException;
+	Map<String, IContactModelPartial> getContactItemMap() throws StoreException;
 	
-	void add(Object uid, IContactItem item) throws StoreException;
+	Map<String, IContactModelPartial> getContactItemMap(String[] ids) throws StoreException;
 	
-	void remove(Object uid) throws StoreException;
+	void add(String uid, IContactModelPartial item) throws StoreException;
 	
-	void modify(Object uid, IContactItem item) throws StoreException;
+	void remove(String uid) throws StoreException;
+	
+	void modify(String uid, IContactModelPartial item) throws StoreException;
 	
 	int count() throws StoreException;
 	
-	boolean exists(Object uid) throws StoreException;
+	boolean exists(String uid) throws StoreException;
 	
 	void save() throws StoreException;
 	

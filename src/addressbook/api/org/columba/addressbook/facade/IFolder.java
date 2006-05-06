@@ -15,21 +15,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
+package org.columba.addressbook.facade;
 
-import org.columba.addressbook.model.IContactModel;
-import org.columba.api.exception.StoreException;
+import javax.swing.ImageIcon;
+import javax.swing.tree.TreeNode;
 
-/**
- * Contact storage backend.
- * 
- * @author fdietz
- *
- */
-public interface DataStorage {
+public interface IFolder extends TreeNode {
+	ImageIcon getIcon();
 
-	IContactModel load(String uid) throws StoreException;
-	void save(String uid, IContactModel contact) throws StoreException;
-	void modify(String uid, IContactModel contact) throws StoreException;
-	void remove(String uid) throws StoreException;
+	String getId();
+
+	String getName();
 }

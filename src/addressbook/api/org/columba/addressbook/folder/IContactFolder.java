@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.columba.addressbook.model.IContactModelPartial;
-import org.columba.addressbook.model.IHeaderItemPartial;
+import org.columba.addressbook.model.IBasicModelPartial;
 import org.columba.api.exception.StoreException;
 
 /**
