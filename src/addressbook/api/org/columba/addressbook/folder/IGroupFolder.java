@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IContactModelPartial;
-import org.columba.addressbook.model.IGroupModel;
+import org.columba.addressbook.model.IGroup;
 import org.columba.api.exception.StoreException;
 
 /**
@@ -68,5 +68,5 @@ public interface IGroupFolder {
 	/**
 	 * @return Returns the group.
 	 */
-	IGroupModel getGroup() throws StoreException;
+	IGroup getGroup() throws StoreException;
 }

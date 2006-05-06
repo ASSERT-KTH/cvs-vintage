@@ -21,7 +21,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  * 
  */
-public class HeaderItemPartial implements IBasicModelPartial {
+public class HeaderItemPartial implements IHeaderItemPartial {
 
 	protected boolean contact;
 
@@ -86,8 +86,8 @@ public class HeaderItemPartial implements IBasicModelPartial {
 		this.description = description;
 	}
 
-	public IBasicModelPartial clone() {
-		IBasicModelPartial p = new HeaderItemPartial(id, name, contact);
+	public IHeaderItemPartial clone() {
+		IHeaderItemPartial p = new HeaderItemPartial(id, name, contact);
 		return p;
 	}
 }

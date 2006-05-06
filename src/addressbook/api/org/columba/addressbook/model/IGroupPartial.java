@@ -1,5 +1,9 @@
 package org.columba.addressbook.model;
 
+import java.util.List;
+
+import org.columba.addressbook.facade.IContactItem;
+
 
 // The contents of this file are subject to the Mozilla Public License Version
 // 1.1
@@ -20,16 +24,16 @@ package org.columba.addressbook.model;
 //All Rights Reserved.
 /**
  * @author fdietz
- * 
+ *
  */
-public interface IContactModelPartial extends IHeaderItemPartial {
-	public String getFirstname();
-	public String getLastname();
-	public String getAddress();
-
-	/**
-	 * @return Returns the website.
-	 */
-	public abstract String getWebsite();
-
+public interface IGroupPartial extends IHeaderItemPartial{
+	
+	public void addContact(IContactModelPartial modelPartial);
+	
+	public void removeContact(IContactModelPartial modelPartial);
+	
+	public int getContactCount();
+	
+	public List<IContactModelPartial> retrieveContacts();
+	
 }

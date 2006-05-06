@@ -28,7 +28,7 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.model.ContactModelPartial;
 import org.columba.addressbook.model.HeaderItemPartial;
-import org.columba.addressbook.model.IBasicModelPartial;
+import org.columba.addressbook.model.IHeaderItemPartial;
 
 
 /**
@@ -90,13 +90,13 @@ public class AddressAutoCompleter implements KeyListener, ItemListener {
         if (opts.length > 0) {
             String str = opts[0].toString();
 
-            IBasicModelPartial item = AddressCollector.getInstance().getHeaderItem((String) opts[0]);
+            IHeaderItemPartial item = AddressCollector.getInstance().getHeaderItem((String) opts[0]);
 
             if (item == null) {
                 item = new ContactModelPartial(str);
                 
             } else {
-                item = (IBasicModelPartial) item.clone();
+                item = (IHeaderItemPartial) item.clone();
             }
 
             _editor.setCaretPosition(cursor_pos);
@@ -136,13 +136,13 @@ public class AddressAutoCompleter implements KeyListener, ItemListener {
         if (event.getStateChange() == ItemEvent.SELECTED) {
             String selected = (String) _comboBox.getSelectedItem();
 
-            IBasicModelPartial item = AddressCollector.getInstance().getHeaderItem(selected);
+            IHeaderItemPartial item = AddressCollector.getInstance().getHeaderItem(selected);
 
             if (item == null) {
                 item = new ContactModelPartial(selected);
                 
             } else {
-                item = (IBasicModelPartial) item.clone();
+                item = (IHeaderItemPartial) item.clone();
             }
 
             int pos2 = _editor.getCaretPosition();

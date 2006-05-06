@@ -48,7 +48,7 @@ import org.columba.addressbook.gui.autocomplete.DefaultAddressComboBox;
 import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
 import org.columba.addressbook.model.IContactModelPartial;
-import org.columba.addressbook.model.IGroupModel;
+import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 
@@ -84,7 +84,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
 	private ButtonWithMnemonic cancelButton;
 
-	private IGroupModel group;
+	private IGroup group;
 
 	private AbstractFolder parentFolder;
 
@@ -97,7 +97,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 	 *            null, if you want to create a new group. Otherwise, the
 	 *            groupNode will be modified.
 	 */
-	public EditGroupDialog(JFrame frame, IGroupModel group,
+	public EditGroupDialog(JFrame frame, IGroup group,
 			AbstractFolder parentFolder) {
 		super(frame, true);
 

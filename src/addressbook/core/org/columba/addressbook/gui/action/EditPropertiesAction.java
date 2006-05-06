@@ -37,7 +37,7 @@ import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.IGroupModel;
+import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.dialog.ErrorDialog;
@@ -139,7 +139,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 			GroupFolder folder = (GroupFolder) mediator.getTree()
 					.getSelectedFolder();
 
-			IGroupModel card = folder.getGroup();
+			IGroup card = folder.getGroup();
 
 			EditGroupDialog dialog = new EditGroupDialog(mediator.getView()
 					.getFrame(), card, (AbstractFolder) folder.getParent());

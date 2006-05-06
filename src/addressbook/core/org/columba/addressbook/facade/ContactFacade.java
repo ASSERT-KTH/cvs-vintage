@@ -32,7 +32,7 @@ import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IContactModelPartial;
-import org.columba.addressbook.model.IGroupModel;
+import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.parser.ParserUtil;
 import org.columba.api.exception.StoreException;
 import org.columba.core.logging.Logging;
@@ -306,7 +306,7 @@ public final class ContactFacade implements IContactFacade {
 		// add group items
 		for (int i = 0; i < f.getChildCount(); i++) {
 			IGroupFolder groupFolder = (IGroupFolder) f.getChildAt(i);
-			IGroupModel group = groupFolder.getGroup();
+			IGroup group = groupFolder.getGroup();
 
 			IGroupItem groupItem = new GroupItem(folderId);
 			groupItem.setName(group.getName());

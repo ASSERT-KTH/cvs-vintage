@@ -1,6 +1,3 @@
-package org.columba.addressbook.model;
-
-
 // The contents of this file are subject to the Mozilla Public License Version
 // 1.1
 //(the "License"); you may not use this file except in compliance with the
@@ -18,18 +15,21 @@ package org.columba.addressbook.model;
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+package org.columba.addressbook.model;
+
+
 /**
  * @author fdietz
- * 
+ *
  */
-public interface IContactModelPartial extends IHeaderItemPartial {
-	public String getFirstname();
-	public String getLastname();
-	public String getAddress();
-
-	/**
-	 * @return Returns the website.
-	 */
-	public abstract String getWebsite();
-
+public interface IHeaderItemPartial{
+	public String getId();
+	
+	public String getName();
+	
+	public String getDescription();
+	
+	public boolean isContact();
+	
+	public IHeaderItemPartial clone();
 }

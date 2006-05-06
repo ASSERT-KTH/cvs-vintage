@@ -22,7 +22,7 @@ import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 
-import org.columba.addressbook.model.IBasicModelPartial;
+import org.columba.addressbook.model.IHeaderItemPartial;
 
 
 /**
@@ -31,18 +31,18 @@ import org.columba.addressbook.model.IBasicModelPartial;
  */
 
 public class AddressbookListModel extends AbstractListModel {
-   private List<IBasicModelPartial> list;
+   private List<IHeaderItemPartial> list;
    
     private String patternString = "";
 
     public AddressbookListModel() {
         super();
-        list = new Vector<IBasicModelPartial>();
+        list = new Vector<IHeaderItemPartial>();
         
     }
 
     public Object getElementAt(int index) {
-        return (IBasicModelPartial) list.get(index);
+        return (IHeaderItemPartial) list.get(index);
     }
 
     public int getSize() {
@@ -63,7 +63,7 @@ public class AddressbookListModel extends AbstractListModel {
         list.clear();
     }
 
-    public void addElement(IBasicModelPartial item) {
+    public void addElement(IHeaderItemPartial item) {
         list.add(item);
 
         int index = list.indexOf(item);
@@ -71,7 +71,7 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalAdded(this, index, index);
     }
 
-    public void setHeaderItemList(List<IBasicModelPartial> l) {
+    public void setHeaderItemList(List<IHeaderItemPartial> l) {
       
 
       this.list = l;
@@ -79,11 +79,11 @@ public class AddressbookListModel extends AbstractListModel {
         fireContentsChanged(this, 0, list.size() - 1);
     }
 
-    public IBasicModelPartial get(int i) {
-        return (IBasicModelPartial) list.get(i);
+    public IHeaderItemPartial get(int i) {
+        return (IHeaderItemPartial) list.get(i);
     }
 
-    public boolean addItem(IBasicModelPartial header) {
+    public boolean addItem(IHeaderItemPartial header) {
         boolean result1 = false;
 
         Object o = header.getName();
@@ -121,7 +121,7 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalRemoved(this, index, index);
     }
 
-    public void removeElement(IBasicModelPartial item) {
+    public void removeElement(IHeaderItemPartial item) {
         int index = list.indexOf(item);
 
         remove(index);

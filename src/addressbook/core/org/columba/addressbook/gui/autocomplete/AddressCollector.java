@@ -29,9 +29,9 @@ import org.columba.addressbook.model.ContactModelFactory;
 import org.columba.addressbook.model.ContactModelPartial;
 import org.columba.addressbook.model.GroupPartial;
 import org.columba.addressbook.model.HeaderItemPartial;
-import org.columba.addressbook.model.IGroupModel;
-import org.columba.addressbook.model.IGroupModelPartial;
-import org.columba.addressbook.model.IBasicModelPartial;
+import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IGroupPartial;
+import org.columba.addressbook.model.IHeaderItemPartial;
 
 public class AddressCollector implements IAddressCollector {
 
@@ -58,7 +58,7 @@ public class AddressCollector implements IAddressCollector {
 		if (uid == null)
 			throw new IllegalArgumentException("uid == null");
 
-		List<IBasicModelPartial> list = new Vector<IBasicModelPartial>();
+		List<IHeaderItemPartial> list = new Vector<IHeaderItemPartial>();
 
 		try {
 			AbstractFolder folder = (AbstractFolder) AddressbookTreeModel
@@ -72,9 +72,9 @@ public class AddressCollector implements IAddressCollector {
 				for (int i = 0; i < folder.getChildCount(); i++) {
 					IGroupFolder groupFolder = (IGroupFolder) folder
 							.getChildAt(i);
-					IGroupModel group = groupFolder.getGroup();
+					IGroup group = groupFolder.getGroup();
 
-					IGroupModelPartial groupPartial = ContactModelFactory.createGroupPartial(group, folder);
+					IGroupPartial groupPartial = ContactModelFactory.createGroupPartial(group, folder);
 
 					list.add(groupPartial);
 				}
@@ -108,7 +108,7 @@ public class AddressCollector implements IAddressCollector {
 		}
 	}
 
-	public void addAddress(String add, IBasicModelPartial item) {
+	public void addAddress(String add, IHeaderItemPartial item) {
 		if (add != null) {
 			_adds.put(add, item);
 		}
@@ -118,8 +118,8 @@ public class AddressCollector implements IAddressCollector {
 		return _adds.keySet().toArray();
 	}
 
-	public IBasicModelPartial getHeaderItem(String add) {
-		return (IBasicModelPartial) _adds.get(add);
+	public IHeaderItemPartial getHeaderItem(String add) {
+		return (IHeaderItemPartial) _adds.get(add);
 	}
 
 	public void clear() {

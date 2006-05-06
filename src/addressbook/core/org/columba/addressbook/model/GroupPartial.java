@@ -24,7 +24,7 @@ import java.util.Vector;
  * @author fdietz
  * 
  */
-public class GroupPartial extends HeaderItemPartial implements IGroupModelPartial {
+public class GroupPartial extends HeaderItemPartial implements IGroupPartial {
 
 	private List<IContactModelPartial> list = new Vector<IContactModelPartial>();
 	

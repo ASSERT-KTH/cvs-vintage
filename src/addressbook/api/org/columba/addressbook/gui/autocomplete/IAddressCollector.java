@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.autocomplete;
 
-import org.columba.addressbook.model.IBasicModelPartial;
+import org.columba.addressbook.model.IHeaderItemPartial;
 
 /**
  * @author fdietz
@@ -32,11 +32,11 @@ public interface IAddressCollector  {
 	 */
 	void addAllContacts(String uid, boolean includeGroup);
 
-	void addAddress(String add, IBasicModelPartial item);
+	void addAddress(String add, IHeaderItemPartial item);
 
 	Object[] getAddresses();
 
-	IBasicModelPartial getHeaderItem(String add);
+	IHeaderItemPartial getHeaderItem(String add);
 
 	void clear();
 
