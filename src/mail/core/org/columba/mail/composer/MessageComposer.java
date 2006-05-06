@@ -77,7 +77,7 @@ public class MessageComposer {
 		// RFC822 - Header
 		if (model.getToList() != null) {
 			String s = ListParser.createStringFromList(ListBuilder
-					.createFlatList(model.getToList()));
+					.createFlatList(model.getToList()), ",");
 			if ( s.length() != 0 )
 				header.set("To",EncodedWord.encode(s,
 						headerCharset, EncodedWord.QUOTED_PRINTABLE).toString() );
@@ -85,7 +85,7 @@ public class MessageComposer {
 
 		if (model.getCcList() != null) {
 			String s = ListParser.createStringFromList(ListBuilder
-					.createFlatList(model.getCcList()));
+					.createFlatList(model.getCcList()), ",");
 			if ( s.length() != 0 )
 			header.set("Cc",EncodedWord.encode(s,
 					headerCharset, EncodedWord.QUOTED_PRINTABLE).toString() );

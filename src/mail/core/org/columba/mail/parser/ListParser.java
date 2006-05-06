@@ -92,7 +92,7 @@ public class ListParser {
 	 *            list containing String objects
 	 * @return String representation
 	 */
-	public static String createStringFromList(List<String> list) {
+	public static String createStringFromList(List<String> list, String separator) {
 		if (list == null)
 			return "";
 
@@ -104,7 +104,7 @@ public class ListParser {
 				continue;
 			}
 			output.append(address);
-			output.append(";");
+			output.append(separator);
 		}
 
 		if (output.length() > 0) {
