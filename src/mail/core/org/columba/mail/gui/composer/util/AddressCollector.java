@@ -54,10 +54,7 @@ public class AddressCollector {
 			if (headerItem.isContact()) {
 				// contacts item
 				IContactItem item = (IContactItem) headerItem;
-				System.out.println("adding="+item.getName());
-				System.out.println("adding="+item.getFirstname());
-				System.out.println("adding="+item.getLastname());
-				System.out.println("adding="+item.getAddress());
+
 				addAddress(item.getName(), item);
 				addAddress(item.getFirstname(), item);
 				addAddress(item.getLastname(), item);
