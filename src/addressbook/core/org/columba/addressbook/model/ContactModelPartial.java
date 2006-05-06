@@ -21,7 +21,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  * 
  */
-public class ContactModelPartial extends HeaderItemPartial implements
+public class ContactModelPartial extends BasicModelPartial implements
 		IContactModelPartial {
 
 	protected String address;

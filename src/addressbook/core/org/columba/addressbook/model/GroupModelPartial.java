@@ -24,26 +24,26 @@ import java.util.Vector;
  * @author fdietz
  * 
  */
-public class GroupPartial extends HeaderItemPartial implements IGroupPartial {
+public class GroupModelPartial extends BasicModelPartial implements IGroupModelPartial {
 
 	private List<IContactModelPartial> list = new Vector<IContactModelPartial>();
 	
 	/**
 	 * 
 	 */
-	public GroupPartial() {
+	public GroupModelPartial() {
 		super(false);
 	}
 
 	/**
 	 * @param group
 	 */
-	public GroupPartial(String id) {
+	public GroupModelPartial(String id) {
 		super(id, false);
 
 	}
 
-	public GroupPartial(String id, String name, String description) {
+	public GroupModelPartial(String id, String name, String description) {
 		this(id);
 
 		this.name = name;

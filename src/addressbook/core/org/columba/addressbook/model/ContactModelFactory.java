@@ -24,14 +24,14 @@ import org.columba.addressbook.folder.IContactFolder;
 
 public class ContactModelFactory {
 
-	public static IGroupPartial createGroupPartial(IGroup group,
+	public static IGroupModelPartial createGroupPartial(IGroupModel group,
 			IContactFolder folder) {
 		if (group == null)
 			throw new IllegalArgumentException("group == null");
 		if (folder == null)
 			throw new IllegalArgumentException("folder == null");
 
-		IGroupPartial groupPartial = new GroupPartial(folder.getId(), group
+		IGroupModelPartial groupPartial = new GroupModelPartial(folder.getId(), group
 				.getName(), group.getDescription());
 
 		// retrieve list of all group members

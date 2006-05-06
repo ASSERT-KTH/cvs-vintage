@@ -18,8 +18,8 @@
 package org.columba.addressbook.gui.util;
 
 import org.columba.addressbook.model.ContactModelPartial;
-import org.columba.addressbook.model.GroupPartial;
-import org.columba.addressbook.model.HeaderItemPartial;
+import org.columba.addressbook.model.GroupModelPartial;
+import org.columba.addressbook.model.BasicModelPartial;
 
 /**
  * @author fdietz
@@ -27,7 +27,7 @@ import org.columba.addressbook.model.HeaderItemPartial;
  */
 public final class ToolTipFactory {
 
-	public static String createToolTip(HeaderItemPartial item) {
+	public static String createToolTip(BasicModelPartial item) {
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("<html><body>&nbsp;Name: " + item.getName());
@@ -54,7 +54,7 @@ public final class ToolTipFactory {
 		return buf.toString();
 	}
 
-	public static String createToolTip(GroupPartial item) {
+	public static String createToolTip(GroupModelPartial item) {
 
 		StringBuffer buf = new StringBuffer();
 

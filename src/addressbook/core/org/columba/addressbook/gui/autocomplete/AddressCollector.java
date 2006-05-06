@@ -27,11 +27,11 @@ import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.ContactModelFactory;
 import org.columba.addressbook.model.ContactModelPartial;
-import org.columba.addressbook.model.GroupPartial;
-import org.columba.addressbook.model.HeaderItemPartial;
-import org.columba.addressbook.model.IGroup;
-import org.columba.addressbook.model.IGroupPartial;
-import org.columba.addressbook.model.IHeaderItemPartial;
+import org.columba.addressbook.model.GroupModelPartial;
+import org.columba.addressbook.model.BasicModelPartial;
+import org.columba.addressbook.model.IGroupModel;
+import org.columba.addressbook.model.IGroupModelPartial;
+import org.columba.addressbook.model.IBasicModelPartial;
 
 public class AddressCollector implements IAddressCollector {
 
@@ -58,7 +58,7 @@ public class AddressCollector implements IAddressCollector {
 		if (uid == null)
 			throw new IllegalArgumentException("uid == null");
 
-		List<IHeaderItemPartial> list = new Vector<IHeaderItemPartial>();
+		List<IBasicModelPartial> list = new Vector<IBasicModelPartial>();
 
 		try {
 			AbstractFolder folder = (AbstractFolder) AddressbookTreeModel
@@ -72,9 +72,9 @@ public class AddressCollector implements IAddressCollector {
 				for (int i = 0; i < folder.getChildCount(); i++) {
 					IGroupFolder groupFolder = (IGroupFolder) folder
 							.getChildAt(i);
-					IGroup group = groupFolder.getGroup();
+					IGroupModel group = groupFolder.getGroup();
 
-					IGroupPartial groupPartial = ContactModelFactory.createGroupPartial(group, folder);
+					IGroupModelPartial groupPartial = ContactModelFactory.createGroupPartial(group, folder);
 
 					list.add(groupPartial);
 				}
@@ -87,7 +87,7 @@ public class AddressCollector implements IAddressCollector {
 
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
-			HeaderItemPartial headerItem = (HeaderItemPartial) it.next();
+			BasicModelPartial headerItem = (BasicModelPartial) it.next();
 
 			if (headerItem.isContact()) {
 				// contacts item
@@ -100,7 +100,7 @@ public class AddressCollector implements IAddressCollector {
 			} else {
 				if (includeGroup) {
 					// group item
-					GroupPartial item = (GroupPartial) headerItem;
+					GroupModelPartial item = (GroupModelPartial) headerItem;
 
 					addAddress(item.getName(), item);
 				}
@@ -108,7 +108,7 @@ public class AddressCollector implements IAddressCollector {
 		}
 	}
 
-	public void addAddress(String add, IHeaderItemPartial item) {
+	public void addAddress(String add, IBasicModelPartial item) {
 		if (add != null) {
 			_adds.put(add, item);
 		}
@@ -118,8 +118,8 @@ public class AddressCollector implements IAddressCollector {
 		return _adds.keySet().toArray();
 	}
 
-	public IHeaderItemPartial getHeaderItem(String add) {
-		return (IHeaderItemPartial) _adds.get(add);
+	public IBasicModelPartial getHeaderItem(String add) {
+		return (IBasicModelPartial) _adds.get(add);
 	}
 
 	public void clear() {

@@ -21,7 +21,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  * 
  */
-public class HeaderItemPartial implements IHeaderItemPartial {
+public class BasicModelPartial implements IBasicModelPartial {
 
 	protected boolean contact;
 
@@ -35,11 +35,11 @@ public class HeaderItemPartial implements IHeaderItemPartial {
 	 * Default constructor
 	 * 
 	 */
-	public HeaderItemPartial(boolean contact) {
+	public BasicModelPartial(boolean contact) {
 		this.contact = contact;
 	}
 
-	public HeaderItemPartial(String id, boolean contact) {
+	public BasicModelPartial(String id, boolean contact) {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
 
@@ -47,7 +47,7 @@ public class HeaderItemPartial implements IHeaderItemPartial {
 		this.id = id;
 	}
 
-	public HeaderItemPartial(String id, String name, boolean contact) {
+	public BasicModelPartial(String id, String name, boolean contact) {
 		this(id, contact);
 
 		if (name == null)
@@ -86,8 +86,8 @@ public class HeaderItemPartial implements IHeaderItemPartial {
 		this.description = description;
 	}
 
-	public IHeaderItemPartial clone() {
-		IHeaderItemPartial p = new HeaderItemPartial(id, name, contact);
+	public IBasicModelPartial clone() {
+		IBasicModelPartial p = new BasicModelPartial(id, name, contact);
 		return p;
 	}
 }

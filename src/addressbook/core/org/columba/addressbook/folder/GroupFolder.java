@@ -26,10 +26,10 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.model.ContactModelFactory;
 import org.columba.addressbook.model.ContactModelPartial;
-import org.columba.addressbook.model.Group;
+import org.columba.addressbook.model.GroupModel;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IContactModelPartial;
-import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IGroupModel;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.exception.StoreException;
 import org.columba.core.resourceloader.IconKeys;
@@ -46,7 +46,7 @@ import org.columba.core.xml.XmlElement;
  */
 public class GroupFolder extends AbstractFolder implements IContactStorage, IGroupFolder {
 
-	private IGroup group;
+	private IGroupModel group;
 
 	private ImageIcon groupImageIcon = ImageLoader
 	.getSmallIcon(IconKeys.USER);
@@ -57,7 +57,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	public GroupFolder(String name, String dir) {
 		super(name, dir);
 
-		group = new Group();
+		group = new GroupModel();
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 			property.addElement(e);
 		}
 
-		group = new Group(e, getId());
+		group = new GroupModel(e, getId());
 	}
 
 	public void createChildren(IWorkerStatusController worker) {
@@ -169,7 +169,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @return Returns the group.
 	 */
-	public IGroup getGroup() {
+	public IGroupModel getGroup() {
 		return group;
 	}
 

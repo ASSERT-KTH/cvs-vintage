@@ -26,8 +26,8 @@ import javax.swing.ListCellRenderer;
 
 import org.columba.addressbook.gui.util.ToolTipFactory;
 import org.columba.addressbook.model.ContactModelPartial;
-import org.columba.addressbook.model.GroupPartial;
-import org.columba.addressbook.model.HeaderItemPartial;
+import org.columba.addressbook.model.GroupModelPartial;
+import org.columba.addressbook.model.BasicModelPartial;
 import org.columba.addressbook.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
@@ -53,7 +53,7 @@ public class AddressbookListRenderer extends JLabel implements ListCellRenderer 
 			setForeground(list.getForeground());
 		}
 
-		HeaderItemPartial item = (HeaderItemPartial) value;
+		BasicModelPartial item = (BasicModelPartial) value;
 
 		setText(item.getName());
 
@@ -63,7 +63,7 @@ public class AddressbookListRenderer extends JLabel implements ListCellRenderer 
 
 		} else {
 			setIcon(image2);
-			setToolTipText(ToolTipFactory.createToolTip((GroupPartial)item));
+			setToolTipText(ToolTipFactory.createToolTip((GroupModelPartial)item));
 
 		}
 
