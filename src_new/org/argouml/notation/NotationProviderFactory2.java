@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.13 2006/05/06 12:23:33 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.14 2006/05/06 19:28:11 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,12 @@ public final class NotationProviderFactory2 {
     /**
      * The text shown at the association end that represents the role.
      */
-    public static final int TYPE_ASSOCIATION_ROLE = 16;
+    public static final int TYPE_ASSOCIATION_END_NAME = 16;
+
+    /**
+     * The text shown for the association role name.
+     */
+    public static final int TYPE_ASSOCIATION_ROLE = 17;
 
     /**
      * defaultLanguage the Notation language used by default, i.e. UML

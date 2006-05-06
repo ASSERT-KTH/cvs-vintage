@@ -1,4 +1,4 @@
-// $Id: AssociationRoleNotation.java,v 1.2 2006/05/06 19:28:11 mvw Exp $
+// $Id: AssociationEndNameNotation.java,v 1.1 2006/05/06 19:28:11 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,25 +28,23 @@ import org.argouml.model.Model;
 
 /**
  * This abstract class forms the basis of all Notation providers
- * for the name of an association-role.
+ * for the text shown next to the end of an association.
  * Subclass this for all languages.
  * 
  * @author michiel
  */
-public abstract class AssociationRoleNotation extends ValueHandler {
+public abstract class AssociationEndNameNotation extends ValueHandler {
 
-    protected Object myAssociationRole;
+    protected Object myAssociationEnd;
     
     /**
-     * The constructor.
-     *
-     * @param role the given associationRole
+     * The constructor. 
      */
-    public AssociationRoleNotation(Object role) {
-        if (!Model.getFacade().isAAssociationRole(role)) {
-            throw new IllegalArgumentException("This is not an AssociationRole.");
+    public AssociationEndNameNotation(Object assocEnd) {
+        if (!Model.getFacade().isAAssociationEnd(assocEnd)) {
+            throw new IllegalArgumentException("This is not an AssociationEnd.");
         }
-        myAssociationRole = role;
+        myAssociationEnd = assocEnd;
     }
 
 }
