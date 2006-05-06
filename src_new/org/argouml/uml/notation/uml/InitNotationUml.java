@@ -1,4 +1,4 @@
-// $Id: InitNotationUml.java,v 1.13 2006/04/30 16:59:55 mvw Exp $
+// $Id: InitNotationUml.java,v 1.14 2006/05/06 12:23:32 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,6 +95,9 @@ public class InitNotationUml {
         npf.addNotationProvider(
                 NotationProviderFactory2.TYPE_EXTENSION_POINT,
                 name, ExtensionPointNotationUml.class);
+        npf.addNotationProvider(
+                NotationProviderFactory2.TYPE_ASSOCIATION_ROLE,
+                name, AssociationRoleNotationUml.class);
 
 
         NotationProviderFactory2.getInstance().setDefaultNotation(name);

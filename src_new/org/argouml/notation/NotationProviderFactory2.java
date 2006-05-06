@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.12 2006/04/29 21:50:32 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.13 2006/05/06 12:23:33 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,6 +122,11 @@ public final class NotationProviderFactory2 {
      * representing the extensionpoint.
      */
     public static final int TYPE_EXTENSION_POINT = 15;
+
+    /**
+     * The text shown at the association end that represents the role.
+     */
+    public static final int TYPE_ASSOCIATION_ROLE = 16;
 
     /**
      * defaultLanguage the Notation language used by default, i.e. UML

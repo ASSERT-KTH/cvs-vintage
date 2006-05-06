@@ -1,4 +1,4 @@
-// $Id: NotationUtilityUml.java,v 1.10 2006/04/30 16:59:55 mvw Exp $
+// $Id: NotationUtilityUml.java,v 1.11 2006/05/06 12:23:32 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -408,7 +408,9 @@ public final class NotationUtilityUml {
     /**
      * Returns a visibility String eihter for a MVisibilityKind (according to
      * the definition in NotationProvider2), but also for a model element.
-     * @see org.argouml.notation.NotationProvider2#generateVisibility(java.lang.Object)
+     *
+     * @param o a modelelement or a visibilitykind
+     * @return a string, guaranteed not null
      */
     public static String generateVisibility(Object o) {
         if (o == null) {
@@ -872,13 +874,15 @@ public final class NotationUtilityUml {
     }
     
     /**
-     * @param st a stereotype UML object or a collection of stereotypes
-     * @return a string representing the given stereotype
+     * @param st a stereotype UML object 
+     *                 or a collection of stereotypes
+     *                 or a modelelement of which the stereotypes are retrieved
+     * @return a string representing the given stereotype(s)
      */
     public static String generateStereotype(Object st) {
         if (st == null)
             return "";
-        if (Model.getFacade().isAModelElement(st)) {
+        if (Model.getFacade().isAStereotype(st)) {
             if (Model.getFacade().getName(st) == null)
                 return ""; // Patch by Jeremy Bennett
             if (Model.getFacade().getName(st).length() == 0)
@@ -886,6 +890,9 @@ public final class NotationUtilityUml {
             return NotationHelper.getLeftGuillemot()
                 + Model.getFacade().getName(st)
                 + NotationHelper.getRightGuillemot();
+        }
+        if (Model.getFacade().isAModelElement(st)) {
+            st = Model.getFacade().getStereotypes(st);
         }
         if (st instanceof Collection) {
             Object o;
