@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.58 2006/04/01 21:06:38 mvw Exp $
+// $Id: FigTransition.java,v 1.59 2006/05/06 19:38:27 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -304,6 +304,14 @@ public class FigTransition extends FigEdgeModelElement {
         if (notationProvider != null) {
             getNameFig().setText(notationProvider.toString());
         }
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#paintClarifiers(java.awt.Graphics)
+     */
+    public void paintClarifiers(Graphics g) {
+        indicateBounds(getNameFig(), g);
+        super.paintClarifiers(g);
     }
 
     /**

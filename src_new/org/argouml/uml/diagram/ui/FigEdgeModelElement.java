@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.162 2006/05/02 18:23:10 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.163 2006/05/06 19:38:27 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -384,6 +384,21 @@ public abstract class FigEdgeModelElement
         }
     }
 
+    /**
+     * @param f the fig to indicate the bounds of
+     * @param g the graphics
+     */
+    protected void indicateBounds(FigText f, Graphics g) {
+        String text = f.getText();
+        if (text == null || text.length() == 0) {
+            Rectangle rect = f.getBounds();
+            Color c = g.getColor();
+            g.setColor(Globals.getPrefs().handleColorFor(f));
+            g.drawRect(rect.x, rect.y, rect.width, rect.height);
+            g.setColor(c); // TODO: Is this needed?
+        }
+    }
+    
     /**
      * The user clicked on the clarifier.
      *
@@ -1220,5 +1235,16 @@ public abstract class FigEdgeModelElement
         listeners.clear();
     }
 
+    /**
+     * Returns all texts shown in a TextFig that are editable.
+     * This is used to meke these texts stand out when the edge is selected.
+     * 
+     * @return a collection of TextFigs
+     */
+//    Collection getEditableTextFigs() {
+//        Collection c = new ArrayList();
+//        c.add(nameFig);
+//        return c;
+//    }
 
 } /* end class FigEdgeModelElement */

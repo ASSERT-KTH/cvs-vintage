@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.116 2006/05/06 19:28:11 mvw Exp $
+// $Id: FigAssociation.java,v 1.117 2006/05/06 19:38:27 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -640,6 +640,18 @@ public class FigAssociation extends FigEdgeModelElement {
 	    destArrowHead.setLineColor(getLineColor());
         }
         super.paint(g);
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#paintClarifiers(java.awt.Graphics)
+     */
+    public void paintClarifiers(Graphics g) {
+        indicateBounds(getNameFig(), g);
+        indicateBounds(srcMult, g);
+        indicateBounds(srcRole, g);
+        indicateBounds(destMult, g);
+        indicateBounds(destRole, g);
+        super.paintClarifiers(g);
     }
 
     /**
