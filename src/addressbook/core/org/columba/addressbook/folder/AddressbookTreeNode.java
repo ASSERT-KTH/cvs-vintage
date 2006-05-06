@@ -132,8 +132,8 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
 	 * public void setName(String s) { name = s; } public String getName() {
 	 * return name; }
 	 */
-	public int getUid() {
-		return node.getInteger("uid");
+	public String getId() {
+		return node.get("uid");
 	}
 
 	public boolean tryToGetLock() {

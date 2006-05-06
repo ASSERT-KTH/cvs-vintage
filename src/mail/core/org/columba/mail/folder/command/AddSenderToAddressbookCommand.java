@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.columba.addressbook.facade.IContactFacade;
@@ -87,7 +88,10 @@ public class AddSenderToAddressbookCommand extends Command {
 		}
 
 		// add sender to addressbook
-		contactFacade.addContact(v.toArray(new String[0]));
+		Iterator<String> it = v.listIterator();
+		while (it.hasNext()) {
+			contactFacade.addContact(it.next());
+		}
 	}
 
 }

@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
+import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JList;
 
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
+import org.columba.addressbook.model.IBasicModelPartial;
 
 
 
@@ -46,7 +47,7 @@ public class AddressbookListView extends JList {
         setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
-    public void setHeaderItemList(IHeaderItemList list) {
+    public void setHeaderItemList(List<IBasicModelPartial> list) {
         removeAll();
 
         model.setHeaderItemList(list);
@@ -57,12 +58,12 @@ public class AddressbookListView extends JList {
         super.setModel(model);
     }
 
-    public void addElement(IHeaderItem item) {
+    public void addElement(IBasicModelPartial item) {
         model.addElement(item);
     }
 
-    public IHeaderItem get(int index) {
-        IHeaderItem item = (IHeaderItem) model.get(index);
+    public IBasicModelPartial get(int index) {
+    	IBasicModelPartial item = (IBasicModelPartial) model.get(index);
 
         return item;
     }

@@ -17,9 +17,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
+import java.util.Map;
+
 import org.columba.addressbook.model.ContactModel;
-import org.columba.addressbook.model.IContactItemMap;
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IContactModelPartial;
 
 /**
  * @author fdietz
@@ -43,14 +44,14 @@ public class GetHeaderItemListTest extends AbstractFolderTstCase {
 
 		c.setSortString("sortstring");
 
-		Object uid = getSourceFolder().add(c);
+		String uid = getSourceFolder().add(c);
 
-		IContactItemMap list = getSourceFolder().getContactItemMap();
+		Map<String, IContactModelPartial> list = getSourceFolder().getContactItemMap();
 
-		IHeaderItem item = list.get(uid);
+		IContactModelPartial item = list.get(uid);
 
 		assertEquals("same displayname", c.getSortString(), item
-				.getDisplayName());
+				.getName());
 	}
 
 }

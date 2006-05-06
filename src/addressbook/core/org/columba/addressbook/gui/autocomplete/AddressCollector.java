@@ -19,24 +19,29 @@ package org.columba.addressbook.gui.autocomplete;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.GroupItem;
-import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
+import org.columba.addressbook.model.ContactModelFactory;
+import org.columba.addressbook.model.ContactModelPartial;
+import org.columba.addressbook.model.GroupPartial;
+import org.columba.addressbook.model.HeaderItemPartial;
+import org.columba.addressbook.model.IGroupModel;
+import org.columba.addressbook.model.IGroupModelPartial;
+import org.columba.addressbook.model.IBasicModelPartial;
 
-public class AddressCollector implements  IAddressCollector {
+public class AddressCollector implements IAddressCollector {
 
-	private	Hashtable _adds = new Hashtable();
+	private Hashtable _adds = new Hashtable();
+
 	private static AddressCollector instance = new AddressCollector();
 
 	private AddressCollector() {
 	}
-	
+
 	public static AddressCollector getInstance() {
 		return instance;
 	}
@@ -44,47 +49,66 @@ public class AddressCollector implements  IAddressCollector {
 	/**
 	 * Add all contacts and group items to hashmap.
 	 * 
-	 * @param uid			selected folder uid
-	 * @param includeGroup	add groups if true. No groups, otherwise.
+	 * @param uid
+	 *            selected folder uid
+	 * @param includeGroup
+	 *            add groups if true. No groups, otherwise.
 	 */
-	public void addAllContacts(int uid, boolean includeGroup) {
-		IHeaderItemList list = null;
+	public void addAllContacts(String uid, boolean includeGroup) {
+		if (uid == null)
+			throw new IllegalArgumentException("uid == null");
+
+		List<IBasicModelPartial> list = new Vector<IBasicModelPartial>();
 
 		try {
-			AbstractFolder folder = (AbstractFolder) AddressbookTreeModel.getInstance()
-					.getFolder(uid);
-			list = folder.getHeaderItemList();
+			AbstractFolder folder = (AbstractFolder) AddressbookTreeModel
+					.getInstance().getFolder(uid);
+			if (folder == null)
+				return;
+
+			list.addAll(folder.getHeaderItemList());
+
+			if (includeGroup) {
+				for (int i = 0; i < folder.getChildCount(); i++) {
+					IGroupFolder groupFolder = (IGroupFolder) folder
+							.getChildAt(i);
+					IGroupModel group = groupFolder.getGroup();
+
+					IGroupModelPartial groupPartial = ContactModelFactory.createGroupPartial(group, folder);
+
+					list.add(groupPartial);
+				}
+			}
+
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 
-		if (list == null)
-			return;
-
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
-			HeaderItem headerItem = (HeaderItem) it.next();
+			HeaderItemPartial headerItem = (HeaderItemPartial) it.next();
 
 			if (headerItem.isContact()) {
 				// contacts item
-				ContactItem item = (ContactItem) headerItem;
+				ContactModelPartial item = (ContactModelPartial) headerItem;
 
-				addAddress(item.getDisplayName(), item);
-
+				addAddress(item.getName(), item);
+				addAddress(item.getLastname(), item);
+				addAddress(item.getFirstname(), item);
 				addAddress(item.getAddress(), item);
 			} else {
 				if (includeGroup) {
 					// group item
-					GroupItem item = (GroupItem) headerItem;
+					GroupPartial item = (GroupPartial) headerItem;
 
-					addAddress(item.getDisplayName(), item);
+					addAddress(item.getName(), item);
 				}
 			}
 		}
 	}
 
-	public void addAddress(String add, IHeaderItem item) {
+	public void addAddress(String add, IBasicModelPartial item) {
 		if (add != null) {
 			_adds.put(add, item);
 		}
@@ -94,8 +118,8 @@ public class AddressCollector implements  IAddressCollector {
 		return _adds.keySet().toArray();
 	}
 
-	public IHeaderItem getHeaderItem(String add) {
-		return (HeaderItem) _adds.get(add);
+	public IBasicModelPartial getHeaderItem(String add) {
+		return (IBasicModelPartial) _adds.get(add);
 	}
 
 	public void clear() {
@@ -109,7 +133,7 @@ public class AddressCollector implements  IAddressCollector {
 		Object[] items = getAddresses();
 
 		Vector v = new Vector();
-		//		 for each JComboBox item
+		// for each JComboBox item
 		for (int k = 0; k < items.length; k++) {
 			// to lower case
 			String item = items[k].toString().toLowerCase();

@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.contact.list;
 
+import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JList;
 
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
+import org.columba.addressbook.facade.IHeaderItem;
 
 
 
@@ -46,7 +47,7 @@ public class ContactList extends JList {
         setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
-    public void setHeaderItemList(IHeaderItemList list) {
+    public void setHeaderItemList(List<IHeaderItem> list) {
         removeAll();
 
         model.setHeaderItemList(list);

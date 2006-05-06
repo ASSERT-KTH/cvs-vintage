@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.contact.list;
 
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.facade.IHeaderItem;
 
 
 /**

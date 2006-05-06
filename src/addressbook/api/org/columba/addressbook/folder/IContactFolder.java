@@ -17,8 +17,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.IContactItemMap;
-import org.columba.addressbook.model.IHeaderItemList;
+import java.util.List;
+import java.util.Map;
+
+import org.columba.addressbook.model.IContactModelPartial;
+import org.columba.addressbook.model.IHeaderItemPartial;
+import org.columba.api.exception.StoreException;
 
 /**
  * @author fdietz
@@ -36,10 +40,22 @@ public interface IContactFolder extends IContactStorage{
 	void removeFolderListener(FolderListener l);
 
 	/**
-	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
+	 * Retrieve map of all contact items.
+	 * 
+	 * @return		never <code>null</code>
+	 * @throws StoreException
 	 */
-	IContactItemMap getContactItemMap() throws StoreException;
+	Map<String, IContactModelPartial> getContactItemMap() throws StoreException;
 
+	/**
+	 * Retrieve map of all specified contact items.
+	 * 
+	 * @param ids		<code>String</code> array of contact IDs
+	 * @return			never <code>null</code>
+	 * @throws StoreException
+	 */
+	Map<String, IContactModelPartial> getContactItemMap(String[] ids) throws StoreException;
+	
 	/**
 	 * save header-cache (HeaderItemList)
 	 */
@@ -51,12 +67,7 @@ public interface IContactFolder extends IContactStorage{
 	void load() throws StoreException;
 
 	/**
-	 * Get all contact *and* group items of this folder.
-	 * <p>
-	 * GroupItems are retrieved accessing the subfolders of this folder.
-	 * <p>
-	 * 
-	 * @return
-	 */
-	IHeaderItemList getHeaderItemList() throws StoreException;
+	 * Get all contact items of this folder.
+     */
+	List<IContactModelPartial> getHeaderItemList() throws StoreException;
 }

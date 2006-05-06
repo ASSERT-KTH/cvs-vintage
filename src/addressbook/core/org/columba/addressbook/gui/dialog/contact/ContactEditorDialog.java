@@ -42,6 +42,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.columba.addressbook.gui.base.FolderComboBox;
 import org.columba.addressbook.model.AddressModel;
 import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.EmailModel;
@@ -98,6 +99,10 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 	private JLabel fileunderLabel;
 
 	private JComboBox fileunderComboBox;
+
+	private JLabel whereLabel;
+
+	private FolderComboBox whereComboBox;
 
 	private JButton categoriesButton;
 
@@ -436,7 +441,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			professionTextField.setText(sourceModel.getProfession());
 			titleTextField.setText(sourceModel.getTitle());
 
-		    managerTextField.setText(sourceModel.getManager());
+			managerTextField.setText(sourceModel.getManager());
 			departmentTextField.setText(sourceModel.getDepartment());
 			officeTextField.setText(sourceModel.getOffice());
 
@@ -556,14 +561,10 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			fillEmailModel(emailTextField4, emailComboBox4, destModel);
 
 			// we support up to 4 phones
-			fillPhoneModel(telephoneTextField1, telephoneComboBox1,
-					destModel);
-			fillPhoneModel(telephoneTextField2, telephoneComboBox2,
-					destModel);
-			fillPhoneModel(telephoneTextField3, telephoneComboBox3,
-					destModel);
-			fillPhoneModel(telephoneTextField4, telephoneComboBox4,
-					destModel);
+			fillPhoneModel(telephoneTextField1, telephoneComboBox1, destModel);
+			fillPhoneModel(telephoneTextField2, telephoneComboBox2, destModel);
+			fillPhoneModel(telephoneTextField3, telephoneComboBox3, destModel);
+			fillPhoneModel(telephoneTextField4, telephoneComboBox4, destModel);
 
 			// we support up to 4 im
 			fillIMModel(imTextField1, imComboBox1, destModel);
@@ -577,13 +578,12 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			fillAddressModel(AddressModel.TYPE_OTHER, destModel);
 
 			destModel.setNote(notesTextArea.getText());
-			
+
 			Icon icon = pictureButton.getIcon();
-			if ( icon != null) {
-				destModel.setPhoto((ImageIcon)icon);
+			if (icon != null) {
+				destModel.setPhoto((ImageIcon) icon);
 			}
-			
-			
+
 		}
 	}
 
@@ -598,10 +598,18 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			if (ln.length() != 0 && fn.length() != 0) {
 				fileunderComboBox.addItem(ln + ", " + fn);
 				fileunderComboBox.addItem(fn + " " + ln);
-			} else if (ln.length() != 0 && fn.length() == 0) {
+			} 
+			
+			if (ln.length() != 0) {
 				fileunderComboBox.addItem(ln);
-			} else if (ln.length() == 0 && fn.length() != 0) {
+			} 
+			
+			if (fn.length() != 0) {
 				fileunderComboBox.addItem(fn);
+			} 
+			
+			if ( formattedNameTextField.getText() != null && formattedNameTextField.getText().length() >0) {
+				fileunderComboBox.addItem(formattedNameTextField.getText());
 			}
 
 			if (fileunderComboBox.getModel().getSize() > 0)
@@ -613,20 +621,23 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			ContactModel destModel2) {
 		if (imTextField.getText() != null) {
 			if (imComboBox.getSelectedIndex() == 0)
-				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
+				destModel.addInstantMessaging(new InstantMessagingModel(
+						imTextField.getText(),
 						InstantMessagingModel.TYPE_JABBER));
 			else if (imComboBox.getSelectedIndex() == 1)
-				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
-						InstantMessagingModel.TYPE_AIM));
+				destModel.addInstantMessaging(new InstantMessagingModel(
+						imTextField.getText(), InstantMessagingModel.TYPE_AIM));
 			else if (imComboBox.getSelectedIndex() == 2)
-				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
-						InstantMessagingModel.TYPE_YAHOO));
+				destModel
+						.addInstantMessaging(new InstantMessagingModel(
+								imTextField.getText(),
+								InstantMessagingModel.TYPE_YAHOO));
 			else if (imComboBox.getSelectedIndex() == 3)
-				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
-						InstantMessagingModel.TYPE_MSN));
+				destModel.addInstantMessaging(new InstantMessagingModel(
+						imTextField.getText(), InstantMessagingModel.TYPE_MSN));
 			else if (imComboBox.getSelectedIndex() == 4)
-				destModel.addInstantMessaging(new InstantMessagingModel(imTextField.getText(),
-						InstantMessagingModel.TYPE_ICQ));
+				destModel.addInstantMessaging(new InstantMessagingModel(
+						imTextField.getText(), InstantMessagingModel.TYPE_ICQ));
 		}
 
 	}
@@ -685,7 +696,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			else if (telephoneComboBox.getSelectedIndex() == 16)
 				destModel.addPhone(new PhoneModel(telephoneTextField.getText(),
 						PhoneModel.TYPE_TTY));
-		
+
 		}
 
 	}
@@ -744,7 +755,7 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 			telephoneComboBox.setSelectedIndex(15);
 		else if (m.getType() == PhoneModel.TYPE_TTY)
 			telephoneComboBox.setSelectedIndex(16);
-	
+
 		telephoneTextField.setText(m.getNumber());
 	}
 
@@ -758,26 +769,28 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		AddressModel model = null;
 		if (type == AddressModel.TYPE_WORK)
 			// "street" is missing
-			model = new AddressModel(workCityTextField.getText(), workStreetTextField.getText(),
-					workCountryTextField.getText(), workPOBoxTextField
-							.getText(), workStateProvinceCountyTextField
-							.getText(), workZipPostalCodeTextField.getText(),
-					workAddressTextArea.getText(), type);
+			model = new AddressModel(workCityTextField.getText(),
+					workStreetTextField.getText(), workCountryTextField
+							.getText(), workPOBoxTextField.getText(),
+					workStateProvinceCountyTextField.getText(),
+					workZipPostalCodeTextField.getText(), workAddressTextArea
+							.getText(), type);
 		else if (type == AddressModel.TYPE_HOME)
 			// "street" is missing
-			model = new AddressModel(privateCityTextField.getText(), privateStreetTextField.getText(),
-					privateCountryTextField.getText(), privatePOBoxTextField
-							.getText(), privateStateProvinceCountyTextField
-							.getText(),
+			model = new AddressModel(privateCityTextField.getText(),
+					privateStreetTextField.getText(), privateCountryTextField
+							.getText(), privatePOBoxTextField.getText(),
+					privateStateProvinceCountyTextField.getText(),
 					privateZipPostalCodeTextField.getText(),
 					privateAddressTextArea.getText(), type);
 		else if (type == AddressModel.TYPE_OTHER)
 			// "street" is missing
-			model = new AddressModel(otherCityTextField.getText(), otherStreetTextField.getText(),
-					otherCountryTextField.getText(), otherPOBoxTextField
-							.getText(), otherStateProvinceCountyTextField
-							.getText(), otherZipPostalCodeTextField.getText(),
-					otherAddressTextArea.getText(), type);
+			model = new AddressModel(otherCityTextField.getText(),
+					otherStreetTextField.getText(), otherCountryTextField
+							.getText(), otherPOBoxTextField.getText(),
+					otherStateProvinceCountyTextField.getText(),
+					otherZipPostalCodeTextField.getText(), otherAddressTextArea
+							.getText(), type);
 
 		destModel.addAddress(model);
 	}
@@ -905,9 +918,10 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 		nicknameLabel = new JLabel();
 		nicknameTextField = new JTextField();
 		fileunderLabel = new JLabel();
-		fileunderLabel.setEnabled(false);
 		fileunderComboBox = new JComboBox();
-		fileunderComboBox.setEnabled(false);
+		whereLabel = new JLabel("Where:");
+		whereComboBox = new FolderComboBox(false);
+		whereLabel.setLabelFor(whereComboBox);
 		categoriesButton = new JButton();
 		categoriesButton.setEnabled(false);
 		categoriesTextField = new JTextField();
@@ -1194,36 +1208,41 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 
 						// ======== panel7 ========
 						{
-							panel7.setLayout(new FormLayout(new ColumnSpec[] {
-									FormFactory.DEFAULT_COLSPEC,
-									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-									FormFactory.DEFAULT_COLSPEC,
-									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-									new ColumnSpec(ColumnSpec.FILL,
-											Sizes.DEFAULT,
-											FormSpec.DEFAULT_GROW) },
-									new RowSpec[] {
-											new RowSpec(RowSpec.FILL,
-													Sizes.DEFAULT,
-													FormSpec.NO_GROW),
-											FormFactory.LINE_GAP_ROWSPEC,
-											new RowSpec(RowSpec.FILL,
-													Sizes.DEFAULT,
-													FormSpec.NO_GROW),
-											FormFactory.LINE_GAP_ROWSPEC,
-											new RowSpec(RowSpec.FILL,
-													Sizes.DEFAULT,
-													FormSpec.NO_GROW),
-											FormFactory.LINE_GAP_ROWSPEC,
-											new RowSpec(RowSpec.FILL,
-													Sizes.DEFAULT,
-													FormSpec.NO_GROW) }));
+							panel7
+									.setLayout(new FormLayout(
+											new ColumnSpec[] {
+													FormFactory.DEFAULT_COLSPEC,
+													FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+													FormFactory.DEFAULT_COLSPEC,
+													FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+													
+													FormFactory.DEFAULT_COLSPEC,
+													FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+
+													FormFactory.DEFAULT_COLSPEC,
+													FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+													new ColumnSpec(
+															ColumnSpec.FILL,
+															Sizes.DEFAULT,
+															FormSpec.DEFAULT_GROW), },
+											new RowSpec[] {
+													new RowSpec(RowSpec.FILL,
+															Sizes.DEFAULT,
+															FormSpec.NO_GROW),
+													FormFactory.LINE_GAP_ROWSPEC,
+													new RowSpec(RowSpec.FILL,
+															Sizes.DEFAULT,
+															FormSpec.NO_GROW),
+													FormFactory.LINE_GAP_ROWSPEC,
+													new RowSpec(RowSpec.FILL,
+															Sizes.DEFAULT,
+															FormSpec.NO_GROW) }));
 							((FormLayout) panel7.getLayout())
-									.setRowGroups(new int[][] { { 1, 3, 5, 7 } });
+									.setRowGroups(new int[][] { { 1, 3, 5 } });
 
 							// ---- pictureButton ----
 
-							panel7.add(pictureButton, cc.xywh(1, 1, 1, 7));
+							panel7.add(pictureButton, cc.xywh(1, 1, 1, 5));
 
 							// ---- fullnameButton ----
 							formattedNameButton.setText(bundle
@@ -1235,25 +1254,31 @@ public class ContactEditorDialog extends JDialog implements ActionListener {
 							nicknameLabel.setText(bundle
 									.getString("nicknameLabel.text"));
 							nicknameLabel.setLabelFor(nicknameTextField);
-							panel7.add(nicknameLabel, cc.xywh(3, 3, 1, 1,
+							panel7.add(nicknameLabel, cc.xywh(7, 1, 1, 1,
 									CellConstraints.RIGHT,
 									CellConstraints.DEFAULT));
-							panel7.add(nicknameTextField, cc.xy(5, 3));
+							panel7.add(nicknameTextField, cc.xy(9, 1));
 
 							// ---- fileunderLabel ----
 							fileunderLabel.setText(bundle
 									.getString("fileunderLabel.text"));
 							fileunderLabel.setLabelFor(fileunderComboBox);
-							panel7.add(fileunderLabel, cc.xywh(3, 5, 1, 1,
+							panel7.add(fileunderLabel, cc.xywh(3, 3, 1, 1,
 									CellConstraints.RIGHT,
 									CellConstraints.DEFAULT));
-							panel7.add(fileunderComboBox, cc.xy(5, 5));
+							panel7.add(fileunderComboBox, cc.xy(5, 3));
 
+							panel7.add(whereLabel, cc.xywh(7, 3, 1, 1,
+									CellConstraints.RIGHT,
+									CellConstraints.DEFAULT));
+							panel7.add(whereComboBox, cc.xy(9, 3));
 							// ---- categoriesButton ----
 							categoriesButton.setText(bundle
 									.getString("categoriesButton.text"));
-							panel7.add(categoriesButton, cc.xy(3, 7));
-							panel7.add(categoriesTextField, cc.xy(5, 7));
+							panel7.add(categoriesButton, cc.xy(3, 5));
+							panel7
+									.add(categoriesTextField, cc.xywh(5, 5, 5,
+											1));
 						}
 						contactPanel.add(panel7, cc.xywh(1, 1, 7, 1));
 						contactPanel.add(emailSeparator, cc.xywh(1, 5, 7, 1));

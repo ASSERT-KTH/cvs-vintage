@@ -41,7 +41,7 @@ public class RemoveContactTest extends AbstractFolderTstCase {
 
 		c.setNickName("nickname");
 
-		Object uid = getSourceFolder().add(c);
+		String uid = getSourceFolder().add(c);
 		
 		getSourceFolder().remove(uid);
 

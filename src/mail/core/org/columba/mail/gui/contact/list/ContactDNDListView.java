@@ -33,7 +33,10 @@ import java.awt.dnd.DropTargetListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.facade.IHeaderItem;
+import org.columba.addressbook.facade.IModelFacade;
+import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.mail.connector.ServiceConnector;
 
 public class ContactDNDListView extends ContactList implements
 		DropTargetListener, DragSourceListener, DragGestureListener,
@@ -142,7 +145,18 @@ public class ContactDNDListView extends ContactList implements
 				.getHeaderItemList();
 
 		for (int i = 0; i < items.length; i++) {
-			addElement((IHeaderItem) ((IHeaderItem) items[i]).clone());
+			IHeaderItem old = items[i];
+			IHeaderItem newItem = null;
+			try {
+				IModelFacade c = ServiceConnector.getModelFacade();
+				newItem = c.createHeaderItem();
+				newItem.setName(old.getName());
+				newItem.setDescription(old.getDescription());
+			} catch (ServiceNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			addElement(newItem);
 		}
 
 		event.getDropTargetContext().dropComplete(true);

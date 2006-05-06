@@ -33,7 +33,8 @@ import java.awt.dnd.DropTargetListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.facade.IHeaderItem;
+import org.columba.addressbook.model.IBasicModelPartial;
 
 //import sun.security.krb5.internal.i;
 //import sun.security.krb5.internal.crypto.b;
@@ -59,9 +60,9 @@ public class AddressbookDNDListView extends AddressbookListView implements
 
 	boolean acceptDrop = true;
 
-	private IHeaderItem[] selection1;
+	private IBasicModelPartial[] selection1;
 
-	private IHeaderItem[] selection2;
+	private IBasicModelPartial[] selection2;
 
 	int index = -1;
 
@@ -146,11 +147,11 @@ public class AddressbookDNDListView extends AddressbookListView implements
 			return;
 		}
 
-		IHeaderItem[] items = HeaderItemDNDManager.getInstance()
+		IBasicModelPartial[] items = HeaderItemDNDManager.getInstance()
 				.getHeaderItemList();
 
 		for (int i = 0; i < items.length; i++) {
-			addElement((IHeaderItem) ((IHeaderItem) items[i]).clone());
+			addElement((IBasicModelPartial) ((IBasicModelPartial) items[i]).clone());
 		}
 
 		event.getDropTargetContext().dropComplete(true);
@@ -177,12 +178,12 @@ public class AddressbookDNDListView extends AddressbookListView implements
 			 * HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 			 */
 			if (selection1 == null) {
-				IHeaderItem[] items = new IHeaderItem[1];
-				items[0] = (IHeaderItem) getSelectedValue();
+				IBasicModelPartial[] items = new IBasicModelPartial[1];
+				items[0] = (IBasicModelPartial) getSelectedValue();
 
 				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 			} else if (selection1.length != 0) {
-				IHeaderItem[] items = new IHeaderItem[selection1.length];
+				IBasicModelPartial[] items = new IBasicModelPartial[selection1.length];
 				items = selection1;
 				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 			}
@@ -201,12 +202,12 @@ public class AddressbookDNDListView extends AddressbookListView implements
 			 * HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 			 */
 			if (selection2.length != 0) {
-				IHeaderItem[] items = new IHeaderItem[selection2.length];
+				IBasicModelPartial[] items = new IBasicModelPartial[selection2.length];
 				items = selection2;
 				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 			} else {
-				IHeaderItem[] items = new IHeaderItem[1];
-				items[0] = (IHeaderItem) getSelectedValue();
+				IBasicModelPartial[] items = new IBasicModelPartial[1];
+				items[0] = (IBasicModelPartial) getSelectedValue();
 
 				HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 			}
@@ -232,7 +233,7 @@ public class AddressbookDNDListView extends AddressbookListView implements
 	public void dragDropEnd(DragSourceDropEvent event) {
 		if (event.getDropSuccess()) {
 			if (acceptDrop == true) {
-				IHeaderItem[] items = HeaderItemDNDManager.getInstance()
+				IBasicModelPartial[] items = HeaderItemDNDManager.getInstance()
 						.getHeaderItemList();
 
 				for (int i = 0; i < items.length; i++) {
@@ -284,27 +285,27 @@ public class AddressbookDNDListView extends AddressbookListView implements
 	 */
 	public void removeElement() {
 		((AddressbookListModel) getModel())
-				.removeElement((IHeaderItem) getSelectedValue());
+				.removeElement((IBasicModelPartial) getSelectedValue());
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
 		if (dndAction == true) {
 			Object[] list = getSelectedValues();
 
-			selection1 = new IHeaderItem[list.length];
+			selection1 = new IBasicModelPartial[list.length];
 
 			for (int i = 0; i < list.length; i++) {
-				selection1[i] = (IHeaderItem) list[i];
+				selection1[i] = (IBasicModelPartial) list[i];
 			}
 
 			dndAction = false;
 		} else {
 			Object[] list = getSelectedValues();
 
-			selection2 = new IHeaderItem[list.length];
+			selection2 = new IBasicModelPartial[list.length];
 
 			for (int i = 0; i < list.length; i++) {
-				selection2[i] = (IHeaderItem) list[i];
+				selection2[i] = (IBasicModelPartial) list[i];
 			}
 
 			dndAction = true;

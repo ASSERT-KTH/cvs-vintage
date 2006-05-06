@@ -20,25 +20,26 @@ package org.columba.addressbook.folder;
 import java.io.File;
 import java.io.IOException;
 
-import org.columba.addressbook.model.ContactModelFactory;
+import org.columba.addressbook.model.ContactModelXMLFactory;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.parser.SyntaxException;
+import org.columba.api.exception.StoreException;
 import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
 /**
- * Datastorage implementation using a MH-style mailbox approach with
- * one folder containing one XML file per contact.
+ * Datastorage implementation using a MH-style mailbox approach with one folder
+ * containing one XML file per contact.
  * 
  * @author fdietz
- *  
+ * 
  */
 public class XmlDataStorage implements DataStorage {
 
 	private AbstractFolder folder;
 
 	/**
-	 *  
+	 * 
 	 */
 	public XmlDataStorage(AbstractFolder folder) {
 		super();
@@ -49,19 +50,20 @@ public class XmlDataStorage implements DataStorage {
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#load(java.lang.Object)
 	 */
-	public IContactModel load(Object uid) throws StoreException {
+	public IContactModel load(String uid) throws StoreException {
 		File file = getFile(uid);
 
 		Document doc = XmlNewIO.load(file);
 
-		if ( doc == null) return null;
-		
+		if (doc == null)
+			return null;
+
 		IContactModel model;
 		try {
-			model = ContactModelFactory.unmarshall(doc, ((Integer) uid).toString());
-		}  catch (SyntaxException e) {
+			model = ContactModelXMLFactory.unmarshall(doc, uid);
+		} catch (SyntaxException e) {
 			throw new StoreException(e);
-		}	
+		}
 
 		return model;
 	}
@@ -70,9 +72,9 @@ public class XmlDataStorage implements DataStorage {
 	 * @param uid
 	 * @return
 	 */
-	private File getFile(Object uid) throws StoreException {
-		File file = new File(folder.getDirectoryFile().toString() + "/"
-				+ (uid.toString()) + ".xml");
+	private File getFile(String uid) throws StoreException {
+		File file = new File(folder.getDirectoryFile().toString() + "/" + uid
+				+ ".xml");
 		return file;
 	}
 
@@ -80,16 +82,16 @@ public class XmlDataStorage implements DataStorage {
 	 * @see org.columba.addressbook.folder.DataStorage#save(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void save(Object uid, IContactModel contact) throws StoreException {
+	public void save(String uid, IContactModel contact) throws StoreException {
 		File file = getFile(uid);
 
 		Document doc;
 		try {
-			doc = ContactModelFactory.marshall(contact);
+			doc = ContactModelXMLFactory.marshall(contact);
 		} catch (SyntaxException e) {
 			throw new StoreException(e);
 		}
-		
+
 		try {
 			XmlNewIO.save(doc, file);
 		} catch (IOException e) {
@@ -102,7 +104,7 @@ public class XmlDataStorage implements DataStorage {
 	 * @see org.columba.addressbook.folder.DataStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactModel contact) throws StoreException {
+	public void modify(String uid, IContactModel contact) throws StoreException {
 		save(uid, contact);
 
 	}
@@ -110,7 +112,7 @@ public class XmlDataStorage implements DataStorage {
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws StoreException {
+	public void remove(String uid) throws StoreException {
 		File file = getFile(uid);
 		file.delete();
 

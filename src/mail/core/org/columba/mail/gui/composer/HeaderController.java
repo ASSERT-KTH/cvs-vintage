@@ -17,15 +17,17 @@ package org.columba.mail.gui.composer;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IFolder;
+import org.columba.addressbook.facade.IFolderFacade;
+import org.columba.addressbook.facade.IHeaderItem;
 import org.columba.addressbook.facade.IModelFacade;
-import org.columba.addressbook.folder.StoreException;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.api.exception.StoreException;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.util.AddressCollector;
 import org.columba.mail.parser.ListBuilder;
@@ -58,17 +60,20 @@ public class HeaderController {
 
 			try {
 				IContactFacade facade = ServiceConnector.getContactFacade();
+				IFolderFacade folderFacade = ServiceConnector.getFolderFacade();
 
 				// fill hashmap with all available contacts and groups
 				try {
+					List<IFolder> list = folderFacade.getAllFolders();
+					Iterator<IFolder> it = list.iterator();
+					while (it.hasNext()) {
+						IFolder f = it.next();
 
-					// personal addressbook 
-					List<IHeaderItem> list = facade.getAllHeaderItems("101");
-					addressCollector.addAllContacts(list, true);
+						List<IHeaderItem> l = facade.getAllHeaderItems(f
+								.getId(), false);
+						addressCollector.addAllContacts(l, true);
+					}
 
-					// collected addresses
-					List<IHeaderItem> list2 = facade.getAllHeaderItems("102");
-					addressCollector.addAllContacts(list2, true);
 				} catch (StoreException e) {
 					e.printStackTrace();
 				}
@@ -159,30 +164,23 @@ public class HeaderController {
 		}
 	}
 
-	private IHeaderItemList getHeaderItemList(int recipient) {
+	private List<IHeaderItem> getHeaderItemList(int recipient) {
 
-		IHeaderItemList list = null;
-		try {
-			IModelFacade c = ServiceConnector.getModelFacade();
-			list = c.createHeaderItemList();
-		} catch (ServiceNotFoundException e1) {
-			e1.printStackTrace();
-		}
+		List<IHeaderItem> list = new Vector<IHeaderItem>();
 
-		String header = null;
 		String str = null;
 		switch (recipient) {
 		case 0:
 			str = getView().getToComboBox().getText();
-			header = "To";
+
 			break;
 		case 1:
 			str = getView().getCcComboBox().getText();
-			header = "Cc";
+
 			break;
 		case 2:
 			str = getView().getBccComboBox().getText();
-			header = "Bcc";
+
 			break;
 
 		}
@@ -207,15 +205,12 @@ public class HeaderController {
 				try {
 					IModelFacade c = ServiceConnector.getModelFacade();
 					item = c.createContactItem();
-					item.setDisplayName(s);
-					item.setHeader(header);
+					item.setName(s);
 				} catch (ServiceNotFoundException e) {
 
 					e.printStackTrace();
 				}
 
-			} else {
-				item.setHeader(header);
 			}
 
 			list.add(item);
@@ -224,26 +219,46 @@ public class HeaderController {
 		return list;
 	}
 
-	public IHeaderItemList[] getHeaderItemLists() {
-		IHeaderItemList[] lists = new IHeaderItemList[3];
-		lists[0] = getHeaderItemList(0);
-		lists[1] = getHeaderItemList(1);
-		lists[2] = getHeaderItemList(2);
-
-		return lists;
+	public List<IHeaderItem> getToHeaderItemList() {
+		return getHeaderItemList(0);
 	}
 
-	public void setHeaderItemLists(IHeaderItemList[] lists) {
-		((ComposerModel) controller.getModel()).setToList(ListBuilder
-				.createStringListFromItemList(lists[0]));
+	public List<IHeaderItem> getCcHeaderItemList() {
+		return getHeaderItemList(1);
+	}
 
+	public List<IHeaderItem> getBccHeaderItemList() {
+		return getHeaderItemList(2);
+	}
+
+	public void setToHeaderItemList(List<IHeaderItem> list) {
+		List<String> stringList = ListBuilder
+				.createStringListFromItemList(list);
+
+		((ComposerModel) controller.getModel()).setToList(stringList);
+	}
+
+	public void setCcHeaderItemList(List<IHeaderItem> list) {
 		((ComposerModel) controller.getModel()).setCcList(ListBuilder
-				.createStringListFromItemList(lists[1]));
-
-		((ComposerModel) controller.getModel()).setBccList(ListBuilder
-				.createStringListFromItemList(lists[2]));
-
-		updateComponents(true);
+				.createStringListFromItemList(list));
 	}
+
+	public void setBccHeaderItemList(List<IHeaderItem> list) {
+		((ComposerModel) controller.getModel()).setBccList(ListBuilder
+				.createStringListFromItemList(list));
+	}
+
+	// public void setHeaderItemLists(List<IHeaderItem>[] lists) {
+	// ((ComposerModel) controller.getModel()).setToList(ListBuilder
+	// .createStringListFromItemList(lists[0]));
+	//
+	// ((ComposerModel) controller.getModel()).setCcList(ListBuilder
+	// .createStringListFromItemList(lists[1]));
+	//
+	// ((ComposerModel) controller.getModel()).setBccList(ListBuilder
+	// .createStringListFromItemList(lists[2]));
+	//
+	// updateComponents(true);
+	// }
 
 }

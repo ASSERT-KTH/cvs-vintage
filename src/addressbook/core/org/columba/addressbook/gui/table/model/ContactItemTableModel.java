@@ -15,10 +15,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
+import java.util.Map;
+
 import javax.swing.table.TableModel;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModelPartial;
 
 
 /**
@@ -27,9 +28,9 @@ import org.columba.addressbook.model.IContactItemMap;
  * @author fdietz
  */
 public interface ContactItemTableModel extends TableModel {
-    void setContactItemMap(IContactItemMap list);
+    void setContactItemMap(Map<String,IContactModelPartial> list);
 
-    IContactItemMap getContactItemMap();
+    Map<String,IContactModelPartial> getContactItemMap();
     
-    IContactItem getContactItem(int index);
+    IContactModelPartial getContactItem(int index);
 }

@@ -18,20 +18,19 @@
 package org.columba.addressbook.gui.table.model;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.ContactModelPartial;
+import org.columba.addressbook.model.IContactModelPartial;
 
 /**
  * Simple table model, using an extended TableModel interface.
  * 
  * @author fdietz
  */
-@SuppressWarnings({"serial","serial"})
 public class AddressbookTableModel extends AbstractTableModel
 		implements
 			ContactItemTableModel {
@@ -40,23 +39,23 @@ public class AddressbookTableModel extends AbstractTableModel
     private static final Logger LOG = Logger
             .getLogger("org.columba.addressbook.gui.table.model");
     
-	private String[] columns = {"displayname", "email;internet", "url"};
-	private ContactItem[] rows;
+	private String[] columns = {"displayname", "given", "family", "email;internet", "url"};
+	private ContactModelPartial[] rows;
 
-	private IContactItemMap headerItemList;
+	private Map<String,IContactModelPartial> headerItemList;
 
 	public AddressbookTableModel() {
 		super();
 
 	}
 
-	public void setContactItemMap(IContactItemMap list) {
+	public void setContactItemMap(Map<String,IContactModelPartial> list) {
 		
 		
 		if ( list == null) {
 			LOG.fine("map == null");
 			
-			rows = new ContactItem[0];
+			rows = new ContactModelPartial[0];
 		
 			fireTableDataChanged();
 			
@@ -67,26 +66,26 @@ public class AddressbookTableModel extends AbstractTableModel
 		
 		this.headerItemList = list;
 
-		if ( list.count() == 0) LOG.fine("map is empty");
+		if ( list.size() == 0) LOG.fine("map is empty");
 		
-		rows = new ContactItem[list.count()];
+		rows = new ContactModelPartial[list.size()];
 
-		Iterator it = list.iterator();
+		Iterator it = list.values().iterator();
 		int i = 0;
 		while (it.hasNext()) {
-			rows[i++] = (ContactItem) it.next();
+			rows[i++] = (ContactModelPartial) it.next();
 		}
 
 		fireTableDataChanged();
 	}
 
 	public void update() {
-		rows = new ContactItem[headerItemList.count()];
+		rows = new ContactModelPartial[headerItemList.size()];
 
-		Iterator it = headerItemList.iterator();
+		Iterator it = headerItemList.values().iterator();
 		int i = 0;
 		while (it.hasNext()) {
-			rows[i++] = (ContactItem) it.next();
+			rows[i++] = (ContactModelPartial) it.next();
 		}
 
 		fireTableDataChanged();
@@ -113,14 +112,18 @@ public class AddressbookTableModel extends AbstractTableModel
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(int row, int column) {
-		ContactItem item = rows[row];
+		ContactModelPartial item = rows[row];
 
 		switch (column) {
 			case 0 :
-				return item.getDisplayName();
+				return item.getName();
 			case 1 :
-				return item.getAddress();
+				return item.getFirstname();
 			case 2 :
+				return item.getLastname();
+			case 3 :
+				return item.getAddress();
+			case 4 :
 				return item.getWebsite();
 			default :
 				return "";
@@ -131,14 +134,14 @@ public class AddressbookTableModel extends AbstractTableModel
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getHeaderItem(int)
 	 */
-	public IContactItem getContactItem(int index) {
+	public IContactModelPartial getContactItem(int index) {
 
 		return rows[index];
 	}
 	/**
 	 * @return Returns the headerItemList.
 	 */
-	public IContactItemMap getContactItemMap() {
+	public Map<String,IContactModelPartial> getContactItemMap() {
 		return headerItemList;
 	}
 }

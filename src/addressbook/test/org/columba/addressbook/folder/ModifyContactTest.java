@@ -40,7 +40,7 @@ public class ModifyContactTest extends AbstractFolderTstCase {
 
 		c.setNickName("nickname");
 
-		Object uid = getSourceFolder().add(c);
+		String uid = getSourceFolder().add(c);
 
 		c.setNickName("new");
 		getSourceFolder().modify(uid, c);

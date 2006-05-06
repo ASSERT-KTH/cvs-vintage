@@ -18,6 +18,7 @@ package org.columba.mail.gui.composer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -26,6 +27,7 @@ import javax.swing.JTextField;
 import org.columba.mail.gui.composer.action.AddressbookAction;
 import org.columba.mail.gui.composer.util.AddressCollector;
 import org.frapuccino.addresscombobox.CommaSeparatedAutoCompleter;
+import org.frapuccino.addresscombobox.PatternSeparatedAutoCompleter;
 
 import com.jgoodies.forms.layout.CellConstraints;
 
@@ -69,12 +71,12 @@ public class HeaderView extends JPanel implements ActionListener {
 
 		if (addressCollector != null) {
 			// pass contact data along to AddressComboBox
-			new CommaSeparatedAutoCompleter(toComboBox, Arrays
-					.asList(addressCollector.getAddresses()), true);
-			new CommaSeparatedAutoCompleter(ccComboBox, Arrays
-					.asList(addressCollector.getAddresses()), true);
-			new CommaSeparatedAutoCompleter(bccComboBox, Arrays
-					.asList(addressCollector.getAddresses()), true);
+			new PatternSeparatedAutoCompleter(toComboBox, Arrays
+					.asList(addressCollector.getAddresses()), Pattern.compile(";"), true);
+			new PatternSeparatedAutoCompleter(ccComboBox, Arrays
+					.asList(addressCollector.getAddresses()), Pattern.compile(";"), true);
+			new PatternSeparatedAutoCompleter(bccComboBox, Arrays
+					.asList(addressCollector.getAddresses()), Pattern.compile(";"), true);
 
 		}
 	}

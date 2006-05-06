@@ -21,10 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-
 /**
- * Provides parsers for creating String representations from List 
- * objects and vice versa.
+ * Provides parsers for creating String representations from List objects and
+ * vice versa.
  * 
  * @author fdietz
  */
@@ -34,17 +33,19 @@ public class ListParser {
 	}
 
 	/**
-	 * Create list from String containing comma-separated email addresses.
+	 * Create list from String containing semicolon-separated email addresses.
 	 * 
 	 * @param str
 	 *            string
 	 * @return list
 	 */
-	public static List createListFromString(String str) {
-		if ( str == null ) return null;
-		if ( str.length() == 0) return null;
-		
-		List result = new Vector();
+	public static List<String> createListFromString(String str) {
+		if (str == null)
+			return null;
+		if (str.length() == 0)
+			return null;
+
+		List<String> result = new Vector<String>();
 
 		int pos = 0;
 		boolean bracket = false;
@@ -54,7 +55,7 @@ public class ListParser {
 		while (pos < listLength) {
 			char ch = str.charAt(pos);
 
-			if ((ch == ',') && (bracket == false)) {
+			if ((ch == ';') && (bracket == false)) {
 				// found new message
 				String address = buf.toString();
 				result.add(address);
@@ -91,9 +92,10 @@ public class ListParser {
 	 *            list containing String objects
 	 * @return String representation
 	 */
-	public static String createStringFromList(List list) {
-		if ( list == null ) return "";
-		
+	public static String createStringFromList(List<String> list) {
+		if (list == null)
+			return "";
+
 		StringBuffer output = new StringBuffer();
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
@@ -102,7 +104,7 @@ public class ListParser {
 				continue;
 			}
 			output.append(address);
-			output.append(",");
+			output.append(";");
 		}
 
 		if (output.length() > 0) {

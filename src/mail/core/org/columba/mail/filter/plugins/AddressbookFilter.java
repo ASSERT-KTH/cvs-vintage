@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.filter.AbstractFilter;
@@ -32,7 +34,7 @@ import org.columba.ristretto.parser.AddressParser;
  * Check if sender is in all available addressbooks.
  * 
  * @author fdietz
- *  
+ * 
  */
 public class AddressbookFilter extends AbstractFilter {
 
@@ -44,9 +46,9 @@ public class AddressbookFilter extends AbstractFilter {
 	 * @see org.columba.core.filter.AbstractFilter#process(IFolder,
 	 *      java.lang.Object)
 	 */
-	public boolean process(IFolder folder, Object uid)
-			throws Exception {
-		Header header = ((IMailbox)folder).getHeaderFields(uid, new String[] { "From" });
+	public boolean process(IFolder folder, Object uid) throws Exception {
+		Header header = ((IMailbox) folder).getHeaderFields(uid,
+				new String[] { "From" });
 		String from = header.get("From");
 
 		Address address = null;
@@ -57,28 +59,19 @@ public class AddressbookFilter extends AbstractFilter {
 		}
 
 		IFolderFacade folderFacade = null;
+		IContactFacade contactFacade = null;
 		try {
 			folderFacade = ServiceConnector.getFolderFacade();
+			contactFacade = ServiceConnector.getContactFacade();
 		} catch (ServiceNotFoundException e) {
-
 			e.printStackTrace();
 			return false;
 		}
 
-		org.columba.addressbook.folder.IContactFolder addressbook = folderFacade
-				.getCollectedAddresses();
-
-		Object contactUid = addressbook.exists(address.getMailAddress());
-		if (contactUid != null)
-			return true;
-
-		addressbook = folderFacade.getLocalAddressbook();
-
-		contactUid = addressbook.exists(address.getMailAddress());
-
-		if (contactUid != null)
-			return true;
-
+		org.columba.addressbook.facade.IFolder contactFolder = folderFacade.getCollectedAddresses();
+		String contactId = contactFacade.findByEmailAddress(contactFolder.getId(), address.getMailAddress());
+		if ( contactId != null ) return true;
+		
 		return false;
 	}
 

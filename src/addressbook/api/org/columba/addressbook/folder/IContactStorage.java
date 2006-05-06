@@ -18,28 +18,50 @@
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.model.IContactModel;
+import org.columba.api.exception.StoreException;
 
 /**
  * Contact storage facility.
  * 
  * @author fdietz
- *  
+ * 
  */
-public interface IContactStorage extends IFolder{
+public interface IContactStorage extends IFolder {
 
-	int count() throws StoreException ;
+	int count() throws StoreException;
 
-	Object exists(String contact) throws StoreException;
-	
-	boolean exists(Object uid) throws StoreException;
+	/**
+	 * Find contact by email address. Search ignores case.
+	 * 
+	 * @param emailAddress
+	 *            email address
+	 * @return contact id, if match found. Otherwise, <code>null</code>
+	 * @throws StoreException
+	 */
+	String findByEmailAddress(String emailAddress) throws StoreException;
 
-	IContactModel get(Object uid) throws StoreException;
+	/**
+	 * Find contact by name. Search ignores case.
+	 * <p>
+	 * First tries to find a vCard "SORT_AS", then vCard "LASTNAME" and last
+	 * vCard "FIRSTNAME", until a match is found. If several contacts match the
+	 * first one is used and all other results are ignored.
+	 * 
+	 * @param name
+	 *            email address
+	 * @return contact id, if match found. Otherwise, <code>null</code>
+	 * @throws StoreException
+	 */
+	String findByName(String name) throws StoreException;
 
-	void remove(Object uid) throws StoreException;
+	boolean exists(String id) throws StoreException;
 
-	void modify(Object uid, IContactModel contact) throws StoreException;
+	IContactModel get(String id) throws StoreException;
+
+	void remove(String id) throws StoreException;
+
+	void modify(String id, IContactModel contact) throws StoreException;
 
 	Object add(IContactModel contact) throws StoreException;
-	
-	
+
 }

@@ -48,7 +48,7 @@ public class DefaultAddressComboBox extends BasicAddressAutocompleteComboBox {
 	 * @param includeGroup
 	 *            include group items, if true. Don't, otherwise.
 	 */
-	public DefaultAddressComboBox(int folderUid, boolean includeGroup) {
+	public DefaultAddressComboBox(String folderUid, boolean includeGroup) {
 		super();
 
 		AddressCollector.getInstance().clear();
@@ -66,8 +66,8 @@ public class DefaultAddressComboBox extends BasicAddressAutocompleteComboBox {
 	private void initData(boolean includeGroup) {
 		AddressCollector.getInstance().clear();
 
-		AddressCollector.getInstance().addAllContacts(101, includeGroup);
-		AddressCollector.getInstance().addAllContacts(102, includeGroup);
+		AddressCollector.getInstance().addAllContacts("101", includeGroup);
+		AddressCollector.getInstance().addAllContacts("102", includeGroup);
 
 	}
 }

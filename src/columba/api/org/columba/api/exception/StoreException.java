@@ -15,34 +15,33 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
+package org.columba.api.exception;
 
-import org.columba.addressbook.model.ContactModel;
-import org.columba.addressbook.model.IContactModel;
 
 /**
+ * Internal exception of an abstract store.
+ * <p> 
+ * The backend implementation could be file-based, database, LDAP, etc. but
+ * these implementation details shouldn't be exposed by exceptions.
+ *    
  * @author fdietz
- *  
  */
-public class GetContactTest extends AbstractFolderTstCase {
+public class StoreException extends BaseRuntimeException {
 
-	/**
-	 * @param arg0
-	 */
-	public GetContactTest(String arg0) {
-		super(arg0);
-		
+	public StoreException() {
+		super();
 	}
 
-	public void testGet() throws Exception {
-		ContactModel c = new ContactModel();
-
-		c.setNickName("nickname");
-
-		String uid = getSourceFolder().add(c);
-
-		IContactModel c2 = getSourceFolder().get(uid);
-
-		assertEquals("same nickname", c.getNickName(), c2.getNickName());
+	public StoreException(String message) {
+		super(message);
 	}
+
+	public StoreException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public StoreException(Throwable cause) {
+		super(cause);
+	}
+
 }

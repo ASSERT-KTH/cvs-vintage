@@ -17,9 +17,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.IContactItemMap;
+import java.util.Map;
+
 import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IContactModelPartial;
+import org.columba.addressbook.model.IGroupModel;
+import org.columba.api.exception.StoreException;
 
 /**
  * @author fdietz
@@ -29,7 +32,7 @@ public interface IGroupFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	Object add(IContactModel contact) throws StoreException;
+	String add(IContactModel contact) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#count()
@@ -39,31 +42,31 @@ public interface IGroupFolder {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#exists(java.lang.Object)
 	 */
-	boolean exists(Object uid) throws StoreException;
+	boolean exists(String uid) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	IContactModel get(Object uid) throws StoreException;
+	IContactModel get(String uid) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	void modify(Object uid, IContactModel contact) throws StoreException;
+	void modify(String uid, IContactModel contact) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
-	void remove(Object uid) throws StoreException;
+	void remove(String uid) throws StoreException;
 
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	IContactItemMap getContactItemMap() throws StoreException;
+	Map<String, IContactModelPartial> getContactItemMap() throws StoreException;
 
 	/**
 	 * @return Returns the group.
 	 */
-	IGroup getGroup() throws StoreException;
+	IGroupModel getGroup() throws StoreException;
 }

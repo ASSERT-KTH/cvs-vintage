@@ -17,9 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.contact.list;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IGroupItem;
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.facade.IGroupItem;
+import org.columba.addressbook.facade.IHeaderItem;
 
 /**
  * @author fdietz
@@ -30,7 +30,7 @@ public final class HeaderItemToolTipFactory {
 	public static String createToolTip(IHeaderItem item) {
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("<html><body>&nbsp;Name: " + item.getDisplayName());
+		buf.append("<html><body>&nbsp;Name: " + item.getName());
 		buf.append("</body></html>");
 
 		return buf.toString();
@@ -40,15 +40,16 @@ public final class HeaderItemToolTipFactory {
 
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("<html><body>&nbsp;Name: " + item.getDisplayName());
+		buf.append("<html><body>&nbsp;Name: " + item.getName());
 		if (item.getAddress() != null) {
 			buf.append("<br>&nbsp;eMail: "
 					+ convert((String) item.getAddress()));
 		}
-		if (item.getWebsite() != null) {
-			buf.append("<br>&nbsp;Website: "
-					+ convert((String) item.getWebsite()));
-		}
+		// TODO 
+//		if (item.getWebsite() != null) {
+//			buf.append("<br>&nbsp;Website: "
+//					+ convert((String) item.getWebsite()));
+//		}
 		buf.append("</body></html>");
 
 		return buf.toString();
@@ -58,7 +59,7 @@ public final class HeaderItemToolTipFactory {
 
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("<html><body>&nbsp;Name: " + item.getDisplayName());
+		buf.append("<html><body>&nbsp;Name: " + item.getName());
 		if (item.getDescription() != null) {
 			buf.append("<br>&nbsp;Description: " + item.getDescription());
 		}

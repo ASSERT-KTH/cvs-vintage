@@ -17,10 +17,10 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.exception.ServiceNotFoundException;
@@ -28,7 +28,6 @@ import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
-import org.columba.mail.facade.IDialogFacade;
 import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
 
@@ -95,7 +94,10 @@ public class AddAllSendersToAddressbookCommand extends Command {
 		}
 
 		// add sender to addressbook
-		contactFacade.addContact(v.toArray(new String[0]));
+		Iterator<String> it = v.listIterator();
+		while (it.hasNext()) {
+			contactFacade.addContact(it.next());
+		}
 	}
 
 }

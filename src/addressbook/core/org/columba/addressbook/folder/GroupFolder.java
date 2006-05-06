@@ -17,17 +17,21 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import javax.swing.ImageIcon;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.model.ContactModelFactory;
+import org.columba.addressbook.model.ContactModelPartial;
 import org.columba.addressbook.model.Group;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IContactModelPartial;
+import org.columba.addressbook.model.IGroupModel;
 import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.exception.StoreException;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.xml.XmlElement;
@@ -42,7 +46,7 @@ import org.columba.core.xml.XmlElement;
  */
 public class GroupFolder extends AbstractFolder implements IContactStorage, IGroupFolder {
 
-	private IGroup group;
+	private IGroupModel group;
 
 	private ImageIcon groupImageIcon = ImageLoader
 	.getSmallIcon(IconKeys.USER);
@@ -69,7 +73,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 			property.addElement(e);
 		}
 
-		group = new Group(e, getUid());
+		group = new Group(e, getId());
 	}
 
 	public void createChildren(IWorkerStatusController worker) {
@@ -78,8 +82,8 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#add(IContactModel)
 	 */
-	public Object add(IContactModel contact) throws StoreException {
-		Object uid = contact.getId();
+	public String add(IContactModel contact) throws StoreException {
+		String uid = contact.getId();
 
 		group.addMember(uid);
 
@@ -99,7 +103,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#exists(java.lang.Object)
 	 */
-	public boolean exists(Object uid) throws StoreException{
+	public boolean exists(String uid) throws StoreException{
 
 		return group.exists(uid);
 	}
@@ -107,7 +111,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public IContactModel get(Object uid) throws StoreException {
+	public IContactModel get(String uid) throws StoreException {
 
 		AbstractFolder parent = (AbstractFolder) getParent();
 
@@ -118,7 +122,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactModel contact) throws StoreException {
+	public void modify(String uid, IContactModel contact) throws StoreException {
 		AbstractFolder parent = (AbstractFolder) getParent();
 
 		parent.modify(uid, contact);
@@ -130,7 +134,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws StoreException {
+	public void remove(String uid) throws StoreException {
 		group.remove(uid);
 
 		fireItemRemoved(uid);
@@ -139,12 +143,12 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	public IContactItemMap getContactItemMap() throws StoreException {
+	public Map<String,IContactModelPartial> getContactItemMap() throws StoreException {
 		AbstractFolder parent = (AbstractFolder) getParent();
 
-		IContactItemMap filter = new ContactItemMap();
+		Map<String,IContactModelPartial> filter = new Hashtable<String,IContactModelPartial>();
 
-		Integer[] members = group.getMembers();
+		String[] members = group.getMembers();
 		for (int i = 0; i < members.length; i++) {
 			IContactModel c = parent.get(members[i]);
 			if (c == null) {
@@ -153,10 +157,9 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 
 				remove(members[i]);
 			} else {
-				IContactItem item = new ContactItem(c);
-				item.setUid(members[i]);
+				IContactModelPartial item = ContactModelFactory.createContactModelPartial(c, c.getId());
 				
-				filter.add(members[i], item);
+				filter.put(members[i], item);
 			}
 		}
 
@@ -166,7 +169,7 @@ public class GroupFolder extends AbstractFolder implements IContactStorage, IGro
 	/**
 	 * @return Returns the group.
 	 */
-	public IGroup getGroup() {
+	public IGroupModel getGroup() {
 		return group;
 	}
 

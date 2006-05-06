@@ -133,7 +133,7 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 		}
 
 		tree.setSelectionPath(new TreePath(AddressbookTreeModel.getInstance()
-				.getFolder(101).getPath()));
+				.getFolder("101").getPath()));
 	}
 
 	public boolean success() {

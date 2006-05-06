@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IBasicModelPartial;
 
 
 /**
@@ -28,7 +28,7 @@ import org.columba.addressbook.model.IHeaderItem;
  */
 public class HeaderItemDNDManager {
     private static HeaderItemDNDManager instance;
-    IHeaderItem[] array;
+    IBasicModelPartial[] array;
 
     public static HeaderItemDNDManager getInstance() {
         if (instance == null) {
@@ -38,11 +38,11 @@ public class HeaderItemDNDManager {
         return instance;
     }
 
-    public void setHeaderItemList(IHeaderItem[] array) {
+    public void setHeaderItemList(IBasicModelPartial[] array) {
         this.array = array;
     }
 
-    public IHeaderItem[] getHeaderItemList() {
+    public IBasicModelPartial[] getHeaderItemList() {
         return this.array;
     }
 }

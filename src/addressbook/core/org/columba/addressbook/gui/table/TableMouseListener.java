@@ -56,7 +56,7 @@ public class TableMouseListener extends DoubleClickListener
 	  {
 	    
 			// get selected contact/group card
-      Object[] uids = mediator.getTable().getUids();
+      String[] uids = mediator.getTable().getUids();
 
       // get selected folder
       IContactStorage folder = (IContactStorage) mediator.getTree()

@@ -24,17 +24,16 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IGroupItem;
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.facade.IHeaderItem;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.resourceloader.MailImageLoader;
 
-@SuppressWarnings({"serial","serial"})
+
 public class ContactListRenderer extends JLabel implements ListCellRenderer {
 	ImageIcon image1 = MailImageLoader.getSmallIcon("contact-new.png");
 
-	ImageIcon image2 = ImageLoader.getSmallIcon(org.columba.core.resourceloader.IconKeys.USER);
+	ImageIcon image2 = ImageLoader
+			.getSmallIcon(org.columba.core.resourceloader.IconKeys.USER);
 
 	public ContactListRenderer() {
 		setOpaque(true);
@@ -54,17 +53,14 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 
 		IHeaderItem item = (IHeaderItem) value;
 
-		setText(item.getDisplayName());
+		setText(item.getName());
 
-		if (item.isContact()) {
+		if (item.isContact())
 			setIcon(image1);
-			setToolTipText(HeaderItemToolTipFactory.createToolTip((IContactItem)item));
-
-		} else {
+		else
 			setIcon(image2);
-			setToolTipText(HeaderItemToolTipFactory.createToolTip((IGroupItem)item));
 
-		}
+		setToolTipText(HeaderItemToolTipFactory.createToolTip(item));
 
 		return this;
 	}

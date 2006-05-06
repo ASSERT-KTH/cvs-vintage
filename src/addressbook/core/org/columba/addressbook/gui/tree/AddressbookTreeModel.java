@@ -127,7 +127,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 
 	}
 
-	public AddressbookTreeNode getFolder(int uid) {
+	public AddressbookTreeNode getFolder(String uid) {
 		AddressbookTreeNode root = (AddressbookTreeNode) getRoot();
 
 		for (Enumeration e = root.breadthFirstEnumeration(); e
@@ -138,9 +138,9 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 				continue;
 			}
 
-			int id = node.getUid();
+			String id = node.getId();
 
-			if (uid == id) {
+			if (uid.equals(id)) {
 				return node;
 			}
 		}

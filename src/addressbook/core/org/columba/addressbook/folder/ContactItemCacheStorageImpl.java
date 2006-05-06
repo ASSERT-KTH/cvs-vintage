@@ -18,18 +18,17 @@
 package org.columba.addressbook.folder;
 
 import java.io.File;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.ContactModelFactory;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.ContactModelXMLFactory;
 import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.WrongFileFormatException;
-import org.columba.core.logging.Logging;
+import org.columba.addressbook.model.IContactModelPartial;
+import org.columba.api.exception.StoreException;
 import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
@@ -50,7 +49,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	 * keeps a list of HeaderItem's we need for the table-view
 	 * 
 	 */
-	private IContactItemMap headerItemList;
+	private Hashtable<String, IContactModelPartial> map;
 
 	/**
 	 * 
@@ -74,7 +73,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 
 		this.folder = folder;
 
-		headerItemList = new ContactItemMap();
+		map = new Hashtable<String, IContactModelPartial>();
 
 		directoryFile = folder.getDirectoryFile();
 
@@ -92,22 +91,24 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#getHeaderItemMap()
 	 */
-	public IContactItemMap getContactItemMap() throws StoreException {
-		return headerItemList;
+	public Map<String, IContactModelPartial> getContactItemMap()
+			throws StoreException {
+		return map;
 	}
 
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#add(IContactModel)
 	 */
-	public void add(Object uid, IContactItem item) throws StoreException {
-		getContactItemMap().add(uid, item);
+	public void add(String uid, IContactModelPartial item)
+			throws StoreException {
+		getContactItemMap().put(uid, item);
 
 	}
 
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#remove(java.lang.Object)
 	 */
-	public void remove(Object uid) throws StoreException {
+	public void remove(String uid) throws StoreException {
 		getContactItemMap().remove(uid);
 
 	}
@@ -116,9 +117,10 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#modify(java.lang.Object,
 	 *      IContactModel)
 	 */
-	public void modify(Object uid, IContactItem item) throws StoreException {
+	public void modify(String uid, IContactModelPartial item)
+			throws StoreException {
 		getContactItemMap().remove(item);
-		getContactItemMap().add(uid, item);
+		getContactItemMap().put(uid, item);
 
 	}
 
@@ -139,7 +141,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	public void sync() {
 
 		File[] list = directoryFile.listFiles();
-		List v = new Vector();
+		List<File> v = new Vector<File>();
 
 		for (int i = 0; i < list.length; i++) {
 			File file = list[i];
@@ -148,20 +150,15 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 			int index = name.indexOf("header");
 
 			if (index == -1) {
-				
 
-				// Integer numberString = new Integer( number );
-				// System.out.println("number: "+ number );
 				if ((file.exists()) && (file.length() > 0)) {
 					renamedFile = new File(file.getParentFile(),
 							file.getName() + '~');
 					file.renameTo(renamedFile);
 
-					// System.out.println("renamed file:" + renamedFile);
 					v.add(renamedFile);
 				}
 
-				// System.out.println("v index: "+ v.indexOf( file ) );
 			} else {
 				// header file found
 				headerFile.delete();
@@ -179,22 +176,19 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 
 				Document doc = XmlNewIO.load(newFile);
 
-				IContactModel model = ContactModelFactory.unmarshall(doc,
+				IContactModel model = ContactModelXMLFactory.unmarshall(doc,
 						new Integer(i).toString());
 
-				IContactItem item = new ContactItem(model);
-
-				item.setUid(new Integer(i));
-
-				add(new Integer(i), item);
+				IContactModelPartial item = ContactModelFactory.createContactModelPartial(model, new Integer(i).toString());
+				add(new Integer(i).toString(), item);
 
 				folder.setNextMessageUid(i + 1);
-			}  catch (Exception ex) {
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
 
-		LOG.info("map-size()==" + headerItemList.count());
+		LOG.info("map-size()==" + map.size());
 
 	}
 
@@ -202,13 +196,36 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#count()
 	 */
 	public int count() {
-		return headerItemList.count();
+		return map.size();
 	}
 
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#exists(java.lang.Object)
 	 */
-	public boolean exists(Object uid) {
-		return headerItemList.exists(uid);
+	public boolean exists(String uid) {
+		return map.containsKey(uid);
+	}
+
+	/**
+	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#getContactItemMap(java.lang.String[])
+	 */
+	public Map<String, IContactModelPartial> getContactItemMap(String[] ids)
+			throws StoreException {
+		if (ids == null)
+			throw new IllegalArgumentException("ids == null");
+
+		Map<String, IContactModelPartial> result = new Hashtable<String, IContactModelPartial>();
+
+		for (int i = 0; i < ids.length; i++) {
+			// skip, if null
+			if (ids[i] == null)
+				continue;
+
+			IContactModelPartial p = map.get(ids[i]);
+			if (p != null)
+				result.put(ids[i], p);
+		}
+
+		return result;
 	}
 }

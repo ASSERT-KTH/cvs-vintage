@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -46,10 +47,8 @@ import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.gui.autocomplete.DefaultAddressComboBox;
 import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
-import org.columba.addressbook.model.IGroup;
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IContactModelPartial;
+import org.columba.addressbook.model.IGroupModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 
@@ -85,7 +84,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
 	private ButtonWithMnemonic cancelButton;
 
-	private IGroup group;
+	private IGroupModel group;
 
 	private AbstractFolder parentFolder;
 
@@ -98,7 +97,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 	 *            null, if you want to create a new group. Otherwise, the
 	 *            groupNode will be modified.
 	 */
-	public EditGroupDialog(JFrame frame, IGroup group,
+	public EditGroupDialog(JFrame frame, IGroupModel group,
 			AbstractFolder parentFolder) {
 		super(frame, true);
 
@@ -204,7 +203,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 				"dialog", "editgroupdialog", "description_2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		descriptionTextField = new JTextField();
 
-		addComboBox = new DefaultAddressComboBox(parentFolder.getUid(), false);
+		addComboBox = new DefaultAddressComboBox(parentFolder.getId(), false);
 		((JTextComponent) addComboBox.getEditor().getEditorComponent())
 				.addKeyListener(this);
 
@@ -248,14 +247,14 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
 			members = new AddressbookListModel();
 
-			Integer[] m = group.getMembers();
+			String[] m = group.getMembers();
 
 			try {
-				IContactItemMap l = parentFolder.getContactItemMap();
+				Map<String, IContactModelPartial> l = parentFolder.getContactItemMap();
 
 				for (int i = 0; i < m.length; i++) {
 
-					IContactItem item = l.get(m[i]);
+					IContactModelPartial item = l.get(m[i]);
 
 					members.addElement(item);
 				}
@@ -275,9 +274,9 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
 			// add children
 			for (int i = 0; i < members.getSize(); i++) {
-				IContactItem item = (IContactItem) members.get(i);
-				Object uid = item.getUid();
-				group.addMember(((Integer) uid).toString());
+				IContactModelPartial item = (IContactModelPartial) members.get(i);
+				String uid = item.getId();
+				group.addMember(uid);
 			}
 		}
 	}
@@ -292,7 +291,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
 		if (o != null) {
 			// this is a headeritem from autocompletion
-			members.addElement((IHeaderItem) o);
+			members.addElement((IContactModelPartial) o);
 			addComboBox.setText(""); //$NON-NLS-1$
 		} else {
 			JOptionPane

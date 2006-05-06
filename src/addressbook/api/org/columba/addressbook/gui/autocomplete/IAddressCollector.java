@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.autocomplete;
 
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IBasicModelPartial;
 
 /**
  * @author fdietz
@@ -30,13 +30,13 @@ public interface IAddressCollector  {
 	 * @param uid			selected folder uid
 	 * @param includeGroup	add groups if true. No groups, otherwise.
 	 */
-	void addAllContacts(int uid, boolean includeGroup);
+	void addAllContacts(String uid, boolean includeGroup);
 
-	void addAddress(String add, IHeaderItem item);
+	void addAddress(String add, IBasicModelPartial item);
 
 	Object[] getAddresses();
 
-	IHeaderItem getHeaderItem(String add);
+	IBasicModelPartial getHeaderItem(String add);
 
 	void clear();
 

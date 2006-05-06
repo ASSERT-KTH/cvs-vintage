@@ -26,7 +26,7 @@ import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Group;
-import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IGroupModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.resourceloader.IconKeys;
@@ -71,7 +71,7 @@ public class AddGroupCardAction extends DefaultTreeAction {
 			return;
 		}
 
-		IGroup group = new Group();
+		IGroupModel group = new Group();
 
 		EditGroupDialog dialog = new EditGroupDialog(mediator.getView()
 				.getFrame(), group, folder);

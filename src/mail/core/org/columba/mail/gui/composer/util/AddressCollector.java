@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IGroupItem;
-import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.facade.IGroupItem;
+import org.columba.addressbook.facade.IHeaderItem;
 
 public class AddressCollector {
 
@@ -47,23 +47,27 @@ public class AddressCollector {
 	public void addAllContacts(List<IHeaderItem> list, boolean includeGroup) {
 		if ( list == null ) throw new IllegalArgumentException("list == null");
 		
-		Iterator it = list.iterator();
+		Iterator<IHeaderItem> it = list.iterator();
 		while (it.hasNext()) {
-			IHeaderItem headerItem = (IHeaderItem) it.next();
+			IHeaderItem headerItem = it.next();
 
 			if (headerItem.isContact()) {
 				// contacts item
 				IContactItem item = (IContactItem) headerItem;
-
-				addAddress(item.getDisplayName(), item);
-
+				System.out.println("adding="+item.getName());
+				System.out.println("adding="+item.getFirstname());
+				System.out.println("adding="+item.getLastname());
+				System.out.println("adding="+item.getAddress());
+				addAddress(item.getName(), item);
+				addAddress(item.getFirstname(), item);
+				addAddress(item.getLastname(), item);
 				addAddress(item.getAddress(), item);
 			} else {
 				if (includeGroup) {
 					// group item
 					IGroupItem item = (IGroupItem) headerItem;
 
-					addAddress(item.getDisplayName(), item);
+					addAddress(item.getName(), item);
 				}
 			}
 		}

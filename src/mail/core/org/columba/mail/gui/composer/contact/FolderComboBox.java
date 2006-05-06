@@ -26,7 +26,7 @@ import javax.swing.JList;
 
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.folder.IContactFolder;
-import org.columba.addressbook.folder.IFolder;
+import org.columba.addressbook.facade.IFolder;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
 
@@ -38,7 +38,7 @@ public class FolderComboBox extends JComboBox {
 		IFolderFacade folderFacade = null;
 		try {
 			folderFacade = ServiceConnector.getFolderFacade();
-			Iterator<IFolder> it = folderFacade.getFolderIterator()
+			Iterator<IFolder> it = folderFacade.getAllFolders()
 					.listIterator();
 
 			while (it.hasNext()) {

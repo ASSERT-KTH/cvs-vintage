@@ -15,34 +15,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
+package org.columba.addressbook.model;
 
-import org.columba.addressbook.model.ContactModel;
-import org.columba.addressbook.model.IContactModel;
 
 /**
  * @author fdietz
- *  
+ *
  */
-public class GetContactTest extends AbstractFolderTstCase {
-
-	/**
-	 * @param arg0
-	 */
-	public GetContactTest(String arg0) {
-		super(arg0);
-		
-	}
-
-	public void testGet() throws Exception {
-		ContactModel c = new ContactModel();
-
-		c.setNickName("nickname");
-
-		String uid = getSourceFolder().add(c);
-
-		IContactModel c2 = getSourceFolder().get(uid);
-
-		assertEquals("same nickname", c.getNickName(), c2.getNickName());
-	}
+public interface IBasicModelPartial{
+	public String getId();
+	
+	public String getName();
+	
+	public String getDescription();
+	
+	public boolean isContact();
+	
+	public IBasicModelPartial clone();
 }

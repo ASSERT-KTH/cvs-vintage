@@ -39,6 +39,11 @@ import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.OutgoingItem;
+import org.columba.mail.facade.ComposerFacade;
+import org.columba.mail.facade.DialogFacade;
+import org.columba.mail.facade.FolderFacade;
+import org.columba.mail.facade.SelectionFacade;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.ActivateVirtualFolderCommand;
 import org.columba.mail.gui.composer.ComposerController;
@@ -109,21 +114,19 @@ public class MailMain implements IComponentPlugin {
 		ShutdownManager.getInstance().register(plugin);
 		
 		
-		ServiceRegistry.getInstance().register(
-				org.columba.mail.facade.IConfigFacade.class,
-				"org.columba.mail.facade.ConfigFactory");
+		
 		ServiceRegistry.getInstance().register(
 				org.columba.mail.facade.IComposerFacade.class,
-				"org.columba.mail.facade.ComposerFactory");
+				new ComposerFacade());
 		ServiceRegistry.getInstance().register(
 				org.columba.mail.facade.IDialogFacade.class,
-				"org.columba.mail.facade.DialogFactory");
+				new DialogFacade());
 		ServiceRegistry.getInstance().register(
 				org.columba.mail.facade.IFolderFacade.class,
-				"org.columba.mail.facade.FolderFactory");
+				new FolderFacade());
 		ServiceRegistry.getInstance().register(
 				org.columba.mail.facade.ISelectionFacade.class,
-				"org.columba.mail.facade.SelectionFactory");
+				new SelectionFacade());
 	}
 
 	public void registerCommandLineArguments() {

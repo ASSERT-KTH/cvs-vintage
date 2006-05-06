@@ -17,13 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.contact.list;
 
+import java.util.List;
+import java.util.Vector;
+
 import javax.swing.AbstractListModel;
 
-import org.columba.addressbook.facade.IModelFacade;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.api.exception.ServiceNotFoundException;
-import org.columba.mail.connector.ServiceConnector;
+import org.columba.addressbook.facade.IHeaderItem;
 
 /**
  * @version 1.0
@@ -31,20 +30,14 @@ import org.columba.mail.connector.ServiceConnector;
  */
 
 public class ContactListModel extends AbstractListModel {
-	private IHeaderItemList list;
+	private List<IHeaderItem> list;
 
 	private String patternString = "";
 
 	public ContactListModel() {
 		super();
 
-		IModelFacade facade = null;
-		try {
-			facade = ServiceConnector.getModelFacade();
-			list = facade.createHeaderItemList();
-		} catch (ServiceNotFoundException e) {
-			e.printStackTrace();
-		}
+		list = new Vector<IHeaderItem>();
 
 	}
 
@@ -53,7 +46,7 @@ public class ContactListModel extends AbstractListModel {
 	}
 
 	public int getSize() {
-		return list.count();
+		return list.size();
 	}
 
 	public String getPatternString() {
@@ -78,11 +71,11 @@ public class ContactListModel extends AbstractListModel {
 		fireIntervalAdded(this, index, index);
 	}
 
-	public void setHeaderItemList(IHeaderItemList l) {
+	public void setHeaderItemList(List<IHeaderItem> l) {
 
 		this.list = l;
 
-		fireContentsChanged(this, 0, list.count() - 1);
+		fireContentsChanged(this, 0, list.size() - 1);
 	}
 
 	public IHeaderItem get(int i) {
@@ -92,28 +85,24 @@ public class ContactListModel extends AbstractListModel {
 	public boolean addItem(IHeaderItem header) {
 		boolean result1 = false;
 
-		Object o = header.getDisplayName();
+		String o = header.getName();
 
 		if (o != null) {
-			if (o instanceof String) {
-				String item = (String) o;
 
-				// System.out.println("add item?:"+item);
-				item = item.toLowerCase();
+			String item = (String) o;
 
-				String pattern = getPatternString().toLowerCase();
+			// System.out.println("add item?:"+item);
+			item = item.toLowerCase();
 
-				if (item.indexOf(pattern) != -1) {
-					result1 = true;
-				} else {
-					result1 = false;
-				}
+			String pattern = getPatternString().toLowerCase();
+
+			if (item.indexOf(pattern) != -1) {
+				result1 = true;
 			} else {
 				result1 = false;
 			}
-		} else {
-			result1 = false;
-		}
+
+		} 
 
 		return result1;
 	}

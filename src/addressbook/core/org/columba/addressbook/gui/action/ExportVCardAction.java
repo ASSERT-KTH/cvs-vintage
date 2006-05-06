@@ -58,7 +58,7 @@ public class ExportVCardAction extends DefaultTableAction {
 				.getSelectedFolder();
 
 		//		 get selected contact/group card
-		Object[] uids = mediator.getTable().getUids();
+		String[] uids = mediator.getTable().getUids();
 
 		// create open file dialog
 		JFileChooser fc = new JFileChooser();

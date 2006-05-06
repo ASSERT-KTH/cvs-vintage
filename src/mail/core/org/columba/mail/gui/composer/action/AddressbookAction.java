@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.composer.contact.SelectAddressDialog;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -59,14 +60,18 @@ public class AddressbookAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent evt) {
 		ComposerController composerController = ((ComposerController) getFrameMediator());
 
+		HeaderController hc = composerController.getHeaderController();
 		JFrame frame = null;
-		SelectAddressDialog dialog = new SelectAddressDialog(frame,
-				composerController.getHeaderController().getHeaderItemLists());
+		SelectAddressDialog dialog = new SelectAddressDialog(frame, hc
+				.getToHeaderItemList(), hc.getCcHeaderItemList(), hc
+				.getBccHeaderItemList());
 
 		if (dialog.isSuccess()) {
-
-			composerController.getHeaderController().setHeaderItemLists(
-					dialog.getHeaderItemLists());
+			hc.setToHeaderItemList(dialog.getToList());
+			hc.setCcHeaderItemList(dialog.getCcList());
+			hc.setBccHeaderItemList(dialog.getBccList());
+			// update view accordingly
+			hc.updateComponents(true);
 		}
 	}
 }

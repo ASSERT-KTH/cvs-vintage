@@ -28,8 +28,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.folder.StoreException;
+import org.columba.addressbook.facade.IFolder;
+import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.api.exception.StoreException;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
@@ -463,12 +465,14 @@ public class MessageBuilderHelper {
 	 * 
 	 */
 	public static void addAddressesToAddressbook(Address[] addresses) {
-		IContactFacade contactFacade = null;
+
 		try {
-			contactFacade = ServiceConnector.getContactFacade();
+			IContactFacade contactFacade = ServiceConnector.getContactFacade();
+			IFolderFacade folderFacade = ServiceConnector.getFolderFacade();
+			IFolder folder = folderFacade.getCollectedAddresses();
 			for (int i = 0; i < addresses.length; i++) {
 				try {
-					contactFacade.addContactToCollectedAddresses(addresses[i]
+					contactFacade.addContact(folder.getId(), addresses[i]
 							.getMailAddress());
 				} catch (StoreException e) {
 					e.printStackTrace();

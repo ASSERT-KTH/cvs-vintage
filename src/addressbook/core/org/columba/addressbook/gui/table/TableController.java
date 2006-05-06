@@ -27,6 +27,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.FolderListener;
@@ -38,7 +39,7 @@ import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.model.AddressbookTableModel;
 import org.columba.addressbook.gui.table.model.FilterDecorator;
 import org.columba.addressbook.gui.table.model.SortDecorator;
-import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactModelPartial;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.logging.Logging;
 
@@ -168,17 +169,15 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	 * 
 	 * @return
 	 */
-	public Object[] getUids() {
+	public String[] getUids() {
 		int[] rows = getView().getSelectedRows();
-		Object[] uids = new Object[rows.length];
+		String[] uids = new String[rows.length];
 
-		IContactItem item;
+		IContactModelPartial item;
 
 		for (int i = 0; i < rows.length; i++) {
-			item = (IContactItem) filterDecorator.getContactItem(rows[i]);
-
-			Object uid = item.getUid();
-			uids[i] = uid;
+			item = (IContactModelPartial) filterDecorator.getContactItem(rows[i]);
+			uids[i] = item.getId();
 		}
 
 		return uids;

@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
+import java.util.List;
+import java.util.Vector;
+
 import javax.swing.AbstractListModel;
 
-import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
+import org.columba.addressbook.model.IBasicModelPartial;
 
 
 /**
@@ -31,22 +31,22 @@ import org.columba.addressbook.model.IHeaderItemList;
  */
 
 public class AddressbookListModel extends AbstractListModel {
-   private IHeaderItemList list;
+   private List<IBasicModelPartial> list;
    
     private String patternString = "";
 
     public AddressbookListModel() {
         super();
-        list = new HeaderItemList();
+        list = new Vector<IBasicModelPartial>();
         
     }
 
     public Object getElementAt(int index) {
-        return (IHeaderItem) list.get(index);
+        return (IBasicModelPartial) list.get(index);
     }
 
     public int getSize() {
-        return list.count();
+        return list.size();
     }
 
     public String getPatternString() {
@@ -63,7 +63,7 @@ public class AddressbookListModel extends AbstractListModel {
         list.clear();
     }
 
-    public void addElement(IHeaderItem item) {
+    public void addElement(IBasicModelPartial item) {
         list.add(item);
 
         int index = list.indexOf(item);
@@ -71,22 +71,22 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalAdded(this, index, index);
     }
 
-    public void setHeaderItemList(IHeaderItemList l) {
+    public void setHeaderItemList(List<IBasicModelPartial> l) {
       
 
       this.list = l;
 
-        fireContentsChanged(this, 0, list.count() - 1);
+        fireContentsChanged(this, 0, list.size() - 1);
     }
 
-    public IHeaderItem get(int i) {
-        return (IHeaderItem) list.get(i);
+    public IBasicModelPartial get(int i) {
+        return (IBasicModelPartial) list.get(i);
     }
 
-    public boolean addItem(HeaderItem header) {
+    public boolean addItem(IBasicModelPartial header) {
         boolean result1 = false;
 
-        Object o = header.getDisplayName();
+        Object o = header.getName();
 
         if (o != null) {
             if (o instanceof String) {
@@ -121,7 +121,7 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalRemoved(this, index, index);
     }
 
-    public void removeElement(IHeaderItem item) {
+    public void removeElement(IBasicModelPartial item) {
         int index = list.indexOf(item);
 
         remove(index);

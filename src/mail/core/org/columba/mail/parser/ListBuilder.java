@@ -22,18 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.facade.IFolder;
 import org.columba.addressbook.facade.IFolderFacade;
-import org.columba.addressbook.folder.IContactStorage;
-import org.columba.addressbook.folder.IFolder;
-import org.columba.addressbook.folder.IGroupFolder;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
-import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.IEmailModel;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
+import org.columba.addressbook.facade.IGroupItem;
+import org.columba.addressbook.facade.IHeaderItem;
 import org.columba.api.exception.ServiceNotFoundException;
-import org.columba.core.logging.Logging;
 import org.columba.mail.connector.ServiceConnector;
 
 /**
@@ -43,6 +38,54 @@ import org.columba.mail.connector.ServiceConnector;
  */
 public class ListBuilder {
 
+	private static IContactItem retrieveContactItem(String name) {
+
+		try {
+			IContactFacade facade = ServiceConnector.getContactFacade();
+			IFolderFacade folderFacade = ServiceConnector.getFolderFacade();
+			List<IFolder> list = folderFacade.getAllFolders();
+			Iterator<IFolder> it = list.iterator();
+			while (it.hasNext()) {
+				IFolder folder = it.next();
+				String id = facade.findByName(folder.getId(), name);
+				if (id != null) {
+					IContactItem contactItem = facade.getContactItem(folder
+							.getId(), id);
+					return contactItem;
+				}
+			}
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private static IGroupItem retrieveGroupItem(String name) {
+
+		try {
+			IContactFacade facade = ServiceConnector.getContactFacade();
+			IFolderFacade folderFacade = ServiceConnector.getFolderFacade();
+			List<IFolder> list = folderFacade.getAllFolders();
+			Iterator<IFolder> it = list.iterator();
+			while (it.hasNext()) {
+				IFolder folder = it.next();
+				List<IGroupItem> groupList = facade
+						.getAllGroups(folder.getId());
+				Iterator<IGroupItem> groupIt = groupList.iterator();
+				while (groupIt.hasNext()) {
+					IGroupItem groupItem = groupIt.next();
+					if (name.equals(groupItem.getName()))
+						return groupItem;
+				}
+			}
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	/**
 	 * Flatten mixed list containing contacts and groups to a new list
 	 * containing only contacts.
@@ -51,87 +94,47 @@ public class ListBuilder {
 	 *            mixed list
 	 * @return list containing only contacts
 	 */
-	public static List createFlatList(List list) {
-		IFolderFacade folderFacade;
-		try {
-			folderFacade = ServiceConnector.getFolderFacade();
-		} catch (ServiceNotFoundException e1) {
-
-			e1.printStackTrace();
-			return new ArrayList();
-		}
-
+	public static List<String> createFlatList(List<String> list) {
 		if (list == null)
-			return null;
+			return new ArrayList<String>();
 
-		List result = new Vector();
+		List<String> result = new Vector<String>();
 
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			String s = (String) it.next();
-			IFolder f = folderFacade.getFolderByName(s);
-
-			// if its a group item
-			if (f != null) {
-				IContactItemMap map = null;
-				try {
-					map = ((IGroupFolder) f).getContactItemMap();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				if (map == null)
-					continue;
-
-				Iterator it2 = map.iterator();
-				while (it2.hasNext()) {
-					IContactItem i = (IContactItem) it2.next();
-					String address = i.getAddress();
-
-					if (address == null) {
-						continue;
-					}
-
-					result.add(address);
-				}
+		Iterator<String> it = list.iterator();
+		while (it.hasNext()) {
+			String str = it.next();
+			
+			// remove leading or trailing whitespaces
+			str = str.trim();
+			
+			IContactItem contactItem = retrieveContactItem(str);
+			if (contactItem != null) {
+				// found contact item in contact component
+				result.add(contactItem.getAddress());
 			} else {
-				// contact item
+				// check if its a group item
 
-				// -> check if its a contact displayname
-				// -> if so, retrieve email address from contact folder
+				IGroupItem groupItem = retrieveGroupItem(str);
+				if (groupItem != null) {
 
-				// look into both folders
-				IContactStorage personal = (IContactStorage) folderFacade
-						.getLocalAddressbook();
-				IContactStorage collected = (IContactStorage) folderFacade
-						.getCollectedAddresses();
+					List<IContactItem> contactItemList = groupItem
+							.getAllContacts();
 
-				// try to find a matching contact item
-				IContactModel item = null;
-				try {
+					Iterator<IContactItem> it2 = contactItemList.iterator();
+					while (it2.hasNext()) {
+						IContactItem i = it2.next();
+						String address = i.getAddress();
 
-					Object uid = personal.exists(s);
-					if (uid != null) {
-						item = personal.get(uid);
+						if (address == null) {
+							continue;
+						}
+
+						result.add(address);
 					}
-
-					uid = collected.exists(s);
-					if (uid != null)
-						item = collected.get(uid);
-
-				} catch (Exception e) {
-					if (Logging.DEBUG)
-						e.printStackTrace();
+				} else
+				{
+					result.add(str);
 				}
-
-				// if match found
-				if (item != null) {
-					// simply get the first address
-					// TODO: use preferred one
-					Iterator it2 = item.getEmailIterator(); 
-					if ( it2.hasNext() )
-						result.add( ((IEmailModel)it2.next()).getAddress());
-				}
-				else
-					result.add(s);
 			}
 
 		}
@@ -147,17 +150,13 @@ public class ListBuilder {
 	 *            HeaderItemList containing HeaderItem objects
 	 * @return list containing only strings
 	 */
-	public static List createStringListFromItemList(IHeaderItemList list) {
-		List result = new Vector();
+	public static List<String> createStringListFromItemList(
+			List<IHeaderItem> list) {
+		List<String> result = new Vector<String>();
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			IHeaderItem item = (IHeaderItem) it.next();
-
-			if (item == null) {
-				continue;
-			}
-
-			result.add(item.getDisplayName());
+			result.add(item.getName());
 		}
 
 		return result;

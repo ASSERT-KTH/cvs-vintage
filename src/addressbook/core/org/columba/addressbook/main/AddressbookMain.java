@@ -19,6 +19,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
+import org.columba.addressbook.facade.ContactFacade;
+import org.columba.addressbook.facade.FolderFacade;
+import org.columba.addressbook.facade.ModelFacade;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
@@ -81,13 +84,13 @@ public class AddressbookMain implements IComponentPlugin {
 
 		ServiceRegistry.getInstance().register(
 				org.columba.addressbook.facade.IContactFacade.class,
-				"org.columba.addressbook.facade.ContactFacade");
+				new ContactFacade());
 		ServiceRegistry.getInstance().register(
 				org.columba.addressbook.facade.IFolderFacade.class,
-				"org.columba.addressbook.facade.FolderFacade");
+				new FolderFacade());
 		ServiceRegistry.getInstance().register(
 				org.columba.addressbook.facade.IModelFacade.class,
-				"org.columba.addressbook.facade.ModelFacade");
+				new ModelFacade());
 	}
 
 	/**

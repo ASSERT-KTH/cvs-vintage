@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.folder.IContactFolder;
-import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 
 /**
@@ -35,17 +33,16 @@ public class FolderFacade implements IFolderFacade {
 	 * @see org.columba.addressbook.facade.IFolderFacade#getFolder(int)
 	 */
 	public IFolder getFolder(String uid) {
-		int uidIntValue = Integer.parseInt(uid);
-		return (IFolder) AddressbookTreeModel.getInstance().getFolder(uidIntValue);
+		return (IFolder) AddressbookTreeModel.getInstance().getFolder(uid);
 	}
 
 	/**
 	 * @see org.columba.addressbook.facade.IFolderFacade#getCollectedAddresses()
 	 */
-	public IContactFolder getCollectedAddresses() {
+	public IFolder getCollectedAddresses() {
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		if (model != null)
-			return (AbstractFolder) model.getFolder(102);
+			return (AbstractFolder) model.getFolder("102");
 
 		return null;
 	}
@@ -53,10 +50,10 @@ public class FolderFacade implements IFolderFacade {
 	/**
 	 * @see org.columba.addressbook.facade.IFolderFacade#getLocalAddressbook()
 	 */
-	public IContactFolder getLocalAddressbook() {
+	public IFolder getLocalAddressbook() {
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		if (model != null)
-			return (AbstractFolder) model.getFolder(101);
+			return (AbstractFolder) model.getFolder("101");
 
 		return null;
 	}
@@ -73,9 +70,9 @@ public class FolderFacade implements IFolderFacade {
 	}
 
 	/**
-	 * @see org.columba.addressbook.facade.IFolderFacade#getFolderIterator()
+	 * @see org.columba.addressbook.facade.IFolderFacade#getAllFolders()
 	 */
-	public List<IFolder> getFolderIterator() {
+	public List<IFolder> getAllFolders() {
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		Vector<IFolder> v = new Vector<IFolder>();
 		

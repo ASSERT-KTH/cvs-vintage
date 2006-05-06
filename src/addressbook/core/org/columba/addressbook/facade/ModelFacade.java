@@ -17,18 +17,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactModel;
-import org.columba.addressbook.model.GroupItem;
-import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
-import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactModel;
-import org.columba.addressbook.model.IGroupItem;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.mail.folder.headercache.MemoryHeaderList;
-import org.columba.mail.message.IHeaderList;
 
 /**
  * Builder for creating contact models.
@@ -36,13 +26,6 @@ import org.columba.mail.message.IHeaderList;
  * @author fdietz
  */
 public class ModelFacade implements IModelFacade {
-
-	/**
-	 * @see org.columba.addressbook.facade.IModelFacade#createHeaderItemList()
-	 */
-	public IHeaderItemList createHeaderItemList() {
-		return new HeaderItemList();
-	}
 
 	/**
 	 * @see org.columba.addressbook.facade.IModelFacade#createHeaderItem()
@@ -72,11 +55,6 @@ public class ModelFacade implements IModelFacade {
 		return new ContactModel();
 	}
 
-	/**
-	 * @see org.columba.addressbook.facade.IModelFacade#createHeaderList()
-	 */
-	public IHeaderList createHeaderList() {
-		return new MemoryHeaderList();
-	}
+
 
 }

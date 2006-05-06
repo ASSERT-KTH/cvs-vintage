@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,11 +41,10 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IFolderFacade;
-import org.columba.addressbook.folder.IContactFolder;
-import org.columba.addressbook.folder.IFolder;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
+import org.columba.addressbook.facade.IHeaderItem;
+import org.columba.addressbook.facade.IFolder;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.DoubleClickListener;
@@ -100,7 +100,11 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 	// models for addressbook/recipients lists
 	private ContactListModel[] dialogAddressbookListModel;
 
-	private IHeaderItemList[] headerItemList;
+	private List<IHeaderItem> toListModel;
+
+	private List<IHeaderItem> ccListModel;
+
+	private List<IHeaderItem> bccListModel;
 
 	private ButtonWithMnemonic cancelButton;
 
@@ -108,13 +112,16 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 	private boolean success;
 
-	public SelectAddressDialog(JFrame frame, IHeaderItemList[] list) {
+	public SelectAddressDialog(JFrame frame, List<IHeaderItem> toListModel,
+			List<IHeaderItem> ccListModel, List<IHeaderItem> bccListModel) {
 		super(frame, true);
 
-		setTitle(MailResourceLoader.getString("dialog",
-				"selectaddressdialog", "title"));
+		setTitle(MailResourceLoader.getString("dialog", "selectaddressdialog",
+				"title"));
 
-		this.headerItemList = list;
+		this.toListModel = toListModel;
+		this.ccListModel = ccListModel;
+		this.bccListModel = bccListModel;
 
 		dialogAddressbookListModel = new ContactListModel[3];
 
@@ -122,17 +129,17 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 		layoutComponents();
 
-		// try to fill the contact list 
-		IFolderFacade folderFacade = null;
+		// try to fill the contact list
 		try {
-			folderFacade = ServiceConnector.getFolderFacade();
-			org.columba.addressbook.folder.IContactFolder addressbook = folderFacade
-					.getLocalAddressbook();
-			addressbookList.setHeaderItemList(addressbook.getHeaderItemList());
+			IContactFacade contactFacade = ServiceConnector.getContactFacade();
+			IFolderFacade folderFacade = ServiceConnector.getFolderFacade();
+			IFolder folder = folderFacade.getLocalAddressbook();
+			List<IHeaderItem> list = contactFacade.getAllHeaderItems(folder
+					.getId(), false);
+
+			addressbookList.setHeaderItemList(list);
 		} catch (ServiceNotFoundException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-
 		}
 
 		pack();
@@ -141,10 +148,21 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	public IHeaderItemList[] getHeaderItemLists() {
-		return headerItemList;
+	public List<IHeaderItem> getToList() {
+		return toListModel;
 	}
 
+	public List<IHeaderItem> getCcList() {
+		return ccListModel;
+	}
+
+	public List<IHeaderItem> getBccList() {
+		return bccListModel;
+	}
+
+	/*
+	 * public IHeaderItemList[] getHeaderItemLists() { return headerItemList; }
+	 */
 	private JPanel createButtonPanel() {
 		JPanel panel = new JPanel();
 		FormLayout layout = new FormLayout(
@@ -254,7 +272,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 				"selectaddressdialog", "to")); //$NON-NLS-1$
 
 		dialogAddressbookListModel[0] = new ContactListModel();
-		dialogAddressbookListModel[0].setHeaderItemList(headerItemList[0]);
+		dialogAddressbookListModel[0].setHeaderItemList(toListModel);
 		toList = new ContactDNDListView(dialogAddressbookListModel[0]);
 		toList.setMinimumSize(new Dimension(150, 150));
 		toList.addMouseListener(new DoubleClickListener() {
@@ -269,7 +287,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 				"selectaddressdialog", "cc")); //$NON-NLS-1$
 
 		dialogAddressbookListModel[1] = new ContactListModel();
-		dialogAddressbookListModel[1].setHeaderItemList(headerItemList[1]);
+		dialogAddressbookListModel[1].setHeaderItemList(ccListModel);
 		ccList = new ContactDNDListView(dialogAddressbookListModel[1]);
 		ccList.setMinimumSize(new Dimension(150, 150));
 		ccList.addMouseListener(new DoubleClickListener() {
@@ -284,7 +302,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 				"selectaddressdialog", "bcc")); //$NON-NLS-1$
 
 		dialogAddressbookListModel[2] = new ContactListModel();
-		dialogAddressbookListModel[2].setHeaderItemList(headerItemList[2]);
+		dialogAddressbookListModel[2].setHeaderItemList(bccListModel);
 		bccList = new ContactDNDListView(dialogAddressbookListModel[2]);
 		bccList.setMinimumSize(new Dimension(150, 150));
 		bccList.addMouseListener(new DoubleClickListener() {
@@ -329,7 +347,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 				"selectaddressdialog", "addressbook")); //$NON-NLS-1$
 
 		chooseComboBox = new FolderComboBox(false);
-		
+
 		chooseComboBox.setActionCommand("CHOOSE"); //$NON-NLS-1$
 		chooseComboBox.addActionListener(this);
 
@@ -349,8 +367,8 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.addActionListener(this);
 
-		cancelButton = new ButtonWithMnemonic(MailResourceLoader
-				.getString("global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
+		cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 		cancelButton.addActionListener(this);
 
@@ -373,31 +391,30 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		if (command.equals("CANCEL")) { //$NON-NLS-1$
 			setVisible(false);
 		} else if (command.equals("OK")) { //$NON-NLS-1$
+			success = true;
+			
 			setVisible(false);
 
-			success = true;
-			for (int i = 0; i < 3; i++) {
-				Object[] array = dialogAddressbookListModel[i].toArray();
-				headerItemList[i].clear();
-
-				LOG.info("array-size=" + array.length); //$NON-NLS-1$
-
-				for (int j = 0; j < array.length; j++) {
-					IHeaderItem item = (IHeaderItem) array[j];
-
-					if (i == 0) {
-						item.setHeader("To");
-
-					} else if (i == 1) {
-						item.setHeader("Cc");
-					} else if (i == 2) {
-						item.setHeader("Bcc");
-					}
-
-					headerItemList[i].add((IHeaderItem) item.clone());
-
-				}
-			}
+//			toListModel.clear();
+//			ccListModel.clear();
+//			bccListModel.clear();
+			
+//			for (int i = 0; i < 3; i++) {
+//				Object[] array = dialogAddressbookListModel[i].toArray();
+//
+//				for (int j = 0; j < array.length; j++) {
+//					IHeaderItem item = (IHeaderItem) array[j];
+//
+//					if (i == 0) {
+//						ccListModel.add(item.clone());
+//					} else if (i == 1) {
+//						ccListModel.add(item.clone());
+//					} else if (i == 2) {
+//						bccListModel.add(item.clone());
+//					}
+//
+//				}
+//			}
 		} else if (command.equals("TO")) { //$NON-NLS-1$
 
 			int[] array = addressbookList.getSelectedIndices();
@@ -458,20 +475,23 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		} else if (command.equals("CHOOSE")) { //$NON-NLS-1$
 
 			// folder selection changed
-			JComboBox cb = (JComboBox)e.getSource();
-				
-			IContactFolder contactFolder = (IContactFolder) cb.getSelectedItem();
-			
-			if (contactFolder != null) {
-				try {
-					IHeaderItemList itemList = contactFolder
-							.getHeaderItemList();
-					addressbookList.setHeaderItemList(itemList);
-					
-				} catch (Exception e1) {
+			JComboBox cb = (JComboBox) e.getSource();
 
+			IFolder contactFolder = (IFolder) cb.getSelectedItem();
+
+			if (contactFolder != null) {
+
+				try {
+					IContactFacade contactFacade = ServiceConnector
+							.getContactFacade();
+					List<IHeaderItem> list = contactFacade
+							.getAllHeaderItems(contactFolder.getId(), false);
+
+					addressbookList.setHeaderItemList(list);
+				} catch (ServiceNotFoundException e1) {
 					e1.printStackTrace();
 				}
+
 			}
 		}
 	}

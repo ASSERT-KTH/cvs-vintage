@@ -17,9 +17,9 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.util;
 
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.GroupItem;
-import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.ContactModelPartial;
+import org.columba.addressbook.model.GroupPartial;
+import org.columba.addressbook.model.HeaderItemPartial;
 
 /**
  * @author fdietz
@@ -27,20 +27,20 @@ import org.columba.addressbook.model.HeaderItem;
  */
 public final class ToolTipFactory {
 
-	public static String createToolTip(HeaderItem item) {
+	public static String createToolTip(HeaderItemPartial item) {
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("<html><body>&nbsp;Name: " + item.getDisplayName());
+		buf.append("<html><body>&nbsp;Name: " + item.getName());
 		buf.append("</body></html>");
 
 		return buf.toString();
 	}
 
-	public static String createToolTip(ContactItem item) {
+	public static String createToolTip(ContactModelPartial item) {
 
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("<html><body>&nbsp;Name: " + item.getDisplayName());
+		buf.append("<html><body>&nbsp;Name: " + item.getName());
 		if (item.getAddress() != null) {
 			buf.append("<br>&nbsp;eMail: "
 					+ convert((String) item.getAddress()));
@@ -54,11 +54,11 @@ public final class ToolTipFactory {
 		return buf.toString();
 	}
 
-	public static String createToolTip(GroupItem item) {
+	public static String createToolTip(GroupPartial item) {
 
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("<html><body>&nbsp;Name: " + item.getDisplayName());
+		buf.append("<html><body>&nbsp;Name: " + item.getName());
 		if (item.getDescription() != null) {
 			buf.append("<br>&nbsp;Description: " + item.getDescription());
 		}

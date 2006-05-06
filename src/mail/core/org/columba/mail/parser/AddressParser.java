@@ -39,12 +39,12 @@ public class AddressParser{
 	 *            List of Strings with mailaddresses in any format
 	 * @return List of Strings with mailaddress in format <fdietz@gmx.de>
 	 */
-	public List normalizeRCPTVector(List in) {
+	public List<String> normalizeRCPTVector(List<String> in) {
 		if ( in == null ) return null;
 		
 		String mailaddress = "";
 		String new_address = "";
-		List out = new Vector();
+		List<String> out = new Vector<String>();
 
 		for (Iterator it = in.iterator(); it.hasNext();) {
 			mailaddress = (String) it.next();

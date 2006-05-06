@@ -48,24 +48,22 @@ public class TableView extends JTable {
 		// set renderers for columns
 		TableColumn tc = getColumnModel().getColumn(0);
 
-		// tc.setHeaderRenderer(new DefaultHeaderRenderer(""));
-		// tc.setCellRenderer(new TypeRenderer());
-		// tc.setMaxWidth(23);
-
 		tc = getColumnModel().getColumn(0);
 		tc.setHeaderRenderer(createHeader("displayname"));
-
 		tc = getColumnModel().getColumn(1);
-		tc.setHeaderRenderer(createHeader("email;internet"));
-
+		tc.setHeaderRenderer(createHeader("given"));
 		tc = getColumnModel().getColumn(2);
+		tc.setHeaderRenderer(createHeader("family"));
+		tc = getColumnModel().getColumn(3);
+		tc.setHeaderRenderer(createHeader("email;internet"));
+		tc = getColumnModel().getColumn(4);
 		tc.setHeaderRenderer(createHeader("url"));
 	}
 
-	public boolean getScrollableTracksViewportHeight() { 
-        return getPreferredSize().height < getParent().getHeight(); 
-    } 
-	
+	public boolean getScrollableTracksViewportHeight() {
+		return getPreferredSize().height < getParent().getHeight();
+	}
+
 	/**
 	 * Create table header renderer. Names use semicolon ";" character to define
 	 * subtypes.
@@ -88,9 +86,14 @@ public class TableView extends JTable {
 					.substring(index + 1, name.length()));
 
 			return new DefaultHeaderRenderer(controller.getSortDecorator(),
-					prefix + "(" + suffix + ")");
+					prefix + " (" + suffix + ")");
+		} else {
+			String trans = AddressbookResourceLoader.getString("header", name);
+			return new DefaultHeaderRenderer(controller.getSortDecorator(),
+					trans);
 		}
 
-		return new DefaultHeaderRenderer(controller.getSortDecorator(), name);
+		// return new DefaultHeaderRenderer(controller.getSortDecorator(),
+		// name);
 	}
 }

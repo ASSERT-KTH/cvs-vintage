@@ -97,6 +97,8 @@ public class ContactModel implements IContactModel {
 	public ContactModel(String id) {
 		if (id == null)
 			throw new IllegalArgumentException("id == null");
+		
+		this.id = id;
 	}
 
 	public String getId() {

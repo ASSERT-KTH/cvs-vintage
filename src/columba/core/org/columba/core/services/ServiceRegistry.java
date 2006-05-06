@@ -29,40 +29,34 @@ import org.columba.api.exception.ServiceNotFoundException;
  * <p>
  * <code>ServiceManager</code> uses reflection to instanciate the
  * implementation.
- * 
  * <p>
- * For example: Mail component makes use of the addressbook component
+ * This registry should be only used to enable different components to interact
+ * with each other. For example: Mail component makes use of the addressbook
+ * component
  * 
  * @author fdietz
  */
 public class ServiceRegistry {
 
-	private static ServiceRegistry instance;
+	private static ServiceRegistry instance = new ServiceRegistry();
 
-	private Map map;
+	private Map<Class,Object> map = new Hashtable<Class,Object>();
 
 	private ServiceRegistry() {
-		map = new Hashtable();
-
 	}
 
 	public static ServiceRegistry getInstance() {
-		if (instance == null)
-			instance = new ServiceRegistry();
-
 		return instance;
-	}
-
-	public void register(Class serviceInterface, String serviceImplementation) {
-		Service service = new Service(serviceInterface, serviceImplementation);
-
-		map.put(serviceInterface, service);
 	}
 
 	public void register(Class serviceInterface, Object serviceInstance) {
 		Service service = new Service(serviceInterface, serviceInstance);
-		
+
 		map.put(serviceInterface, service);
+	}
+
+	public void unregister(Class serviceInterface) {
+		map.remove(serviceInterface);
 	}
 	
 	public Object getService(Class serviceInterface)

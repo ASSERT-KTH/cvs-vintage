@@ -23,11 +23,11 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.HeaderItemPartial;
 
 
 /**
- * ComboBox for {@link HeaderItem} objects. Includes an
+ * ComboBox for {@link HeaderItemPartial} objects. Includes an
  * autocomplete feature.
  *
  * @author fdietz

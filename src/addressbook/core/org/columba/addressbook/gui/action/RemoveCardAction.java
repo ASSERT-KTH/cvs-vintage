@@ -88,7 +88,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 		if (tableHasFocus) {
 
 			// get selected contact/group card
-			Object[] uids = mediator.getTable().getUids();
+			String[] uids = mediator.getTable().getUids();
 
 			// get selected folder
 			AbstractFolder folder = (AbstractFolder) mediator.getTree()

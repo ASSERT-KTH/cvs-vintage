@@ -17,11 +17,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
+import java.util.Map;
+
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableModel;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModelPartial;
 
 /**
  * Decorates TableModel which additional sorting functionality.
@@ -52,7 +53,7 @@ public class SortDecorator extends TableModelDecorator {
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setHeaderItemList(org.columba.addressbook.folder.HeaderItemList)
 	 */
-	public void setContactItemMap(IContactItemMap list) {
+	public void setContactItemMap(Map<String,IContactModelPartial> list) {
 
 		super.setContactItemMap(list);
 
@@ -63,7 +64,7 @@ public class SortDecorator extends TableModelDecorator {
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getHeaderItem(int)
 	 */
-	public IContactItem getContactItem(int index) {
+	public IContactModelPartial getContactItem(int index) {
 		return getRealModel().getContactItem(indexes[index]);
 	}
 

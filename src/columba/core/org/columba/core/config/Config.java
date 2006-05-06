@@ -26,11 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.shutdown.IShutdownManager;
 import org.columba.core.base.OSInfo;
 import org.columba.core.io.DiskIO;
-import org.columba.core.services.ServiceRegistry;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -104,14 +103,8 @@ public class Config implements IConfig {
 
 		// register at shutdown manager
 		// -> this will save all configuration data, when closing Columba
-		IShutdownManager shutdownManager = null;
-		try {
-			shutdownManager = ((IShutdownManager) ServiceRegistry.getInstance()
-					.getService(IShutdownManager.class));
-		} catch (ServiceNotFoundException e1) {
-			e1.printStackTrace();
-		}
-
+		IShutdownManager shutdownManager = ShutdownManager.getInstance();
+		
 		shutdownManager.register(new Runnable() {
 			public void run() {
 				try {

@@ -26,10 +26,15 @@ import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.facade.IHeaderItem;
+import org.columba.addressbook.facade.IModelFacade;
+import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.IColumbaMessage;
 import org.columba.mail.parser.AddressParser;
@@ -46,7 +51,7 @@ import org.columba.ristretto.message.StreamableMimePart;
  * @author frd
  * 
  * Model for message composer dialog
- *  
+ * 
  */
 public class ComposerModel {
 
@@ -64,11 +69,11 @@ public class ComposerModel {
 
 	private List attachments;
 
-	private List toList;
+	private List<String> toList;
 
-	private List ccList;
+	private List<String> ccList;
 
-	private List bccList;
+	private List<String> bccList;
 
 	private boolean signMessage;
 
@@ -82,11 +87,11 @@ public class ComposerModel {
 	 * (example:mail@toplevel.mail.de)
 	 * <p>
 	 * TODO: see if we can replace the matching code with Ristretto stuff
-	 *  
+	 * 
 	 */
 	private static final String emailRegExp = "[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@([a-zA-Z0-9]+([\\.-][a-zA-Z0-9]+)*)+\\.[a-zA-Z]{2,}";
 
-	//original: "^[a-zA-Z0-9]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,4}+$";
+	// original: "^[a-zA-Z0-9]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,4}+$";
 
 	private static final Pattern emailPattern = Pattern.compile(emailRegExp);
 
@@ -130,10 +135,10 @@ public class ComposerModel {
 	public ComposerModel(boolean html) {
 		this(null, html);
 	}
-	
+
 	/**
-	 * Constructs a new ComposerModel. The parameters
-	 * are read from the messageOptions.
+	 * Constructs a new ComposerModel. The parameters are read from the
+	 * messageOptions.
 	 * 
 	 * @param messageOptions
 	 */
@@ -194,7 +199,8 @@ public class ComposerModel {
 	/**
 	 * Set To: header
 	 * 
-	 * @param a		address array
+	 * @param a
+	 *            address array
 	 */
 	public void setTo(Address[] a) {
 		getToList().clear();
@@ -202,16 +208,17 @@ public class ComposerModel {
 		for (int i = 0; i < a.length; i++) {
 			getToList().add(a[i].toString());
 		}
+
 	}
 
 	/**
 	 * Set Cc: header
 	 * 
-	 * @param a		address array
+	 * @param a
+	 *            address array
 	 */
 	public void setCc(Address[] a) {
 		getCcList().clear();
-
 		for (int i = 0; i < a.length; i++) {
 			getCcList().add(a[i].toString());
 		}
@@ -220,11 +227,11 @@ public class ComposerModel {
 	/**
 	 * Set Bcc: header
 	 * 
-	 * @param a		address array
+	 * @param a
+	 *            address array
 	 */
 	public void setBcc(Address[] a) {
 		getBccList().clear();
-
 		for (int i = 0; i < a.length; i++) {
 			getBccList().add(a[i].toString());
 		}
@@ -257,27 +264,27 @@ public class ComposerModel {
 		return (String) message.getHeader().get(key);
 	}
 
-	public void setToList(List v) {
+	public void setToList(List<String> v) {
 		this.toList = v;
 	}
 
-	public void setCcList(List v) {
+	public void setCcList(List<String> v) {
 		this.ccList = v;
 	}
 
-	public void setBccList(List v) {
+	public void setBccList(List<String> v) {
 		this.bccList = v;
 	}
 
-	public List getToList() {
+	public List<String> getToList() {
 		return toList;
 	}
 
-	public List getCcList() {
+	public List<String> getCcList() {
 		return ccList;
 	}
 
-	public List getBccList() {
+	public List<String> getBccList() {
 		return bccList;
 	}
 
@@ -308,35 +315,39 @@ public class ComposerModel {
 	public void addMimePart(StreamableMimePart mp) {
 		attachments.add(mp);
 
-		//notifyListeners();
+		// notifyListeners();
 	}
-	
+
 	public void addFileAttachment(File file) {
-   	 if (file.isFile()) {
+		if (file.isFile()) {
 
-        String mimetype = ColumbaDesktop.getInstance().getMimeType(file);
+			String mimetype = ColumbaDesktop.getInstance().getMimeType(file);
 
-         MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
-         header.putContentParameter("name", file.getName());
-         header.setContentDisposition("attachment");
-         header.putDispositionParameter("filename", file.getName());
-         header.setContentTransferEncoding("base64");
+			MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype
+					.indexOf('/')), mimetype
+					.substring(mimetype.indexOf('/') + 1));
+			header.putContentParameter("name", file.getName());
+			header.setContentDisposition("attachment");
+			header.putDispositionParameter("filename", file.getName());
+			header.setContentTransferEncoding("base64");
 
-         try {
-             LocalMimePart mimePart = new LocalMimePart(header, new FileSource(file));
-             
-             attachments.add(mimePart);
-         } catch (IOException e) {
-             LOG.warning("Could not add the file '" + file + "' to the attachment list, due to:" + e);
-         }
-     }
-		
+			try {
+				LocalMimePart mimePart = new LocalMimePart(header,
+						new FileSource(file));
+
+				attachments.add(mimePart);
+			} catch (IOException e) {
+				LOG.warning("Could not add the file '" + file
+						+ "' to the attachment list, due to:" + e);
+			}
+		}
+
 	}
 
 	public void setBodyText(String str) {
 		this.bodytext = str;
 
-		//notifyListeners();
+		// notifyListeners();
 	}
 
 	public String getSignature() {
@@ -360,8 +371,8 @@ public class ComposerModel {
 	}
 
 	public void setAccountItem(String host, String address) {
-		setAccountItem(MailConfig.getInstance().getAccountList().hostGetAccount(
-				host, address));
+		setAccountItem(MailConfig.getInstance().getAccountList()
+				.hostGetAccount(host, address));
 	}
 
 	/**
@@ -456,14 +467,10 @@ public class ComposerModel {
 		isHtmlMessage = html;
 	}
 
-	/*
-	 * public IFrameMediator createInstance(String id) { return new
-	 * ComposerController(id, this); }
-	 */
 	public List getRCPTVector() {
-		List output = new Vector();
+		List<String> output = new Vector<String>();
 
-		List l = new AddressParser().normalizeRCPTVector(ListBuilder
+		List<String> l = new AddressParser().normalizeRCPTVector(ListBuilder
 				.createFlatList(getToList()));
 		if (l != null)
 			output.addAll(l);
@@ -480,65 +487,14 @@ public class ComposerModel {
 		return output;
 	}
 
-	/**
-	 * Checks if there are any invalid email address in the to,cc and bcc lists
-	 * [bug] fdietz: added trimming of leading/trailing whitespaces
-	 * 
-	 * @return null if there are no offending email addresses or the offending
-	 *         email address
-	 */
-	public String getInvalidRecipients() {
-
-		/*
-		 * assert that email addresses are valid
-		 */
-
-		//validate TO: list
-		for (int i = 0; i < toList.size(); i++) {
-			String adr = (String) toList.get(i);
-			// remove leading/trailing whitespaces
-			adr = adr.trim();
-			LOG.info("adr=" + adr); //$NON-NLS-1$
-			if (!emailPattern.matcher(adr).matches())
-				return adr;
-
-		}
-
-		if (ccList != null) {
-			//validate CC: list
-			for (int i = 0; i < ccList.size(); i++) {
-				String adr = (String) ccList.get(i);
-				// remove leading/trailing whitespaces
-				adr = adr.trim();
-				if (!emailPattern.matcher(adr).matches())
-					return adr;
-
-			}
-		}
-		if (bccList != null) {
-			//validate BCC: list
-			for (int i = 0; i < bccList.size(); i++) {
-				String adr = (String) bccList.get(i);
-				// remove leading/trailing whitespaces
-				adr = adr.trim();
-				if (!emailPattern.matcher(adr).matches())
-					return adr;
-
-			}
-		}
-
-		return null;
-
-	}
-
 	public void setMessageOptions(Map options) {
 
 		addAddresses(options, "to");
 		addAddresses(options, "cc");
 		addAddresses(options, "bcc");
-		
-		if( options.get("subject") != null) {
-			setSubject((String)options.get("subject"));
+
+		if (options.get("subject") != null) {
+			setSubject((String) options.get("subject"));
 		}
 
 		if (options.get("body") != null) {
@@ -562,8 +518,8 @@ public class ComposerModel {
 			setBodyText(body);
 		}
 
-		if( options.get("attachment") != null) {
-			if( options.get("attachment") instanceof String ) {
+		if (options.get("attachment") != null) {
+			if (options.get("attachment") instanceof String) {
 				String s = (String) options.get("attachment");
 				try {
 					URI uri = new URI(s);
@@ -571,10 +527,10 @@ public class ComposerModel {
 				} catch (URISyntaxException e) {
 					// if this is no URI
 					addFileAttachment(new File(s));
-				}			
+				}
 			} else {
 				String[] attachments = (String[]) options.get("attachment");
-				for( int i=0; i<attachments.length; i++) {
+				for (int i = 0; i < attachments.length; i++) {
 					String s = attachments[i];
 					try {
 						URI uri = new URI(s);
@@ -582,12 +538,12 @@ public class ComposerModel {
 					} catch (URISyntaxException e) {
 						// if this is no URI
 						addFileAttachment(new File(s));
-					}	
+					}
 				}
 			}
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -595,24 +551,23 @@ public class ComposerModel {
 	 */
 	private void addAddresses(Map options, String type) {
 		List list;
-		
-		if( type.equals("to")) {
+
+		if (type.equals("to")) {
 			list = getToList();
-		} else if( type.equals("cc")) {
+		} else if (type.equals("cc")) {
 			list = getCcList();
 		} else {
 			list = getBccList();
 		}
-		
+
 		if (options.get(type) != null) {
 			if (options.get(type) instanceof String) {
-					list.add((String) options.get(type));
+				list.add((String) options.get(type));
 			} else {
 				String[] addresses = (String[]) options.get(type);
 
 				for (int i = 0; i < addresses.length; i++) {
-						list.add(
-								addresses[i]);
+					list.add(addresses[i]);
 				}
 			}
 

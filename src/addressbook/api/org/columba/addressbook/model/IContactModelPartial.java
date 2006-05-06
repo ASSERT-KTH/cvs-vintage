@@ -1,3 +1,6 @@
+package org.columba.addressbook.model;
+
+
 // The contents of this file are subject to the Mozilla Public License Version
 // 1.1
 //(the "License"); you may not use this file except in compliance with the
@@ -15,34 +18,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
-
-import org.columba.addressbook.model.ContactModel;
-import org.columba.addressbook.model.IContactModel;
-
 /**
  * @author fdietz
- *  
+ * 
  */
-public class GetContactTest extends AbstractFolderTstCase {
+public interface IContactModelPartial extends IBasicModelPartial {
+	public String getFirstname();
+	public String getLastname();
+	public String getAddress();
 
 	/**
-	 * @param arg0
+	 * @return Returns the website.
 	 */
-	public GetContactTest(String arg0) {
-		super(arg0);
-		
-	}
+	public abstract String getWebsite();
 
-	public void testGet() throws Exception {
-		ContactModel c = new ContactModel();
-
-		c.setNickName("nickname");
-
-		String uid = getSourceFolder().add(c);
-
-		IContactModel c2 = getSourceFolder().get(uid);
-
-		assertEquals("same nickname", c.getNickName(), c2.getNickName());
-	}
 }

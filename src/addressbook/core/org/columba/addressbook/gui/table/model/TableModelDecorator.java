@@ -17,10 +17,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
+import java.util.Map;
+
 import javax.swing.event.TableModelListener;
 
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IContactModelPartial;
 
 /**
  * Decorator for TableModel.
@@ -88,21 +89,21 @@ public abstract class TableModelDecorator
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getContactItemMap()
 	 */
-	public IContactItemMap getContactItemMap() {
+	public Map<String,IContactModelPartial> getContactItemMap() {
 		return realModel.getContactItemMap();
 	}
 
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setHeaderItemList(org.columba.addressbook.folder.HeaderItemList)
 	 */
-	public void setContactItemMap(IContactItemMap list) {
+	public void setContactItemMap(Map<String,IContactModelPartial> list) {
 		realModel.setContactItemMap(list);
 	}
 
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getHeaderItem(int)
 	 */
-	public IContactItem getContactItem(int index) {
+	public IContactModelPartial getContactItem(int index) {
 		return realModel.getContactItem(index);
 	}
 }

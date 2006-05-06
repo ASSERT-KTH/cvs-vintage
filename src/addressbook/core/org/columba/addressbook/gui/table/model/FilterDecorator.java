@@ -20,12 +20,12 @@ package org.columba.addressbook.gui.table.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.event.TableModelEvent;
 
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.ContactModelPartial;
+import org.columba.addressbook.model.IContactModelPartial;
 
 /**
  * @author fdietz
@@ -54,7 +54,7 @@ public class FilterDecorator extends TableModelDecorator {
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setContactItemMap(org.columba.addressbook.model.ContactItemMap)
 	 */
-	public void setContactItemMap(IContactItemMap list) {
+	public void setContactItemMap(Map<String,IContactModelPartial> list) {
 		super.setContactItemMap(list);
 		
 		if ( list != null)
@@ -66,11 +66,11 @@ public class FilterDecorator extends TableModelDecorator {
 
 		pattern = pattern.toLowerCase();
 
-		Iterator it = getRealModel().getContactItemMap().iterator();
+		Iterator it = getRealModel().getContactItemMap().values().iterator();
 		int i = 0;
 		while (it.hasNext()) {
-			ContactItem item = (ContactItem) it.next();
-			String name = item.getDisplayName();
+			ContactModelPartial item = (ContactModelPartial) it.next();
+			String name = item.getName();
 			String adr = item.getAddress();
 
 			name = name.toLowerCase();
@@ -130,7 +130,7 @@ public class FilterDecorator extends TableModelDecorator {
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getContactItem(int)
 	 */
-	public IContactItem getContactItem(int index) {
+	public IContactModelPartial getContactItem(int index) {
 		return getRealModel().getContactItem(
 				((Integer) list.get(index)).intValue());
 	}

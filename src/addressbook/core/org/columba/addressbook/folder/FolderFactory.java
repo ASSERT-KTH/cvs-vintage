@@ -18,7 +18,7 @@
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IGroupModel;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -51,7 +51,7 @@ public final class FolderFactory {
 	}
 
 	public static IGroupFolder createGroupFolder(AbstractFolder parent,
-			IGroup group) {
+			IGroupModel group) {
 		XmlElement folder = new XmlElement("folder");
 		folder.addAttribute("uid", (AddressbookTreeNode.generateNextFolderUid())
 				.toString());
