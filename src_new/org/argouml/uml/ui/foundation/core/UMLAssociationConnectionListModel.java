@@ -1,4 +1,4 @@
-// $Id: UMLAssociationConnectionListModel.java,v 1.16 2006/03/08 21:42:37 mvw Exp $
+// $Id: UMLAssociationConnectionListModel.java,v 1.17 2006/05/07 17:18:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,6 +50,8 @@ import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 public class UMLAssociationConnectionListModel
     extends UMLModelElementOrderedListModel2 {
 
+    Collection others;
+
     /**
      * Constructor for UMLModelElementClientDependencyListModel.
      */
@@ -62,8 +64,9 @@ public class UMLAssociationConnectionListModel
      */
     protected void addOtherModelEventListeners(Object newTarget) {
         super.addOtherModelEventListeners(newTarget);
-        Collection ends = Model.getFacade().getConnections(newTarget);
-        Iterator i = ends.iterator();
+        /* Make a copy of the modelelements: */
+        others = new ArrayList(Model.getFacade().getConnections(newTarget));
+        Iterator i = others.iterator();
         while (i.hasNext()) {
             Object end = i.next();
             Model.getPump().addModelEventListener(this, end, "name");
@@ -75,12 +78,12 @@ public class UMLAssociationConnectionListModel
      */
     protected void removeOtherModelEventListeners(Object oldTarget) {
         super.removeOtherModelEventListeners(oldTarget);
-        Collection ends = Model.getFacade().getConnections(oldTarget);
-        Iterator i = ends.iterator();
+        Iterator i = others.iterator();
         while (i.hasNext()) {
             Object end = i.next();
             Model.getPump().removeModelEventListener(this, end, "name");
         }
+        others.clear();
     }
 
     /**
