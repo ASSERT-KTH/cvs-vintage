@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.16 2006/03/02 06:56:18 tfmorris Exp $
+// $Id: FigNodeAssociation.java,v 1.17 2006/05/07 17:16:09 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.diagram.ui;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -138,46 +139,50 @@ public class FigNodeAssociation extends FigNodeModelElement {
             damage();
         }
         if (mee.getPropertyName().equals("connection")) {
-            boolean rerender = false;
             if (mee instanceof RemoveAssociationEvent) {
                 Object association = ((RemoveAssociationEvent) mee)
-                .getSource();
+                    .getSource();
                 if (Model.getFacade().getConnections(association).size()
                         == 2) {
-                    rerender = true;
+                    reduceToBinairy();
                 }
             }
-            if (rerender) {
-                final Object association = getOwner();
-                final Fig oldNodeFig = this;
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        oldNodeFig.setOwner(null);
-                        FigEdge figEdge = null;
-                        Editor editor = Globals.curEditor();
-                        GraphModel gm = editor.getGraphModel();
-                        GraphEdgeRenderer renderer =
-                            editor.getGraphEdgeRenderer();
-                        Layer lay = editor.getLayerManager().getActiveLayer();
-                        figEdge =
-                            renderer.getFigEdgeFor(gm, lay, association, null);
-                        editor.add(figEdge);
-                        if (gm instanceof MutableGraphModel) {
-                            MutableGraphModel mutableGraphModel =
-                                (MutableGraphModel) gm;
-                            mutableGraphModel.removeNode(association);
-                            mutableGraphModel.addEdge(association);
-                        }
-                        oldNodeFig.removeFromDiagram();
-                        editor.getSelectionManager().deselectAll();
-                        editor.damageAll();
-                    }
-                });
-            }
-
         }
     }
 
+    /**
+     * When association end nr 3 is removed, 
+     * from the model (OR from the diagram?), 
+     * reduce this to a binairy association.
+     */
+    void reduceToBinairy() {
+        final Object association = getOwner();
+        final Fig oldNodeFig = this;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                oldNodeFig.setOwner(null);
+                FigEdge figEdge = null;
+                Editor editor = Globals.curEditor();
+                GraphModel gm = editor.getGraphModel();
+                GraphEdgeRenderer renderer =
+                    editor.getGraphEdgeRenderer();
+                Layer lay = editor.getLayerManager().getActiveLayer();
+                figEdge =
+                    renderer.getFigEdgeFor(gm, lay, association, null);
+                editor.add(figEdge);
+                if (gm instanceof MutableGraphModel) {
+                    MutableGraphModel mutableGraphModel =
+                        (MutableGraphModel) gm;
+                    mutableGraphModel.removeNode(association);
+                    mutableGraphModel.addEdge(association);
+                }
+                oldNodeFig.removeFromDiagram();
+                editor.getSelectionManager().deselectAll();
+                editor.damageAll();
+            }
+        });
+    }
+    
     /**
      * Updates the name if modelchanged receives an "isAbstract" event.
      */
