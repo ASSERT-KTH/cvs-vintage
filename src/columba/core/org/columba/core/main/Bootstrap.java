@@ -33,7 +33,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
+import org.columba.api.backgroundtask.IBackgroundTaskManager;
 import org.columba.api.plugin.IPluginManager;
+import org.columba.api.shutdown.IShutdownManager;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.base.OSInfo;
 import org.columba.core.component.ComponentManager;
@@ -356,14 +358,22 @@ public class Bootstrap {
 	 * @throws Exception
 	 */
 	private static void setLibraryPath() throws Exception {
+		String libDir;
+		if (OSInfo.isAMD64Bit()) {
+			libDir = "amd64";
+		} else {
+			libDir = "lib";
+		}
+
+		
 		if (OSInfo.isLinux()) {
 			System.setProperty("java.library.path", System
 					.getProperty("java.library.path")
-					+ ":native/linux/lib");
+					+ ":native/linux/" + libDir);
 		} else if (OSInfo.isWin32Platform()) {
 			System.setProperty("java.library.path", System
-					.getProperty("java.library.path")
-					+ ";native\\win32\\lib");
+					.getProperty("java.library.path" + libDir)
+					+ ";native\\win32\\");
 		}
 		// Platform maintainers: add your platform here
 
