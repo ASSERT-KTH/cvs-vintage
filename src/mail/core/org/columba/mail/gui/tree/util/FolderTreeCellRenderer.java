@@ -157,7 +157,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 		String name = item.getString("property", "name");
 		// IMAP folder specific
 		// - Is this folder selectable (does it contain messages?)
-		boolean selectable = item.getBooleanWithDefault("selectable", true) == false;
+		boolean not_selectable = item.getBooleanWithDefault("selectable", true) == false;
 
 		StringBuffer buf;
 		// set label text
@@ -165,7 +165,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		// if IMAP selectable folder
 		// -> lightgray font color and italic
-		if (selectable)
+		if (not_selectable)
 			buf.append("<i><font color='#333333'>");
 
 		if (info.getUnseen() > 0) {
@@ -182,7 +182,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			buf.append(name);
 
 		// if IMAP selectable folder
-		if (selectable)
+		if (not_selectable)
 			buf.append("</i>");
 
 		if (info.getRecent() > 0) {
