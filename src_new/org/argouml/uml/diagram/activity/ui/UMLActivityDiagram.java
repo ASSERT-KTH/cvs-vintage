@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.87 2006/04/05 18:20:31 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.88 2006/05/08 21:00:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,12 +36,14 @@ import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.activity.ActivityDiagramGraphModel;
+import org.argouml.uml.diagram.state.StateDiagramGraphModel;
 import org.argouml.uml.diagram.state.ui.ActionCreatePseudostate;
 import org.argouml.uml.diagram.ui.RadioAction;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
+import org.tigris.gef.graph.GraphModel;
 
 /**
  * The Activity diagram.<p>
@@ -196,7 +198,14 @@ public class UMLActivityDiagram extends UMLDiagram {
      * @return the statemachine
      */
     public Object getStateMachine() {
-        return ((ActivityDiagramGraphModel) getGraphModel()).getMachine();
+        GraphModel gm = getGraphModel();
+        if (gm instanceof StateDiagramGraphModel) {
+            Object machine = ((StateDiagramGraphModel) gm).getMachine();
+            if (!Model.getUmlFactory().isRemoved(machine)) {
+                return machine;
+            }
+        }
+        return null;
     }
 
     /**

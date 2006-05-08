@@ -1,5 +1,5 @@
-// $Id: UMLModelElementListModel2.java,v 1.42 2006/04/22 21:14:47 tfmorris Exp $
-// Copyright (c) 2002-2005 The Regents of the University of California. All
+// $Id: UMLModelElementListModel2.java,v 1.43 2006/05/08 21:00:44 mvw Exp $
+// Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -113,9 +113,11 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
         if (e instanceof AttributeChangeEvent) {
             if (isValidEvent(e)) {
                 removeAllElements();
-                buildingModel = true;
-                buildModelList();
-                buildingModel = false;
+                if (!Model.getUmlFactory().isRemoved(getTarget())) {
+                    buildingModel = true;
+                    buildModelList();
+                    buildingModel = false;
+                }
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
                 }
@@ -278,9 +280,11 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
                 addOtherModelEventListeners(listTarget);
 
                 removeAllElements();
-                buildingModel = true;
-                buildModelList();
-                buildingModel = false;
+                if (!Model.getUmlFactory().isRemoved(getTarget())) {
+                    buildingModel = true;
+                    buildModelList();
+                    buildingModel = false;
+                }
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
                 }

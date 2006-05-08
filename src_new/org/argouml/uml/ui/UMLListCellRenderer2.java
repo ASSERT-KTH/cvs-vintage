@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.37 2006/04/22 06:28:43 tfmorris Exp $
+// $Id: UMLListCellRenderer2.java,v 1.38 2006/05/08 21:00:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -152,11 +152,16 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             return name;
         }
         if (Model.getFacade().isAModelElement(value)) {
-            Object/* MModelElement */elem = value;
-                name = Model.getFacade().getName(elem);
+            if (Model.getUmlFactory().isRemoved(value)) {
+                /* This is needed since you can not query 
+                 * the name of a removed modelelement. */
+                name = ("(removed)");
+            } else {
+                name = Model.getFacade().getName(value);
                 if (name == null || name.equals("")) {
-                    name = "(unnamed " + makeTypeName(elem) + ")";
+                    name = "(unnamed " + makeTypeName(value) + ")";
                 }
+            }
             if (Model.getFacade().isAStereotype(value)) {
                 Collection bases = Model.getFacade().getBaseClasses(value);
                 StringBuffer sb = new StringBuffer();
