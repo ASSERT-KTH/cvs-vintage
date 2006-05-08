@@ -562,6 +562,25 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			}
 		}
 
+		// Sanity tests
+		if( messageFolderInfo.getRecent() < 0 ) {
+			messageFolderInfo.setRecent(0);
+			updated = true;
+		}
+		if( messageFolderInfo.getRecent() > messageFolderInfo.getExists() ) {
+			messageFolderInfo.setRecent(messageFolderInfo.getExists());
+			updated = true;
+		}
+		
+		if( messageFolderInfo.getUnseen() < 0 ) {
+			messageFolderInfo.setUnseen(0);
+			updated = true;
+		}
+		if( messageFolderInfo.getUnseen() > messageFolderInfo.getExists() ) {
+			messageFolderInfo.setUnseen(messageFolderInfo.getExists());
+			updated = true;
+		}
+
 		if (updated) {
 			fireFolderPropertyChanged();
 		}
