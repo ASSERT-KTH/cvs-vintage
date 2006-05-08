@@ -920,25 +920,16 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			getServer().setFlags(new Object[] { uid }, imapFlags, this);
 		}
 
-		if (getServer().isSelected(this)) {
-			// Parser the header
-			Header header = withHeaderInputStream.getHeader();
+		// Parser the header
+		Header header = withHeaderInputStream.getHeader();
 
-			// update the HeaderList
-			IColumbaHeader cHeader = new ColumbaHeader(header,
-					(Attributes) attributes.clone(), imapFlags);
+		// update the HeaderList
+		IColumbaHeader cHeader = new ColumbaHeader(header,
+				(Attributes) attributes.clone(), imapFlags);
 
-			getHeaderList().add(cHeader, uid);
+		getHeaderList().add(cHeader, uid);
 
-			fireMessageAdded(uid, cHeader.getFlags());
-		} else {
-			if( mailboxSyncEnabled ) {			
-				// Trigger Synchronization
-				CommandProcessor.getInstance().addOp(
-						new CheckForNewMessagesCommand(
-								new MailFolderCommandReference(this)));
-				}
-		}
+		fireMessageAdded(uid, cHeader.getFlags());
 
 		return uid;
 	}
