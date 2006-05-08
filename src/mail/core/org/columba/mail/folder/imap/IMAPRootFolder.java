@@ -407,7 +407,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	 * 
 	 * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
 	 */
-	public void addSubfolder(AbstractFolder child) throws Exception {
+	public void addSubfolder(IMailFolder child) throws Exception {
 		if (child instanceof IMAPFolder) {
 			getServer().createMailbox(child.getName(), null);
 		}
