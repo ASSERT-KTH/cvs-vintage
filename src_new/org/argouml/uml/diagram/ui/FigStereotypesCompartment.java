@@ -1,4 +1,4 @@
-// $Id: FigStereotypesCompartment.java,v 1.21 2006/04/29 21:50:32 mvw Exp $
+// $Id: FigStereotypesCompartment.java,v 1.22 2006/05/09 18:47:13 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,6 +130,7 @@ public class FigStereotypesCompartment extends FigCompartment {
                             null);
                 // bounds not relevant here
                 stereotypeTextFig.setJustification(FigText.JUSTIFY_CENTER);
+                stereotypeTextFig.setEditable(false);
                 addFig(stereotypeTextFig);
             } else {
                 stereotypeTextFig =
@@ -160,6 +161,7 @@ public class FigStereotypesCompartment extends FigCompartment {
                                 null);
                     // bounds not relevant here
                     stereotypeTextFig.setJustification(FigText.JUSTIFY_CENTER);
+                    stereotypeTextFig.setEditable(false);
                     addFig(stereotypeTextFig);
                 } else {
                     stereotypeTextFig =
