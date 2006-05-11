@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.29 2006/03/10 22:11:23 mvw Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.30 2006/05/11 20:12:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 
+import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -91,8 +92,20 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        /* The list may only change when the target changes.
-         * Hence do nothing by design. */
+        /* The list may only change when the target changes,
+         * except when edited on the diagram.
+         * Hence handle only this case:. */
+        if (evt instanceof AddAssociationEvent) {
+            if (evt.getPropertyName().equals(this.getPropertySetName())) {
+                if (evt.getSource() == getTarget()) {
+                    Object elem = evt.getNewValue();
+                    if (evt.getOldValue() == null && elem != null) {
+                        addElement(elem);
+                        setSelectedItem(elem);
+                    }
+                }
+            }
+        }
     }
 
 }
