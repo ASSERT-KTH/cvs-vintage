@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.32 2006/05/06 19:42:40 mvw Exp $
+// $Id: FigAssociationRole.java,v 1.33 2006/05/11 20:12:00 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
+import org.tigris.gef.presentation.FigText;
 
 
 /**
@@ -129,6 +130,15 @@ public class FigAssociationRole extends FigAssociation {
     public void removeFromDiagram() {
         super.removeFromDiagram();
         messages.removeFromDiagram();
+    }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        if (ft == getNameFig()) {
+            showHelp(notationProviderName.getParsingHelp());
+        }
     }
 
 } /* end class FigAssociationRole */
