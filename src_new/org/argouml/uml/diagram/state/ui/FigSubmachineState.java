@@ -1,4 +1,4 @@
-// $Id: FigSubmachineState.java,v 1.15 2006/05/01 14:37:19 mvw Exp $
+// $Id: FigSubmachineState.java,v 1.16 2006/05/12 16:42:07 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -387,10 +387,21 @@ public class FigSubmachineState extends FigState {
     }
 
     private void updateInclude() {
-        include.setText(Notation.generate(this, getOwner()));
+        include.setText(generateSubmachine(getOwner()));
         calcBounds();
         setBounds(getBounds());
         damage();
+    }
+
+    private String generateSubmachine(Object m) {
+        Object c = Model.getFacade().getSubmachine(m);
+        String s = "include / ";
+        if ((c == null)
+                || (Model.getFacade().getName(c) == null)
+                || (Model.getFacade().getName(c).length() == 0)) {
+            return s;
+        }
+        return (s + Model.getFacade().getName(c));
     }
 
     /**
