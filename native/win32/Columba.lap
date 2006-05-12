@@ -4,7 +4,7 @@
 
 -Djava.class.path={app}\columba.jar
 janel.main.class=org.columba.core.main.Main
-janel.min.java.version=1.4
+janel.min.java.version=1.5
 
 
 
