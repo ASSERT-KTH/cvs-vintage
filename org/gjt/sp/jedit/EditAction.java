@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.24 2006/02/25 03:00:39 ezust Exp $
+ * @version $Id: EditAction.java,v 1.25 2006/05/12 04:13:11 ezust Exp $
  */
 public abstract class EditAction
 {
@@ -59,6 +59,15 @@ public abstract class EditAction
 	{
 		return name;
 	} //}}}
+	
+	/**
+	 * Changes the name of an action
+	 * @param newName
+	 * @since jEdit 4.3pre4
+	 */
+	public void setName(String newName) {
+		name = newName;
+	}
 
 	//{{{ getLabel() method
 	/**
