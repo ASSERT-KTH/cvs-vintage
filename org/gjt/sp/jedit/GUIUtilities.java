@@ -78,7 +78,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.92 2006/04/19 23:50:16 ezust Exp $
+ * @version $Id: GUIUtilities.java,v 1.93 2006/05/12 23:05:47 ezust Exp $
  */
 public class GUIUtilities
 {
@@ -1259,18 +1259,14 @@ public class GUIUtilities
 	 */
 	public static void requestFocus(final Window win, final Component comp)
 	{
-		win.addWindowListener(new WindowAdapter()
+		win.addWindowFocusListener(new WindowAdapter()
 		{
-			public void windowActivated(WindowEvent evt)
+			public void windowGainedFocus(WindowEvent evt)
 			{
-				SwingUtilities.invokeLater(new Runnable()
-				{
-					public void run()
-					{
-						comp.requestFocus();
-					}
-				});
-				win.removeWindowListener(this);
+				
+				boolean success = comp.requestFocusInWindow();
+				
+				win.removeWindowFocusListener(this);
 			}
 		});
 	} //}}}
