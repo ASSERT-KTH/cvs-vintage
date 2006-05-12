@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.117 2006/05/06 19:38:27 mvw Exp $
+// $Id: FigAssociation.java,v 1.118 2006/05/12 16:51:39 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,12 +41,12 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
-import org.argouml.notation.Notation;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.notation.uml.NotationUtilityUml;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercentPlusConst;
 import org.tigris.gef.presentation.ArrowHead;
@@ -329,7 +329,7 @@ public class FigAssociation extends FigEdgeModelElement {
 	Object multi = Model.getFacade().getMultiplicity(end);
 	Object order = Model.getFacade().getOrdering(end);
 
-	multiToUpdate.setText(Notation.generate(this, multi));
+	multiToUpdate.setText(NotationUtilityUml.generateMultiplicity(multi));
 	orderingToUpdate.setText(getOrderingName(order));
     }
 

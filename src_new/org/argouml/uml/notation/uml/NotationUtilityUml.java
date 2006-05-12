@@ -1,4 +1,4 @@
-// $Id: NotationUtilityUml.java,v 1.11 2006/05/06 12:23:32 mvw Exp $
+// $Id: NotationUtilityUml.java,v 1.12 2006/05/12 16:51:39 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -993,5 +993,18 @@ public final class NotationUtilityUml {
         return Model.getFacade().getTagOfTag(tv)
             + "="
             + generateUninterpreted(Model.getFacade().getValueOfTag(tv));
+    }
+    
+    /**
+     * Generate the text of a multiplicity.
+     * 
+     * @param m the given multiplicity
+     * @return a string (guaranteed not null)
+     */
+    public static String generateMultiplicity(Object m) {
+        if (m == null || "1".equals(Model.getFacade().toString(m))) {
+            return "";
+        }
+        return Model.getFacade().toString(m);
     }
 }
