@@ -1,5 +1,5 @@
-// $Id: Main.java,v 1.143 2006/03/27 13:09:01 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: Main.java,v 1.144 2006/05/13 08:22:56 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -215,9 +215,6 @@ public class Main {
 	// is that some of the commands will use the projectbrowser.
 	st.mark("initialize gui");
         SplashScreen splash = initializeGUI(doSplash && !batch, theTheme);
-
-        // Register the default notation.
-        org.argouml.uml.generator.GeneratorDisplay.getInstance();
 
         // Initialize the UMLActions
         Actions.getInstance();
