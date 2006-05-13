@@ -364,18 +364,19 @@ public class Bootstrap {
 		} else {
 			libDir = "lib";
 		}
-
-		
-		if (OSInfo.isLinux()) {
-			System.setProperty("java.library.path", System
-					.getProperty("java.library.path")
-					+ ":native/linux/" + libDir);
-		} else if (OSInfo.isWin32Platform()) {
-			System.setProperty("java.library.path", System
-					.getProperty("java.library.path" + libDir)
-					+ ";native\\win32\\");
-		}
 		// Platform maintainers: add your platform here
+		
+		String propertyPath = System.getProperty("java.library.path");
+		if (OSInfo.isLinux())
+			propertyPath += ":native/linux/";
+		else if (OSInfo.isWin32Platform())
+			propertyPath += ";native\\win32\\";
+		// Platform maintainers: add your platform here
+		
+		propertyPath += libDir;
+
+		System.setProperty("java.library.path", propertyPath);
+
 
 		Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 		fieldSysPath.setAccessible(true);
