@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.5 2006/03/07 17:51:02 tfmorris Exp $
+<!-- $Id: build.xml,v 1.6 2006/05/13 16:32:27 linus Exp $
 
     Ant build file for the Model subsystem interfaces.
 
@@ -38,6 +38,10 @@
       
     <property name="name" value="argouml-model"/>
   
+    <property name="debug" value="yes"/>
+    <property name="deprecation" value="yes"/>
+    <property name="optimize" value="yes"/>
+
     <path id="compile.classpath">
       <pathelement location="${log4j.jar.path}"/>
     </path>
@@ -56,6 +60,8 @@
     <!-- create directories -->
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.classes}"/>
+
+<echo message="Compiling with debug=${debug}"/>
 
     <javac debug="${debug}" deprecation="${deprecation}" destdir="${build.classes}" includes="org/argouml/**/*.java" optimize="${optimize}" srcdir="src">
        <classpath>
