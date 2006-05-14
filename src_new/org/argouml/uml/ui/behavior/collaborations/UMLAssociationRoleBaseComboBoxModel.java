@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.30 2006/05/11 20:12:36 mvw Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.31 2006/05/14 07:23:00 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Collection;
 
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.Model;
+import org.argouml.model.RemoveAssociationEvent;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
@@ -102,6 +103,14 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
                     if (evt.getOldValue() == null && elem != null) {
                         addElement(elem);
                         setSelectedItem(elem);
+                    }
+                }
+            }
+        } else if (evt instanceof RemoveAssociationEvent) {
+            if (evt.getPropertyName().equals(this.getPropertySetName())) {
+                if (evt.getSource() == getTarget()) {
+                    if (evt.getOldValue() == getSelectedItem()) {
+                        setSelectedItem(evt.getNewValue());
                     }
                 }
             }

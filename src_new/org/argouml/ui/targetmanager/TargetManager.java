@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.60 2006/05/07 17:19:22 mvw Exp $
+// $Id: TargetManager.java,v 1.61 2006/05/14 07:23:00 mvw Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1020,11 +1020,10 @@ public final class TargetManager {
         Collection toBeRemoved = new ArrayList();
         Iterator i = targets.iterator();
         while (i.hasNext()) {
-            WeakReference ref = (WeakReference) i.next();
-            Object historyObject = ref.get();
-            if (Model.getFacade().isAModelElement(historyObject)) {
-                if (Model.getUmlFactory().isRemoved(historyObject)) {
-                    toBeRemoved.add(historyObject);
+            Object candidate = i.next();
+            if (Model.getFacade().isAModelElement(candidate)) {
+                if (Model.getUmlFactory().isRemoved(candidate)) {
+                    toBeRemoved.add(candidate);
                 }
             }
         }

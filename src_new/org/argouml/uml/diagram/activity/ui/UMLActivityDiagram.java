@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.88 2006/05/08 21:00:45 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.89 2006/05/14 07:23:00 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -415,7 +415,8 @@ public class UMLActivityDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#needsToBeRemoved()
      */
     public boolean needsToBeRemoved() {
-        if (Model.getUmlFactory().isRemoved(getStateMachine())) {
+        if ((getStateMachine() != null)
+                && (Model.getUmlFactory().isRemoved(getStateMachine()))) {
             return true;
         }
         if (Model.getUmlFactory().isRemoved(getNamespace())) {
