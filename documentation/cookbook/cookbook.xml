@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cookbook.xml,v 1.124 2006/05/13 21:29:06 linus Exp $ -->
+<!-- $Id: cookbook.xml,v 1.125 2006/05/14 05:59:21 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -50,6 +50,7 @@
 <!ENTITY subsystemlogging SYSTEM "subsystemlogging.xml">
   
 <!ENTITY cookbookmodules SYSTEM "cookbook_modules.xml">
+<!ENTITY glossary SYSTEM "glossary.xml">
 
 
 
@@ -127,6 +128,8 @@
   &documentationstandards;
   &processes;
   
+  &glossary;
+
   <index/>
 
   &further_reading;
