@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.246 2006/05/10 21:53:42 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.247 2006/05/14 07:27:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1361,6 +1361,8 @@ public abstract class FigNodeModelElement
      * @see org.argouml.application.events.ArgoNotationEventListener#notationChanged(org.argouml.application.events.ArgoNotationEvent)
      */
     public void notationChanged(ArgoNotationEvent event) {
+        if (getOwner() == null) return;
+        NotationName oldNotation = currentNotationName;
         PropertyChangeEvent changeEvent =
 	    (PropertyChangeEvent) event.getSource();
         if (changeEvent.getPropertyName().equals("argo.notation.only.uml")) {
@@ -1371,8 +1373,10 @@ public abstract class FigNodeModelElement
             setContextNotation(
                 Notation.findNotation((String) changeEvent.getNewValue()));
         }
-        initNotationProviders(getOwner());
-        renderingChanged();
+        if (!oldNotation.sameNotationAs(currentNotationName)) {
+            initNotationProviders(getOwner());
+            renderingChanged();
+        }
     }
 
     /**

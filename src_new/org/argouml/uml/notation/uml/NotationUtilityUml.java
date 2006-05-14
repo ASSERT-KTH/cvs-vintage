@@ -1,4 +1,4 @@
-// $Id: NotationUtilityUml.java,v 1.12 2006/05/12 16:51:39 mvw Exp $
+// $Id: NotationUtilityUml.java,v 1.13 2006/05/14 07:27:52 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
