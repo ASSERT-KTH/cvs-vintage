@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.72 2006/03/16 19:58:50 mvw Exp $
+// $Id: UMLComboBoxModel2.java,v 1.73 2006/05/14 17:56:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,13 +158,26 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
             }
         } else if (evt instanceof AddAssociationEvent) {
             if (getTarget() != null && isValidEvent(evt)) {
-                Object o = getChangedElement(evt);
-                addElement(o);
+                if (evt.getPropertyName().equals(propertySetName) 
+                    && (evt.getSource() == getTarget())) {
+                    Object elem = evt.getNewValue();
+                    setSelectedItem(elem);
+                } else {
+                    Object o = getChangedElement(evt);
+                    addElement(o);
+                }
             }
         } else if (evt instanceof RemoveAssociationEvent && isValidEvent(evt)) {
-            Object o = getChangedElement(evt);
-            if (contains(o)) {
-                removeElement(o);
+            if (evt.getPropertyName().equals(propertySetName) 
+                    && (evt.getSource() == getTarget())) {
+                if (evt.getOldValue() == getSelectedItem()) {
+                    setSelectedItem(evt.getNewValue());
+                }
+            } else {
+                Object o = getChangedElement(evt);
+                if (contains(o)) {
+                    removeElement(o);
+                }
             }
         }
         buildingModel = false;
@@ -317,12 +330,16 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
             if (Model.getFacade().isAModelElement(comboBoxTarget)) {
                 Model.getPump().removeModelEventListener(this, comboBoxTarget,
                         propertySetName);
+                // Allow listening to other elements:
+                removeOtherModelEventListeners(comboBoxTarget);
             }
 
             if (Model.getFacade().isAModelElement(theNewTarget)) {
                 comboBoxTarget = theNewTarget;
                 Model.getPump().addModelEventListener(this, comboBoxTarget,
                         propertySetName);
+                // Allow listening to other elements:
+                addOtherModelEventListeners(comboBoxTarget);
                 
                 buildingModel = true;
                 buildModelList();
@@ -343,6 +360,26 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
                 addElement(""); // makes sure we can select 'none'
             }
         }
+    }
+
+    /**
+     * This function allows subclasses to listen to more modelelements.
+     * The given target is guaranteed to be a UML modelelement.
+     * 
+     * @param oldTarget the UML modelelement
+     */
+    protected void removeOtherModelEventListeners(Object oldTarget) {
+        /* Do nothing by default. */
+    }
+
+    /**
+     * This function allows subclasses to listen to more modelelements.
+     * The given target is guaranteed to be a UML modelelement.
+     * 
+     * @param newTarget the UML modelelement
+     */
+    protected void addOtherModelEventListeners(Object newTarget) {
+        /* Do nothing by default. */
     }
 
     /**
