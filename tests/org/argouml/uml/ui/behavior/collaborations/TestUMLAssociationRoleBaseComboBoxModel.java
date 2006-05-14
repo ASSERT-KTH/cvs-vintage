@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.25 2006/03/28 07:03:29 linus Exp $
+// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.26 2006/05/14 17:57:44 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,15 +135,28 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
     public void testSetBase() {
         Model.getCollaborationsHelper().setBase(elem, bases[0]);
         Model.getPump().flushModelEvents();
-        // One can only delete a assoc by changing target,
-        // so let's simulate that:
-        model.targetSet(new TargetEvent(this,
-                TargetEvent.TARGET_SET,
-                new Object[0],
-                new Object[] {
-                    elem,
-                }));
         assertTrue(model.getSelectedItem() == bases[0]);
+    }
+
+    /**
+     * Test setting the Base.
+     */
+    public void testChangeBase() {
+        Model.getCollaborationsHelper().setBase(elem, bases[0]);
+        Model.getPump().flushModelEvents();
+        Model.getCollaborationsHelper().setBase(elem, bases[1]);
+        Model.getPump().flushModelEvents();
+        assertTrue(model.getSelectedItem() == bases[1]);
+    }
+
+    /**
+     * Test deleting selected Base.
+     */
+    public void testDeleteBase() {
+        Model.getCollaborationsHelper().setBase(elem, bases[1]);
+        Model.getUmlFactory().delete(bases[1]);
+        Model.getPump().flushModelEvents();
+        assertNull(model.getSelectedItem());
     }
 
     /**
@@ -163,6 +176,7 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
         Model.getUmlFactory().delete(bases[NO_ELEMENTS_IN_TEST - 1]);
         // One can only delete a assoc by changing target,
         // so let's simulate that:
+        /* TODO: Get rid of this! */
         model.targetSet(new TargetEvent(this,
                 TargetEvent.TARGET_SET,
                 new Object[0],
