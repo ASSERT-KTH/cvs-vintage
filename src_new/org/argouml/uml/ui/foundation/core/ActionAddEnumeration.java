@@ -1,4 +1,4 @@
-// $Id: ActionAddEnumeration.java,v 1.1 2005/12/13 18:59:53 mvw Exp $
+// $Id: ActionAddEnumeration.java,v 1.2 2006/05/14 18:09:25 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,11 @@ public class ActionAddEnumeration extends AbstractActionNewModelElement {
             ns = Model.getFacade().getNamespace(target);
         if (Model.getFacade().isAClassifier(target))
             ns = Model.getFacade().getNamespace(target);
-
+        if (Model.getFacade().isAAssociationEnd(target)) {
+            target = Model.getFacade().getAssociation(target);
+            ns = Model.getFacade().getNamespace(target);
+        }
+        
         Object newEnum = Model.getCoreFactory().buildEnumeration("", ns);
         TargetManager.getInstance().setTarget(newEnum);
         super.actionPerformed(e);
