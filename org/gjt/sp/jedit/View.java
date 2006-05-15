@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.130 2006/04/09 04:02:21 vanza Exp $
+ * @version $Id: View.java,v 1.131 2006/05/15 23:32:14 mediumnet Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -563,7 +563,7 @@ public class View extends JFrame implements EBComponent
 	{
 		if(Debug.DUMP_KEY_EVENTS)
 		{
-			Log.log(Log.DEBUG,this,"Key event: "
+			Log.log(Log.DEBUG,this,"Key event                 : "
 				+ GrabKeyDialog.toString(evt) + " from " + from);
 		}
 
@@ -1725,9 +1725,15 @@ loop:		for(;;)
 				}
 			}
 		}
-
+		
 		if(evt.isConsumed())
 			return null;
+
+		if(Debug.DUMP_KEY_EVENTS)
+		{
+			Log.log(Log.DEBUG,this,"Key event (preprocessing) : "
+					+ GrabKeyDialog.toString(evt));
+		}
 
 		return KeyEventWorkaround.processKeyEvent(evt);
 	} //}}}
