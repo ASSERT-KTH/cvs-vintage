@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -75,6 +76,9 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 		TreeSelectionListener {
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
+	private static final Logger LOG = Logger
+	.getLogger("org.columba.core.gui.plugin");
+	
 	protected JButton installButton;
 
 	protected JButton removeButton;
@@ -362,11 +366,17 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 		return selectedNode;
 	}
 
+	/**
+	 * TODO @author fdietz: move some logic out of this ui class and into plugin package
+	 */
 	protected void installPlugin(File file) {
 		// use user's config folder in his/her home-folder
+		// all plugins reside in "<config-folder>/plugins"
 		File destination = new File(Config.getInstance().getConfigDirectory(),
 				"plugins");
 
+		LOG.info("extract "+file.getName()+" to "+ destination.getAbsolutePath());
+		
 		File pluginDirectory;
 		try {
 			// extract plugin
@@ -383,11 +393,25 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 		}
 
 		if (pluginDirectory != null) {
+			// the plugin directory is "<config-folder>/plugins/<plugin-id>"
+			pluginDirectory = new File(destination, pluginDirectory.getName());
+			LOG.info("plugin directory="+pluginDirectory.getAbsolutePath());
+			
+			// the path to the plugin.xml descriptor file is:
+			// "<config-folder>/plugins/<plugin-id>/plugin.xml
+			pluginDirectory = new File(pluginDirectory, "plugin.xml");
+			
 			String id = PluginManager.getInstance().addPlugin(pluginDirectory);
 			PluginMetadata metadata = PluginManager.getInstance()
 					.getPluginMetadata(id);
 
 			table.addPlugin(metadata);
+			
+			JOptionPane.showMessageDialog(this, GlobalResourceLoader.getString(
+					RESOURCE_PATH, "pluginmanager", "installSuccess.msg"),
+					GlobalResourceLoader.getString(RESOURCE_PATH,
+							"pluginmanager", "installSuccess.title"),
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }
