@@ -207,14 +207,14 @@ public class Bootstrap {
 		// FrameManager.getInstance().getActiveFrameMediator()
 		// .getFrameMediator());
 
-		// call the postStartups of the modules
-		// e.g. check for default mailclient
-		ComponentManager.getInstance().postStartup();
-
 		// hide splash screen
 		if (frame != null) {
 			frame.setVisible(false);
 		}
+
+		// call the postStartups of the modules
+		// e.g. check for default mailclient
+		ComponentManager.getInstance().postStartup();
 
 		/* everything is up and running, start services */
 		ServiceManager.getInstance().startServices();
@@ -365,18 +365,17 @@ public class Bootstrap {
 			libDir = "lib";
 		}
 		// Platform maintainers: add your platform here
-		
+
 		String propertyPath = System.getProperty("java.library.path");
 		if (OSInfo.isLinux())
 			propertyPath += ":native/linux/";
 		else if (OSInfo.isWin32Platform())
 			propertyPath += ";native\\win32\\";
 		// Platform maintainers: add your platform here
-		
+
 		propertyPath += libDir;
 
 		System.setProperty("java.library.path", propertyPath);
-
 
 		Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 		fieldSysPath.setAccessible(true);
