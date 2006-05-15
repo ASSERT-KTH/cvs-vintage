@@ -58,8 +58,6 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 	}
 
 	public ICalendarStore getLocaleStore() {
-
-		System.out.println("classloader="+this.getClass().getClassLoader());
 		
 		if (store == null)
 			try {
