@@ -11,7 +11,7 @@ import org.flexdock.docking.Dockable;
 
 public class DockableRegistry {
 
-	private Hashtable hashtable = new Hashtable();
+	private Hashtable<String,Dockable> hashtable = new Hashtable<String,Dockable>();
 
 	private static DockableRegistry instance = new DockableRegistry();
 
@@ -27,8 +27,6 @@ public class DockableRegistry {
 
 	public void register(Dockable dockable) {
 		hashtable.put(dockable.getPersistentId(), dockable);
-		
-		System.out.println("dockable registered="+dockable.getPersistentId());
 		
 		fireDockableAdded(dockable);
 	}
