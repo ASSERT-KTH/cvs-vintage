@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.columba.core.logging.Logging;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -181,7 +182,8 @@ public class XmlIO extends DefaultHandler {
 			LOG.severe("XML config error while attempting to read XML file \n'"
 					+ inputURL + "'");
 			LOG.severe(ex.toString());
-			ex.printStackTrace();
+			if ( Logging.DEBUG)
+				ex.printStackTrace();
 
 			return (false);
 		} catch (SAXException ex) {
@@ -189,6 +191,7 @@ public class XmlIO extends DefaultHandler {
 			LOG.severe("XML parse error while attempting to read XML file \n'"
 					+ inputURL + "'");
 			LOG.severe(ex.toString());
+			if ( Logging.DEBUG)
 			ex.printStackTrace();
 
 			return (false);
@@ -196,6 +199,7 @@ public class XmlIO extends DefaultHandler {
 			LOG.severe("I/O error while attempting to read XML file \n'"
 					+ inputURL + "'");
 			LOG.severe(ex.toString());
+			if ( Logging.DEBUG)
 			ex.printStackTrace();
 
 			return (false);

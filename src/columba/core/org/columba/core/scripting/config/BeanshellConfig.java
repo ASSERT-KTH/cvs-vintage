@@ -32,7 +32,9 @@ import org.columba.core.io.DiskIO;
 public class BeanshellConfig
 {
 
-    private static final String COLUMBA_SCRIPT_DIRECTORY = "scripts", OPTIONS_FILE = "options.xml";
+    private static final String CORE_MODULE = "core";
+
+	private static final String COLUMBA_SCRIPT_DIRECTORY = "scripts", OPTIONS_FILE = "scripting.xml";
 
     protected Config config;
 
@@ -46,17 +48,21 @@ public class BeanshellConfig
     {
 
         this.config = config;
+        
+        // scripts should reside in <config-folder>/scripts/ directory
         path = new File(config.getConfigDirectory(), COLUMBA_SCRIPT_DIRECTORY);
         DiskIO.ensureDirectory(path);
 
-        optionsFile = new File(path, OPTIONS_FILE);
-        registerPlugin(optionsFile.getName(), new OptionsXmlConfig(optionsFile));
+        // scripting.xml configuration file should reside in <config-folder>
+        optionsFile = new File(config.getConfigDirectory(), OPTIONS_FILE);
+        
+        registerPlugin(optionsFile.getName(), new ScriptingXmlConfig(optionsFile));
 
     }
 
-    public String getModuleName()
+    private String getModuleName()
     {
-        return COLUMBA_SCRIPT_DIRECTORY;
+        return CORE_MODULE;
     }
 
     public File getPath()
@@ -66,7 +72,7 @@ public class BeanshellConfig
 
     public Options getOptions()
     {
-        return ((OptionsXmlConfig) getPlugin(optionsFile.getName()))
+        return ((ScriptingXmlConfig) getPlugin(optionsFile.getName()))
             .getOptions();
     }
 

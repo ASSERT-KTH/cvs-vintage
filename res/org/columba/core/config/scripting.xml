@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<options>
+  <poll_interval>5</poll_interval>
+  <polling_enabled>true</polling_enabled>
+</options>
