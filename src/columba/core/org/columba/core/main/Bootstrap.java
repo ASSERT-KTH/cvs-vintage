@@ -96,10 +96,6 @@ public class Bootstrap {
 		new Config(profile.getLocation());
 		profiler.pop("config");
 
-		// register Config in service registry
-		ServiceRegistry.getInstance().register(IConfig.class,
-				Config.getInstance());
-
 		// if user doesn't overwrite logger settings with commandline arguments
 		// just initialize default logging
 		// Logging.createDefaultHandler();
