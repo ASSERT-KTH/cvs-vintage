@@ -1,5 +1,5 @@
-// $Id: ResourceLoaderWrapper.java,v 1.45 2006/03/21 21:55:51 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ResourceLoaderWrapper.java,v 1.46 2006/05/15 20:50:12 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -201,6 +201,11 @@ public final class ResourceLoaderWrapper {
         }
 
         if (value instanceof String) {
+            return null;
+        }
+        
+        if (Model.getFacade().isAModelElement(value) 
+                && Model.getUmlFactory().isRemoved(value)) {
             return null;
         }
 

@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.14 2006/04/22 06:28:13 tfmorris Exp $
+// $Id: ActionBaseDelete.java,v 1.15 2006/05/15 20:50:12 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -151,6 +151,11 @@ public abstract class ActionBaseDelete extends UMLAction {
         Object target = null;
         for (int i = targets.length - 1; i >= 0; i--) {
             target = targets[i];
+            if (Model.getFacade().isAModelElement(target) 
+                    && Model.getUmlFactory().isRemoved(target)) {
+                /* Must have been removed indirectly already...*/
+                return;
+            }
             if (sureRemove(target)) {
                 // remove from the model
                 if (target instanceof Fig) {
@@ -164,7 +169,7 @@ public abstract class ActionBaseDelete extends UMLAction {
                 }
             }
         }
-        }
+    }
 
     /**
      * A utility method that asks the user if he is sure to remove the selected
