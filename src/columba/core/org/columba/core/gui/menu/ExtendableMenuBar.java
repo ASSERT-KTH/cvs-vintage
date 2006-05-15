@@ -44,7 +44,7 @@ public class ExtendableMenuBar extends JMenuBar {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.gui.menu");
 
-	private Hashtable map = new Hashtable();
+	private Hashtable<String, ExtendableMenu> map = new Hashtable<String, ExtendableMenu>();
 
 	
 	public ExtendableMenuBar() {
@@ -52,10 +52,10 @@ public class ExtendableMenuBar extends JMenuBar {
 	}
 	
 	public void add(ExtendableMenu menu) {
-		
-		Enumeration e = menu.getSubmenuEnumeration();
+		if ( menu == null ) throw new IllegalArgumentException("menu == null");
+		Enumeration<ExtendableMenu> e = menu.getSubmenuEnumeration();
 		while (e.hasMoreElements()) {
-			ExtendableMenu submenu = (ExtendableMenu) e.nextElement();
+			ExtendableMenu submenu =  e.nextElement();
 			map.put(submenu.getId(), submenu);
 		}
 
@@ -63,10 +63,11 @@ public class ExtendableMenuBar extends JMenuBar {
 	}
 	
 	public void insert(ExtendableMenu menu) {
+		if ( menu == null ) throw new IllegalArgumentException("menu == null");
 		
-		Enumeration e = menu.getSubmenuEnumeration();
+		Enumeration<ExtendableMenu> e = menu.getSubmenuEnumeration();
 		while (e.hasMoreElements()) {
-			ExtendableMenu submenu = (ExtendableMenu) e.nextElement();
+			ExtendableMenu submenu =  e.nextElement();
 			map.put(submenu.getId(), submenu);
 		}
 		
@@ -74,11 +75,20 @@ public class ExtendableMenuBar extends JMenuBar {
 		super.add(menu, getMenuCount()-2);
 	}
 
+	public boolean exists(String menuId) {
+		if ( menuId == null ) throw new IllegalArgumentException("menuId == null");
+		
+		if ( map.containsKey(menuId)) return true;
+		
+		return false;
+	}
+	
 	public ExtendableMenu getMenu(String menuId) {
-		if (map.containsKey(menuId) == false) {
-			LOG.severe("no menu with id " + menuId + " found");
-			return null;
-		}
+		if ( menuId == null ) throw new IllegalArgumentException("menuId == null");
+		
+		if (map.containsKey(menuId) == false) 
+			throw new IllegalArgumentException("no menu for "+menuId+" found");
+		
 
 		ExtendableMenu menu = (ExtendableMenu) map.get(menuId);
 
@@ -87,6 +97,8 @@ public class ExtendableMenuBar extends JMenuBar {
 
 	public void insertMenuItem(String menuId, String placeholderId,
 			JMenuItem menuItem) {
+		if ( menuId == null ) throw new IllegalArgumentException("menuId == null");
+		
 		if (map.containsKey(menuId) == false)
 			throw new IllegalArgumentException("no menu with id " + menuId
 					+ " found");
@@ -97,6 +109,8 @@ public class ExtendableMenuBar extends JMenuBar {
 
 	public void insertAction(String menuId, String placeholderId,
 			AbstractColumbaAction action) {
+		if ( menuId == null ) throw new IllegalArgumentException("menuId == null");
+		
 		if (map.containsKey(menuId) == false)
 			throw new IllegalArgumentException("no menu with id " + menuId
 					+ " found");

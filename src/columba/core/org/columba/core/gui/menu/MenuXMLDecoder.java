@@ -96,8 +96,8 @@ public class MenuXMLDecoder {
 		this.mediator = mediator;
 
 		try {
-			pluginHandler = PluginManager
-					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
+			pluginHandler = PluginManager.getInstance().getExtensionHandler(
+					IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -152,7 +152,6 @@ public class MenuXMLDecoder {
 			return null;
 		}
 
-		
 		ExtendablePopupMenu menu = new ExtendablePopupMenu("id");
 		parsePopupMenu(menu, menuElement);
 
@@ -214,22 +213,23 @@ public class MenuXMLDecoder {
 		Iterator it = parentElement.getChildren().listIterator();
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
+
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				
+
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
 
-			
 				ExtendableMenu menu = new ExtendableMenu(menuId, menuName);
 				parseMenu(menu, menuElement);
 				parentMenu.add(menu);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
-				if ( action == null ) continue;
-				
+				if (action == null)
+					continue;
+
 				CMenuItem menuItem = new CMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
@@ -238,8 +238,9 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
-				if ( action == null ) continue;
-				
+				if (action == null)
+					continue;
+
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
@@ -247,8 +248,9 @@ public class MenuXMLDecoder {
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
-				if ( action == null ) continue;
-				
+				if (action == null)
+					continue;
+
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
@@ -259,8 +261,9 @@ public class MenuXMLDecoder {
 				IMenu imenu;
 				try {
 					imenu = getIMenu(id, mediator);
-					if ( imenu == null ) continue;
-					
+					if (imenu == null)
+						continue;
+
 					parentMenu.add(imenu);
 				} catch (Exception e) {
 					LOG.severe(e.getMessage());
@@ -281,22 +284,21 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				
+
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
 
-			
 				ExtendableMenu menu = new ExtendableMenu(menuId, menuName);
 				parseMenu(menu, menuElement);
 				parentMenu.add(menu);
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
-				if (action == null) 
-					 continue;
-				
+				if (action == null)
+					continue;
+
 				CMenuItem menuItem = new CMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
@@ -305,8 +307,8 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
-				if (action == null) 
-					 continue;
+				if (action == null)
+					continue;
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
@@ -314,8 +316,8 @@ public class MenuXMLDecoder {
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
-				if (action == null) 
-					 continue;
+				if (action == null)
+					continue;
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.add(menuItem);
@@ -326,8 +328,8 @@ public class MenuXMLDecoder {
 				IMenu imenu;
 				try {
 					imenu = getIMenu(id, mediator);
-					if (imenu == null) 
-						 continue;
+					if (imenu == null)
+						continue;
 					parentMenu.add(imenu);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -360,7 +362,7 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-			
+
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
 				String placeholderId = menuElement
@@ -368,16 +370,16 @@ public class MenuXMLDecoder {
 
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
-			
-				ExtendableMenu menu = menubar.getMenu(menuId);
-				if (menu == null) {
+
+				if (menubar.exists(menuId)) {
+					// extend existing menu
+					ExtendableMenu menu = menubar.getMenu(menuId);
+					extendMenu(menubar, menu, menuElement, placeholderId);
+				} else {
 					// create new menu
-					menu = new ExtendableMenu(menuId, menuName);
+					ExtendableMenu menu = new ExtendableMenu(menuId, menuName);
 					menubar.insert(menu);
 					parseMenu(menu, menuElement);
-				} else {
-					// extend existing menu
-					extendMenu(menubar, menu, menuElement, placeholderId);
 				}
 			}
 		}
@@ -392,28 +394,30 @@ public class MenuXMLDecoder {
 		while (it.hasNext()) {
 			Element menuElement = (Element) it.next();
 			if (menuElement.getName().equals(MenuXMLDecoder.MENU)) {
-				
+
 				String menuId = menuElement
 						.getAttributeValue(MenuXMLDecoder.ID);
+
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
-			
-				ExtendableMenu menu = menubar.getMenu(menuId);
-				if (menu == null) {
+
+				if (menubar.exists(menuId)) {
+					// extend existing menu
+					ExtendableMenu menu = menubar.getMenu(menuId);
+					extendMenu(menubar, menu, menuElement, placeholderId);
+				} else {
 					// create new menu
-					menu = new ExtendableMenu(menuId, menuName);
+					ExtendableMenu menu = new ExtendableMenu(menuId, menuName);
 					parseMenu(menu, menuElement);
 					parentMenu.insert(menu, placeholderId);
-				} else {
-					// extend existing menu
-					extendMenu(menubar, menu, menuElement, placeholderId);
 				}
 
 			} else if (menuElement.getName().equals(MenuXMLDecoder.MENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
-				if ( action == null ) continue;
-				
+				if (action == null)
+					continue;
+
 				CMenuItem menuItem = new CMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.insert(menuItem, placeholderId);
@@ -422,7 +426,8 @@ public class MenuXMLDecoder {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractSelectableAction action = (AbstractSelectableAction) getAction(
 						id, mediator);
-				if ( action == null ) continue;
+				if (action == null)
+					continue;
 				CCheckBoxMenuItem menuItem = new CCheckBoxMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.insert(menuItem, placeholderId);
@@ -430,7 +435,8 @@ public class MenuXMLDecoder {
 					MenuXMLDecoder.RADIOBUTTONMENUITEM)) {
 				String id = menuElement.getAttributeValue(MenuXMLDecoder.ID);
 				AbstractColumbaAction action = getAction(id, mediator);
-				if ( action == null ) continue;
+				if (action == null)
+					continue;
 				JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
 				menuItem.addMouseListener(mediator.getMouseTooltipHandler());
 				parentMenu.insert(menuItem, placeholderId);
@@ -441,7 +447,8 @@ public class MenuXMLDecoder {
 				IMenu imenu;
 				try {
 					imenu = getIMenu(id, mediator);
-					if ( imenu == null ) continue;
+					if (imenu == null)
+						continue;
 					parentMenu.insert(imenu, placeholderId);
 				} catch (Exception e) {
 					LOG.severe(e.getMessage());

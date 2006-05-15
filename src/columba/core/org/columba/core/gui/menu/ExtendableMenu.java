@@ -33,7 +33,7 @@ public class ExtendableMenu extends CMenu {
 
 	private MenuModel model;
 
-	private Hashtable map = new Hashtable();
+	private Hashtable<String, ExtendableMenu> map = new Hashtable<String, ExtendableMenu>();
 
 	private String id;
 
@@ -175,7 +175,7 @@ public class ExtendableMenu extends CMenu {
 		return id;
 	}
 
-	public Enumeration getSubmenuEnumeration() {
+	public Enumeration<ExtendableMenu> getSubmenuEnumeration() {
 		return map.elements();
 	}
 
