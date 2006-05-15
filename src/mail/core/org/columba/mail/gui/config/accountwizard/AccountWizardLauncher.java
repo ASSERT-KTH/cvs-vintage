@@ -62,11 +62,11 @@ public class AccountWizardLauncher {
 		if (w instanceof Frame)
 			wizard = new Wizard((Frame) w, model, MailResourceLoader.getString(
 					"dialog", "accountwizard", "title"), ImageLoader
-					.getIcon(IconKeys.PREFERENCES));
+					.getSmallIcon(IconKeys.PREFERENCES));
 		else
 			wizard = new Wizard((Dialog) w, model, MailResourceLoader
 					.getString("dialog", "accountwizard", "title"), ImageLoader
-					.getIcon(IconKeys.PREFERENCES));
+					.getSmallIcon(IconKeys.PREFERENCES));
 
 		wizard.setStepListRenderer(null);
 		CSH.setHelpIDString(wizard, "getting_started_1");
