@@ -2,12 +2,12 @@
 
 <menubar>
 
+	<!--
 	<menu id="menu_file_new" placeholderid="open">
 	<separator />
 		<menuitem id="NewAppointment" />
-		<!-- <menuitem id="NewAllDayAppointment" />-->
 	</menu>
-
+	-->
 	<menu id="menu_file" placeholderid="top">
 		<menuitem id="SaveAs" />
 	</menu>
