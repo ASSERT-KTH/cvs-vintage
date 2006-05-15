@@ -42,11 +42,10 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.MultiLineLabel;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.frapuccino.swing.ActiveWindowTracker;
 

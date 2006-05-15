@@ -53,10 +53,9 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.CheckBoxWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.help.HelpManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;

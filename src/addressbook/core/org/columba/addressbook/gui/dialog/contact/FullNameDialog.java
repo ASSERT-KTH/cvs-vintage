@@ -34,11 +34,10 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

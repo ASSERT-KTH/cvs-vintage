@@ -44,11 +44,10 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.imap.IMAPRootFolder;

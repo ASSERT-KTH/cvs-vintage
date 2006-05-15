@@ -47,9 +47,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.scripting.ScriptLogger;
 import org.columba.core.scripting.model.ColumbaScript;
 

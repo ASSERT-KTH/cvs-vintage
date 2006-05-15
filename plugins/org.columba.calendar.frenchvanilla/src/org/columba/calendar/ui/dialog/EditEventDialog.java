@@ -39,13 +39,12 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.calendar.model.api.IEvent;
 import org.columba.calendar.ui.comp.CalendarPicker;
 import org.columba.calendar.ui.comp.DatePicker;
 import org.columba.calendar.ui.comp.TimePicker;
 import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.resourceloader.IconKeys;

@@ -48,8 +48,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.plugin.IExtensionHandler;
@@ -58,6 +56,7 @@ import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.config.Config;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.InfoViewerDialog;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;

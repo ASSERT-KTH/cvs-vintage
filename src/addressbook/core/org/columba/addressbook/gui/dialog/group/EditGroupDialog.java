@@ -40,17 +40,16 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.text.JTextComponent;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.gui.autocomplete.DefaultAddressComboBox;
 import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
 import org.columba.addressbook.model.IContactModelPartial;
-import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IGroupModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -84,7 +83,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
 	private ButtonWithMnemonic cancelButton;
 
-	private IGroup group;
+	private IGroupModel group;
 
 	private AbstractFolder parentFolder;
 
@@ -97,7 +96,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 	 *            null, if you want to create a new group. Otherwise, the
 	 *            groupNode will be modified.
 	 */
-	public EditGroupDialog(JFrame frame, IGroup group,
+	public EditGroupDialog(JFrame frame, IGroupModel group,
 			AbstractFolder parentFolder) {
 		super(frame, true);
 

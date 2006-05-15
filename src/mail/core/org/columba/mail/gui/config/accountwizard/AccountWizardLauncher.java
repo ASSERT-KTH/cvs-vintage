@@ -15,6 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.accountwizard;
 
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.Window;
+
 import javax.help.CSH;
 
 import net.javaprog.ui.wizard.DataModel;
@@ -28,41 +32,48 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
-
+import org.frapuccino.swing.ActiveWindowTracker;
 
 public class AccountWizardLauncher {
-    public AccountWizardLauncher() {
-    }
+	public AccountWizardLauncher() {
+	}
 
-    public void launchWizard(boolean firstStart) {
-        DataModel data = new DataModel();
-        Step[] steps;
+	public void launchWizard(boolean firstStart) {
+		DataModel data = new DataModel();
+		Step[] steps;
 
-        if (firstStart) {
-            steps = new Step[] {
-                    new WelcomeStep(), new IdentityStep(data),
-                    new IncomingServerStep(data),
-                    new OutgoingServerStep(data, false), new FinishStep()
-                };
-        } else {
-            steps = new Step[] {
-                    new IdentityStep(data), new IncomingServerStep(data),
-                    new OutgoingServerStep(data, true)
-                };
-        }
+		if (firstStart) {
+			steps = new Step[] { new WelcomeStep(), new IdentityStep(data),
+					new IncomingServerStep(data),
+					new OutgoingServerStep(data, false), new FinishStep() };
+		} else {
+			steps = new Step[] { new IdentityStep(data),
+					new IncomingServerStep(data),
+					new OutgoingServerStep(data, true) };
+		}
 
-        WizardModel model = new DefaultWizardModel(steps);
-        model.addWizardModelListener(new AccountCreator(data));
+		WizardModel model = new DefaultWizardModel(steps);
+		model.addWizardModelListener(new AccountCreator(data));
 
-        Wizard wizard = new Wizard(model,
-                MailResourceLoader.getString("dialog", "accountwizard", "title"),
-                ImageLoader.getSmallIcon(IconKeys.PREFERENCES));
-        wizard.setStepListRenderer(null);
-        CSH.setHelpIDString(wizard, "getting_started_1");
-        JavaHelpSupport.enableHelp(wizard,
-            HelpManager.getInstance().getHelpBroker());
-        wizard.pack();
-        wizard.setLocationRelativeTo(null);
-        wizard.setVisible(true);
-    }
+		Window w = ActiveWindowTracker.findActiveWindow();
+
+		Wizard wizard = null;
+
+		if (w instanceof Frame)
+			wizard = new Wizard((Frame) w, model, MailResourceLoader.getString(
+					"dialog", "accountwizard", "title"), ImageLoader
+					.getIcon(IconKeys.PREFERENCES));
+		else
+			wizard = new Wizard((Dialog) w, model, MailResourceLoader
+					.getString("dialog", "accountwizard", "title"), ImageLoader
+					.getIcon(IconKeys.PREFERENCES));
+
+		wizard.setStepListRenderer(null);
+		CSH.setHelpIDString(wizard, "getting_started_1");
+		JavaHelpSupport.enableHelp(wizard, HelpManager.getInstance()
+				.getHelpBroker());
+		wizard.pack();
+		wizard.setLocationRelativeTo(null);
+		wizard.setVisible(true);
+	}
 }

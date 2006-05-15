@@ -35,8 +35,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
@@ -44,6 +42,7 @@ import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 
 public class SelectAddressbookFolderDialog extends JDialog implements
 		ActionListener, TreeSelectionListener, ISelectFolderDialog {

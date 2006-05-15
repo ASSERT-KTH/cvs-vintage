@@ -48,10 +48,9 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;

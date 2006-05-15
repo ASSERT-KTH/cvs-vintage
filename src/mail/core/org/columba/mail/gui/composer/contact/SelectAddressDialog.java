@@ -39,15 +39,14 @@ import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IFolder;
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.facade.IHeaderItem;
-import org.columba.addressbook.facade.IFolder;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.DoubleClickListener;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.contact.list.ContactDNDListView;
 import org.columba.mail.gui.contact.list.ContactListModel;

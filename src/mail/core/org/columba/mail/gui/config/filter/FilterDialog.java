@@ -35,13 +35,12 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.help.HelpManager;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;

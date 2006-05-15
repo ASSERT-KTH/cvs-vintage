@@ -43,8 +43,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.api.command.IWorkerStatusChangeListener;
 import org.columba.api.command.WorkerStatusChangedEvent;
 import org.columba.core.command.TaskManager;
@@ -52,6 +50,7 @@ import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.base.ButtonWithMnemonic;
+import org.columba.core.gui.base.SingleSideEtchedBorder;
 import org.columba.core.help.HelpManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
