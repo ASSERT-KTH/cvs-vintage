@@ -27,9 +27,12 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.columba.addressbook.facade.FacadeUtil;
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.facade.IFolder;
 import org.columba.addressbook.facade.IFolderFacade;
+import org.columba.addressbook.facade.IModelFacade;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.exception.StoreException;
 import org.columba.core.io.StreamUtils;
@@ -469,11 +472,14 @@ public class MessageBuilderHelper {
 		try {
 			IContactFacade contactFacade = ServiceConnector.getContactFacade();
 			IFolderFacade folderFacade = ServiceConnector.getFolderFacade();
+			IModelFacade modelFacade = ServiceConnector.getModelFacade();
 			IFolder folder = folderFacade.getCollectedAddresses();
 			for (int i = 0; i < addresses.length; i++) {
 				try {
-					contactFacade.addContact(folder.getId(), addresses[i]
-							.getMailAddress());
+					IContactItem contactItem = modelFacade.createContactItem();
+					Address addr = addresses[i];
+					FacadeUtil.getInstance().initContactItem(contactItem, addr.getDisplayName(), addr.getMailAddress());
+					contactFacade.addContact(folder.getId(), null);
 				} catch (StoreException e) {
 					e.printStackTrace();
 				}

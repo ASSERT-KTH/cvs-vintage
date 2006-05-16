@@ -51,30 +51,57 @@ public interface IContactFacade {
 	 * 
 	 * @param id
 	 *            contact folder unique id
-	 * @param emailAddress
-	 *            new email address
+	 * @param contactItem The IContactItem to add to the specified folder
 	 * @throws StoreException
 	 *             in case of an internal storage backend failure
 	 * @throws IllegalArgumentException
 	 *             in case of invalid arguments, in case this method is not
 	 *             supported by a facade implementation
 	 */
-	void addContact(String id, String emailAddress) throws StoreException,
+	void addContact(String id, IContactItem contactItem) throws StoreException,
 			IllegalArgumentException;
 
 	/**
-	 * Add new contact to contact folder with specified id. Implementation
-	 * should prompt user for a destination contact folder.
+	 * Add an array of contacts to the contact folder with specified id.
 	 * 
-	 * @param emailAddress
-	 *            new email address
+	 * @param id
+	 *            contact folder unique id
+	 * @param contactItems Array of IContactItemS to add to the specified folder
 	 * @throws StoreException
 	 *             in case of an internal storage backend failure
 	 * @throws IllegalArgumentException
 	 *             in case of invalid arguments, in case this method is not
 	 *             supported by a facade implementation
 	 */
-	void addContact(String emailAddress) throws StoreException,
+	void addContacts(String id, IContactItem[] contactItem) throws StoreException,
+			IllegalArgumentException;
+
+	/**
+	 * Add new contact to a contact folder. Implementation
+	 * should prompt user for a destination contact folder.
+	 * @param contactItem The IContactItem to add to the specified folder
+	 * 
+	 * @throws StoreException
+	 *             in case of an internal storage backend failure
+	 * @throws IllegalArgumentException
+	 *             in case of invalid arguments, in case this method is not
+	 *             supported by a facade implementation
+	 */
+	void addContact(IContactItem contactItem) throws StoreException,
+			IllegalArgumentException;
+
+	/**
+	 * Add an array of contacts to a contact folder. Implementation
+	 * should prompt user for a destination contact folder.
+	 * @param contactItems Array of IContactItemS to add to the specified folder
+	 * 
+	 * @throws StoreException
+	 *             in case of an internal storage backend failure
+	 * @throws IllegalArgumentException
+	 *             in case of invalid arguments, in case this method is not
+	 *             supported by a facade implementation
+	 */
+	void addContacts(IContactItem[] contactItems) throws StoreException,
 			IllegalArgumentException;
 
 	/**

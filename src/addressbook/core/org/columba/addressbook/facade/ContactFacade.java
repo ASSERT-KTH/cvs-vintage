@@ -32,7 +32,7 @@ import org.columba.addressbook.model.ContactModel;
 import org.columba.addressbook.model.EmailModel;
 import org.columba.addressbook.model.IContactModel;
 import org.columba.addressbook.model.IContactModelPartial;
-import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IGroupModel;
 import org.columba.addressbook.parser.ParserUtil;
 import org.columba.api.exception.StoreException;
 import org.columba.core.logging.Logging;
@@ -51,12 +51,12 @@ public final class ContactFacade implements IContactFacade {
 
 	/**
 	 * @see org.columba.addressbook.facade.IContactFacade#addContact(int,
-	 *      java.lang.String)
+	 *      IContactItem)
 	 */
-	public void addContact(String uid, String address) throws StoreException {
-		if (address == null || address.length() == 0)
+	public void addContact(String uid, IContactItem contactItem) throws StoreException {
+		if (contactItem == null)
 			throw new IllegalArgumentException(
-					"address == null or empty String");
+					"IContactItem is null");
 
 		if (uid == null)
 			throw new IllegalArgumentException("uid == null");
@@ -64,7 +64,7 @@ public final class ContactFacade implements IContactFacade {
 		AbstractFolder selectedFolder = (AbstractFolder) AddressbookTreeModel
 				.getInstance().getFolder(uid);
 
-		IContactModel card = createContactModel(address);
+		IContactModel card = createContactModel(contactItem);
 
 		try {
 			if (selectedFolder.findByEmailAddress(card.getPreferredEmail()) == null)
@@ -75,8 +75,11 @@ public final class ContactFacade implements IContactFacade {
 
 	}
 
-	private ContactModel createContactModel(String address) {
-		if (address == null || address.length() == 0)
+	private ContactModel createContactModel(IContactItem contactItem) {
+		return new ContactModel(contactItem);
+		
+		/*
+		if (contactItem == null || contactItem.getAddress() == null  || contactItem.getAddress().length() == 0)
 			throw new IllegalArgumentException(
 					"address == null or empty String");
 
@@ -89,11 +92,11 @@ public final class ContactFacade implements IContactFacade {
 			return null;
 		}
 
-		LOG.info("address:" + address); //$NON-NLS-1$
+		LOG.info("address:" + contactItem); //$NON-NLS-1$
 
 		ContactModel card = new ContactModel();
 
-		String fn = adr.getShortAddress();
+		String fn = contactItem.getName()
 
 		card.setFormattedName(fn);
 		// backwards compatibility
@@ -107,6 +110,7 @@ public final class ContactFacade implements IContactFacade {
 		card.setFamilyName(result[1]);
 		card.setAdditionalNames(result[2]);
 		return card;
+		*/
 	}
 
 	/**
@@ -134,21 +138,21 @@ public final class ContactFacade implements IContactFacade {
 
 	/**
 	 * @see org.columba.addressbook.facade.IContactFacade#addContact(int,
-	 *      java.lang.String[])
+	 *      IContactItem)
 	 */
-	public void addContact(String uid, String[] address) throws StoreException {
+	public void addContacts(String uid, IContactItem[] contactItems) throws StoreException {
 		if (uid == null)
 			throw new IllegalArgumentException("uid == null");
 
-		if (address == null || address.length == 0)
+		if (contactItems == null)
 			throw new IllegalArgumentException(
-					"address == null or null entry array");
+					"Zero IContactItem's were specified to add to addressbook folder");
 
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		IContactFolder folder = (IContactFolder) model.getFolder(uid);
 
-		for (int i = 0; i < address.length; i++) {
-			IContactModel card = createContactModel(address[i]);
+		for (int i = 0; i < contactItems.length; i++) {
+			IContactModel card = createContactModel(contactItems[i]);
 
 			try {
 				if (folder.findByEmailAddress(card.getPreferredEmail()) == null)
@@ -160,12 +164,13 @@ public final class ContactFacade implements IContactFacade {
 	}
 
 	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#addContact(java.lang.String[])
+	 * @see org.columba.addressbook.facade.IContactFacade#addContact(IContactItem)
 	 */
-	public void addContact(String[] address) throws StoreException {
-		if (address == null || address.length == 0)
+	public void addContacts(IContactItem[] contactItems) throws StoreException {
+
+		if (contactItems == null)
 			throw new IllegalArgumentException(
-					"address == null or null entry array");
+					"Zero IContactItem's were specified to add to addressbook folder");
 
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		SelectAddressbookFolderDialog dialog = new SelectAddressbookFolderDialog(
@@ -174,18 +179,18 @@ public final class ContactFacade implements IContactFacade {
 			IFolder folder = dialog.getSelectedFolder();
 			String uid = folder.getId();
 
-			addContact(uid, address);
+			addContacts(uid, contactItems);
 		} else
 			return;
 	}
 
 	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#addContact(java.lang.String)
+	 * @see org.columba.addressbook.facade.IContactFacade#addContact(IContactItem)
 	 */
-	public void addContact(String address) throws StoreException {
-		if (address == null || address.length() == 0)
+	public void addContact(IContactItem contactItem) throws StoreException {
+		if (contactItem == null)
 			throw new IllegalArgumentException(
-					"address == null or empty String");
+					"IContactItem is null");
 
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		SelectAddressbookFolderDialog dialog = new SelectAddressbookFolderDialog(
@@ -194,7 +199,7 @@ public final class ContactFacade implements IContactFacade {
 			IFolder folder = dialog.getSelectedFolder();
 			String uid = folder.getId();
 
-			addContact(uid, address);
+			addContact(uid, contactItem);
 		} else
 			return;
 	}
@@ -306,7 +311,7 @@ public final class ContactFacade implements IContactFacade {
 		// add group items
 		for (int i = 0; i < f.getChildCount(); i++) {
 			IGroupFolder groupFolder = (IGroupFolder) f.getChildAt(i);
-			IGroup group = groupFolder.getGroup();
+			IGroupModel group = groupFolder.getGroup();
 
 			IGroupItem groupItem = new GroupItem(folderId);
 			groupItem.setName(group.getName());

@@ -116,15 +116,15 @@ public class AddressbookTableModel extends AbstractTableModel
 
 		switch (column) {
 			case 0 :
-				return item.getName();
+				return item.getName() != null ? item.getName() : "";
 			case 1 :
-				return item.getFirstname();
+				return item.getFirstname() != null ? item.getFirstname() : "";
 			case 2 :
-				return item.getLastname();
+				return item.getLastname() != null ? item.getLastname() : "";
 			case 3 :
 				return item.getAddress();
 			case 4 :
-				return item.getWebsite();
+				return item.getWebsite() != null ? item.getWebsite() : "";
 			default :
 				return "";
 

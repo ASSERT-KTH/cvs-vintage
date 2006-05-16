@@ -19,13 +19,18 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.columba.addressbook.facade.ContactItem;
+import org.columba.addressbook.facade.FacadeUtil;
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.facade.IModelFacade;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.exception.StoreException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
+import org.columba.core.util.NameParser;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
@@ -84,8 +89,10 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 	public void actionPerformed(ActionEvent evt) {
 
 		IContactFacade contactFacade = null;
+		IModelFacade modelFacade = null;
 		try {
 			contactFacade = ServiceConnector.getContactFacade();
+			modelFacade = ServiceConnector.getModelFacade();
 		} catch (ServiceNotFoundException e) {
 			e.printStackTrace();
 			return;
@@ -100,7 +107,9 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 				address = Address.parse(url.getSender());
 
 			// add contact to addressbook
-			contactFacade.addContact(address.toString());
+			IContactItem contactItem = modelFacade.createContactItem();
+			FacadeUtil.getInstance().initContactItem(contactItem, address.getDisplayName(), address.getMailAddress());
+			contactFacade.addContact(contactItem);
 		} catch (ParserException e) {
 			e.printStackTrace();
 		} catch (StoreException e) {

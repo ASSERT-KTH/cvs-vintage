@@ -20,16 +20,22 @@ package org.columba.mail.folder.command;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.columba.addressbook.facade.FacadeUtil;
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.facade.IModelFacade;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.api.exception.StoreException;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.folder.IMailbox;
+import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * Add sender of the selected messages to addressbook.
@@ -67,8 +73,10 @@ public class AddSenderToAddressbookCommand extends Command {
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
 		IContactFacade contactFacade = null;
+		IModelFacade modelFacade = null;
 		try {
 			contactFacade = ServiceConnector.getContactFacade();
+			modelFacade = ServiceConnector.getModelFacade();
 		} catch (ServiceNotFoundException e) {
 			e.printStackTrace();
 			return;
@@ -90,7 +98,18 @@ public class AddSenderToAddressbookCommand extends Command {
 		// add sender to addressbook
 		Iterator<String> it = v.listIterator();
 		while (it.hasNext()) {
-			contactFacade.addContact(it.next());
+			try {
+				Address address = Address.parse(it.next());
+
+				// add contact to addressbook
+				IContactItem contactItem = modelFacade.createContactItem();
+				FacadeUtil.getInstance().initContactItem(contactItem, address.getDisplayName(), address.getMailAddress());
+				contactFacade.addContact(null);
+			} catch (ParserException e) {
+				e.printStackTrace();
+			} catch (StoreException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

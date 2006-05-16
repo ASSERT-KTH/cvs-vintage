@@ -48,7 +48,16 @@ public class FilterDecorator extends TableModelDecorator {
 	}
 
 	public void tableChanged(TableModelEvent e) {
-		//allocate();
+		filter();
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.gui.table.model.TableModelDecorator#getRowCount()
+	 */
+	@Override
+	public int getRowCount() {
+		return list.size();
 	}
 
 	/**
@@ -86,18 +95,10 @@ public class FilterDecorator extends TableModelDecorator {
 	}
 
 	/**
-	 * @see javax.swing.table.TableModel#getRowCount()
-	 */
-	public int getRowCount() {
-		return list.size();
-	}
-
-	/**
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if ( getRealModel().getRowCount()  == 0 ) return null;
-		
 		return getRealModel().getValueAt(
 				((Integer) list.get(rowIndex)).intValue(), columnIndex);
 	}
@@ -123,8 +124,6 @@ public class FilterDecorator extends TableModelDecorator {
 	 */
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
-
-		filter();
 	}
 
 	/**

@@ -58,10 +58,6 @@ public class ContactModelPartial extends BasicModelPartial implements
 	public ContactModelPartial(String id, String name, String firstname, String lastname, String address,
 			String website) {
 		super(id, name, true);
-
-		if ( firstname == null ) throw new IllegalArgumentException("firstname == null");
-		if ( lastname == null ) throw new IllegalArgumentException("lastname == null");
-		if ( address == null ) throw new IllegalArgumentException("address == null");
 		
 		this.firstname = firstname;
 		this.lastname = lastname;

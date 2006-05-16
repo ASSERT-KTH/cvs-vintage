@@ -23,7 +23,12 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.parser.ParserUtil;
 import org.columba.core.base.UUIDGenerator;
+import org.columba.core.logging.Logging;
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * Contact model POJO.
@@ -89,6 +94,26 @@ public class ContactModel implements IContactModel {
 	private Vector addressVector = new Vector();
 
 	private String note;
+	
+	public ContactModel(IContactItem contactItem) {
+		if (contactItem == null || contactItem.getAddress() == null  || contactItem.getAddress().length() == 0)
+			throw new IllegalArgumentException(
+					"address == null or empty String");
+
+		Address adr;
+
+		String fn = contactItem.getName() != null ? contactItem.getName() : contactItem.getAddress();
+		setFormattedName(fn);
+		
+		// backwards compatibility
+		setSortString(fn);
+		addEmail(new EmailModel(contactItem.getAddress(), EmailModel.TYPE_WORK));
+
+		String[] result = ParserUtil.tryBreakName(fn);
+		setGivenName(contactItem.getFirstname());
+		setFamilyName(contactItem.getLastname());
+		
+	}
 
 	public ContactModel() {
 		this.id = new UUIDGenerator().newUUID();

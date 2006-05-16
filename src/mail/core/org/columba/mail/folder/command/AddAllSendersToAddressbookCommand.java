@@ -17,19 +17,28 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.columba.addressbook.facade.FacadeUtil;
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IContactItem;
+import org.columba.addressbook.facade.IModelFacade;
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.exception.ServiceNotFoundException;
+import org.columba.api.exception.StoreException;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.folder.IMailbox;
+import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * Add all senders contained in the selected messages to the addressbook.
@@ -67,37 +76,75 @@ public class AddAllSendersToAddressbookCommand extends Command {
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
 		IContactFacade contactFacade = null;
+		IModelFacade modelFacade = null;
 		try {
 			contactFacade = ServiceConnector.getContactFacade();
+			modelFacade = ServiceConnector.getModelFacade();
 		} catch (ServiceNotFoundException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		Vector<String> v = new Vector<String>();
+		List<String> addresses = new ArrayList<String>();
 
 		// for every message
 		for (int i = 0; i < uids.length; i++) {
 			// get header of message
 			Header header = folder.getHeaderFields(uids[i], new String[] {
-					"From", "Cc", "Bcc" });
+					"From", "To", "Cc", "Bcc" });
 
-			String sender = (String) header.get("From");
-			v.add(sender);
+			String addrStr = (String) header.get("From");
+			addresses.addAll(parseAddrStr(addrStr));
 
-			sender = (String) header.get("Cc");
-			v.add(sender);
+			addrStr = (String) header.get("To");
+			addresses.addAll(parseAddrStr(addrStr));
 
-			sender = (String) header.get("Bcc");
-			v.add(sender);
+			addrStr = (String) header.get("Cc");
+			addresses.addAll(parseAddrStr(addrStr));
+
+			addrStr = (String) header.get("Bcc");
+			addresses.addAll(parseAddrStr(addrStr));
 
 		}
 
 		// add sender to addressbook
-		Iterator<String> it = v.listIterator();
+		Iterator<String> it = addresses.listIterator();
+		List<IContactItem> contactItems = new ArrayList<IContactItem>();
 		while (it.hasNext()) {
-			contactFacade.addContact(it.next());
+			try {
+				String addrStr = it.next();
+				if (addrStr == null)
+					continue;
+				Address address = Address.parse(addrStr);
+
+				// add contact to addressbook
+				IContactItem contactItem = modelFacade.createContactItem();
+				FacadeUtil.getInstance().initContactItem(contactItem, address.getDisplayName(), address.getMailAddress());
+				contactItems.add(contactItem);
+			} catch (ParserException e) {
+				e.printStackTrace();
+			} catch (StoreException e) {
+				e.printStackTrace();
+			}
 		}
+		contactFacade.addContacts(contactItems.toArray(new IContactItem[contactItems.size()]));
+	}
+	
+	/**
+	 * Parse an address string containing multiple comma-separated mail addresses
+	 * @param addrStr The comma-separated address string.
+	 * @return List containing individual address strings
+	 */
+	private List<String> parseAddrStr(String addrStr) {
+		List<String> addresses = new ArrayList<String>();
+		if (addrStr == null)
+			return addresses;
+		StringTokenizer st = new StringTokenizer(addrStr, ",");
+		while (st.hasMoreTokens()) {
+			String addr = st.nextToken();
+			addresses.add(addr);
+		}
+		return addresses;
 	}
 
 }
