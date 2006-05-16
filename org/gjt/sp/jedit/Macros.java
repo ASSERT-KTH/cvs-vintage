@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.41 2004/12/31 21:10:16 spestov Exp $
+ * @version $Id: Macros.java,v 1.42 2006/05/16 17:56:19 ezust Exp $
  */
 public class Macros
 {
@@ -429,16 +429,14 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 				handler.runMacro(null,this);
 			else
 			{
-				Buffer buffer = view.getBuffer();
-
 				try
 				{
-					buffer.beginCompoundEdit();
+					view.getBuffer().beginCompoundEdit();
 					handler.runMacro(view,this);
 				}
 				finally
 				{
-					buffer.endCompoundEdit();
+					view.getBuffer().endCompoundEdit();
 				}
 			}
 		} //}}}
