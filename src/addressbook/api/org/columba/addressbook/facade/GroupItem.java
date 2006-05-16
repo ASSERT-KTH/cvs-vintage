@@ -20,6 +20,10 @@ package org.columba.addressbook.facade;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * Convenience class implementation of IGroupItem. This implementation class can be used by clients
+ * of the addressbook facade if desired, or can be implemented differently, if necessary.
+ */
 public class GroupItem extends HeaderItem implements IGroupItem {
 
 	private List<IContactItem> list = new Vector<IContactItem>();

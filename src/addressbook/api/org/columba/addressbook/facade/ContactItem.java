@@ -18,7 +18,10 @@
 package org.columba.addressbook.facade;
 
 
-
+/**
+ * Convenience class implementation of IContactItem. This implementation class can be used by clients
+ * of the addressbook facade if desired, or can be implemented differently, if necessary.
+ */
 public class ContactItem extends HeaderItem implements IContactItem {
 
 	private String firstname;
