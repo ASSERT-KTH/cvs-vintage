@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.248 2006/05/16 18:18:49 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.249 2006/05/16 22:57:35 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,6 +71,7 @@ import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.DiElement;
 import org.argouml.model.Model;
 import org.argouml.notation.Notation;
@@ -905,9 +906,11 @@ public abstract class FigNodeModelElement
     public void propertyChange(PropertyChangeEvent pve) {
         Object src = pve.getSource();
         String pName = pve.getPropertyName();
-        if (pName.equals("editing")
+        if (pve instanceof DeleteInstanceEvent && src == getOwner()) {
+            removeFromDiagram();
+            return;
+        } else if (pName.equals("editing")
                 && Boolean.FALSE.equals(pve.getNewValue())) {
-	    LOG.debug("finished editing");
             try {
                 //parse the text that was edited
                 textEdited((FigText) src);
@@ -942,7 +945,7 @@ public abstract class FigNodeModelElement
             modelChanged(pve);
         }
     }
-
+    
     /**
      * This method is called when the user doubleclicked on the text field,
      * and starts editing. Subclasses should overrule this field to e.g.
