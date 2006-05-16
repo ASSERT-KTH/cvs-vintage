@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.97 2006/04/15 18:14:34 mvw Exp $
+// $Id: UMLDiagram.java,v 1.98 2006/05/16 18:37:43 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -545,6 +545,10 @@ public abstract class UMLDiagram
         while (elems.hasMoreElements()) {
             Fig fig = (Fig) elems.nextElement();
             Object owner = fig.getOwner();
+            if (Model.getFacade().isAModelElement(owner) 
+                    && Model.getUmlFactory().isRemoved(owner)) {
+                continue;
+            }
             /* This will make sure all the correct
              * event listeners are set:
              */
