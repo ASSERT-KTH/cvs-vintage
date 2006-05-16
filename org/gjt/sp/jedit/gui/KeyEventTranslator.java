@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.31 2006/05/16 02:58:25 mediumnet Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.32 2006/05/16 03:05:15 mediumnet Exp $
  */
 public class KeyEventTranslator
 {
@@ -81,7 +81,7 @@ public class KeyEventTranslator
 						keyChar+=0x40;
 						
 						if ((keyChar>='A')&&(keyChar<='Z')) {	// if they are uppercase letters
-								keyChar+=20; 		// make them lowercase letters
+								keyChar+=0x20; 		// make them lowercase letters
 						}
 //						usecooked	= false;
 
