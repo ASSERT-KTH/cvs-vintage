@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.28 2006/05/15 23:53:23 mediumnet Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.29 2006/05/16 01:01:19 mediumnet Exp $
  */
 public class KeyEventTranslator
 {
@@ -70,7 +70,7 @@ public class KeyEventTranslator
 				Java delivers them with a valid keyChar. We intentionally ignore this keyChar.
 				(However, not ignoring the keyChar  would be an easy way to enter "escape" or "delete" characters into the edited text document, but this is not what we want.) 
 			*/
-			switch (evt.getKeyChar()) {
+			switch (keyChar) {
 				case 0x1b:	// case KeyEvent.VK_ESCAPE:
 				case 0x08:	// case KeyEvent.VK_BACK_SPACE:
 				case 0x7f:	// case KeyEvent.VK_DELETE:
