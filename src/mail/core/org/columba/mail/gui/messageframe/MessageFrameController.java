@@ -26,6 +26,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IDock;
+import org.columba.api.gui.frame.IDockable;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -59,12 +61,18 @@ public class MessageFrameController extends AbstractMailFrameController
 
 	private ThreePaneMailFrameController parentController;
 
+	private IDockable messageViewerDockable;
+	
 	/**
 	 * @param viewItem
 	 */
 	public MessageFrameController() {
 		super(FrameManager.getInstance().createCustomViewItem("Messageframe"));
 
+//		messageViewerDockable = registerDockable("mail_messageviewer", MailResourceLoader.getString(
+//				"global", "dockable_messageviewer"),
+//				messageController, null);
+		
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
 		getSelectionManager().addSelectionHandler(tableSelectionHandler);
 
@@ -140,16 +148,16 @@ public class MessageFrameController extends AbstractMailFrameController
 	/**
 	 * @see org.columba.api.gui.frame.IContentPane#getComponent()
 	 */
-	public JComponent getComponent() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-
-		panel.add(messageController, BorderLayout.CENTER);
-
-		
-
-		return panel;
-	}
+//	public JComponent getComponent() {
+//		JPanel panel = new JPanel();
+//		panel.setLayout(new BorderLayout());
+//
+//		panel.add(messageController, BorderLayout.CENTER);
+//
+//		
+//
+//		return panel;
+//	}
 
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#getString(java.lang.String,
@@ -163,10 +171,17 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * @see org.columba.core.gui.frame.DockFrameController#loadDefaultPosition()
 	 */
 	public void loadDefaultPosition() {
+
+		super.dock(messageViewerDockable, IDock.REGION.CENTER);
+
 	}
 
 	/** *********************** container callbacks ************* */
 
+	
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#extendMenu(org.columba.api.gui.frame.IContainer)
+	 */
 	public void extendMenu(IContainer container) {
 		try {
 			InputStream is = DiskIO
@@ -179,16 +194,31 @@ public class MessageFrameController extends AbstractMailFrameController
 		}
 	}
 
+	/**
+	 * @see org.columba.api.gui.frame.IFrameMediator#extendToolBar(org.columba.api.gui.frame.IContainer)
+	 */
 	public void extendToolBar(IContainer container) {
 		try {
 			InputStream is = DiskIO
-					.getResourceStream("org/columba/mail/action/messageframe_menu.xml");
+					.getResourceStream("org/columba/mail/config/messageframe_toolbar.xml");
 
-			container.extendMenu(this, is);
+			container.extendToolbar(this, is);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public JPanel getContentPane() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+
+		panel.add(messageController, BorderLayout.CENTER);
+
+		
+
+		return panel;
 	}
 
 }

@@ -63,7 +63,7 @@
  		
 
 		<placeholder id="show_hide"/>
-
+		
 
 		<!--
 		<menu id="menu_view_show_hide">
@@ -75,6 +75,7 @@
 		
 		
 		<placeholder id="bottom"/>
+		<seperator/>
 	</menu>
 	
 	<menu id="menu_utilities">

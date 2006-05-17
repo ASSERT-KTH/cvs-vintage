@@ -11,7 +11,8 @@
 	</menu>
 	
 	
-	<menu id="menu_view" placeholderid="top">
+	<menu id="menu_view" placeholderid="bottom">
+	<seperator/>
 		<menu id="menu_view_next">
 			<menuitem id="NextMessage" />
 			<menuitem id="NextUnreadMessage" />
@@ -52,16 +53,13 @@
 		<extensionpoint id="bottom" />	
 		<separator/>
 		<menu id="menu_message_mark">
-		 <menuitem id="MarkAsRead"/>
-		 <menuitem id="MarkAsFlagged"/>
-		 <menuitem id="MarkAsExpunged"/>
-		 <menuitem id="MarkAsSpam" />
-		 <separator/>
-		 <menuitem id="MarkAsUnread"/>
-		 <menuitem id="MarkAsUnflagged"/>
-		 <menuitem id="MarkAsUnexpunged"/>
-		 <menuitem id="MarkAsNotSpam"/>
-		</menu>
+		 <menuitem id="ToggleReadFlag"/>
+		 <menuitem id="ToggleAnsweredFlag"/>
+		 <menuitem id="ToggleDraftFlag"/>
+		 <menuitem id="ToggleFlaggedFlag"/>
+		 <menuitem id="ToggleExpungedFlag"/>
+		 <menuitem id="ToggleSpamFlag"/>
+		</menu>	
 	</menu>
 	
 	<menu id="menu_utilities" placeholderid="bottom">

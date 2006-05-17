@@ -114,8 +114,10 @@ public class MessageController extends JPanel implements CharsetListener,
 
 			public void componentResized(ComponentEvent e) {
 				try {
+					if ( getShownUid() != null ) {
 					updateGUI();
 					repaint();
+					}
 
 				} catch (Exception e1) {
 					e1.printStackTrace();

@@ -34,6 +34,9 @@ public abstract class DockFrameController extends DefaultFrameController
 
 	private ArrayList<IDockable> list = new ArrayList<IDockable>();
 
+	/**
+	 * @param viewItem
+	 */
 	public DockFrameController(ViewItem viewItem) {
 		super(viewItem);
 
@@ -41,6 +44,9 @@ public abstract class DockFrameController extends DefaultFrameController
 
 	}
 
+	/**
+	 * @param id
+	 */
 	public DockFrameController(String id) {
 		super(id);
 
@@ -48,6 +54,9 @@ public abstract class DockFrameController extends DefaultFrameController
 
 	}
 
+	/**
+	 * 
+	 */
 	private void initComponents() {
 
 		dockingPort = new DefaultDockingPort();
@@ -55,10 +64,16 @@ public abstract class DockFrameController extends DefaultFrameController
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IFrameMediator#getContentPane()
+	 */
 	public JPanel getContentPane() {
 		return dockingPort;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IFrameMediator#loadPositions()
+	 */
 	public void loadPositions() {
 		super.loadPositions();
 
@@ -92,6 +107,9 @@ public abstract class DockFrameController extends DefaultFrameController
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IFrameMediator#savePositions()
+	 */
 	public void savePositions() {
 		super.savePositions();
 
@@ -116,11 +134,17 @@ public abstract class DockFrameController extends DefaultFrameController
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#isInitialized()
 	 */
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IFrameMediator#isInitialized()
+	 */
 	public boolean isInitialized() {
 		return false;
 	}
 
 	/**
+	 * @see org.columba.api.gui.frame.IDock#registerDockable(org.columba.api.gui.frame.IDockable)
+	 */
+	/* (non-Javadoc)
 	 * @see org.columba.api.gui.frame.IDock#registerDockable(org.columba.api.gui.frame.IDockable)
 	 */
 	public void registerDockable(IDockable dockable) {
@@ -134,6 +158,9 @@ public abstract class DockFrameController extends DefaultFrameController
 	 * @see org.columba.api.gui.frame.IDock#registerDockable(java.lang.String,
 	 *      java.lang.String, javax.swing.JComponent, javax.swing.JPopupMenu)
 	 */
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IDock#registerDockable(java.lang.String, java.lang.String, javax.swing.JComponent, javax.swing.JPopupMenu)
+	 */
 	public IDockable registerDockable(String id, String name, JComponent comp,
 			JPopupMenu popup) {
 		IDockable dockable = new FrameMediatorDockable(id, name, comp, popup);
@@ -146,6 +173,9 @@ public abstract class DockFrameController extends DefaultFrameController
 	/**
 	 * @see org.columba.api.gui.frame.IDock#getDockableIterator()
 	 */
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IDock#getDockableIterator()
+	 */
 	public Iterator<IDockable> getDockableIterator() {
 		return list.iterator();
 	}
@@ -153,6 +183,9 @@ public abstract class DockFrameController extends DefaultFrameController
 	/**
 	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable,
 	 *      org.columba.api.gui.frame.IDock.REGION, float)
+	 */
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable, org.columba.api.gui.frame.IDock.REGION, float)
 	 */
 	public void dock(IDockable dockable, REGION region, float percentage) {
 		String regionString = convertRegion(region);
@@ -166,6 +199,9 @@ public abstract class DockFrameController extends DefaultFrameController
 	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable,
 	 *      org.columba.api.gui.frame.IDock.REGION)
 	 */
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable, org.columba.api.gui.frame.IDock.REGION)
+	 */
 	public void dock(IDockable dockable, REGION region) {
 		String regionString = convertRegion(region);
 
@@ -177,6 +213,9 @@ public abstract class DockFrameController extends DefaultFrameController
 	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable,
 	 *      org.columba.api.gui.frame.IDockable,
 	 *      org.columba.api.gui.frame.IDock.REGION, float)
+	 */
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IDock#dock(org.columba.api.gui.frame.IDockable, org.columba.api.gui.frame.IDockable, org.columba.api.gui.frame.IDock.REGION, float)
 	 */
 	public void dock(IDockable dockable, IDockable parentDockable,
 			REGION region, float percentage) {
@@ -191,11 +230,18 @@ public abstract class DockFrameController extends DefaultFrameController
 	 * @see org.columba.api.gui.frame.IDock#setSplitProportion(org.columba.api.gui.frame.IDockable,
 	 *      float)
 	 */
+	/* (non-Javadoc)
+	 * @see org.columba.api.gui.frame.IDock#setSplitProportion(org.columba.api.gui.frame.IDockable, float)
+	 */
 	public void setSplitProportion(IDockable dockable, float percentage) {
 		DockingManager.setSplitProportion(dockable.getView(), percentage);
 	}
 
 	// convert region enum to flexdock string
+	/**
+	 * @param region
+	 * @return
+	 */
 	private String convertRegion(REGION region) {
 		String regionString = null;
 		if (region == REGION.CENTER)
@@ -222,6 +268,9 @@ public abstract class DockFrameController extends DefaultFrameController
 	 * <p>
 	 * This method is called in case a formerly persisted state could not be
 	 * loaded correctly or no persisted state is available yet.
+	 */
+	/**
+	 * 
 	 */
 	public abstract void loadDefaultPosition();
 }

@@ -370,7 +370,7 @@ public class MenuXMLDecoder {
 
 				String menuName = mediator.getString("menu", "mainframe",
 						menuId);
-
+				
 				if (menubar.exists(menuId)) {
 					// extend existing menu
 					ExtendableMenu menu = menubar.getMenu(menuId);
@@ -389,6 +389,7 @@ public class MenuXMLDecoder {
 	public void extendMenu(ExtendableMenuBar menubar,
 			ExtendableMenu parentMenu, Element parentElement,
 			String placeholderId) {
+		if( placeholderId == null ) throw new IllegalArgumentException("placeholderId == null");
 
 		Iterator it = parentElement.getChildren().listIterator();
 		while (it.hasNext()) {

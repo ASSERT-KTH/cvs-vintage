@@ -91,7 +91,7 @@ public class ToolBarXMLDecoder {
 
 		Element toolBarElement = doc.getRootElement();
 		if (toolBarElement.getName().equals("toolbar") == false) {
-			LOG.severe("root element <toolbar> expected");
+			LOG.severe("root element <toolbar> expected, but was "+toolBarElement.getName());
 			return;
 		}
 

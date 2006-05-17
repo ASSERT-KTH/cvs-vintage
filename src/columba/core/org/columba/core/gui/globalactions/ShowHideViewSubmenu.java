@@ -31,6 +31,9 @@ public class ShowHideViewSubmenu extends IMenu {
 
 		// register for change of the frame mediator
 		controller.addListener(new MyListener());
+		
+		if ( getMenuComponentCount() == 0) setEnabled(false);
+		else setEnabled(true);
 	}
 
 	class DisplayAction extends AbstractAction {
@@ -86,6 +89,9 @@ public class ShowHideViewSubmenu extends IMenu {
 					add(new JMenuItem(action));
 				}
 			}
+			
+			if ( getMenuComponentCount() == 0) setEnabled(false);
+			else setEnabled(true);
 		}
 	}
 

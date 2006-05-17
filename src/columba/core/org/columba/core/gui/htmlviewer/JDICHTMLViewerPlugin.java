@@ -103,7 +103,7 @@ public class JDICHTMLViewerPlugin extends JPanel implements IHTMLViewerPlugin {
 	}
 
 	public boolean initialized() {
-		return true;
+		return browser.isInitialized();
 	}
 
 	public JComponent getContainer() {

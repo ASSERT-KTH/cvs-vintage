@@ -79,8 +79,10 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 			}
 		}
 
-		if (!isManagedFrame)
+		if (!isManagedFrame) {
+			setEnabled(false);
 			return;
+		}
 
 		group = new ButtonGroup();
 
