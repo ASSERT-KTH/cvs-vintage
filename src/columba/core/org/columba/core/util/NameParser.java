@@ -30,10 +30,12 @@ import org.columba.core.resourceloader.GlobalResourceLoader;
 public class NameParser {
 	
 	public static void main(String args[]) {
-		String[] testNames = {"Dr. Richard K. Ellington", "Bob Jones", "Ms. Jill Hark", "Robert B. Smith, Esq.", "Johnson, PhD.", "Sue & Gene Stark"};
+		String[] testNames = {"Dr. Richard K. Ellington", "Bob Jones", "Ms. Jill Hark", "Robert B. Smith, Esq.", "Johnson, PhD.", 
+				"Sue & Gene Stark", "George", "", null};
 		NameParser parser = NameParser.getInstance();
-		for (String name : testNames) {
-			System.out.println(parser.parseDisplayName(name).toString());
+		for (int i = 0; i < testNames.length; i++) {
+			String name = testNames[i];
+			System.out.println(i +": " +parser.parseDisplayName(name).toString());
 		}
 	}
 
@@ -88,6 +90,10 @@ public class NameParser {
 	
 	public Name parseDisplayName(String nameInputStr) {
 		
+		// Treat a null name input string the same as an empty input string
+		if (nameInputStr == null)
+			nameInputStr = "";
+		
 		String displayName = nameInputStr;
 		String salutation = null;
 		String firstName = null;
@@ -120,7 +126,9 @@ public class NameParser {
 		}
 
 		boolean commaSpecified = nameInputStr.indexOf(',') >= 0;
-		if (tokens.size() == 1) {
+		if (tokens.size() == 0) {
+			// Do nothing
+		} else if (tokens.size() == 1) {
 			// Assume last name only
 			lastName = tokens.get(0);
 		} else if (tokens.size() == 2) {
