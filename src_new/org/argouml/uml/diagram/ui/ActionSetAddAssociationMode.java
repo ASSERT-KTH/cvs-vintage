@@ -1,5 +1,5 @@
-// $Id: ActionSetAddAssociationMode.java,v 1.2 2006/04/19 05:28:58 tfmorris Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ActionSetAddAssociationMode.java,v 1.3 2006/05/19 21:38:26 linus Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -55,8 +55,9 @@ public class ActionSetAddAssociationMode extends CmdSetMode {
      *        association
      * @param name the action description
      */
-    public ActionSetAddAssociationMode(Object aggregationKind, boolean unidirectional,
-				String name) {
+    public ActionSetAddAssociationMode(Object aggregationKind,
+            boolean unidirectional,
+            String name) {
         super(ModeCreatePolyEdge.class, "edgeClass",
 	      Model.getMetaTypes().getAssociation(), name);
         _modeArgs.put("aggregation", aggregationKind);
