@@ -1,4 +1,4 @@
-// $Id: ActionImportXMI.java,v 1.6 2006/04/29 22:33:49 linus Exp $
+// $Id: ActionImportXMI.java,v 1.7 2006/05/19 21:20:55 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.persistence.AbstractFilePersister;
 import org.argouml.persistence.PersistenceManager;
-import org.argouml.ui.cmd.GenericArgoMenuBar;
 
 /**
  * This Action allows import of a XMI file.
