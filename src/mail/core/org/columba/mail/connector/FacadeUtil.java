@@ -1,8 +1,9 @@
 /**
  * Copyright 2005, 2006 ToolCafe, Inc. All rights reserved.
  */
-package org.columba.addressbook.facade;
+package org.columba.mail.connector;
 
+import org.columba.addressbook.facade.IContactItem;
 import org.columba.core.util.NameParser;
 import org.columba.core.util.NameParser.Name;
 

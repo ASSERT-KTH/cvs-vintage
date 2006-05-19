@@ -20,7 +20,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.addressbook.facade.ContactItem;
-import org.columba.addressbook.facade.FacadeUtil;
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.facade.IModelFacade;
@@ -31,6 +30,7 @@ import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.util.NameParser;
+import org.columba.mail.connector.FacadeUtil;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;

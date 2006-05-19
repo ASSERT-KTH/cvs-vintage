@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.columba.addressbook.facade.FacadeUtil;
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.facade.IFolder;
@@ -40,6 +39,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.connector.FacadeUtil;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.coder.Base64DecoderInputStream;

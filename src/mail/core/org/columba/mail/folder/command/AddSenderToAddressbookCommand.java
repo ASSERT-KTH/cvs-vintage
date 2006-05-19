@@ -20,7 +20,6 @@ package org.columba.mail.folder.command;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.columba.addressbook.facade.FacadeUtil;
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.facade.IModelFacade;
@@ -31,6 +30,7 @@ import org.columba.api.exception.StoreException;
 import org.columba.core.command.Command;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.connector.FacadeUtil;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Address;
