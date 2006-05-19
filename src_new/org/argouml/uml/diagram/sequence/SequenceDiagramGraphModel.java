@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.57 2006/04/12 21:21:20 mvw Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.58 2006/05/19 21:43:17 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,7 +158,8 @@ public class SequenceDiagramGraphModel
             return false;
         }
         return !getNodes().contains(node)
-              && Model.getFacade().getNamespace(node) == getCollaboration();
+                && Model.getFacade().isAModelElement(node)
+                && Model.getFacade().getNamespace(node) == getCollaboration();
     }
 
     /**
