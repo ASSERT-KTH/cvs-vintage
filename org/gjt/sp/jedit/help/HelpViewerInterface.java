@@ -7,17 +7,34 @@ import java.beans.PropertyChangeListener;
  * Interface supported by all HelpViewer classes.
  * Currently used by @ref infoviewer.InfoViewerPlugin and @ref HelpViewer 
  * 
- * @since Jedit 4.2pre3
- * @version $Id: HelpViewerInterface.java,v 1.5 2006/01/23 23:04:25 ezust Exp $
+ * @since Jedit 4.2pre5
+ * @version $Id: HelpViewerInterface.java,v 1.6 2006/05/19 22:33:12 ezust Exp $
  */
 public interface HelpViewerInterface 
 {
-	public void addPropertyChangeListener(PropertyChangeListener l);
-	public void dispose();
+	
+	/**
+	 * 
+	 * @param url
+	 * @param addToHistory 
+	 * @param scrollPos desired vertical scrollbar position after we go there
+	 */
+	public void gotoURL(String url, boolean addToHistory, int scrollPos);
+	
 	public String getBaseURL();
+	
+	public void addPropertyChangeListener(PropertyChangeListener l);
+	
+	/**
+	 * Called when the helpviewer is closed
+	 */
+	public void dispose();
+	/**
+	 * @return the root pane of this help viewer
+	 */
 	public Component getComponent();
 	public String getShortURL();
-	public void gotoURL(String url, boolean addToHistory);
+	
 	public void queueTOCReload();
 	public void setTitle(String newTitle);
 }

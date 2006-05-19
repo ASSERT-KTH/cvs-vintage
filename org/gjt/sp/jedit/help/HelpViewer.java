@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * jEdit's searchable help viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.20 2005/12/16 07:26:15 ezust Exp $
+ * @version $Id: HelpViewer.java,v 1.21 2006/05/19 22:33:12 ezust Exp $
  */
 public class HelpViewer extends JFrame implements HelpViewerInterface, EBComponent, HelpHistoryModelListener
 {
@@ -132,7 +132,7 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, EBCompone
 		historyModel.addHelpHistoryModelListener(this);
 		historyUpdated();
 
-		gotoURL(url,true);
+		gotoURL(url,true, 0);
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -163,7 +163,7 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, EBCompone
 	 * @param addToHistory Should the URL be added to the back/forward
 	 * history?
 	 */
-	public void gotoURL(String url, boolean addToHistory)
+	public void gotoURL(String url, boolean addToHistory, int scrollPos)
 	{
 		// the TOC pane looks up user's guide URLs relative to the
 		// doc directory...
@@ -323,7 +323,7 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, EBCompone
 			String url = evt.getActionCommand();
 			if (!url.equals(""))
 			{
-				gotoURL(url,false);
+				gotoURL(url,false,0);
 				return;
 			}
 				
@@ -334,7 +334,7 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, EBCompone
 					getToolkit().beep();
 				else
 				{
-					gotoURL(url,false);
+					gotoURL(url,false,0);
 				}
 			}
 			else if(source == forward)
@@ -344,7 +344,7 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, EBCompone
 					getToolkit().beep();
 				else
 				{
-					gotoURL(url,false);
+					gotoURL(url,false,0);
 				}
 			}
 		} //}}}
@@ -369,7 +369,7 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, EBCompone
 				{
 					URL url = evt.getURL();
 					if(url != null)
-						gotoURL(url.toString(),true);
+						gotoURL(url.toString(),true,0);
 				}
 			}
 			else if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
