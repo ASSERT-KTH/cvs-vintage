@@ -479,7 +479,7 @@ public class MessageBuilderHelper {
 					IContactItem contactItem = modelFacade.createContactItem();
 					Address addr = addresses[i];
 					FacadeUtil.getInstance().initContactItem(contactItem, addr.getDisplayName(), addr.getMailAddress());
-					contactFacade.addContact(folder.getId(), null);
+					contactFacade.addContact(folder.getId(), contactItem);
 				} catch (StoreException e) {
 					e.printStackTrace();
 				}
