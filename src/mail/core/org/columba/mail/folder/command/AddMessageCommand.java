@@ -16,15 +16,15 @@
 
 package org.columba.mail.folder.command;
 
+import java.io.InputStream;
+
+import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.message.IColumbaMessage;
-import org.columba.ristretto.io.SourceInputStream;
 
 /**
  * Add message to folder
@@ -37,14 +37,19 @@ import org.columba.ristretto.io.SourceInputStream;
 public class AddMessageCommand extends Command {
 	private IMailbox folder;
 
+	private InputStream is;
+	
 	/**
 	 * Constructor for AddMessageCommand.
 	 * 
 	 * @param references
 	 *            command arguments.
 	 */
-	public AddMessageCommand(DefaultCommandReference reference) {
+	public AddMessageCommand(ICommandReference reference, InputStream is) {
 		super(reference);
+		
+		this.is = is;
+		
 	}
 
 	/**
@@ -60,13 +65,9 @@ public class AddMessageCommand extends Command {
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-		// get message from reference
-		IColumbaMessage message = (IColumbaMessage) r.getMessage();
-
 		// add message to folder
-		SourceInputStream messageStream = new SourceInputStream(message
-				.getSource());
-		folder.addMessage(messageStream);
-		messageStream.close();
+		folder.addMessage(is);
+		is.close();
+		
 	}
 }
