@@ -58,7 +58,7 @@ public class ToggleMarkCommand extends Command {
 
 	private IWorkerStatusController worker;
 
-	private List commandList;
+	private List<MarkMessageCommand> commandList;
 
 	/**
 	 * Constructor for ToggleMarkCommand.
@@ -69,7 +69,7 @@ public class ToggleMarkCommand extends Command {
 	public ToggleMarkCommand(ICommandReference reference) {
 		super(reference);
 
-		commandList = new ArrayList();
+		commandList = new ArrayList<MarkMessageCommand>();
 	}
 
 	/**
@@ -99,8 +99,10 @@ public class ToggleMarkCommand extends Command {
 		// which kind of mark?
 		int markVariant = r.getMarkVariant();
 
-		List list1 = new ArrayList();
-		List list2 = new ArrayList();
+		// create one list containing the marked items, which have to be "unmarked"
+		// and another list containing the items remained to be marked
+		List<Object> list1 = new ArrayList<Object>();
+		List<Object> list2 = new ArrayList<Object>();
 
 		for (int j = 0; j < uids.length; j++) {
 			Flags flags = srcFolder.getFlags(uids[j]);
@@ -136,6 +138,7 @@ public class ToggleMarkCommand extends Command {
 
 		MailFolderCommandReference ref = null;
 
+		// un-mark messages
 		if (list1.size() > 0) {
 			ref = new MailFolderCommandReference(srcFolder, list1.toArray());
 			ref.setMarkVariant(-markVariant);
@@ -150,6 +153,7 @@ public class ToggleMarkCommand extends Command {
 			}
 		}
 
+		// mark messages
 		if (list2.size() > 0) {
 			ref = new MailFolderCommandReference(srcFolder, list2.toArray());
 			ref.setMarkVariant(markVariant);
@@ -187,7 +191,7 @@ public class ToggleMarkCommand extends Command {
 		worker.setDisplayText("Training messages...");
 		worker.setProgressBarMaximum(uids.length);
 
-		// mark as/as not spam
+		// mark as spam /as not spam
 		// for each message
 		for (int j = 0; j < uids.length; j++) {
 

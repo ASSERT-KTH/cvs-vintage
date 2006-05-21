@@ -25,8 +25,8 @@ public class ExternalToolsHelper {
 		try {
 			File file = ExternalToolsManager.getInstance()
 					.getLocationOfExternalTool(name);
-
-			return file.getPath();
+			if ( file != null )
+				return file.getPath();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

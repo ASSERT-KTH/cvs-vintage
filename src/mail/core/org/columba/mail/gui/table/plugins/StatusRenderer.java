@@ -34,8 +34,6 @@ public class StatusRenderer extends DefaultLabelRenderer {
 
 	boolean bool;
 
-	ImageIcon image1;
-
 	ImageIcon image2;
 
 	ImageIcon image3;
@@ -51,8 +49,6 @@ public class StatusRenderer extends DefaultLabelRenderer {
 
 		setHorizontalAlignment(SwingConstants.CENTER);
 
-		// setOpaque(true);
-		image1 = MailImageLoader.getSmallIcon("tag-orange.png");
 		image2 = MailImageLoader.getSmallIcon("message-mail-replied.png");
 		image3 = ImageLoader.getSmallIcon("user-trash.png");
 

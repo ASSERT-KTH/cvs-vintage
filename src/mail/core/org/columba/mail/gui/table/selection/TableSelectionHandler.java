@@ -157,6 +157,8 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 			for (int i = 0; i < rows.length; i++) {
 				TreePath path = view.getTree().getPathForRow(rows[i]);
+				if ( path == null ) continue;
+				
 				MessageNode node = (MessageNode) path.getLastPathComponent();
 				messages.add(node);
 			}

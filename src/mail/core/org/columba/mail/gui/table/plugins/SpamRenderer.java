@@ -62,7 +62,7 @@ public class SpamRenderer extends DefaultLabelRenderer {
         setIcon(null);
         setToolTipText(MailResourceLoader.getString("header", "column", "nospam"));
 
-        Boolean bool = (Boolean) header.getAttributes().get("columba.spam");
+        Boolean bool = (Boolean) header.get("columba.spam");
 
         if (bool != null) {
             if (bool.equals(Boolean.TRUE)) {
