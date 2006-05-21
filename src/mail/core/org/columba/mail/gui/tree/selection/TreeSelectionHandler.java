@@ -118,6 +118,8 @@ public class TreeSelectionHandler extends SelectionHandler implements
 			}
 		}
 
+		if ( selectedFolders.size() == 0 ) return;
+		
 		fireSelectionChanged(new TreeSelectionChangedEvent(
 				(IMailFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
 
