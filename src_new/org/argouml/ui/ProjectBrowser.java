@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.194 2006/05/19 21:20:55 linus Exp $
+// $Id: ProjectBrowser.java,v 1.195 2006/05/23 17:57:52 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1416,6 +1416,10 @@ public final class ProjectBrowser
      * @param showUI true if an error message may be shown to the user,
      *               false if run in commandline mode
      * @param ex The exception that was thrown.
+     * 
+     * TODO: This appears to have been cloned from the method below
+     * without updating the Javadoc. Not sure what the difference
+     * is meant to be... - tfm
      */
     private void reportError(String message, boolean showUI, String error) {
         if (showUI) {
