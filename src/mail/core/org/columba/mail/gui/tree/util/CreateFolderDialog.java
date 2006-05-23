@@ -253,6 +253,8 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 	}
 
 	public IMailFolder getSelected() {
+		if ( tree.getSelectionPath() == null ) return null;
+		
 		return (IMailFolder) tree.getSelectionPath().getLastPathComponent();
 	}
 

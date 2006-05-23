@@ -50,7 +50,10 @@ public class EditSignatureAction extends AbstractColumbaAction implements Observ
 			signature = new File(System.getProperty("user.home"),".signature");
 		}
 		
-		ColumbaDesktop.getInstance().open(signature);
+		ColumbaDesktop.getInstance().openAndWait(signature);
+		
+		// update signature -> will notify all listeners that signature changed
+		identity.setSignature(signature);
 	}
 
 	public void update(Observable o, Object arg) {

@@ -90,7 +90,7 @@ public class SignatureView extends JPanel implements MouseListener,
 			fonts = gui.addSubElement("fonts");
 		}
 
-		// register interest on configuratin changes
+		// register interest on configuration changes
 		fonts.addObserver(this);
 
 		item = (AccountItem) controller.getAccountController().getView()
@@ -102,10 +102,16 @@ public class SignatureView extends JPanel implements MouseListener,
 		// if account selection changes, reload signature file
 		controller.getAccountController().getView().addItemListener(this);
 
+		// add listener to changes
+		item.getIdentity().addObserver(this);
+
 	}
 
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
+
+			// remove listener from old account selection
+			item.getIdentity().removeObserver(this);
 
 			item = (AccountItem) controller.getAccountController().getView()
 					.getSelectedItem();
@@ -114,6 +120,10 @@ public class SignatureView extends JPanel implements MouseListener,
 			} else {
 				textPane.setText("");
 			}
+
+			// add listener to changes
+			item.getIdentity().addObserver(this);
+
 		}
 
 	}
@@ -139,6 +149,7 @@ public class SignatureView extends JPanel implements MouseListener,
 			in.close();
 
 			textPane.setText(strbuf.toString());
+			
 		} catch (IOException ex) {
 			textPane.setText("");
 		}
@@ -182,6 +193,8 @@ public class SignatureView extends JPanel implements MouseListener,
 	public void update(Observable arg0, Object arg1) {
 		Font font = FontProperties.getTextFont();
 		setFont(font);
+
+		readSignature(item.getIdentity().getSignature());
 	}
 
 }

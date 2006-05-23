@@ -110,7 +110,7 @@ public class Identity {
             e.getAttributes().remove(Identity.SIGNATURE_FILE);
         }
         
-        e.notifyObservers(signature);
+        e.notifyObservers();
     }
     
     public void addObserver(Observer observer) {
