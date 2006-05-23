@@ -514,7 +514,7 @@
         </jar>
 
         <copy toDir="${release.base}/webstart/images">
-            <fileset dir="${res.base}/org/columba/core/images">
+            <fileset dir="${res.base}/org/columba/core/icons/MISC">
                 <include name="icon64.gif"/>
             </fileset>
         </copy>
