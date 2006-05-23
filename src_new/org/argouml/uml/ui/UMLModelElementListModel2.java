@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.43 2006/05/08 21:00:44 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.44 2006/05/23 21:29:57 tfmorris Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,11 @@ import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.JPopupMenu;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AssociationChangeEvent;
 import org.argouml.model.AttributeChangeEvent;
+import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -54,6 +56,9 @@ import org.tigris.gef.presentation.Fig;
 public abstract class UMLModelElementListModel2 extends DefaultListModel
         implements TargetListener, PropertyChangeListener {
 
+    private static final Logger LOG = 
+        Logger.getLogger(UMLModelElementListModel2.class);
+    
     private String eventName = null;
     private Object listTarget = null;
 
@@ -113,9 +118,18 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
         if (e instanceof AttributeChangeEvent) {
             if (isValidEvent(e)) {
                 removeAllElements();
-                if (!Model.getUmlFactory().isRemoved(getTarget())) {
-                    buildingModel = true;
+                buildingModel = true;
+                // This can throw an exception if the target has been deleted.
+                // We don't want to try locking the repository because this
+                // is called from the event delivery thread and could cause a
+                // deadlock.  Instead catch the exception and leave the model
+                // empty.
+                try {
                     buildModelList();
+                } catch (InvalidElementException exception) {
+                    LOG.debug("buildModelList threw exception for target " + getTarget()
+                            + exception.getStackTrace()) ;
+                } finally {
                     buildingModel = false;
                 }
                 if (getSize() > 0) {
@@ -281,9 +295,9 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
 
                 removeAllElements();
                 if (!Model.getUmlFactory().isRemoved(getTarget())) {
-                    buildingModel = true;
-                    buildModelList();
-                    buildingModel = false;
+                buildingModel = true;
+                buildModelList();
+                buildingModel = false;
                 }
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);

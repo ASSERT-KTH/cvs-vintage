@@ -1,4 +1,4 @@
-// $Id: NameOrder.java,v 1.13 2006/05/09 18:35:49 mvw Exp $
+// $Id: NameOrder.java,v 1.14 2006/05/23 21:29:57 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Comparator;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.i18n.Translator;
 import org.tigris.gef.base.Diagram;
@@ -99,10 +100,10 @@ public class NameOrder
             name = ((Diagram) obj).getName();
         } else {
             if (Model.getFacade().isAModelElement(obj)) { 
-                if (Model.getUmlFactory().isRemoved(obj)) {
-                    name = "(removed)";
-                } else {
+                try {
                     name = Model.getFacade().getName(obj);
+                } catch (InvalidElementException e) {
+                    name = "(*deleted*)";
                 }
             }
             name = "??";

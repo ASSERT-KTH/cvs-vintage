@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.21 2006/04/29 10:06:11 linus Exp $
+// $Id: FacadeMDRImpl.java,v 1.22 2006/05/23 21:29:57 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2664,8 +2664,12 @@ class FacadeMDRImpl implements Facade {
      * @see org.argouml.model.Facade#getDoActivity(java.lang.Object)
      */
     public Object getDoActivity(Object handle) {
-        if (handle instanceof State) {
-            return ((State) handle).getDoActivity();
+        try {
+            if (handle instanceof State) {
+                return ((State) handle).getDoActivity();
+            }  
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
         }
         return illegalArgumentObject(handle);
     }

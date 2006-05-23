@@ -1,5 +1,5 @@
-// $Id: ExplorerTreeModel.java,v 1.29 2006/03/23 14:54:53 mkl Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ExplorerTreeModel.java,v 1.30 2006/05/23 21:29:57 tfmorris Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -49,6 +49,7 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.InvalidElementException;
 import org.argouml.ui.explorer.rules.PerspectiveRule;
 
 /**
@@ -443,13 +444,34 @@ public class ExplorerTreeModel extends DefaultTreeModel
 	// Collect the current set of objects that should be children to
 	// this node
         for (int x = 0; x < rules.length; x++) {
-            Collection c =
-                ((PerspectiveRule) rules[x])
-		    .getChildren(modelElement);
-            Set c2 =
-                ((PerspectiveRule) rules[x])
-		    .getDependencies(modelElement);
+            Collection c = null;
+            Set c2 = null;
+            
+            // TODO: A better implementation would be to batch events into
+            // logical groups and update the tree one time for the entire
+            // group, synchronizing access to the model repository so that
+            // it stays consistent during the query.  This would likely
+            // require doing the updates in a different thread than the
+            // event delivery thread to prevent deadlocks, so for right now
+            // we protect ourselves with try/catch blocks.
 
+            try {
+                c =
+                    ((PerspectiveRule) rules[x])
+                        .getChildren(modelElement);
+            } catch (InvalidElementException e) {
+                LOG.debug("InvalidElementException in ExplorerTree : " 
+                        + e.getStackTrace());
+            }
+            try {
+                c2 =
+                    ((PerspectiveRule) rules[x])
+                        .getDependencies(modelElement);
+            } catch (InvalidElementException e) {
+                LOG.debug("InvalidElementException in ExplorerTree : " 
+                        + e.getStackTrace());
+            }
+            
 	    if (c != null) {
 		Iterator it = c.iterator();
 		while (it.hasNext()) {
