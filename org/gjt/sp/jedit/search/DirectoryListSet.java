@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recursive directory search.
  * @author Slava Pestov
- * @version $Id: DirectoryListSet.java,v 1.7 2006/05/20 01:47:33 ezust Exp $
+ * @version $Id: DirectoryListSet.java,v 1.8 2006/05/24 15:27:26 ezust Exp $
  */
 public class DirectoryListSet extends BufferListSet
 {
@@ -110,6 +110,8 @@ public class DirectoryListSet extends BufferListSet
 	//{{{ _getFiles() method
 	protected String[] _getFiles(final Component comp)
 	{
+		this.skipBinary = jEdit.getBooleanProperty("search.skipBinary");
+		this.skipHidden = jEdit.getBooleanProperty("search.skipHidden");
 		final VFS vfs = VFSManager.getVFSForPath(directory);
 		Object session;
 		if(SwingUtilities.isEventDispatchThread())
