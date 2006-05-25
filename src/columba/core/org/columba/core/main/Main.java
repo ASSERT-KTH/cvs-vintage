@@ -57,12 +57,10 @@ public class Main {
 
 	private static void start(String[] args) throws Exception {
 		// initialize global class loader
-		mainClassLoader = new MainClassLoader(ClassLoader
-				.getSystemClassLoader());
+		mainClassLoader = new MainClassLoader(Thread.currentThread().getContextClassLoader());
+		Thread.currentThread().setContextClassLoader(mainClassLoader);
 
-		Class clazz = mainClassLoader.loadClass(Bootstrap.class.getName());
-
-		Bootstrap startup = (Bootstrap) clazz.newInstance();
+		Bootstrap startup = new Bootstrap();
 		startup.run(args);
 	}
 
