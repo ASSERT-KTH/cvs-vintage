@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.28 2006/04/29 21:50:32 mvw Exp $
+// $Id: CompartmentFigText.java,v 1.29 2006/05/25 20:54:23 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,5 +169,12 @@ public class CompartmentFigText extends FigSingleLineText {
      */
     public NotationProvider4 getNotationProvider() {
         return notationProvider;
+    }
+
+    /**
+     * @param np The notationProvider to set.
+     */
+    void setNotationProvider(NotationProvider4 np) {
+        this.notationProvider = np;
     }
 } /* End of class CompartmentFigText */
