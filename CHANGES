@@ -1,3 +1,59 @@
+Columba v1.2
+
+** Bug
+    * [CA-21] -  message view lost synchronisation after font change
+    * [CA-23] -  Cannot set up new mail server as IMAP
+    * [CA-24] -  Tree display inconsistent
+    * [CA-25] - Expunge Does not work correctly
+    * [CA-26] -  Incorrect Mail Display
+    * [CA-27] - Font doesn't change after marking as read in threaded view
+    * [CA-34] - Charset Encoding in Composer
+    * [CA-35] - Focus Problems in Message Viewer
+    * [CA-39] - Corrupt attachement file
+    * [CA-40] - HtmlParser: + (plus) in email adress not recognized
+    * [CA-41] - Columba hangs after Composing and Sending Email
+    * [CA-45] - [BUG] NullPointerException after creating virtual folder
+    * [CA-51] - NullPointerException after deleting vsearch folder
+    * [CA-52] - After switching to another skin, only text AND icons option is available
+    * [CA-54] - C doesnt show you wrong pop3-host
+    * [CA-56] - Local Folders: disable Message Filters... dialog
+    * [CA-57] - first connect to imap server doe's not show the recieved messages in the message list
+    * [CA-58] - switching between AlturaFrame and ThreePaneView makes columba unuseable
+    * [CA-63] - When Forwarding, sender address should be added to composer
+    * [CA-70] - threaded view doesn't work
+    * [CA-72] - Move on IMAP-Folders doe's not work anymore
+    * [CA-76] - windows startup problem - registry entry
+    * [CA-77] - Error when selecting empty IMAP folder
+    * [CA-78] - IMAP: NPE Copying between Servers
+    * [CA-79] - IMAP exchange folder list parsing bug
+    * [CA-80] - IMAP: nullpointer when viewing message
+    * [CA-81] - IMAP nullpointer when deleting message
+    * [CA-82] - IMAP: java.lang.ArrayIndexOutOfBoundsException: 0 when deleting message
+    * [CA-96] - Open Messages in new Window does not work
+    * [CA-97] - Creating new subfolder on IMAP
+    * [CA-99] - Bug when sending message
+    * [CA-102] - GUI not updating the TreeNode, throwing exception
+
+** New Feature
+    * [CA-2] - Message Viewer clean up and support for JTextPane/JDIC renderer/xhtmlrenderer
+    * [CA-4] - Integrated FlexDock Docking Framework
+    * [CA-5] - Scripting support for Groovy, Beanshell and Jython
+    * [CA-12] - add a welcome email message in inbox
+    * [CA-68] - Improved IMAP Caching to allow Offline Mailreading of already cached messages
+    * [CA-106] - Initial Release of Calendar Prototype as component plugin
+    * [CA-107] - Initial Release of Chat Prototype as component plugin
+
+
+** Improvement
+    * [CA-3] - Complete vCard contact model including new Contact Editor dialog added
+    * [CA-14] - Update vCard ImportFilter to cover complete vCard schema
+    * [CA-59] - IMAP folders should sync asynchronosly
+    * [CA-103] - Major cleanup of Plugin Framework
+    * [CA-104] - Cleanup of contact facade
+    * [CA-105] - New iconset based on Tango (http://tango-project.org)
+
+
+
 Columba v1.0 
 
 Bug fixes:
