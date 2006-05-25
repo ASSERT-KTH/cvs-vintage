@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.227 2006/05/14 21:35:17 linus Exp $
+<!-- $Id: build.xml,v 1.228 2006/05/25 21:56:19 linus Exp $
 This requires ANT 1.6.2
 
 Introduction
@@ -529,7 +529,6 @@ Property files to be searched:
              overview="org/argouml/overview-argo.html"
              packagenames="org.argouml.*"
              source="1.4"
-             private="true"
              splitindex="${javadoc.splitindex}"
              use="${javadoc.use}"
              windowtitle="ArgoUML Javadoc for internal use">
