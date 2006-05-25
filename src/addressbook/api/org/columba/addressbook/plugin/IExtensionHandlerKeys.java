@@ -19,7 +19,14 @@ package org.columba.addressbook.plugin;
 
 public interface IExtensionHandlerKeys {
 
+	/**
+	 * Contact folders.
+	 */
 	public static final String ORG_COLUMBA_CONTACT_FOLDER = "org.columba.addressbook.folder";
+	
+	/**
+	 * Contact Import Filter.
+	 */
 	public static final String ORG_COLUMBA_CONTACT_IMPORT = "rg.columba.addressbook.import";
 
 }

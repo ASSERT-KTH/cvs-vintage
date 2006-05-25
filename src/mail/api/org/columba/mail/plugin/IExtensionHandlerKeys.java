@@ -19,14 +19,49 @@ package org.columba.mail.plugin;
 
 public interface IExtensionHandlerKeys {
 
+	/**
+	 * Message Filter Action 
+	 */
 	public static final String ORG_COLUMBA_MAIL_FILTERACTION = "org.columba.mail.filteraction";
+	
+	/**
+	 * UI Component for Message Filter Action
+	 */
 	public static final String ORG_COLUMBA_MAIL_FILTERACTIONUI = "org.columba.mail.filteractionui";
+	
+	/**
+	 * Message Filter
+	 */
 	public static final String ORG_COLUMBA_MAIL_FILTER = "org.columba.mail.filter";
+	
+	/**
+	 * UI Component for Message Filter
+	 */
 	public static final String ORG_COLUMBA_MAIL_FILTERUI = "org.columba.mail.filterui";
+	
+	/**
+	 * Message Folders
+	 */
 	public static final String ORG_COLUMBA_MAIL_FOLDER = "org.columba.mail.folder";
+	
+	/**
+	 * Message Folder Options
+	 */
 	public static final String ORG_COLUMBA_MAIL_FOLDEROPTIONS = "org.columba.mail.folderoptions";
+	
+	/**
+	 * Message import filter.
+	 */
 	public static final String ORG_COLUMBA_MAIL_IMPORT = "org.columba.mail.import";
+	
+	/**
+	 * Spam Filter Component
+	 */
 	public static final String ORG_COLUMBA_MAIL_SPAM = "org.columba.mail.spam";
+	
+	/**
+	 * Column renderer for the message list
+	 */
 	public static final String ORG_COLUMBA_MAIL_TABLERENDERER = "org.columba.mail.tablerenderer";
 
 }

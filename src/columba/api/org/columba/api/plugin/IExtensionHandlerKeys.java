@@ -23,12 +23,17 @@ public interface IExtensionHandlerKeys {
 	 * Every action in Columba is handled by this class.
 	 * <p>
 	 * These actions are used to generate the menu and the toolbar dynamically.
+	 * <p>
+	 * @see core/org.columba.core.ui.globalaction
 	 */
 	public static final String ORG_COLUMBA_CORE_ACTION = "org.columba.core.action";
 
 	/**
 	 * Handler provides access to main entrypoint of components like addressbook
 	 * and mail.
+	 * <p>
+	 * @see contact/org.columba.addressbook.main
+	 * @see mail/org.columba.mail.main
 	 */
 	public static final String ORG_COLUMBA_CORE_COMPONENT = "org.columba.core.component";
 
@@ -57,23 +62,24 @@ public interface IExtensionHandlerKeys {
 	 * <p>
 	 * <verbatim> File file = getLocationOfExternalTool("gpg"); </verbatim>
 	 * 
-	 * <p>
-	 * 
-	 * @see org.columba.api.plugin.external_tools.xml
 	 */
 	public static final String ORG_COLUMBA_CORE_EXTERNALTOOLS = "org.columba.core.externaltools";
 
 	/**
-	 * Frames found in package org.columba.core.gui.frame are loaded
-	 * dynamically.
-	 * <p>
-	 * This makes it possible to write a plugin, for the mail component where
-	 * the frame has a completely different layout.
+	 * Frame component which is shown in the JFrame container's content pane. 
 	 */
 	public static final String ORG_COLUMBA_CORE_FRAME = "org.columba.core.frame";
 
+	/**
+	 * Html Viewer component.
+	 * <p>
+	 * @see core/org.columba.core.gui.htmlviewer
+	 */
 	public static final String ORG_COLUMBA_CORE_HTMLVIEWER = "org.columba.core.htmlviewer";
 
+	/**
+	 * Tray Icon plugged into the statusbar
+	 */
 	public static final String ORG_COLUMBA_CORE_STATUSBAR = "org.columba.core.statusbar";
 
 	/**
@@ -89,6 +95,9 @@ public interface IExtensionHandlerKeys {
 	 */
 	public static final String ORG_COLUMBA_CORE_VIEW = "org.columba.core.view";
 
+	/**
+	 * Background services
+	 */
 	public static final String ORG_COLUMBA_CORE_SERVICE = "org.columba.core.service";
 
 	/**
