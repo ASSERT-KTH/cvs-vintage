@@ -57,7 +57,7 @@ public class Main {
 
 	private static void start(String[] args) throws Exception {
 		// initialize global class loader
-		mainClassLoader = new MainClassLoader(Thread.currentThread().getContextClassLoader());
+		mainClassLoader = new MainClassLoader(Main.class.getClassLoader());
 		Thread.currentThread().setContextClassLoader(mainClassLoader);
 
 		Bootstrap startup = new Bootstrap();
