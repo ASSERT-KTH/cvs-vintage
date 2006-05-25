@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.145 2006/05/23 20:09:20 tfmorris Exp $
+// $Id: Main.java,v 1.146 2006/05/25 07:32:53 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -205,6 +205,7 @@ public class Main {
         }
         
         // Get the splash screen up as early as possible
+        st.mark("create splash");
         SplashScreen splash = null;
         if (doSplash && !batch) {
             splash = initializeSplash();
@@ -225,6 +226,7 @@ public class Main {
         initializeGUI(splash, theTheme);
 
         // Initialize the UMLActions
+        st.mark("actions");
         Actions.getInstance();
 
         if (reloadRecent && projectName == null) {
@@ -252,8 +254,10 @@ public class Main {
             urlToOpen = projectUrl(projectName, urlToOpen);
         }
 
+        st.mark("initialize ProjectBrowser");
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 
+        st.mark("perform commands");
 	if (batch) {
 	    performCommands(commands);
 	    commands = null;
