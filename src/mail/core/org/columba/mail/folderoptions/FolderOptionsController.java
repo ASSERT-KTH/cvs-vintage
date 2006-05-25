@@ -17,10 +17,10 @@ package org.columba.mail.folderoptions;
 
 import java.util.Enumeration;
 
-import org.columba.api.exception.PluginException;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginException;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;

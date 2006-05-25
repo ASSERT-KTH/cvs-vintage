@@ -24,13 +24,13 @@ import java.util.Vector;
 
 import javax.swing.JMenuItem;
 
-import org.columba.api.exception.PluginException;
-import org.columba.api.exception.PluginHandlerNotFoundException;
-import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
+import org.columba.api.plugin.PluginException;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.base.CMenuItem;
 import org.columba.core.gui.frame.FrameManager;

@@ -17,8 +17,8 @@ package org.columba.core.gui.globalactions;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;

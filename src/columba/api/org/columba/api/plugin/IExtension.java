@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.api.plugin;
 
-import org.columba.api.exception.PluginException;
 
 
 /**
@@ -55,5 +54,11 @@ public interface IExtension {
 	 * 
 	 */
 	public boolean isInternal();
+	
+	/**
+	 * An extension can be disabled if an error occured on instanciation. 
+	 * @return	true, if enabled. False, otherwise.
+	 */
+	public boolean isEnabled();
 
 }

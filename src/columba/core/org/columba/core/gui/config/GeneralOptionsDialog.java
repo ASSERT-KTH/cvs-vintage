@@ -39,12 +39,12 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
-import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.base.ButtonWithMnemonic;

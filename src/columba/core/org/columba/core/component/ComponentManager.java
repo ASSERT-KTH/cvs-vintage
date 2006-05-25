@@ -1,24 +1,28 @@
 package org.columba.core.component;
 
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.IPluginManager;
+import org.columba.api.plugin.PluginException;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
+import org.columba.core.logging.Logging;
 import org.columba.core.services.ServiceRegistry;
 
 public class ComponentManager implements IComponentPlugin {
+
+	private static final Logger LOG = Logger.getLogger("org.columba.core.main"); //$NON-NLS-1$
 
 	private static ComponentManager instance = new ComponentManager();
 
 	private IExtensionHandler extensionHandler;
 
 	private ComponentManager() {
-		initDefaultPlugins();
 	};
 
 	public static ComponentManager getInstance() {
@@ -31,16 +35,22 @@ public class ComponentManager implements IComponentPlugin {
 				// retrieve plugin manager instance
 				IPluginManager pm = null;
 				try {
-					pm = (IPluginManager) ServiceRegistry
-							.getInstance().getService(IPluginManager.class);
+					pm = (IPluginManager) ServiceRegistry.getInstance()
+							.getService(IPluginManager.class);
 				} catch (ServiceNotFoundException e) {
-					e.printStackTrace();
+					LOG.severe(e.getMessage());
+
+					if (Logging.DEBUG)
+						e.printStackTrace();
 				}
 
-				extensionHandler =  pm
+				extensionHandler = pm
 						.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_COMPONENT);
 			} catch (PluginHandlerNotFoundException e) {
-				e.printStackTrace();
+				LOG.severe(e.getMessage());
+
+				if (Logging.DEBUG)
+					e.printStackTrace();
 			}
 		}
 		return extensionHandler;
@@ -53,8 +63,11 @@ public class ComponentManager implements IComponentPlugin {
 
 		try {
 			component = (IComponentPlugin) extension.instanciateExtension(null);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (PluginException e) {
+			LOG.severe(e.getMessage());
+
+			if (Logging.DEBUG)
+				e.printStackTrace();
 		}
 
 		return component;
@@ -70,12 +83,18 @@ public class ComponentManager implements IComponentPlugin {
 		while (extensionEnumeration.hasMoreElements()) {
 			IExtension ext = (IExtension) extensionEnumeration.nextElement();
 			IComponentPlugin p;
+
 			try {
 				p = (IComponentPlugin) ext.instanciateExtension(null);
 				p.init();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (PluginException e) {
+				LOG.severe(e.getMessage());
+
+				if (Logging.DEBUG)
+					e.printStackTrace();
+				
 			}
+
 		}
 	}
 
@@ -92,8 +111,11 @@ public class ComponentManager implements IComponentPlugin {
 			try {
 				p = (IComponentPlugin) ext.instanciateExtension(null);
 				p.postStartup();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (PluginException e) {
+				LOG.severe(e.getMessage());
+
+				if (Logging.DEBUG)
+					e.printStackTrace();
 			}
 		}
 	}
@@ -102,9 +124,6 @@ public class ComponentManager implements IComponentPlugin {
 	 * @see org.columba.core.component.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
-		// init mail/addressbook internal components
-		// FIXME
-		// initDefaultPlugins();
 
 		Enumeration extensionEnumeration = getExtensionHandler()
 				.getExtensionEnumeration();
@@ -114,14 +133,12 @@ public class ComponentManager implements IComponentPlugin {
 			IComponentPlugin p;
 			try {
 				p = (IComponentPlugin) ext.instanciateExtension(null);
-				
-				if ( p == null ) {
-					System.out.println("extension="+ext.getMetadata().getId());
-					return;
-				}
 				p.registerCommandLineArguments();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (PluginException e) {
+				LOG.severe(e.getMessage());
+
+				if (Logging.DEBUG)
+					e.printStackTrace();
 			}
 
 		}
@@ -140,15 +157,14 @@ public class ComponentManager implements IComponentPlugin {
 			try {
 				p = (IComponentPlugin) ext.instanciateExtension(null);
 				p.handleCommandLineParameters(commandLine);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+			} catch (PluginException e) {
+				LOG.severe(e.getMessage());
 
-	private void initDefaultPlugins() {
-		//getPlugin("MailComponent");
-		//getPlugin("AddressbookComponent");
+				if (Logging.DEBUG)
+					e.printStackTrace();
+			}
+
+		}
 	}
 
 }

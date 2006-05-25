@@ -24,10 +24,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.api.exception.PluginException;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionInterface;
+import org.columba.api.plugin.PluginException;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.logging.Logging;
 import org.columba.core.main.Main;
@@ -52,6 +52,12 @@ public class Extension implements IExtension {
 	private boolean internalPlugin;
 
 	private IExtensionInterface cachedInstance;
+
+	/**
+	 * Enabled by default. But, in case of an error on instanciation its
+	 * disabled.
+	 */
+	private boolean enabled = true;
 
 	/**
 	 * Constructor used by internal extensions
@@ -89,6 +95,10 @@ public class Extension implements IExtension {
 	 */
 	public IExtensionInterface instanciateExtension(Object[] arguments)
 			throws PluginException {
+
+		if (!enabled)
+			throw new PluginException("Extension <" + getMetadata().getId()
+					+ "> was disabled due to a former instanciation error");
 
 		String id = null;
 		File pluginDirectory = null;
@@ -128,16 +138,16 @@ public class Extension implements IExtension {
 
 					// use default Java classlodaer
 
-//					try {
-//						plugin = instanciateJavaClass(className, arguments);
-//						if (plugin != null)
-//							return plugin;
-//
-//					} catch (Exception e) {
-//						//handleException(e);
-//					} catch (Error e) {
-//						//handleException(e);
-//					}
+					// try {
+					// plugin = instanciateJavaClass(className, arguments);
+					// if (plugin != null)
+					// return plugin;
+					//
+					// } catch (Exception e) {
+					// //handleException(e);
+					// } catch (Error e) {
+					// //handleException(e);
+					// }
 
 					// use external Java URL classloader
 					plugin = instanciateExternalJavaClass(arguments,
@@ -150,9 +160,19 @@ public class Extension implements IExtension {
 					cachedInstance = plugin;
 
 			} catch (Exception e) {
-				handleException(e);
+				logErrorMessage(e);
+
+				// disable extension
+				enabled = false;
+
+				throw new PluginException(this, e);
 			} catch (Error e) {
-				handleException(e);
+				logErrorMessage(e);
+
+				// disable extension
+				enabled = false;
+
+				throw new PluginException(this, e);
 			}
 
 		}
@@ -162,7 +182,7 @@ public class Extension implements IExtension {
 	/**
 	 * @param e
 	 */
-	private void handleException(Throwable e) {
+	private void logErrorMessage(Throwable e) {
 		if (e.getCause() != null) {
 			LOG.severe(e.getCause().getMessage());
 			if (Logging.DEBUG)
@@ -292,7 +312,7 @@ public class Extension implements IExtension {
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
 		buf.append("id=" + metadata.getId());
-		buf.append(" class=" + metadata.getClassname());
+		buf.append("class=" + metadata.getClassname());
 
 		return buf.toString();
 	}
@@ -367,4 +387,10 @@ public class Extension implements IExtension {
 	public void setInternal(boolean internal) {
 		this.internalPlugin = internal;
 	}
+
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

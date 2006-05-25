@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
-import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.config.DefaultItem;

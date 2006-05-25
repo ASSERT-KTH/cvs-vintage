@@ -39,10 +39,10 @@ import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.gui.base.ButtonWithMnemonic;
 import org.columba.core.gui.base.CheckBoxWithMnemonic;
 import org.columba.core.gui.base.LabelWithMnemonic;

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.api.exception;
+package org.columba.api.plugin;
 
 /**
  * Throw this Exception if it couldn't load a plugin.

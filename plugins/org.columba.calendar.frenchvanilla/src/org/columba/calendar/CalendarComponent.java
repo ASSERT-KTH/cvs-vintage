@@ -20,8 +20,8 @@ package org.columba.calendar;
 import java.io.InputStream;
 
 import org.apache.commons.cli.CommandLine;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtensionHandlerKeys;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.calendar.store.CalendarStoreFactory;
 import org.columba.core.component.IComponentPlugin;

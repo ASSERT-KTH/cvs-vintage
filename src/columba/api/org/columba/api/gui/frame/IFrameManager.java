@@ -1,6 +1,6 @@
 package org.columba.api.gui.frame;
 
-import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.PluginLoadingFailedException;
 
 public interface IFrameManager {
 

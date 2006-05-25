@@ -24,8 +24,8 @@ import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;

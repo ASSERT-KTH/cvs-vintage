@@ -39,10 +39,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.filter.FilterActionList;

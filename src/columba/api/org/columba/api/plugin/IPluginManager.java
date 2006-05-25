@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 
 /**
  * Plugin manager is a singleton registry for all plugins and all

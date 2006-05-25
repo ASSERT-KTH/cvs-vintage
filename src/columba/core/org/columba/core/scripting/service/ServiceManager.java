@@ -21,11 +21,11 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.columba.api.exception.PluginException;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.IExtensionInterface;
+import org.columba.api.plugin.PluginException;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.Extension;
 import org.columba.core.plugin.PluginManager;

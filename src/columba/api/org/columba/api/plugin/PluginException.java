@@ -15,10 +15,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.api.exception;
+package org.columba.api.plugin;
+
+import org.columba.api.exception.BaseException;
 
 public class PluginException extends BaseException {
 
+	private IExtension extension;
+	
 	public PluginException() {
 		super();
 	}
@@ -33,6 +37,16 @@ public class PluginException extends BaseException {
 
 	public PluginException(Throwable cause) {
 		super(cause);
+	}
+	
+	public PluginException(IExtension extension, Throwable cause) {
+		super(cause);
+		
+		this.extension = extension;
+	}
+
+	public IExtension getExtension() {
+		return extension;
 	}
 
 }

@@ -23,7 +23,7 @@ import org.columba.addressbook.facade.ContactFacade;
 import org.columba.addressbook.facade.FolderFacade;
 import org.columba.addressbook.facade.ModelFacade;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
-import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.component.IComponentPlugin;
 import org.columba.core.gui.frame.FrameManager;

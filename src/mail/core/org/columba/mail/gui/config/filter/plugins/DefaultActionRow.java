@@ -24,10 +24,10 @@ import java.awt.Insets;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionInterface;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.gui.base.ComboMenu;
 import org.columba.core.gui.dialog.ErrorDialog;

@@ -21,8 +21,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.gui.dialog.ErrorDialog;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.plugin.IExtensionHandlerKeys;

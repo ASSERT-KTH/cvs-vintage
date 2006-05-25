@@ -19,10 +19,10 @@ package org.columba.mail.spam;
 
 import java.util.logging.Logger;
 
-import org.columba.api.exception.PluginException;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginException;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.IMailbox;

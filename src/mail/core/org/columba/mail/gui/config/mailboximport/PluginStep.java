@@ -35,9 +35,9 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
-import org.columba.api.exception.PluginException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginException;
 import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.logging.Logging;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;

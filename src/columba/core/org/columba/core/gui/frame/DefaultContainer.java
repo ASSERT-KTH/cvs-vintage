@@ -37,8 +37,6 @@ import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
-import org.columba.api.exception.PluginException;
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.gui.frame.event.FrameEvent;
@@ -48,6 +46,8 @@ import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
+import org.columba.api.plugin.PluginException;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.api.statusbar.IStatusBar;
 import org.columba.api.statusbar.IStatusBarExtension;
 import org.columba.core.command.TaskManager;

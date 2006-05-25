@@ -16,7 +16,7 @@
 
 package org.columba.mail.facade;
 
-import org.columba.api.exception.PluginLoadingFailedException;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.gui.frame.FrameManager;
 
 /**

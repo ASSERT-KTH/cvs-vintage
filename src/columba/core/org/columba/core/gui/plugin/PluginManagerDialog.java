@@ -49,10 +49,10 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
-import org.columba.api.exception.PluginLoadingFailedException;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.config.Config;
 import org.columba.core.gui.base.ButtonWithMnemonic;

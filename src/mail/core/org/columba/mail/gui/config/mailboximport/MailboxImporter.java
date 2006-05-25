@@ -23,9 +23,9 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
-import org.columba.api.exception.PluginException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.logging.Logging;
 import org.columba.mail.command.ImportFolderCommandReference;

@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.api.exception.PluginException;
 import org.columba.api.plugin.IExtensionInterface;
+import org.columba.api.plugin.PluginException;
 
 public interface IPluginLoader {
 

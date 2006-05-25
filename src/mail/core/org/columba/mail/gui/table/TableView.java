@@ -22,9 +22,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.gui.table.model.HeaderTableModel;

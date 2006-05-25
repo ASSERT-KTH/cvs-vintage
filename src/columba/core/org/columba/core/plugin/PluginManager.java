@@ -31,11 +31,11 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.ExtensionHandlerMetadata;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IPluginManager;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.api.plugin.PluginMetadata;
 import org.columba.core.io.DiskIO;
 

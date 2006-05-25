@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.plugin.ExtensionMetadata;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;

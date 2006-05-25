@@ -26,9 +26,9 @@ import net.javaprog.ui.wizard.Step;
 import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
 
-import org.columba.api.exception.PluginHandlerNotFoundException;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.IconKeys;
