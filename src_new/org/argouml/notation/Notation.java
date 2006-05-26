@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.10 2006/05/26 16:05:40 linus Exp $
+// $Id: Notation.java,v 1.11 2006/05/26 16:33:10 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -258,7 +258,7 @@ public final class Notation implements PropertyChangeListener {
     // Static workers for dealing with notation names.
 
     /**
-     * Get list of available notations.
+     * Get list of available notations, of type NotationName.
      *
      * @return list of available notations
      */
