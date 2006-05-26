@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.24 2006/04/29 09:08:11 linus Exp $
+// $Id: Model.java,v 1.25 2006/05/26 11:05:19 linus Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,6 +96,11 @@ public final class Model {
      * The decorated helper.
      */
     private static UseCasesHelper useCasesHelper;
+
+    /**
+     * The register for the observer.
+     */
+    private static MementoCreationObserver mementoCreationObserver;
 
     /**
      * Constructor to prohibit creation.
@@ -510,7 +515,7 @@ public final class Model {
      */
     public static void setMementoCreationObserver(
             MementoCreationObserver observer) {
-        impl.setMementoCreationObserver(observer);
+        mementoCreationObserver = observer;
     }
 
     /**
@@ -518,7 +523,7 @@ public final class Model {
      * @return the MementoCreationObserver
      */
     public static MementoCreationObserver getMementoCreationObserver() {
-        return impl.getMementoCreationObserver();
+        return mementoCreationObserver;
     }
 
     /**
