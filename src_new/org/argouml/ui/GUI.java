@@ -1,4 +1,4 @@
-// $Id: GUI.java,v 1.2 2006/04/29 22:33:49 linus Exp $
+// $Id: GUI.java,v 1.3 2006/05/26 15:23:40 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.argouml.notation.ui.SettingsTabNotation;
+
 /**
  * This is the "main" class for the GUI subsystem.<p>
  *
@@ -50,6 +52,7 @@ public final class GUI {
         addSettingsTab(new SettingsTabPreferences());
         addSettingsTab(new SettingsTabEnvironment());
         addSettingsTab(new SettingsTabUser());
+        addSettingsTab(new SettingsTabNotation());
         addSettingsTab(new SettingsTabAppearance());
     }
 
