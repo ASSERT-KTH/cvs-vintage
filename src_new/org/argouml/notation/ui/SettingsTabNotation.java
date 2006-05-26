@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.6 2006/05/26 16:05:40 linus Exp $
+// $Id: SettingsTabNotation.java,v 1.7 2006/05/26 21:57:57 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -38,6 +39,7 @@ import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.i18n.Translator;
 import org.argouml.notation.Notation;
+import org.argouml.notation.NotationName;
 import org.argouml.ui.GUI;
 import org.argouml.ui.GUISettingsTabInterface;
 import org.argouml.ui.ShadowComboBox;
@@ -53,6 +55,7 @@ public class SettingsTabNotation
     implements GUISettingsTabInterface {
 
     private JCheckBox allowNotations;
+    private JComboBox notationLanguage;
     private JCheckBox useGuillemots;
     private JCheckBox showVisibility;
     private JCheckBox showMultiplicity;
@@ -85,6 +88,16 @@ public class SettingsTabNotation
         constraints.gridy = GridBagConstraints.RELATIVE;
         allowNotations = createCheckBox("label.uml-notation-only");
         top.add(allowNotations, constraints);
+
+        JPanel notationLanguagePanel =
+            new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        JLabel notationLanguageLabel =
+            createLabel("label.notation-language");
+        notationLanguage = new NotationComboBox();
+        notationLanguageLabel.setLabelFor(notationLanguage);
+        notationLanguagePanel.add(notationLanguageLabel);
+        notationLanguagePanel.add(notationLanguage);
+        top.add(notationLanguagePanel, constraints);
 
         useGuillemots = createCheckBox("label.use-guillemots");
         top.add(useGuillemots, constraints);
@@ -132,6 +145,7 @@ public class SettingsTabNotation
      */
     public void handleSettingsTabRefresh() {
         useGuillemots.setSelected(Notation.getUseGuillemots());
+        notationLanguage.setSelectedItem(Notation.getConfigueredNotation());
         allowNotations.setSelected(getBoolean(Notation.KEY_UML_NOTATION_ONLY));
         showVisibility.setSelected(getBoolean(Notation.KEY_SHOW_VISIBILITY));
         showInitialValue.setSelected(
@@ -167,6 +181,8 @@ public class SettingsTabNotation
         Notation.setUseGuillemots(useGuillemots.isSelected());
         Configuration.setBoolean(Notation.KEY_UML_NOTATION_ONLY,
                  allowNotations.isSelected());
+        Notation.setDefaultNotation(
+                (NotationName) notationLanguage.getSelectedItem());
         Configuration.setBoolean(Notation.KEY_SHOW_VISIBILITY,
                  showVisibility.isSelected());
         Configuration.setBoolean(Notation.KEY_SHOW_MULTIPLICITY,
