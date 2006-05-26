@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.9 2006/05/13 08:22:55 mvw Exp $
+// $Id: Notation.java,v 1.10 2006/05/26 16:05:40 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.argouml.application.api.ConfigurationKey;
 import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
+import org.argouml.notation.ui.SettingsTabNotation;
 
 /**
  * Provides centralized methods dealing with notation.
@@ -153,6 +154,7 @@ public final class Notation implements PropertyChangeListener {
         Configuration.addListener(KEY_SHOW_PROPERTIES, this);
         Configuration.addListener(KEY_SHOW_VISIBILITY, this);
         Configuration.addListener(KEY_SHOW_INITIAL_VALUE, this);
+        new SettingsTabNotation();
     }
 
     /**
