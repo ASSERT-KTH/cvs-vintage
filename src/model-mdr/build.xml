@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.6 2006/05/26 08:53:20 linus Exp $
+<!-- $Id: build.xml,v 1.7 2006/05/27 18:22:31 linus Exp $
 
 Build file for the MDR implementation of the Model subsystem.
 
@@ -353,7 +353,13 @@ This is designed to work in two different environments:
   <!-- =================================================================== -->
   <target name="clean" depends="init"
           description="Clean out all built files.">
-    <delete dir="${build.dir}" quiet="true"/>
+    <delete includeemptydirs="true">
+      <fileset dir="${build.dir}">
+    	<exclude name="**/.cvsignore"/>
+      	<exclude name="**/readme-build-java.txt"/>
+      	<exclude name="**/CVS/*"/>
+      </fileset>
+    </delete>
   </target>
         
 </project>
