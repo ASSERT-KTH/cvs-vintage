@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 
 import org.columba.mail.gui.composer.action.AddressbookAction;
 import org.columba.mail.gui.composer.util.AddressCollector;
+import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.addresscombobox.CommaSeparatedAutoCompleter;
 import org.frapuccino.addresscombobox.PatternSeparatedAutoCompleter;
 
@@ -112,8 +113,14 @@ public class HeaderView extends JPanel implements ActionListener {
 		bccButton.addActionListener(this);
 
 		toComboBox = new JTextField();
+		toComboBox.setToolTipText(MailResourceLoader.getString(
+				"dialog", "composer", "recipient_separator"));
 		ccComboBox = new JTextField();
+		ccComboBox.setToolTipText(MailResourceLoader.getString(
+				"dialog", "composer", "recipient_separator"));
 		bccComboBox = new JTextField();
+		bccComboBox.setToolTipText(MailResourceLoader.getString(
+				"dialog", "composer", "recipient_separator"));
 	}
 
 	/**
