@@ -37,7 +37,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.IColumbaMessage;
-import org.columba.mail.parser.AddressParser;
+import org.columba.mail.parser.NormalizeRecipientListParser;
 import org.columba.mail.parser.ListBuilder;
 import org.columba.mail.parser.ListParser;
 import org.columba.ristretto.io.FileSource;
@@ -470,16 +470,16 @@ public class ComposerModel {
 	public List getRCPTVector() {
 		List<String> output = new Vector<String>();
 
-		List<String> l = new AddressParser().normalizeRCPTVector(ListBuilder
+		List<String> l = new NormalizeRecipientListParser().normalizeRCPTVector(ListBuilder
 				.createFlatList(getToList()));
 		if (l != null)
 			output.addAll(l);
 
-		l = new AddressParser().normalizeRCPTVector(ListBuilder
+		l = new NormalizeRecipientListParser().normalizeRCPTVector(ListBuilder
 				.createFlatList(getCcList()));
 		if (l != null)
 			output.addAll(l);
-		l = new AddressParser().normalizeRCPTVector(ListBuilder
+		l = new NormalizeRecipientListParser().normalizeRCPTVector(ListBuilder
 				.createFlatList(getBccList()));
 		if (l != null)
 			output.addAll(l);

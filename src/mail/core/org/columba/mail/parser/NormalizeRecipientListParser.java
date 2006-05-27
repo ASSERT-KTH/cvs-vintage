@@ -25,23 +25,30 @@ import java.util.Vector;
  * 
  * @author fdietz
  */
-public class AddressParser{
-	
+public class NormalizeRecipientListParser {
+
 	/**
-	 * to normalize Mail-addresses given in an Vector in
-	 * 
-	 * for example there ar mails as strings in thelist with following formats:
-	 * Frederik Dietz <fdietz@gmx.de>fdietz@gmx.de <fdietz@gmx.de>this formats
-	 * must be normalized to <fdietz@gmx.de>. Formats in the form "name
-	 * <name@de>" never exists, while the " character alrady removed
+	 * Normalize Mail-addresses given in an Vector in
+	 * <p>
+	 * For example there ar mails as strings in the list with following formats:
+	 * <p>
+	 * <ul>
+	 * <li>Frederik Dietz<fdietz@gmx.de></li> 
+	 * <li>fdietz@gmx.de</li>
+	 * <li><fdietz@gmx.de></li>
+	 * </ul>
+	 * <p>
+	 * These formats must be normalized to <fdietz@gmx.de>. Formats in the form
+	 * "name<name@de>" never exists, while the " character was already removed
 	 * 
 	 * @param in
 	 *            List of Strings with mailaddresses in any format
 	 * @return List of Strings with mailaddress in format <fdietz@gmx.de>
 	 */
 	public List<String> normalizeRCPTVector(List<String> in) {
-		if ( in == null ) return null;
-		
+		if (in == null)
+			return null;
+
 		String mailaddress = "";
 		String new_address = "";
 		List<String> out = new Vector<String>();
@@ -49,18 +56,11 @@ public class AddressParser{
 		for (Iterator it = in.iterator(); it.hasNext();) {
 			mailaddress = (String) it.next();
 
-			//		for (int i = 0; i < v_size; i++) {
-			//			// get the String from the Vector
-			//			mailaddress = (String) in.elementAt(i);
-			if (mailaddress == null) {
+			// skip
+			if ( (mailaddress == null) || (mailaddress.length() == 0) ){
 				continue;
 			}
 
-			if (mailaddress.length() == 0) {
-				continue;
-			}
-
-			// System.out.println("[DEBUG!!!!] mailaddress: "+mailaddress);
 			StringTokenizer strToken = new StringTokenizer(mailaddress, "<");
 
 			if (strToken.countTokens() == 2) {
@@ -69,8 +69,6 @@ public class AddressParser{
 
 				// the next token is an token with the whole Mailaddress
 				new_address = "<" + strToken.nextToken();
-
-				// System.out.println("[DEBUG1] new_address: "+new_address);
 			} else {
 				// just look if the first character alrady an <
 				// so can use this mailaddress as the correct address

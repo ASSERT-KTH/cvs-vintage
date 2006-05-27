@@ -15,13 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.parser;
+package org.columba.mail.parser;
 
 import java.util.List;
+import java.util.Vector;
 
 import junit.framework.TestCase;
-
-import org.columba.mail.parser.ListParser;
 
 /**
  * @author fdietz
@@ -32,17 +31,31 @@ public class ListParserTest extends TestCase {
 	public void testCreateListFromString() {
 		String s = "test@test.de";
 		
-		List l = ListParser.createListFromString(s);
-		
+		List<String> l = ListParser.createListFromString(s);
 		assertEquals("list size 1", 1, l.size());
+		
+		assertEquals("test@test.de", l.get(0));
 	}
 	
 	public void testCreateListFromString2() {
-		String s = "test@test.de, test2@test2.de";
+		String s = "test@test.de; test2@test2.de";
 		
-		List l = ListParser.createListFromString(s);
-		
+		List<String> l = ListParser.createListFromString(s);
 		assertEquals("list size 2", 2, l.size());
+		
+		assertEquals("test@test.de", l.get(0));
+		assertEquals("test2@test2.de", l.get(1));
+		
+	}
+	
+	public void testCreateStringFromList() {
+		
+		List<String> list = new Vector<String>();
+		list.add("test@test.de");
+		list.add("test2@test2.de");
+		
+		String result = ListParser.createStringFromList(list, ";");
+		assertEquals("test@test.de;test2@test2.de", result);
 	}
 
 }

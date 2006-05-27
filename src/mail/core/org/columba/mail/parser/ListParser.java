@@ -29,6 +29,9 @@ import java.util.Vector;
  */
 public class ListParser {
 
+	public final static char SEPARATOR_CHAR = ';';
+	public final static String SEPARATOR_STRING = ";";
+	
 	public ListParser() {
 	}
 
@@ -55,7 +58,7 @@ public class ListParser {
 		while (pos < listLength) {
 			char ch = str.charAt(pos);
 
-			if ((ch == ';') && (bracket == false)) {
+			if ((ch == SEPARATOR_CHAR) && (bracket == false)) {
 				// found new message
 				String address = buf.toString();
 				result.add(address);
@@ -80,6 +83,8 @@ public class ListParser {
 		}
 
 		String address = buf.toString();
+		// remove whitespaces
+		address = address.trim();
 		result.add(address);
 
 		return result;
