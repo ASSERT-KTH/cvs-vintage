@@ -92,12 +92,11 @@ public class ListBuilder {
 	 * 
 	 * @param list
 	 *            mixed list
-	 * @return list containing only contacts
+	 * @return list containing only contacts. Never <code>null</code>
 	 */
 	public static List<String> createFlatList(List<String> list) {
-		if (list == null)
-			return new ArrayList<String>();
-
+		if ( list == null ) throw new IllegalArgumentException("list == null");
+		
 		List<String> result = new Vector<String>();
 
 		Iterator<String> it = list.iterator();
