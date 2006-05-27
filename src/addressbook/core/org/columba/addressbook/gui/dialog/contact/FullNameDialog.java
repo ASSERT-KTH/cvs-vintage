@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -71,7 +72,7 @@ public class FullNameDialog extends JDialog implements ActionListener {
 
 	private JButton cancelButton;
 
-	private boolean success;
+	private boolean success = false;
 
 	public FullNameDialog(JDialog frame) {
 		super(frame, AddressbookResourceLoader.getString("dialog", "contact",
@@ -202,12 +203,44 @@ public class FullNameDialog extends JDialog implements ActionListener {
 
 	public void actionPerformed(ActionEvent event) {
 		if (event.getActionCommand().equals("OK")) {
+
+			// check if firstname, middlename or lastname contain only valid
+			// characters
+
+			if (firstNameTextField.getText() != null) {
+				// contains "," comma character
+				if (firstNameTextField.getText().indexOf(",") != -1) {
+					JOptionPane.showInternalMessageDialog(this,
+							"Firstname can't contain comma character.");
+					return;
+				}
+			}
+			
+			if (middleNameTextField.getText() != null) {
+				// contains "," comma character
+				if (middleNameTextField.getText().indexOf(",") != -1) {
+					JOptionPane.showInternalMessageDialog(this,
+							"Middle name can't contain comma character.");
+					return;
+				}
+			}
+			
+			if (lastNameTextField.getText() != null) {
+				// contains "," comma character
+				if (lastNameTextField.getText().indexOf(",") != -1) {
+					JOptionPane.showInternalMessageDialog(this,
+							"Lastname can't contain comma character.");
+					return;
+				}
+			}
+
 			success = true;
+			setVisible(false);
 		} else if (event.getActionCommand().equals("CANCEL")) {
 			success = false;
+			setVisible(false);
 		}
 
-		setVisible(false);
 	}
 
 	public String getFormattedName() {
