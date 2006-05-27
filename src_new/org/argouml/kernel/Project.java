@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.182 2006/05/27 07:15:54 mvw Exp $
+// $Id: Project.java,v 1.183 2006/05/27 07:17:03 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -679,7 +679,7 @@ public class Project implements java.io.Serializable, TargetListener {
             List diagramFigs = diagram.presentationsFor(obj);
             Iterator figIt = diagramFigs.iterator();
             while (figIt.hasNext()) {
-                Fig aFig = (Fig)figIt.next();
+                Fig aFig = (Fig) figIt.next();
                 if (includeEnclosedOnes) {
                     figs.addAll(collectAllEnclosedFigsRecursively(aFig));
                 }
@@ -1399,7 +1399,7 @@ public class Project implements java.io.Serializable, TargetListener {
         String report = "";
         Iterator it = members.iterator();
         while (it.hasNext()) {
-            ProjectMember member = (ProjectMember)it.next();
+            ProjectMember member = (ProjectMember) it.next();
             report += member.repair();
         }
         return report;
