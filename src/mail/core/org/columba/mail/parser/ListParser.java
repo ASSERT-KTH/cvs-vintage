@@ -30,8 +30,9 @@ import java.util.Vector;
 public class ListParser {
 
 	public final static char SEPARATOR_CHAR = ';';
+
 	public final static String SEPARATOR_STRING = ";";
-	
+
 	public ListParser() {
 	}
 
@@ -39,16 +40,17 @@ public class ListParser {
 	 * Create list from String containing semicolon-separated email addresses.
 	 * 
 	 * @param str
-	 *            string
-	 * @return list
+	 *            semicolon separated email address list
+	 * 
+	 * @return list list of email addresses, never <code>null</code>
 	 */
 	public static List<String> createListFromString(String str) {
 		if (str == null)
-			return null;
-		if (str.length() == 0)
-			return null;
+			throw new IllegalArgumentException("str == null");
 
 		List<String> result = new Vector<String>();
+		if (str.length() == 0)
+			return result;
 
 		int pos = 0;
 		boolean bracket = false;
@@ -95,11 +97,14 @@ public class ListParser {
 	 * 
 	 * @param list
 	 *            list containing String objects
-	 * @return String representation
+	 * @return String representation, never <code>null</code
 	 */
-	public static String createStringFromList(List<String> list, String separator) {
+	public static String createStringFromList(List<String> list,
+			String separator) {
 		if (list == null)
-			return "";
+			throw new IllegalArgumentException("list == null");
+		if (separator == null)
+			throw new IllegalArgumentException("separator == null");
 
 		StringBuffer output = new StringBuffer();
 

@@ -33,31 +33,31 @@ public class NormalizeRecipientListParser {
 	 * For example there ar mails as strings in the list with following formats:
 	 * <p>
 	 * <ul>
-	 * <li>Frederik Dietz<fdietz@gmx.de></li> 
-	 * <li>fdietz@gmx.de</li>
-	 * <li><fdietz@gmx.de></li>
+	 * <li>Firstname Lastname <mail@mail.org></li>
+	 * <li>"Lastname, Firstname" <mail@mail.org></li>
+	 * <li>mail@mail.org</li>
+	 * <li><mail@mail.org></li>
 	 * </ul>
 	 * <p>
-	 * These formats must be normalized to <fdietz@gmx.de>. Formats in the form
-	 * "name<name@de>" never exists, while the " character was already removed
+	 * These formats must be normalized to <mail@mail.org>. 
 	 * 
-	 * @param in
+	 * @param list
 	 *            List of Strings with mailaddresses in any format
-	 * @return List of Strings with mailaddress in format <fdietz@gmx.de>
+	 * @return List of Strings with mailaddress in format <mail@mail.org>, never <code>null</code>
 	 */
-	public List<String> normalizeRCPTVector(List<String> in) {
-		if (in == null)
-			return null;
+	public List<String> normalizeRCPTVector(List<String> list) {
+		if (list == null)
+			throw new IllegalArgumentException("list == null");
 
 		String mailaddress = "";
 		String new_address = "";
 		List<String> out = new Vector<String>();
 
-		for (Iterator it = in.iterator(); it.hasNext();) {
+		for (Iterator it = list.iterator(); it.hasNext();) {
 			mailaddress = (String) it.next();
 
 			// skip
-			if ( (mailaddress == null) || (mailaddress.length() == 0) ){
+			if ((mailaddress == null) || (mailaddress.length() == 0)) {
 				continue;
 			}
 

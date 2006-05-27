@@ -24,36 +24,76 @@ import junit.framework.TestCase;
 
 /**
  * @author fdietz
- *
+ * 
  */
 public class ListParserTest extends TestCase {
 
+	public void testCreateListFromStringNull() {
+
+		try {
+			ListParser.createListFromString(null);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	public void testCreateListFromStringEmpty() {
+		String s = "";
+
+		List<String> l = ListParser.createListFromString(s);
+		assertEquals("list size 0", 0, l.size());
+	}
+
 	public void testCreateListFromString() {
 		String s = "test@test.de";
-		
+
 		List<String> l = ListParser.createListFromString(s);
 		assertEquals("list size 1", 1, l.size());
-		
+
 		assertEquals("test@test.de", l.get(0));
 	}
-	
+
 	public void testCreateListFromString2() {
 		String s = "test@test.de; test2@test2.de";
-		
+
 		List<String> l = ListParser.createListFromString(s);
 		assertEquals("list size 2", 2, l.size());
-		
+
 		assertEquals("test@test.de", l.get(0));
 		assertEquals("test2@test2.de", l.get(1));
-		
+
+	}
+
+	public void testCreateStringFromListNull() {
+		try {
+			ListParser.createStringFromList(new Vector<String>(), null);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	public void testCreateStringFromListNull2() {
+		try {
+			ListParser.createStringFromList(null, ";");
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	public void testCreateStringFromListEmpty() {
+
+		List<String> list = new Vector<String>();
+
+		String result = ListParser.createStringFromList(list, ";");
+		assertEquals("", result);
 	}
 	
 	public void testCreateStringFromList() {
-		
+
 		List<String> list = new Vector<String>();
 		list.add("test@test.de");
 		list.add("test2@test2.de");
-		
+
 		String result = ListParser.createStringFromList(list, ";");
 		assertEquals("test@test.de;test2@test2.de", result);
 	}
