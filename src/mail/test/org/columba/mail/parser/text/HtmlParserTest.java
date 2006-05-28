@@ -83,33 +83,58 @@ public class HtmlParserTest extends TestCase {
                 + "<h1>A header </h><p>" + "<i>The end</i></p></body></html>"));
     }
     
-    public void restoreSpecialCharacters1() {
+    public void testrestoreSpecialCharacters1() {
     	String input = "this &#59; is encoded!";
     	
     	assertEquals("this ; is encoded!", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
-    public void restoreSpecialCharacters2() {
+    public void testrestoreSpecialCharacters2() {
     	String input = "this &auml; is encoded!";
     	
-    	assertEquals(";", HtmlParser.restoreSpecialCharacters(testCharset, input));
+    	assertEquals("this \u00e4 is encoded!", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
-    public void restoreSpecialCharacters3() {
+    public void testrestoreSpecialCharacters3() {
     	String input = "this is &frac12; encoded &#59; !";
     	
     	assertEquals("this is \u00bd encoded ; !", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
-    public void restoreSpecialCharacters4() {
+    public void testrestoreSpecialCharacters4() {
     	String input = "this is&lt;encoded&gt;!";
     	
     	assertEquals("this is<encoded>!", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
-    public void restoreSpecialCharacters5() {
+    public void testrestoreSpecialCharacters5() {
     	String input = "&frac12; this is &#160;this is &#59;this is &#59;this is &#59;\nthis is &#59;\nthis is &#59;";
     	
-    	assertEquals("\u00bd his is \u00a0this is ;this is ;this is ;\nthis is ;\nthis is ;", HtmlParser.restoreSpecialCharacters(testCharset, input));
+    	assertEquals("\u00bd this is \u00a0this is ;this is ;this is ;\nthis is ;\nthis is ;", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
+    
+    public void testsubstitiuteEmail1() {
+    	String input = "test@mail.com";
+    	
+    	assertEquals("<A HREF=\"mailto:" + input +"\">"+ input + "</A>", HtmlParser.substituteEmailAddress(input) );
+    }
+
+    public void testsubstitiuteEmail2() {
+    	String input = "te+st09@mail.com";
+    	
+    	assertEquals("<A HREF=\"mailto:" + input +"\">"+ input + "</A>", HtmlParser.substituteEmailAddress(input) );
+    }
+
+    public void testsubstitiuteEmail3() {
+    	String input = "test09_+@mail.com";
+    	
+    	assertEquals("<A HREF=\"mailto:" + input +"\">"+ input + "</A>", HtmlParser.substituteEmailAddress(input) );
+    }
+
+    public void testsubstitiuteEmail4() {
+    	String input = "test09_+@mail.af.two.three.four.five.com";
+    	
+    	assertEquals("<A HREF=\"mailto:" + input +"\">"+ input + "</A>", HtmlParser.substituteEmailAddress(input) );
+    }
+
 }
