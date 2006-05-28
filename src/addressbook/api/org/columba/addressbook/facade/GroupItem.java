@@ -45,12 +45,6 @@ public class GroupItem extends HeaderItem implements IGroupItem {
 		return list;
 	}
 
-	public IGroupItem clone() {
-		IGroupItem item = new GroupItem(getId());
-		item.setDescription(getDescription());
-		return item;
-	}
-
 	public void addContact(IContactItem item) {
 		if (item == null)
 			throw new IllegalArgumentException("item == null");

@@ -94,10 +94,4 @@ public class HeaderItem implements IHeaderItem {
 		this.description = description;
 	}
 
-	public IHeaderItem clone() {
-		IHeaderItem item = new HeaderItem(getId(), isContact());
-		item.setName(getName());
-		item.setDescription(getDescription());
-		return item;
-	}
 }

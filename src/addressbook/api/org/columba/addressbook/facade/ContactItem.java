@@ -70,12 +70,6 @@ public class ContactItem extends HeaderItem implements IContactItem {
 		return address;
 	}
 
-	public IContactItem clone() {
-		IContactItem item = new ContactItem(getId(), getName(), getFirstname(), getLastname(), getAddress());
-		item.setDescription(getDescription());
-		return item;
-	}
-
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}

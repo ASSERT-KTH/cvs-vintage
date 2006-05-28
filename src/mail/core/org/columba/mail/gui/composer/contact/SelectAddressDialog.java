@@ -422,8 +422,8 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			for (int j = 0; j < array.length; j++) {
 				item = (IHeaderItem) model.getElementAt(array[j]);
-				dialogAddressbookListModel[0].addElement((IHeaderItem) item
-						.clone());
+				dialogAddressbookListModel[0].addElement(item
+						);
 			}
 		} else if (command.equals("CC")) { //$NON-NLS-1$
 
@@ -433,8 +433,8 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			for (int j = 0; j < array.length; j++) {
 				item = (IHeaderItem) model.getElementAt(array[j]);
-				dialogAddressbookListModel[1].addElement((IHeaderItem) item
-						.clone());
+				dialogAddressbookListModel[1].addElement(item
+						);
 			}
 		} else if (command.equals("BCC")) { //$NON-NLS-1$
 
@@ -444,8 +444,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			for (int j = 0; j < array.length; j++) {
 				item = (IHeaderItem) model.getElementAt(array[j]);
-				dialogAddressbookListModel[2].addElement((IHeaderItem) item
-						.clone());
+				dialogAddressbookListModel[2].addElement(item);
 			}
 		} else if (command.equals("TO_REMOVE")) { //$NON-NLS-1$
 

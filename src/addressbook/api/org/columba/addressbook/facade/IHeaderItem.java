@@ -30,6 +30,4 @@ public interface IHeaderItem {
 	public void setDescription(String description);
 	
 	public boolean isContact();
-	
-	public IHeaderItem clone();
 }

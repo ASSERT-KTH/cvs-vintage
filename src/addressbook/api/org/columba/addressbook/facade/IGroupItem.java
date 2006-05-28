@@ -28,6 +28,4 @@ public interface IGroupItem extends IHeaderItem {
 	public void removeContact(IContactItem item);
 	
 	public int getContactCount();
-
-	public IGroupItem clone();
 }
