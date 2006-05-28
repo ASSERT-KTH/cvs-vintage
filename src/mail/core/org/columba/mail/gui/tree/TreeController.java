@@ -32,6 +32,8 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IMailFolder;
+import org.columba.mail.gui.tree.comparator.FolderComparator;
+import org.columba.mail.gui.tree.comparator.UnreadFolderComparator;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**
@@ -46,6 +48,8 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 	private IFrameMediator frameController;
 
 	private ExtendablePopupMenu menu;
+
+	private FolderComparator folderComparator;
 
 	/**
 	 * Constructor for tree controller.
@@ -82,6 +86,14 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 		 * RenameFolderAction(mailFrameController);
 		 * getView().getActionMap().put("RENAME", action);
 		 */
+	}
+
+	/**
+	 * @see org.columba.mail.gui.tree.ITreeController#sortAscending(boolean)
+	 */
+	public void sortAscending(boolean ascending) {
+		folderComparator.setAscending(ascending);
+		view.setSortingComparator(folderComparator);
 	}
 
 	/**
@@ -163,8 +175,7 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 
 	/** {@inheritDoc} */
 	public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
-		IMailFolder treeNode = (IMailFolder) e.getPath()
-				.getLastPathComponent();
+		IMailFolder treeNode = (IMailFolder) e.getPath().getLastPathComponent();
 
 		if (treeNode == null) {
 			return;
@@ -176,8 +187,7 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 
 	/** {@inheritDoc} */
 	public void treeWillCollapse(TreeExpansionEvent e) {
-		IMailFolder treeNode = (IMailFolder) e.getPath()
-				.getLastPathComponent();
+		IMailFolder treeNode = (IMailFolder) e.getPath().getLastPathComponent();
 
 		if (treeNode == null) {
 			return;
@@ -215,4 +225,34 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 	public TreeModel getModel() {
 		return getView().getModel();
 	}
+
+	/**
+	 * @see org.columba.mail.gui.tree.ITreeController#setSortingEnabled(boolean)
+	 */
+	public void setSortingEnabled(boolean enabled) {
+		view.setSortingEnabled(enabled);
+	}
+
+	public void setSortingMode(SORTING_MODE_ENUM sortingMode, boolean ascending) {
+
+		if (sortingMode == SORTING_MODE_ENUM.ALPHABETICAL) {
+			setFolderComparator(new FolderComparator(ascending));
+		} else if (sortingMode == SORTING_MODE_ENUM.UNREAD_COUNT) {
+			setFolderComparator(new UnreadFolderComparator(ascending));
+		} else {
+			// no sorting
+		}
+	}
+
+	/**
+	 * Set a new folder comparator for sorting the folders.
+	 * 
+	 * @param comparator
+	 *            the folder comparator to use.
+	 */
+	private void setFolderComparator(FolderComparator comparator) {
+		folderComparator = comparator;
+		view.setSortingComparator(folderComparator);
+	}
+
 }

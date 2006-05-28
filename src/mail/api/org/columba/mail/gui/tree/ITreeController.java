@@ -23,16 +23,12 @@ import org.columba.mail.folder.IMailFolder;
 
 /**
  * @author fdietz
- *
+ * 
  */
 public interface ITreeController {
-	/**
-	 * Returns the tree view.
-	 * 
-	 * @return the tree view.
-	 */
-	//TreeView getView();
 
+	public enum SORTING_MODE_ENUM { UNSORTED, ALPHABETICAL, UNREAD_COUNT};
+	
 	/**
 	 * Set the specified folder as seleceted.
 	 * 
@@ -40,6 +36,13 @@ public interface ITreeController {
 	 *            the new selected folder.
 	 */
 	void setSelected(IMailFolder folder);
-	
+
 	TreeModel getModel();
+
+	public void sortAscending(boolean ascending);
+
+	public void setSortingEnabled(boolean enabled);
+	
+	public void setSortingMode(SORTING_MODE_ENUM sortingMode, boolean ascending);
+	
 }

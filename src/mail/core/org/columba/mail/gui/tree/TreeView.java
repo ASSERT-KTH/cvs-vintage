@@ -24,7 +24,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Comparator;
 
 import javax.swing.JComponent;
 import javax.swing.JTree;
@@ -37,7 +36,6 @@ import javax.swing.tree.TreePath;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IMailFolder;
-import org.columba.mail.gui.tree.comparator.FolderComparator;
 import org.frapuccino.swing.SortedJTree;
 
 /**
@@ -59,7 +57,7 @@ public class TreeView extends SortedJTree {
 	 */
 	private Timer dndAutoExpanderTimer;
 
-	private FolderComparator folderComparator;
+	
 
 	/**
 	 * Constructa a tree view
@@ -203,38 +201,7 @@ public class TreeView extends SortedJTree {
 		isInDndMode = false;
 	}
 
-	/**
-	 * If the folders should be sorted ascending or descending.
-	 * 
-	 * @param ascending
-	 *            if it should be sorted ascending.
-	 */
-	public void sortAscending(boolean ascending) {
-		folderComparator.setAscending(ascending);
-		super.setSortingComparator(folderComparator);
-	}
-
-	/**
-	 * Set a new folder comparator for sorting the folders.
-	 * 
-	 * @param comparator
-	 *            the folder comparator to use.
-	 */
-	public void setFolderComparator(FolderComparator comparator) {
-		folderComparator = comparator;
-		super.setSortingComparator(folderComparator);
-	}
-
-	/**
-	 * Deprecated method, use <code>setFolderComparator()</code> instead.
-	 * 
-	 * @param comparator
-	 *            ignored.
-	 * @deprecated Use
-	 * @link TreeView#setFolderComparator(FolderComparator) instad.
-	 */
-	public void setSortingComparator(Comparator comparator) {
-	}
+	
 
 	/**
 	 * Our own drop target implementation. This treeview class uses its own drop
