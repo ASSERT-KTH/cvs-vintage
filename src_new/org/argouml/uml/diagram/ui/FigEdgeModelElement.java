@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.164 2006/05/14 07:27:52 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.165 2006/05/28 21:29:49 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -880,21 +880,19 @@ public abstract class FigEdgeModelElement
      */
     public void notationChanged(ArgoNotationEvent event) {
         if (getOwner() == null) return;
-        NotationName oldNotation = currentNotationName;
         PropertyChangeEvent changeEvent =
             (PropertyChangeEvent) event.getSource();
         if (changeEvent.getPropertyName().equals("argo.notation.only.uml")) {
             if (changeEvent.getNewValue().equals("true")) {
                 setContextNotation(Notation.getConfigueredNotation());
             }
-        } else if (changeEvent.getPropertyName().equals("argo.notation.default")) {
+        } else if (changeEvent.getPropertyName()
+                .equals("argo.notation.default")) {
             setContextNotation(
                 Notation.findNotation((String) changeEvent.getNewValue()));
         }
-        if (!oldNotation.sameNotationAs(currentNotationName)) {
-            initNotationProviders(getOwner());
-            renderingChanged();
-        }
+        initNotationProviders(getOwner());
+        renderingChanged();
     }
 
     /**
