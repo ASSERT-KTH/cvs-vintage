@@ -68,11 +68,9 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 		try {
 			document = VCalendarModelFactory.marshall(basicModel);
 		} catch (SyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		}
 
 		dataStorage.save(id, document);
@@ -107,11 +105,9 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 		try {
 			basicModel = VCalendarModelFactory.unmarshall(document);
 		} catch (SyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		}
 
 		return basicModel;
@@ -136,11 +132,9 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 		try {
 			document = VCalendarModelFactory.marshall(basicModel);
 		} catch (SyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		}
 
 		// add new data to local store
@@ -176,11 +170,9 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 			try {
 				basicModel = VCalendarModelFactory.unmarshall(document);
 			} catch (SyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new StoreException(e);
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new StoreException(e);
 			}
 
 			if (basicModel.getType() == IComponent.TYPE.EVENT) {
@@ -206,11 +198,9 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 			try {
 				basicModel = VCalendarModelFactory.unmarshall(document);
 			} catch (SyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new StoreException(e);
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new StoreException(e);
 			}
 
 			if (basicModel.getType() == IComponent.TYPE.EVENT) {
@@ -234,11 +224,9 @@ public class LocalCalendarStore extends AbstractCalendarStore implements
 			try {
 				basicModel = VCalendarModelFactory.unmarshall(document);
 			} catch (SyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new StoreException(e);
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new StoreException(e);
 			}
 
 			if (basicModel.getType() == IComponent.TYPE.EVENT) {

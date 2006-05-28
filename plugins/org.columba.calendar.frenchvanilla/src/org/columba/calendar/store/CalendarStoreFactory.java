@@ -51,6 +51,27 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 
 		storeDirectory = new File(parentDirectory, "store");
 		DiskIO.ensureDirectory(storeDirectory);
+
+		initLocalStore();
+	}
+
+	private void initLocalStore() {
+		store = new LocalCalendarStore(storeDirectory);
+
+		IComponentInfoList list = store.getComponentInfoList();
+		Iterator<IComponentInfo> it = list.iterator();
+		while (it.hasNext()) {
+			IComponentInfo item = (IComponentInfo) it.next();
+
+			if (item.getType() == IComponent.TYPE.EVENT) {
+				IEventInfo event = (IEventInfo) item;
+
+				Activity act = CalendarHelper.createActivity(event);
+
+				ActivityDepository.getInstance().addBrokedActivity(act, this);
+
+			}
+		}
 	}
 
 	public static CalendarStoreFactory getInstance() {
@@ -58,35 +79,6 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 	}
 
 	public ICalendarStore getLocaleStore() {
-		
-		if (store == null)
-			try {
-				store = new LocalCalendarStore(storeDirectory);
-
-				IComponentInfoList list = store.getComponentInfoList();
-				Iterator<IComponentInfo> it = list.iterator();
-				while (it.hasNext()) {
-					IComponentInfo item = (IComponentInfo) it.next();
-
-					if (item.getType() == IComponent.TYPE.EVENT) {
-						IEventInfo event = (IEventInfo) item;
-						try {
-							Activity act = CalendarHelper.createActivity(event);
-
-							ActivityDepository.getInstance().addBrokedActivity(act,
-									this);
-						} catch (RuntimeException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-
-			} catch (StoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
 		return store;
 	}
 

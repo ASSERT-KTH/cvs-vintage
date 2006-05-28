@@ -65,11 +65,9 @@ public class LocalXMLFileStore {
 			doc = builder.build(file);
 
 		} catch (JDOMException e) {
-
-			e.printStackTrace();
+			throw new StoreException(e);
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			throw new StoreException(e);
 		}
 
 		return doc;
@@ -84,15 +82,13 @@ public class LocalXMLFileStore {
 		File file = getFile(id);
 
 		XMLOutputter outp = new XMLOutputter();
-		
+
 		try {
 			outp.output(document, new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StoreException(e);
 		}
 	}
 
@@ -166,13 +162,8 @@ public class LocalXMLFileStore {
 			String uid = filename.substring(0, filename.indexOf("."));
 
 			Document document = null;
-			try {
-				document = load(uid);
-			} catch (StoreException e) {
-				LOG.severe(e.getMessage());
-				e.printStackTrace();
-			}
 
+			document = load(uid);
 			nextIndex++;
 
 			return document;
@@ -181,12 +172,7 @@ public class LocalXMLFileStore {
 		public void remove() {
 			String uid = files[nextIndex].getName();
 
-			try {
-				LocalXMLFileStore.this.remove(uid);
-			} catch (StoreException e) {
-				LOG.severe(e.getMessage());
-				e.printStackTrace();
-			}
+			LocalXMLFileStore.this.remove(uid);
 
 			nextIndex++;
 		}
