@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.29 2005/08/05 07:58:41 olearyni Exp $
+ * @version $Id: Registers.java,v 1.30 2006/05/28 15:35:26 ezust Exp $
  */
 public class Registers
 {
@@ -219,15 +219,14 @@ public class Registers
 				textArea.getToolkit().beep();
 				return;
 			}
-
-			if(vertical && textArea.getSelectionCount() == 0)
+			JEditBuffer buffer = textArea.getBuffer();
+			try
 			{
-				JEditBuffer buffer = textArea.getBuffer();
+				buffer.beginCompoundEdit();
 
-				try
+				/* vertical paste */
+				if(vertical && textArea.getSelectionCount() == 0)
 				{
-					buffer.beginCompoundEdit();
-
 					int caret = textArea.getCaretPosition();
 					int caretLine = textArea.getCaretLine();
 					Selection.Rect rect = new Selection.Rect(
@@ -257,14 +256,14 @@ public class Registers
 						}
 					}
 				}
-				finally
+				else /* Regular paste */ 
 				{
-					buffer.endCompoundEdit();
+					textArea.replaceSelection(selection);
 				}
 			}
-			else
-				textArea.replaceSelection(selection);
-
+			finally {
+				buffer.endCompoundEdit();
+			}
 			HistoryModel.getModel("clipboard").addItem(selection);
 		}
 	} //}}}
