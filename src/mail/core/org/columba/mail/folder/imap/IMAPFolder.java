@@ -206,7 +206,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.api.command.IWorkerStatusController)
 	 */
-	public IHeaderList getHeaderList() throws Exception {
+	public synchronized IHeaderList getHeaderList() throws Exception {
 		if (mailboxSyncEnabled  && ConnectionStateImpl.getInstance().isOnline() && !getServer().isSelected(this)) {
 			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
