@@ -476,8 +476,16 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 *      IMAPFolder)
 	 */
 	public void markMessage(Object[] uids, int variant) throws Exception {
-		List list = new ArrayList(Arrays.asList(uids));
+		List list = new ArrayList();
 
+		// Check if all uids are still exisiting
+		for ( Object uid : uids) {
+			if(exists(uid)) {
+				list.add(uid);
+			}
+		}
+		if( list.size() == 0 ) return;
+		
 		Collections.sort(list, new Comparator() {
 
 			public int compare(Object o1, Object o2) {
@@ -956,7 +964,15 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	}
 
 	public void innerCopy(IMailbox destFolder, Object[] uids) throws Exception {
-		List list = new ArrayList(Arrays.asList(uids));
+		List list = new ArrayList();
+
+		// Check if all uids are still exisiting
+		for ( Object uid : uids) {
+			if(exists(uid)) {
+				list.add(uid);
+			}
+		}
+		if( list.size() == 0 ) return;
 
 		Collections.sort(list, new Comparator() {
 
