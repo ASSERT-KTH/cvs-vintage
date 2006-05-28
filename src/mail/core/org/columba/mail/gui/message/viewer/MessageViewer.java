@@ -19,22 +19,31 @@ package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import org.columba.core.desktop.ColumbaDesktop;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
+import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
@@ -56,14 +65,19 @@ public class MessageViewer extends JPanel implements ICustomViewer {
 
 	private PGPMessageFilter pgpFilter;
 
-	private MessageController mediator;
+	private IMessageController mediator;
 
+	// TODO: @author fdietz, remove dependency here
+	private MailFrameMediator frameMediator;
+	
 	/**
 	 * 
 	 */
-	public MessageViewer(MessageController mediator) {
+	public MessageViewer(MailFrameMediator frameMediator, IMessageController mediator) {
 		super();
 
+		this.frameMediator = frameMediator;
+		
 		this.mediator = mediator;
 
 		Border outterBorder = BorderFactory.createCompoundBorder(BorderFactory
@@ -193,7 +207,7 @@ public class MessageViewer extends JPanel implements ICustomViewer {
 		headerController = new HeaderViewer(mediator,
 				securityInformationController, spamStatusController);
 
-		pgpFilter = new PGPMessageFilter(mediator.getFrameController(),
+		pgpFilter = new PGPMessageFilter(frameMediator,
 				mediator);
 		pgpFilter.addSecurityStatusListener(securityInformationController);
 

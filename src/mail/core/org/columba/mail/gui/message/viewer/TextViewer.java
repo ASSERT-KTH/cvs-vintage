@@ -40,6 +40,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -71,7 +72,12 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
+import org.columba.mail.gui.message.action.AddToAddressbookAction;
+import org.columba.mail.gui.message.action.ComposeMessageAction;
+import org.columba.mail.gui.message.action.CopyLinkLocationAction;
+import org.columba.mail.gui.message.action.OpenAction;
+import org.columba.mail.gui.message.action.OpenWithAction;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -121,7 +127,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	 */
 	private boolean htmlMessage;
 
-	private MessageController mediator;
+	private IMessageController mediator;
 
 	private IHTMLViewerPlugin viewerPlugin;
 
@@ -131,7 +137,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 	private boolean usingJDIC;
 
-	public TextViewer(MessageController mediator) {
+	public TextViewer(IMessageController mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -180,12 +186,26 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 	}
 
+	private JPopupMenu createPopupMenu(ColumbaURL url) {
+		JPopupMenu menu = new JPopupMenu();
+		menu.add(new CopyLinkLocationAction(url));
+		menu.addSeparator();
+		menu.add(new OpenAction(url));
+		menu.add(new OpenWithAction(url));
+		menu.addSeparator();
+		menu.add(new AddToAddressbookAction(url));
+		menu.add(new ComposeMessageAction(url));
+
+		return menu;
+	}
+
 	private IHTMLViewerPlugin createHTMLViewerPluginInstance(String pluginId) {
 		IHTMLViewerPlugin plugin = null;
 		try {
 
-			IExtensionHandler handler =  PluginManager
-					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
+			IExtensionHandler handler = PluginManager.getInstance()
+					.getExtensionHandler(
+							IExtensionHandlerKeys.ORG_COLUMBA_CORE_HTMLVIEWER);
 
 			IExtension extension = handler.getExtension(pluginId);
 			if (extension == null)
@@ -521,23 +541,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		return htmlMessage;
 	}
 
-	protected void processPopup(MouseEvent ev) {
-		// final URL url = extractURL(ev);
-		ColumbaURL mailto = extractMailToURL(ev);
-		mediator.setSelectedURL(mailto);
-
-		final MouseEvent event = ev;
-		// open context-menu
-		// -> this has to happen in the awt-event dispatcher thread
-		SwingUtilities.invokeLater(new Runnable() {
-
-			public void run() {
-				mediator.getPopupMenu().show(event.getComponent(),
-						event.getX(), event.getY());
-			}
-		});
-	}
-
 	protected URL extractURL(MouseEvent event) {
 		JEditorPane pane = (JEditorPane) event.getSource();
 		HTMLDocument doc = (HTMLDocument) pane.getDocument();
@@ -621,10 +624,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 				return;
 			}
 
-			mediator.setSelectedURL(new ColumbaURL(url));
-
-			// URLController c = new URLController();
-
 			if (url.getProtocol().equalsIgnoreCase("mailto")) {
 				// open composer
 				ComposerController controller = new ComposerController();
@@ -641,6 +640,22 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 				ColumbaDesktop.getInstance().browse(url);
 			}
 		}
+	}
+
+	protected void processPopup(MouseEvent ev) {
+		// final URL url = extractURL(ev);
+		final ColumbaURL mailto = extractMailToURL(ev);
+		
+		final MouseEvent event = ev;
+		// open context-menu
+		// -> this has to happen in the awt-event dispatcher thread
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				createPopupMenu(mailto).show(event.getComponent(),
+						event.getX(), event.getY());
+			}
+		});
 	}
 
 }

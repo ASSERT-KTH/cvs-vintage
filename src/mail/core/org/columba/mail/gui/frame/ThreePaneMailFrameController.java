@@ -201,7 +201,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();
-		messageController.createPopupMenu();
+		//messageController.createPopupMenu();
 	}
 
 	public void enableMessagePreview(boolean enable) {

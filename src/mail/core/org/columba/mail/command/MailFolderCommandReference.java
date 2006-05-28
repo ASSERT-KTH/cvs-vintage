@@ -216,4 +216,5 @@ public class MailFolderCommandReference extends DefaultFolderCommandReference
 	public void setFolderType(String folderType) {
 		this.folderType = folderType;
 	}
+	
 }

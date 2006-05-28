@@ -17,15 +17,14 @@ package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.api.gui.frame.IFrameMediator;
+import javax.swing.AbstractAction;
+
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.command.SaveAttachmentAsCommand;
 import org.columba.mail.gui.message.viewer.AttachmentsViewer;
 import org.columba.mail.util.MailResourceLoader;
@@ -35,19 +34,20 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author frdietz
  */
-public class SaveAsAttachmentAction extends AbstractColumbaAction {
+public class SaveAsAttachmentAction extends AbstractAction {
 
 	private Integer[] address;
 
 	private AttachmentsViewer attachmentViewer;
-	
-	public SaveAsAttachmentAction(IFrameMediator frameMediator,
-			Integer[] address) {
-		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
-				"attachmentsaveas"));
 
+	private IMessageController mediator;
+
+	public SaveAsAttachmentAction(IMessageController mediator, Integer[] address) {
+		super(MailResourceLoader.getString("menu", "mainframe",
+				"attachmentsaveas"));
+		this.mediator = mediator;
 		this.address = address;
-		
+
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "attachmentsaveas_tooltip").replaceAll("&", ""));
@@ -55,17 +55,17 @@ public class SaveAsAttachmentAction extends AbstractColumbaAction {
 		// icons
 		putValue(SMALL_ICON, ImageLoader
 				.getSmallIcon(IconKeys.DOCUMENT_SAVE_AS));
-		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.DOCUMENT_SAVE_AS));
+		// putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.DOCUMENT_SAVE_AS));
 
 	}
-	
-	public SaveAsAttachmentAction(IFrameMediator frameMediator,
+
+	public SaveAsAttachmentAction(IMessageController mediator,
 			AttachmentsViewer attachmentViewer) {
-		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"attachmentsaveas"));
-
+		this.mediator = mediator;
 		this.attachmentViewer = attachmentViewer;
-		
+
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "attachmentsaveas_tooltip").replaceAll("&", ""));
@@ -73,19 +73,17 @@ public class SaveAsAttachmentAction extends AbstractColumbaAction {
 		// icons
 		putValue(SMALL_ICON, ImageLoader
 				.getSmallIcon(IconKeys.DOCUMENT_SAVE_AS));
-		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.DOCUMENT_SAVE_AS));
+		// putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.DOCUMENT_SAVE_AS));
 
 	}
-	
 
 	/** {@inheritDoc} */
 	public void actionPerformed(ActionEvent evt) {
-		IMailFolderCommandReference ref = ((MessageController) ((MessageViewOwner) frameMediator)
-				.getMessageController()).getReference();
+		IMailFolderCommandReference ref = mediator.getSelectedReference();
 
-		if ( attachmentViewer != null )
+		if (attachmentViewer != null)
 			address = attachmentViewer.getSelected();
-		
+
 		CommandProcessor.getInstance().addOp(
 				new SaveAttachmentAsCommand(new MailFolderCommandReference(ref
 						.getSourceFolder(), ref.getUids(), address)));

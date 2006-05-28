@@ -16,16 +16,12 @@
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Observable;
-import java.util.Observer;
 
-import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.gui.action.AbstractColumbaAction;
+import javax.swing.AbstractAction;
+
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -35,8 +31,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 
-public class ComposeMessageAction extends AbstractColumbaAction implements
-		Observer {
+public class ComposeMessageAction extends AbstractAction {
 
 	private String emailAddress;
 
@@ -45,31 +40,25 @@ public class ComposeMessageAction extends AbstractColumbaAction implements
 	/**
 	 * 
 	 */
-	public ComposeMessageAction(IFrameMediator controller, String emailAddress) {
-		super(controller, MailResourceLoader.getString("menu", "mainframe",
+	public ComposeMessageAction(String emailAddress) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"viewer_compose"));
 
 		this.emailAddress = emailAddress;
 
-		setEnabled(true);
+		setEnabled( emailAddress != null);
 	}
 
-	public ComposeMessageAction(IFrameMediator controller) {
-		super(controller, MailResourceLoader.getString("menu", "mainframe",
+	public ComposeMessageAction(ColumbaURL url) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"viewer_compose"));
-
-		setEnabled(false);
-
-		// listen for URL changes
-		((MessageViewOwner) controller).getMessageController().addURLObserver(
-				this);
+		this.url = url;
+		setEnabled( url != null);
+		
+		if ( url != null)
+		setEnabled( url.isMailTo());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	public void actionPerformed(ActionEvent evt) {
 		ComposerController controller = new ComposerController();
 		new DefaultContainer(controller);
@@ -87,20 +76,4 @@ public class ComposeMessageAction extends AbstractColumbaAction implements
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		URLObservable o = (URLObservable) arg0;
-		
-		// only enable this action, if this is a mailto: URL
-		url = o.getUrl();
-		if (url == null)
-			setEnabled(false);
-		else
-			setEnabled(url.isMailTo());
-
-	}
 }

@@ -35,10 +35,11 @@ import javax.swing.UIManager;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.resourceloader.ImageLoader;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.action.OpenAttachmentAction;
 import org.columba.mail.gui.message.action.SaveAsAttachmentAction;
 import org.columba.mail.gui.message.command.SaveAttachmentTemporaryCommand;
@@ -63,11 +64,11 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 	private AttachmentModel model;
 
-	private MessageController mediator;
+	private IMessageController mediator;
 
 	private MailFolderCommandReference ref;
 
-	public AttachmentsViewer(MessageController mediator) {
+	public AttachmentsViewer(IMessageController mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -84,8 +85,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 		addMouseListener(popupListener);
 
 		// set double-click action for attachment viewer
-		setDoubleClickAction(new OpenAttachmentAction(mediator
-				.getFrameController(), this));
+		setDoubleClickAction(new OpenAttachmentAction(mediator, this));
 	}
 
 	/**
@@ -178,8 +178,9 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		if (mimePartTree == null ) return;
-		
+		if (mimePartTree == null)
+			return;
+
 		setMimePartTree(mimePartTree);
 	}
 
@@ -194,9 +195,9 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 		// bug #999990 (fdietz): make sure popup menu is created correctly
 		if (menu == null) {
 			menu = new ExtendablePopupMenu("mail.attachmentviewer");
-			menu.add(new OpenAttachmentAction(mediator.getFrameController(),
+			menu.add(new OpenAttachmentAction(mediator,
 					this));
-			menu.add(new SaveAsAttachmentAction(mediator.getFrameController(),
+			menu.add(new SaveAsAttachmentAction(mediator,
 					this));
 		}
 
@@ -239,9 +240,11 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 		public File[] createFiles(JComponent arg0) throws IOException {
 			File[] files = new File[1];
 
+			IMailFolderCommandReference ref = mediator.getSelectedReference();
+			ref.setAddress(getSelected());
+			
 			SaveAttachmentTemporaryCommand command = new SaveAttachmentTemporaryCommand(
-					mediator.getFrameController().getSelectionManager()
-							.getHandler("mail.attachment").getSelection());
+					ref);
 
 			CommandProcessor.getInstance().addOp(command);
 
@@ -287,7 +290,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 	 * @see org.columba.mail.gui.message.command.SaveAttachmentTemporaryCommand
 	 * @see org.frappucino.swing.DynamicFileTransferHandler
 	 */
-	
+
 	public class AttachmentTransferHandler extends DynamicFileTransferHandler {
 
 		/**
@@ -362,8 +365,8 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 			ImageIcon icon = ImageLoader.getMimetypeIcon(buf.toString());
 
 			if (icon == null) {
-				icon = ImageLoader.getMimetypeIcon("gnome-"
-						+ contentType + ".png");
+				icon = ImageLoader.getMimetypeIcon("gnome-" + contentType
+						+ ".png");
 			}
 
 			if (icon == null) {

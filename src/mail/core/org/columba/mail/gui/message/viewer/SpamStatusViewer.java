@@ -35,7 +35,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 
 /**
@@ -50,7 +50,7 @@ public class SpamStatusViewer extends JPanel implements ICustomViewer,
 
 	private boolean visible;
 
-	private MessageController mediator;
+	private IMessageController mediator;
 
 	private JLabel label;
 
@@ -58,7 +58,7 @@ public class SpamStatusViewer extends JPanel implements ICustomViewer,
 
 	private JPanel panel;
 
-	public SpamStatusViewer(MessageController mediator) {
+	public SpamStatusViewer(IMessageController mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -175,7 +175,7 @@ public class SpamStatusViewer extends JPanel implements ICustomViewer,
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		// get selected message
-		IMailFolderCommandReference r = mediator.getFrameController().getTableSelection();
+		IMailFolderCommandReference r = mediator.getSelectedReference();
 
 		// learn message as non spam
 		CommandProcessor.getInstance().addOp(new LearnMessageAsHamCommand(r));

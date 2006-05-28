@@ -16,24 +16,18 @@
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Observable;
-import java.util.Observer;
 
-import org.columba.addressbook.facade.ContactItem;
+import javax.swing.AbstractAction;
+
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IContactItem;
 import org.columba.addressbook.facade.IModelFacade;
 import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.api.exception.StoreException;
-import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.core.util.NameParser;
 import org.columba.mail.connector.FacadeUtil;
 import org.columba.mail.connector.ServiceConnector;
-import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
@@ -44,9 +38,7 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz
  */
-@SuppressWarnings( { "serial", "serial" })
-public class AddToAddressbookAction extends AbstractColumbaAction implements
-		Observer {
+public class AddToAddressbookAction extends AbstractAction {
 	private String emailAddress;
 
 	private ColumbaURL url = null;
@@ -54,30 +46,28 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 	/**
 	 * 
 	 */
-	public AddToAddressbookAction(IFrameMediator controller) {
-		super(controller, MailResourceLoader.getString("menu", "mainframe",
+	public AddToAddressbookAction(ColumbaURL url) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"viewer_addressbook"));
 
-		setEnabled(false);
-
 		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.CONTACT_NEW));
-
-		// listen for URL changes
-		((MessageViewOwner) controller).getMessageController().addURLObserver(
-				this);
+		
+		this.url = url;
+		setEnabled( url != null);
+		if ( url != null)
+			setEnabled( url.isMailTo());
 	}
 
 	/**
 	 * 
 	 */
-	public AddToAddressbookAction(IFrameMediator controller, String emailAddress) {
-		super(controller, MailResourceLoader.getString("menu", "mainframe",
+	public AddToAddressbookAction(String emailAddress) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"viewer_addressbook"));
 
 		this.emailAddress = emailAddress;
-
-		setEnabled(true);
-
+		setEnabled(emailAddress != null);
+		
 		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.CONTACT_NEW));
 	}
 
@@ -108,7 +98,8 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 
 			// add contact to addressbook
 			IContactItem contactItem = modelFacade.createContactItem();
-			FacadeUtil.getInstance().initContactItem(contactItem, address.getDisplayName(), address.getMailAddress());
+			FacadeUtil.getInstance().initContactItem(contactItem,
+					address.getDisplayName(), address.getMailAddress());
 			contactFacade.addContact(contactItem);
 		} catch (ParserException e) {
 			e.printStackTrace();
@@ -117,20 +108,4 @@ public class AddToAddressbookAction extends AbstractColumbaAction implements
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-
-		url = ((URLObservable) arg0).getUrl();
-
-		// only enable this action, if this is a mailto: URL
-		if (url == null)
-			setEnabled(false);
-		else
-			setEnabled(url.isMailTo());
-
-	}
 }

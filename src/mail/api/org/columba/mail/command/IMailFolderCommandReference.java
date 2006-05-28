@@ -86,4 +86,6 @@ public interface IMailFolderCommandReference  extends ICommandReference, IFolder
 	
 	public String getFolderType();
 	public void setFolderType(String folderType);
+	
+	public void setAddress(Integer[] address);
 }

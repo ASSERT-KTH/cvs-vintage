@@ -20,7 +20,6 @@ package org.columba.mail.facade;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.MessageController;
 
 /**
  * Selection handling.
@@ -61,8 +60,8 @@ public class SelectionFacade implements ISelectionFacade {
 	 * @return selected text
 	 */
 	public String getTextSelection(MailFrameMediator mediator) {
-		return ((MessageController) ((MessageViewOwner) mediator)
-				.getMessageController()).getSelectedText();
+		return ((MessageViewOwner) mediator)
+				.getMessageController().getSelectedText();
 	}
 
 }

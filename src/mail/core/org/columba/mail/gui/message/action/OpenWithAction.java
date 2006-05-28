@@ -16,13 +16,9 @@
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Observable;
-import java.util.Observer;
 
-import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.URLObservable;
+import javax.swing.AbstractAction;
+
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -31,21 +27,17 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
-public class OpenWithAction extends AbstractColumbaAction implements Observer {
+public class OpenWithAction extends AbstractAction {
 	ColumbaURL url = null;
 
 	/**
-	 *  
+	 * 
 	 */
-	public OpenWithAction(IFrameMediator controller) {
-		super(controller, MailResourceLoader.getString("menu", "mainframe",
+	public OpenWithAction(ColumbaURL url) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"viewer_openlinkwith"));
-
-		setEnabled(false);
-
-		// listen for URL changes
-		((MessageViewOwner) controller).getMessageController().addURLObserver(
-				this);
+		this.url = url;
+		setEnabled( url != null);
 	}
 
 	/*
@@ -56,20 +48,4 @@ public class OpenWithAction extends AbstractColumbaAction implements Observer {
 	public void actionPerformed(ActionEvent evt) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		URLObservable o = (URLObservable) arg0;
-
-		url = o.getUrl();
-
-		if (url == null) {
-			setEnabled(false);
-		} else {
-			setEnabled(!url.isMailTo());
-		}
-	}
 }

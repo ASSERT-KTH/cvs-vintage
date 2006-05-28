@@ -20,14 +20,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -38,8 +34,6 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
-import org.columba.core.gui.menu.MenuXMLDecoder;
-import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -48,7 +42,6 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
-import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.gui.message.viewer.HeaderViewer;
 import org.columba.mail.gui.message.viewer.MessageBorder;
 import org.columba.mail.gui.message.viewer.SecurityStatusViewer;
@@ -77,7 +70,7 @@ public class MessageController extends JPanel implements CharsetListener,
 
 	private PGPMessageFilter pgpFilter;
 
-	private URLObservable urlObservable;
+	
 
 	private ExtendablePopupMenu menu;
 
@@ -102,7 +95,7 @@ public class MessageController extends JPanel implements CharsetListener,
 
 		((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
-		urlObservable = new URLObservable();
+		
 
 		addComponentListener(new ComponentListener() {
 
@@ -262,7 +255,10 @@ public class MessageController extends JPanel implements CharsetListener,
 
 	}
 
-	public IMailFolderCommandReference getReference() {
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#getSelectedReference()
+	 */
+	public IMailFolderCommandReference getSelectedReference() {
 		return new MailFolderCommandReference(folder, new Object[] { uid });
 	}
 
@@ -270,46 +266,17 @@ public class MessageController extends JPanel implements CharsetListener,
 		return this;
 	}
 
-	public void addURLObserver(Observer observer) {
-		urlObservable.addObserver(observer);
-	}
 
-	public void setSelectedURL(ColumbaURL url) {
-		urlObservable.setUrl(url);
-	}
-
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#getSelectedText()
+	 */
 	public String getSelectedText() {
 		// TODO (@author fdietz): get selected text
 		throw new IllegalArgumentException("not implemented yet");
 	}
 
-	/**
-	 * @return Returns the urlObservable.
-	 */
-	public URLObservable getUrlObservable() {
-		return urlObservable;
-	}
+	
 
-	/**
-	 * return the PopupMenu for the message viewer
-	 */
-	public JPopupMenu getPopupMenu() {
-		return menu;
-	}
-
-	public void createPopupMenu() {
-		if (menu == null) {
-			try {
-				InputStream is = DiskIO
-						.getResourceStream("org/columba/mail/action/message_contextmenu.xml");
-
-				menu = new MenuXMLDecoder(getFrameController())
-						.createPopupMenu(is);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	public IMailbox getShownFolder() {
 		return folder;
@@ -357,4 +324,7 @@ public class MessageController extends JPanel implements CharsetListener,
 
 	}
 
+	
+	
+	
 }

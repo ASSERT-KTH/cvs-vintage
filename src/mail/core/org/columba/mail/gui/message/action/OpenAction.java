@@ -16,16 +16,12 @@
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Observable;
-import java.util.Observer;
 
-import org.columba.api.gui.frame.IFrameMediator;
+import javax.swing.AbstractAction;
+
 import org.columba.core.desktop.ColumbaDesktop;
-import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
-import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -34,23 +30,20 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
-public class OpenAction extends AbstractColumbaAction implements Observer {
+public class OpenAction extends AbstractAction {
 	ColumbaURL url = null;
 
 	/**
-	 *  
+	 * 
 	 */
-	public OpenAction(IFrameMediator controller) {
-		super(controller, MailResourceLoader.getString("menu", "mainframe",
+	public OpenAction(ColumbaURL url) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"viewer_openlink"));
-
-		setEnabled(false);
 
 		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.FOLDER_OPEN));
 
-		// listen for URL changes
-		((MessageViewOwner) controller).getMessageController().addURLObserver(
-				this);
+		this.url = url;
+		setEnabled( url != null);
 	}
 
 	/*
@@ -62,20 +55,4 @@ public class OpenAction extends AbstractColumbaAction implements Observer {
 		ColumbaDesktop.getInstance().browse(url.getRealURL());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		URLObservable o = (URLObservable) arg0;
-
-		url = o.getUrl();
-
-		if (url == null) {
-			setEnabled(false);
-		} else {
-			setEnabled(!url.isMailTo() && ColumbaDesktop.getInstance().supportsBrowse());
-		}
-	}
 }

@@ -55,7 +55,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.action.AddToAddressbookAction;
 import org.columba.mail.gui.message.action.ComposeMessageAction;
 import org.columba.mail.gui.message.action.OpenAttachmentAction;
@@ -95,9 +95,9 @@ public class HeaderViewer extends JPanel {
 
 	private AttachmentsViewer attachmentViewer;
 
-	private MessageController mediator;
+	private IMessageController mediator;
 
-	// TODO (@author fdietz):  this should be changed into a "real" window
+	// TODO (@author fdietz): this should be changed into a "real" window
 	private JPopupMenu attachmentViewerPopup = new JPopupMenu();
 
 	private static DateFormat DATE_FORMATTER = DateFormat.getDateTimeInstance(
@@ -109,7 +109,7 @@ public class HeaderViewer extends JPanel {
 
 	private JPopupMenu attachmentPopup;
 
-	public HeaderViewer(MessageController mediator,
+	public HeaderViewer(IMessageController mediator,
 			SecurityStatusViewer securityInfoViewer,
 			SpamStatusViewer spamInfoViewer) {
 
@@ -422,13 +422,8 @@ public class HeaderViewer extends JPanel {
 		// button.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 		button.setToolTipText(tooltip.toString());
 
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				new OpenAttachmentAction(mediator.getFrameController(), mp
-						.getAddress()).actionPerformed(event);
-
-			}
-		});
+		button.addActionListener(new OpenAttachmentAction(mediator, mp
+				.getAddress()));
 
 		button.addMouseListener(new PopupListener(createAttachmentPopupMenu(mp
 				.getAddress())));
@@ -481,7 +476,7 @@ public class HeaderViewer extends JPanel {
 	private JPanel createAttachmentViewerPanel() {
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(HeaderViewer.this.getWidth() - 1,
-				(int) mediator.getHeight() / 2));
+				(int) HeaderViewer.this.getHeight() * 2));
 		panel.setLayout(new BorderLayout());
 
 		JPanel centerPanel = new JPanel();
@@ -549,20 +544,16 @@ public class HeaderViewer extends JPanel {
 
 	private JPopupMenu createAttachmentPopupMenu(Integer[] address) {
 		JPopupMenu popup = new JPopupMenu();
-		popup.add(new OpenAttachmentAction(mediator.getFrameController(),
-				address));
-		popup.add(new SaveAsAttachmentAction(mediator.getFrameController(),
-				address));
+		popup.add(new OpenAttachmentAction(mediator, address));
+		popup.add(new SaveAsAttachmentAction(mediator, address));
 
 		return popup;
 	}
 
 	private JPopupMenu createAddressPopupMenu(String emailAddress) {
 		JPopupMenu popup = new JPopupMenu();
-		popup.add(new ComposeMessageAction(mediator.getFrameController(),
-				emailAddress));
-		popup.add(new AddToAddressbookAction(mediator.getFrameController(),
-				emailAddress));
+		popup.add(new ComposeMessageAction(emailAddress));
+		popup.add(new AddToAddressbookAction(emailAddress));
 
 		return popup;
 	}
@@ -600,8 +591,8 @@ public class HeaderViewer extends JPanel {
 			ImageIcon icon = ImageLoader.getMimetypeIcon(buf.toString());
 
 			if (icon == null) {
-				icon = ImageLoader.getMimetypeIcon("gnome-"
-						+ contentType + ".png");
+				icon = ImageLoader.getMimetypeIcon("gnome-" + contentType
+						+ ".png");
 			}
 
 			if (icon == null) {
@@ -643,20 +634,19 @@ public class HeaderViewer extends JPanel {
 			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
 			return new JComponent[] { new JLabel(str) };
 		} else if (key.equals("To")) {
-			
+
 			return createRecipientComponentArray(bHeader.getTo());
 		} else if (key.equals("Reply-To")) {
-			
 
 			return createRecipientComponentArray(bHeader.getReplyTo());
 		} else if (key.equals("Cc")) {
-			
+
 			return createRecipientComponentArray(bHeader.getCc());
 		} else if (key.equals("Bcc")) {
-			
+
 			return createRecipientComponentArray(bHeader.getBcc());
 		} else if (key.equals("From")) {
-			
+
 			return createRecipientComponentArray(new Address[] { (Address) bHeader
 					.getFrom() });
 		} else if (key.equals("Date")) {
@@ -706,8 +696,7 @@ public class HeaderViewer extends JPanel {
 
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
-					new ComposeMessageAction(mediator.getFrameController(),
-							label).actionPerformed(event);
+					new ComposeMessageAction(label).actionPerformed(event);
 
 				}
 			});
@@ -744,8 +733,7 @@ public class HeaderViewer extends JPanel {
 	}
 
 	private void showAddressListDialog() {
-		new AddressListDialog(mediator.getFrameController().getContainer()
-				.getFrame());
+		new AddressListDialog(null);
 
 	}
 

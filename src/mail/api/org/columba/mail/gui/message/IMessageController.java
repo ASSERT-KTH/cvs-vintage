@@ -17,8 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
-import java.util.Observer;
-
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 
 /**
@@ -54,6 +53,9 @@ public interface IMessageController {
 
 	void clear();
 
-	void addURLObserver(Observer observer);
+	
+	String getSelectedText();
+	
+	public IMailFolderCommandReference getSelectedReference();
 
 }

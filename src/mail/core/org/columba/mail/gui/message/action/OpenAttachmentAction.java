@@ -17,16 +17,17 @@ package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.desktop.ColumbaDesktop;
-import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.command.OpenAttachmentCommand;
 import org.columba.mail.gui.message.viewer.AttachmentsViewer;
 import org.columba.mail.util.MailResourceLoader;
@@ -36,48 +37,51 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
-public class OpenAttachmentAction extends AbstractColumbaAction {
+public class OpenAttachmentAction extends AbstractAction {
 
 	private Integer[] address;
 
+	private IMessageController mediator;
 	private AttachmentsViewer attachmentViewer;
 	
-	public OpenAttachmentAction(IFrameMediator frameMediator, Integer[] address) {
-		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+	public OpenAttachmentAction(IMessageController mediator, Integer[] address) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"attachmentopen"));
 
+		this.mediator = mediator;
 		this.address = address;
-		
+
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "attachmentopen_tooltip").replaceAll("&", ""));
 
 		// icons
 		putValue(SMALL_ICON, ImageLoader.getSmallIcon(IconKeys.FOLDER_OPEN));
-		putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.FOLDER_OPEN));
+		// putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.FOLDER_OPEN));
 
 		setEnabled(ColumbaDesktop.getInstance().supportsOpen());
-		
+
 	}
-	
-	public OpenAttachmentAction(IFrameMediator frameMediator, AttachmentsViewer attachmentViewer) {
-		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+
+	public OpenAttachmentAction(IMessageController mediator,
+			AttachmentsViewer attachmentViewer) {
+		super(MailResourceLoader.getString("menu", "mainframe",
 				"attachmentopen"));
 
+		this.mediator = mediator;
 		this.attachmentViewer = attachmentViewer;
-		
+
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "attachmentopen_tooltip").replaceAll("&", ""));
 
 		// icons
 		putValue(SMALL_ICON, ImageLoader.getIcon(IconKeys.FOLDER_OPEN));
-		putValue(LARGE_ICON, ImageLoader.getSmallIcon(IconKeys.FOLDER_OPEN));
+		// putValue(LARGE_ICON, ImageLoader.getSmallIcon(IconKeys.FOLDER_OPEN));
 
 		setEnabled(ColumbaDesktop.getInstance().supportsOpen());
-		
+
 	}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -85,13 +89,12 @@ public class OpenAttachmentAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		IMailFolderCommandReference ref = ((MessageController) ((MessageViewOwner) frameMediator)
-				.getMessageController()).getReference();
+		IMailFolderCommandReference ref = mediator.getSelectedReference();
 
-		if ( attachmentViewer != null ) {
+		if (attachmentViewer != null) {
 			address = attachmentViewer.getSelected();
 		}
-		
+
 		CommandProcessor.getInstance().addOp(
 				new OpenAttachmentCommand(new MailFolderCommandReference(ref
 						.getSourceFolder(), ref.getUids(), address)));

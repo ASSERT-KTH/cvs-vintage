@@ -22,7 +22,7 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.IColumbaMessage;
@@ -42,7 +42,7 @@ public abstract class AbstractFilter implements Filter {
     private MailFrameMediator mediator;
 
     
-    public AbstractFilter(MailFrameMediator mediator, MessageController messageViewer) {
+    public AbstractFilter(MailFrameMediator mediator, IMessageController messageViewer) {
         this.mediator = mediator;
     }
     /**
