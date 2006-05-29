@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.28 2006/04/13 04:23:38 tfmorris Exp $
+// $Id: PerspectiveConfigurator.java,v 1.29 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.ui.explorer;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -124,37 +123,33 @@ public class PerspectiveConfigurator extends ArgoDialog {
 
     /**
      * Creates a new instance of PerspectiveDesignerDialog.
-     *
-     * @param parent the parent frame
      */
-    public PerspectiveConfigurator(Frame parent) {
-
-        super(parent,
-	      Translator.localize("dialog.title.configure-perspectives"),
+    public PerspectiveConfigurator() {
+        super(Translator.localize("dialog.title.configure-perspectives"),
 	      ArgoDialog.OK_CANCEL_OPTION,
 	      true); // the dialog is modal
 
         configPanelNorth = new JPanel();
         configPanelSouth = new JPanel();
-
+        
         makeLists();
-
+        
         makeButtons();
-
+        
         makeLayout();
         updateRuleLabel();
-
+        
         makeListeners();
-
+        
         loadPerspectives();
         loadLibrary();
         //sortJListModel(ruleLibraryList);
-
+        
         splitPane =
             new JSplitPane(JSplitPane.VERTICAL_SPLIT,
                     configPanelNorth, configPanelSouth);
         splitPane.setContinuousLayout(true);
-
+        
         setContent(splitPane);
     }
 

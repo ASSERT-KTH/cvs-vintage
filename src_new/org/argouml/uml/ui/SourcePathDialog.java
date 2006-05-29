@@ -1,4 +1,4 @@
-// $Id: SourcePathDialog.java,v 1.16 2005/01/09 14:59:02 linus Exp $
+// $Id: SourcePathDialog.java,v 1.17 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import javax.swing.table.TableColumn;
 
 import org.argouml.i18n.Translator;
 import org.argouml.ui.ArgoDialog;
-import org.argouml.ui.ProjectBrowser;
 
 /**
  * This dialog appears when selecting
@@ -67,7 +66,6 @@ public class SourcePathDialog extends ArgoDialog implements ActionListener {
      */
     public SourcePathDialog() {
         super(
-            ProjectBrowser.getInstance(),
             Translator.localize("action.generate-code-for-project"),
             ArgoDialog.OK_CANCEL_OPTION,
             true);

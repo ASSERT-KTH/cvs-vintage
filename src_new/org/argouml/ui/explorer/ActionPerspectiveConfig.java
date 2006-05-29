@@ -1,4 +1,4 @@
-// $Id: ActionPerspectiveConfig.java,v 1.2 2006/04/03 20:52:03 linus Exp $
+// $Id: ActionPerspectiveConfig.java,v 1.3 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.AbstractAction;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.ui.ProjectBrowser;
 
 /**
  * Action to invoke the Configure Perspectives dialog.
@@ -51,8 +50,7 @@ public class ActionPerspectiveConfig extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-        PerspectiveConfigurator ncd =
-            new PerspectiveConfigurator(ProjectBrowser.getInstance());
+        PerspectiveConfigurator ncd = new PerspectiveConfigurator();
         ncd.setVisible(true);
     }
 

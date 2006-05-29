@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.22 2005/10/17 11:26:58 bobtarling Exp $
+// $Id: EmailExpertDialog.java,v 1.23 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,8 +80,7 @@ public class EmailExpertDialog extends ArgoDialog {
      * The constructor.
      */
     public EmailExpertDialog() {
-        super(ProjectBrowser.getInstance(),
-            Translator.localize("dialog.title.send-email-to-expert"),
+        super(Translator.localize("dialog.title.send-email-to-expert"),
 	      ArgoDialog.OK_CANCEL_OPTION,
 	      true);
 

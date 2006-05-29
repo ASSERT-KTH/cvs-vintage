@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.41 2006/02/19 10:17:59 linus Exp $
+// $Id: FindDialog.java,v 1.42 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,9 +126,8 @@ public class FindDialog extends ArgoDialog
      *
      */
     public FindDialog() {
-        super(ProjectBrowser.getInstance(),
-                Translator.localize("dialog.find.title"),
-                ArgoDialog.OK_CANCEL_OPTION, false);
+        super(Translator.localize("dialog.find.title"),
+              ArgoDialog.OK_CANCEL_OPTION, false);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 

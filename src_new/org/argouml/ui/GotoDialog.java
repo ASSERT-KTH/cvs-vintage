@@ -1,4 +1,4 @@
-// $Id: GotoDialog.java,v 1.4 2005/02/20 21:55:17 linus Exp $
+// $Id: GotoDialog.java,v 1.5 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.ui;
-
-
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -59,9 +57,8 @@ public class GotoDialog extends ArgoDialog {
      * The constructor.
      */
     public GotoDialog() {
-        super(ProjectBrowser.getInstance(), // the parent frame
-                Translator.localize("dialog.gotodiagram.title"),
-                ArgoDialog.OK_CANCEL_OPTION, false);
+        super(Translator.localize("dialog.gotodiagram.title"),
+              ArgoDialog.OK_CANCEL_OPTION, false);
 
         Project p = ProjectManager.getManager().getCurrentProject();
 

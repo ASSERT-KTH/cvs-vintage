@@ -1,4 +1,4 @@
-// $Id: SystemInfoDialog.java,v 1.12 2006/03/28 20:04:08 tfmorris Exp $
+// $Id: SystemInfoDialog.java,v 1.13 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,23 +71,6 @@ public class SystemInfoDialog extends ArgoDialog {
 
     ////////////////////////////////////////////////////////////////
     // constructors
-
-    /**
-     * The constructor.
-     *
-     */
-    public SystemInfoDialog() {
-	this((Frame) null, false);
-    }
-
-    /**
-     * The constructor.
-     *
-     * @param owner the parent frame
-     */
-    public SystemInfoDialog(Frame owner) {
-	this(owner, false);
-    }
 
     /**
      * The constructor.

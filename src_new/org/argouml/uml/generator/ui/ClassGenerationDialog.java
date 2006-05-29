@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.56 2006/02/27 14:27:20 bobtarling Exp $
+// $Id: ClassGenerationDialog.java,v 1.57 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.notation.Notation;
 import org.argouml.ui.ArgoDialog;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.CodeGenerator;
 import org.argouml.uml.generator.GeneratorManager;
 import org.argouml.uml.generator.Language;
@@ -117,7 +116,6 @@ public class ClassGenerationDialog
      */
     public ClassGenerationDialog(Vector nodes, boolean inModel) {
         super(
-            ProjectBrowser.getInstance(),
             Translator.localize("dialog.title.generate-classes"),
             Dialog.OK_CANCEL_OPTION,
             true);

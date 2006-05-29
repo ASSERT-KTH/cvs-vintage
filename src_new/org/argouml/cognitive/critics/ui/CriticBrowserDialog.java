@@ -1,4 +1,4 @@
-// $Id: CriticBrowserDialog.java,v 1.26 2005/01/09 14:58:05 linus Exp $
+// $Id: CriticBrowserDialog.java,v 1.27 2006/05/29 20:39:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,6 @@ import org.argouml.cognitive.Translator;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.ui.ArgoDialog;
-import org.argouml.ui.ProjectBrowser;
 
 /**
  * Dialog box to list all critics and allow editing of some of their
@@ -159,8 +158,7 @@ public class CriticBrowserDialog extends ArgoDialog
      *
      */
     public CriticBrowserDialog() {
-	super(ProjectBrowser.getInstance(),
-            Translator.localize("dialog.browse.label.critics"), true);
+	super(Translator.localize("dialog.browse.label.critics"), true);
 
 	JPanel mainContent = new JPanel();
 	mainContent.setLayout(new BorderLayout(10, 10));
@@ -470,8 +468,9 @@ class TableModelCritics extends AbstractTableModel
     // instance varables
     private List target;
 
-    ////////////////
-    // constructor
+    /**
+     * Constructor.
+     */
     public TableModelCritics() { }
 
     ////////////////

@@ -1,4 +1,4 @@
-// $Id: SettingsDialog.java,v 1.2 2006/04/29 16:02:23 linus Exp $
+// $Id: SettingsDialog.java,v 1.3 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,10 +69,9 @@ class SettingsDialog extends ArgoDialog implements WindowListener {
      * Constructor to build new settings dialog.
      */
     SettingsDialog() {
-        super(ProjectBrowser.getInstance(),
-                Translator.localize("dialog.settings"),
-                ArgoDialog.OK_CANCEL_OPTION,
-                true);
+        super(Translator.localize("dialog.settings"),
+              ArgoDialog.OK_CANCEL_OPTION,
+              true);
 
 
         tabs = new JTabbedPane();

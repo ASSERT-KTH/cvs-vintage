@@ -1,4 +1,4 @@
-// $Id: GoalsDialog.java,v 1.12 2006/03/23 21:57:27 linus Exp $
+// $Id: GoalsDialog.java,v 1.13 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.cognitive.ui;
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Enumeration;
@@ -69,11 +68,9 @@ public class GoalsDialog extends ArgoDialog implements ChangeListener {
 
     /**
      * The constructor.
-     *
-     * @param parent the parent frame
      */
-    public GoalsDialog(Frame parent) {
-	super(parent, Translator.localize("dialog.title.design-goals"), false);
+    public GoalsDialog() {
+	super(Translator.localize("dialog.title.design-goals"), false);
 
 	initMainPanel();
 

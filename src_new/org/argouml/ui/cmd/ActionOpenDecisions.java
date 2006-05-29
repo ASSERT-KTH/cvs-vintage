@@ -1,4 +1,4 @@
-// $Id: ActionOpenDecisions.java,v 1.4 2005/04/28 20:45:04 mvw Exp $
+// $Id: ActionOpenDecisions.java,v 1.5 2006/05/29 20:38:59 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.ui.cmd;
 import java.awt.event.ActionEvent;
 
 import org.argouml.cognitive.ui.DesignIssuesDialog;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.UMLAction;
 
 
@@ -42,8 +41,7 @@ class ActionOpenDecisions extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	DesignIssuesDialog d =
-	    new DesignIssuesDialog(ProjectBrowser.getInstance());
+	DesignIssuesDialog d = new DesignIssuesDialog();
 	d.setVisible(true);
     }
 } /* end class ActionOpenDecisions */

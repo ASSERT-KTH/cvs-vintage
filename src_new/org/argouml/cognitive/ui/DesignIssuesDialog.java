@@ -1,4 +1,4 @@
-// $Id: DesignIssuesDialog.java,v 1.13 2005/01/09 14:58:05 linus Exp $
+// $Id: DesignIssuesDialog.java,v 1.14 2006/05/29 20:39:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.cognitive.ui;
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Enumeration;
@@ -67,11 +66,9 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
 
     /**
      * The constructor.
-     *
-     * @param parent the parent frame for this dialog
      */
-    public DesignIssuesDialog(Frame parent) {
-        super(parent, Translator.localize("dialog.title.design-issues"), false);
+    public DesignIssuesDialog() {
+        super(Translator.localize("dialog.title.design-issues"), false);
 
         final int width = 320;
         final int height = 400;
