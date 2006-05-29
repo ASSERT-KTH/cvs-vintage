@@ -19,13 +19,15 @@ package org.columba.addressbook.facade;
 
 public interface IContactItem extends IHeaderItem {
 
-	public String getFirstname();
-	public void setFirstname(String firstname);
+	public String getFirstName();
+	public void setFirstName(String firstName);
 	
-	public String getLastname();
-	public void setLastname(String lastname);
+	public String getLastName();
+	public void setLastName(String lastName);
 	
-	public String getAddress();
-	public void setAddress(String address);
-
+	public String getEmailAddress();
+	public void setEmailAddress(String emailAddress);
+	
+	public Object clone();
+	
 }
