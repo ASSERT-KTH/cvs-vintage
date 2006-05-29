@@ -54,7 +54,7 @@ public class ListParserTest extends TestCase {
 	}
 
 	public void testCreateListFromString2() {
-		String s = "test@test.de; test2@test2.de";
+		String s = "test@test.de, test2@test2.de";
 
 		List<String> l = ListParser.createListFromString(s);
 		assertEquals("list size 2", 2, l.size());
@@ -69,7 +69,7 @@ public class ListParserTest extends TestCase {
 	 * 
 	 */
 	public void testCreateListFromString3() {
-		String s = "test@test.de;test2@test2.de; MyGroup;  My Test Group";
+		String s = "test@test.de,test2@test2.de, MyGroup,  My Test Group";
 
 		List<String> l = ListParser.createListFromString(s);
 		assertEquals("list size 4", 4, l.size());
@@ -81,14 +81,14 @@ public class ListParserTest extends TestCase {
 	}
 
 	/**
-	 * test if a comma doesn't disturb our parser
+	 * test if a comma doesn't disturb our parser if enclosed in double-quotes
 	 * 
 	 */
 	public void testCreateListFromString4() {
-		String s = "test@test.de; Firstname Lastname; Lastname, Firstname";
+		String s = "test@test.de, Firstname Lastname, \"Lastname, Firstname\"";
 
 		List<String> l = ListParser.createListFromString(s);
-		assertEquals("list size 4", 4, l.size());
+		assertEquals("list size 3", 3, l.size());
 
 		assertEquals("test@test.de", l.get(0));
 		assertEquals("Firstname Lastname", l.get(1));
@@ -101,10 +101,10 @@ public class ListParserTest extends TestCase {
 	 * String representation
 	 */
 	public void testCreateListFromString5() {
-		String s = "test@test.de; \"Firstname Lastname\"; \"Lastname, Firstname\"";
+		String s = "test@test.de, \"Firstname Lastname\", \"Lastname, Firstname\"";
 
 		List<String> l = ListParser.createListFromString(s);
-		assertEquals("list size 4", 4, l.size());
+		assertEquals("list size 3", 3, l.size());
 
 		assertEquals("test@test.de", l.get(0));
 		assertEquals("Firstname Lastname", l.get(1));
@@ -115,10 +115,10 @@ public class ListParserTest extends TestCase {
 	 * Test displayname and address with and without comma
 	 */
 	public void testCreateListFromString6() {
-		String s = "test@test.de; \"Firstname Lastname\" <mail@mail.org>; \"Lastname, Firstname\" <mail@mail.org>";
+		String s = "test@test.de, \"Firstname Lastname\" <mail@mail.org>, \"Lastname, Firstname\" <mail@mail.org>";
 
 		List<String> l = ListParser.createListFromString(s);
-		assertEquals("list size 4", 4, l.size());
+		assertEquals("list size 3", 3, l.size());
 
 		assertEquals("test@test.de", l.get(0));
 		assertEquals("Firstname Lastname <mail@mail.org>", l.get(1));
@@ -155,8 +155,8 @@ public class ListParserTest extends TestCase {
 		list.add("test@test.de");
 		list.add("test2@test2.de");
 
-		String result = ListParser.createStringFromList(list, ";");
-		assertEquals("test@test.de;test2@test2.de", result);
+		String result = ListParser.createStringFromList(list, ",");
+		assertEquals("test@test.de, test2@test2.de, ", result);
 	}
 	
 	/**
@@ -168,8 +168,8 @@ public class ListParserTest extends TestCase {
 		list.add("test@test.de");
 		list.add("\"My yours and he's list\"");
 
-		String result = ListParser.createStringFromList(list, ";");
-		assertEquals("test@test.de;My yours and he's list", result);
+		String result = ListParser.createStringFromList(list, ",");
+		assertEquals("test@test.de, My yours and he's list, ", result);
 	}
 	
 
@@ -182,10 +182,10 @@ public class ListParserTest extends TestCase {
 		List<String> list = new Vector<String>();
 		list.add("test@test.de");
 		list.add("Firstname Lastname");
-		list.add("Lastname, Firstname");
+		list.add("\"Lastname, Firstname\"");
 		
-		String result = ListParser.createStringFromList(list, ";");
-		assertEquals("test@test.de;Firstname Lastname; \"Lastname, Firstname\"", result);
+		String result = ListParser.createStringFromList(list, ",");
+		assertEquals("test@test.de, Firstname Lastname, \"Lastname, Firstname\", ", result);
 	}
 	
 	/**
@@ -199,8 +199,8 @@ public class ListParserTest extends TestCase {
 		list.add("\"Firstname Lastname\" <mail@mail.org>");
 		list.add("\"Lastname, Firstname\" <mail@mail.org>");
 		
-		String result = ListParser.createStringFromList(list, ";");
-		assertEquals("test@test.de;\"Firstname Lastname\" <mail@mail.org>; \"Lastname, Firstname\" <mail@mail.org>", result);
+		String result = ListParser.createStringFromList(list, ",");
+		assertEquals("test@test.de, Firstname Lastname <mail@mail.org>, \"Lastname, Firstname\" <mail@mail.org>, ", result);
 	}
 
 	

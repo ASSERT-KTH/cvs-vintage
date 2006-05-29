@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry combineaccessrules="false" kind="src" path="/ristretto"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/frapuccino"/>
 	<classpathentry kind="src" path="src/columba/core"/>
 	<classpathentry kind="src" path="plugins/org.columba.core.FlyingSaucerRenderer/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/api"/>
@@ -31,13 +33,13 @@
 	<classpathentry kind="src" path="src/mail/api"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="src" path="src/columba/test"/>
-	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry sourcepath="/home/rick/programs/eclipse/plugins/org.eclipse.jdt.source_3.2.0.v20060512-1326-F7snp6fks-pZ8dn/src/org.junit_3.8.1/junitsrc.zip" kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/usermanual.jar"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-cli-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jpim.jar"/>
-	<classpathentry exported="true" kind="lib" path="native/linux/lib/jdic.jar"/>
+	<classpathentry kind="lib" path="native/linux/lib/jdic.jar"/>
 	<classpathentry kind="lib" path="native/win32/lib/jniwrap-2.4.jar"/>
 	<classpathentry kind="lib" path="native/win32/lib/winpack.jar"/>
 	<classpathentry kind="lib" path="lib/forms-1.0.5.jar"/>
@@ -55,12 +57,12 @@
 	<classpathentry kind="lib" path="lib/bsh-2.0b2.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-1.4.3.jar"/>
 	<classpathentry kind="lib" path="lib/tagsoup-1.0rc3.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/flexdock-0.4.1.jar"/>
+	<classpathentry sourcepath="/org.flexdock" kind="lib" path="lib/flexdock-0.4.1.jar"/>
 	<classpathentry sourcepath="/frapuccino" kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
 	<classpathentry kind="lib" path="lib/je-2.1.30.jar"/>
 	<classpathentry kind="lib" path="lib/jhall-2.0_02.jar"/>
 	<classpathentry kind="lib" path="lib/jython-2.2a1.jar"/>
-	<classpathentry exported="true" sourcepath="/home/frd/ical4j-0.9.18/source" kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/ical4j-0.9.18.jar"/>
+	<classpathentry sourcepath="/home/frd/ical4j-0.9.18/source" kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/ical4j-0.9.18.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/cssparser-0-9-4-fs.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/jtidy-04aug2000r7.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/core-renderer.jar"/>

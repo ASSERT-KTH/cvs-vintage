@@ -29,9 +29,9 @@ import java.util.Vector;
  */
 public class ListParser {
 
-	public final static char SEPARATOR_CHAR = ';';
+	public final static char SEPARATOR_CHAR = ',';
 
-	public final static String SEPARATOR_STRING = ";";
+	public final static String SEPARATOR_STRING = ",";
 
 	public ListParser() {
 	}
@@ -44,6 +44,56 @@ public class ListParser {
 	 * 
 	 * @return list list of email addresses, never <code>null</code>
 	 */
+	public static List<String> createListFromString(String str) {
+		if (str == null)
+			throw new IllegalArgumentException("str == null");
+
+		List<String> result = new Vector<String>();
+		if (str.length() == 0)
+			return result;
+
+		int pos = 0;
+		boolean bracket = false;
+		
+		// Remove the ending separator and whitespace, if any exist
+		str = str.trim();
+		if (str.endsWith(SEPARATOR_STRING))
+			str = str.substring(0, str.length()-1);
+
+		StringBuffer buf = new StringBuffer();
+		while (pos < str.length()) {
+			char ch = str.charAt(pos);
+
+			if ((ch == SEPARATOR_CHAR) && (bracket == false)) {
+				// found new message
+				String address = buf.toString().trim();
+				result.add(address);
+
+				buf = new StringBuffer();
+			} else if (ch == '"') {
+				// Remove the double-quote characters from around the addresses in the string 
+				bracket = !bracket;
+			} else {
+				buf.append(ch);
+			}
+			pos++;
+		}
+
+		String address = buf.toString().trim();
+		// remove whitespaces
+		address = address.trim();
+		result.add(address);
+
+		return result;
+	}
+
+	/**
+	 * Create list from String containing semicolon-separated email addresses.
+	 * 
+	 * @param str
+	 *            semicolon separated email address list
+	 * 
+	 * @return list list of email addresses, never <code>null</code>
 	public static List<String> createListFromString(String str) {
 		if (str == null)
 			throw new IllegalArgumentException("str == null");
@@ -72,11 +122,7 @@ public class ListParser {
 
 				pos++;
 
-				if (bracket == false) {
-					bracket = true;
-				} else {
-					bracket = false;
-				}
+				bracket = !bracket;
 			} else {
 				buf.append(ch);
 
@@ -91,6 +137,7 @@ public class ListParser {
 
 		return result;
 	}
+	 */
 
 	/**
 	 * Create comma-separated String representation of a list of String objects.
@@ -113,13 +160,40 @@ public class ListParser {
 			if (address == null) {
 				continue;
 			}
+			
+			// Remote double-quotes
+			StringBuffer addrSB = new StringBuffer(address);
+			while (true) {
+				int doubleQuote = addrSB.indexOf("\"");
+				if (doubleQuote >= 0)
+					addrSB.deleteCharAt(doubleQuote);
+				else
+					break;
+			}
+			
+			// If address contains a comma, enclose the display name portion in double-quotes
+			int comma = addrSB.indexOf(",");
+			int endDoubleQuote = addrSB.length();
+			if (comma >= 0) {
+				int addrStart = addrSB.indexOf(" <");
+				if (addrStart >= 0)
+					endDoubleQuote = addrStart;
+				addrSB.insert(endDoubleQuote, '"');
+				addrSB.insert(0, '"');
+			}
+
+			address = addrSB.toString();
+			
 			output.append(address);
 			output.append(separator);
+			output.append(" ");
 		}
 
+		/*
 		if (output.length() > 0) {
 			output.deleteCharAt(output.length() - 1);
 		}
+		*/
 
 		return output.toString();
 	}
