@@ -74,6 +74,13 @@ public class HeaderItem implements IHeaderItem {
 		return id;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.facade.IHeaderItem#setId(java.lang.String)
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -94,4 +101,14 @@ public class HeaderItem implements IHeaderItem {
 		this.description = description;
 	}
 
+	public Object clone() {
+		IHeaderItem item = null;
+		try {
+			item = (IHeaderItem)super.clone();
+		} catch (CloneNotSupportedException e) {
+			// This should never happen since superclass is Object
+			e.printStackTrace();
+		}
+		return item;
+	}
 }
