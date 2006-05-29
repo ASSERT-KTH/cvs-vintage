@@ -395,6 +395,17 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		if (uidvalidity != null) {
 			info.setUidValidity(Integer.parseInt(uidvalidity));
 		}
+		
+		// Sanity checks
+		if( info.getExists() < 0) info.setExists(0);
+		
+		if( info.getRecent() < 0) info.setRecent(0);
+		
+		if( info.getRecent() > info.getExists()) info.setRecent(info.getExists());
+		
+		if( info.getUnseen() < 0 ) info.setUnseen(0);
+		
+		if( info.getUnseen() > info.getExists()) info.setUnseen(info.getExists());
 
 	}
 
