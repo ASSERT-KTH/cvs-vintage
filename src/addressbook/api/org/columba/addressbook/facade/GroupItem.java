@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,11 +39,19 @@ public class GroupItem extends HeaderItem implements IGroupItem {
 	
 	public GroupItem(String id, String name, String description) {
 		super(id, name, description, false);
-	}
+	}import java.util.ArrayList;
+	
 	
 
-	public List<IContactItem> getAllContacts() {
+	public List<IContactItem> getContacts() {
 		return list;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.facade.IGroupItem#setContacts(java.util.List)
+	 */
+	public void setContacts(List<IContactItem> contacts) {
+		list = contacts;
 	}
 
 	public void addContact(IContactItem item) {

@@ -19,9 +19,11 @@ package org.columba.addressbook.facade;
 
 import java.util.List;
 
-public interface IGroupItem extends IHeaderItem {
+public interface IGroupItem extends IHeaderItem, Cloneable {
 
-	public List<IContactItem> getAllContacts();
+	public List<IContactItem> getContacts();
+	
+	public void setContacts(List<IContactItem> contacts);
 	
 	public void addContact(IContactItem item);
 	
