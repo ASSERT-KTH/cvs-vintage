@@ -72,12 +72,12 @@ public class HeaderView extends JPanel implements ActionListener {
 
 		if (addressCollector != null) {
 			// pass contact data along to AddressComboBox
-			new PatternSeparatedAutoCompleter(toComboBox, Arrays
-					.asList(addressCollector.getAddresses()), Pattern.compile(";"), true);
-			new PatternSeparatedAutoCompleter(ccComboBox, Arrays
-					.asList(addressCollector.getAddresses()), Pattern.compile(";"), true);
-			new PatternSeparatedAutoCompleter(bccComboBox, Arrays
-					.asList(addressCollector.getAddresses()), Pattern.compile(";"), true);
+			new EmailNameAutoCompleter(toComboBox, Arrays
+					.asList(addressCollector.getAddresses()), Pattern.compile(","), true);
+			new EmailNameAutoCompleter(ccComboBox, Arrays
+					.asList(addressCollector.getAddresses()), Pattern.compile(","), true);
+			new EmailNameAutoCompleter(bccComboBox, Arrays
+					.asList(addressCollector.getAddresses()), Pattern.compile(","), true);
 
 		}
 	}
