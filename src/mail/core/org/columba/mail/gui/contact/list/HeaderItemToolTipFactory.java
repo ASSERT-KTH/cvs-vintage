@@ -41,9 +41,9 @@ public final class HeaderItemToolTipFactory {
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("<html><body>&nbsp;Name: " + item.getName());
-		if (item.getAddress() != null) {
+		if (item.getEmailAddress() != null) {
 			buf.append("<br>&nbsp;eMail: "
-					+ convert((String) item.getAddress()));
+					+ convert((String) item.getEmailAddress()));
 		}
 		// TODO 
 //		if (item.getWebsite() != null) {

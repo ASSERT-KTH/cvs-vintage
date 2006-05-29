@@ -205,7 +205,7 @@ public final class ContactFacade implements IContactFacade {
 				Iterator<IGroupItem> it2 = groupList.iterator();
 				while (it2.hasNext()) {
 					IGroupItem groupItem = it2.next();
-					List<IContactItem> l = groupItem.getAllContacts();
+					List<IContactItem> l = groupItem.getContacts();
 					v.addAll(l);
 				}
 			} else {

@@ -96,22 +96,22 @@ public class ContactModel implements IContactModel {
 	private String note;
 	
 	public ContactModel(IContactItem contactItem) {
-		if (contactItem == null || contactItem.getAddress() == null  || contactItem.getAddress().length() == 0)
+		if (contactItem == null || contactItem.getEmailAddress() == null  || contactItem.getEmailAddress().length() == 0)
 			throw new IllegalArgumentException(
 					"address == null or empty String");
 
 		Address adr;
 
-		String fn = contactItem.getName() != null ? contactItem.getName() : contactItem.getAddress();
+		String fn = contactItem.getName() != null ? contactItem.getName() : contactItem.getEmailAddress();
 		setFormattedName(fn);
 		
 		// backwards compatibility
 		setSortString(fn);
-		addEmail(new EmailModel(contactItem.getAddress(), EmailModel.TYPE_WORK));
+		addEmail(new EmailModel(contactItem.getEmailAddress(), EmailModel.TYPE_WORK));
 
 		String[] result = ParserUtil.tryBreakName(fn);
-		setGivenName(contactItem.getFirstname());
-		setFamilyName(contactItem.getLastname());
+		setGivenName(contactItem.getFirstName());
+		setFamilyName(contactItem.getLastName());
 		
 	}
 

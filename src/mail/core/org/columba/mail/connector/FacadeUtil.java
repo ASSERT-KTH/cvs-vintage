@@ -33,9 +33,9 @@ public class FacadeUtil {
 	public void initContactItem(IContactItem contactItem, String displayName, String emailAddr) {
 		
 		NameParser.Name name = NameParser.getInstance().parseDisplayName(displayName);
-		contactItem.setAddress(emailAddr);
-		contactItem.setFirstname(name.getFirstName());
-		contactItem.setLastname(name.getLastName());
+		contactItem.setEmailAddress(emailAddr);
+		contactItem.setFirstName(name.getFirstName());
+		contactItem.setLastName(name.getLastName());
 		contactItem.setName(name.toString());
 	}
 }

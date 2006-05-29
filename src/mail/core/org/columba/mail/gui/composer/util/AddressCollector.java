@@ -56,9 +56,9 @@ public class AddressCollector {
 				IContactItem item = (IContactItem) headerItem;
 
 				addAddress(item.getName(), item);
-				addAddress(item.getFirstname(), item);
-				addAddress(item.getLastname(), item);
-				addAddress(item.getAddress(), item);
+				addAddress(item.getFirstName(), item);
+				addAddress(item.getLastName(), item);
+				addAddress(item.getEmailAddress(), item);
 			} else {
 				if (includeGroup) {
 					// group item
