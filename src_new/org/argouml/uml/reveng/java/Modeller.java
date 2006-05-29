@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.134 2006/04/13 03:38:30 tfmorris Exp $
+// $Id: Modeller.java,v 1.135 2006/05/29 18:43:14 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1269,7 +1269,7 @@ public class Modeller {
         // included in the profile that is being used. - tfm 20060224
         throw new IllegalArgumentException("Could not find "
 					   + "a suitable stereotype for "
-					   + me + " " + name + " "
+					   + me + " stereotype: <<" + name + ">> base: "
 					   + baseClass);
     }
 
