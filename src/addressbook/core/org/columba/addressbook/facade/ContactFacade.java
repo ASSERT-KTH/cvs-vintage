@@ -153,16 +153,16 @@ public final class ContactFacade implements IContactFacade {
 	}
 
 	private void checkContactItemValidity(IContactItem contactItem) {
-		if (contactItem.getFirstname() != null) {
+		if (contactItem.getFirstName() != null) {
 			// check if it contains comma character
-			if (contactItem.getFirstname().indexOf(",") != -1)
+			if (contactItem.getFirstName().indexOf(",") != -1)
 				throw new IllegalArgumentException(
 						"Firstname contains illegal character <,>");
 		}
 
-		if (contactItem.getLastname() != null) {
+		if (contactItem.getLastName() != null) {
 			// check if it contains comma character
-			if (contactItem.getLastname().indexOf(",") != -1)
+			if (contactItem.getLastName().indexOf(",") != -1)
 				throw new IllegalArgumentException(
 						"Lastname contains illegal character <,>");
 		}

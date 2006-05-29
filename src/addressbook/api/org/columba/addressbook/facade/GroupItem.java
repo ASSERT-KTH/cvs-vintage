@@ -39,9 +39,7 @@ public class GroupItem extends HeaderItem implements IGroupItem {
 	
 	public GroupItem(String id, String name, String description) {
 		super(id, name, description, false);
-	}import java.util.ArrayList;
-	
-	
+	}	
 
 	public List<IContactItem> getContacts() {
 		return list;
