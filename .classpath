@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry combineaccessrules="false" kind="src" path="/ristretto"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/frapuccino"/>
 	<classpathentry kind="src" path="src/columba/core"/>
 	<classpathentry kind="src" path="plugins/org.columba.core.FlyingSaucerRenderer/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/api"/>
@@ -70,5 +68,6 @@
 	<classpathentry kind="lib" path="lib/ristretto-1.2-all.jar"/>
 	<classpathentry kind="lib" path="lib/jwizz-0.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/looks-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/ristretto-1.2_RC1-all.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
