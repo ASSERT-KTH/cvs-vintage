@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.251 2006/05/28 21:29:49 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.252 2006/05/30 13:40:27 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,6 +134,14 @@ public abstract class FigNodeModelElement
     private static final Font ITALIC_LABEL_FONT;
 
     protected NotationProvider4 notationProviderName;
+    
+    /**
+     * True of a subclass of FigNodeModelElement is allowed to be
+     * invisible. This is currently only set true by FigEdgePort
+     * TODO: FigEdgePort should be removed from the FigNodeModelElement
+     * hierarchy and so the need for this removed.
+     */
+    protected boolean invisibleAllowed = false;
 
     /**
      * min. 17, used to calculate y pos of FigText items in a compartment
@@ -1604,6 +1612,12 @@ public abstract class FigNodeModelElement
      */
     protected void setSuppressCalcBounds(boolean scb) {
         this.suppressCalcBounds = scb;
+    }
+    
+    public void setVisible(boolean visible) {
+        if (!visible && !invisibleAllowed) {
+            throw new IllegalArgumentException("Visibility of a FigNode should never be false");
+        }
     }
 
     /**

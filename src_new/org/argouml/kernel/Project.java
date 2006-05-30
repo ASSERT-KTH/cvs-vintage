@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.183 2006/05/27 07:17:03 mvw Exp $
+// $Id: Project.java,v 1.184 2006/05/30 13:40:27 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1072,7 +1072,6 @@ public class Project implements java.io.Serializable, TargetListener {
         while (i.hasNext()) {
             Fig obj = (Fig) i.next();
             // This should prevent the removeFromDiagram to update the model:
-            obj.setVisible(false);
             obj.removeFromDiagram();
         }
     }

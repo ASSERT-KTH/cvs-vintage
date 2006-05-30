@@ -1,4 +1,4 @@
-// $Id: FigEdgePort.java,v 1.1 2006/04/07 23:57:48 bobtarling Exp $
+// $Id: FigEdgePort.java,v 1.2 2006/05/30 13:40:27 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,17 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigCircle;
 
 /**
- * The T juntion joining the dashed edge to a solid edge of an association
- * class.
+ * This node cannot be dragged and manipulated in the same way as other
+ * FigNodes in ArgoUML. It is actually an optional child fig (or more precisely a
+ * path item) of a FigEdgeModelElement.
+ * This allows the dashed edge of an association class to connect the
+ * association edge and allows the dashed edge of a comment edge to attach a
+ * comment to some other edge type.
+ * GEF can only attach edges to nodes, by making this fig both a node and
+ * containing it as a child of an edge we push the rules to allow edge to edge
+ * connections.
+ * TODO: We are inheriting a lot of functionality here that we don't really
+ * require. We should attempt to make FigEdgePort extend FigNode.
  *
  * @author Bob Tarling
  */
@@ -43,6 +52,7 @@ public class FigEdgePort extends FigNodeModelElement {
      * Constructor.
      */
     public FigEdgePort() {
+        invisibleAllowed = true;
         bigPort = new FigCircle(0, 0, 10, 10, Color.black, Color.white);
         addFig(bigPort);
     }
