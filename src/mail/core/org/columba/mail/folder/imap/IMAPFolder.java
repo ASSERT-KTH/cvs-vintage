@@ -123,18 +123,6 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		engine.setNonDefaultEngine(new IMAPQueryEngine(this));
 		setSearchEngine(engine);
 
-		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),
-				"headerlist"));
-
-		headerList
-				.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
-
-					public void headerListCorrupted(IHeaderList headerList) {
-						headerList.clear();
-						getMessageFolderInfo().reset();
-						fireFolderPropertyChanged();
-					}
-				});
 	}
 
 	/**
@@ -146,9 +134,6 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		IFolderItem item = getConfiguration();
 		item.setString("property", "accessrights", "user");
 		item.setString("property", "subfolder", "true");
-
-		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),
-				"headerlist"));
 	}
 
 	/**
@@ -161,7 +146,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 				getServer().deleteFolder(path);
 			}
-
+ 
 			super.removeFolder();
 		} catch (Exception e) {
 			throw e;
@@ -207,6 +192,22 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.api.command.IWorkerStatusController)
 	 */
 	public synchronized IHeaderList getHeaderList() throws Exception {
+		if( headerList == null) {
+			headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),
+			"headerlist"));
+
+	headerList
+			.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
+
+				public void headerListCorrupted(IHeaderList headerList) {
+					headerList.clear();
+					getMessageFolderInfo().reset();
+					fireFolderPropertyChanged();
+				}
+			});
+			
+		}
+		
 		if (mailboxSyncEnabled  && ConnectionStateImpl.getInstance().isOnline() && !getServer().isSelected(this)) {
 			// Trigger Synchronization
 			CommandProcessor.getInstance().addOp(
@@ -1151,7 +1152,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	public void save() throws Exception {
 		super.save();
 
-		headerList.persist();
+		if( headerList != null ) headerList.persist();
 	}
 
 	void fetchDone() throws IOException, CommandCancelledException,

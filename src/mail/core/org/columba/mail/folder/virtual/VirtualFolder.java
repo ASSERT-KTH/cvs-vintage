@@ -230,7 +230,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 					it.remove();
 
 					// notify listeners
-					fireMessageRemoved(h.getVirtualUid(), null);
+					fireMessageRemoved(h.getVirtualUid(), h.getFlags());
 					
 				}
 			} catch (Exception e) {

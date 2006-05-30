@@ -36,6 +36,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.IFolderListener;
 import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.message.ICloseableIterator;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -84,7 +85,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	/**
 	 * total/unread/recent count of messages in this folder
 	 */
-	protected MailboxInfo messageFolderInfo = new MailboxInfo();
+	protected IMailboxInfo messageFolderInfo = new ColumbaMailboxInfo();
 
 	/**
 	 * list of filters
@@ -160,21 +161,46 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		loadMessageFolderInfo();
 	}
 
+	protected void recreateMessageFolderInfo(){
+		messageFolderInfo.reset();
+		
+		try {
+			ICloseableIterator it = getHeaderList().headerIterator();
+			
+			while(it.hasNext()) {
+				Flags flags = ((IColumbaHeader)it.next()).getFlags();
+				messageFolderInfo.incExists();
+				if( flags.getRecent() ) {
+					messageFolderInfo.incRecent();
+				}
+				if( !flags.getSeen() ) {
+					messageFolderInfo.incUnseen();
+				}
+			}
+			
+		} catch (Exception e) {
+			LOG.severe(e.getLocalizedMessage());
+		}
+		
+	}
+	
 	/**
 	 * Propagates an event to all registered listeners notifying them of a
 	 * message addition.
 	 * @param flags 
 	 */
 	public void fireMessageAdded(Object uid, Flags flags) {
-		getMessageFolderInfo().incExists();
 		try {
+			getMessageFolderInfo().incExists();
+
 			if (flags.getRecent()) {
 				getMessageFolderInfo().incRecent();
 			}
 			if (!flags.getSeen()) {
 				getMessageFolderInfo().incUnseen();
 			}
-		} catch (Exception e) {
+		} catch (MailboxInfoInvalidException e) {
+			recreateMessageFolderInfo();
 		}
 		setChanged(true);
 
@@ -199,16 +225,21 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * message removal.
 	 */
 	public void fireMessageRemoved(Object uid, Flags flags) {
-		getMessageFolderInfo().decExists();
 		
-		if( flags != null) {
-			if (!flags.getSeen()) {
-				getMessageFolderInfo().decUnseen();
-			}
+		try {
+			if( flags != null ) {
 			if (flags.getRecent()) {
 				getMessageFolderInfo().decRecent();
 			}
+			if (!flags.getSeen()) {
+				getMessageFolderInfo().decUnseen();
+			}
+			}
+			getMessageFolderInfo().decExists();
+		} catch (MailboxInfoInvalidException e) {
+			recreateMessageFolderInfo();
 		}
+		
 
 		setChanged(true);
 
@@ -280,7 +311,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 *            the new messagefolderinfo
 	 */
 	public void setMessageFolderInfo(MailboxInfo i) {
-		messageFolderInfo = i;
+		messageFolderInfo = new ColumbaMailboxInfo(i);
 	}
 
 	/**
@@ -297,7 +328,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * 
 	 * @return MessageFolderInfo
 	 */
-	public MailboxInfo getMessageFolderInfo() {
+	public IMailboxInfo getMessageFolderInfo() {
 		return messageFolderInfo;
 	}
 
@@ -325,7 +356,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 *  
 	 */
 	protected void saveMessageFolderInfo() {
-		MailboxInfo info = getMessageFolderInfo();
+		IMailboxInfo info = getMessageFolderInfo();
 
 		IFolderItem item = getConfiguration();
 
@@ -364,7 +395,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 			return;
 		}
 
-		MailboxInfo info = getMessageFolderInfo();
+		IMailboxInfo info = getMessageFolderInfo();
 
 		String exists = property.getAttribute("exists");
 
@@ -394,19 +425,14 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 
 		if (uidvalidity != null) {
 			info.setUidValidity(Integer.parseInt(uidvalidity));
+		}		
+		
+		// Check if the MessageFolderInfo is sane
+		if( !info.isSane() ) {
+			recreateMessageFolderInfo();
 		}
-		
-		// Sanity checks
-		if( info.getExists() < 0) info.setExists(0);
-		
-		if( info.getRecent() < 0) info.setRecent(0);
-		
-		if( info.getRecent() > info.getExists()) info.setRecent(info.getExists());
-		
-		if( info.getUnseen() < 0 ) info.setUnseen(0);
-		
-		if( info.getUnseen() > info.getExists()) info.setUnseen(info.getExists());
 
+	
 	}
 
 	/**
@@ -478,61 +504,65 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 			return;
 		}
 
-		switch (variant) {
-		case MarkMessageCommand.MARK_AS_READ: {
-			if (flags.getRecent()) {
-				getMessageFolderInfo().decRecent();
-				updated = true;
+		try {
+			switch (variant) {
+			case MarkMessageCommand.MARK_AS_READ: {
+				if (flags.getRecent()) {
+					getMessageFolderInfo().decRecent();
+					updated = true;
+				}
+
+				if (!flags.getSeen()) {
+					getMessageFolderInfo().decUnseen();
+					updated = true;
+				}
+
+				break;
 			}
 
-			if (!flags.getSeen()) {
-				getMessageFolderInfo().decUnseen();
-				updated = true;
+			case MarkMessageCommand.MARK_AS_UNREAD: {
+				if (flags.getSeen()) {
+					getMessageFolderInfo().incUnseen();
+					updated = true;
+				}
+
+				break;
 			}
 
-			break;
-		}
+			case MarkMessageCommand.MARK_AS_EXPUNGED: {
+				if (!flags.getSeen()) {
+					getMessageFolderInfo().decUnseen();
+					updated = true;
+				}
 
-		case MarkMessageCommand.MARK_AS_UNREAD: {
-			if (flags.getSeen()) {
-				getMessageFolderInfo().incUnseen();
-				updated = true;
+				if (flags.getRecent()) {
+					getMessageFolderInfo().decRecent();
+					updated = true;
+				}
+
+				break;
+			}
+			
+			case MarkMessageCommand.MARK_AS_RECENT: {
+				if (!flags.getRecent()) {
+					getMessageFolderInfo().incRecent();
+					updated = true;
+				}
+
+				break;
+			}
+			case MarkMessageCommand.MARK_AS_NOTRECENT: {
+				if (flags.getRecent()) {
+					getMessageFolderInfo().decRecent();
+					updated = true;
+				}
+
+				break;
 			}
 
-			break;
-		}
-
-		case MarkMessageCommand.MARK_AS_EXPUNGED: {
-			if (!flags.getSeen()) {
-				getMessageFolderInfo().decUnseen();
-				updated = true;
 			}
-
-			if (flags.getRecent()) {
-				getMessageFolderInfo().decRecent();
-				updated = true;
-			}
-
-			break;
-		}
-		
-		case MarkMessageCommand.MARK_AS_RECENT: {
-			if (!flags.getRecent()) {
-				getMessageFolderInfo().incRecent();
-				updated = true;
-			}
-
-			break;
-		}
-		case MarkMessageCommand.MARK_AS_NOTRECENT: {
-			if (flags.getRecent()) {
-				getMessageFolderInfo().decRecent();
-				updated = true;
-			}
-
-			break;
-		}
-
+		} catch (MailboxInfoInvalidException e) {
+			recreateMessageFolderInfo();
 		}
 		
 //      update treenode

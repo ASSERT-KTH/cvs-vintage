@@ -60,8 +60,8 @@ import org.columba.ristretto.parser.ParserException;
  * This class is abstract becaused, instead use {@link MHCachedFolder}a
  * complete implementation.
  * <p>
- * AbstractLocalFolder uses an internal {@link ColumbaMessage}object as cache. This
- * allows parsing of a message only once, while accessing the data of the
+ * AbstractLocalFolder uses an internal {@link ColumbaMessage}object as cache.
+ * This allows parsing of a message only once, while accessing the data of the
  * message multiple times.
  * <p>
  * Attribute <code>nextMessageUid</code> handles the next unique message ID.
@@ -91,7 +91,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	protected ColumbaMessage aktMessage;
 
 	private boolean firstOpen = true;
-	
+
 	/**
 	 * implement your own mailbox format here
 	 */
@@ -120,21 +120,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		}
 
 		filterList = new FilterList(filterListElement);
-		
-        //headerList = new PersistantHeaderList(new LocalHeaderCache(this));
-		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),"headerlist"));
-		final AbstractMessageFolder folder = this;		
-		headerList.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
 
-			public void headerListCorrupted(IHeaderList headerList) {
-				try {
-					SyncHeaderList.sync(folder, headerList);
-				} catch (IOException e) {
-					LOG.severe(e.getMessage());
-				}
-			}});
-        
-        setSearchEngine(new DefaultSearchEngine(this));        
+		setSearchEngine(new DefaultSearchEngine(this));
 	}
 
 	/**
@@ -158,20 +145,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 		filterList = new FilterList(filterListElement);
 
-        //headerList = new PersistantHeaderList(new LocalHeaderCache(this));	
-		headerList = new BerkeleyDBHeaderList(new File(this.getDirectoryFile(),"headerlist"));
-		final AbstractMessageFolder folder = this;		
-		headerList.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
-
-			public void headerListCorrupted(IHeaderList headerList) {
-				try {
-					SyncHeaderList.sync(folder, headerList);
-				} catch (IOException e) {
-					LOG.severe(e.getMessage());
-				}
-			}});
-
-        setSearchEngine(new DefaultSearchEngine(this));        	
+		setSearchEngine(new DefaultSearchEngine(this));
 	}
 
 	/**
@@ -196,20 +170,24 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 * @return <class>Integer </class> containing UID
 	 */
 	protected Object generateNextMessageUid() {
-		if( nextMessageUid == -1) {
-			if( headerList.count() > 0) {			
-        List _headerList = new ArrayList();
-        Object[] _uidList = headerList.getUids();
-        for (int i=0; i < _uidList.length; i++ ) {
-          _headerList.add(_uidList[i]);
-        }
-				Integer maxUid = (Integer) Collections.max(_headerList);
-				nextMessageUid = maxUid.intValue() + 1;
-			} else {
+		if (nextMessageUid == -1) {
+			try {
+				if (getHeaderList().count() > 0) {
+					List _headerList = new ArrayList();
+					Object[] _uidList = headerList.getUids();
+					for (int i = 0; i < _uidList.length; i++) {
+						_headerList.add(_uidList[i]);
+					}
+					Integer maxUid = (Integer) Collections.max(_headerList);
+					nextMessageUid = maxUid.intValue() + 1;
+				} else {
+					nextMessageUid = 0;
+				}
+			} catch (Exception e) {
 				nextMessageUid = 0;
 			}
 		}
-		
+
 		return new Integer(nextMessageUid++);
 	}
 
@@ -226,8 +204,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 	/**
 	 * 
-	 * Implement a <class>IDataStorage </class> for the mailbox format
-	 * of your pleasure.
+	 * Implement a <class>IDataStorage </class> for the mailbox format of your
+	 * pleasure.
 	 * 
 	 * @return instance of <class>IDataStorage </class>
 	 */
@@ -286,8 +264,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 * @see org.columba.mail.folder.IMailbox#innerCopy(org.columba.mail.folder.IMailbox,
 	 *      java.lang.Object[])
 	 */
-	public void innerCopy(IMailbox destFolder, Object[] uids)
-			throws Exception {
+	public void innerCopy(IMailbox destFolder, Object[] uids) throws Exception {
 		if (getObservable() != null) {
 			getObservable().setMax(uids.length);
 		}
@@ -299,14 +276,15 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 			}
 
 			InputStream messageSourceStream = getMessageSourceStream(uids[i]);
-			destFolder.addMessage(messageSourceStream,getAttributes(uids[i]), getFlags(uids[i]));
+			destFolder.addMessage(messageSourceStream, getAttributes(uids[i]),
+					getFlags(uids[i]));
 			messageSourceStream.close();
 
 			/*
-			 * ((AbstractLocalFolder) destFolder).setFlags(destuid, (Flags) getFlags(
-			 * uids[i]).clone());
+			 * ((AbstractLocalFolder) destFolder).setFlags(destuid, (Flags)
+			 * getFlags( uids[i]).clone());
 			 */
-			//destFolder.fireMessageAdded(uids[i]);
+			// destFolder.fireMessageAdded(uids[i]);
 			if (getObservable() != null) {
 				getObservable().setCurrent(i);
 			}
@@ -335,20 +313,21 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 		// parse header
 		Source source = getDataStorageInstance().getMessageSource(newUid);
-		int messageSize = source.length();		
-		
+		int messageSize = source.length();
+
 		Header header = HeaderParser.parse(source);
 		ColumbaHeader h;
 		if ((attributes != null) && (flags != null)) {
 			// save header and attributes. Copy the flags!
-			h = new ColumbaHeader( header, (Attributes)attributes.clone(), new Flags(flags.getFlags()));
+			h = new ColumbaHeader(header, (Attributes) attributes.clone(),
+					new Flags(flags.getFlags()));
 		} else {
 			h = new ColumbaHeader(header);
-			h.set("columba.size",new Integer(messageSize / 1024));
+			h.set("columba.size", new Integer(messageSize / 1024));
 		}
 		source.close();
 		h.set("columba.uid", newUid);
-		getHeaderList().add(h,newUid);
+		getHeaderList().add(h, newUid);
 
 		fireMessageAdded(newUid, getFlags(newUid));
 		return newUid;
@@ -366,7 +345,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 	/** {@inheritDoc} */
 	public boolean supportsAddFolder(String newFolderType) {
-		return (FolderFactory.getInstance().getGroup(newFolderType).equals("local") || newFolderType.equals("VirtualFolder"));
+		return (FolderFactory.getInstance().getGroup(newFolderType).equals(
+				"local") || newFolderType.equals("VirtualFolder"));
 	}
 
 	/**
@@ -380,11 +360,11 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 	/**
 	 * @param uid
-	 * @return @throws
-	 *         Exception
+	 * @return
+	 * @throws Exception
 	 */
 	protected ColumbaMessage getMessage(Object uid) throws Exception {
-		//Check if the message is already cached
+		// Check if the message is already cached
 		if (aktMessage != null) {
 			if (aktMessage.getUID().equals(uid)) {
 				// this message is already cached
@@ -415,25 +395,13 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 			// TODO: fix parser exception
 		} catch (FolderInconsistentException e) {
-			// update message folder info
-			Flags flags = getFlags(uid);
-
-			if (flags.getSeen()) {
-				getMessageFolderInfo().decUnseen();
-			}
-
-			if (flags.getRecent()) {
-				getMessageFolderInfo().decRecent();
-			}
-
-			// remove message from headercache
-			getHeaderList().remove(uid);
+			super.removeMessage(uid);
 
 			throw e;
 		}
 
-		//We use the attributes and flags from the cache
-		//but the parsed header from the parsed message
+		// We use the attributes and flags from the cache
+		// but the parsed header from the parsed message
 		IColumbaHeader header = getHeaderList().get(uid);
 		header.setHeader(message.getHeader().getHeader());
 		message.setHeader(header);
@@ -487,7 +455,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		// remove message from disk
 		getDataStorageInstance().removeMessage(uid);
 
-		//fireMessageRemoved(uid, getFlags(uid));
+		// fireMessageRemoved(uid, getFlags(uid));
 		super.removeMessage(uid);
 
 	}
@@ -534,7 +502,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 * 
 	 * @see org.columba.mail.folder.IMailbox#getHeaderFields(java.lang.Object,
 	 *      java.lang.String[])
-	 *  
+	 * 
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 		// cached headerfield list
@@ -596,17 +564,35 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 		return header;
 	}
 
-	public IHeaderList getHeaderList() throws Exception {
-		if( firstOpen ) {
-		
-			if( headerList.count() != getDataStorageInstance().getMessageCount()) {
-				// 	Must be out of sync!
+	public synchronized IHeaderList getHeaderList() throws Exception {
+		if (headerList == null) {
+			headerList = new BerkeleyDBHeaderList(new File(this
+					.getDirectoryFile(), "headerlist"));
+			final AbstractMessageFolder folder = this;
+			headerList
+					.addHeaderListCorruptedListener(new IHeaderListCorruptedListener() {
+
+						public void headerListCorrupted(IHeaderList headerList) {
+							try {
+								SyncHeaderList.sync(folder, headerList);
+							} catch (IOException e) {
+								LOG.severe(e.getMessage());
+							}
+						}
+					});
+		}
+
+		if (firstOpen) {
+
+			if (headerList.count() != getDataStorageInstance()
+					.getMessageCount()) {
+				// Must be out of sync!
 				SyncHeaderList.sync(this, headerList);
 			}
-			
+
 			firstOpen = false;
 		}
-	
+
 		return headerList;
 	}
 
@@ -615,21 +601,23 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	 */
 	public void save() throws Exception {
 		super.save();
-		headerList.persist();
+		if (headerList != null)
+			headerList.persist();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.AbstractMessageFolder#loadMessageFolderInfo()
 	 */
 	protected void loadMessageFolderInfo() {
 		super.loadMessageFolderInfo();
-		
+
 		int storedCount = getDataStorageInstance().getMessageCount();
-		//Check if still consistent
-		if( messageFolderInfo.getExists() > storedCount) {
-			messageFolderInfo.setExists(storedCount);
-			messageFolderInfo.setUnseen(Math.min(messageFolderInfo.getUnseen(), storedCount));
+		// Check if still consistent
+		if (messageFolderInfo.getExists() != storedCount) {
+			recreateMessageFolderInfo();
 		}
-		
+
 	}
 }

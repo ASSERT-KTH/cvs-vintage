@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import org.columba.addressbook.folder.DataStorage;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.folder.AbstractLocalFolder;
+import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.io.Source;
@@ -115,7 +116,11 @@ public class MHDataStorage implements IDataStorage {
     public Source getMessageSource(Object uid) throws Exception {
         File file = new File(folder.getDirectoryFile() + File.separator + ((Integer) uid).toString());
 
-        return new FileSource(file);
+        try {
+        	return new FileSource(file);
+        } catch (IOException e) {
+        	throw new FolderInconsistentException();
+        }
     }
 
     /* (non-Javadoc)

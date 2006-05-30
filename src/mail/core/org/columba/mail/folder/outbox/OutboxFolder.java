@@ -43,7 +43,10 @@ public class OutboxFolder extends CachedMHFolder {
 	public OutboxFolder(FolderItem item, String path) {
 		super(item, path);
 		
-		((BerkeleyDBHeaderList)headerList).setHeaderBinding(new OutboxHeaderBinding());
+		try {
+			((BerkeleyDBHeaderList)getHeaderList()).setHeaderBinding(new OutboxHeaderBinding());
+		} catch (Exception e) {
+		}
 		
 		sendListManager[0] = new SendListManager();
 		sendListManager[1] = new SendListManager();

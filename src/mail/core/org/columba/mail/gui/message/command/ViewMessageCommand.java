@@ -24,18 +24,19 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.command.Command;
-import org.columba.core.command.CommandProcessor;
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.headercache.SyncHeaderList;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.viewer.MarkAsReadTimer;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
@@ -121,27 +122,30 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 		try {
 			// get flags
 			flags = srcFolder.getFlags(uid);
-		} catch (FolderInconsistentException ex) {
-			Object[] options = new String[] { MailResourceLoader.getString("",
-					"global", "ok").replaceAll("&", ""), };
-			JOptionPane.showOptionDialog(null, MailResourceLoader
-					.getString("dialog", "error", "message_deleted"), "Error",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
-					null, options, options[0]);
-
-			CommandProcessor.getInstance().addOp(
-					new ViewHeaderListCommand(mediator, r));
-
-			return;
-		}
 
 		// get messagecontroller of frame
 		IMessageController messageController = ((MessageViewOwner) mediator)
 				.getMessageController();
 
-		messageController.showMessage(srcFolder, uid);
+			messageController.showMessage(srcFolder, uid);
 
-		restartMarkAsReadTimer(flags, messageController, r);
+			restartMarkAsReadTimer(flags, messageController, r);
+		} catch (FolderInconsistentException e) {
+			Object[] options = new String[] { MailResourceLoader.getString("",
+					"global", "ok").replaceAll("&", ""), };
+			int result = JOptionPane.showOptionDialog(null, MailResourceLoader
+					.getString("dialog", "error", "message_deleted"), "Error",
+					JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE,
+					null, null, null);
+
+			
+			if( result == JOptionPane.YES_OPTION ) {
+				// Synchronize the complete folder
+				SyncHeaderList.sync((AbstractMessageFolder)srcFolder, srcFolder.getHeaderList());
+			}
+
+			throw new CommandCancelledException();
+		}
 	}
 
 	private void restartMarkAsReadTimer(Flags flags, IMessageController messageController, IMailFolderCommandReference r) throws Exception {

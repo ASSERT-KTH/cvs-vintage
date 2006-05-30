@@ -1,18 +1,22 @@
 package org.columba.mail.folder.headercache;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.columba.core.base.ListTools;
 import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IDataStorage;
+import org.columba.mail.folder.IMailboxInfo;
+import org.columba.mail.folder.MailboxInfoInvalidException;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.parser.HeaderParser;
 
 public class SyncHeaderList {
@@ -34,12 +38,21 @@ public class SyncHeaderList {
 				.getDataStorageInstance();
 
 		Object[] uids = ds.getMessageUids();
-
+		Object[] headerlistUids = headerList.getUids();
+		
+		// First remove all headers that are in the headerlist but
+		// not the Folder
+		ArrayList uidsToRemove = new ArrayList(Arrays.asList(headerlistUids));
+		ListTools.substract(uidsToRemove, Arrays.asList(uids));
+		for( Object u : uidsToRemove) {
+			headerList.remove(u);
+		}
+		
 		Date today = Calendar.getInstance().getTime();
 
 		// parse all message files to recreate the header cache
 		IColumbaHeader header = null;
-		MailboxInfo messageFolderInfo = folder.getMessageFolderInfo();
+		IMailboxInfo messageFolderInfo = folder.getMessageFolderInfo();
 		messageFolderInfo.setExists(0);
 		messageFolderInfo.setRecent(0);
 		messageFolderInfo.setUnseen(0);
@@ -103,15 +116,19 @@ public class SyncHeaderList {
 				header = headerList.get(uids[i]);
 			}
 
-			if (header.getFlags().getRecent()) {
-				messageFolderInfo.incRecent();
+			try {
+				messageFolderInfo.incExists();
+				if (header.getFlags().getRecent()) {
+					messageFolderInfo.incRecent();
+				}
+
+				if (!header.getFlags().getSeen()) {
+					messageFolderInfo.incUnseen();
+				}
+			} catch (MailboxInfoInvalidException e) {
+				// Can't happen
 			}
 
-			if (!header.getFlags().getSeen()) {
-				messageFolderInfo.incUnseen();
-			}
-
-			messageFolderInfo.incExists();
 
 			((AbstractLocalFolder) folder)
 					.setNextMessageUid(((Integer) uids[uids.length - 1])

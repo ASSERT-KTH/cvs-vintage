@@ -28,11 +28,11 @@ import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.IMailboxInfo;
 import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.resourceloader.MailImageLoader;
-import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * This class is used for the mail folder tree.
@@ -124,7 +124,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			IMailbox folder = (IMailbox) value;
 
 			// getting folder info
-			MailboxInfo info = folder.getMessageFolderInfo();
+			IMailboxInfo info = folder.getMessageFolderInfo();
 
 			// get folder item configuration
 			IFolderItem item = folder.getConfiguration();
@@ -151,7 +151,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	 *            folderitem containing xml-configuration
 	 * @return label
 	 */
-	private String createLabelText(MailboxInfo info, IFolderItem item) {
+	private String createLabelText(IMailboxInfo info, IFolderItem item) {
 
 		// name of folder
 		String name = item.getString("property", "name");
@@ -205,7 +205,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	 *            mailboxinfo (total/unread/recent count)
 	 * @return tooltip text
 	 */
-	private String createTooltipText(MailboxInfo info) {
+	private String createTooltipText(IMailboxInfo info) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<html><body>&nbsp;Total: " + info.getExists());
 		buf.append("<br>&nbsp;Unseen: " + info.getUnseen());

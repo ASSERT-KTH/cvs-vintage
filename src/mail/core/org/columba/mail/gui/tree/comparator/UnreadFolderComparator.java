@@ -16,7 +16,7 @@
 package org.columba.mail.gui.tree.comparator;
 
 import org.columba.mail.folder.IMailbox;
-import org.columba.ristretto.message.MailboxInfo;
+import org.columba.mail.folder.IMailboxInfo;
 
 /**
  * Folder comparator that sorts the folders based on the number of unread
@@ -38,8 +38,8 @@ public class UnreadFolderComparator extends FolderComparator {
 	protected int compareFolders(IMailbox folder1, IMailbox folder2) {
 		int compValue = 0;
 
-		MailboxInfo info1;
-		MailboxInfo info2;
+		IMailboxInfo info1;
+		IMailboxInfo info2;
 		try {
 			info1 = ((IMailbox) folder1).getMessageFolderInfo();
 			info2 = ((IMailbox) folder2).getMessageFolderInfo();

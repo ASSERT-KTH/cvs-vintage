@@ -22,9 +22,9 @@ import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.FolderTstHelper;
+import org.columba.mail.folder.IMailboxInfo;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * @author fdietz
@@ -78,7 +78,7 @@ public class CopyMessageCommandTest extends AbstractFolderTst {
 		Object[] uids = getDestFolder().getUids();
 		assertEquals("one message should be in destination folder", 1,
 				uids.length);
-		MailboxInfo info = getDestFolder().getMessageFolderInfo();
+		IMailboxInfo info = getDestFolder().getMessageFolderInfo();
 		assertEquals("one message should be in destination folder", 1, info
 				.getExists());
 		// close streams

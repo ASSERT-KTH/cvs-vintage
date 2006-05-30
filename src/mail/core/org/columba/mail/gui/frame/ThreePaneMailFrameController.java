@@ -44,13 +44,13 @@ import org.columba.api.selection.ISelectionListener;
 import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.base.UIFSplitPane;
-import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.IMailboxInfo;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.message.action.ViewMessageAction;
 import org.columba.mail.gui.table.FilterToolbar;
@@ -74,8 +74,6 @@ import org.columba.mail.gui.tree.action.SortFoldersMenu;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.MailboxInfo;
-import org.flexdock.docking.DockingConstants;
 
 /**
  * @author fdietz
@@ -327,7 +325,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 					// simply demonstration of how to change the docking title
 					if (selectedFolders[0] instanceof IMailbox) {
-						MailboxInfo info = ((IMailbox) selectedFolders[0])
+						IMailboxInfo info = ((IMailbox) selectedFolders[0])
 								.getMessageFolderInfo();
 						StringBuffer buf = new StringBuffer();
 						buf.append("Total Count: " + info.getExists());

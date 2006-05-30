@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.io.Source;
@@ -129,8 +130,10 @@ public class MboxDataStorage implements IDataStorage {
 	 */
 	public Source getMessageSource(Object uid) throws Exception {
 
+		if( ! exists(uid)) throw new FolderInconsistentException();
 		MboxMessage message = (MboxMessage) messages.get(uid);
-
+		
+		
 		FileInputStream in = new FileInputStream(mboxFile);
 		in.skip(message.getStart());
 

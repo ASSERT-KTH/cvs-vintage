@@ -53,6 +53,7 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.IMailboxInfo;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
@@ -61,7 +62,6 @@ import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.MailboxInfo;
 import org.frapuccino.checkablelist.CheckableItem;
 import org.frapuccino.checkablelist.CheckableItemListTableModel;
 
@@ -439,7 +439,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 	public void updateComponents(boolean b) {
 		if (b) {
-			MailboxInfo info = folder.getMessageFolderInfo();
+			IMailboxInfo info = folder.getMessageFolderInfo();
 
 			nameTextField.setText(folder.getName());
 

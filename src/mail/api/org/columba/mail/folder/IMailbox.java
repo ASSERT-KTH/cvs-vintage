@@ -47,7 +47,7 @@ public interface IMailbox extends IMailFolder {
 	 * @return
 	 * @throws IOException
 	 */
-	public MailboxInfo getMessageFolderInfo();
+	public IMailboxInfo getMessageFolderInfo();
 
 	/**
 	 * Removes all messages which are marked as expunged
