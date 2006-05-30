@@ -28,6 +28,4 @@ public interface IContactItem extends IHeaderItem {
 	public String getEmailAddress();
 	public void setEmailAddress(String emailAddress);
 	
-	public Object clone();
-	
 }
