@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.135 2006/05/29 18:43:14 tfmorris Exp $
+// $Id: Modeller.java,v 1.136 2006/05/30 15:41:06 tfmorris Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1268,9 +1268,9 @@ public class Modeller {
         // requires.  Most likely cause of failure is that the stereotype isn't
         // included in the profile that is being used. - tfm 20060224
         throw new IllegalArgumentException("Could not find "
-					   + "a suitable stereotype for "
-					   + me + " stereotype: <<" + name + ">> base: "
-					   + baseClass);
+					   + "a suitable stereotype for " + me
+                                           + " -  stereotype: <<" + name 
+                                           + ">> base: " + baseClass);
     }
 
     /**
@@ -1685,9 +1685,11 @@ public class Modeller {
     }
 
     /**
-     * Collect parsed method calls. Used for reverse engineering of
+     * Manage collection of parsed method calls. Used for reverse engineering of
      * interactions.
-     * 
+     */
+    /**
+     * Add a parsed method call to the collection of method calls.
      * @param methodName
      *            The method name called.
      */
@@ -1695,22 +1697,43 @@ public class Modeller {
         methodCalls.add(methodName);
     }
 
+    /**
+     * Get collection of method calls.
+     * @return vector containing collected method calls
+     */
     public synchronized Vector getMethodCalls() {
         return methodCalls;
     }
 
+    /**
+     * Clear collected method calls.
+     */
     public void clearMethodCalls() {
         methodCalls.clear();
     }
 
+    /**
+     * Add a local variable declaration to the list of variables.
+     * 
+     * @param type type of declared variable
+     * @param name name of declared variable
+     */
     public void addLocalVariableDeclaration(String type, String name) {
         localVariables.put(name, type);
     }
 
+    /**
+     * Return the collected set of local variable declarations.
+     * 
+     * @return hashtable containing all local variable declarations.
+     */
     public Hashtable getLocalVariableDeclarations() {
         return localVariables;
     }
 
+    /**
+     * Clear the set of local variable declarations.
+     */
     public void clearLocalVariableDeclarations() {
         localVariables.clear();
     }
