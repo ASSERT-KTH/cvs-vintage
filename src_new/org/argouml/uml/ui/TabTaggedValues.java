@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.60 2006/05/10 21:03:55 mvw Exp $
+// $Id: TabTaggedValues.java,v 1.61 2006/05/31 17:54:48 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,10 +252,10 @@ public class TabTaggedValues extends AbstractArgoJPanel
                 (DefaultListSelectionModel) e.getSource();
             ArrayList tvs = new ArrayList(Model.getFacade()
                     .getTaggedValuesCollection(target));
-            if (sel.getLeadSelectionIndex() >= 0 &&
-                     sel.getLeadSelectionIndex() < tvs.size()) {
+            int index = sel.getLeadSelectionIndex();
+            if (index >= 0 && index < tvs.size()) {
                 Object tagDef = Model.getFacade().getTagDefinition(
-                        tvs.get(sel.getLeadSelectionIndex()));
+                        tvs.get(index));
                 tagDefinitionsComboBoxModel.setSelectedItem(tagDef);
             }
         }
