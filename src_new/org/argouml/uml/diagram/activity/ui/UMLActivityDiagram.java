@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.90 2006/05/15 17:23:36 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.91 2006/05/31 18:42:22 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,9 +117,13 @@ public class UMLActivityDiagram extends UMLDiagram {
                 setup(context, o);
             }
         } else {
-            throw new IllegalStateException("Cannot find context namespace "
-                        + "while initializing "
-                        + "activity diagram");
+            Object namespace = Model.getFacade().getNamespace(o);
+            if (namespace != null) {
+                setup(namespace, o);
+            } else {
+                throw new IllegalStateException("Cannot find context "
+                        + "nor namespace while initializing activity diagram");
+            }
         }
     }
 
