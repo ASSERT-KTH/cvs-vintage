@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.22 2006/05/23 21:29:57 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.23 2006/05/31 16:18:58 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1476,18 +1476,22 @@ class FacadeMDRImpl implements Facade {
      * @see org.argouml.model.Facade#getBase(java.lang.Object)
      */
     public Object getBase(Object handle) {
-        if (handle instanceof AssociationEndRole) {
-            return ((AssociationEndRole) handle).getBase();
-        } else if (handle instanceof AssociationRole) {
-            return ((AssociationRole) handle).getBase();
-        } else if (handle instanceof Extend) {
-            return ((Extend) handle).getBase();
-        } else if (handle instanceof Include) {
-            return ((Include) handle).getBase();
-        } else if (handle instanceof ClassifierRole) {
-            // TODO: this returns a Collection, not a single Object
-            // Is this what the callers expect?
-            return ((ClassifierRole) handle).getBase();
+        try {
+            if (handle instanceof AssociationEndRole) {
+                return ((AssociationEndRole) handle).getBase();
+            } else if (handle instanceof AssociationRole) {
+                return ((AssociationRole) handle).getBase();
+            } else if (handle instanceof Extend) {
+                return ((Extend) handle).getBase();
+            } else if (handle instanceof Include) {
+                return ((Include) handle).getBase();
+            } else if (handle instanceof ClassifierRole) {
+                // TODO: this returns a Collection, not a single Object
+                // Is this what the callers expect?
+                return ((ClassifierRole) handle).getBase();
+            }
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
         }
         return illegalArgumentObject(handle);
     }
