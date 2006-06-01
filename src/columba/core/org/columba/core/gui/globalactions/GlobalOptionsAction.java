@@ -17,6 +17,8 @@ package org.columba.core.gui.globalactions;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JFrame;
+
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.config.GeneralOptionsDialog;
@@ -41,13 +43,11 @@ public class GlobalOptionsAction extends AbstractColumbaAction {
         putValue(LARGE_ICON, ImageLoader.getIcon(IconKeys.PREFERENCES));
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-    	new GeneralOptionsDialog(frameMediator.getView().getFrame());
-        /*
-        ThemeSwitcher.updateFrame(frameMediator.getFrame());
-        */
+    	JFrame frame = frameMediator.getView().getFrame();
+    	new GeneralOptionsDialog(frame);
     }
 }

@@ -474,7 +474,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		String action = event.getActionCommand();
 
 		if (action.equals("OK")) {
-			setVisible(false);
+			
 
 			updateComponents(false);
 
@@ -484,7 +484,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			if (restartRequired) {
 				JOptionPane
-						.showInternalMessageDialog(this,
+						.showMessageDialog(this,
 								"You have to restart Columba for the changes to take effect!");
 
 				// switch to new theme
@@ -492,6 +492,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			}
 
+			setVisible(false);
+			
 			// notify frame to update
 			IContainer[] m = FrameManager.getInstance().getOpenFrames();
 			for (int i = 0; i < m.length; i++) {
@@ -502,6 +504,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			// set fonts
 			FontProperties.setFont();
 
+			
 		} else if (action.equals("CANCEL")) {
 			setVisible(false);
 		} else if (action.equals("THEME")) {
