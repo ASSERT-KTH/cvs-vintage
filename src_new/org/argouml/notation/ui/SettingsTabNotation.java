@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.7 2006/05/26 21:57:57 mvw Exp $
+// $Id: SettingsTabNotation.java,v 1.8 2006/06/01 19:22:24 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import org.argouml.application.api.ConfigurationKey;
 import org.argouml.i18n.Translator;
 import org.argouml.notation.Notation;
 import org.argouml.notation.NotationName;
-import org.argouml.ui.GUI;
 import org.argouml.ui.GUISettingsTabInterface;
 import org.argouml.ui.ShadowComboBox;
 
@@ -137,7 +136,6 @@ public class SettingsTabNotation
 
         add(top, BorderLayout.NORTH);
 
-        GUI.getInstance().addSettingsTab(this);
     }
 
     /**
