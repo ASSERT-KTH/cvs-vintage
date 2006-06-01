@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.12 2006/06/01 19:37:05 tfmorris Exp $
+// $Id: Notation.java,v 1.13 2006/06/01 19:37:52 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.application.api.ConfigurationKey;
 import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
-import org.argouml.notation.ui.SettingsTabNotation;
 
 /**
  * Provides centralized methods dealing with notation.
