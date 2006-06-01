@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.34 2006/06/01 00:32:35 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.35 2006/06/01 00:52:53 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -206,7 +206,7 @@ public class FigEdgeNote
         if (newOwner == null) {
             // hack to avoid loading problems since we cannot store
             // the whole model yet in XMI
-            newOwner = new CommentEdge();
+            newOwner = new CommentEdge(comment, annotatedElement);
         }
         owner = (CommentEdge)newOwner;
     }
