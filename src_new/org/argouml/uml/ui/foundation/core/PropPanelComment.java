@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.31 2006/04/24 18:21:57 mvw Exp $
+// $Id: PropPanelComment.java,v 1.32 2006/06/01 00:33:17 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,6 @@ import org.argouml.util.ConfigLoader;
 
 /**
  * Proppanel for comments (notes). <p>
- *
- * In UML 1.3, the text of the comment is kept
- * in the name of the Comment.<p>
  *
  * In UML 1.4 and beyond, the Comment has a "body"
  * attribute to contain the comment string, although 
