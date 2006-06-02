@@ -1,4 +1,4 @@
-// $Id: NotationHelper.java,v 1.3 2006/03/05 15:04:56 mvw Exp $
+// $Id: NotationHelper.java,v 1.4 2006/06/02 18:28:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,6 +55,7 @@ public final class NotationHelper {
 
     /**
      * @return the left pointing guillemot, i.e. << or the one-character symbol
+     * @deprecated by MVW in V0.21.3. Use ProjectSettings instead.
      */
     public static String getLeftGuillemot() {
 	return (Configuration.getBoolean(Notation.KEY_USE_GUILLEMOTS, false))
@@ -65,6 +66,7 @@ public final class NotationHelper {
 
     /**
      * @return the right pointing guillemot, i.e. >> or the one-character symbol
+     * @deprecated by MVW in V0.21.3. Use ProjectSettings instead.
      */
     public static String getRightGuillemot() {
 	return (Configuration.getBoolean(Notation.KEY_USE_GUILLEMOTS, false))

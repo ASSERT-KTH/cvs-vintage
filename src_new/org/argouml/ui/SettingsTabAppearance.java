@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.13 2006/04/29 16:02:23 linus Exp $
+// $Id: SettingsTabAppearance.java,v 1.14 2006/06/02 18:28:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -189,6 +189,13 @@ class SettingsTabAppearance
      * @see GUISettingsTabInterface#handleSettingsTabCancel()
      */
     public void handleSettingsTabCancel() { }
+
+    /**
+     * @see org.argouml.ui.GUISettingsTabInterface#handleResetToDefault()
+     */
+    public void handleResetToDefault() {
+        // Do nothing - these buttons are not shown.
+    }
 
     /**
      * @see GUISettingsTabInterface#getTabKey()

@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.13 2006/04/29 16:02:23 linus Exp $
+// $Id: SettingsTabModules.java,v 1.14 2006/06/02 18:28:25 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,4 +292,12 @@ class SettingsTabModules extends JPanel
      * The UID.
      */
     private static final long serialVersionUID = 8945027241102020504L;
+
+    /**
+     * @see org.argouml.ui.GUISettingsTabInterface#handleResetToDefault()
+     */
+    public void handleResetToDefault() {
+        // Do nothing - these buttons are not shown.
+    }
+
 }

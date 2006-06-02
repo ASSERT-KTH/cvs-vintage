@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotationUml.java,v 1.15 2006/05/02 15:19:24 mvw Exp $
+// $Id: ModelElementNameNotationUml.java,v 1.16 2006/06/02 18:28:24 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,10 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.kernel.ProjectSettings;
 import org.argouml.model.Model;
-import org.argouml.notation.NotationHelper;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.notation.ModelElementNameNotation;
 import org.argouml.util.MyTokenizer;
@@ -127,9 +128,12 @@ public class ModelElementNameNotationUml extends ModelElementNameNotation {
                 first = false;
             }
         }
-        return first ? "" : NotationHelper.getLeftGuillemot()
+        Project project = 
+            ProjectManager.getManager().getCurrentProject();
+        ProjectSettings ps = project.getProjectSettings();
+        return first ? "" : ps.getLeftGuillemot()
             + sb.toString()
-            + NotationHelper.getRightGuillemot();
+            + ps.getRightGuillemot();
     }
 
     /**

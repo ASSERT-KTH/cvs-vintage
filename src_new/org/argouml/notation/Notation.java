@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.13 2006/06/01 19:37:52 tfmorris Exp $
+// $Id: Notation.java,v 1.14 2006/06/02 18:28:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -280,6 +280,7 @@ public final class Notation implements PropertyChangeListener {
     /**
      * @return <code>true</code> if guillemots (&laquo; and &raquo;) are used
      * instead of &lt;&lt; and &gt;&gt;.
+     * @deprecated by MVW in V0.21.3.Use ProjectSettings instead.
      */
     public static boolean getUseGuillemots() {
         return Configuration.getBoolean(KEY_USE_GUILLEMOTS, false);
@@ -288,6 +289,7 @@ public final class Notation implements PropertyChangeListener {
     /**
      * @param useGuillemots <code>true</code> if guillemots (&laquo;
      * and &raquo;) shall be used instead of &lt;&lt; and &gt;&gt;.
+     * @deprecated by MVW in V0.21.3.Use ProjectSettings instead.
      */
     public static void setUseGuillemots(boolean useGuillemots) {
         Configuration.setBoolean(KEY_USE_GUILLEMOTS, useGuillemots);
@@ -297,6 +299,7 @@ public final class Notation implements PropertyChangeListener {
      * Get the default width for Fig shadows.
      *
      * @return the default width for Fig shadows
+     * @deprecated by MVW in V0.21.3.Use ProjectSettings instead.
      */
     public static int getDefaultShadowWidth() {
         return Configuration.getInteger(KEY_DEFAULT_SHADOW_WIDTH, 1);
@@ -306,6 +309,7 @@ public final class Notation implements PropertyChangeListener {
      * Set the default width for Fig Shadow.
      *
      * @param width    the Fig shadow width
+     * @deprecated by MVW in V0.21.3.Use ProjectSettings instead.
      */
     public static void setDefaultShadowWidth(int width) {
         Configuration.setInteger(KEY_DEFAULT_SHADOW_WIDTH, width);

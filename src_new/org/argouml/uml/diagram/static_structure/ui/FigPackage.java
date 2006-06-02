@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.97 2006/04/19 05:28:59 tfmorris Exp $
+// $Id: FigPackage.java,v 1.98 2006/06/02 18:28:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,8 +176,8 @@ public class FigPackage extends FigNodeModelElement
         
         updateEdges();
 
-        visibilityVisible =
-                Configuration.getBoolean(Notation.KEY_SHOW_VISIBILITY);
+        Project p = ProjectManager.getManager().getCurrentProject();
+        visibilityVisible = p.getProjectSettings().getShowVisibilityValue();
         setOwner(node);
     }
 

@@ -1,4 +1,4 @@
-// $Id: SettingsTabPreferences.java,v 1.15 2006/04/29 16:02:23 linus Exp $
+// $Id: SettingsTabPreferences.java,v 1.16 2006/06/02 18:28:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.ProfileException;
 
 /**
- * Action object for handling Argo settings.
+ * Settings tab panel for handling ArgoUML application related settings.
  *
  * @author Thierry Lach
  * @since  0.9.4
@@ -150,6 +150,13 @@ class SettingsTabPreferences extends JPanel
      */
     public void handleSettingsTabCancel() {
         handleSettingsTabRefresh();
+    }
+
+    /**
+     * @see org.argouml.ui.GUISettingsTabInterface#handleResetToDefault()
+     */
+    public void handleResetToDefault() {
+        // Do nothing - these buttons are not shown.
     }
 
     /**

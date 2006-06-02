@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.48 2006/05/23 20:08:35 tfmorris Exp $
+// $Id: GenericArgoMenuBar.java,v 1.49 2006/06/02 18:28:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ import org.argouml.notation.ui.ActionNotation;
 import org.argouml.ui.ActionAutoResize;
 import org.argouml.ui.ActionExportXMI;
 import org.argouml.ui.ActionImportXMI;
+import org.argouml.ui.ActionProjectSettings;
 import org.argouml.ui.ActionSaveConfiguration;
 import org.argouml.ui.ActionSettings;
 import org.argouml.ui.ArgoJMenu;
@@ -457,6 +458,10 @@ public class GenericArgoMenuBar extends JMenuBar implements
         file.add(new ActionSaveAllGraphics());
         setMnemonic(saveGraphicsItem, "SaveGraphics");
         file.addSeparator();
+
+        JMenuItem propertiesItem = file.add(new ActionProjectSettings());
+        setMnemonic(propertiesItem, "Properties");
+        
         JMenuItem saveConfiguration = file.add(new ActionSaveConfiguration());
         setMnemonic(saveConfiguration, "Save Configuration");
         file.addSeparator();

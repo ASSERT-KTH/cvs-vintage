@@ -1,4 +1,4 @@
-// $Id: GUISettingsTabInterface.java,v 1.1 2006/04/29 16:02:23 linus Exp $
+// $Id: GUISettingsTabInterface.java,v 1.2 2006/06/02 18:28:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,17 @@ public interface GUISettingsTabInterface {
      * Load or reload field settings.
      */
     void handleSettingsTabRefresh();
-
+    
+    /**
+     * Reset the settings shown to the same settings with a broader scope.
+     * I.e. copy settings from wider scope to narrow scope. <p>
+     * 
+     * Remark:
+     * This shall only adapt the displayed value! 
+     * You need a save to make the actual change.
+     */
+    void handleResetToDefault();
+    
     /**
      * Gets the unlocalized settings tab name.
      *

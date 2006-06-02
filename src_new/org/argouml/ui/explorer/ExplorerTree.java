@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.51 2006/04/23 09:37:35 mvw Exp $
+// $Id: ExplorerTree.java,v 1.52 2006/06/02 18:28:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,9 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.argouml.application.api.Configuration;
+import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.kernel.ProjectSettings;
 import org.argouml.notation.Notation;
 import org.argouml.ui.DisplayTextTree;
 import org.argouml.ui.ProjectBrowser;
@@ -230,9 +232,9 @@ public class ExplorerTree
          * @see javax.swing.event.TreeWillExpandListener#treeWillExpand(javax.swing.event.TreeExpansionEvent)
          */
         public void treeWillExpand(TreeExpansionEvent tee) {
-
-            showStereotype =
-		Configuration.getBoolean(Notation.KEY_SHOW_STEREOTYPES, false);
+            Project p = ProjectManager.getManager().getCurrentProject();
+            ProjectSettings ps = p.getProjectSettings();
+            showStereotype = ps.getShowStereotypesValue();
 
             if (getModel() instanceof ExplorerTreeModel) {
 
