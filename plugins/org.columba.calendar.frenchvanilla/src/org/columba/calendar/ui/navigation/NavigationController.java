@@ -74,7 +74,7 @@ public class NavigationController implements ICalendarNavigationView {
 				new DateChangeListener() {
 					public void dateRangeChanged(DateChangeEvent e) {
 						if (e.getType() == DateChangeEvent.SELECTED) {
-							System.out.println("selection changed");
+							
 
 							fireSelectionChanged(new DateRange(e.getNewRange()
 									.getStartMillis(), e.getNewRange()

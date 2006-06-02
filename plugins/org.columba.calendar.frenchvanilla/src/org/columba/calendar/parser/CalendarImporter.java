@@ -53,7 +53,7 @@ public class CalendarImporter {
 		for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
 			net.fortuna.ical4j.model.Component component = (net.fortuna.ical4j.model.Component) i
 					.next();
-			System.out.println("Component [" + component.getName() + "]");
+			//System.out.println("Component [" + component.getName() + "]");
 
 			// only import VEVENT for now
 			if (component.getName().equals(Component.VEVENT)) {

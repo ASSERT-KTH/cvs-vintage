@@ -93,7 +93,7 @@ public class EditActivityAction extends AbstractColumbaAction implements
 	}
 
 	public void selectionChanged(ActivitySelectionChangedEvent event) {
-		System.out.println("changed="+event.getSelection().length);
+		
 		
 		if (event.getSelection().length == 0)
 			setEnabled(false);

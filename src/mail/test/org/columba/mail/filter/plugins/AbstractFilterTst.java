@@ -136,7 +136,7 @@ public class AbstractFilterTst extends TestCase {
 	public Object addMessage() throws Exception {
 		// add message "0.eml" as inputstream to folder
 		String input = FolderTstHelper.getString(0);
-		System.out.println("input=" + input);
+	
 
 		// create stream from string
 		ByteArrayInputStream inputStream = FolderTstHelper

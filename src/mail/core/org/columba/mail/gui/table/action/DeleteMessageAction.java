@@ -83,7 +83,7 @@ public class DeleteMessageAction extends AbstractColumbaAction implements
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		System.out.println("-------------------->");
+	
 		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 		r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);

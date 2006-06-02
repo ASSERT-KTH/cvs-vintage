@@ -101,8 +101,7 @@ public class ResourceLoader {
 
 			return bundle.getString(resourceName);
 		} catch (MissingResourceException e) {
-			System.out.println(e.getMessage());
-			System.out.println("path=" + bundlePath);
+			
 
 			// fall-back to global resource loader
 			return GlobalResourceLoader.getString(null, resourceBundleName,

@@ -276,12 +276,7 @@ public class MainCalendarController implements InteractionListener,
 		Calendar endCalendar = dateRange.getStart();
 		int selectedEndDay = endCalendar.get(java.util.Calendar.DAY_OF_YEAR);
 
-		System.out.println("start-day=" + selectedStartDay + " "
-				+ startCalendar.getTime().toString());
-		System.out.println("end-day=" + selectedEndDay + " "
-				+ endCalendar.getTime().toString());
-		System.out.println("today=" + today + " "
-				+ todayCalendar.getTime().toString());
+		
 
 	}
 

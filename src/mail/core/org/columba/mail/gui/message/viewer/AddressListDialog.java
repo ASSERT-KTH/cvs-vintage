@@ -176,7 +176,7 @@ public class AddressListDialog extends JDialog implements ActionListener,
 
 			selection = (CheckableItemImpl) ((CheckableItemListTableModel) list
 					.getModel()).getElement(index);
-			System.out.println("selection="+selection.toString());
+			
 		}
 	}
 

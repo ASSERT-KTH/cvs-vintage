@@ -48,7 +48,7 @@ public class MonthViewSelectableAction extends AbstractSelectableAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("frameMediator="+frameMediator);
+		
 		
 		ICalendarMediator calendarFrame = (ICalendarMediator) frameMediator;
 		
