@@ -59,7 +59,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: JEditBuffer.java,v 1.2 2005/07/13 20:46:01 spestov Exp $
+ * @version $Id: JEditBuffer.java,v 1.3 2006/06/02 06:50:57 kpouer Exp $
  *
  * @since jEdit 4.3pre3
  */
@@ -2272,6 +2272,9 @@ loop:		for(int i = 0; i < seg.count; i++)
 	protected void initIndentRules()
 	{
 		indentRules.clear();
+
+		if (getBooleanProperty("deepIndent"))
+			indentRules.add(new DeepIndentRule());
 
 		String[] regexpProps = {
 			"indentNextLine",
