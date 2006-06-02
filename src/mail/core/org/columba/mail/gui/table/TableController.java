@@ -17,21 +17,32 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Observable;
 import java.util.logging.Logger;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.folder.IFolder;
 import org.columba.core.folder.IFolderCommandReference;
+import org.columba.core.gui.base.AscendingIcon;
+import org.columba.core.gui.base.DescendingIcon;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
@@ -56,7 +67,7 @@ import org.frapuccino.treetable.Tree;
  * message, Subject:, Date:, From: and Size headerfields.
  * <p>
  * Folder-specific configuration options are handled by
- * {@link FolderOptionsController}and can be configured by the user in the
+ * <code>FolderOptionsController</code> and can be configured by the user in the
  * AbstractMessageFolder Options Dialog.
  * 
  * @author fdietz
@@ -137,7 +148,7 @@ public class TableController implements ListSelectionListener,
 
 		// init view
 		view = new TableView(headerTableModel, tableModelSorter);
-		
+
 		// pass tree to model, used by the threaded-view
 		headerTableModel.setTree((Tree) view.getTree());
 
@@ -146,7 +157,7 @@ public class TableController implements ListSelectionListener,
 		getView().setDragEnabled(true);
 
 		// MouseListener sorts table when clicking on a column header
-		new TableHeaderMouseListener(this, getTableModelSorter());
+		new TableHeaderMouseListener(getTableModelSorter());
 		view.getColumnModel().addColumnModelListener(headerTableModel);
 
 		// we need this for the focus manager
@@ -500,7 +511,7 @@ public class TableController implements ListSelectionListener,
 	 * @see org.columba.mail.gui.table.ITableController#selectLastRow()
 	 */
 	public Object selectLastRow() {
-		if( getView().getColumnCount() > 0) {		
+		if (getView().getColumnCount() > 0) {
 			Object result = getView().selectLastRow();
 			return result;
 		} else {
@@ -580,7 +591,6 @@ public class TableController implements ListSelectionListener,
 	 */
 	public void setSortingOrder(boolean order) {
 		getTableModelSorter().setSortingOrder(order);
-		// getHeaderTableModel().update();
 	}
 
 	/**
@@ -588,7 +598,6 @@ public class TableController implements ListSelectionListener,
 	 */
 	public void setSortingColumn(String column) {
 		getTableModelSorter().setSortingColumn(column);
-		// getHeaderTableModel().update();
 	}
 
 	/**
@@ -605,4 +614,190 @@ public class TableController implements ListSelectionListener,
 		return getTableModelSorter().getSortingOrder();
 	}
 
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#isThreadedViewEnabled()
+	 */
+	public boolean isThreadedViewEnabled() {
+		return getTableModelThreadedView().isEnabled();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getRowCount()
+	 */
+	public int getRowCount() {
+		return getView().getRowCount();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getColumnModel()
+	 */
+	public TableColumnModel getColumnModel() {
+		return view.getColumnModel();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#resetColumnModel()
+	 */
+	public void resetColumnModel() {
+		TableView view = getView();
+
+		// remove all columns from table model
+		getHeaderTableModel().clearColumns();
+
+		// reset row height
+		view.resetRowHeight();
+		view.setShowHorizontalLines(false);
+
+		// remove all columns for column model
+		view.getColumnModel().removeColumnModelListener(getHeaderTableModel());
+		view.setColumnModel(new DefaultTableColumnModel());
+		view.getColumnModel().addColumnModelListener(getHeaderTableModel());
+
+		// for some weird reason the table loses its inter-cell spacing
+		// property, when changing the underlying column model
+		// -> setting this to (0,0) again
+		view.setIntercellSpacing(new Dimension(0, 0));
+
+		// if new columns were added, we have to initialize the tooltips
+		initTooltips();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#createColumn(java.lang.String, int)
+	 */
+	public TableColumn createTableColumn(String name, int size) {
+		return view.createTableColumn(name, size);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#addColumn(javax.swing.table.TableColumn)
+	 */
+	public void addColumn(TableColumn column) {
+		view.addColumn(column);
+	}
+
+	
+	/**
+	 * Mouse listener for selecting columns with the left mouse to change the
+	 * sorting order.
+	 * <p>
+	 * Also responsible for changing the icon in the renderer
+	 * 
+	 * @author fdietz
+	 */
+	class TableHeaderMouseListener extends MouseAdapter {
+		private TableView view;
+
+		private TableModelSorter sorter;
+
+		private SortingStateObservable observable;
+
+		private ImageIcon ascending = new AscendingIcon();
+
+		private ImageIcon descending = new DescendingIcon();
+
+		private TableController controller;
+
+		/**
+		 *  
+		 */
+		public TableHeaderMouseListener(
+				TableModelSorter sorter) {
+	
+			
+			this.sorter = sorter;
+
+			this.observable = sorter.getSortingStateObservable();
+
+			JTableHeader th = view.getTableHeader();
+			th.addMouseListener(this);
+		}
+
+		public void mouseClicked(MouseEvent e) {
+			TableColumnModel columnModel = view.getColumnModel();
+			int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+			int column = viewColumn;
+
+			//int column = view.convertColumnIndexToModel(viewColumn);
+			//int column2 = view.convertColumnIndexToView(viewColumn);
+			if (column != -1) {
+				ImageIcon icon = null;
+
+				if (sorter.getSortingOrder() == true) {
+					icon = ascending;
+				} else {
+					icon = descending;
+				}
+
+				// disable every icon
+				// -> set appropriate icon for selected column
+				for (int i = 0; i < columnModel.getColumnCount(); i++) {
+					JLabel renderer = (JLabel) columnModel.getColumn(i)
+							.getHeaderRenderer();
+
+					if (i == column) {
+						renderer.setIcon(icon);
+					} else {
+						renderer.setIcon(null);
+					}
+				}
+
+				// remember selected node
+				MessageNode[] nodes = view.getSelectedNodes();
+				Object uid = null;
+
+				if ((nodes != null) && (nodes.length > 0))
+					uid = nodes[0].getUid();
+
+				// repaint table header
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						view.getTableHeader().repaint();
+					}
+				});
+
+				String columnName = controller.getHeaderTableModel().getColumnName(
+						column);
+
+				// notify the model to sort the table
+				//sorter.sort(column);
+				boolean order = false;
+				
+				if (sorter.getSortingColumn().equals(columnName)) {
+					order = !sorter.getSortingOrder();
+				}
+				// notify observers (sorting state submenu)
+				observable.setSortingState(columnName, order);
+
+				controller.setSortingColumn(columnName);
+				controller.setSortingOrder(order);
+				controller.getHeaderTableModel().update();
+				
+				// make selected row visible again
+				if (uid != null)
+					controller.setSelected(new Object[] { uid });
+
+			}
+		}
+	}
+
+
+	public ListSelectionModel getListSelectionModel() {
+		return view.getSelectionModel();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getSelectedRows()
+	 */
+	public int[] getSelectedRows() {
+		return view.getSelectedRows();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getPathForRow(int)
+	 */
+	public TreePath getPathForRow(int row) {
+		return view.getTree().getPathForRow(row);
+	}
+	
 }
