@@ -16,6 +16,12 @@
 
 package org.columba.core.main;
 
+import java.security.AllPermission;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.security.Policy;
+
 import org.columba.core.shutdown.ShutdownManager;
 
 /**
@@ -30,18 +36,43 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		// initialize global class loader
-		mainClassLoader = new MainClassLoader(ClassLoader
-				.getSystemClassLoader());
+		// @author: fdietz
+		//
+		// PROBLEM: Extensions don't run using Java Webstart (JWS)
+		// 
+		// Even though we assign "all-permission" in our columba.jnlp file, this only applies
+		// to the initial Java Webstart classloader. But, we create our own classloaders for
+		// loading extensions. These classloaders don't have the same permission settings anymore.
+		
+		// WORKAROUND: 
+		// 
+		// System.setSecurityManager(null);
+		//
+		// This call effectly disables the sandbox mode and seems to work fine.
+		//
+		// Below I use another way. The policy for all classloaders is set to "all-permissions". 
+		// Don't really know the difference though.
+		
+		// grant "all-permissions"
+		Policy.setPolicy(new Policy() {
+			public PermissionCollection getPermissions(CodeSource codesource) {
+				Permissions perms = new Permissions();
+				perms.add(new AllPermission());
+				return (perms);
+			}
+
+			public void refresh() {
+			}
+		});
 
 		start(args);
 	}
 
 	public static void restart(String[] args) throws Exception {
-		
-		// shutdown Columba 
+
+		// shutdown Columba
 		ShutdownManager.getInstance().shutdown(0);
-		
+
 		// set global class loader to null
 		mainClassLoader = null;
 
@@ -58,9 +89,10 @@ public class Main {
 	private static void start(String[] args) throws Exception {
 		// initialize global class loader
 		mainClassLoader = new MainClassLoader(Main.class.getClassLoader());
-		Thread.currentThread().setContextClassLoader(mainClassLoader);
 
-		Bootstrap startup = new Bootstrap();
+		// use global class loader to bootstrap Columba
+		Bootstrap startup = (Bootstrap) mainClassLoader.loadClass(
+				Bootstrap.class.getName()).newInstance();
 		startup.run(args);
 	}
 

@@ -229,21 +229,22 @@ public class Extension implements IExtension {
 		// @author: fdietz
 		// WORKAROUND:
 		// we simply append URLs to the existing global class loader
-		// and use the same for instanciation
-		// Note, that we don't create a new classloader for every class
-		// we instanciate. This implies that we don't support hot-swapping
-		// of changed classes, currently.
+		// and use the same as parent
+		// 
+		// Note, that we create a new URL classloader for every class
+		// we instanciate. We might want to support hot-swapping
+		// of changed classes later.
 
 		// append URLs to global classloader
 		Main.mainClassLoader.addURLs(urls);
 
-		plugin = instanciateJavaClass(className, arguments);
+		//plugin = instanciateJavaClass(className, arguments);
 
 		// create new class loader using the global class loader as parent
-		// ExternalClassLoader loader = new ExternalClassLoader(urls,
-		// Main.mainClassLoader);
-		// plugin = (IExtensionInterface) loader.instanciate(className,
-		// arguments);
+		 ExternalClassLoader loader = new ExternalClassLoader(urls,
+				 Main.mainClassLoader);
+		 plugin = (IExtensionInterface) loader.instanciate(className,
+		 arguments);
 
 		return plugin;
 	}
@@ -258,7 +259,7 @@ public class Extension implements IExtension {
 
 		// use our global class loader
 		ClassLoader loader = Main.mainClassLoader;
-
+		
 		Class actClass;
 
 		actClass = loader.loadClass(className);
