@@ -52,8 +52,8 @@ import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.IMailboxInfo;
 import org.columba.mail.gui.composer.HeaderController;
+import org.columba.mail.gui.filtertoolbar.FilterToolbar;
 import org.columba.mail.gui.message.action.ViewMessageAction;
-import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.DeleteAction;
@@ -147,7 +147,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// for updating the title
 		treeHandler.addSelectionListener(this);
 
-		filterToolbar = new FilterToolbar(tableController);
+		filterToolbar = new FilterToolbar(this);
 
 		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 

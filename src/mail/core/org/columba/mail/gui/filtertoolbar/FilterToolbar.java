@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table;
+package org.columba.mail.gui.filtertoolbar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,7 +73,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 	private JTextField textField;
 
-	private TableController tableController;
+	private MailFrameMediator frameMediator;
 
 	private IFolder sourceFolder;
 
@@ -88,17 +88,16 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 	private IFolder selectedFolder;
 
-	public FilterToolbar(TableController headerTableViewer) {
+	public FilterToolbar(MailFrameMediator frameMediator) {
 		super();
-		this.tableController = headerTableViewer;
+		this.frameMediator = frameMediator;
 
 		selectedItem = strs[0];
 
 		initComponents();
 		layoutComponents();
 
-		((MailFrameMediator) tableController.getFrameController())
-				.registerTreeSelectionListener(this);
+		frameMediator.registerTreeSelectionListener(this);
 	}
 
 	private ComboMenu createComboMenu() {
@@ -113,18 +112,20 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 				switch (i) {
 				case 7:
-					m.setIcon(MailImageLoader.getSmallIcon("message-mail-unread.png"));
+					m.setIcon(MailImageLoader
+							.getSmallIcon("message-mail-unread.png"));
 					break;
 				case 8:
-					m.setIcon(MailImageLoader
-							.getSmallIcon("flag.png"));
+					m.setIcon(MailImageLoader.getSmallIcon("flag.png"));
 					break;
 				case 9:
-					m.setIcon(MailImageLoader
-							.getSmallIcon("priority-high.png"));
+					m
+							.setIcon(MailImageLoader
+									.getSmallIcon("priority-high.png"));
 					break;
 				case 10:
-					m.setIcon(MailImageLoader.getSmallIcon("mail-mark-junk.png"));
+					m.setIcon(MailImageLoader
+							.getSmallIcon("mail-mark-junk.png"));
 					break;
 				}
 			}
@@ -179,7 +180,6 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 	}
 
-
 	private int getIndex(String name) {
 		for (int i = 0; i < strs.length; i++) {
 			if (name.equals(strs[i]))
@@ -202,14 +202,11 @@ public class FilterToolbar extends JPanel implements ActionListener,
 			// select search folder
 			MailFolderCommandReference r = new MailFolderCommandReference(
 					sourceFolder);
-			((MailFrameMediator) tableController.getFrameController())
-					.setTreeSelection(r);
+			frameMediator.setTreeSelection(r);
 
-			((MailFrameMediator) tableController.getFrameController())
-					.setTableSelection(r);
+			frameMediator.setTableSelection(r);
 			CommandProcessor.getInstance().addOp(
-					new ViewHeaderListCommand(tableController
-							.getFrameController(), r));
+					new ViewHeaderListCommand(frameMediator, r));
 		}
 
 	}
@@ -251,24 +248,14 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		}
 
 		// select search folder
-		/*
-		 * MailFolderCommandReference r = new MailFolderCommandReference(null);
-		 * ((MailFrameMediator) tableController.getFrameController())
-		 * .setTreeSelection(r);
-		 */
 
 		MailFolderCommandReference r = new MailFolderCommandReference(
 				searchFolder);
-		/*
-		 * ((MailFrameMediator) tableController.getFrameController())
-		 * .setTreeSelection(r);
-		 */
-		((MailFrameMediator) tableController.getFrameController())
-				.setTableSelection(r);
+
+		frameMediator.setTableSelection(r);
 
 		CommandProcessor.getInstance().addOp(
-				new ViewHeaderListCommand(tableController.getFrameController(),
-						r));
+				new ViewHeaderListCommand(frameMediator, r));
 	}
 
 	/**
@@ -400,17 +387,6 @@ public class FilterToolbar extends JPanel implements ActionListener,
 			if (sourceFolder == null)
 				return;
 
-			/*
-			 * // get selected search criteria int index =
-			 * criteriaComboBox.getSelectedIndex(); // create filter criteria
-			 * based on selected type FilterCriteria c =
-			 * createFilterCriteria(index); // set criteria for search folder
-			 * VirtualFolder searchFolder = prepareSearchFolder(c,
-			 * sourceFolder); // select search folder MailFolderCommandReference
-			 * r = new MailFolderCommandReference( searchFolder);
-			 * ((MailFrameMediator) tableController.getFrameController())
-			 * .setTreeSelection(r);
-			 */
 		}
 	}
 
@@ -449,15 +425,14 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		IMailbox searchFolder = (IMailbox) FolderTreeModel.getInstance()
 				.getFolder(106);
 
-		IMailbox folder = (IMailbox) ((MailFrameMediator) tableController
-				.getFrameController()).getTableSelection().getSourceFolder();
+		IMailbox folder = (IMailbox) frameMediator.getTableSelection()
+				.getSourceFolder();
 
 		if (folder == null) {
 			return;
 		}
 
-		new SearchFrame(tableController
-				.getFrameController(), searchFolder, folder);
+		new SearchFrame(frameMediator, searchFolder, folder);
 	}
 
 	/*
@@ -467,8 +442,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		// get currently selected folder
-		IMailFolderCommandReference ref = ((MailFrameMediator) tableController
-				.getFrameController()).getTreeSelection();
+		IMailFolderCommandReference ref = frameMediator.getTreeSelection();
 
 		if (ref != null) {
 			selectedFolder = ref.getSourceFolder();

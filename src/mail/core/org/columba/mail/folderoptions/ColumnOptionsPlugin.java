@@ -15,10 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import java.awt.Dimension;
 import java.util.Enumeration;
 
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
 import org.columba.core.config.DefaultItem;
@@ -27,8 +25,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.TableView;
+import org.columba.mail.gui.table.ITableController;
 
 /**
  * Stores all visible columns of the message list.
@@ -64,14 +61,13 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 	public void saveOptionsToXml(IMailbox folder) {
 		XmlElement columns = getConfigNode(folder);
 
-		TableController tableController = ((TableController) ((TableViewOwner) getMediator())
+		ITableController tableController = ((ITableController) ((TableViewOwner) getMediator())
 				.getTableController());
-		TableView view = tableController.getView();
 
-		Enumeration enumeration = view.getColumnModel().getColumns();
+		Enumeration enumeration = tableController.getColumnModel().getColumns();
 
 		// check if there are columns which need to be saved
-		if ( view.getColumnModel().getColumnCount() == 0) 
+		if ( tableController.getColumnModel().getColumnCount() == 0) 
 			return;
 		
 		// remove all child nodes
@@ -106,21 +102,9 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 		 *  }
 		 */
 
-		TableController tableController = ((TableController) ((TableViewOwner) getMediator())
+		ITableController tableController = ((ITableController) ((TableViewOwner) getMediator())
 				.getTableController());
-		TableView view = tableController.getView();
-
-		// remove all columns from table model
-		tableController.getHeaderTableModel().clearColumns();
-		
-		// reset row height 
-		view.resetRowHeight();
-		view.setShowHorizontalLines(false);
-		
-		// remove all columns for column model
-		view.getColumnModel().removeColumnModelListener(tableController.getHeaderTableModel());
-		view.setColumnModel(new DefaultTableColumnModel());
-		view.getColumnModel().addColumnModelListener(tableController.getHeaderTableModel());
+		tableController.resetColumnModel();
 
 		
 		// add columns
@@ -136,7 +120,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 			tableController.getHeaderTableModel().addColumn(name);
 
 			// add column to JTable column model
-			TableColumn tc = view.createTableColumn(name, size);
+			TableColumn tc = tableController.createTableColumn(name, size);
 
 			//tc.setModelIndex(position);
 			tc.setModelIndex(i);
@@ -144,16 +128,10 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 			// resize column width
 			tc.setPreferredWidth(size);
 
-			view.addColumn(tc);
+			tableController.addColumn(tc);
 		}
 
-		// for some weird reason the table loses its inter-cell spacing
-		// property, when changing the underlying column model
-		// -> setting this to (0,0) again
-		view.setIntercellSpacing(new Dimension(0, 0));
-
-		// if new columns were added, we have to initialize the tooltips
-		tableController.initTooltips();
+		
 	}
 
 	/**

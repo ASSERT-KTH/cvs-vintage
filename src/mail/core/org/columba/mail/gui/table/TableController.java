@@ -686,8 +686,7 @@ public class TableController implements ListSelectionListener,
 	 * @author fdietz
 	 */
 	class TableHeaderMouseListener extends MouseAdapter {
-		private TableView view;
-
+		
 		private TableModelSorter sorter;
 
 		private SortingStateObservable observable;

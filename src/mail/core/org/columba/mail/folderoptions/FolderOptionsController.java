@@ -27,14 +27,13 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.TableController;
 import org.columba.mail.plugin.IExtensionHandlerKeys;
 
 /**
- * Controller used by {@link TableController} to handle all folder-related
+ * Controller used by <code>TableController</code> to handle all folder-related
  * option plugins.
  * <p>
- * Note, that every {@link MailFrameMediator} keeps its own
+ * Note, that every <code>MailFrameMediator</code> keeps its own
  * <code>FolderOptionsController<code>, which makes sure that
  * all plugins are singletons.
  *

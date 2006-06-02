@@ -29,8 +29,8 @@ import org.columba.api.selection.SelectionChangedEvent;
 import org.columba.core.selection.SelectionHandler;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
-import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.TableView;
+import org.columba.mail.gui.table.IMessageNode;
+import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
@@ -58,9 +58,8 @@ public class TableSelectionHandler extends SelectionHandler implements
 		ListSelectionListener, ISelectionListener {
 	public static final String HANDLER_ID = "mail.table";
 
-	private TableView view;
 
-	private LinkedList messages;
+	private LinkedList<IMessageNode> messages;
 
 	private IMailFolder folder;
 
@@ -70,17 +69,18 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 	private MailFolderCommandReference local;
 
+	private ITableController tableController;
 	/**
 	 * @param id
 	 */
-	public TableSelectionHandler(TableController tableController) {
+	public TableSelectionHandler(ITableController tableController) {
 		super(TableSelectionHandler.HANDLER_ID);
 
-		this.view = tableController.getView();
+		this.tableController = tableController;
 
-		view.getSelectionModel().addListSelectionListener(this);
+		tableController.getListSelectionModel().addListSelectionListener(this);
 
-		messages = new LinkedList();
+		messages = new LinkedList<IMessageNode>();
 
 		useLocalSelection = false;
 	}
@@ -145,7 +145,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 			return;
 		}
 
-		messages = new LinkedList();
+		messages = new LinkedList<IMessageNode>();
 
 		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
@@ -153,13 +153,13 @@ public class TableSelectionHandler extends SelectionHandler implements
 			// no rows are selected
 
 		} else {
-			int[] rows = view.getSelectedRows();
+			int[] rows = tableController.getSelectedRows();
 
 			for (int i = 0; i < rows.length; i++) {
-				TreePath path = view.getTree().getPathForRow(rows[i]);
+				TreePath path = tableController.getPathForRow(rows[i]);
 				if ( path == null ) continue;
 				
-				MessageNode node = (MessageNode) path.getLastPathComponent();
+				IMessageNode node = (IMessageNode) path.getLastPathComponent();
 				messages.add(node);
 			}
 		}

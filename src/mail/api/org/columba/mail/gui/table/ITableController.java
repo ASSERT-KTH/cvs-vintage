@@ -19,6 +19,11 @@ package org.columba.mail.gui.table;
 
 import java.util.Observable;
 
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.tree.TreePath;
+
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.message.IHeaderList;
 
@@ -56,6 +61,10 @@ public interface ITableController {
 	
 	IMessageNode[] getSelectedNodes();
 	void setSelected(Object[] uids);
+	int[] getSelectedRows();
+	TreePath getPathForRow(int row);
+	
+	int getRowCount();
 	
 	Object selectFirstRow();
 	Object selectLastRow();
@@ -64,14 +73,22 @@ public interface ITableController {
 	void makeSelectedRowVisible();
 	
 	IMessageNode getMessageNode(Object uid);
+	
 	void enableThreadedView(boolean enableThreadedMode, boolean updateModel);
+	boolean isThreadedViewEnabled();
 	
 	Observable getSortingStateObservable();
 	void setSortingOrder(boolean order);
-	void setSortingColumn(String column);
-	
+	void setSortingColumn(String column);	
 	String getSortingColumn();
 	boolean getSortingOrder();
 	
 	void clear();
+	
+	TableColumnModel getColumnModel();
+	void resetColumnModel();
+	TableColumn createTableColumn(String  name, int size);
+	void addColumn(TableColumn column);
+	
+	ListSelectionModel getListSelectionModel();
 }

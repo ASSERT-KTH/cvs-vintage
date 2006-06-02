@@ -21,8 +21,8 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.SortingStateObservable;
-import org.columba.mail.gui.table.TableController;
 
 
 /**
@@ -56,7 +56,7 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         boolean order = item.getBooleanWithDefault("order", true);
 
-        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
+        ITableController tableController = ((ITableController)((TableViewOwner) getMediator()).getTableController());
 
         tableController.setSortingColumn(column);
         tableController.setSortingOrder(order);
@@ -71,7 +71,7 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
  */
     public void saveOptionsToXml(IMailbox folder) {
         XmlElement sorting = getConfigNode(folder);
-        TableController tableController =((TableController)((TableViewOwner) getMediator()).getTableController());
+        ITableController tableController =((ITableController)((TableViewOwner) getMediator()).getTableController());
 
         String column = tableController.getSortingColumn();
         boolean order = tableController.getSortingOrder();

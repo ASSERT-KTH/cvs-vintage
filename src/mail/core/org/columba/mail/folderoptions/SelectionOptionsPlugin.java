@@ -24,9 +24,7 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.IMessageNode;
-import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.TableView;
-import org.columba.mail.gui.table.model.HeaderTableModel;
+import org.columba.mail.gui.table.ITableController;
 
 /**
  * Handles selecting message after folder selection changes.
@@ -56,7 +54,8 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(IMailbox)
 	 */
 	public void saveOptionsToXml(IMailbox folder) {
-		TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
+		ITableController tableController = ((ITableController) ((TableViewOwner) getMediator())
+				.getTableController());
 
 		if (tableController.getSelectedNodes() == null)
 			return;
@@ -78,24 +77,26 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 		XmlElement parent = getConfigNode(folder);
 		IDefaultItem item = new DefaultItem(parent);
 
-		TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
+		ITableController tableController = ((ITableController) ((TableViewOwner) getMediator())
+				.getTableController());
 
-		TableView view = tableController.getView();
+		// TableView view = tableController.getView();
 
 		// should we re-use the last remembered selection?
-		boolean remember = item.getBooleanWithDefault("remember_last_selection", true);
+		boolean remember = item.getBooleanWithDefault(
+				"remember_last_selection", true);
 
 		// sorting order
-		boolean ascending = tableController.getTableModelSorter()
-				.getSortingOrder();
+		boolean ascending = tableController.getSortingOrder();
 
 		// row count
-		int row = view.getTree().getRowCount();
+		int row = tableController.getRowCount();
 
 		// row count == 0 --> empty table
 		if (row == 0) {
-			//  clear message viewer
-			///tableController.valueChanged(new ListSelectionEvent(this,-1,-1,false));
+			// clear message viewer
+			// /tableController.valueChanged(new
+			// ListSelectionEvent(this,-1,-1,false));
 			tableController.clearSelection();
 			return;
 		}
@@ -133,7 +134,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 			Object uid = lastSelUids[0];
 
 			// this message doesn't exit in this folder anymore
-			if (((HeaderTableModel)tableController.getHeaderTableModel()).getMessageNode(uid) == null) {
+			if (tableController.getMessageNode(uid) == null) {
 
 				if (ascending) {
 					uid = tableController.selectLastRow();

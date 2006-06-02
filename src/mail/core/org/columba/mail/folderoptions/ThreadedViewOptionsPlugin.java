@@ -21,8 +21,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.TableController;
-
+import org.columba.mail.gui.table.ITableController;
 
 /**
  * Handles enabled/disabled state of threaded-view.
@@ -30,49 +29,52 @@ import org.columba.mail.gui.table.TableController;
  * @author fdietz
  */
 public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
-    /**
- * Constructor
- * 
- * @param mediator      mail framemediator
- */
-    public ThreadedViewOptionsPlugin(MailFrameMediator mediator) {
-        super("threadedview", "ThreadedViewOptions", mediator);
-    }
+	/**
+	 * Constructor
+	 * 
+	 * @param mediator
+	 *            mail framemediator
+	 */
+	public ThreadedViewOptionsPlugin(MailFrameMediator mediator) {
+		super("threadedview", "ThreadedViewOptions", mediator);
+	}
 
-    /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(IMailbox)
- */
-    public void saveOptionsToXml(IMailbox folder) {
-        XmlElement parent = getConfigNode(folder);
-        IDefaultItem item = new DefaultItem(parent);
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(IMailbox)
+	 */
+	public void saveOptionsToXml(IMailbox folder) {
+		XmlElement parent = getConfigNode(folder);
+		IDefaultItem item = new DefaultItem(parent);
 
-        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
+		ITableController tableController = ((ITableController) ((TableViewOwner) getMediator())
+				.getTableController());
 
-        item.setBoolean("enabled",
-            tableController.getTableModelThreadedView().isEnabled());
-    }
+		item.setBoolean("enabled", tableController.isThreadedViewEnabled());
+	}
 
-    /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(IMailbox)
- */
-    public void loadOptionsFromXml(IMailbox folder) {
-        XmlElement parent = getConfigNode(folder);
-        IDefaultItem item = new DefaultItem(parent);
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(IMailbox)
+	 */
+	public void loadOptionsFromXml(IMailbox folder) {
+		XmlElement parent = getConfigNode(folder);
+		IDefaultItem item = new DefaultItem(parent);
 
-        boolean enableThreadedView = item.getBooleanWithDefault("enabled", false);
+		boolean enableThreadedView = item.getBooleanWithDefault("enabled",
+				false);
 
-        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
+		ITableController tableController = ((ITableController) ((TableViewOwner) getMediator())
+				.getTableController());
 
-        tableController.enableThreadedView(enableThreadedView, false);
-    }
+		tableController.enableThreadedView(enableThreadedView, false);
+	}
 
-    /**
-   * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-   */
-    public XmlElement createDefaultElement(boolean global) {
-        XmlElement parent = super.createDefaultElement(global);
-        parent.addAttribute("enabled", "false");
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+	 */
+	public XmlElement createDefaultElement(boolean global) {
+		XmlElement parent = super.createDefaultElement(global);
+		parent.addAttribute("enabled", "false");
 
-        return parent;
-    }
+		return parent;
+	}
 }
