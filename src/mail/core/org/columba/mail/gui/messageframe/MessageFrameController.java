@@ -172,7 +172,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	 */
 	public void loadDefaultPosition() {
 
-		super.dock(messageViewerDockable, IDock.REGION.CENTER);
+		//super.dock(messageViewerDockable, IDock.REGION.CENTER);
 
 	}
 
