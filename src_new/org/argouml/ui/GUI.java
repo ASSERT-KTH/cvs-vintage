@@ -1,4 +1,4 @@
-// $Id: GUI.java,v 1.6 2006/06/02 18:28:25 mvw Exp $
+// $Id: GUI.java,v 1.7 2006/06/03 06:28:07 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,6 +64,13 @@ public final class GUI {
      */
     private GUI() {
         // Add GUI-internal stuff.
+        // GUI-internal stuff is panes, tabs, menu items that are
+        // part of the GUI subsystem i.e. a class in the
+        // org.argouml.ui-package.
+        // Things that are not part of the GUI, like everything that
+        // has any knowledge about UML, Diagrams, Code Generation, 
+        // Reverse Engineering, creates and registers itself
+        // when that subsystem or module is loaded.
         addSettingsTab(new SettingsTabPreferences());
         addSettingsTab(new SettingsTabEnvironment());
         addSettingsTab(new SettingsTabUser());
