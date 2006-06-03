@@ -7,7 +7,7 @@
  <information>
    <title>Columba</title>
    <vendor>Free Software (MPL1.1)</vendor>
-   <homepage href="http://columba.sourceforge.net/"/>
+   <homepage href="http://columbamail.org/"/>
    <description>Columba Email Client</description>
    <description kind="short">Java Email Client</description>
    <icon href="images/icon64.gif"/>
