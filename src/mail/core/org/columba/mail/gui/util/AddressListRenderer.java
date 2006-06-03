@@ -89,7 +89,8 @@ public class AddressListRenderer {
 	 */
 	private static String createAddressHTMLString(Address address) {
 		StringBuffer result = new StringBuffer();
-		result.append("<html><A HREF=\"mailto:");
+		//tstich: Someone added <html> tags here. This is not the right place!
+		result.append("<A HREF=\"mailto:");
 		if (address.getDisplayName().length() != 0) {
 			result.append(address.getDisplayName());
 			result.append(" ");
@@ -109,7 +110,7 @@ public class AddressListRenderer {
 		} else
 			result.append(address.getShortAddress());
 
-		result.append("</A></html>");
+		result.append("</A>");
 
 		return result.toString();
 	}
