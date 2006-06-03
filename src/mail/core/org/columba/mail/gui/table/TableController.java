@@ -695,8 +695,6 @@ public class TableController implements ListSelectionListener,
 
 		private ImageIcon descending = new DescendingIcon();
 
-		private TableController controller;
-
 		/**
 		 *  
 		 */
@@ -755,7 +753,7 @@ public class TableController implements ListSelectionListener,
 					}
 				});
 
-				String columnName = controller.getHeaderTableModel().getColumnName(
+				String columnName = getHeaderTableModel().getColumnName(
 						column);
 
 				// notify the model to sort the table
@@ -768,13 +766,13 @@ public class TableController implements ListSelectionListener,
 				// notify observers (sorting state submenu)
 				observable.setSortingState(columnName, order);
 
-				controller.setSortingColumn(columnName);
-				controller.setSortingOrder(order);
-				controller.getHeaderTableModel().update();
+				setSortingColumn(columnName);
+				setSortingOrder(order);
+				getHeaderTableModel().update();
 				
 				// make selected row visible again
 				if (uid != null)
-					controller.setSelected(new Object[] { uid });
+					setSelected(new Object[] { uid });
 
 			}
 		}
