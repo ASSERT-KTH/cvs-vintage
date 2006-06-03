@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,11 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
-import org.columba.api.backgroundtask.IBackgroundTaskManager;
 import org.columba.api.plugin.IPluginManager;
-import org.columba.api.shutdown.IShutdownManager;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.base.OSInfo;
 import org.columba.core.component.ComponentManager;
 import org.columba.core.config.Config;
-import org.columba.core.config.IConfig;
 import org.columba.core.config.SaveConfig;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.base.DebugRepaintManager;
@@ -60,6 +58,8 @@ import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.StackProfiler;
 import org.columba.core.versioninfo.VersionInfo;
 import org.frapuccino.swing.ActiveWindowTracker;
+
+import sun.misc.URLClassPath;
 
 public class Bootstrap {
 
@@ -353,7 +353,7 @@ public class Bootstrap {
 	 * 
 	 * @throws Exception
 	 */
-	private static void setLibraryPath() throws Exception {
+	private void setLibraryPath() throws Exception {
 		String libDir;
 		if (OSInfo.isAMD64Bit()) {
 			libDir = "amd64";
@@ -392,7 +392,7 @@ public class Bootstrap {
 	 * 
 	 * @throws Exception
 	 */
-	private static void addNativeJarsToClasspath() throws Exception {
+	private void addNativeJarsToClasspath() throws Exception {
 		File nativeDir;
 
 		String libDir;
@@ -423,19 +423,46 @@ public class Bootstrap {
 		if (nativeJars == null)
 			return;
 
+		// @author: fdietz
+		//
+		// The following line is not working - just don't know why 
+		// Main.mainClassLoader.addURLs((URL[]) urlList.toArray(new URL[0]));
+		//
+		// WORKAROUND:
+		//
+		// Modify the system class loader instead - horribly! But it works!
+		
+		// Get the current classpath from the sysloader
+		// through reflection
+		URLClassLoader sysloader = (URLClassLoader) ClassLoader
+				.getSystemClassLoader();
+
+		Field ucp = URLClassLoader.class.getDeclaredField("ucp");
+		ucp.setAccessible(true);
+		URLClassPath currentCP = (URLClassPath) ucp.get(sysloader);
+		URL[] currentURLs = currentCP.getURLs();
+
 		// add all native jars
 		List<URL> urlList = new ArrayList<URL>();
 		for (int i = 0; i < nativeJars.length; i++) {
 			urlList.add(nativeJars[i].toURL());
 		}
 
-		Main.mainClassLoader.addURLs((URL[]) urlList.toArray(new URL[0]));
+		// add the old classpath
+		for (int i = 0; i < currentURLs.length; i++) {
+			urlList.add(currentURLs[i]);
+		}
+
+		// replace with the modified classpath
+		ucp.set(sysloader,
+				new URLClassPath((URL[]) urlList.toArray(new URL[0])));
+
 	}
 
 	/**
 	 * 
 	 */
-	private static void initPlatformServices() {
+	private void initPlatformServices() {
 
 		// Initilise system dependant stuff
 		ColumbaDesktop.getInstance().initActiveDesktop();
