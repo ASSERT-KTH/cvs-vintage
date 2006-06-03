@@ -342,8 +342,8 @@
                 <include name="${lib.bsh}"/>
                 <include name="${manual.jar}"/>
                 <include name="${lib.flexdoc}"/>
-                <include name="${native.linux}/lib/*.jar"/>
-                <include name="${native.linux}/lib/*.so"/>
+                <include name="${native.linux}/**/*.jar"/>
+                <include name="${native.linux}/**/*.so"/>
             </tarfileset>
             <tarfileset dir="${basedir}" mode="755" prefix="columba-unix-${version}-bin">
                 <include name="run.sh"/>
