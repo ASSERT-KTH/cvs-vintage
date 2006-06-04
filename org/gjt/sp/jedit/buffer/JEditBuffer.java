@@ -28,10 +28,7 @@ import gnu.regexp.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.*;
-import java.net.Socket;
 import java.util.*;
 import org.gjt.sp.jedit.Debug;
 import org.gjt.sp.jedit.MiscUtilities;
@@ -59,7 +56,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: JEditBuffer.java,v 1.3 2006/06/02 06:50:57 kpouer Exp $
+ * @version $Id: JEditBuffer.java,v 1.4 2006/06/04 11:48:42 kpouer Exp $
  *
  * @since jEdit 4.3pre3
  */
