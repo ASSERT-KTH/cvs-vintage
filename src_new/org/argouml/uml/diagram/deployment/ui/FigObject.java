@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.43 2006/03/26 21:05:33 mvw Exp $
+// $Id: FigObject.java,v 1.44 2006/06/04 13:54:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public class FigObject extends FigNodeModelElement {
         if (Model.getFacade().isAObject(own)) {
             notationProvider =
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                    NotationProviderFactory2.TYPE_OBJECT, this, own);
+                    NotationProviderFactory2.TYPE_OBJECT, own);
         }
     }
 

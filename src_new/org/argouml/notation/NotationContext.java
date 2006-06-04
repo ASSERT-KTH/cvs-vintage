@@ -1,4 +1,4 @@
-// $Id: NotationContext.java,v 1.2 2005/11/13 00:19:00 linus Exp $
+// $Id: NotationContext.java,v 1.3 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,9 @@ package org.argouml.notation;
  *
  * @author Thierry Lach
  * @since 0.9.4
+ * @deprecated by MVW in V0.21.3. Replaced by 
+ * {@link org.argouml.kernel.ProjectSettings#getNotationName()}
+ * See issue 3140.
  */
 public interface NotationContext {
     /**

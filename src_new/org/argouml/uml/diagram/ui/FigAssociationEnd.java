@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.23 2006/05/23 21:29:57 tfmorris Exp $
+// $Id: FigAssociationEnd.java,v 1.24 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,7 +135,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
             notationProviderSrcRole =
                 NotationProviderFactory2.getInstance().getNotationProvider(
                         NotationProviderFactory2.TYPE_ASSOCIATION_END_NAME, 
-                        this, own);
+                        own);
         }
     }
 

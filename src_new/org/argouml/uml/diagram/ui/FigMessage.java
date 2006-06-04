@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.48 2006/04/29 21:34:18 mvw Exp $
+// $Id: FigMessage.java,v 1.49 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,7 @@ public class FigMessage extends FigNodeModelElement {
         if (Model.getFacade().isAMessage(own)) {
             notationProvider =
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                    NotationProviderFactory2.TYPE_MESSAGE, this, own);
+                    NotationProviderFactory2.TYPE_MESSAGE, own);
         }
     }
 

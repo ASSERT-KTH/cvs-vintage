@@ -1,4 +1,4 @@
-// $Id: ProjectSettings.java,v 1.3 2006/06/04 07:08:00 mvw Exp $
+// $Id: ProjectSettings.java,v 1.4 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,6 @@ import org.argouml.notation.NotationName;
 public class ProjectSettings {
 
     /* The notation settings with project scope: */
-    private boolean allowNotations;
     private String notationLanguage;
     private boolean useGuillemots;
     private boolean showVisibility;
@@ -68,9 +67,8 @@ public class ProjectSettings {
     ProjectSettings() {
         super();
         
-        allowNotations = Configuration.getBoolean(
-                Notation.KEY_UML_NOTATION_ONLY);
-        notationLanguage = Notation.getConfigueredNotation().getName();
+        notationLanguage = 
+            Notation.getConfigueredNotation().getConfigurationValue();
         useGuillemots = Configuration.getBoolean(
                 Notation.KEY_USE_GUILLEMOTS, false);
         showVisibility = Configuration.getBoolean(
@@ -90,39 +88,6 @@ public class ProjectSettings {
                 Notation.KEY_SHOW_STEREOTYPES);
         defaultShadowWidth = Configuration.getInteger(
                 Notation.KEY_DEFAULT_SHADOW_WIDTH, 1);
-    }
-
-
-    /**
-     * Used by "argo.tee".
-     * 
-     * @return Returns "true" if we allow notations.
-     */
-    public String getAllowNotations() {
-        return Boolean.toString(allowNotations);
-    }
-
-    /**
-     * @return Returns <code>true</code> if we allow notations.
-     */
-    public boolean getAllowNotationsValue() {
-        return allowNotations;
-    }
-
-    /**
-     * @param allowem <code>true</code> if notations are to be allowed.
-     */
-    public void setAllowNotations(String allowem) {
-        setAllowNotations(Boolean.valueOf(allowem).booleanValue());
-    }
-
-    /**
-     * @param allowem <code>true</code> if properties are to be shown.
-     */
-    public void setAllowNotations(boolean allowem) {
-        boolean oldValue = allowNotations;
-        allowNotations = allowem;
-        fireEvent(Notation.KEY_UML_NOTATION_ONLY, oldValue, allowNotations);
     }
 
 

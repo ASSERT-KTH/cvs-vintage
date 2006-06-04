@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.59 2006/05/06 19:38:27 mvw Exp $
+// $Id: FigTransition.java,v 1.60 2006/06/04 13:54:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,7 +122,7 @@ public class FigTransition extends FigEdgeModelElement {
         if (Model.getFacade().isATransition(own)) {
             notationProvider =
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                        NotationProviderFactory2.TYPE_TRANSITION, this, own);
+                        NotationProviderFactory2.TYPE_TRANSITION, own);
         }
     }
 

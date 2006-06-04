@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.5 2006/06/02 18:28:26 mvw Exp $
+// $Id: ArgoParser.java,v 1.6 2006/06/04 13:54:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,7 +153,10 @@ public class ArgoParser extends SAXParserBase {
             handleMember(e);
             break;
         case ArgoTokenTable.TOKEN_AUTHORNAME:
-            handleAuthorname(e);
+            handleAuthorName(e);
+            break;
+        case ArgoTokenTable.TOKEN_AUTHOREMAIL:
+            handleAuthorEmail(e);
             break;
         case ArgoTokenTable.TOKEN_VERSION:
             handleVersion(e);
@@ -166,9 +169,6 @@ public class ArgoParser extends SAXParserBase {
             break;
         case ArgoTokenTable.TOKEN_HISTORYFILE:
             handleHistoryfile(e);
-            break;
-        case ArgoTokenTable.TOKEN_ALLOWNOTATIONS:
-            handleAllowNotations(e);
             break;
         case ArgoTokenTable.TOKEN_NOTATIONLANGUAGE:
             handleNotationLanguage(e);
@@ -235,9 +235,17 @@ public class ArgoParser extends SAXParserBase {
     /**
      * @param e the element
      */
-    protected void handleAuthorname(XMLElement e) {
+    protected void handleAuthorName(XMLElement e) {
         String authorname = e.getText().trim();
         project.setAuthorname(authorname);
+    }
+
+    /**
+     * @param e the element
+     */
+    protected void handleAuthorEmail(XMLElement e) {
+        String authoremail = e.getText().trim();
+        project.setAuthoremail(authoremail);
     }
 
     /**
@@ -289,14 +297,6 @@ public class ArgoParser extends SAXParserBase {
         }
         String historyfile = e.getAttribute("name").trim();
         project.setHistoryFile(historyfile);
-    }
-
-    /**
-     * @param e the element
-     */
-    protected void handleAllowNotations(XMLElement e) {
-        String an = e.getText().trim();
-        ps.setAllowNotations(an);
     }
     
     /**

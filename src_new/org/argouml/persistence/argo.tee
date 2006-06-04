@@ -11,7 +11,7 @@
 <!-- "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.tee,v 1.6 2006/06/02 18:28:26 mvw Exp $ -->
+<!-- $Id: argo.tee,v 1.7 2006/06/04 13:54:53 mvw Exp $ -->
 
 
 <TemplateSet>
@@ -32,7 +32,6 @@
     </description>
   </documentation>
   <settings>
-	<allownotations><ocl>self.projectSettings.allowNotations</ocl></allownotations>
     <notationlanguage><ocl>self.projectSettings.notationLanguage</ocl></notationlanguage>
     <useguillemots><ocl>self.projectSettings.useGuillemots</ocl></useguillemots>
     <showvisibility><ocl>self.projectSettings.showVisibility</ocl></showvisibility>

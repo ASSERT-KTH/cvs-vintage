@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.56 2006/04/13 19:49:09 mvw Exp $
+// $Id: FigClassifierRole.java,v 1.57 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -154,7 +154,7 @@ public class FigClassifierRole extends FigNodeModelElement {
         if (Model.getFacade().isAClassifierRole(own)) {
             notationProvider =
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                    NotationProviderFactory2.TYPE_CLASSIFIERROLE, this, own);
+                    NotationProviderFactory2.TYPE_CLASSIFIERROLE, own);
         }
     }
 

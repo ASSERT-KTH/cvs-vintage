@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.86 2006/05/01 13:25:11 mvw Exp $
+// $Id: FigUseCase.java,v 1.87 2006/06/04 13:54:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1241,9 +1241,10 @@ public class FigUseCase extends FigNodeModelElement
                 // one. We set the bounds, but they will be reset later.
                 if (epFig == null) {
                     NotationProvider4 np = 
-                        NotationProviderFactory2.getInstance().getNotationProvider(
-                            NotationProviderFactory2.TYPE_EXTENSION_POINT,
-                            this, ep);
+                        NotationProviderFactory2.getInstance()
+                            .getNotationProvider(
+                                NotationProviderFactory2.TYPE_EXTENSION_POINT, 
+                                ep);
 
                     epFig = new CompartmentFigText(
                             xpos,

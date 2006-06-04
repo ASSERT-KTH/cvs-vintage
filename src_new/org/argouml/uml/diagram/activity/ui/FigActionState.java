@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.42 2006/04/01 21:06:38 mvw Exp $
+// $Id: FigActionState.java,v 1.43 2006/06/04 13:54:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +120,7 @@ public class FigActionState extends FigStateVertex {
         if (Model.getFacade().isAActionState(own)) {
             notationProvider =
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                    NotationProviderFactory2.TYPE_ACTIONSTATE, this, own);
+                    NotationProviderFactory2.TYPE_ACTIONSTATE, own);
         }
     }
 

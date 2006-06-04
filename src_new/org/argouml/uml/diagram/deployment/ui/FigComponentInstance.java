@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.49 2006/03/26 16:31:50 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.50 2006/06/04 13:54:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,7 +118,7 @@ public class FigComponentInstance extends FigNodeModelElement {
         if (Model.getFacade().isAComponentInstance(own)) {
             notationProvider =
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                    NotationProviderFactory2.TYPE_COMPONENTINSTANCE, this, own);
+                    NotationProviderFactory2.TYPE_COMPONENTINSTANCE, own);
         }
     }
 

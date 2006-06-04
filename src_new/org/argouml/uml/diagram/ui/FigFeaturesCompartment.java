@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.28 2006/05/25 20:54:23 mvw Exp $
+// $Id: FigFeaturesCompartment.java,v 1.29 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,9 +190,7 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
                 
                 NotationProvider4 np = 
                     NotationProviderFactory2.getInstance()
-                        .getNotationProvider(
-                                getNotationType(),
-                                (NotationContext) getGroup(), umlObject);
+                        .getNotationProvider(getNotationType(), umlObject);
 
                 // If we don't have a fig for this feature, we'll need to add
                 // one. We set the bounds, but they will be reset later.

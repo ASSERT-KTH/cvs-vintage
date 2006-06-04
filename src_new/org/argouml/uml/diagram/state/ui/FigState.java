@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.43 2006/03/22 21:10:52 mvw Exp $
+// $Id: FigState.java,v 1.44 2006/06/04 13:54:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +121,7 @@ public abstract class FigState extends FigStateVertex {
         if (Model.getFacade().isAState(own)) {
             notationProviderBody =
                 NotationProviderFactory2.getInstance().getNotationProvider(
-                        NotationProviderFactory2.TYPE_STATEBODY, this, own);
+                        NotationProviderFactory2.TYPE_STATEBODY, own);
         }
     }
 

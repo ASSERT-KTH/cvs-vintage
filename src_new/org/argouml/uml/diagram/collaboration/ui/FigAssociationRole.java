@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.33 2006/05/11 20:12:00 mvw Exp $
+// $Id: FigAssociationRole.java,v 1.34 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,16 +87,16 @@ public class FigAssociationRole extends FigAssociation {
                 notationProviderSrcRole =
                     NotationProviderFactory2.getInstance().getNotationProvider(
                             NotationProviderFactory2.TYPE_ASSOCIATION_END_NAME, 
-                            this, ae0);
+                            ae0);
                 notationProviderDestRole =
                     NotationProviderFactory2.getInstance().getNotationProvider(
                             NotationProviderFactory2.TYPE_ASSOCIATION_END_NAME, 
-                            this, ae1);
+                            ae1);
             }
             notationProviderName =
                 NotationProviderFactory2.getInstance().getNotationProvider(
                         NotationProviderFactory2.TYPE_ASSOCIATION_ROLE, 
-                        this, own);
+                        own);
         }
     }
 

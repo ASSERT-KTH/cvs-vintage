@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.14 2006/06/02 18:28:25 mvw Exp $
+// $Id: Notation.java,v 1.15 2006/06/04 13:54:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,12 +90,6 @@ public final class Notation implements PropertyChangeListener {
         Configuration.makeKey("notation", "guillemots");
 
     /**
-     * Indicates if the user only wants to see UML notation.
-     */
-    public static final ConfigurationKey KEY_UML_NOTATION_ONLY =
-        Configuration.makeKey("notation", "only", "uml");
-
-    /**
      * Indicates if the user wants to see visibility signs (public,
      * private, protected or # + -).
      */
@@ -147,7 +141,6 @@ public final class Notation implements PropertyChangeListener {
     private Notation() {
         Configuration.addListener(KEY_USE_GUILLEMOTS, this);
         Configuration.addListener(KEY_DEFAULT_NOTATION, this);
-        Configuration.addListener(KEY_UML_NOTATION_ONLY, this);
         Configuration.addListener(KEY_SHOW_TYPES, this);
         Configuration.addListener(KEY_SHOW_MULTIPLICITY, this);
         Configuration.addListener(KEY_SHOW_PROPERTIES, this);
@@ -164,7 +157,6 @@ public final class Notation implements PropertyChangeListener {
     protected void finalize() {
         Configuration.removeListener(KEY_DEFAULT_NOTATION, this);
         Configuration.removeListener(KEY_USE_GUILLEMOTS, this);
-        Configuration.removeListener(KEY_UML_NOTATION_ONLY, this);
         Configuration.removeListener(KEY_SHOW_TYPES, this);
         Configuration.removeListener(KEY_SHOW_MULTIPLICITY, this);
         Configuration.removeListener(KEY_SHOW_PROPERTIES, this);
@@ -227,13 +219,11 @@ public final class Notation implements PropertyChangeListener {
     /**
      * @param context the notation context
      * @return the notation name
+     * @deprecated by MVW in V0.21.3. Replaced by 
+     * {@link org.argouml.kernel.ProjectSettings#getNotationName()}
+     * See issue 3140.
      */
     public static NotationName getNotation(NotationContext context) {
-        // UML is the default language
-        if (Configuration.getBoolean(Notation.KEY_UML_NOTATION_ONLY, false)) {
-            return notationArgo;
-        }
-        // Otherwise we use the given context
         return context.getContextNotation();
     }
 
