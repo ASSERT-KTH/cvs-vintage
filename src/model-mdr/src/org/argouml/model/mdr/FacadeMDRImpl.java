@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.23 2006/05/31 16:18:58 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.24 2006/06/04 17:02:38 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3857,17 +3857,21 @@ class FacadeMDRImpl implements Facade {
      * @see org.argouml.model.Facade#getOwner(java.lang.Object)
      */
     public Object getOwner(Object handle) {
-        if ((handle instanceof Attribute)
-                && ((Attribute) handle).getAssociationEnd() != null) {
-            return ((Attribute) handle).getAssociationEnd();
+        try {
+            if ((handle instanceof Attribute)
+                    && ((Attribute) handle).getAssociationEnd() != null) {
+                return ((Attribute) handle).getAssociationEnd();
+            }
+            if (handle instanceof Feature) {
+                return ((Feature) handle).getOwner();
+            }
+            if (handle instanceof TagDefinition) {
+                return ((TagDefinition) handle).getOwner();
+            }
+            return illegalArgumentObject(handle);
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
         }
-        if (handle instanceof Feature) {
-            return ((Feature) handle).getOwner();
-        }
-        if (handle instanceof TagDefinition) {
-            return ((TagDefinition) handle).getOwner();
-        }
-        return illegalArgumentObject(handle);
     }
 
     /**

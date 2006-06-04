@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.41 2006/04/24 06:36:35 tfmorris Exp $
+// $Id: Facade.java,v 1.42 2006/06/04 17:02:21 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2624,6 +2624,8 @@ public interface Facade {
      *
      * @param handle is the feature
      * @return classifier
+     * @throws InvalidElementException if the supplied feature has been removed
+     * from the repository.
      */
     Object getOwner(Object handle);
 

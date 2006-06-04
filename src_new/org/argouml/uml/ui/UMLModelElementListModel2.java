@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.47 2006/06/04 15:41:46 bobtarling Exp $
+// $Id: UMLModelElementListModel2.java,v 1.48 2006/06/04 17:02:43 bobtarling Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,18 +126,8 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
                 // empty.
                 try {
                     buildModelList();
-                } catch (Exception exception) {
-                    // TODO: Bob says - Until recently this was catching a
-                    // InvalidElementException. I think that was correct.
-                    // The model implementation should be catching any
-                    // InvalidObjectExceptions and converting to
-                    // InvalidElementException.
-                    // Is the logging level here correct? Surely the target
-                    // manager should be listing for removed elements and deleting
-                    // from its list. If this is not happening we need to know
-                    // more urgently.
-                    /* need to catch javax.jmi.reflect.InvalidObjectException */
-                    LOG.warn("buildModelList threw exception for target " 
+                } catch (InvalidElementException exception) {
+                    LOG.error("buildModelList threw exception for target " 
                             + getTarget(),
                             exception);
                 } finally {
