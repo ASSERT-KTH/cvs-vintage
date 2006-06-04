@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.19 2006/01/13 07:59:44 tfmorris Exp $
+// $Id: PersistenceManager.java,v 1.20 2006/06/04 18:49:53 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,12 +136,6 @@ public final class PersistenceManager {
     public AbstractFilePersister getPersisterFromFileName(String name) {
         if (defaultPersister.isFileExtensionApplicable(name)) {
             return defaultPersister;
-        }
-        if (xmiPersister.isFileExtensionApplicable(name)) {
-            return xmiPersister;
-        }
-        if (zipPersister.isFileExtensionApplicable(name)) {
-            return zipPersister;
         }
         Iterator iter = otherPersisters.iterator();
         while (iter.hasNext()) {
