@@ -48,9 +48,12 @@ import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.IMailboxInfo;
+import org.columba.mail.folder.event.IFolderEvent;
+import org.columba.mail.folder.event.IFolderListener;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.filtertoolbar.FilterToolbar;
 import org.columba.mail.gui.message.action.ViewMessageAction;
@@ -80,7 +83,7 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
-		implements TreeViewOwner, TableViewOwner, ISelectionListener {
+		implements TreeViewOwner, TableViewOwner, ISelectionListener, IFolderListener {
 
 	public TreeController treeController;
 
@@ -98,6 +101,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 	private JPanel messagePanel;
 
+	private IMailFolder currentFolder;
+	
 	/**
 	 * true, if the messagelist table selection event was triggered by a popup
 	 * event. False, otherwise.
@@ -295,6 +300,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		return MailResourceLoader.getString(sPath, sName, sID);
 	}
 
+	
+	
 	/**
 	 * @see org.columba.api.gui.frame.IFrameMediator#getContentPane()
 	 */
@@ -316,27 +323,18 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 				// view headerlist in message list viewer
 				new ViewHeaderListAction(this).actionPerformed(null);
 
-				// update frame title
-				if (selectedFolders.length == 1 && selectedFolders[0] != null) {
-					fireTitleChanged(selectedFolders[0].getName());
-
-					// update message list view title
-					messageListDockable.setTitle(selectedFolders[0].getName());
-
-					// simply demonstration of how to change the docking title
-					if (selectedFolders[0] instanceof IMailbox) {
-						IMailboxInfo info = ((IMailbox) selectedFolders[0])
-								.getMessageFolderInfo();
-						StringBuffer buf = new StringBuffer();
-						buf.append("Total Count: " + info.getExists());
-						// buf.append("Unread: " + info.getUnseen());
-						buf.append("    Recent: " + info.getRecent());
-						folderTreeDockable.setTitle(buf.toString());
-					} else
-						folderTreeDockable.setTitle(selectedFolders[0].getName());
-				} else {
-					fireTitleChanged("");
+				// Unregister/register as Folder listener
+				if( currentFolder != null) {
+					currentFolder.removeFolderListener(this);
+					currentFolder = null;
 				}
+				if(selectedFolders.length == 1 && selectedFolders[0] != null) {
+					selectedFolders[0].addFolderListener(this);
+					currentFolder = selectedFolders[0];
+				}
+				
+				// update frame title
+				updateTreeDockableTitle();
 			}
 
 			isTreePopupEvent = false;
@@ -350,6 +348,28 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		} else
 			throw new IllegalArgumentException(
 					"unknown selection changed event");
+	}
+
+	private void updateTreeDockableTitle() {
+		if (currentFolder != null) {
+			fireTitleChanged(currentFolder.getName());
+
+			// update message list view title
+			messageListDockable.setTitle(currentFolder.getName());
+
+			// simply demonstration of how to change the docking title
+			if (currentFolder instanceof IMailbox) {
+				IMailboxInfo info = ((IMailbox) currentFolder)
+						.getMessageFolderInfo();
+				StringBuffer buf = new StringBuffer();
+				buf.append("Total: " + info.getExists());
+				buf.append(" Recent: " + info.getRecent());
+				folderTreeDockable.setTitle(buf.toString());
+			} else
+				folderTreeDockable.setTitle(currentFolder.getName());
+		} else {
+			fireTitleChanged("");
+		}
 	}
 
 	/**
@@ -606,6 +626,25 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 */
 	public IDockable getMessageViewerDockable() {
 		return messageViewerDockable;
+	}
+
+	public void messageAdded(IFolderEvent e) {
+	}
+
+	public void messageRemoved(IFolderEvent e) {
+	}
+
+	public void messageFlagChanged(IFolderEvent e) {
+	}
+
+	public void folderPropertyChanged(IFolderEvent e) {
+		updateTreeDockableTitle();		
+	}
+
+	public void folderAdded(IFolderEvent e) {
+	}
+
+	public void folderRemoved(IFolderEvent e) {
 	}
 
 }
