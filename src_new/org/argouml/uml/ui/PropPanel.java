@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.138 2006/04/25 20:57:27 mvw Exp $
+// $Id: PropPanel.java,v 1.139 2006/06/04 00:43:13 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ import org.tigris.toolbar.ToolBar;
  * column of "fields" which are laid out indepently from the other panels.
  * <p>
  * The Properties panels for UML Model Elements are structured in an inheritance
- * hierarchy that matches the UML 1.3 metamodel.
+ * hierarchy that matches the UML metamodel.
  */
 public abstract class PropPanel extends AbstractArgoJPanel implements
         TabModelTarget, UMLUserInterfaceContainer {
