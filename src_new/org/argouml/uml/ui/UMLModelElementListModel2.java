@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.46 2006/06/04 14:26:21 bobtarling Exp $
+// $Id: UMLModelElementListModel2.java,v 1.47 2006/06/04 15:41:46 bobtarling Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,9 +137,9 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
                     // from its list. If this is not happening we need to know
                     // more urgently.
                     /* need to catch javax.jmi.reflect.InvalidObjectException */
-                    LOG.debug("buildModelList threw exception for target " 
-                            + getTarget()
-                            + exception.getStackTrace());
+                    LOG.warn("buildModelList threw exception for target " 
+                            + getTarget(),
+                            exception);
                 } finally {
                     buildingModel = false;
                 }
