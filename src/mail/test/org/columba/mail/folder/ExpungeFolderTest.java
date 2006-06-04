@@ -19,6 +19,7 @@ package org.columba.mail.folder;
 
 import java.io.ByteArrayInputStream;
 
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.ristretto.message.Flags;
 
 /**
@@ -86,14 +87,9 @@ public class ExpungeFolderTest extends AbstractFolderTst {
                 .getByteArrayInputStream(input);
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
-        //      get flags of message
-        Flags oldFlags = getSourceFolder().getFlags(uid);
-        // set flags
-        oldFlags.setSeen(false);
-        oldFlags.setRecent(true);
-        oldFlags.setFlagged(true);
-        oldFlags.setDeleted(true);
 
+        getSourceFolder().markMessage(new Object[] {uid}, MarkMessageCommand.MARK_AS_EXPUNGED);
+        
         getSourceFolder().expungeFolder();
 
         Object[] uids = getSourceFolder().getUids();

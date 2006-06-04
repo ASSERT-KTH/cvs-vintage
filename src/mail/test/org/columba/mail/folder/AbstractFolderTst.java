@@ -117,28 +117,24 @@ public class AbstractFolderTst extends TestCase {
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	protected void tearDown() throws Exception {
-		if (folders == null)
-			return;
-
-		for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-			AbstractMessageFolder folder = (AbstractMessageFolder) iterator
-					.next();
-			File f = folder.getDirectoryFile();
-
-			// delete all mails in folder
-			File[] list = f.listFiles();
-
-			for (int i = 0; i < list.length; i++) {
-				list[i].delete();
-			}
-
-			// delete folder
-			f.delete();
-			folder.removeFolder();
-		}
-		new File(FolderTstHelper.homeDirectory + "/folders/").delete();
+		recursiveDelete(new File(FolderTstHelper.homeDirectory + "/folders/"));
 	}
 
+	private void recursiveDelete(File folder) {
+		// delete all files in folder
+		File[] list = folder.listFiles();
+
+		for (int i = 0; i < list.length; i++) {
+			if( list[i].isDirectory() ) {
+				recursiveDelete(list[i]);
+			} else {
+				list[i].delete();				
+			}
+		}
+		
+		folder.delete();
+	}
+	
 	/**
 	 * @return Returns the folder.
 	 */
