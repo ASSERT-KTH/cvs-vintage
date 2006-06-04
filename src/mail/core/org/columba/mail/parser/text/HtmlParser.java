@@ -71,7 +71,7 @@ public final class HtmlParser {
     private static final String PUNC = ".,:;?!\\-";
     private static final String ANY = "\\S";
     private static final String URL_STR = "\\b" + "(" + "(\\w*(:\\S*)?@)?" + PROT
-        + "://" + "[" + ANY + "]+" + ")" + "([).]|\\b)";
+        + "://" + "[" + ANY + "]+" + ")" + "\\b";
 
     /*
              \\b  Start at word boundary
@@ -703,13 +703,17 @@ prot + "://  protocol and ://
 
         int pos = 0;
         while (m.find()) {
-            match = m.group(1);
+            match = m.group();
             
             sb.append(s.substring(pos, m.start()));
+            String temp = "";
+            // Test if there is a trailing html tag
+            if( match.matches(".*<\\w+$") && s.length() > m.end() && s.charAt(m.end()) == '>') {
+            	temp = match.substring(match.lastIndexOf('<'));
+            	match = match.substring(0,match.lastIndexOf('<'));
+            }            
             sb.append("<A HREF=\"" + match + "\">"+ match + "</A>");
-            if( m.groupCount() == 5 && m.group(5) != null) {
-            	sb.append(m.group(5));
-            }
+            sb.append(temp);
             pos = m.end();
         }
 

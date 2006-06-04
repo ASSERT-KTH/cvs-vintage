@@ -38,10 +38,6 @@ public class HtmlParserTest extends TestCase {
         assertEquals("This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A> is net!", result);
     }
 
-    /**
-     * TODO: fix the HtmlParser, which seems to include ")" character
-     *  
-     */
     public void testSubstituteURL3() {
         String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
 
@@ -66,6 +62,15 @@ public class HtmlParserTest extends TestCase {
         assertEquals("This page <A HREF=\"http://test.com/$255\">http://test.com/$255</A>. is net!", result);
     }
     
+    public void testSubstituteURL6() {
+        String input = "http://columbamail.org/jira/browse/CA-117<br>";
+
+        String result = HtmlParser.substituteURL(input);
+     
+        assertEquals(
+                "<A HREF=\"http://columbamail.org/jira/browse/CA-117\">http://columbamail.org/jira/browse/CA-117</A><br>",
+                result);
+    }
     
     public void testRemoveComments1() {
         String input = "<html><body><p><!- this is a text without comments -></p></body></html>";
