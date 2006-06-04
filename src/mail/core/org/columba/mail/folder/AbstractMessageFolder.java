@@ -643,13 +643,13 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		}
 
 		case MarkMessageCommand.MARK_AS_SPAM: {
-			setAttribute(uid, "columba.spam", Boolean.TRUE);
+			header.getAttributes().put("columba.spam", Boolean.TRUE);
 
 			break;
 		}
 
 		case MarkMessageCommand.MARK_AS_NOTSPAM: {
-			setAttribute(uid, "columba.spam", Boolean.FALSE);
+			header.getAttributes().put("columba.spam", Boolean.FALSE);
 
 			break;
 		}
