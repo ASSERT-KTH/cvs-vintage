@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.20 2006/02/19 17:44:44 linus Exp $
+// $Id: FileImportSupport.java,v 1.21 2006/06/04 19:21:16 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ import org.tigris.gef.base.Globals;
  * for other input sources.
  *
  * @author Alexander Lepekhine
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
@@ -84,10 +84,10 @@ public abstract class FileImportSupport implements PluggableImport {
 	    configPanel = new JPanel();
 	    configPanel.setLayout(new GridBagLayout());
 
-	    JLabel attributeLabel =
+	    JLabel attributeLabel1 =
                 new JLabel(
                         Translator.localize("action.import-java-attr-model"));
-	    configPanel.add(attributeLabel,
+	    configPanel.add(attributeLabel1,
 			    new GridBagConstraints(GridBagConstraints.RELATIVE,
 						   GridBagConstraints.RELATIVE,
 						   GridBagConstraints.REMAINDER,
@@ -127,6 +127,19 @@ public abstract class FileImportSupport implements PluggableImport {
 						   GridBagConstraints.NONE,
 						   new Insets(0, 5, 5, 5),
 						   0, 0));
+	    JLabel attributeLabel2 =
+	        new JLabel(
+                    Translator.localize("action.import-java-array-model"));
+	    configPanel.add(attributeLabel2,
+                        new GridBagConstraints(GridBagConstraints.RELATIVE,
+                                               GridBagConstraints.RELATIVE,
+                                               GridBagConstraints.REMAINDER,
+                                               1,
+                                               1.0, 0.0,
+                                               GridBagConstraints.NORTHWEST,
+                                               GridBagConstraints.NONE,
+                                               new Insets(5, 5, 0, 5),
+                                               0, 0));
 
 	    ButtonGroup group2 = new ButtonGroup();
 	    datatype =
