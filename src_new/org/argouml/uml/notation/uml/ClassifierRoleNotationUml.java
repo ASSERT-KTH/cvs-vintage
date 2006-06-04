@@ -1,4 +1,4 @@
-// $Id: ClassifierRoleNotationUml.java,v 1.2 2006/04/03 19:24:50 mvw Exp $
+// $Id: ClassifierRoleNotationUml.java,v 1.3 2006/06/04 19:49:35 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,32 +160,36 @@ public class ClassifierRoleNotationUml extends ClassifierRoleNotation {
                     base = null;
                 } else if (hasColon) {
                     if (base != null) {
+                    	String msg = "parsing.error.classifier.extra-test";
                         throw new ParseException(
-                                "Extra text in Classifier Role", st
-                                        .getTokenIndex());
+                                Translator.localize(msg), 
+                                st.getTokenIndex());
                     }
 
                     base = token;
                 } else if (hasSlash) {
                     if (role != null) {
+                    	String msg = "parsing.error.classifier.extra-test";
                         throw new ParseException(
-                                "Extra text in Classifier Role", st
-                                        .getTokenIndex());
+                                Translator.localize(msg), 
+                                st.getTokenIndex());
                     }
 
                     role = token;
                 } else {
                     if (name != null) {
+                    	String msg = "parsing.error.classifier.extra-test";
                         throw new ParseException(
-                                "Extra text in Classifier Role", st
-                                        .getTokenIndex());
+                                Translator.localize(msg), 
+                                st.getTokenIndex());
                     }
 
                     name = token;
                 }
             }
         } catch (NoSuchElementException nsee) {
-            throw new ParseException("Unexpected end of attribute", s.length());
+            String msg = "parsing.error.classifier.unexpected-end-attribute";
+            throw new ParseException(Translator.localize(msg), s.length());
         }
 
         if (base != null) {

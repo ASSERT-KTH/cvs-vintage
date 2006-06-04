@@ -1,4 +1,4 @@
-// $Id: ObjectFlowStateTypeNotationUml.java,v 1.3 2006/03/23 22:43:09 linus Exp $
+// $Id: ObjectFlowStateTypeNotationUml.java,v 1.4 2006/06/04 19:49:35 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,8 +80,11 @@ public class ObjectFlowStateTypeNotationUml
         if (c != null) {
             Model.getCoreHelper().setType(objectFlowState, c);
         } else {
+        	String msg = "parsing.error.object-flow-type.classifier-not-found";
+            Object[] args = {s};
             throw new ParseException(
-                    "Classifier with name " + s + " not found", 0);
+                    Translator.localize(msg, args), 
+                    0);
         }
         return objectFlowState;
     }

@@ -1,4 +1,4 @@
-// $Id: TransitionNotationUml.java,v 1.6 2006/03/26 10:49:02 mvw Exp $
+// $Id: TransitionNotationUml.java,v 1.7 2006/06/04 19:49:35 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,10 +110,14 @@ public class TransitionNotationUml extends TransitionNotation {
         int b = s.indexOf("]");
         int c = s.indexOf("/");
         if (((a < 0) && (b >= 0)) || ((b < 0) && (a >= 0)) || (b < a)) {
-            throw new ParseException("No matching brackets [] found.", 0);
+            String msg = "parsing.error.transition.no-matching-square-brackets";
+            throw new ParseException(Translator.localize(msg), 
+                    0);
         }
         if ((c >= 0) && (c < b)) {
-            throw new ParseException("Found a ']' after a '/'", 0);
+            String msg = "parsing.error.transition.found-bracket-instead-slash";
+            throw new ParseException(Translator.localize(msg), 
+                    0);
         }
 
         StringTokenizer tokenizer = new StringTokenizer(s, "[/");
@@ -180,8 +184,10 @@ public class TransitionNotationUml extends TransitionNotation {
                     || (trigger.indexOf(")") > 1)) {
                 callEvent = true;
                 if (!trigger.endsWith(")") || !(trigger.indexOf("(") > 0)) {
+                    String msg = 
+                    	"parsing.error.transition.no-matching-brackets"; 
                     throw new ParseException(
-                            "No matching brackets () found.", 0);
+                            Translator.localize(msg), 0);
                 }
             } else {
                 signalEvent = true;
