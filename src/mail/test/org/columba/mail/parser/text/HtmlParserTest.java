@@ -17,9 +17,15 @@
 //All Rights Reserved.
 package org.columba.mail.parser.text;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 import junit.framework.TestCase;
+
+import org.columba.core.io.StreamUtils;
 
 public class HtmlParserTest extends TestCase {
 
@@ -29,8 +35,7 @@ public class HtmlParserTest extends TestCase {
         String input = "This page http://columba.sourceforge.net is net!";
 
         String result = HtmlParser.substituteURL(input);
-        assertTrue(result
-                .equals("This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A> is net!"));
+        assertEquals("This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A> is net!", result);
     }
 
     /**
@@ -38,26 +43,30 @@ public class HtmlParserTest extends TestCase {
      *  
      */
     public void testSubstituteURL3() {
-        //String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
+        String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
 
-        //String result = HtmlParser.substituteURL(input);
+        String result = HtmlParser.substituteURL(input);
      
-        // TODO: fix testcase
-        /*
         assertEquals(
                 "This page \t(<A HREF=\"http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239\">http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239</A>) is net!",
                 result);
-                */
     }
 
     public void testSubstituteURL4() {
         String input = "This page http://columba.sourceforge.net. is net!";
 
         String result = HtmlParser.substituteURL(input);
-        assertTrue(result
-                .equals("This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A>. is net!"));
+        assertEquals("This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A>. is net!", result);
     }
 
+    public void testSubstituteURL5() {
+        String input = "This page http://test.com/$255. is net!";
+
+        String result = HtmlParser.substituteURL(input);
+        assertEquals("This page <A HREF=\"http://test.com/$255\">http://test.com/$255</A>. is net!", result);
+    }
+    
+    
     public void testRemoveComments1() {
         String input = "<html><body><p><!- this is a text without comments -></p></body></html>";
         String result = HtmlParser.removeComments(input);
@@ -136,5 +145,4 @@ public class HtmlParserTest extends TestCase {
     	
     	assertEquals("<A HREF=\"mailto:" + input +"\">"+ input + "</A>", HtmlParser.substituteEmailAddress(input) );
     }
-
 }

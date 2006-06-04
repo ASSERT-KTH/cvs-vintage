@@ -71,7 +71,7 @@ public final class HtmlParser {
     private static final String PUNC = ".,:;?!\\-";
     private static final String ANY = "\\S";
     private static final String URL_STR = "\\b" + "(" + "(\\w*(:\\S*)?@)?" + PROT
-        + "://" + "[" + ANY + "]+" + ")" + "(?=\\s|$)";
+        + "://" + "[" + ANY + "]+" + ")" + "([).]|\\b)";
 
     /*
              \\b  Start at word boundary
@@ -701,14 +701,20 @@ prot + "://  protocol and ://
         Matcher m = URL_PATTERN.matcher(s);
         StringBuffer sb = new StringBuffer();
 
+        int pos = 0;
         while (m.find()) {
-            match = m.group();
-            match = URL_REPAIR_PATTERN.matcher(match).replaceAll("<A HREF=\"$1\">$1</A>$2");
-            m.appendReplacement(sb, match);
+            match = m.group(1);
+            
+            sb.append(s.substring(pos, m.start()));
+            sb.append("<A HREF=\"" + match + "\">"+ match + "</A>");
+            if( m.groupCount() == 5 && m.group(5) != null) {
+            	sb.append(m.group(5));
+            }
+            pos = m.end();
         }
 
-        m.appendTail(sb);
-
+        sb.append(s.substring(pos));
+        
         return sb.toString();
     }
 
