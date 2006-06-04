@@ -156,7 +156,7 @@ public class SaveMessageBodyAsCommand extends Command {
 
             // setup dialog title, active filter and file name
             String defaultName = getValidFilename((String) header.get("Subject"),
-                    false);
+                    true);
 
             if (ishtml) {
                 fileChooser.setDialogTitle(MailResourceLoader.getString(
@@ -246,7 +246,7 @@ public class SaveMessageBodyAsCommand extends Command {
             char c = subj.charAt(i);
 
             if ((c == '\\') || (c == '/') || (c == ':') || (c == ',')
-                    || (c == '\n') || (c == '\t')) {
+                    || (c == '\n') || (c == '\t') || (c == '(') || (c == ')') || (c == '[') || (c == ']')) {
                 // dismiss char
             } else if ((c == ' ') && (replSpaces)) {
                 buf.append('_');
