@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.168 2006/06/04 20:14:43 tfmorris Exp $
+// $Id: FigEdgeModelElement.java,v 1.169 2006/06/04 20:24:37 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,6 +251,7 @@ public abstract class FigEdgeModelElement
             } catch (InvalidElementException e) {
                 // We moused over an object just as it was deleted
                 // transient condition - doesn't require I18N
+                LOG.warn("A deleted element still exists on the diagram");
                 return "*deleted element*";
             }
         } else {
@@ -542,6 +543,9 @@ public abstract class FigEdgeModelElement
         } else if (pName.equals("editing")
                 && Boolean.TRUE.equals(pve.getNewValue())) {
             textEditStarted((FigText) src);
+        } else if (pve instanceof DeleteInstanceEvent && src == getOwner()) {
+            removeFromDiagram();
+            return;
         } else {
             // Add/remove name change listeners for applied stereotypes
             if (src == getOwner()
