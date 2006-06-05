@@ -791,7 +791,7 @@
     </target>
 
 	<target name="upload_sf" description="Uploads all packages in the relase folder to Sourceforge">
-		<ftp password="mail@columbamail.org" server="ftp://upload.sourceforge.net" userid="anonymous" remotedir="incoming">
+		<ftp password="mail@columbamail.org" server="upload.sourceforge.net" userid="anonymous" remotedir="incoming" verbose="true">
 			<fileset dir="${release.base}"><include name="*"/></fileset>
 		</ftp>
 	</target>
