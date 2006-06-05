@@ -1,4 +1,4 @@
-// $Id: ActionProjectSettings.java,v 1.1 2006/06/02 18:28:25 mvw Exp $
+// $Id: ActionProjectSettings.java,v 1.2 2006/06/05 12:28:43 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.ui;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
@@ -49,6 +50,9 @@ public class ActionProjectSettings extends AbstractAction {
     public ActionProjectSettings() {
         super(Translator.localize("action.properties"),
                 ResourceLoaderWrapper.lookupIcon("action.settings"));
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("action.properties"));
     }
 
     /**

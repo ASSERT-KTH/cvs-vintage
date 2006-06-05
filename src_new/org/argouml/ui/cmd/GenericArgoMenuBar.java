@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.49 2006/06/02 18:28:25 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.50 2006/06/05 12:28:43 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -447,6 +447,9 @@ public class GenericArgoMenuBar extends JMenuBar implements
             file.add(ActionImportFromSources.getInstance());
         setMnemonic(importFromSources, "Import");
         file.addSeparator();
+
+        Action a = new ActionProjectSettings();
+        fileToolbar.add(a);
 
         JMenuItem pageSetupItem = file.add(new ActionPageSetup());
         setMnemonic(pageSetupItem, "PageSetup");
