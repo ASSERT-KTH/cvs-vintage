@@ -258,22 +258,16 @@ begin
 	end;
 end;
 
-#endif
 
 procedure InitializeWizard();
 var 
 	ErrorCode: Integer;
 begin
-	#ifdef BUNDLE_JRE
 	if not checkJRE() then	
 	begin
 		createJREInstallPage();
 	end;		
-	#else
-	begin
-		MsgBox('You need to install a JRE first!', mbError, MB_OK);
-		ShellExec('open','http://www.java.com/en/download/windows_automatic.jsp','','',SW_SHOW,ewNoWait,ErrorCode);
-		Abort();
-	end;
-	#endif
 end;
+
+#endif
+
