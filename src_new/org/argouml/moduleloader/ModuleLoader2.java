@@ -1,4 +1,4 @@
-// $Id: ModuleLoader2.java,v 1.13 2006/04/29 16:02:23 linus Exp $
+// $Id: ModuleLoader2.java,v 1.14 2006/06/05 20:03:35 linus Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -440,6 +441,23 @@ public final class ModuleLoader2 {
         } catch (ClassNotFoundException e) {
             // We'll automatically use the dev module if we find
             // it but don't care is we don'e
+        }
+
+        // Load modules specified by a System property.
+        // Modules specified by a system property is for
+        // running modules from within Eclipse and running
+        // from Java Web Start.
+        String listOfClasses = System.getProperty("argouml.modules");
+        if (listOfClasses != null) {
+            StringTokenizer si = new StringTokenizer(listOfClasses, ";");
+            while (si.hasMoreTokens()) {
+                String className = si.nextToken();
+                try {
+                    addClass(className);
+                } catch (ClassNotFoundException e) {
+                    LOG.error("Could not load module from class " + className);
+                }
+            }
         }
     }
 
