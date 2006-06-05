@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.101 2006/06/05 09:01:35 mvw Exp $
+// $Id: UMLDiagram.java,v 1.102 2006/06/05 21:51:26 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -524,16 +524,16 @@ public abstract class UMLDiagram
      * performance.
      */
     public void removeAsTarget() {
-        Enumeration elems = elements();
-        while (elems.hasMoreElements()) {
-            Fig fig = (Fig) elems.nextElement();
-            if (fig instanceof FigNodeModelElement) {
-                ((FigNodeModelElement) fig).updateListeners(null);
-            }
-            if (fig instanceof FigEdgeModelElement) {
-                ((FigEdgeModelElement) fig).updateListeners(null);
-            }
-        }
+//        Enumeration elems = elements();
+//        while (elems.hasMoreElements()) {
+//            Fig fig = (Fig) elems.nextElement();
+//            if (fig instanceof FigNodeModelElement) {
+//                ((FigNodeModelElement) fig).updateListeners(null);
+//            }
+//            if (fig instanceof FigEdgeModelElement) {
+//                ((FigEdgeModelElement) fig).updateListeners(null);
+//            }
+//        }
     }
 
     /**
@@ -542,27 +542,29 @@ public abstract class UMLDiagram
      * a performance improvement.
      */
     public void setAsTarget() {
-        Enumeration elems = elements();
-        while (elems.hasMoreElements()) {
-            Fig fig = (Fig) elems.nextElement();
-            Object owner = fig.getOwner();
-            /* This will make sure all the correct
-             * event listeners are set:
-             */
-            try {
-                if (fig instanceof FigNodeModelElement) {
-                    ((FigNodeModelElement) fig).updateListeners(owner);
-                    ((FigNodeModelElement) fig).renderingChanged();
-                }
-                if (fig instanceof FigEdgeModelElement) {
-                    ((FigEdgeModelElement) fig).updateListeners(owner);
-                    ((FigEdgeModelElement) fig).renderingChanged();
-                }
-            } catch (InvalidElementException e) {
-                LOG.debug("Attempted to set a deleted element as target : "
-                        + owner);
-            }
-        }
+//        Enumeration elems = elements();
+//        while (elems.hasMoreElements()) {
+//            Fig fig = (Fig) elems.nextElement();
+//            Object owner = fig.getOwner();
+//            if (!Model.getUmlFactory().isRemoved(owner)) {
+//                /* This will make sure all the correct
+//                 * event listeners are set:
+//                 */
+//                try {
+//                    if (fig instanceof FigNodeModelElement) {
+//                        ((FigNodeModelElement) fig).updateListeners(owner);
+//                        ((FigNodeModelElement) fig).renderingChanged();
+//                    }
+//                    if (fig instanceof FigEdgeModelElement) {
+//                        ((FigEdgeModelElement) fig).updateListeners(owner);
+//                        ((FigEdgeModelElement) fig).renderingChanged();
+//                    }
+//                } catch (InvalidElementException e) {
+//                    LOG.error("Attempted to set a deleted element as target : "
+//                            + owner, e);
+//                }
+//            }
+//        }
     }
 
     /**
