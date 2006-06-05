@@ -110,6 +110,20 @@ var
   jreVersion: TLabel;
   InstallJREPage: TInputQueryWizardPage;
 
+procedure updateLAPfile();
+var
+lapString : String;
+
+begin
+	LoadStringFromFile(ExpandConstant('{app}\columba.lap'), lapString);
+
+	StringChange(lapString, '{app}', ExpandConstant('{app}'));
+
+	SaveStringToFile(ExpandConstant('{app}\columba.lap'), lapString, false);
+end;
+
+
+#ifdef BUNDLE_JRE
 //* Getting Java version from registry *//
 function getJavaVersion(): String;
 var
@@ -139,20 +153,8 @@ begin
      end;
 end;
 
-procedure updateLAPfile();
-var
-lapString : String;
-
-begin
-	LoadStringFromFile(ExpandConstant('{app}\columba.lap'), lapString);
-
-	StringChange(lapString, '{app}', ExpandConstant('{app}'));
-
-	SaveStringToFile(ExpandConstant('{app}\columba.lap'), lapString, false);
-end;
 
 
-#ifdef BUNDLE_JRE
 procedure InstallJRE(Sender: TObject);
 var
 AppPath, Parameters, WorkingDirectory: String;ResultCode: Integer;
@@ -262,8 +264,8 @@ procedure InitializeWizard();
 var 
 	ErrorCode: Integer;
 begin
-	if not checkJRE() then	
 	#ifdef BUNDLE_JRE
+	if not checkJRE() then	
 	begin
 		createJREInstallPage();
 	end;		
