@@ -23,8 +23,8 @@ import org.jdesktop.jdic.browser.WebBrowser;
  * print the HTML page using:
  * <code>webBrowser.executeScript("window.print();");</code>
  * <p>
- * TODO (@author fdietz): how to use images in Message Viewer, we can't set a base URL and load
- * images from columba.jar?
+ * TODO (@author fdietz): how to use images in Message Viewer, we can't set a
+ * base URL and load images from columba.jar?
  * 
  * @author Frederik Dietz
  * 
@@ -37,13 +37,15 @@ public class JDICHTMLViewerPlugin extends JPanel implements IHTMLViewerPlugin {
 
 	private WebBrowser browser;
 
+	private boolean initialized = false;
+
 	public JDICHTMLViewerPlugin() {
 		super();
 
 		try {
 			WebBrowser.setDebug(true);
 
-			browser = new WebBrowser();
+			browser = new WebBrowser(true);
 
 			// turn of focus stealing (workaround should be removed in the
 			// future!)
@@ -51,6 +53,7 @@ public class JDICHTMLViewerPlugin extends JPanel implements IHTMLViewerPlugin {
 
 			setLayout(new BorderLayout());
 			add(browser, BorderLayout.CENTER);
+
 		} catch (Error e) {
 			LOG.severe("Error while initializing JDIC native browser: "
 					+ e.getMessage());
@@ -103,7 +106,7 @@ public class JDICHTMLViewerPlugin extends JPanel implements IHTMLViewerPlugin {
 	}
 
 	public boolean initialized() {
-		return browser.isInitialized();
+		return true;
 	}
 
 	public JComponent getContainer() {

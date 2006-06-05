@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
@@ -170,18 +171,18 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		try {
 			viewerPlugin = createHTMLViewerPluginInstance(selectedBrowser);
 			// in case of an error -> fall-back to Swing's built-in JTextPane
-			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false)) {
-				LOG
-						.severe("Error while trying to load html viewer -> falling back to default");
+			if ( viewerPlugin == null || !viewerPlugin.initialized()) {
+				JOptionPane.showMessageDialog(null, "Error while trying to load html viewer");
+				
+				LOG.severe("Error while trying to load html viewer -> falling back to default");
 
 				viewerPlugin = createHTMLViewerPluginInstance("Default");
-				// usingJDIC = false;
-			} // else
-			// usingJDIC = true;
+			} 
 		} catch (RuntimeException e) {
 			viewerPlugin = createHTMLViewerPluginInstance("Default");
-			// usingJDIC = false;
-			e.printStackTrace();
+			
+			if ( Logging.DEBUG)
+				e.printStackTrace();
 		}
 
 	}
@@ -222,11 +223,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
 			if (Logging.DEBUG)
 				e.printStackTrace();
-		} catch (Exception e) {
-			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
-			if (Logging.DEBUG)
-				e.printStackTrace();
-		}
+		} 
 
 		return null;
 	}
