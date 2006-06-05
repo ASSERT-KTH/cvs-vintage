@@ -1,4 +1,4 @@
-// $Id: TestPropertyPanels.java,v 1.3 2006/06/05 16:34:07 linus Exp $
+// $Id: TestPropertyPanels.java,v 1.4 2006/06/05 17:00:03 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,7 +158,7 @@ public class TestPropertyPanels extends TestCase {
                         TEST_PROPERTY_PANELS_ZARGO);
 
         if (url == null) {
-            System.out.println(TestPropertyPanels.class.getCanonicalName()
+            System.out.println(TestPropertyPanels.class.getName()
                     + ": WARNING: Inconclusive tests.");
             System.out.println("For this test to succeed it must be able to"
                     + " find the file " + TEST_PROPERTY_PANELS_ZARGO);

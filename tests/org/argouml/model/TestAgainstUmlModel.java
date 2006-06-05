@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.7 2006/06/05 16:34:07 linus Exp $
+// $Id: TestAgainstUmlModel.java,v 1.8 2006/06/05 17:00:04 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,7 @@ public class TestAgainstUmlModel extends TestCase {
      * @param message that is to me printed.
      */
     private static void printInconclusiveMessage(String message) {
-	System.out.println(TestAgainstUmlModel.class.getCanonicalName()
+	System.out.println(TestAgainstUmlModel.class.getName()
                 + ": WARNING: INCONCLUSIVE TEST!");
 	System.out.println(message);
 	System.out.println("You will have to fetch the model using the command"
