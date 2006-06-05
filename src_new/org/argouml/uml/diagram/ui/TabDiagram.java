@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.63 2006/04/19 22:05:37 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.64 2006/06/05 23:48:37 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -181,12 +181,7 @@ public class TabDiagram
 		      + "not an instance of UMLDiagram");
             return;
         }
-        if (target != null) {
-            target.removeAsTarget();
-        }
         UMLDiagram newTarget = (UMLDiagram) t;
-
-        newTarget.setAsTarget();
 
         setToolBar(newTarget.getJToolBar());
         graph.removeGraphSelectionListener(this);
