@@ -138,7 +138,7 @@
         <property name="alias" value="TheColumbaProject" description="signing jar-files for Java WebStart"/>
         <property name="storepass" value="columba"/>
         <property name="keypass" value="columba"/>
-        <property name="webstart.codebase" value="http://columba.sourceforge.net/webstart"/>
+        <property name="webstart.codebase" value="http://columbamail.org/webstart"/>
 
         <fileset dir="${release.base}/webstart" id="sign.jars">
             <include name="columba.jar"/>
@@ -351,9 +351,17 @@
         </tar>
     </target>
 
+	<!-- This task creates the Columba.exe's for windows-->
+	<!-- Therefore we use Janel (http://janel.sf.net) -->
+	<taskdef name="janel" classpath="${native.win32}/janel-ant-0.1.jar" classname="net.sf.janel.ant.JanelTask"/>
+	<target name="windows-launcher">
+		<janel exeType="console" exe="${native.win32}/Columba.exe" smallIcon="${res.base}/org/columba/core/icons/MISC/icon16.png" bigIcon="${res.base}/org/columba/core/icons/MISC/icon32.png"/>
+		<janel exeType="windows" exe="${native.win32}/Columbaw.exe" smallIcon="${res.base}/org/columba/core/icons/MISC/icon16.png" bigIcon="${res.base}/org/columba/core/icons/MISC/icon32.png"/>
+	</target>
+	
     <!-- create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
     <!-- this task is for a binary release -->
-    <target name="bin-win32" depends="jar, linefeeds-win32"
+    <target name="bin-win32" depends="jar, linefeeds-win32, windows-launcher"
             description="Creates packaged win32 Columba release">
 
         <copy file="${native.win32}/Columba.lap" todir="${basedir}"/>
