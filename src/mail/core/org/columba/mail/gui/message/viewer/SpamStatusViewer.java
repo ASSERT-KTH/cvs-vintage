@@ -34,9 +34,9 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.folder.command.ToggleMarkCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.IMessageController;
-import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 
 /**
  * IViewer displaying spam status information.
@@ -177,12 +177,10 @@ public class SpamStatusViewer extends JPanel implements ICustomViewer,
 		// get selected message
 		IMailFolderCommandReference r = mediator.getSelectedReference();
 
-		// learn message as non spam
-		CommandProcessor.getInstance().addOp(new LearnMessageAsHamCommand(r));
-
 		// mark as not spam
 		r.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
-		MarkMessageCommand c = new MarkMessageCommand(r);
+		
+		ToggleMarkCommand c = new ToggleMarkCommand(r);
 		CommandProcessor.getInstance().addOp(c);
 	}
 
