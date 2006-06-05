@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.16 2006/05/23 21:29:57 tfmorris Exp $
+// $Id: ActionBaseDelete.java,v 1.17 2006/06/05 20:49:25 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Action;
@@ -190,9 +189,7 @@ public abstract class ActionBaseDelete extends UMLAction {
         } else if (target instanceof UMLDiagram) {
             // lets see if this diagram has some figs on it
             UMLDiagram diagram = (UMLDiagram) target;
-            List nodes = diagram.getNodes();
-            List edges = diagram.getNodes();
-            if ((nodes.size() + edges.size()) > 0) {
+            if (diagram.getNodes().size() + diagram.getEdges().size() != 0) {
                 // the diagram contains figs so lets ask the user if
                 // he/she is sure
                 String confirmStr =
