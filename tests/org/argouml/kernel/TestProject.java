@@ -1,4 +1,4 @@
-// $Id: TestProject.java,v 1.20 2006/04/13 03:38:31 tfmorris Exp $
+// $Id: TestProject.java,v 1.21 2006/06/06 16:41:26 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -189,15 +189,15 @@ public class TestProject extends TestCase {
                     Model.getFacade().getNamespace(machine),
                     machine);
         p.addMember(d);
-        assertEquals(sizeDiagrams + 1, p.getDiagrams().size());
-        assertEquals(sizeMembers + 1, p.getMembers().size());
+        assertEquals("Diagram count incorrect", sizeDiagrams + 1, p.getDiagrams().size());
+        assertEquals("Member count incorrect", sizeMembers + 1, p.getMembers().size());
         p.moveToTrash(aClass);
         Model.getPump().flushModelEvents();
         
         assertTrue("Statemachine not in trash", p.isInTrash(machine));
         assertTrue("Class not in trash", p.isInTrash(aClass));
-        assertEquals(sizeDiagrams, p.getDiagrams().size());
-        assertEquals(sizeMembers, p.getMembers().size());
+        assertEquals("Diagram count incorrect after trash", sizeDiagrams, p.getDiagrams().size());
+        assertEquals("Member count incorrect after trash", sizeMembers, p.getMembers().size());
     }
 
     /**
