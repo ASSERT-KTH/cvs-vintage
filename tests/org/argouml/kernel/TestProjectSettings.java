@@ -1,4 +1,4 @@
-// $Id: TestProjectSettings.java,v 1.2 2006/06/06 12:46:24 linus Exp $
+// $Id: TestProjectSettings.java,v 1.3 2006/06/06 17:59:59 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,12 +63,14 @@ public class TestProjectSettings extends TestCase {
                 p1.getProjectSettings().getDefaultShadowWidthValue() == 2);
         ProjectManager.getManager().removeProject(p1);
 
-        // TODO: This test is wrong since p2 always becomes null and we then
-        // end up with a NullPointerException on the following line.
-//        Project p2 = ProjectManager.getManager().getCurrentProject();
-//        assertTrue("New project does not get Default Setting", 
-//                p2.getProjectSettings().getDefaultShadowWidthValue() == 3);
-//        p2.getProjectSettings().setDefaultShadowWidth(4);
+        /* In the next line, replacing makeEmptyProject 
+         * by getCurrentProject fails the test, 
+         * except when run in Eclipse. 
+         * MVW: I have no idea why.*/
+        Project p2 = ProjectManager.getManager().makeEmptyProject();
+        assertTrue("New project does not get Default Setting", 
+                p2.getProjectSettings().getDefaultShadowWidthValue() == 3);
+        p2.getProjectSettings().setDefaultShadowWidth(4);
         assertTrue("Default is altered by project-setting", 
                 Configuration.getInteger(
                         Notation.KEY_DEFAULT_SHADOW_WIDTH) == 3);
