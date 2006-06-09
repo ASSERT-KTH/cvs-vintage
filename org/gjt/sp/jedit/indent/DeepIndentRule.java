@@ -31,7 +31,7 @@ import java.util.List;
  * Deep indent rule.
  *
  * @author Matthieu Casanova
- * @version $Id: DeepIndentRule.java,v 1.3 2006/06/06 17:58:41 kpouer Exp $
+ * @version $Id: DeepIndentRule.java,v 1.4 2006/06/09 06:26:38 kpouer Exp $
  */
 public class DeepIndentRule implements IndentRule
 {
@@ -73,7 +73,6 @@ public class DeepIndentRule implements IndentRule
 		 int oldLineIndex = lineIndex;
 		 String lineText = buffer.getLineText(lineIndex);
 		 int searchPos = -1;
-		 boolean shouldIndent = false;
 		 while (true)
 		 {
 			 if (lineIndex != oldLineIndex)
@@ -91,14 +90,8 @@ public class DeepIndentRule implements IndentRule
 			 // No parens on prev line
 			 if (parens.openOffset == -1 && parens.closeOffset == -1)
 			 {
-				 if (shouldIndent)
-				 {
-					 int i = buffer.getCurrentIndentForLine(lineIndex, null);
-					 indentActions.add(new IndentAction.AlignParameter(i - 1, lineText));
-				 }
 				 return;
 			 }
-			 shouldIndent = true;
 			 int openParenOffset = TextUtilities.findMatchingBracket(buffer, lineIndex, parens.closeOffset);
 			 if (openParenOffset >= 0)
 			 {
