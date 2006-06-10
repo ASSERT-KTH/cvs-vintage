@@ -96,7 +96,10 @@
             <pathelement path="${native.base}/${lib.jdic}"/>
             <pathelement path="${lib.mac_mock}"/>
             <pathelement path="${lib.flexdoc}"/>
-            <pathelement path="${lib.jython}"/>
+            <pathelement path="${lib.commons.logging}"/>
+            <pathelement path="${lib.ical4j}"/>
+	    <pathelement path="${lib.migcalendar}"/>
+	<pathelement path="${lib.jython}"/>
         </path>
         <path id="run.classpath">
             <path refid="compile.classpath"/>
@@ -159,6 +162,9 @@
             <include name="${lib.bsh}"/>
             <include name="${lib.flexdoc}"/>
             <include name="${lib.jython}"/>
+	    <include name="${lib.commons.logging}"/>
+            <include name="${lib.ical4j}"/>
+	    <include name="${lib.migcalendar}"/>
             <include name="${native.linux}${lib.jdic}"/>
             <include name="${native.linux}${lib.native}"/>
             <include name="${native.win32}${lib.jdic}"/>
@@ -177,10 +183,10 @@
                 version="${version}">
         </jreleaseinfo>
 
-        <javac target="1.5" source="1.5" srcdir="${src.columba.core}/org/columba/core/versioninfo/"
+        <javac target="1.5" source="1.5" srcdir="${src.core}/org/columba/core/versioninfo/"
                includes="ColumbaVersionInfo.java" destdir="${dest}"/>
 
-        <delete file="${src.columba.core}/org/columba/core/versioninfo/ColumbaVersionInfo.java"/>
+        <delete file="${src.core}/org/columba/core/versioninfo/ColumbaVersionInfo.java"/>
     </target>
 
     <target name="update" description="Updates the source when checked out via CVS">
@@ -194,13 +200,15 @@
         <javadoc destdir="${doc.api}" doctitle="Columba ${version} API Documentation"
                  windowtitle="Columba API Documentation" link="http://java.sun.com/j2se/1.5.0/docs/api">
             <classpath refid="compile.classpath"/>
-            <packageset dir="${src.columba.api}"/>
-            <packageset dir="${src.columba.core}"/>
+            <packageset dir="${src.core.api}"/>
+            <packageset dir="${src.core}"/>
+	    <packageset dir="${src.mail.facade}"/>
             <packageset dir="${src.mail.api}"/>
-            <packageset dir="${src.mail.core}"/>
-            <packageset dir="${src.addressbook.api}"/>
-            <packageset dir="${src.addressbook.core}"/>
-            <group title="Addressbook" packages="org.columba.addressbook*"/>
+            <packageset dir="${src.mail}"/>
+            <packageset dir="${src.contact.facade}"/>
+            <packageset dir="${src.contact.api}"/>
+            <packageset dir="${src.contact}"/>
+            <group title="Contact" packages="org.columba.addressbook*"/>
             <group title="Core" packages="org.columba.core*"/>
             <group title="Mail" packages="org.columba.mail*"/>
         </javadoc>
@@ -208,8 +216,53 @@
 
 
     <target name="copy-resources" description="Copies all resources to the classes/ folder">
+	<echo message="resources are going to ${dest} "/>
+
+	<echo message="copy resources from ${res.core}"/>
         <copy todir="${dest}">
-            <fileset dir="${res.base}">
+            <fileset dir="${res.core}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+	<echo message="copy resources from ${res.core.test}"/>
+	<copy todir="${dest}">
+            <fileset dir="${res.core.test}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+	<echo message="copy resources from ${res.contact}"/>
+        <copy todir="${dest}">
+            <fileset dir="${res.contact}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+	<echo message="copy resources from ${res.contact.test}"/>
+	<copy todir="${dest}">
+            <fileset dir="${res.contact.test}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+	<echo message="copy resources from ${res.mail}"/>
+        <copy todir="${dest}">
+            <fileset dir="${res.mail}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+	<echo message="copy resources from ${res.mail.test}"/>
+	<copy todir="${dest}">
+            <fileset dir="${res.mail.test}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+	<echo message="copy resources from ${res.calendar}"/>
+        <copy todir="${dest}">
+            <fileset dir="${res.calendar}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+	<echo message="copy resources from ${res.calendar.test}"/>
+	<copy todir="${dest}">
+            <fileset dir="${res.calendar.test}">
                 <include name="**"/>
             </fileset>
         </copy>
@@ -219,36 +272,109 @@
     <target name="compile" depends="init, copy-resources, version" description="Compiles the Columba core components">
         <echo message="the classes are going to ${dest} "/>
 
-        <!-- compile columba APIs -->
+	<!-- core module -->
+	<echo message="compiling ${src.core.api}"/>
         <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
-            <src path="${src.columba.api}"/>
+            <src path="${src.core.api}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<echo message="compiling ${src.core}"/>
+	<javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.core}"/>
             <classpath refid="compile.classpath"/>
         	  <compilerarg value="${unchecked}"/>
         </javac>
 
+
+	<!-- contact module -->
+	<echo message="compiling ${src.contact.facade}"/>
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.contact.facade}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<echo message="compiling ${src.contact.api}"/>
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.contact.api}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<echo message="compiling ${src.contact}"/>
+	<javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.contact}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+
+	<!-- mail module -->
+	<echo message="compiling ${src.mail.facade}"/>
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.mail.facade}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<echo message="compiling ${src.mail.api}"/>
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.mail.api}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<echo message="compiling ${src.mail}"/>
+	<javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.mail}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<!-- calendar module -->
+	<echo message="compiling ${src.calendar.facade}"/>
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.calendar.facade}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<echo message="compiling ${src.calendar.api}"/>
+        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.calendar.api}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+	<echo message="compiling ${src.calendar}"/>
+	<javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}" >
+            <src path="${src.calendar}"/>
+            <classpath refid="compile.classpath"/>
+        	  <compilerarg value="${unchecked}"/>
+        </javac>
+
+	
         <!-- compile columba core -->
-        <ant dir="${src.columba.core}" target="compile" inheritrefs="true"/>
+        <!--<ant dir="${src.columba.core}" target="compile" inheritrefs="true"/>-->
 
         <!-- compile mail/addressbook APIs -->
-        <javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}">
+	<!--    
+    	<javac destdir="${dest}" target="1.5" source="1.5" deprecation="${deprecation}">
             <src path="${src.columba.api}"/>
             <src path="${src.mail.api}"/>
             <src path="${src.addressbook.api}"/>
             <classpath refid="compile.classpath"/>
         	  <compilerarg value="${unchecked}"/>
         </javac>
-
+	-->
+	<!--
         <ant dir="${src.mail.core}" target="compile" inheritrefs="true"/>
         <ant dir="${src.addressbook.core}" target="compile" inheritrefs="true"/>
+	-->
+
     </target>
 
 
     <!-- compile the test classes -->
     <target name="compile-test" depends="compile, init-test" description="Compiles the Unit tests">
         <echo message="the classes are going to ${test.dest} "/>
-        <ant dir="${src.columba.test}" target="compile" inheritrefs="true"/>
+        <ant dir="${src.core.test}" target="compile" inheritrefs="true"/>
         <ant dir="${src.mail.test}" target="compile" inheritrefs="true"/>
-        <ant dir="${src.addressbook.test}" target="compile" inheritrefs="true"/>
+        <ant dir="${src.contact.test}" target="compile" inheritrefs="true"/>
+        <ant dir="${src.calendar.test}" target="compile" inheritrefs="true"/>
     </target>
 
     <!-- pack the files into one jar file with automatic manifest file -->
@@ -275,7 +401,7 @@
             <manifest>
                 <attribute name="Main-Class" value="org.columba.core.main.Main"/>
                 <attribute name="Class-Path"
-                           value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc} ${lib.jython} ${lib.bsh} ${lib.groovy}"/>
+                           value=" ${manual.jar} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.flexdoc} ${lib.jython} ${lib.bsh} ${lib.groovy} ${lib.commons.logging} ${lib.ical4j} ${lib.migcalendar}"/>
                 <attribute name="Sealed" value="false"/>
             </manifest>
         </jar>
@@ -342,6 +468,9 @@
                 <include name="${lib.bsh}"/>
                 <include name="${manual.jar}"/>
                 <include name="${lib.flexdoc}"/>
+		<include name="${lib.commons.logging}"/>
+            	<include name="${lib.ical4j}"/>
+	    	<include name="${lib.migcalendar}"/>
                 <include name="${native.linux}/**/*.jar"/>
                 <include name="${native.linux}/**/*.so"/>
             </tarfileset>
@@ -355,8 +484,8 @@
 	<!-- Therefore we use Janel (http://janel.sf.net) -->
 	<taskdef name="janel" classpath="${native.win32}/janel-ant-0.1.jar" classname="net.sf.janel.ant.JanelTask"/>
 	<target name="windows-launcher">
-		<janel exeType="console" exe="${native.win32}/Columba.exe" smallIcon="${res.base}/org/columba/core/icons/MISC/icon16.png" bigIcon="${res.base}/org/columba/core/icons/MISC/icon32.png"/>
-		<janel exeType="windows" exe="${native.win32}/Columbaw.exe" smallIcon="${res.base}/org/columba/core/icons/MISC/icon16.png" bigIcon="${res.base}/org/columba/core/icons/MISC/icon32.png"/>
+		<janel exeType="console" exe="${native.win32}/Columba.exe" smallIcon="${res.core}/org/columba/core/icons/MISC/icon16.png" bigIcon="${res.core}/org/columba/core/icons/MISC/icon32.png"/>
+		<janel exeType="windows" exe="${native.win32}/Columbaw.exe" smallIcon="${res.core}/org/columba/core/icons/MISC/icon16.png" bigIcon="${res.core}/org/columba/core/icons/MISC/icon32.png"/>
 	</target>
 	
     <!-- create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
@@ -396,6 +525,9 @@
                 <include name="${lib.groovy}"/>
                 <include name="${lib.bsh}"/>
                 <include name="${lib.flexdoc}"/>
+		<include name="${lib.commons.logging}"/>
+            	<include name="${lib.ical4j}"/>
+	    	<include name="${lib.migcalendar}"/>
                 <include name="${native.win32}/lib/*.jar"/>
                 <include name="${native.win32}/lib/*.dll"/>
                 <include name="Columba.lap"/>
@@ -438,6 +570,9 @@
                 <include name="${lib.groovy}"/>
                 <include name="${lib.bsh}"/>
                 <include name="${lib.flexdoc}"/>
+		<include name="${lib.commons.logging}"/>
+	        <include name="${lib.ical4j}"/>
+	    	<include name="${lib.migcalendar}"/>
             </zipfileset>
         </zip>
     </target>
@@ -491,6 +626,9 @@
                 <include name="${lib.bsh}"/>
                 <include name="${lib.flexdoc}"/>
                 <include name="${lib.jython}"/>
+		<include name="${lib.commons.logging}"/>
+            	<include name="${lib.ical4j}"/>
+	    	<include name="${lib.migcalendar}"/>
             </fileset>
             <fileset dir="${dist.webstart}">
                 <include name="columba.jnlp"/>
@@ -522,7 +660,7 @@
         </jar>
 
         <copy toDir="${release.base}/webstart/images">
-            <fileset dir="${res.base}/org/columba/core/icons/MISC">
+            <fileset dir="${res.core}/org/columba/core/icons/MISC">
                 <include name="icon64.gif"/>
             </fileset>
         </copy>
@@ -556,6 +694,9 @@
             <replacefilter token="@native@" value="${lib.native}"/>
             <replacefilter token="@flexdoc@" value="${lib.flexdoc}"/>
             <replacefilter token="@jython@" value="${lib.jython}"/>
+	    <replacefilter token="@commons.logging@" value="${lib.commons.logging}"/>
+            <replacefilter token="@ical4j@" value="${lib.ical4j}"/>
+            <replacefilter token="@migcalendar@" value="${lib.migcalendar}"/>
         </replace>
     </target>
 
@@ -626,6 +767,9 @@
                 <include name="${lib.groovy}"/>
                 <include name="${lib.bsh}"/>
                 <include name="${lib.flexdoc}"/>
+		<include name="${lib.commons.logging}"/>
+            	<include name="${lib.ical4j}"/>
+	    	<include name="${lib.migcalendar}"/>
                 <include name="${manual.jar}"/>
             </fileset>
         </copy>
@@ -682,6 +826,9 @@
             <arg value="/dJDIC=${lib.jdic}"/>
             <arg value="/dFLEXDOC=${lib.flexdoc}"/>
             <arg value="/dJYTHON=${lib.jython}"/>
+	    <arg value="/dCOMMONS.LOGGING=${lib.commons.logging}"/>
+	    <arg value="/dICAL4J=${lib.ical4j}"/>
+            <arg value="/dMIGCALENDAR=${lib.migcalendar}"/>
         </exec>
 
         <exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -708,7 +855,10 @@
             <arg value="/dGROOVY=${lib.groovy}"/>
             <arg value="/dBSH=${lib.bsh}"/>
             <arg value="/dFLEXDOC=${lib.flexdoc}"/>
-            <arg value="/dJYTHON=${lib.jython}"/>        	
+            <arg value="/dJYTHON=${lib.jython}"/>   
+            <arg value="/dCOMMONS.LOGGING=${lib.commons.logging}"/>
+	    <arg value="/dICAL4J=${lib.ical4j}"/>
+            <arg value="/dMIGCALENDAR=${lib.migcalendar}"/>     	
         </exec>
     </target>
 
@@ -747,6 +897,9 @@
             <arg value="/dBSH=${lib.bsh}"/>
             <arg value="/dFLEXDOC=${lib.flexdoc} "/>
             <arg value="/dJYTHON=${lib.jython}"/>        	
+   	    <arg value="/dCOMMONS.LOGGING=${lib.commons.logging}"/>
+	    <arg value="/dICAL4J=${lib.ical4j}"/>
+            <arg value="/dMIGCALENDAR=${lib.migcalendar}"/>
         </exec>
 
         <exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -774,7 +927,10 @@
             <arg value="/dGROOVY=${lib.groovy}"/>
             <arg value="/dBSH=${lib.bsh}"/>
             <arg value="/dFLEXDOC=${lib.flexdoc}"/>
-            <arg value="/dJYTHON=${lib.jython}"/>        	
+            <arg value="/dJYTHON=${lib.jython}"/> 
+	    <arg value="/dCOMMONS.LOGGING=${lib.commons.logging}"/>
+	    <arg value="/dICAL4J=${lib.ical4j}"/>
+            <arg value="/dMIGCALENDAR=${lib.migcalendar}"/>       	
         </exec>
     </target>
 

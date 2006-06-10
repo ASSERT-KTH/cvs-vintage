@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<menu id="table_menu">
+ 	
+ 	<menuitem id="OpenNewMailWindow"/>
+ 	<menuitem id="OpenNewAddressbookWindow" />
+ 	
+ 	<separator/>
+ 	
+ 	<menuitem id="AboutDialog" />
+ 	<menuitem id="ShowHelp" />
+ 	
+	<separator />
+	
+	<menuitem id="Exit" />
+
+</menu>
+

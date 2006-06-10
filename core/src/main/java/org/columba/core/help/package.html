@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  @(#)package.html	1.0 2003/08/23
+
+  The contents of this file are subject to the Mozilla Public License Version 1.1
+  (the "License"); you may not use this file except in compliance with the 
+  License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+
+  Software distributed under the License is distributed on an "AS IS" basis,
+  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+  for the specific language governing rights and
+  limitations under the License.
+
+  The Original Code is "The Columba Project"
+
+  The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+  Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+
+All Rights Reserved.
+
+-->
+
+</head>
+<body bgcolor="white">
+
+Online help framework using JavaHelp.
+<p>
+
+<h3>Adding context-specific help to a button</h3>
+<pre>
+ HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
+</pre>
+This associates the help button (JButton) with the topic ID. 
+
+<h3>Looking up topic ID</h3>
+
+See the file jhelpmap.jhm, which associates topic IDs with html files.
+All files can be found in package lib/usermanual.jar.
+<p>
+I've used a very general schema to generate topic IDs.
+Following a couple of examples, so you don't need to lookup every
+single topic ID:
+<ul>
+ <li>index -> index (index.html)</li>
+ <li>introduction -> introduction (ch01.html) </li>
+ <li>installation -> installing (ch02.html) </li>
+ <li>installation_1 -> installating-windows (ch02.html)</li>
+ <li>installation_2 -> installating-linux (ch02_2.html)</li>
+ <li>installation_3 -> installating-generic (ch02_3.html)</li>
+ <li>using_columba_composing_new_email_messages_2 -> composing new email messages (ch04s03.html)</li>
+</ul>
+
+Note that subsections are numbered where sections have names. The last 
+examples is a very interesting one:
+"using_columba" -> section
+"composing_new_email_messages" ->first subsection
+"2" ->second subsection
+
+Hope you get the idea!
+
+</body>
+</html>

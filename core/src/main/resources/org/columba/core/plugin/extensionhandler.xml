@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handlerlist>
+ <handler id="org.columba.core.action" />
+ <handler id="org.columba.core.config" />
+ <handler id="org.columba.core.frame" />
+ <handler id="org.columba.core.theme" />
+ <handler id="org.columba.core.view" />
+ <handler id="org.columba.core.externaltools" />
+ <handler id="org.columba.core.component" />
+ <handler id="org.columba.core.htmlviewer" />
+ <handler id="org.columba.core.service" />
+ <handler id="org.columba.core.statusbar" />
+ <handler id="org.columba.core.newitem" />
+</handlerlist>

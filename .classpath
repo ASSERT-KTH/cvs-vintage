@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/columba/core"/>
 	<classpathentry kind="src" path="plugins/org.columba.core.FlyingSaucerRenderer/src"/>
-	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/api"/>
-	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/res"/>
-	<classpathentry kind="src" path="plugins/org.columba.calendar.frenchvanilla/src"/>
+	<classpathentry kind="src" path="calendar/src/main/java"/>
+	<classpathentry kind="src" path="calendar/src/main/resources"/>
+	<classpathentry kind="src" path="calendar/src/test/java"/>
+	<classpathentry kind="src" path="calendar/src/test/resources"/>
+	<classpathentry kind="src" path="calendar-api/src/main/java"/>
+	<classpathentry kind="src" path="calendar-facade/src/main/java"/>
+	<classpathentry kind="src" path="contact/src/main/java"/>
+	<classpathentry kind="src" path="contact/src/main/resources"/>
+	<classpathentry kind="src" path="contact/src/test/java"/>
+	<classpathentry kind="src" path="contact/src/test/resources"/>
+	<classpathentry kind="src" path="contact-api/src/main/java"/>
+	<classpathentry kind="src" path="contact-facade/src/main/java"/>
+	<classpathentry kind="src" path="core/src/main/java"/>
+	<classpathentry kind="src" path="core/src/main/resources"/>
+	<classpathentry kind="src" path="core/src/test/java"/>
+	<classpathentry kind="src" path="core/src/test/resources"/>
+	<classpathentry kind="src" path="core-api/src/main/java"/>
+	<classpathentry kind="src" path="mail/src/main/java"/>
+	<classpathentry kind="src" path="mail/src/main/resources"/>
+	<classpathentry kind="src" path="mail/src/test/java"/>
+	<classpathentry kind="src" path="mail/src/test/resources"/>
+	<classpathentry kind="src" path="mail-api/src/main/java"/>
+	<classpathentry kind="src" path="mail-facade/src/main/java"/>
 	<classpathentry kind="src" path="plugins/org.columba.mail.ZippedMHFolder/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.chat.altura/api"/>
-	<classpathentry kind="src" path="src/columba/api"/>
 	<classpathentry kind="src" path="plugins/org.columba.chat.altura/res"/>
 	<classpathentry kind="src" path="plugins/org.columba.chat.altura/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.core.HippoLookAndFeel/src"/>
@@ -23,14 +41,6 @@
 	<classpathentry kind="src" path="plugins/org.columba.mail.EudoraMailImportFilter/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.mail.PlaySoundFilterAction/src"/>
 	<classpathentry kind="src" path="plugins/org.columba.mail.ToOrCcFilter/src"/>
-	<classpathentry kind="src" path="src/mail/test"/>
-	<classpathentry kind="src" path="src/addressbook/test"/>
-	<classpathentry kind="src" path="src/addressbook/core"/>
-	<classpathentry kind="src" path="src/mail/core"/>
-	<classpathentry kind="src" path="src/addressbook/api"/>
-	<classpathentry kind="src" path="src/mail/api"/>
-	<classpathentry kind="src" path="res"/>
-	<classpathentry kind="src" path="src/columba/test"/>
 	<classpathentry sourcepath="/home/rick/programs/eclipse/plugins/org.eclipse.jdt.source_3.2.0.v20060512-1326-F7snp6fks-pZ8dn/src/org.junit_3.8.1/junitsrc.zip" kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/usermanual.jar"/>
@@ -60,14 +70,15 @@
 	<classpathentry kind="lib" path="lib/je-2.1.30.jar"/>
 	<classpathentry kind="lib" path="lib/jhall-2.0_02.jar"/>
 	<classpathentry kind="lib" path="lib/jython-2.2a1.jar"/>
-	<classpathentry sourcepath="/home/frd/ical4j-0.9.18/source" kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/ical4j-0.9.18.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/cssparser-0-9-4-fs.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/jtidy-04aug2000r7.jar"/>
 	<classpathentry kind="lib" path="plugins/org.columba.core.FlyingSaucerRenderer/lib/core-renderer.jar"/>
-	<classpathentry kind="lib" path="plugins/org.columba.calendar.frenchvanilla/lib/migcalendar-5.6.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.2-all.jar"/>
 	<classpathentry kind="lib" path="lib/jwizz-0.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/looks-2.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.2_RC1-all.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/ical4j-0.9.18.jar"/>
+	<classpathentry kind="lib" path="lib/migcalendar-5.6.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

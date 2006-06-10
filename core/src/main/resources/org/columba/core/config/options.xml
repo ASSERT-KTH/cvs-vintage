@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "options.dtd"> -->
+
+<options version="1.0">
+ <gui>
+  <fonts overwrite="false">
+   <text name="Default" size="12"></text>
+   <main name="Default" size="12"></main>
+  </fonts>
+  <toolbar enable_icon="true" enable_text="true" text_position="false"/>
+ </gui>
+</options>

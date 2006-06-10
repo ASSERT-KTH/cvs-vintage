@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<views>
+ <viewlist>
+   <view id="ThreePaneMail" >
+    <window maximized="true"/> 
+    <toolbars main="true"/>  
+    <splitpanes main="200" header="200" attachment="100" />
+   </view>
+  </viewlist>
+</views>

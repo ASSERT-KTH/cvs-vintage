@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  @(#)package.html	1.0 2003/08/23
+
+  The contents of this file are subject to the Mozilla Public License Version 1.1
+  (the "License"); you may not use this file except in compliance with the 
+  License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+
+  Software distributed under the License is distributed on an "AS IS" basis,
+  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+  for the specific language governing rights and
+  limitations under the License.
+
+  The Original Code is "The Columba Project"
+
+  The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+  Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+
+All Rights Reserved.
+
+-->
+
+</head>
+<body bgcolor="white">
+
+Scheduler/Dispatcher for a multi-threaded application.
+<p>
+Columba uses the CommandReference pattern. Where {@link Command} instances are decoupled
+from their References ({@link DefaultCommandReference}). 
+Actions ({@link FrameAction}) start Commands and pass the appropriate Reference to them.
+<p>
+This is Preclaiming Scheduler implementation. Meaning tasks get queued until 
+all resources they need are free at once. Which is no problem, because for 
+example a "copy message from folder a to folder b" operation needs only two 
+resources: folder a and folder b.
+<p>
+The org.columba.core.command.Command class has two methods. <code>Execute()</code> is for 
+time consuming background tasks, <code>updateGUI()</code> is called after the execute-method
+is finished (the thread is finished). The nice thing about <code>updateGUI()</code> is that is called 
+in the awt-event dispatcher thread. It is therefore thread-safe, and can be used to 
+update the gui.
+<p>
+Note, that execute() has {@link Worker} in its signature, which has a couple of methods 
+to display a text in the {@link Statusbar}, or updating the progressbar.
+<p>
+Worker registers at the {@link Taskmanager}, which is basically the model for 
+{@link Statusbar}. 
+We use an easy listener pattern to register all the workers.
+<p>
+This makes it easy for commands to send status updates.
+<p>
+Then we have actions in org.columba.core.action. These provide the glue between 
+the gui-elements and the commands. An action initializes a command and passes it 
+along to the Processor (task scheduler {@link DefaultProcessor}) to execute.
+<p>
+You can find many examples in the packages ending with "action" and "command". 
+Adapting, this schema should be pretty easy for developers. 
+
+</body>
+</html>
