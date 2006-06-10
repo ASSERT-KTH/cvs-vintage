@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  @(#)package.html	1.0 2003/08/23
+
+  The contents of this file are subject to the Mozilla Public License Version 1.1
+  (the "License"); you may not use this file except in compliance with the 
+  License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+
+  Software distributed under the License is distributed on an "AS IS" basis,
+  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+  for the specific language governing rights and
+  limitations under the License.
+
+  The Original Code is "The Columba Project"
+
+  The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+  Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+
+All Rights Reserved.
+
+-->
+
+</head>
+<body bgcolor="white">
+
+Provides commands for accessing the mailbox stores.
+<p>
+Folder shouldn't be accessed directly. Instead we use {@link FolderCommand}, which
+in conjunction with {@link FolderCommandReference} provide a looking facility.
+This makes sure that only one {@link Command} at a time can modify the folder's
+data.
+<p>
+As explained in org.columba.command, {@link DefaultProcessor} is  a preclaiming
+schedular. FolderCommandReference keeps a list of folders involved in
+the operation the Command executes. DefaultProcessor will only start
+the Command if all folders (resources) can be claimed at once.
+
+</body>
+</html>
