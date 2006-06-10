@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.194 2006/06/10 17:48:32 bobtarling Exp $
+// $Id: Project.java,v 1.195 2006/06/10 18:44:06 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -988,14 +988,6 @@ public class Project implements java.io.Serializable, TargetListener {
             trashcan.add(obj);
         }
         if (Model.getFacade().isAModelElement(obj)) {
-            // an object that can be represented
-            
-            // TODO: Bob says - do we require these two lines.
-            // Surely Figs should be listening for delete events
-            // and so will be removed as a result of the
-            // following line.
-            Collection allFigs = findAllPresentationsFor(obj, true);
-            removeFigs(allFigs);
 
             Model.getUmlFactory().delete(obj);
 
