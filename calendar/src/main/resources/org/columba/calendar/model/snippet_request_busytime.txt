@@ -1,0 +1,18 @@
+The following is a snippet of an iCalendar XML document that requests
+a calendar user's busy time information.
+
+  <iCalendar>
+   <vcalendar>
+    <method>REQUEST</method>
+    <version>2.0</version>
+    <prodid>-//hacksw/handcal//NONSGML 1.0//EN</prodid>
+    <vfreebusy>
+     <uid>19970901T083000@ical1.host.com</uid>
+     <dtstamp>19970901T083000Z</dtstamp>
+     <organizer>MAILTO:jane_doe@host1.com</organizer>
+     <dtstart>19971015T050000Z</dtstart>
+     <dtend>19971016T050000Z</dtend>
+     <attendee>MAILTO:john_public@host2.com</attendee>
+    </vfreebusy>
+   </vcalendar>
+  </iCalendar>

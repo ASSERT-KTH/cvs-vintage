@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vcard version="1.0"><prefix>title</prefix><family>last name</family><given>firstname</given><middle>middle name</middle><suffix>suffix</suffix><email><internet>email internet</internet><x400>email x400</x400><pref>email pref</pref></email><fn><![CDATA[title firstname middle name last name suffix ]]></fn><org>organisation</org><displayname>sorting displayname</displayname><nickname>nickname</nickname><role>position</role><url>website</url></vcard>

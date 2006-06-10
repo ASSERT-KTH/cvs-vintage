@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE folderlist SYSTEM "import.dtd"> -->
+
+<extensionlist>
+ <extension id="Mozilla (CSV)" class="org.columba.addressbook.folder.importfilter.MozillaCSVAddressbookImporter"/>
+ <extension id="Netscape (LDIF)" class="org.columba.addressbook.folder.importfilter.NetscapeLDIFAddressbookImporter"/>
+</extensionlist>

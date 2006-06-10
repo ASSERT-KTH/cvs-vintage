@@ -1,0 +1,21 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE iCalendar PUBLIC "-//IETF//DTD XCAL/iCalendar XML//EN"
+ "http://www.ietf.org/internet-drafts/draft-hare-xcalendar-01.txt">
+ <?xml-stylesheet href="xcal2ics.xsl" type="text/xsl" output="text" ?>
+ <iCalendar>
+ <vcalendar method="PUBLISH"
+       version="2.0"
+       prodid="-//HandGen//NONSGML vGen v1.0//EN">
+ <vevent>
+      <uid>19981116T150000@cal10.host.com</uid>
+      <dtstamp>19981116T145958Z</dtstamp>
+      <summary>Project XYZ Review</summary>
+      <location>Conference Room 23A</location>
+      <dtstart>19981116T163000Z</dtstart>
+      <dtend>19981116T190000Z</dtend>
+      <categories>
+           <item>Appointment</item>
+      </categories>
+ </vevent>
+ </vcalendar>
+ </iCalendar>

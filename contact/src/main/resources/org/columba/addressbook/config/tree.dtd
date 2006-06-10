@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT tree (folder*)>
+
+<!ELEMENT folder (folder*)>
+<!ATTLIST folder
+ name CDATA #REQUIRED
+ type (localroot|addresses|remoteroot) #REQUIRED
+ uid CDATA #REQUIRED
+ accessrights CDATA #REQUIRED
+>

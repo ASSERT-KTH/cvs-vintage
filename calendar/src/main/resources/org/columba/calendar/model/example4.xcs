@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE iCalendar PUBLIC "-//IETF//DTD XCAL/iCalendar XML//EN"
+  "http://www.ietf.org/internet-drafts/draft-hare-xcalendar-01.txt">
+  <?xml-stylesheet href="xcal2ics.xsl" type="text/xsl" output="text" ?>
+  <iCalendar annotation="IT Conference Prep">
+  <vcalendar>
+   <method>PUBLISH</method>
+   <version>2.0</version>
+   <prodid>-//HandGen//NONSGML vGen v1.0//EN</prodid>
+   <vtodo>
+    <uid>19981009T233000@cal1.host.com</uid>
+    <dtstamp>19981009T232928Z</dtstamp>
+    <dtstart>19981010T000000Z</dtstart>
+    <due>19981010T235959Z</due>
+    <summary>Register for conference</summary>
+    <priority>2</priority>
+   </vtodo>
+  </vcalendar>
+  <vcalendar>
+   <version>2.0</version>
+   <prodid>-//HandGen//NONSGML vGen v1.0//EN</prodid>
+   <method>PUBLISH</method>
+   <vevent>
+    <uid>19981009T233010@cal1.host.com</uid>
+    <dtstamp>19981009T233000Z</dtstamp>
+    <dtstart>19981120T133000Z</dtstart>
+    <dtend>19981122T183000Z</dtend>
+    <summary>IT Conference</summary>
+    <location>Downtowner Hotel</location>
+   </vevent>
+  </vcalendar>
+  </iCalendar>

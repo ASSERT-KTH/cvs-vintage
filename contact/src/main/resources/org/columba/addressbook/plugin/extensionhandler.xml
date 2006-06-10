@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handlerlist>
+ <handler id="org.columba.addressbook.folder"/>
+ <handler id="org.columba.addressbook.import"/>
+</handlerlist>

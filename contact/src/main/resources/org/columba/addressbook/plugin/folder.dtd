@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT folderlist (folder+)>
+
+<!ELEMENT folder EMPTY>
+<!ATTLIST folder
+ name CDATA #REQUIRED
+ class CDATA #REQUIRED
+>
+ 

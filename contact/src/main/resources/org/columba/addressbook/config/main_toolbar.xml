@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
+
+<toolbar visible="true">
+    <button action="AddContactCard"/>
+    <button action="AddGroupCard"/>
+    <separator/>
+    <button action="EditProperties"/>
+    <separator/>
+    <button action="RemoveCard"/>
+</toolbar>

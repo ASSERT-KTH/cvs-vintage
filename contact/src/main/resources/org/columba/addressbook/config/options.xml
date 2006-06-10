@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "options.dtd"> -->
+
+<options>
+ <gui>
+  <table selected="Date" ascending="true"> 
+    <column name="type" position="0" size="23" enabled="true" />
+    <column name="displayname" position="1" size="23" enabled="true" />
+   	<column name="email;internet" position="2" size="23" enabled="true" />
+   	<column name="url" position="3" size="146" enabled="true" />
+  </table>
+ </gui>
+</options>
