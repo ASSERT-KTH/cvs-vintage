@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.30 2006/06/09 16:41:22 mvw Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.31 2006/06/10 06:10:27 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import java.util.TreeSet;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
