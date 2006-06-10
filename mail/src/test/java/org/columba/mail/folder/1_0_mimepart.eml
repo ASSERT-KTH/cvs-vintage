@@ -1,0 +1,47 @@
+Content-Type: text/plain
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+Software zur Erkennung von "Spam" auf dem Rechner "leto.net-build.de" hat diese
+eingegangene E-mail als mögliche "Spam"-Nachricht identifiziert. Die
+ursprüngliche Nachricht wurde an diesen Report angehängt, so dass Sie
+sie anschauen können (falls es doch eine legitime E-mail ist) oder
+ähnliche unerwünschte Nachrichten in Zukunft abblocken können.
+Bei Fragen zu diesem Vorgang wenden Sie sich bitte an
+the administrator of that system.
+
+Vorschau: Dear Sir/Madam: [...] 
+
+Inhaltsanalyse im Detail:   (14.0 Punkte, 5.0 benötigt)
+
+Pnkt Regelname              Beschreibung
+---- ---------------------- --------------------------------------------------
+ 0.5 X_PRIORITY_HIGH        Kopfzeile "X-Priority" hat einen zu hohen Wert
+ 0.5 X_MSMAIL_PRIORITY_HIGH Kopfzeile "X-Msmail-Priority" hat einen zu hohen Wert
+ 1.2 DEAR_SOMETHING         BODY: Anonyme Anrede ("Dear ...")
+ 0.2 EXCUSE_16              BODY: Wie viele E-mails wurden wohl irrtümlich verschickt?
+ 1.3 TONER                  BODY: Enthält "Toner Cartridge", vermutlich Werbung für Laserdruckerzubehör
+ 0.3 HTML_SHOUTING4         BODY: Viele visuell auffällige ("schreiende") HTML-Elemente
+ 0.1 HTML_FONTCOLOR_GREEN   BODY: HTML-Schriftfarbe Grün
+ 1.2 MIME_HTML_MOSTLY       BODY: Mehrteilige MIME-Nachricht überwiegend in HTML
+ 0.0 HTML_MESSAGE           BODY: Nachricht enthält HTML
+ 0.7 HTML_TABLE_THICK_BORD  BODY: HTML-Tabelle mit dicker Umrandung
+ 0.1 HTML_TAG_EXISTS_TBODY  BODY: HTML-Nachricht mit "tbody"-Markierung
+ 0.1 HTML_FONTCOLOR_RED     BODY: HTML-Schriftfarbe Rot
+ 1.1 MAILTO_TO_SPAM_ADDR    URI: Hyperlink mit E-mail-Adresse eines verdächtigten Spam-Versenders
+ 3.0 NO_RDNS_DOTCOM_HELO    HELO-Identifikation als großer Provider, aber rDNS-Name inkorrekt
+ 0.5 FORGED_YAHOO_RCVD      Gefälschte "Received"-Kopfzeile von yahoo.com gefunden
+ 1.1 RCVD_IN_DSBL           RBL: Transportiert via Rechner in Liste von list.dsbl.org
+                            [<http://dsbl.org/listing?ip=61.177.185.46>]
+ 2.2 RCVD_IN_BL_SPAMCOP_NET RBL: Transportiert via Rechner in Liste von www.spamcop.net
+               [Blocked - see <http://www.spamcop.net/bl.shtml?61.177.185.46>]
+ 0.1 RCVD_IN_SORBS          RBL: Transportiert via Rechner in Liste von www.dnsbl.sorbs.net
+                            [61.177.185.46 listed in dnsbl.sorbs.net]
+
+Die ursprüngliche Nachricht enthielt nicht ausschließlich Klartext
+(plain text) und kann eventuell eine Gefahr für einige E-mail-Programme
+darstellen falls sie z.B. einen Computervirus enthält.
+Möchten Sie die Nachricht dennoch ansehen ist es wahrscheinlich
+sicherer sie zuerst in einer Datei zu speichern und diese Datei danach
+mit einem Editorprogramm zu öffnen.
+

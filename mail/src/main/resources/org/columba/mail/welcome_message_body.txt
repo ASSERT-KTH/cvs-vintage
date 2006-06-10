@@ -1,0 +1,43 @@
+Dear New Columba User,
+
+Your Columba Development Team wishes to Thank You for trying out Columba.
+
+Columba has been under continuous development for several years and we 
+continue to watch what functionality is being delivered by all the new Email 
+clients and we believe that we have several points that make Columba one of 
+the best.
+
+As you continue to trial Columba, you will find that it is very speedy in the 
+way it operates. We also try to deliver a non-bloated software product while 
+enabling Columba to be extended through the use of plugins and scripting. 
+
+We have a very diverse development team and we strive to have Columba useful 
+by people all over the world. We want you to be able to enter text in a 
+similar fashion to what you do in all your other programs and we are trying 
+to have our sofware internationalised for use in as many Countries / cultures 
+as possible.
+
+If you can help us by translating to further languages or if you notice any 
+faults in out existing translations, please let us know in one of the mailing 
+lists at Sourceforge below or on our new website. 
+
+We release all our software through the Sourceforge network so that you can be 
+assured of availabilty of our software and it source code in a timely 
+fashion. 
+
+If you are a Java developer and would like to help us maintain and develop 
+Columba, we would welcome your assistance. All developers bring different 
+experience which helps make Columba even better. Even if you cannot write 
+program code, if you like writing documentation or help with the more 
+aesthetic elements of Columba, we would welcome any help you are able to 
+provide.
+
+Our new website can be found at http://columbamail.org
+Our Sourceforge site is at http://sourceforge.net/projects/columba 
+
+We welcome all opinions on Columba as it stands now and into the future with 
+functionality that you need. Please help us to help you!
+
+Best Regards,
+
+Columba Development Team

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+ <account name="Cyrus" uid="0">
+    <identity name="IMAP Test" attach_signature="false" address="anonymous@cyrus.edu" organisation="" use_default_account="false" signature_file="signature.txt" reply_address=""></identity>
+    <imapserver mailcheck_interval="10" port="143" enable_ssl="false" password="my@test.columbaa.oprg" save_password="true" user="anonymous" enable_sound="false" sound_file="default" login_method="LOGIN" use_default_account="false" host="cyrus.andrew.cmu.edu" automatically_apply_filter="false" enable_mailcheck="false"></imapserver>
+    <smtpserver login_method="LOGIN" user="anonymous" host="cyrus.andrew.cmu.edu" save_password="false" password="" use_default_account="false" port="25"></smtpserver>
+    <pgp path="/usr/bin/gpg" always_sign="false" always_encrypt="false" id="" enabled="false" type="0"></pgp>
+    <specialfolders trash="183" drafts="125" templates="107" inbox="101" sent="130"></specialfolders>
+  </account>

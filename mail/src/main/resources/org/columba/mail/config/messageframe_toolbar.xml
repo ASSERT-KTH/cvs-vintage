@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
+
+<toolbar>
+	<button action="Reply"/>
+	<button action="Forward"/>
+	<separator/>
+	<button action="CopyMessage"/>
+	<button action="MoveMessage"/>
+	<button action="DeleteMessage"/>
+	<separator/>
+	
+	<button action="PreviousMessage" />
+	<button action="NextMessage" />
+	<separator/>
+	
+	<!--
+	<button action="ShowContextSpecificHelp"/>
+	<separator/>
+	<button action="Cancel"/>
+	-->
+</toolbar>    

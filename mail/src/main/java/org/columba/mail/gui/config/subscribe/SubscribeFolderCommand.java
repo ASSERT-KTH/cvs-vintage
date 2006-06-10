@@ -1,0 +1,62 @@
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
+package org.columba.mail.gui.config.subscribe;
+
+import org.columba.api.command.IWorkerStatusController;
+import org.columba.core.command.Command;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.imap.IImapServer;
+
+public class SubscribeFolderCommand extends Command {
+	private IMAPRootFolder root;
+
+	private IImapServer store;
+
+	/**
+	 * @param references
+	 */
+	public SubscribeFolderCommand(SubscribeCommandReference reference) {
+		super(reference);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.api.command.Command#execute(org.columba.api.command.Worker)
+	 */
+	public void execute(IWorkerStatusController worker) throws Exception {
+		SubscribeCommandReference subscribeReference = (SubscribeCommandReference) getReference();
+		root = (IMAPRootFolder) subscribeReference.getSourceFolder();
+
+		store = root.getServer();
+
+		store.subscribeFolder(subscribeReference.getMailbox());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.api.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		SubscribeDialog dialog = ((SubscribeCommandReference) getReference())
+				.getDialog();
+
+		dialog.subscribeDone();
+	}
+}

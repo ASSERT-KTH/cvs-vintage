@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<menubar>
+	
+	
+	<menu id="menu_file" placeholderid="top">
+		<seperator/>
+		<menuitem id="Print"/>
+		<seperator/>
+		<menuitem id="SaveMessageSourceAs"/>
+	</menu>
+	
+	
+	<menu id="menu_view" placeholderid="bottom">
+	<seperator/>
+		<menu id="menu_view_next">
+			<menuitem id="NextMessage" />
+			<menuitem id="NextUnreadMessage" />
+		</menu>
+		<menu id="menu_view_prev">
+			<menuitem id="PreviousMessage" />
+			<menuitem id="PreviousUnreadMessage" />
+		</menu>
+		<separator/>
+		<imenu id="CharacterEncodingMenu" />
+		<separator/>
+		<menuitem id="ViewMessageSource"/>
+	</menu>
+	
+	
+	
+	<menu id="menu_message">
+		<menuitem id="OpenMessageWithComposer" />
+		<menuitem id="OpenMessageWithMessageFrame" />
+		<menuitem id="SaveMessageBodyAs" />
+		<separator />
+		<menuitem id="Reply" />
+		<menuitem id="ReplyToAll" />
+		<menuitem id="ReplyToList" />
+		<menuitem id="ReplyAsAttachment"/>
+		<menuitem id="Forward" />
+		<menuitem id="ForwardInline" />
+		<menuitem id="ForwardAsAttachment" />
+		<menuitem id="Redirect" />
+		<separator />
+		<menuitem id="CopyMessage" />
+		<menuitem id="MoveMessage" />
+		<menuitem id="DeleteMessage" />
+		<separator/>
+		<menuitem id="AddSenderToAddressbook"/>
+		<menuitem id="AddAllSendersToAddressbook"/>
+		<extensionpoint id="top" />	
+		<extensionpoint id="bottom" />	
+		<separator/>
+		<menu id="menu_message_mark">
+		 <menuitem id="ToggleReadFlag"/>
+		 <menuitem id="ToggleAnsweredFlag"/>
+		 <menuitem id="ToggleDraftFlag"/>
+		 <menuitem id="ToggleFlaggedFlag"/>
+		 <menuitem id="ToggleExpungedFlag"/>
+		 <menuitem id="ToggleSpamFlag"/>
+		</menu>	
+	</menu>
+	
+	<menu id="menu_utilities" placeholderid="bottom">
+	 <menu id="menu_message_filteronmessage">
+	  <menuitem id="CreateFilterOnSubject"/>
+	  <menuitem id="CreateFilterOnFrom"/>
+	  <menuitem id="CreateFilterOnTo"/>
+	 </menu>
+	 <menu id="menu_message_vfolderonmessage">
+	  <menuitem id="CreateVFolderOnSubject"/>
+	  <menuitem id="CreateVFolderOnFrom"/>
+	  <menuitem id="CreateVFolderOnTo"/>
+	 </menu>
+	 <separator/>
+	 <extensionpoint id="top" />	
+	 <extensionpoint id="bottom" />	
+	</menu>
+	
+	
+	
+	</menubar>
+		

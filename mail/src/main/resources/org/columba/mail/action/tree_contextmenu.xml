@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menu>
+ <menuitem id="CreateSubFolder"/>
+	 <menuitem id="CreateVirtualFolder"/>
+	 <separator/>
+	 <menuitem id="RenameFolder"/>
+	 <menuitem id="RemoveFolder"/>
+	 <separator/>
+	 <menuitem id="ExpungeFolder"/>
+	 <menuitem id="MarkFolderAsRead"/>
+	 <!--
+	 <menuitem id="EmptyFolder"/>
+	 -->
+	 <separator/>
+	 <menuitem id="MoveUp"/>
+	 <menuitem id="MoveDown"/>
+	 <separator/>
+	 <menuitem id="ApplyFilter"/>
+	 <menuitem id="FilterPreferences"/>
+	 <separator/>
+	 <menuitem id="SubscribeFolder"/>
+	 <separator/>
+	 <menuitem id="FolderOptions"/>
+</menu>

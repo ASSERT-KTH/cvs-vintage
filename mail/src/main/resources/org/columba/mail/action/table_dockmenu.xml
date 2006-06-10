@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<menu id="message_menu">
+    <imenu id="SortMessagesMenu"/>
+    <separator/>
+    <checkboxmenuitem id="ThreadedView"/>
+    <menuitem id="ColumnDialog"/>
+</menu>

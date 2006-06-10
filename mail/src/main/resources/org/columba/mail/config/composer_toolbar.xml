@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
+
+<toolbar>
+    <button action="Send"/>
+	<button action="AttachFile"/>
+	<separator></separator>
+	<button action="Undo"/>
+	<button action="Redo"/>
+	<button action="Cut"/>
+	<button action="Copy"/>
+	<button action="Paste"/>
+	<separator/>
+	<button action="Spellcheck"/>
+	<button action="Addressbook"/>
+	<separator/>
+	<!--
+	<button action="ShowContextSpecificHelp"/>
+	<separator/>
+	<button action="Cancel"/>
+	-->
+</toolbar>    

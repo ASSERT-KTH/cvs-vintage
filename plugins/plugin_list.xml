@@ -68,12 +68,7 @@
 		</ant>
 	</target>
 
-	<target name="calendar" description="Builds all calendar plugins">
-		<ant target="release" inheritall="false" antfile="build_plugin.xml">
-			<property name="plugin_dir" value="org.columba.calendar.frenchvanilla" />
-		</ant>
-	</target>
 	
 	<!-- only build if columba classpath variable is set -->
-	<target name="all" if="columba_classpath" depends="core,mail,examples,chat,calendar" />
+	<target name="all" if="columba_classpath" depends="core,mail,examples,chat" />
 </project>

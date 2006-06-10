@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<menu id="table_menu">
+ 	<menuitem id="OpenMessageWithComposer"/>
+ 	<menuitem id="OpenMessageWithMessageFrame" />
+ 	<menuitem id="SaveMessageBodyAs" />
+ 	
+ 	<menuitem id="Print"/>
+ 	<separator/>
+ 	<menuitem id="Reply" />
+ 	<menuitem id="ReplyToAll" />
+ 	<menuitem id="ReplyToList" />
+ 	<menuitem id="ReplyAsAttachment"/>
+ 	<menuitem id="ReplyWithTemplate"/>
+	<menuitem id="Forward" />
+	 <menu id="menu_message_forward_as">
+	  <menuitem id="ForwardInline" />
+	  <menuitem id="ForwardAsAttachment" />
+	  <separator/>
+	  <menuitem id="Redirect" />
+	 </menu>
+	<separator />
+	<menuitem id="CopyMessage" />
+	<menuitem id="MoveMessage" />
+	<menuitem id="DeleteMessage" />
+	<separator/>
+	<menuitem id="AddSenderToAddressbook"/>
+	<menuitem id="AddAllSendersToAddressbook"/>
+	<separator/>
+	<imenu id="ColorMessageMenu"/>
+		<separator/>
+		<menu id="menu_message_mark">
+		 <menuitem id="ToggleReadFlag"/>
+		 <menuitem id="ToggleAnsweredFlag"/>
+		 <menuitem id="ToggleDraftFlag"/>
+		 <menuitem id="ToggleFlaggedFlag"/>
+		 <menuitem id="ToggleExpungedFlag"/>
+		 <menuitem id="ToggleSpamFlag"/>
+		</menu>	
+</menu>
+

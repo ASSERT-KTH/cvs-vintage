@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT template (pop3,imap)>
+
+<!ELEMENT pop3 (account)>
+<!ELEMENT imap (account)>
+
+<!ELEMENT accountlist (account*)>
+
+<!ELEMENT account (identity,(popserver|imapserver),smtpserver,pgp,specialfolders)>
+<!ATTLIST account
+ name CDATA #REQUIRED
+ uid CDATA #REQUIRED
+>
+ 
+<!ELEMENT identity EMPTY>
+<!ATTLIST identity
+ name CDATA #REQUIRED
+ address CDATA #REQUIRED
+ organisation CDATA #IMPLIED
+ reply_address CDATA #IMPLIED
+ attach_signature (true|false) "false"
+ signature_file CDATA "~/.signature"
+>
+ 
+<!ELEMENT popserver EMPTY>
+<!ATTLIST popserver
+ user CDATA #REQUIRED
+ password CDATA #REQUIRED
+ user CDATA #REQUIRED
+ host CDATA #REQUIRED
+ port CDATA "110"
+ leave_message_on_server (true|false) "true"
+ save_password (true|false) "false"
+ exclude_from_checkall (true|false) "false"
+ destination_folder_uid CDATA #REQUIRED
+ enable_mailcheck (true|false) "false"
+ mailcheck_interval CDATA "10"
+ enable_download_limit (true|false) "false"
+ download_limit CDATA "100"
+ login_method (USER|APOP) "USER"
+ enable_sound (true|false) "false"
+ sound_file CDATA "default"
+ automatically_download_new_messages (true|false) "true"
+ use_default_account (true|false) "false"
+>
+
+<!ELEMENT imapserver EMPTY>
+<!ATTLIST imapserver
+ user CDATA #REQUIRED
+ password CDATA #REQUIRED
+ user CDATA #REQUIRED
+ host CDATA #REQUIRED
+ port CDATA "110"
+ save_password (true|false) "false"
+ enable_mailcheck (true|false) "false"
+ mailcheck_interval CDATA "10"
+ login_method (LOGIN) "LOGIN"
+ enable_sound (true|false) "false"
+ sound_file CDATA "default"
+ use_default_account (true|false) "false"
+ automatically_apply_filter (true|false) "false"
+>
+
+<!ELEMENT smtpserver EMPTY>
+<!ATTLIST smtpserver
+ user CDATA #REQUIRED
+ password CDATA #REQUIRED
+ user CDATA #REQUIRED
+ host CDATA #REQUIRED
+ port CDATA "110"
+ save_password (true|false) "false"
+ login_method (LOGIN) "LOGIN"
+ use_default_account (true|false) "false"
+ automatically_apply_filter (true|false) "false"
+>
+
+<!ELEMENT pgp EMPTY> 
+<!ATTLIST pgp
+ id CDATA #REQUIRED
+ type (0|1) "0"
+ path CDATA "/usr/bin/gpg"
+ always_sign (true|false) "false"
+ always_encrypt (true|false) "false"  
+ enabled (true|false) "false"
+>
+ 
+<!ELEMENT specialfolders EMPTY>
+<!ATTLIST specialfolders
+ inbox CDATA "101"
+ drafts CDATA "102"
+ templates CDATA "107"
+ sent CDATA "104"
+ trash CDATA "105"
+>
+ 

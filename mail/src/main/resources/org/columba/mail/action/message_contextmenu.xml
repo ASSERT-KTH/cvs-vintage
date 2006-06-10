@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<menu id="message_menu">
+ 	<menuitem id="Copy"/>
+ 	<menuitem id="CopyLinkLocationAction" />
+ 	<menuitem id="SelectAll"/>	
+ 	<separator/>
+ 	<menuitem id="OpenUrlAction"/>
+ 	<menuitem id="OpenUrlWithAction"/>
+ 	<separator/>
+ 	<menuitem id="AddToAddressbookAction"/>
+ 	<menuitem id="ComposeMessageAction"/>
+</menu>

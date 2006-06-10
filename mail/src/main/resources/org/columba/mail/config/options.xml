@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "options.dtd"> -->
+
+<options version="1.0">
+ <gui>
+  <table />
+ </gui>
+ <html prefer="true" />
+ <markasread delay="2" />
+ <headerviewer headerfields="Subject Date Reply-To From To Cc Bcc" />
+ <headercache/>
+ <defaultclient check="true" />
+</options>
