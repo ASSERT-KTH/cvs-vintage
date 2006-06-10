@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.14 2005/11/13 11:01:17 linus Exp $
+// $Id: AbstractFilePersister.java,v 1.15 2006/06/10 20:46:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -284,4 +284,12 @@ public abstract class AbstractFilePersister extends FileFilter
     public void removeProgressListener(ProgressListener listener) {
         listenerList.remove(ProgressListener.class, listener);
     }
+
+    /**
+     * Returns true if a FileChooser should visualize an icon for the
+     * persister.
+     * 
+     * @return true if the persister is associated to an icon 
+     */
+    public abstract boolean hasAnIcon();
 }

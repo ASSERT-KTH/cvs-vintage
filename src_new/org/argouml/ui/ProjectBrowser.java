@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.195 2006/05/23 17:57:52 tfmorris Exp $
+// $Id: ProjectBrowser.java,v 1.196 2006/06/10 20:46:29 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,6 +84,7 @@ import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.ui.ActionRemoveFromDiagram;
 import org.argouml.uml.ui.ActionSaveProject;
+import org.argouml.uml.ui.ProjectFileView;
 import org.argouml.uml.ui.TabProps;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
@@ -1559,6 +1560,9 @@ public final class ProjectBrowser
         String sChooserTitle =
             Translator.localize("filechooser.save-as-project");
         chooser.setDialogTitle(sChooserTitle + " " + p.getName());
+
+        // adding project files icon
+        chooser.setFileView(ProjectFileView.getInstance());
 
         chooser.setAcceptAllFileFilterUsed(false);
         PersistenceManager.getInstance().setSaveFileChooserFilters(chooser);

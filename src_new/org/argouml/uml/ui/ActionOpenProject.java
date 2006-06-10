@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.67 2006/04/29 22:33:49 linus Exp $
+// $Id: ActionOpenProject.java,v 1.68 2006/06/10 20:46:28 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,6 +118,9 @@ public class ActionOpenProject extends AbstractAction
 
             chooser.setAcceptAllFileFilterUsed(false);
 
+            // adding project files icon
+            chooser.setFileView(ProjectFileView.getInstance());
+            
             pm.setOpenFileChooserFilter(chooser);
 
             String fn = Configuration.getString(

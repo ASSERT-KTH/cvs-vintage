@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.25 2006/02/27 14:53:36 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.26 2006/06/10 20:46:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,6 +187,15 @@ public class XmiFilePersister extends AbstractFilePersister {
         } catch (IOException e) {
             throw new OpenException(e);
         }
+    }
+
+    /**
+     * Returns true. All Argo specific files have an icon.
+     * 
+     * @see org.argouml.persistence.AbstractFilePersister#hasAnIcon()
+     */
+    public boolean hasAnIcon() {
+        return true;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.34 2006/04/08 13:22:07 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.35 2006/06/10 20:46:28 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -574,5 +574,14 @@ public class UmlFilePersister extends AbstractFilePersister
             persister = new ModelMemberFilePersister();
         }
         return persister;
+    }
+
+    /**
+     * Returns true. All Argo specific files have an icon.
+     * 
+     * @see org.argouml.persistence.AbstractFilePersister#hasAnIcon()
+     */
+    public boolean hasAnIcon() {
+        return true;
     }
 }

@@ -1,4 +1,4 @@
-// $Id: XmlFilePersister.java,v 1.2 2006/02/19 09:42:15 linus Exp $
+// $Id: XmlFilePersister.java,v 1.3 2006/06/10 20:46:28 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,15 @@ public class XmlFilePersister extends XmiFilePersister {
      */
     public String getExtension() {
         return "xml";
+    }
+
+    /**
+     * Returns false. Only Argo specific files have an icon.
+     * 
+     * @see org.argouml.persistence.AbstractFilePersister#hasAnIcon()
+     */
+    public boolean hasAnIcon() {
+        return false;
     }
 
 }
