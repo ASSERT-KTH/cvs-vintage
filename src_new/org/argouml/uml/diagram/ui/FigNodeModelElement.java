@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.254 2006/06/04 13:54:52 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.255 2006/06/10 18:42:46 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -927,7 +927,9 @@ public abstract class FigNodeModelElement
         if (pve instanceof DeleteInstanceEvent && src == getOwner()) {
             removeFromDiagram();
             return;
-        } else if (pName.equals("editing")
+        }
+        // We handle and consume editing events
+        if (pName.equals("editing")
                 && Boolean.FALSE.equals(pve.getNewValue())) {
             try {
                 //parse the text that was edited
