@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.19 2006/05/23 19:09:59 tfmorris Exp $
+// $Id: FigNodeAssociation.java,v 1.20 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -279,8 +279,9 @@ public class FigNodeAssociation extends FigNodeModelElement {
 
     /**
      * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
+     * TODO: Why does this behaviour differ from standard? Please javadoc.
      */
-    public void removeFromDiagram() {
+    protected void removeFromDiagramImpl() {
         Object owner = getOwner();
         super.removeFromDiagram();
         Editor editor = Globals.curEditor();

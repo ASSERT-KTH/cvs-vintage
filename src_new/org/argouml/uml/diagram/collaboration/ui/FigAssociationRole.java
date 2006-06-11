@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.34 2006/06/04 13:54:52 mvw Exp $
+// $Id: FigAssociationRole.java,v 1.35 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,7 +127,7 @@ public class FigAssociationRole extends FigAssociation {
     /**
      * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
-    public void removeFromDiagram() {
+    protected void removeFromDiagramImpl() {
         super.removeFromDiagram();
         messages.removeFromDiagram();
     }

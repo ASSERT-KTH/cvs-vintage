@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.255 2006/06/10 18:42:46 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.256 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1496,7 +1496,11 @@ public abstract class FigNodeModelElement
     /**
      * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
-    public void removeFromDiagram() {
+    final public void removeFromDiagram() {
+        removeFromDiagramImpl();
+    }
+    
+    protected void removeFromDiagramImpl() {
         ArgoEventPump.removeListener(this);
         removeAllElementListeners();
         shadowSize = 0;

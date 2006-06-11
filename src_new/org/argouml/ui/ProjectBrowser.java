@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.196 2006/06/10 20:46:29 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.197 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
@@ -89,6 +90,7 @@ import org.argouml.uml.ui.TabProps;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
+import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.ui.IStatusBar;
@@ -1093,6 +1095,7 @@ public final class ProjectBrowser
 //            // A Fig with a null owner
 //            if (figs.size() > 0) {
 //                Fig fig = (Fig)figs.get(0);
+//                LOG.error("Setting owner of " + fig.getClass().getName() + " to null");
 //                fig.setOwner(null);
 //            }
 //            // A Fig with a null layer

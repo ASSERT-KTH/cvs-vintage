@@ -1,4 +1,4 @@
-// $Id: FigClassAssociationClass.java,v 1.6 2006/06/11 13:15:25 mvw Exp $
+// $Id: FigClassAssociationClass.java,v 1.7 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,7 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
-import org.tigris.gef.base.Editor;
-import org.tigris.gef.base.Globals;
 
 /**
  * Class to display a class in an Association Class

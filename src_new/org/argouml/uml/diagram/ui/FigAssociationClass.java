@@ -1,4 +1,4 @@
-// $Id: FigAssociationClass.java,v 1.17 2006/06/11 11:34:04 bobtarling Exp $
+// $Id: FigAssociationClass.java,v 1.18 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,7 @@ public class FigAssociationClass extends FigAssociation {
      * FigClassAssociationClass attached to that. Remove them from the diagram
      * before removing this.
      */
-    public void removeFromDiagram() {
+    protected void removeFromDiagramImpl() {
         // TODO implement as described above.
         super.removeFromDiagram();
     }

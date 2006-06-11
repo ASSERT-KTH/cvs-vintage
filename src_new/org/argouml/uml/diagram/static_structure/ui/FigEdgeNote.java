@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.35 2006/06/01 00:52:53 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.36 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -271,7 +271,7 @@ public class FigEdgeNote
     /**
      * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
-    public void removeFromDiagram() {
+    public void removeFromDiagramImpl() {
         superRemoveFromDiagram();
     }
     

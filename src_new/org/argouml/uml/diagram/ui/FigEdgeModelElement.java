@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.172 2006/06/11 13:16:00 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.173 2006/06/11 13:25:52 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -940,7 +940,11 @@ public abstract class FigEdgeModelElement
     /**
      * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
-    public void removeFromDiagram() {
+    public final void removeFromDiagram() {
+        removeFromDiagramImpl();
+    }
+    
+    protected void removeFromDiagramImpl() {
         Object o = getOwner();
         if (o != null) {
             removeElementListener(o);
@@ -960,8 +964,8 @@ public abstract class FigEdgeModelElement
         // therefore we loop through our diagrams and delete each and every
         // occurence on our own
         it =
-	    ProjectManager.getManager().getCurrentProject()
-	        .getDiagrams().iterator();
+        ProjectManager.getManager().getCurrentProject()
+            .getDiagrams().iterator();
         while (it.hasNext()) {
             ArgoDiagram diagram = (ArgoDiagram) it.next();
             diagram.damage();
@@ -970,7 +974,6 @@ public abstract class FigEdgeModelElement
         /* TODO: MVW: Should we not call damage()
          * for diagrams AFTER the next step? */
         super.removeFromDiagram();
-
     }
     
     protected void superRemoveFromDiagram() {
