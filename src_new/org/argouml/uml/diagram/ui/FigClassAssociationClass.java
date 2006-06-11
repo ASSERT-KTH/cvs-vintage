@@ -1,4 +1,4 @@
-// $Id: FigClassAssociationClass.java,v 1.5 2006/04/09 22:23:30 bobtarling Exp $
+// $Id: FigClassAssociationClass.java,v 1.6 2006/06/11 13:15:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,12 @@ public class FigClassAssociationClass extends FigClass {
     
     /**
      * The constructor.
+     *
+     * @param owner the UML object
+     * @param x the x of the initial location
+     * @param y the y of the initial location
+     * @param w the initial width
+     * @param h the initial height
      */
     public FigClassAssociationClass(Object owner, int x, int y, int w, int h) {
         super(owner, x, y, w, h);
@@ -50,7 +56,7 @@ public class FigClassAssociationClass extends FigClass {
     /**
      * The constructor.
      *
-     * @param ownerFig the owner fig
+     * @param owner the owner UML object
      */
     public FigClassAssociationClass(Object owner) {
         super(null, owner);
