@@ -1,4 +1,4 @@
-// $Id: FigEdgeAssociationClass.java,v 1.14 2006/06/11 17:30:17 mvw Exp $
+// $Id: FigEdgeAssociationClass.java,v 1.15 2006/06/11 21:55:01 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.beans.VetoableChangeListener;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.DelayedVChangeListener;
-import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
@@ -138,10 +137,16 @@ public class FigEdgeAssociationClass
             node = getSourceFigNode();
         }
         if (!(node instanceof FigEdgePort)) {
+            LOG.warn("The is no FigEdgePort attached" +
+                    " to the association class link");
             return null;
         }
         // Actually return the FigEdge that the FigEdgePort is part of.
-        return node.getAnnotationOwner();
+        Fig delegate = node.getGroup();
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Delegating remove to " + delegate.getClass().getName());
+        }
+        return delegate;
     }
 
 

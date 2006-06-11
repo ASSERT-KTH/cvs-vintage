@@ -1,4 +1,4 @@
-// $Id: FigAssociationClass.java,v 1.19 2006/06/11 14:42:10 bobtarling Exp $
+// $Id: FigAssociationClass.java,v 1.20 2006/06/11 21:55:01 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,11 @@
 
 package org.argouml.uml.diagram.ui;
 
+import java.util.Iterator;
+
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
 
 
@@ -83,7 +86,25 @@ public class FigAssociationClass extends FigAssociation {
      * before removing this.
      */
     protected void removeFromDiagramImpl() {
-        // TODO implement as described above.
+        FigEdgePort figEdgePort = getEdgePort();
+        
+        FigEdgeAssociationClass figEdgeLink = null;
+        Iterator it = figEdgePort.getFigEdges().iterator();
+        while(it.hasNext() && figEdgeLink == null) {
+            Object o = it.next();
+            if (o instanceof FigEdgeAssociationClass) {
+                figEdgeLink = (FigEdgeAssociationClass)o;
+                
+            }
+        }
+        if (figEdgeLink != null) {
+            FigNode figClassBox = figEdgeLink.getDestFigNode();
+            if (!(figClassBox instanceof FigClassAssociationClass)) {
+                figClassBox = figEdgeLink.getSourceFigNode();
+            }
+            figEdgeLink.removeFromDiagramImpl();
+            ((FigClassAssociationClass)figClassBox).removeFromDiagramImpl();
+        }
         super.removeFromDiagramImpl();
     }
 
