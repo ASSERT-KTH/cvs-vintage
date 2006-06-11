@@ -1,5 +1,5 @@
-// $Id: GUITestActionSaveGraphics.java,v 1.3 2005/04/14 18:29:47 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: GUITestActionSaveGraphics.java,v 1.4 2006/06/11 17:30:38 mvw Exp $
+// Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

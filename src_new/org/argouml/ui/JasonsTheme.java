@@ -1,5 +1,5 @@
-// $Id: JasonsTheme.java,v 1.7 2004/12/08 19:42:31 linus Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: JasonsTheme.java,v 1.8 2006/06/11 17:30:17 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
