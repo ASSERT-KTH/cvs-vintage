@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.171 2006/06/11 07:22:09 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.172 2006/06/11 13:16:00 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -967,6 +967,8 @@ public abstract class FigEdgeModelElement
             diagram.damage();
         }
 
+        /* TODO: MVW: Should we not call damage()
+         * for diagrams AFTER the next step? */
         super.removeFromDiagram();
 
     }
