@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.40 2006/04/01 21:06:39 mvw Exp $
+// $Id: FigClassifierRole.java,v 1.41 2006/06/11 23:53:07 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -770,17 +770,8 @@ public class FigClassifierRole extends FigNodeModelElement
      * @see FigNodeModelElement#updateListeners(java.lang.Object)
      */
     protected void updateListeners(Object newOwner) {
-        Object oldOwner = getOwner();
-        if (oldOwner != null) {
-            removeAllElementListeners();
-        }
+        super.updateListeners(newOwner);
         if (newOwner != null) {
-            addElementListener(newOwner,
-                    new String[] {
-                        "name",
-                        "stereotype",
-                        "base",
-                    });
             Iterator it = Model.getFacade().getBases(newOwner).iterator();
             while (it.hasNext()) {
                 Object base = it.next();
@@ -845,7 +836,7 @@ public class FigClassifierRole extends FigNodeModelElement
         lifeLineFig.removeFig(fmp);
         updateNodeStates();
     }
-
+    
     /**
      * Update an array of booleans to set node indexes that have associated
      * FigMessagePort to false.
