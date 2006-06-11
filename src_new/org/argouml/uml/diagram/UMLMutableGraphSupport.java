@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.40 2006/06/11 15:39:50 mvw Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.41 2006/06/11 19:01:27 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -206,7 +206,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
      * java.lang.Object, java.lang.Class)
      */
     public Object connect(Object fromPort, Object toPort, Class edgeClass) {
-        return connect(fromPort, toPort, (Object)edgeClass);
+        return connect(fromPort, toPort, (Object) edgeClass);
     }
 
     /**

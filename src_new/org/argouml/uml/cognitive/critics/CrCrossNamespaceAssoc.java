@@ -1,4 +1,4 @@
-// $Id: CrCrossNamespaceAssoc.java,v 1.18 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrCrossNamespaceAssoc.java,v 1.19 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ import org.argouml.uml.cognitive.UMLDecision;
  * useful for the future when multiple models and sub-systems are
  * supported.<p>
  *
- * @see <a href=
+ * See <a href=
  * "http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/
  * #s2.ref.critics_cross_namespace_assoc">
  * ArgoUML User Manual: Classifier not in Namespace of its Association</a>

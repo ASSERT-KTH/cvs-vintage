@@ -1,4 +1,4 @@
-// $Id: PgmlUtility.java,v 1.5 2006/05/10 21:53:42 bobtarling Exp $
+// $Id: PgmlUtility.java,v 1.6 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,6 +67,7 @@ public final class PgmlUtility {
     
     /**
      * Return just the comment edges for a specific layer.
+     * TODO: Document: Diagram / layer?
      *
      * @param lay The {@link Layer}.
      * @return a {@link List} with the edges.
@@ -92,7 +93,7 @@ public final class PgmlUtility {
         List contents = lay.getContents();
         int size = contents.size();
         List list = new ArrayList(size);
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             Object o = contents.get(i);
             if (!(o instanceof FigEdge)) {
                 list.add(o);
@@ -102,11 +103,13 @@ public final class PgmlUtility {
         return list;
     }
     
-    private static void getEdges(Diagram diagram, Collection edges, List returnEdges) {
+    private static void getEdges(Diagram diagram, 
+            Collection edges, List returnEdges) {
         Iterator it = edges.iterator();
         while (it.hasNext()) {
             Object o = it.next();
-            if (!(o instanceof FigEdgeNote) && !(o instanceof FigEdgeAssociationClass)) {
+            if (!(o instanceof FigEdgeNote) 
+                    && !(o instanceof FigEdgeAssociationClass)) {
                 returnEdges.add(o);
             }
         }

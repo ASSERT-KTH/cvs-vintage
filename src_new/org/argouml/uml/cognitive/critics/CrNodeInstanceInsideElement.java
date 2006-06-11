@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceInsideElement.java,v 1.16 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrNodeInstanceInsideElement.java,v 1.17 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +101,6 @@ public class CrNodeInstanceInsideElement extends CrUML {
 	Collection figs = dd.getLayer().getContents();
         Iterator figIter = figs.iterator();
 	ListSet offs = null;
-	int size = figs.size();
 	while (figIter.hasNext()) {
 	    Object obj = figIter.next();
 	    if (!(obj instanceof FigMNodeInstance)) {

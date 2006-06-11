@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.18 2006/03/24 05:50:48 linus Exp $
+// $Id: ProjectMemberTodoList.java,v 1.19 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +121,7 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
                     continue;
                 }
     	    } catch (ClassCastException e) {
-        		continue;
+    	        continue;
     	    }
     	    out.addElement(new ResolvedCriticXMLHelper(rci));
     	}

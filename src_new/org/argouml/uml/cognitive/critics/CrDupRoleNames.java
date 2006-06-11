@@ -1,4 +1,4 @@
-// $Id: CrDupRoleNames.java,v 1.18 2006/06/11 15:39:45 mvw Exp $
+// $Id: CrDupRoleNames.java,v 1.19 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.argouml.uml.cognitive.UMLDecision;
  * This is the first well-formedness rule for associations in the UML 1.3
  * standard (see section 2.5.3 of the standard).<p>
  *
- * @see <a href=
+ * See <a href=
  * "http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/
  * #s2.ref.critics_dup_role_names">
  * ArgoUML User Manual: Duplicate end (role) names for &lt;association&gt;</a>

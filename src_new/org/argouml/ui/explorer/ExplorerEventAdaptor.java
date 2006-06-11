@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.24 2006/06/11 15:39:51 mvw Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.25 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,7 @@ public final class ExplorerEventAdaptor
      */
     public static ExplorerEventAdaptor getInstance() {
         if (instance == null) {
-            return instance = new ExplorerEventAdaptor();
+            instance = new ExplorerEventAdaptor();
 	}
 	return instance;
     }

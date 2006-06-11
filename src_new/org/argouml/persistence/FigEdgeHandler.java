@@ -1,4 +1,4 @@
-// $Id: FigEdgeHandler.java,v 1.9 2006/06/02 17:19:19 bobtarling Exp $
+// $Id: FigEdgeHandler.java,v 1.10 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,6 @@ package org.argouml.persistence;
 
 import java.util.StringTokenizer;
 
-import org.argouml.uml.diagram.ui.FigEdgePort;
-import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.persistence.pgml.PGMLStackParser;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
@@ -78,10 +76,10 @@ public class FigEdgeHandler
 
         if (o instanceof String) {
             PGMLStackParser parser = getPGMLStackParser();
-            Fig spf = null;
-            Fig dpf = null;
-            FigNode sfn = null;
-            FigNode dfn = null;
+//            Fig spf = null;
+//            Fig dpf = null;
+//            FigNode sfn = null;
+//            FigNode dfn = null;
             String body = (String) o;
             StringTokenizer st2 = new StringTokenizer(body, "=\"' \t\n");
             String sourcePortFig = null;
@@ -109,7 +107,7 @@ public class FigEdgeHandler
                 }
             }
             
-            ((org.argouml.persistence.PGMLStackParser)parser).addFigEdge(
+            ((org.argouml.persistence.PGMLStackParser) parser).addFigEdge(
                     edge, 
                     sourcePortFig, 
                     destPortFig, 

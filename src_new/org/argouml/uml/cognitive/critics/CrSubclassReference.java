@@ -1,4 +1,4 @@
-// $Id: CrSubclassReference.java,v 1.18 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrSubclassReference.java,v 1.19 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,7 +111,6 @@ public class CrSubclassReference extends CrUML {
 	    descendants.addElement(descendEnum.nextElement());
 
 	//TODO: GenNavigableClasses?
-	int nAsc = asc.size();
 	ListSet offs = null;
 	for (Iterator iter = asc.iterator(); iter.hasNext();) {
 	    Object ae = /*(MAssociationEnd)*/ iter.next();

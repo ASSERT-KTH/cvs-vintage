@@ -1,4 +1,4 @@
-// $Id: StylePanelFigNodeModelElement.java,v 1.14 2006/03/05 19:37:15 bobtarling Exp $
+// $Id: StylePanelFigNodeModelElement.java,v 1.15 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,6 +96,11 @@ public class StylePanelFigNodeModelElement
         pathCheckBox.addItemListener(this);
     }
 
+    /**
+     * Add a given checkbox to the panel.
+     * 
+     * @param cb the given checkbox
+     */
     public void addToDisplayPane(JCheckBox cb) {
         displayPane.add(cb);
     }
@@ -137,7 +142,6 @@ public class StylePanelFigNodeModelElement
             return;
         }
         FigNodeModelElement nodeTarget = (FigNodeModelElement) getPanelTarget();
-        int oldShadowSize = nodeTarget.getShadowSize();
         nodeTarget.setShadowSize(i);
         getPanelTarget().endTrans();
     }

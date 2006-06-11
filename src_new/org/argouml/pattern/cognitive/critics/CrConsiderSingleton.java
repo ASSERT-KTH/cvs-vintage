@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.27 2006/06/11 15:39:53 mvw Exp $
+// $Id: CrConsiderSingleton.java,v 1.28 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,7 +105,7 @@ public class CrConsiderSingleton extends CrUML {
         // with a name...
         if (Model.getFacade().getName(dm) == null
                 || "".equals(Model.getFacade().getName(dm))) {
-                return NO_PROBLEM;
+            return NO_PROBLEM;
         }
 
         // ... and not incompletely imported

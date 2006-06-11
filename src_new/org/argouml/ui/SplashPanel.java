@@ -1,4 +1,4 @@
-// $Id: SplashPanel.java,v 1.12 2006/06/11 17:30:17 mvw Exp $
+// $Id: SplashPanel.java,v 1.13 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,6 +78,9 @@ class SplashPanel extends JPanel {
 	add(splashLabel, BorderLayout.CENTER);
     }
 
+    /**
+     * @return the image of the splash
+     */
     public ImageIcon getImage() {
 	return splashImage;
     }

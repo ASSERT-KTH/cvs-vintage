@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.35 2006/06/11 15:39:47 mvw Exp $
+// $Id: WizStep.java,v 1.36 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,11 +161,6 @@ public class WizStep extends JPanel
     // accessors
 
     /**
-     * @deprecated since 0.15.3. The method in TabToDoTarget has been
-     * 		   deprecated, the visibility of this method will change
-     *             to protected in the future, and replaced by
-     * 		   {@link org.argouml.ui.targetmanager.TargetManager}.
-     *
      * @param item the target item
      */
     public void setTarget(Object item) {

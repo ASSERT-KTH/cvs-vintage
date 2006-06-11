@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.35 2006/06/11 15:39:51 mvw Exp $
+// $Id: ProjectMember.java,v 1.36 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,8 @@ public interface ProjectMember {
     /**
      * Repair any corruptions in the project member. Executed before a save in
      * order to ensure persistence is robust.
+     *
+     * @return A text that explains what is repaired.
      */
     String repair();
 }

@@ -1,4 +1,4 @@
-// $Id: InitMenusLater.java,v 1.12 2006/05/23 20:08:35 tfmorris Exp $
+// $Id: InitMenusLater.java,v 1.13 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,8 @@ class InitMenusLater implements Runnable {
      * @param reorder
      * @param nudge
      */
-    public static void initMenus(JMenu align, JMenu distribute, JMenu reorder, JMenu nudge) {
+    public static void initMenus(JMenu align, JMenu distribute, 
+            JMenu reorder, JMenu nudge) {
 	initAlignMenu(align);
         initDistributeMenu(distribute);
         initReorderMenu(reorder);

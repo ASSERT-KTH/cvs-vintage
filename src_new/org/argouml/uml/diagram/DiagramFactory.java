@@ -1,4 +1,4 @@
-// $Id: DiagramFactory.java,v 1.9 2006/04/01 16:30:11 mvw Exp $
+// $Id: DiagramFactory.java,v 1.10 2006/06/11 19:01:27 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,8 +128,8 @@ public final class DiagramFactory {
              * The diagram are always owned by the model
              * in this first implementation.
              */
-            DiDiagram dd =
-                GraphChangeAdapter.getInstance().createDiagram(diType, namespace);
+            DiDiagram dd = GraphChangeAdapter.getInstance()
+                .createDiagram(diType, namespace);
             ((UMLMutableGraphSupport) diagram.getGraphModel()).setDiDiagram(dd);
         }
 

@@ -1,4 +1,4 @@
-// $Id: CrNoInitialState.java,v 1.20 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrNoInitialState.java,v 1.21 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,6 @@ public class CrNoInitialState extends CrUML {
 	if (peers == null) {
 	    return PROBLEM_FOUND;
 	}
-	int size = peers.size();
 	for (Iterator iter = peers.iterator(); iter.hasNext();) {
 	    Object sv = iter.next();
 	    if (Model.getFacade().isAPseudostate(sv)

@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.44 2006/06/11 15:39:45 mvw Exp $
+// $Id: Init.java,v 1.45 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -227,17 +227,17 @@ public class Init {
     // from UML 1.1 Semantics spec
 
     // common coding conventions
-    private static Critic
-	crUnconventionalOperName = new CrUnconventionalOperName();
+    private static Critic crUnconventionalOperName = 
+        new CrUnconventionalOperName();
 
-    private static Critic
-	crUnconventionalAttrName = new CrUnconventionalAttrName();
+    private static Critic crUnconventionalAttrName = 
+        new CrUnconventionalAttrName();
 
-    private static Critic
-	crUnconventionalClassName = new CrUnconventionalClassName();
+    private static Critic crUnconventionalClassName = 
+        new CrUnconventionalClassName();
 
-    private static Critic
-	crUnconventionalPackName = new CrUnconventionalPackName();
+    private static Critic crUnconventionalPackName = 
+        new CrUnconventionalPackName();
 
     // Java specific
     private static Critic crClassMustBeAbstract = new CrClassMustBeAbstract();

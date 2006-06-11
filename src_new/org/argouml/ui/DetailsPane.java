@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.59 2006/06/11 15:39:42 mvw Exp $
+// $Id: DetailsPane.java,v 1.60 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -224,6 +224,8 @@ public class DetailsPane
      * the owner(model element) of a selected fig.<p>
      *
      * Decides which panels to enable.
+     *
+     * @param target the target object
      */
     private void setTarget(Object target) {
         enableTabs(target);
@@ -614,6 +616,8 @@ public class DetailsPane
     /**
      * Enables/disables the tabs on the tabbed card. Also selects the tab to
      * show.
+     *
+     * @param target the target object
      */
     private void enableTabs(Object target) {
 

@@ -1,4 +1,4 @@
-// $Id: CrNWayAgg.java,v 1.20 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrNWayAgg.java,v 1.21 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ import org.argouml.uml.cognitive.UMLDecision;
  * org.argouml.uml.cognitive.critics.CrMultipleAgg}) which deals with
  * 2-way assocations. <p>
  *
- * @see <a href=
+ * See <a href=
  * "http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/
  * #s2.ref.critics_multiple_agg">
  * ArgoUML User Manual: Two Aggregate ends (roles) in binary

@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.41 2006/06/11 15:39:42 mvw Exp $
+// $Id: StylePanelFig.java,v 1.42 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -397,7 +397,6 @@ public class StylePanelFig
         if (target == null || c == null) {
             return;
         }
-        Color oldColor = target.getFillColor();
         if (c instanceof Color) {
             target.setFillColor((Color) c);
         }
@@ -414,7 +413,6 @@ public class StylePanelFig
         if (target == null || c == null) {
             return;
         }
-        Color oldColor = target.getLineColor();
         if (c instanceof Color) {
             target.setLineColor((Color) c);
         }

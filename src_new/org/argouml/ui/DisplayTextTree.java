@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.64 2006/06/04 13:54:53 mvw Exp $
+// $Id: DisplayTextTree.java,v 1.65 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public class DisplayTextTree extends JTree {
     /**
      * This determines if stereotypes are to be shown in the explorer.
      */
-    protected boolean showStereotype;
+    private boolean showStereotype;
 
     /**
      * Sets the label renderer, line style angled, enable tooltips,
@@ -361,6 +361,13 @@ public class DisplayTextTree extends JTree {
             expandPath(path);
         }
         reexpanding = false;
+    }
+
+    /**
+     * @param show true if stereotypes have to be shown
+     */
+    protected void setShowStereotype(boolean show) {
+        this.showStereotype = show;
     }
 
     /**

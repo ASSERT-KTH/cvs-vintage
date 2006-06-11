@@ -1,4 +1,4 @@
-// $Id: ProjectSettingsTabProperties.java,v 1.1 2006/06/02 18:28:25 mvw Exp $
+// $Id: ProjectSettingsTabProperties.java,v 1.2 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -164,7 +164,6 @@ public class ProjectSettingsTabProperties extends JPanel implements
      * @see org.argouml.ui.GUISettingsTabInterface#handleResetToDefault()
      */
     public void handleResetToDefault() {
-        Project p = ProjectManager.getManager().getCurrentProject();
         userFullname.setText(Configuration.getString(Argo.KEY_USER_FULLNAME));
         userEmail.setText(Configuration.getString(Argo.KEY_USER_EMAIL));
         // There is no default description.

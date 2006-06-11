@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.18 2006/06/11 15:39:44 mvw Exp $
+// $Id: WizAddOperation.java,v 1.19 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.cognitive.critics;
-
-import java.util.Collection;
 
 import javax.swing.JPanel;
 

@@ -1,4 +1,4 @@
-// $Id: CmdSetPreferredSize.java,v 1.17 2006/06/11 15:39:53 mvw Exp $
+// $Id: CmdSetPreferredSize.java,v 1.18 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,8 +64,10 @@ public class CmdSetPreferredSize extends Cmd {
 
     private static String wordFor(int r) {
         switch (r) {
-        case PREFERRED_SIZE: return "preferred";
-        case MINIMUM_SIZE: return "minimum";
+        case PREFERRED_SIZE: 
+            return "preferred";
+        case MINIMUM_SIZE: 
+            return "minimum";
         }
         throw new IllegalArgumentException("CmdSetPreferredSize invoked with "
 					   + "incompatible mode: " + r);

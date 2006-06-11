@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.32 2006/04/29 16:02:23 linus Exp $
+// $Id: ActionSettings.java,v 1.33 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class ActionSettings extends AbstractAction {
         if (dialog == null) {
             dialog = new SettingsDialog();
         }
-        dialog.show();
+        dialog.setVisible(true);
     }
 
 

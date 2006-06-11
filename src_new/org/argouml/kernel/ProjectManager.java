@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.74 2006/03/03 23:44:05 tfmorris Exp $
+// $Id: ProjectManager.java,v 1.75 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -266,16 +266,16 @@ public final class ProjectManager implements MementoCreationObserver {
     /**
      * Set the save action.
      * 
-     * @param saveAction the action to be used
+     * @param save the action to be used
      */
-    public void setSaveAction(Action saveAction) {
-        this.saveAction = saveAction;
+    public void setSaveAction(Action save) {
+        this.saveAction = save;
         // Register with the save action with other subsystems so that
         // any changes in those subsystems will enable the
         // save button/menu item etc.
-        Designer.setSaveAction(saveAction);
-        Model.getPump().setSaveAction(saveAction);
-        MutableGraphSupport.setSaveAction(saveAction);
+        Designer.setSaveAction(save);
+        Model.getPump().setSaveAction(save);
+        MutableGraphSupport.setSaveAction(save);
     }
 
     /**

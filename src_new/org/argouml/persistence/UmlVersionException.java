@@ -1,4 +1,4 @@
-// $Id: UmlVersionException.java,v 1.2 2006/06/11 17:12:42 mvw Exp $
+// $Id: UmlVersionException.java,v 1.3 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,8 @@ public class UmlVersionException extends XmiFormatException {
      * Construct an UmlVersionException with the version string
      * and a nested cause.
      * 
-     * @param cause
+     * @param message the message for the exception
+     * @param cause what caused the exception
      */
     public UmlVersionException(String message, Throwable cause) {
         super(cause);

@@ -1,4 +1,4 @@
-// $Id: ActionFind.java,v 1.4 2006/03/13 19:41:51 mvw Exp $
+// $Id: ActionFind.java,v 1.5 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,9 @@ class ActionFind extends UndoableAction {
 
     private String name;
     
+    /**
+     * The constructor.
+     */
     public ActionFind() {
         // Set the name:
         super(Translator.localize("action.find"));

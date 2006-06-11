@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.148 2006/06/11 14:56:02 mvw Exp $
+// $Id: Main.java,v 1.149 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -629,7 +629,7 @@ public class Main {
         if (!EventQueue.isDispatchThread()
                 && Runtime.getRuntime().availableProcessors() == 1) {
             synchronized (splash) {
-                while (!splash.paintCalled) {
+                while (!splash.isPaintCalled()) {
                     try {
                         splash.wait();
                     } catch (InterruptedException e) {

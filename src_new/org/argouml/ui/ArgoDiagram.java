@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.58 2006/06/10 23:51:38 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.59 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -224,6 +224,8 @@ public class ArgoDiagram extends Diagram {
      * Before a save takes place we repair the model in order to
      * be as certain as possible that the saved file will reload.
      * TODO: Split into small inner classes for each fix.
+     *
+     * @return A text that explains what is repaired.
      */
     public String repair() {
         StringBuffer report = new StringBuffer(500);

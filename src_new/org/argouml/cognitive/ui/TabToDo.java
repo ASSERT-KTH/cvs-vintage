@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.33 2006/06/11 14:56:02 mvw Exp $
+// $Id: TabToDo.java,v 1.34 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,10 +153,6 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     /**
      * Sets the target of the TabToDo.
      *
-     * @deprecated As of ArgoUml version 0.13.5,
-     *             the visibility of this method will change to private
-     *             in the future, replaced by
-     *             {@link org.argouml.ui.targetmanager.TargetManager}.
      * @param item the new target
      */
     public void setTarget(Object item) {

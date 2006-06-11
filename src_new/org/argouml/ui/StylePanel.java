@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.28 2006/06/11 15:39:42 mvw Exp $
+// $Id: StylePanel.java,v 1.29 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,10 +79,12 @@ public class StylePanel
     /**
      * This method must be overriden by implementors if they don't want to
      * refresh the whole stylepanel every time a property change events is
-     * fired.<p>
+     * fired.
      *
      * @since 8 june 2003, 0.13.6
      * @see org.argouml.ui.TabTarget#refresh()
+     *
+     * @param e the property-change-event
      */
     public void refresh(PropertyChangeEvent e) {
 	refresh();

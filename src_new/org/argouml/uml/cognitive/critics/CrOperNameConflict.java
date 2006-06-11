@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.21 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrOperNameConflict.java,v 1.22 2006/06/11 19:01:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ import org.argouml.uml.cognitive.UMLDecision;
  * classes have a lot of operations. See the {@link #predicate2}
  * method for possible solutions.<p>
  *
- * @see <a href=
+ * See <a href=
  * "http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/
  * #s2.ref.oper_name_conflict">
  * ArgoUML User Manual: Change Names or Signatures in &lt;artifact&gt;

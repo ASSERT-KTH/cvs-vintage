@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.39 2006/02/27 20:44:54 tfmorris Exp $
+// $Id: ArgoFacade.java,v 1.40 2006/06/11 19:01:26 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,7 +252,7 @@ class ArgoAny implements Any, Type2 {
 	return internalNavigateParameterized(name, qualifiers, false);
     }
 
-    public Type internalNavigateParameterized(final String name,
+    private Type internalNavigateParameterized(final String name,
                                               final Type[] params,
                                               boolean fCheckIsQuery)
 	throws OclTypeException {
@@ -292,7 +292,8 @@ class ArgoAny implements Any, Type2 {
 	    }
 	}
 
-        Collection returnParams = Model.getCoreHelper().getReturnParameters(foundOp);
+        Collection returnParams = 
+            Model.getCoreHelper().getReturnParameters(foundOp);
         Object rp;
         if (returnParams.size() == 0) {
             rp = null;
