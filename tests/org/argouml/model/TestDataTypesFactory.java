@@ -1,5 +1,5 @@
-// $Id: TestDataTypesFactory.java,v 1.2 2005/10/28 15:54:18 tfmorris Exp $
-// Copyright (c) 2002-2005 The Regents of the University of California. All
+// $Id: TestDataTypesFactory.java,v 1.3 2006/06/11 15:43:56 mvw Exp $
+// Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

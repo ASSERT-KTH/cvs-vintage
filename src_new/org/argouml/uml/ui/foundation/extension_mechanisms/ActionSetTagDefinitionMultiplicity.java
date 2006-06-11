@@ -1,5 +1,5 @@
-// $Id: ActionSetTagDefinitionMultiplicity.java,v 1.2 2005/10/31 01:51:03 tfmorris Exp $
-// Copyright (c) 2003-2005 The Regents of the University of California. All
+// $Id: ActionSetTagDefinitionMultiplicity.java,v 1.3 2006/06/11 15:39:51 mvw Exp $
+// Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

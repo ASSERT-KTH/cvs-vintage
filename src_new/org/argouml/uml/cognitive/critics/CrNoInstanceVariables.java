@@ -1,5 +1,5 @@
-// $Id: CrNoInstanceVariables.java,v 1.29 2005/03/11 09:43:04 mkl Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: CrNoInstanceVariables.java,v 1.30 2006/06/11 15:39:44 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

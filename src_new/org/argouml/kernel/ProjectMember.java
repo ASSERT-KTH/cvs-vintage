@@ -1,5 +1,5 @@
-// $Id: ProjectMember.java,v 1.34 2006/03/17 23:19:42 bobtarling Exp $
-// Copyright (c) 2004-2005 The Regents of the University of California. All
+// $Id: ProjectMember.java,v 1.35 2006/06/11 15:39:51 mvw Exp $
+// Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

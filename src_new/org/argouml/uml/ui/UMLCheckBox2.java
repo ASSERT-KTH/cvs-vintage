@@ -1,5 +1,5 @@
-// $Id: UMLCheckBox2.java,v 1.26 2006/02/27 20:41:55 tfmorris Exp $
-// Copyright (c) 2002-2005 The Regents of the University of California. All
+// $Id: UMLCheckBox2.java,v 1.27 2006/06/11 15:39:47 mvw Exp $
+// Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

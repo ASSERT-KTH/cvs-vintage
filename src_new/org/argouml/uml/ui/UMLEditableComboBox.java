@@ -1,5 +1,5 @@
-// $Id: UMLEditableComboBox.java,v 1.11 2006/03/02 15:33:17 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: UMLEditableComboBox.java,v 1.12 2006/06/11 15:39:47 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLEditableComboBox.java,v 1.11 2006/03/02 15:33:17 mvw Exp $
+// $Id: UMLEditableComboBox.java,v 1.12 2006/06/11 15:39:47 mvw Exp $
 
 package org.argouml.uml.ui;
 

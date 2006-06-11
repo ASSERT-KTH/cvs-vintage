@@ -1,5 +1,5 @@
-// $Id: UMLReceptionSpecificationDocument.java,v 1.7 2006/02/25 07:15:32 tfmorris Exp $
-// Copyright (c) 2003-2005 The Regents of the University of California. All
+// $Id: UMLReceptionSpecificationDocument.java,v 1.8 2006/06/11 15:39:48 mvw Exp $
+// Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

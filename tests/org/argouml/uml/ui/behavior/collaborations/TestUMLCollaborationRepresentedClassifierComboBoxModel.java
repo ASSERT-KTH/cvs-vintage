@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationRepresentedClassifierComboBoxModel.java,v 1.1 2006/04/11 18:34:42 mvw Exp $
+// $Id: TestUMLCollaborationRepresentedClassifierComboBoxModel.java,v 1.2 2006/06/11 15:43:56 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written

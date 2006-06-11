@@ -1,5 +1,5 @@
-// $Id: Argo.java,v 1.42 2006/05/29 19:36:07 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: Argo.java,v 1.43 2006/06/11 15:39:49 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

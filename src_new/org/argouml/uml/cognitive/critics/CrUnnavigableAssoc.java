@@ -1,5 +1,5 @@
-// $Id: CrUnnavigableAssoc.java,v 1.16 2005/03/11 09:43:04 mkl Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: CrUnnavigableAssoc.java,v 1.17 2006/06/11 15:39:45 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrUnnavigableAssoc.java,v 1.16 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.17 2006/06/11 15:39:45 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;

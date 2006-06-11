@@ -1,5 +1,5 @@
-// $Id: ActionSetClassActive.java,v 1.8 2006/06/11 14:56:01 mvw Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ActionSetClassActive.java,v 1.9 2006/06/11 15:39:43 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

@@ -1,5 +1,5 @@
-// $Id: CmdSetMode.java,v 1.11 2005/06/05 13:07:30 linus Exp $
-// Copyright (c) 2003-2005 The Regents of the University of California. All
+// $Id: CmdSetMode.java,v 1.12 2006/06/11 15:39:42 mvw Exp $
+// Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

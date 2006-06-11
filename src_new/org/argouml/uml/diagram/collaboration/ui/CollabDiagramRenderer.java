@@ -1,5 +1,5 @@
-// $Id: CollabDiagramRenderer.java,v 1.18 2005/02/20 21:55:17 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: CollabDiagramRenderer.java,v 1.19 2006/06/11 15:39:52 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CollabDiagramRenderer.java,v 1.18 2005/02/20 21:55:17 linus Exp $
+// $Id: CollabDiagramRenderer.java,v 1.19 2006/06/11 15:39:52 mvw Exp $
 package org.argouml.uml.diagram.collaboration.ui;
 
 import java.util.Map;

@@ -1,5 +1,5 @@
-// $Id: CheckUMLModelHelper.java,v 1.9 2006/03/25 00:47:48 tfmorris Exp $
-// Copyright (c) 2002-2005 The Regents of the University of California. All
+// $Id: CheckUMLModelHelper.java,v 1.10 2006/06/11 15:43:56 mvw Exp $
+// Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

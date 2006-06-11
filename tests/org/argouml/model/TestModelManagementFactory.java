@@ -1,5 +1,5 @@
-// $Id: TestModelManagementFactory.java,v 1.1 2005/08/20 09:31:08 linus Exp $
-// Copyright (c) 2002-2005 The Regents of the University of California. All
+// $Id: TestModelManagementFactory.java,v 1.2 2006/06/11 15:43:56 mvw Exp $
+// Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
