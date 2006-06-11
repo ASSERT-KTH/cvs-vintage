@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.101 2006/04/15 19:20:01 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.102 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -229,9 +229,9 @@ public class PropPanelOperation extends PropPanelFeature {
         }
         
         /**
-         * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+         * @see org.tigris.gef.undo.UndoableAction#isEnabled()
          */
-        public boolean shouldBeEnabled() {
+        public boolean isEnabled() {
             Object target = TargetManager.getInstance().getModelTarget();
             boolean result = true;
             if (Model.getFacade().isAOperation(target)) {
@@ -240,17 +240,17 @@ public class PropPanelOperation extends PropPanelFeature {
                     result = false;
                 }
             }
-            return super.shouldBeEnabled() && result;
+            return super.isEnabled() && result;
         }
 
         /**
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
+            super.actionPerformed(e);
             Object target = TargetManager.getInstance().getModelTarget();
             if (Model.getFacade().isAOperation(target)) {
                 addMethod();
-                super.actionPerformed(e);
             }
         }
     }

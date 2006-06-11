@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.22 2005/11/04 23:17:36 bobtarling Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.23 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,19 @@ package org.argouml.uml.ui.foundation.core;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 
+import javax.swing.Action;
+
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * @since Oct 10, 2002
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
  */
-public class ActionSetModelElementStereotype extends UMLAction {
+public class ActionSetModelElementStereotype extends UndoableAction {
     /**
      * The instance.
      */
@@ -47,13 +50,17 @@ public class ActionSetModelElementStereotype extends UMLAction {
      * Constructor for ActionSetModelElementStereotype.
      */
     protected ActionSetModelElementStereotype() {
-        super("Set", true, NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+    	super.actionPerformed(e);
         Object source = e.getSource();
         Collection oldStereo = null;
         Object newStereo = null;
@@ -77,7 +84,6 @@ public class ActionSetModelElementStereotype extends UMLAction {
             if (newStereo != null) {
                 Model.getCoreHelper().addStereotype(target, newStereo);
             }
-            super.actionPerformed(e);
         }
     }
 

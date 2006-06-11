@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndTargetScope.java,v 1.15 2005/01/30 20:47:34 linus Exp $
+// $Id: ActionSetAssociationEndTargetScope.java,v 1.16 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,17 +26,19 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLCheckBox2;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  *
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 4, 2003
  */
-public class ActionSetAssociationEndTargetScope extends UMLAction {
+public class ActionSetAssociationEndTargetScope extends UndoableAction {
 
     private static final ActionSetAssociationEndTargetScope SINGLETON =
         new ActionSetAssociationEndTargetScope();
@@ -45,7 +47,10 @@ public class ActionSetAssociationEndTargetScope extends UMLAction {
      * Constructor for ActionSetElementOwnershipSpecification.
      */
     protected ActionSetAssociationEndTargetScope() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**

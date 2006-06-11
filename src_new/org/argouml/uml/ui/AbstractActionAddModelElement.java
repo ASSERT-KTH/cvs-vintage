@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.16 2006/03/03 23:44:05 tfmorris Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.17 2006/06/11 14:56:00 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,12 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
+import javax.swing.Action;
 import javax.swing.JOptionPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.ui.ProjectBrowser;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * Abstract action that is the parent to all add actions that add the
@@ -38,7 +40,7 @@ import org.argouml.ui.ProjectBrowser;
  * @since Oct 2, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public abstract class AbstractActionAddModelElement extends UMLAction {
+public abstract class AbstractActionAddModelElement extends UndoableAction {
 
     private Object target;
     private boolean multiSelect = true;
@@ -48,8 +50,11 @@ public abstract class AbstractActionAddModelElement extends UMLAction {
      * The constructor.
      */
     protected AbstractActionAddModelElement() {
-        super(Translator.localize("menu.popup.add-modelelement"), false,
-                NO_ICON);
+        super(Translator.localize("menu.popup.add-modelelement"),
+                null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("menu.popup.add-modelelement"));
     }
 
 
@@ -149,7 +154,7 @@ public abstract class AbstractActionAddModelElement extends UMLAction {
      * @see javax.swing.Action#isEnabled()
      */
     public boolean isEnabled() {
-         return !getChoices().isEmpty();
+        return !getChoices().isEmpty();
     }
 
 }

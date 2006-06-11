@@ -1,5 +1,5 @@
-// $Id: ActionAutoCritique.java,v 1.6 2006/04/19 05:28:59 tfmorris Exp $
-// Copyright (c) 2004-2005 The Regents of the University of California. All
+// $Id: ActionAutoCritique.java,v 1.7 2006/06/11 14:56:01 mvw Exp $
+// Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,31 +26,39 @@ package org.argouml.ui.cmd;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoList;
-import org.argouml.uml.ui.UMLAction;
+import org.argouml.i18n.Translator;
+import org.tigris.gef.undo.UndoableAction;
 
 
 
 /**
  * Stops critiquing and the TodoList validity checking thread in ToDoList.
  */
-class ActionAutoCritique extends UMLAction {
+class ActionAutoCritique extends UndoableAction {
 
     /**
      * The constructor.
      */
     public ActionAutoCritique() {
-	super("action.toggle-auto-critique", NO_ICON);
-	putValue("SELECTED",
-                Boolean.valueOf(Designer.theDesigner().getAutoCritique()));
+        super(Translator.localize("action.toggle-auto-critique"),
+                null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("action.toggle-auto-critique"));
+        putValue("SELECTED",
+                    Boolean.valueOf(Designer.theDesigner().getAutoCritique()));
     }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-
+        super.actionPerformed(ae);
+    	
         // stop/start creating more critics
 	Designer d = Designer.theDesigner();
 	boolean b = d.getAutoCritique();

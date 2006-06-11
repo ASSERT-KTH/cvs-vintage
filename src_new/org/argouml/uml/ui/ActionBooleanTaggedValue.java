@@ -1,5 +1,5 @@
-// $Id: ActionBooleanTaggedValue.java,v 1.9 2005/01/30 20:47:49 linus Exp $
-// Copyright (c) 2003-2005 The Regents of the University of California. All
+// $Id: ActionBooleanTaggedValue.java,v 1.10 2006/06/11 14:56:00 mvw Exp $
+// Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +26,11 @@ package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * An action which can be used to create arbritary tagged values which hold
@@ -35,7 +39,7 @@ import org.argouml.model.Model;
  * @see UMLCheckBox2
  * @author mkl
  */
-public class ActionBooleanTaggedValue extends UMLAction {
+public class ActionBooleanTaggedValue extends UndoableAction {
 
     private String tagName;
 
@@ -47,7 +51,10 @@ public class ActionBooleanTaggedValue extends UMLAction {
      *            the name of the taggedvalue containing boolean values.
      */
     public ActionBooleanTaggedValue(String theTagName) {
-        super("Set", NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
         tagName = theTagName;
     }
 

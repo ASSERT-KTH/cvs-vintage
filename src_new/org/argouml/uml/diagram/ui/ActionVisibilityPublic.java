@@ -1,4 +1,4 @@
-// $Id: ActionVisibilityPublic.java,v 1.5 2006/04/19 05:28:58 tfmorris Exp $
+// $Id: ActionVisibilityPublic.java,v 1.6 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ class ActionVisibilityPublic extends AbstractActionRadioMenuItem {
      * @param o the target
      */
     public ActionVisibilityPublic(Object o) {
-        super("checkbox.visibility.public-uc", NO_ICON);
+        super("checkbox.visibility.public-uc", false);
         putValue("SELECTED", Boolean.valueOf(
             Model.getVisibilityKind().getPublic()
                 .equals(valueOfTarget(o))));

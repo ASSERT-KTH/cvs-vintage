@@ -1,4 +1,4 @@
-// $Id: ActionSetTagDefinitionType.java,v 1.1 2006/01/11 22:48:05 tfmorris Exp $
+// $Id: ActionSetTagDefinitionType.java,v 1.2 2006/06/11 14:56:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +26,17 @@ package org.argouml.uml.ui.foundation.extension_mechanisms;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.tigris.gef.undo.UndoableAction;
 /**
  * @since Nov 3, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class ActionSetTagDefinitionType extends UMLAction {
+public class ActionSetTagDefinitionType extends UndoableAction {
 
     private static final ActionSetTagDefinitionType SINGLETON =
         new ActionSetTagDefinitionType();
@@ -43,7 +45,10 @@ public class ActionSetTagDefinitionType extends UMLAction {
      * Constructor for ActionSetTagDefinitionType.
      */
     protected ActionSetTagDefinitionType() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**

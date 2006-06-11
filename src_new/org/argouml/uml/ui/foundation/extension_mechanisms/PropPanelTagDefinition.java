@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.15 2006/04/22 06:28:13 tfmorris Exp $
+// $Id: PropPanelTagDefinition.java,v 1.16 2006/06/11 14:56:02 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -42,7 +43,6 @@ import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -55,6 +55,7 @@ import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.uml.ui.foundation.core.UMLModelElementNamespaceComboBoxModel;
 import org.argouml.uml.ui.foundation.core.UMLStructuralFeatureTypeComboBoxModel;
 import org.argouml.util.ConfigLoader;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * The properties panel for a Class.
@@ -253,7 +254,7 @@ class UMLTagDefinitionNamespaceComboBoxModel
     }
 }
 
-class ActionSetTagDefinitionNamespace extends UMLAction {
+class ActionSetTagDefinitionNamespace extends UndoableAction {
 
     /**
      * The serial version.
@@ -264,13 +265,17 @@ class ActionSetTagDefinitionNamespace extends UMLAction {
      * Constructor for ActionSetModelElementNamespace.
      */
     protected ActionSetTagDefinitionNamespace() {
-        super("Set", true, NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**
      * @see org.tigris.gef.undo.UndoableAction#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+    	super.actionPerformed(e);
         Object source = e.getSource();
         Object oldNamespace = null;
         Object newNamespace = null;

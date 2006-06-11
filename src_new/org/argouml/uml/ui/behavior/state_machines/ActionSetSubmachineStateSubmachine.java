@@ -1,4 +1,4 @@
-// $Id: ActionSetSubmachineStateSubmachine.java,v 1.11 2005/01/09 14:59:07 linus Exp $
+// $Id: ActionSetSubmachineStateSubmachine.java,v 1.12 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,16 +26,18 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * @since Dec 15, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class ActionSetSubmachineStateSubmachine extends UMLAction {
+public class ActionSetSubmachineStateSubmachine extends UndoableAction {
 
     private static final ActionSetSubmachineStateSubmachine SINGLETON =
         new ActionSetSubmachineStateSubmachine();
@@ -44,7 +46,10 @@ public class ActionSetSubmachineStateSubmachine extends UMLAction {
      * Constructor for ActionSetModelElementStereotype.
      */
     protected ActionSetSubmachineStateSubmachine() {
-        super(Translator.localize("action.set"), false, NO_ICON);
+        super(Translator.localize("action.set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("action.set"));
     }
 
     /**

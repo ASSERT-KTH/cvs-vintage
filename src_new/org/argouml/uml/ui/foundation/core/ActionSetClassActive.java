@@ -1,4 +1,4 @@
-// $Id: ActionSetClassActive.java,v 1.7 2005/06/05 13:07:30 linus Exp $
+// $Id: ActionSetClassActive.java,v 1.8 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +26,18 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLCheckBox2;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * @stereotype singleton
  * @author mkl
  */
-public class ActionSetClassActive extends UMLAction {
+public class ActionSetClassActive extends UndoableAction {
     /**
      * The instance.
      */
@@ -45,7 +48,10 @@ public class ActionSetClassActive extends UMLAction {
      * Constructor.
      */
     protected ActionSetClassActive() {
-        super("Set", true, NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**

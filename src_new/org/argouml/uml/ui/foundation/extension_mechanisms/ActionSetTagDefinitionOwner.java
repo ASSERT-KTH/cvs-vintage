@@ -1,4 +1,4 @@
-// $Id: ActionSetTagDefinitionOwner.java,v 1.6 2006/03/24 05:36:05 linus Exp $
+// $Id: ActionSetTagDefinitionOwner.java,v 1.7 2006/06/11 14:56:02 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,18 +27,22 @@ package org.argouml.uml.ui.foundation.extension_mechanisms;
 import java.awt.AWTEvent;
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import org.apache.log4j.Logger;
+import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  *
  * @author mkl
  *
  */
-public class ActionSetTagDefinitionOwner extends UMLAction {
+public class ActionSetTagDefinitionOwner extends UndoableAction {
     /**
      * Logger.
      */
@@ -55,7 +59,11 @@ public class ActionSetTagDefinitionOwner extends UMLAction {
      * Constructor.
      */
     public ActionSetTagDefinitionOwner() {
-        super("Set", HAS_ICON);
+        super(Translator.localize("Set"),
+                ResourceLoaderWrapper.lookupIcon("Set"));
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**

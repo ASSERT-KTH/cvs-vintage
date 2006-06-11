@@ -1,4 +1,4 @@
-// $Id: ActionVisibilityPackage.java,v 1.3 2006/04/19 05:28:58 tfmorris Exp $
+// $Id: ActionVisibilityPackage.java,v 1.4 2006/06/11 14:56:00 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ class ActionVisibilityPackage extends AbstractActionRadioMenuItem {
      * @param o the target
      */
     public ActionVisibilityPackage(Object o) {
-        super("checkbox.visibility.package-uc", NO_ICON);
+        super("checkbox.visibility.package-uc", false);
         putValue("SELECTED", Boolean.valueOf(
             Model.getVisibilityKind().getPackage()
                 .equals(valueOfTarget(o))));

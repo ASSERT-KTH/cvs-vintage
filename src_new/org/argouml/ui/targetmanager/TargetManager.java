@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.62 2006/06/10 15:56:32 mvw Exp $
+// $Id: TargetManager.java,v 1.63 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.Model;
-import org.argouml.ui.Actions;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
@@ -320,7 +319,6 @@ public final class TargetManager {
                 }
             }
             ListIterator it = history.listIterator();
-            int oldCurrentTarget = currentTarget;
             while (it.hasNext()) {
                 WeakReference ref = (WeakReference) it.next();
                 Object historyObject = ref.get();
@@ -340,12 +338,6 @@ public final class TargetManager {
 
                 // cannot break here since an object can be multiple
                 // times in history
-            }
-            if (oldCurrentTarget != currentTarget) {
-                Actions.updateAllEnabled();
-                /* TODO: (MVW) Why? Actions is
-                 * listening to target changes already...
-                 */
             }
         }
 

@@ -1,5 +1,5 @@
-// $Id: AbstractActionNewModelElement.java,v 1.15 2005/01/09 14:59:01 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: AbstractActionNewModelElement.java,v 1.16 2006/06/11 14:56:00 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,16 +22,20 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.15 2005/01/09 14:59:01 linus Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.16 2006/06/11 14:56:00 mvw Exp $
 package org.argouml.uml.ui;
 
+import javax.swing.Action;
+
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * @since Oct 3, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public abstract class AbstractActionNewModelElement extends UMLAction {
+public abstract class AbstractActionNewModelElement extends UndoableAction {
 
     private Object/*MModelElement*/ target;
 
@@ -40,7 +44,10 @@ public abstract class AbstractActionNewModelElement extends UMLAction {
      * Defaults to name "action.new", global and NO_ICON
      */
     protected AbstractActionNewModelElement() {
-        super(Translator.localize("action.new"), true, NO_ICON);
+        super(Translator.localize("action.new"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("action.new"));
     }
 
     /**
@@ -49,7 +56,11 @@ public abstract class AbstractActionNewModelElement extends UMLAction {
      * @param name the to be localized name of the action
      */
     protected AbstractActionNewModelElement(String name) {
-        super(name, true, HAS_ICON);
+        super(Translator.localize(name), 
+                ResourceLoaderWrapper.lookupIcon(name));
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize(name));
     }
 
      /**

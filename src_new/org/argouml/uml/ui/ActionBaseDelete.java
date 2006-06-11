@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.17 2006/06/05 20:49:25 bobtarling Exp $
+// $Id: ActionBaseDelete.java,v 1.18 2006/06/11 14:56:00 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,7 @@ import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigTextEditor;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * Action for removing (moving to trash) objects from the model. 
@@ -67,7 +68,7 @@ import org.tigris.gef.presentation.FigTextEditor;
  * @author original author not known.
  * @author jaap.branderhorst@xs4all.nl extensions
  */
-public abstract class ActionBaseDelete extends UMLAction {
+public abstract class ActionBaseDelete extends UndoableAction {
     
     private static final Logger LOG = Logger.getLogger(ActionBaseDelete.class);
 
@@ -75,7 +76,11 @@ public abstract class ActionBaseDelete extends UMLAction {
      * Constructor.
      */
     public ActionBaseDelete() {
-        super("action.delete-from-model", true, HAS_ICON);
+        super(Translator.localize("action.delete-from-model"),
+                ResourceLoaderWrapper.lookupIcon("action.delete-from-model"));
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("action.delete-from-model"));
         putValue(Action.SMALL_ICON,
                 ResourceLoaderWrapper.lookupIcon("Delete"));
     }
@@ -86,10 +91,10 @@ public abstract class ActionBaseDelete extends UMLAction {
      * is the top level model, the last diagram, or the top state
      * of a StateMachine.
      * Necessary to use since this option works via the menu too. 
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     * @see org.tigris.gef.undo.UndoableAction#isEnabled()
      */
-    public boolean shouldBeEnabled() {
-        super.shouldBeEnabled();
+    public boolean isEnabled() {
+        super.isEnabled();
         int size = 0;
         try {
             Editor ce = Globals.curEditor();
@@ -131,6 +136,7 @@ public abstract class ActionBaseDelete extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
+        super.actionPerformed(ae);
         KeyboardFocusManager focusManager =
             KeyboardFocusManager.getCurrentKeyboardFocusManager();
         Component focusOwner = focusManager.getFocusOwner();
@@ -147,7 +153,6 @@ public abstract class ActionBaseDelete extends UMLAction {
                 }
             }
         }
-        super.actionPerformed(ae);
 
         Project p = ProjectManager.getManager().getCurrentProject();
         Object[] targets = getTargets();
@@ -162,7 +167,7 @@ public abstract class ActionBaseDelete extends UMLAction {
                     }
                     if (Model.getFacade().isAConcurrentRegion(target)) {
                         new ActionDeleteConcurrentRegion()
-                        .actionPerformed(ae);
+                            .actionPerformed(ae);
                     } else {
                         p.moveToTrash(target);
                     }

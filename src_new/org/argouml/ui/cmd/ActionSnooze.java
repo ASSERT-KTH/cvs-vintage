@@ -1,5 +1,5 @@
-// $Id: ActionSnooze.java,v 1.3 2005/01/09 14:58:13 linus Exp $
-// Copyright (c) 2004-2005 The Regents of the University of California. All
+// $Id: ActionSnooze.java,v 1.4 2006/06/11 14:56:01 mvw Exp $
+// Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -40,13 +40,14 @@ public class ActionSnooze extends ToDoItemAction {
      * The constructor.
      */
     public ActionSnooze() {
-        super("action.snooze-critic", HAS_ICON);
+        super("action.snooze-critic", true);
     }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
+    	super.actionPerformed(ae);
 	if (!(getRememberedTarget() instanceof ToDoItem)) return;
 
 	ToDoItem item = (ToDoItem) getRememberedTarget();

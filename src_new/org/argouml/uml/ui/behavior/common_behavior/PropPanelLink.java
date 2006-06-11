@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.45 2006/04/08 22:36:06 tfmorris Exp $
+// $Id: PropPanelLink.java,v 1.46 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -38,7 +39,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -46,6 +46,7 @@ import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * The properties panel for a Link.
@@ -205,19 +206,22 @@ class UMLLinkAssociationComboBoxModel extends UMLComboBoxModel2 {
     private static final long serialVersionUID = 3232437122889409351L;
 }
 
-class ActionSetLinkAssociation extends UMLAction {
+class ActionSetLinkAssociation extends UndoableAction {
 
     /**
      * Constructor for ActionSetModelElementNamespace.
      */
     public ActionSetLinkAssociation() {
-        super("Set", NO_ICON);
+        super(Translator.localize("Set"), null);
+		// Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, Translator.localize("Set"));
     }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+    	super.actionPerformed(e);
         Object source = e.getSource();
         Object oldAssoc = null;
         Object newAssoc = null;
@@ -236,7 +240,6 @@ class ActionSetLinkAssociation extends UMLAction {
         }
         if (newAssoc != oldAssoc && link != null && newAssoc != null) {
             Model.getCoreHelper().setAssociation(link, newAssoc);
-            super.actionPerformed(e);
         }
     }
 

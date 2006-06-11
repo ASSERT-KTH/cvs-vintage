@@ -1,4 +1,4 @@
-// $Id: ActionModifierAbstract.java,v 1.5 2006/04/19 05:28:58 tfmorris Exp $
+// $Id: ActionModifierAbstract.java,v 1.6 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ class ActionModifierAbstract extends AbstractActionCheckBoxMenuItem {
      * @param o the target
      */
     public ActionModifierAbstract(Object o) {
-        super("checkbox.abstract-uc", NO_ICON);
+        super("checkbox.abstract-uc");
         putValue("SELECTED", Boolean.valueOf(valueOfTarget(o)));
     }
 

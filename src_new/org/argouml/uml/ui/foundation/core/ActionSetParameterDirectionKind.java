@@ -1,4 +1,4 @@
-// $Id: ActionSetParameterDirectionKind.java,v 1.8 2005/01/30 20:47:33 linus Exp $
+// $Id: ActionSetParameterDirectionKind.java,v 1.9 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,12 +26,13 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
 import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * An action to set the concurrency of an operation.
@@ -39,7 +40,7 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  * @author mkl
  *
  */
-public class ActionSetParameterDirectionKind extends UMLAction {
+public class ActionSetParameterDirectionKind extends UndoableAction {
 
     private static final ActionSetParameterDirectionKind SINGLETON =
         new ActionSetParameterDirectionKind();
@@ -68,7 +69,10 @@ public class ActionSetParameterDirectionKind extends UMLAction {
      * Constructor for ActionSetElementOwnershipSpecification.
      */
     protected ActionSetParameterDirectionKind() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**

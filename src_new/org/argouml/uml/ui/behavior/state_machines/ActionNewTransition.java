@@ -1,4 +1,4 @@
-// $Id: ActionNewTransition.java,v 1.9 2006/04/03 21:25:29 mvw Exp $
+// $Id: ActionNewTransition.java,v 1.10 2006/06/11 14:56:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,11 +78,12 @@ public class ActionNewTransition extends AbstractActionNewModelElement {
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     * @return true if the action is enabled
+     * @see org.tigris.gef.undo.UndoableAction#isEnabled()
      */
-    public boolean shouldBeEnabled() {
+    public boolean isEnabled() {
         Object target = TargetManager.getInstance().getModelTarget();
-        return super.shouldBeEnabled() 
+        return super.isEnabled() 
             && !Model.getStateMachinesHelper().isTopState(target);
     }
     

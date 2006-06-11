@@ -1,5 +1,5 @@
-// $Id: ActionSetMultiplicity.java,v 1.8 2005/01/09 14:59:02 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: ActionSetMultiplicity.java,v 1.9 2006/06/11 14:56:00 mvw Exp $
+// Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,25 +22,31 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetMultiplicity.java,v 1.8 2005/01/09 14:59:02 linus Exp $
+// $Id: ActionSetMultiplicity.java,v 1.9 2006/06/11 14:56:00 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import org.argouml.i18n.Translator;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * Framework action to set the multiplicity of some modelelement.
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 6, 2003
  */
-public abstract class ActionSetMultiplicity extends UMLAction {
+public abstract class ActionSetMultiplicity extends UndoableAction {
 
     /**
      * Constructor for ActionSetMultiplicity.
      */
     protected ActionSetMultiplicity() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super(Translator.localize("Set"), null);
+        // Set the tooltip string:
+        putValue(Action.SHORT_DESCRIPTION, 
+                Translator.localize("Set"));
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.147 2006/06/04 18:17:50 mvw Exp $
+// $Id: Main.java,v 1.148 2006/06/11 14:56:02 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.moduleloader.ModuleLoader2;
 import org.argouml.persistence.PersistenceManager;
-import org.argouml.ui.Actions;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
@@ -227,10 +226,6 @@ public class Main {
 	// is that some of the commands will use the projectbrowser.
 	st.mark("initialize gui");
         initializeGUI(splash);
-
-        // Initialize the UMLActions
-        st.mark("actions");
-        Actions.getInstance();
 
         if (reloadRecent && projectName == null) {
             // If no project was entered on the command line,
