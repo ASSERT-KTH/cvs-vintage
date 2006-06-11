@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.51 2006/06/04 20:51:10 tfmorris Exp $
+// $Id: UMLModelElementListModel2.java,v 1.52 2006/06/11 07:21:17 mvw Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,8 +116,12 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
      */
     public void propertyChange(PropertyChangeEvent e) {
         if (e instanceof AttributeChangeEvent) {
-            if (isValidEvent(e)) {
-                rebuildModelList();
+            try {
+                if (isValidEvent(e)) {
+                    rebuildModelList();
+                }
+            } catch (InvalidElementException iee) {
+                return;
             }
         } else if (e instanceof AddAssociationEvent) {
             if (isValidEvent(e)) {
@@ -245,7 +249,7 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel
             return ((AssociationChangeEvent) e).getChangedValue();
         }
         if (e instanceof AttributeChangeEvent) {
-          return ((AttributeChangeEvent) e).getSource();
+            return ((AttributeChangeEvent) e).getSource();
         }
         return e.getNewValue();
     }
