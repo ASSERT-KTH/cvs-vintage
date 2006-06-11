@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.20 2006/06/11 13:25:52 bobtarling Exp $
+// $Id: FigNodeAssociation.java,v 1.21 2006/06/11 14:42:10 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -283,7 +283,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
      */
     protected void removeFromDiagramImpl() {
         Object owner = getOwner();
-        super.removeFromDiagram();
+        super.removeFromDiagramImpl();
         Editor editor = Globals.curEditor();
         GraphModel gm = editor.getGraphModel();
         if (gm instanceof MutableGraphModel) {

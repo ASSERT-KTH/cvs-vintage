@@ -1,4 +1,4 @@
-// $Id: FigClassAssociationClass.java,v 1.7 2006/06/11 13:25:52 bobtarling Exp $
+// $Id: FigClassAssociationClass.java,v 1.8 2006/06/11 14:42:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,11 @@
 
 package org.argouml.uml.diagram.ui;
 
+import java.util.Iterator;
+
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
+import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigNode;
 
 /**
  * Class to display a class in an Association Class
@@ -57,6 +61,21 @@ public class FigClassAssociationClass extends FigClass {
      */
     public FigClassAssociationClass(Object owner) {
         super(null, owner);
+    }
+    
+    protected Fig getRemoveDelegate() {
+        // Look for the dashed edge
+        Iterator it = getFigEdges().iterator();
+        while (it.hasNext()) {
+            Object o = it.next();
+            if (o instanceof FigEdgeAssociationClass) {
+                // We have the dashed edge now find the opposite FigNode
+                FigEdgeAssociationClass dashedEdge =
+                    (FigEdgeAssociationClass)o;
+                return dashedEdge.getRemoveDelegate();
+            }
+        }
+        return null;
     }
 
 } /* end class FigClassAssociationClass */

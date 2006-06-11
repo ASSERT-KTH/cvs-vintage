@@ -1,4 +1,4 @@
-// $Id: FigEdgeAssociationClass.java,v 1.12 2006/04/09 22:23:30 bobtarling Exp $
+// $Id: FigEdgeAssociationClass.java,v 1.13 2006/06/11 14:42:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,13 +128,22 @@ public class FigEdgeAssociationClass
     }
 
     /**
-     * It is used to remove itself without removing its
-     * associated FigAssociationClass.
+     * If the user requests deletion of this FIg then delgate to the attached
+     * FigAssociationClass
+     * @return the attached FigAssociationClass
      */
-    public void removeThisFromDiagram() {
-        super.removeFromDiagram();
-        TargetManager.getInstance().removeHistoryElement(this);
+    protected Fig getRemoveDelegate() {
+        FigNode node = getDestFigNode();
+        if (!(node instanceof FigEdgePort)) {
+            node = getSourceFigNode();
+        }
+        if (!(node instanceof FigEdgePort)) {
+            return null;
+        }
+        // Actually return the FigEdge that the FigEdgePort is part of.
+        return node.getAnnotationOwner();
     }
+
 
     public void setDestFigNode(FigNode fn) {
         if (!(fn instanceof FigClassAssociationClass)) {

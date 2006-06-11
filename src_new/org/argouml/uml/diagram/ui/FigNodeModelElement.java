@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.256 2006/06/11 13:25:52 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.257 2006/06/11 14:42:10 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1497,7 +1497,25 @@ public abstract class FigNodeModelElement
      * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
     final public void removeFromDiagram() {
-        removeFromDiagramImpl();
+        Fig delegate = getRemoveDelegate();
+        if (delegate instanceof FigNodeModelElement) {
+            ((FigNodeModelElement)delegate).removeFromDiagramImpl();
+        } else if (delegate instanceof FigEdgeModelElement) {
+            ((FigEdgeModelElement)delegate).removeFromDiagramImpl();
+        } else if (delegate != null) {
+            removeFromDiagramImpl();
+        }
+    }
+    
+    /**
+     * Subclasses should override this to redirect a remove request from
+     * one Fig to another.
+     * e.g. FigClassAssociationClass uses this to delegate the remove to
+     * its attached FigAssociationClass.
+     * @return
+     */
+    protected Fig getRemoveDelegate() {
+        return this;
     }
     
     protected void removeFromDiagramImpl() {
