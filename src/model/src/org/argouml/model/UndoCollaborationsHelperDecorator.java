@@ -1,5 +1,5 @@
-// $Id: UndoCollaborationsHelperDecorator.java,v 1.1 2005/07/28 07:15:52 linus Exp $
-// Copyright (c) 2005 The Regents of the University of California. All
+// $Id: UndoCollaborationsHelperDecorator.java,v 1.2 2006/06/11 17:13:46 mvw Exp $
+// Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
