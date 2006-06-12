@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: do-for-projects.sh,v 1.3 2006/04/20 20:12:28 linus Exp $
+# $Id: do-for-projects.sh,v 1.4 2006/06/12 20:01:12 linus Exp $
 
 # Do the same thing for each project involved in the release.
 
@@ -11,7 +11,8 @@ PROJECTS="argouml \
     argouml-php \
     argouml-de argouml-es argouml-en-gb argouml-fr argouml-nb \
     argouml-pt argouml-ru \
-    argouml-i18n-zh"
+    argouml-i18n-zh
+    argoumlinstaller"
 
 case $1 in
 --checkout)
@@ -20,7 +21,7 @@ case $1 in
 *)
     for dir in $PROJECTS
     do
-        ( cd $dir && $* )
+        ( cd $dir && $* ) 2>&1 | sed "s/^/$dir: /"
     done
     ;;
 esac
