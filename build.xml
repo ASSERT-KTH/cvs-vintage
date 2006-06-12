@@ -179,7 +179,7 @@
         <jreleaseinfo
                 className="ColumbaVersionInfo"
                 packageName="org.columba.core.versioninfo"
-                targetDir="${src.columba.core}"
+                targetDir="${src.core}"
                 version="${version}">
         </jreleaseinfo>
 
@@ -694,7 +694,7 @@
             <replacefilter token="@native@" value="${lib.native}"/>
             <replacefilter token="@flexdoc@" value="${lib.flexdoc}"/>
             <replacefilter token="@jython@" value="${lib.jython}"/>
-	    <replacefilter token="@commons.logging@" value="${lib.commons.logging}"/>
+	        <replacefilter token="@commons.logging@" value="${lib.commons.logging}"/>
             <replacefilter token="@ical4j@" value="${lib.ical4j}"/>
             <replacefilter token="@migcalendar@" value="${lib.migcalendar}"/>
         </replace>
