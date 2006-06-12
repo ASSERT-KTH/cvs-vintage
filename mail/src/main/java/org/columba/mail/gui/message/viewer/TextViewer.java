@@ -153,8 +153,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		initStyleSheet();
 
-		// FocusManager.getInstance().registerComponent(new MyFocusOwner());
-
 		if (!usingJDIC)
 			viewerPlugin.getComponent()
 					.addMouseListener(new URLMouseListener());
@@ -178,7 +176,12 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 				viewerPlugin = createHTMLViewerPluginInstance("Default");
 			} 
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
+			viewerPlugin = createHTMLViewerPluginInstance("Default");
+			
+			if ( Logging.DEBUG)
+				e.printStackTrace();
+		} catch (Error e) {
 			viewerPlugin = createHTMLViewerPluginInstance("Default");
 			
 			if ( Logging.DEBUG)
@@ -423,7 +426,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()
 	 */
 	public JComponent getView() {
-		return this;
+		return viewerPlugin.getContainer();
 	}
 
 	/**

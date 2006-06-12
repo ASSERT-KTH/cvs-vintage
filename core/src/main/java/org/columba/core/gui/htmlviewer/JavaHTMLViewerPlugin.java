@@ -26,13 +26,13 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 
 	private AsynchronousHTMLDocument doc;
 
-	private JTextPane textPane;
+	private JTextPane textPane = new JTextPane();
 
 	public JavaHTMLViewerPlugin() {
 		super();
 
-		textPane = new JTextPane();
-
+		
+		
 		setViewportView(textPane);
 		// textPane.setMargin(new Insets(5, 5, 5, 5));
 		textPane.setEditable(false);

@@ -152,17 +152,17 @@ public class MessageController extends JPanel implements CharsetListener,
 
 		add(top, BorderLayout.NORTH);
 
-		JPanel bottom = new JPanel();
-		bottom.setBackground(backgroundColor);
-
-		bottom.setLayout(new BorderLayout());
+//		JPanel bottom = new JPanel();
+//		bottom.setBackground(backgroundColor);
+//
+//		bottom.setLayout(new BorderLayout());
 
 		JComponent c = bodytextViewer.getView();
 		c.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		c.setBackground(backgroundColor);
-		bottom.add(c, BorderLayout.CENTER);
+//		bottom.add(c, BorderLayout.CENTER);
 
-		add(bottom, BorderLayout.CENTER);
+		add(c, BorderLayout.CENTER);
 	}
 
 	public void clear() {

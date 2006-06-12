@@ -230,17 +230,17 @@ public class MessageViewer extends JPanel implements ICustomViewer {
 
 		add(top, BorderLayout.NORTH);
 
-		JPanel bottom = new JPanel();
-		bottom.setBackground(backgroundColor);
-
-		bottom.setLayout(new BorderLayout());
+//		JPanel bottom = new JPanel();
+//		bottom.setBackground(backgroundColor);
+//
+//		bottom.setLayout(new BorderLayout());
 
 		JComponent c = getBodytextViewer().getView();
 		c.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		c.setBackground(backgroundColor);
-		bottom.add(c, BorderLayout.CENTER);
+		add(c, BorderLayout.CENTER);
 
-		add(bottom, BorderLayout.CENTER);
+		//add(bottom, BorderLayout.CENTER);
 	}
 
 	public void clear() {
