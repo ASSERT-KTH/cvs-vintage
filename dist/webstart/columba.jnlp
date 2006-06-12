@@ -39,7 +39,7 @@
    <jar href="@groovy@"/>
    <jar href="@commons.logging@"/>
    <jar href="@ical4j@"/>
-   <jar href="@micalendar@"/>
+   <jar href="@migcalendar@"/>
    <!-- JavaHelp is signed by SUN already -->
    <!-- it therefor can't be in the same jnlp file -->
    <!-- because it is signed by someone else -->
