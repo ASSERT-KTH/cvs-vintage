@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.174 2006/06/11 14:42:10 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.175 2006/06/13 21:16:48 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import java.beans.VetoableChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Action;
@@ -1032,11 +1033,27 @@ public abstract class FigEdgeModelElement
         }
         if (newSource != currentSource || newDest != currentDestination) {
             Fig newSourceFig = null;
-            if (newSource != null)
-                newSourceFig = getLayer().presentationFor(newSource);
+            if (newSource != null) {
+                List contents = getLayer().getContentsNoEdges();
+                int figCount = contents.size();
+                for(int figIndex = 0; figIndex < figCount; ++figIndex) {
+                    Fig fig = (Fig)contents.get(figIndex);
+                    if(fig.getOwner() == newSource) {
+                        newSourceFig = fig;
+                    }
+                }
+            }
             Fig newDestFig = null;
-            if (newDest != null)
-                newDestFig = getLayer().presentationFor(newDest);
+            if (newDest != null) {
+                List contents = getLayer().getContentsNoEdges();
+                int figCount = contents.size();
+                for(int figIndex = 0; figIndex < figCount; ++figIndex) {
+                    Fig fig = (Fig)contents.get(figIndex);
+                    if(fig.getOwner() == newDest) {
+                        newDestFig = fig;
+                    }
+                }
+            }
             if (newSourceFig == null || newDestFig == null) {
                 removeFromDiagram();
                 return false;
