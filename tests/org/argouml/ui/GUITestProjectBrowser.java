@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.15 2006/06/11 15:43:56 mvw Exp $
+// $Id: GUITestProjectBrowser.java,v 1.16 2006/06/13 18:36:41 linus Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,6 +128,7 @@ public class GUITestProjectBrowser extends TestCase {
 	assertEquals("Diagram2 should be the target", diagram2, tm.getTarget());
 
 	p.moveToTrash(package2);
+        Model.getPump().flushModelEvents();
 	assertEquals("The target is not reset to the first diagram",
             p.getDiagrams().get(0), tm.getTarget());
     }
