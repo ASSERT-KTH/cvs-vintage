@@ -1,4 +1,4 @@
-// $Id: CrAssocNameConflict.java,v 1.18 2006/06/11 15:39:45 mvw Exp $
+// $Id: CrAssocNameConflict.java,v 1.19 2006/06/14 06:10:49 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrAssocNameConflict.java,v 1.18 2006/06/11 15:39:45 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;

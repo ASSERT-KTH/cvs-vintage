@@ -1,4 +1,4 @@
-// $Id: UMLTransitionEffectList.java,v 1.8 2006/06/11 17:30:17 mvw Exp $
+// $Id: UMLTransitionEffectList.java,v 1.9 2006/06/14 06:10:50 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTransitionEffectList.java,v 1.8 2006/06/11 17:30:17 mvw Exp $
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JPopupMenu;

@@ -1,4 +1,4 @@
-// $Id: SelectionNodeClarifiers.java,v 1.11 2006/06/11 15:39:48 mvw Exp $
+// $Id: SelectionNodeClarifiers.java,v 1.12 2006/06/14 06:10:48 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SelectionNodeClarifiers.java,v 1.11 2006/06/11 15:39:48 mvw Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Graphics;
