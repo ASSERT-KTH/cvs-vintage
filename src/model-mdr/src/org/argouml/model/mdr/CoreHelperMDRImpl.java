@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.20 2006/06/14 18:48:51 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.21 2006/06/14 20:26:49 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -288,6 +288,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
         try {
             if (cls instanceof Classifier && feature instanceof Feature) {
                 ((Classifier) cls).getFeature().remove(feature);
+                return;
             }
         } catch (InvalidObjectException e) {
             throw new InvalidElementException(e);
