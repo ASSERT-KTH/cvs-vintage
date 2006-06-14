@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.18 2006/06/05 20:31:11 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.19 2006/06/14 18:16:41 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1914,7 +1914,11 @@ public class CoreHelperMDRImpl implements CoreHelper {
      */
     public void removeAnnotatedElement(Object handle, Object me) {
         if (handle instanceof Comment && me instanceof ModelElement) {
-            ((Comment) handle).getAnnotatedElement().remove(me);
+            try {
+                ((Comment) handle).getAnnotatedElement().remove(me);
+            } catch (InvalidObjectException e) {
+                throw new InvalidElementException(e);
+            }
             return;
         }
         throw new IllegalArgumentException("handle: " + handle
