@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.25 2006/06/11 15:39:53 mvw Exp $
+// $Id: ConfigLoader.java,v 1.26 2006/06/14 05:48:23 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -193,8 +193,7 @@ public class ConfigLoader {
 		}
 		catch (ClassNotFoundException cnfe) { }
 		catch (Exception e) {
-		    LOG.error("Unanticipated exception, skipping " + tabName);
-		    LOG.error(e);
+		    LOG.error("Unanticipated exception, skipping " + tabName, e);
 		}
 		if (res != null) {
 		    return res;

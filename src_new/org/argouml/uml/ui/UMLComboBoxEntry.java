@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxEntry.java,v 1.28 2006/06/11 15:39:47 mvw Exp $
+// $Id: UMLComboBoxEntry.java,v 1.29 2006/06/14 05:48:23 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.uml.Profile;
 
@@ -42,6 +43,9 @@ import org.argouml.uml.Profile;
  *  Is it a good idea to complete this? Or shall we remove?
  */
 public class UMLComboBoxEntry implements Comparable {
+    
+    private static final Logger LOG = Logger.getLogger(UMLComboBoxEntry.class);
+    
     private Object/*MModelElement*/ element;
     private String shortName;
 
@@ -217,7 +221,7 @@ public class UMLComboBoxEntry implements Comparable {
                 element = clone;
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.error("Exception in getElement()", ex);
             }
             thisIsAPhantom = false;
         }

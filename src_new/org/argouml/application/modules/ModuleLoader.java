@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.34 2006/05/26 22:10:00 mvw Exp $
+// $Id: ModuleLoader.java,v 1.35 2006/06/14 05:48:23 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -366,7 +366,7 @@ public class ModuleLoader {
         try {
 	    return loadModules(new FileInputStream(moduleFile), moduleFile);
 	} catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
         return false;
     }

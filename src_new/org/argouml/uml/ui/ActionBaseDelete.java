@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.18 2006/06/11 14:56:00 mvw Exp $
+// $Id: ActionBaseDelete.java,v 1.19 2006/06/14 05:48:23 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,6 +102,8 @@ public abstract class ActionBaseDelete extends UndoableAction {
             size = figs.size();
         } catch (Exception e) {
 	    // Ignore
+            // TODO: Why are these being ignored? - tfm
+            LOG.warn("Exception ignored", e);
         }
         if (size > 0) {
             return true;
@@ -167,7 +169,7 @@ public abstract class ActionBaseDelete extends UndoableAction {
                     }
                     if (Model.getFacade().isAConcurrentRegion(target)) {
                         new ActionDeleteConcurrentRegion()
-                            .actionPerformed(ae);
+                        .actionPerformed(ae);
                     } else {
                         p.moveToTrash(target);
                     }

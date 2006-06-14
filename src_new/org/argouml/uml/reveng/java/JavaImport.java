@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.33 2006/06/11 15:39:52 mvw Exp $
+// $Id: JavaImport.java,v 1.34 2006/06/14 05:48:22 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class JavaImport extends FileImportSupport {
                 LOG.error(e.getClass().getName()
 			  + " Exception in file: "
 			  + f.getCanonicalPath() + " "
-			  + f.getName());
+			  + f.getName(), e);
                 throw e;
             }
 	    in.close();

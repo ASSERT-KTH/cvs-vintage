@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.31 2006/06/11 19:01:26 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.32 2006/06/14 05:48:22 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -395,7 +395,7 @@ public class PerspectiveConfigurator extends ArgoDialog {
         // sort them
         Collections.sort(rulesLib, new Comparator() {
             public int compare(Object o1, Object o2) {
-                return o1.toString().compareTo(o2.toString());
+            return o1.toString().compareTo(o2.toString());
             }
         });
         // remove the ones already selected (if a perspective is selected)
@@ -488,7 +488,7 @@ public class PerspectiveConfigurator extends ArgoDialog {
         model.clear();
         Collections.sort(all, new Comparator() {
             public int compare(Object o1, Object o2) {
-                return o1.toString().compareTo(o2.toString());
+            return o1.toString().compareTo(o2.toString());
             }
         });
         Iterator it = all.iterator();
@@ -657,7 +657,7 @@ public class PerspectiveConfigurator extends ArgoDialog {
             ruleLibraryList.setSelectedIndex(selLibNr);
             updateRuleLabel();
         } catch (Exception e) {
-            LOG.error("problem adding rule");
+            LOG.error("problem adding rule", e);
         }
     }
 

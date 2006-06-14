@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.74 2006/03/25 21:33:52 tfmorris Exp $
+// $Id: StateDiagramGraphModel.java,v 1.75 2006/06/14 05:48:22 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -279,7 +279,8 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         super.addNodeRelatedEdges(node);
 
         if (Model.getFacade().isAStateVertex(node)) {
-            Collection transen = new ArrayList(Model.getFacade().getOutgoings(node));
+            Collection transen = 
+                new ArrayList(Model.getFacade().getOutgoings(node));
             transen.addAll(Model.getFacade().getIncomings(node));
             Iterator iter = transen.iterator();
             while (iter.hasNext()) {
@@ -361,7 +362,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
                 addEdge(connection);
                 return connection;
             } catch (Exception ex) {
-                // fail silently
+                LOG.error("buildConnection() failed", ex);
             }
             return null;
         } else {

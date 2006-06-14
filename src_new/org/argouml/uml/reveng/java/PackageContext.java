@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.30 2006/06/11 15:39:52 mvw Exp $
+// $Id: PackageContext.java,v 1.31 2006/06/14 05:48:22 tfmorris Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.reveng.java;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.Facade;
 import org.argouml.model.Model;
 import org.argouml.uml.reveng.ImportClassLoader;
@@ -34,6 +35,9 @@ import org.argouml.uml.reveng.ImportClassLoader;
  * @author Marcus Andersson
  */
 class PackageContext extends Context {
+    
+    private static final Logger LOG = Logger.getLogger(PackageContext.class);
+    
     /** The package this context represents. */
     private Object mPackage;
 
@@ -107,6 +111,8 @@ class PackageContext extends Context {
                 }
                 catch (Exception e1) {
 		    // Ignore.
+                    // TODO: Why are these being ignored?
+                    LOG.warn("Exception ignored", e1);
                 }
 	    }
 	}
@@ -194,6 +200,8 @@ class PackageContext extends Context {
                 }
                 catch (Exception e1) {
 		    // Ignore
+                    // TODO: Why are these being ignored? - tfm
+                    LOG.warn("Exception ignored", e1);
                 }
             }
 	}

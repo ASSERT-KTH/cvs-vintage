@@ -1,4 +1,4 @@
-// $Id: XmiReferenceResolverImpl.java,v 1.4 2006/03/24 02:14:22 tfmorris Exp $
+// $Id: XmiReferenceResolverImpl.java,v 1.5 2006/06/14 05:48:12 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -386,6 +386,7 @@ class XmiReferenceResolverImpl extends XmiContext {
             stream = url.openStream();
             stream.close();
         } catch (Exception e) {
+            // TODO: What kinds of exceptions are expected here? - tfm
             url = null;
         } finally {
             stream = null;

@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.38 2006/03/08 01:17:30 bobtarling Exp $
+// $Id: DiagramInterface.java,v 1.39 2006/06/14 05:48:23 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -348,7 +348,7 @@ public class DiagramInterface {
 	    try {
 		d.setName(diagramName);
 	    } catch (Exception e) {
-		LOG.error("Failed to set diagram name.");
+		LOG.error("Failed to set diagram name.", e);
 	    }
 	    p.addMember(d);
 	    setCurrentDiagram(d);

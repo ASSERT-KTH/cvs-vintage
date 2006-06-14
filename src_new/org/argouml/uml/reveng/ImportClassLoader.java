@@ -1,4 +1,4 @@
-// $Id: ImportClassLoader.java,v 1.6 2006/02/19 17:44:44 linus Exp $
+// $Id: ImportClassLoader.java,v 1.7 2006/06/14 05:48:23 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -223,7 +223,7 @@ public final class ImportClassLoader extends URLClassLoader {
             try {
 		urlList.add(new File(token).toURL());
             } catch (Exception e) {
-		e.printStackTrace();
+		LOG.error(e);
 	    }
         }
 
