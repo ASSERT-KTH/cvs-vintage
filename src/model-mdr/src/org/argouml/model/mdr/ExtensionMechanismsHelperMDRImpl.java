@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.9 2006/06/05 20:31:11 tfmorris Exp $
+// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.10 2006/06/14 18:48:51 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -189,8 +189,8 @@ class ExtensionMechanismsHelperMDRImpl implements ExtensionMechanismsHelper {
                     Object o = it.next();
                     if (o instanceof Stereotype
                             && name.equals(((Stereotype) o).getName())
-                            && ((Stereotype) o).getBaseClass().
-                            contains(baseClass)) {
+                            && ((Stereotype) o).getBaseClass().contains(
+                                    baseClass)) {
                         return (Stereotype) o;
                     }
                 }
@@ -473,16 +473,20 @@ class ExtensionMechanismsHelperMDRImpl implements ExtensionMechanismsHelper {
      * @see org.argouml.model.ExtensionMechanismsHelper#removeBaseClass(java.lang.Object, java.lang.Object)
      */
     public void removeBaseClass(Object handle, Object baseClass) {
-        if (handle instanceof Stereotype) {
-            if (baseClass instanceof String) {
-                ((Stereotype) handle).getBaseClass().remove(baseClass);
-                return;
+        try {
+            if (handle instanceof Stereotype) {
+                if (baseClass instanceof String) {
+                    ((Stereotype) handle).getBaseClass().remove(baseClass);
+                    return;
+                }
+                if (baseClass instanceof ModelElement) {
+                    ((Stereotype) handle).getBaseClass().remove(
+                            nsmodel.getMetaTypes().getName(baseClass));
+                    return;
+                }
             }
-            if (baseClass instanceof ModelElement) {
-                ((Stereotype) handle).getBaseClass().remove(
-                        nsmodel.getMetaTypes().getName(baseClass));
-                return;
-            }
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
         }
         throw new IllegalArgumentException("handle: " + handle
                 + " or baseClass: " + baseClass);
