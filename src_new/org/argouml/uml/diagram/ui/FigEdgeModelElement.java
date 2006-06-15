@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.176 2006/06/14 05:59:55 tfmorris Exp $
+// $Id: FigEdgeModelElement.java,v 1.177 2006/06/15 01:40:36 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1073,20 +1073,17 @@ public abstract class FigEdgeModelElement
      * @return the Fig representing the presentation
      */
     private Fig getNoEdgePresentationFor(Object element) {
-        Fig result = null;
         if (element != null) {
             List contents = getLayer().getContentsNoEdges();
             int figCount = contents.size();
             for (int figIndex = 0; figIndex < figCount; ++figIndex) {
                 Fig fig = (Fig) contents.get(figIndex);
                 if (fig.getOwner() == element) {
-                    // TODO: Why doesn't this stop searching after
-                    // the first figure found? - tfm
-                    result = fig;
+                    return fig;
                 }
             }
         }
-        return result;
+        return null;
     }
 
 
