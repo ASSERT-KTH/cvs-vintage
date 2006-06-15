@@ -1,4 +1,4 @@
-// $Id: UmlFactoryMDRImpl.java,v 1.10 2006/04/29 10:06:11 linus Exp $
+// $Id: UmlFactoryMDRImpl.java,v 1.11 2006/06/15 00:05:44 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,6 +129,7 @@ import org.omg.uml.foundation.core.Stereotype;
 import org.omg.uml.foundation.core.StructuralFeature;
 import org.omg.uml.foundation.core.TagDefinition;
 import org.omg.uml.foundation.core.TaggedValue;
+import org.omg.uml.foundation.core.TemplateArgument;
 import org.omg.uml.foundation.core.TemplateParameter;
 import org.omg.uml.foundation.core.UmlAssociation;
 import org.omg.uml.foundation.core.UmlClass;
@@ -668,7 +669,7 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
         nsmodel.getRepository().beginTrans(true);
         try {
             // TODO: Encountering a deleted object during
-            // any part of this traversal while
+            // any part of this traversal will
             // abort the rest of the traversal.
             // We probably should do the whole traversal
             // in a single MDR transaction.
@@ -752,8 +753,9 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
                 }
             } else if (elem instanceof TemplateParameter) {
                 getCore().deleteTemplateParameter(elem);
+            } else if (elem instanceof TemplateArgument) {
+                getCore().deleteTemplateArgument(elem);
             }
-            // TODO: Add TemplateArgument
 
             if (elem instanceof Partition) {
                 getActivityGraphs().deletePartition(elem);

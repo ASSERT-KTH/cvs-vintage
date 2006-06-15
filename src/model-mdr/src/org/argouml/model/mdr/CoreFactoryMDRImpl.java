@@ -1,4 +1,4 @@
-// $Id: CoreFactoryMDRImpl.java,v 1.5 2006/04/13 03:38:30 tfmorris Exp $
+// $Id: CoreFactoryMDRImpl.java,v 1.6 2006/06/15 00:05:44 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1399,11 +1399,13 @@ public class CoreFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
      * element. This method should not be called directly.
      * <p>
      * 
-     * In the case of an associationend these are the following elements:
+     * In the case of an AssociationEnd these are the following elements:
      * <ul>
-     * <li>Binary Associations that 'loose' one of the associationends by this
+     * <li>Binary Associations that lose one of the AssociationEnds by this
      * deletion.
+     * <li>LinkEnds associated with this AssociationEnd.
      * </ul>
+     * 
      * 
      * @param elem
      * @see UmlFactoryMDRImpl#delete(Object)
@@ -1412,12 +1414,16 @@ public class CoreFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
         if (!(elem instanceof AssociationEnd)) {
             throw new IllegalArgumentException("elem: " + elem);
         }
-        UmlAssociation assoc = ((AssociationEnd) elem).getAssociation();
+        AssociationEnd ae = (AssociationEnd) elem;
+        UmlAssociation assoc = ae.getAssociation();
         if (assoc != null && assoc.getConnection() != null
                 && assoc.getConnection().size() == 2) { // binary association
             nsmodel.getUmlFactory().delete(assoc);
         }
-        // TODO: delete LinkEnds which have this as their associationEnd
+        // delete LinkEnds which have this as their associationEnd
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getUmlPackage().getCommonBehavior()
+                        .getAAssociationEndLinkEnd().getLinkEnd(ae));
     }
 
     /**
@@ -1488,15 +1494,27 @@ public class CoreFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
         if (!(elem instanceof Classifier)) {
             throw new IllegalArgumentException("elem: " + elem);
         }
-        Collection col = nsmodel.getFacade().getAssociationEnds(elem);
-        Iterator it = col.iterator();
-        while (it.hasNext()) {
-            nsmodel.getUmlFactory().delete(it.next());
-        }
-        // TODO: delete CreateActions which have this as their instantiation
-        // TODO: delete Instances which have this as their classifier
-        // TODO: delete ObjectFlowStates which have this as their type
-        // TODO: delete ClassifierInStates which have this as their type
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getFacade().getAssociationEnds(elem));
+        Classifier cls = (Classifier) elem;
+        // delete CreateActions which have this as their instantiation
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getUmlPackage().getCommonBehavior()
+                        .getACreateActionInstantiation().getCreateAction(cls));
+        // TODO: ?delete Instances which have this as their classifier?
+        // or should we leave them since they contain so much state that the
+        // user would have to recreate??
+//        nsmodel.getUmlHelper().deleteCollection(
+//                nsmodel.getUmlPackage().getCommonBehavior()
+//                        .getAInstanceClassifier().getInstance(cls));
+        // TODO: ?delete ObjectFlowStates which have this as their type?
+//        nsmodel.getUmlHelper().deleteCollection(
+//                nsmodel.getUmlPackage().getActivityGraphs()
+//                        .getATypeObjectFlowState().getObjectFlowState(cls));
+        // TODO: ?delete ClassifierInStates which have this as their type?
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getUmlPackage().getActivityGraphs()
+                        .getATypeClassifierInState().getClassifierInState(cls));
     }
 
     /**
@@ -1742,8 +1760,15 @@ public class CoreFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
         if (!(elem instanceof Operation)) {
             throw new IllegalArgumentException("elem: " + elem);
         }
-        // TODO: delete CallActions which have this as their operation
-        // TODO: delete all CallEvents which have this as their operation
+        Operation oper = (Operation) elem;
+        // delete CallActions which have this as their operation
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getUmlPackage().getCommonBehavior()
+                        .getACallActionOperation().getCallAction(oper));
+        // delete CallEvents which have this as their operation
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getUmlPackage().getStateMachines()
+                        .getAOccurrenceOperation().getOccurrence(oper));
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactoryMDRImpl.java,v 1.5 2006/05/23 21:37:16 tfmorris Exp $
+// $Id: CommonBehaviorFactoryMDRImpl.java,v 1.6 2006/06/15 00:05:44 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -562,14 +562,12 @@ public class CommonBehaviorFactoryMDRImpl extends AbstractUmlModelFactoryMDR
                 nsmodel.getUmlFactory().delete(it.next());
             }
         }
-        
-        // TODO: ?Delete Stimulii where this is the sender or receiver?
-        // (or leave them since they contain other info the user might
-        // want to reuse even though they are temporarily invalid?)
-//        nsmodel.getUmlHelper().deleteCollection(
-//                cbPackage.getAStimulusSender().getStimulus((Instance) elem));
-//        nsmodel.getUmlHelper().deleteCollection(
-//                cbPackage.getAReceiverStimulus().getStimulus((Instance) elem));
+
+        // Delete Stimuli which have this as a Sender or Receiver
+        nsmodel.getUmlHelper().deleteCollection(
+                cbPackage.getAStimulusSender().getStimulus((Instance) elem));
+        nsmodel.getUmlHelper().deleteCollection(
+                cbPackage.getAReceiverStimulus().getStimulus((Instance) elem));
 
     }
 

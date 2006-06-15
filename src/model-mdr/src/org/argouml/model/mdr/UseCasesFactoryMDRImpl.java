@@ -1,4 +1,4 @@
-// $Id: UseCasesFactoryMDRImpl.java,v 1.4 2006/06/11 15:43:08 mvw Exp $
+// $Id: UseCasesFactoryMDRImpl.java,v 1.5 2006/06/15 00:05:44 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,9 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model.mdr;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.argouml.model.UseCasesFactory;
 import org.omg.uml.behavioralelements.usecases.Actor;
@@ -268,7 +271,16 @@ public class UseCasesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
         if (!(elem instanceof ExtensionPoint)) {
             throw new IllegalArgumentException();
         }
-        // TODO: Delete Extends where this is the only extensionPoint
+        // Delete Extends which have this as their only ExtensionPoint
+        Collection xtends = nsmodel.getUmlPackage().getUseCases()
+                .getAExtensionPointExtend().getExtend((ExtensionPoint) elem);
+        for (Iterator it = xtends.iterator(); it.hasNext(); ) {
+            Extend extend = (Extend) it.next();
+            Collection eps = extend.getExtensionPoint();
+            if (eps.size() == 1 && eps.contains(elem)) {
+                nsmodel.getUmlFactory().delete(extend);
+            }
+        }
     }
 
     /**
@@ -294,8 +306,14 @@ public class UseCasesFactoryMDRImpl extends AbstractUmlModelFactoryMDR
         UseCase useCase = ((UseCase) elem);
         nsmodel.getUmlHelper().deleteCollection(useCase.getExtend());
         nsmodel.getUmlHelper().deleteCollection(useCase.getInclude());
-        // TODO: delete Extends where this is the base
-        // TODO: delete Includes where this is the addition
+        // delete Extends where this is the base
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getUmlPackage().getUseCases().getABaseExtender()
+                        .getExtender(useCase));
+        // delete Includes where this is the addition
+        nsmodel.getUmlHelper().deleteCollection(
+                nsmodel.getUmlPackage().getUseCases().getAIncluderAddition()
+                        .getIncluder(useCase));
     }
 
     /**

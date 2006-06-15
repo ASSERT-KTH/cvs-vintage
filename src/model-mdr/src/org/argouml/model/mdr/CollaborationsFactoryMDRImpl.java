@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryMDRImpl.java,v 1.4 2006/04/29 10:06:11 linus Exp $
+// $Id: CollaborationsFactoryMDRImpl.java,v 1.5 2006/06/15 00:05:44 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -559,7 +559,20 @@ public class CollaborationsFactoryMDRImpl extends AbstractUmlModelFactoryMDR
         if (!(elem instanceof ClassifierRole)) {
             throw new IllegalArgumentException();
         }
-        // TODO: delete Messages which have this as sender or receiver
+        ClassifierRole cr = (ClassifierRole) elem;
+        // delete Messages which have this as sender or receiver
+        nsmodel.getUmlHelper().deleteCollection(
+                collabPkg.getAMessageSender().getMessage(cr));
+        nsmodel.getUmlHelper().deleteCollection(
+                collabPkg.getAReceiverMessage().getMessage(cr));
+        // TODO: delete Collaborations where this is the last ClassifierRole?
+//        Object owner = cr.refImmediateComposite();
+//        if (owner instanceof Collaboration) {
+//            Collection ownedElements = ((Collaboration) owner)
+//                    .getOwnedElement();
+//            if (ownedElements.size() == 1 && ownedElements.contains(cr))
+//                nsmodel.getUmlFactory().delete(owner);
+//        }
     }
 
     /**
