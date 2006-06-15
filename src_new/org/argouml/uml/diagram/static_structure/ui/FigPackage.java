@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.98 2006/06/02 18:28:24 mvw Exp $
+// $Id: FigPackage.java,v 1.99 2006/06/15 19:26:16 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,13 +39,11 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Configuration;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.notation.Notation;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
@@ -67,6 +65,12 @@ import org.tigris.gef.undo.UndoableAction;
 
 /**
  * Class to display graphics for a UML package in a class diagram.
+ * <p>
+ * 
+ * The "tab" of the Package Fig is build of 2 pieces: 
+ * the stereotypes at the top, and the name below it. 
+ * Both are not transparent, and have a line border. 
+ * And there is a blinder for the line in the middle.
  */
 public class FigPackage extends FigNodeModelElement
     implements StereotypeContainer, VisibilityContainer {
@@ -286,7 +290,6 @@ public class FigPackage extends FigNodeModelElement
      * @see org.tigris.gef.presentation.Fig#setLineWidth(int)
      */
     public void setLineWidth(int w) {
-        getStereotypeFig().setLineWidth(w);
         getNameFig().setLineWidth(w);
         body.setLineWidth(w);
     }
