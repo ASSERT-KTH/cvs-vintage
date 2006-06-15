@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.198 2006/06/11 19:01:25 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.199 2006/06/15 14:48:31 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1293,6 +1293,13 @@ public final class ProjectBrowser
                     }
                 }
 
+                // Let's save this project in the mru list
+                this.addFileSaved(file);
+                // Let's save this project as the last used one
+                // in the configuration file
+                Configuration.setString(Argo.KEY_MOST_RECENT_PROJECT_FILE,
+                        file.getCanonicalPath());
+                
                 ProjectBrowser.getInstance().showStatus(
                         Translator.localize(
                                 "label.open-project-status-read",
