@@ -1,4 +1,4 @@
-// $Id: UMLCheckItem.java,v 1.15 2006/06/11 15:39:53 mvw Exp $
+// $Id: UMLCheckItem.java,v 1.16 2006/06/15 19:40:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,8 @@
 package org.argouml.uml.cognitive.checklist;
 
 import org.apache.log4j.Logger;
-
-
-
 import org.argouml.cognitive.checklist.CheckItem;
-//
-//  slightly different from its GEF counterpart
-//
+import org.argouml.model.InvalidElementException;
 import org.argouml.ocl.CriticOclEvaluator;
 import org.argouml.ocl.OCLEvaluator;
 import org.tigris.gef.ocl.ExpansionException;
@@ -89,7 +84,11 @@ public class UMLCheckItem extends CheckItem {
 	    } catch (ExpansionException e) {
 	        // Really ought to have a CriticException to throw here.
 	        LOG.error("Failed to evaluate critic expression", e);
-	    }
+	    } catch (InvalidElementException e) {
+                /* The modelelement must have been 
+                 * deleted - ignore this - it will pass. */
+                evalStr = "(deleted)";
+            }
 	    LOG.debug("expr='" + expr + "' = '" + evalStr + "'");
 	    res = res.substring(0, matchPos) + evalStr
 	        + res.substring(endExpr + OCLEvaluator.OCL_END.length());
