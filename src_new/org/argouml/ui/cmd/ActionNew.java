@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.4 2006/04/29 10:29:11 linus Exp $
+// $Id: ActionNew.java,v 1.5 2006/06/16 19:58:31 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 /**
  * Action to trigger creation of a new project.
  */
-class ActionNew extends AbstractAction {
+public class ActionNew extends AbstractAction {
 
     /**
      * The constructor.
@@ -67,8 +67,10 @@ class ActionNew extends AbstractAction {
         Model.getPump().flushModelEvents();
         Project p = ProjectManager.getManager().getCurrentProject();
 
-        if (!ProjectBrowser.getInstance().askConfirmationAndSave()) {
-            return;
+        if (getValue("non-interactive") == null) {
+            if (!ProjectBrowser.getInstance().askConfirmationAndSave()) {
+                return;
+            }
         }
 
         ProjectBrowser.getInstance().clearDialogs();

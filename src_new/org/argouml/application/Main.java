@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.149 2006/06/11 19:01:26 mvw Exp $
+// $Id: Main.java,v 1.150 2006/06/16 19:58:31 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -311,10 +311,6 @@ public class Main {
         Designer.enableCritiquing();
 
         st.mark("perspectives");
-
-        if (urlToOpen == null) {
-            pb.buildTitle(Translator.localize("label.projectbrowser-title"));
-	}
 
         if (splash != null) {
             splash.getStatusBar().showProgress(75);
