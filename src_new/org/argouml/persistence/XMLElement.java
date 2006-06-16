@@ -1,4 +1,4 @@
-// $Id: XMLElement.java,v 1.3 2006/06/11 15:39:46 mvw Exp $
+// $Id: XMLElement.java,v 1.4 2006/06/16 19:09:25 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,16 @@ public class XMLElement {
     public void   addText(String t) { text = text.append(t); }
 
     /**
+     * Append text to the end of the element.
+     * @param c character array containing the text to be appended
+     * @param offset starting offset of text
+     * @param len length of text to append
+     */
+    public void addText(char[] c, int offset, int len) {
+        text = text.append(c, offset, len);
+    }
+    
+    /**
      * @param t the new text
      */
     public void   setText(String t) { text = new StringBuffer(t); }
@@ -81,6 +91,12 @@ public class XMLElement {
      * @return the text of this element
      */
     public String getText()            { return text.toString(); }
+
+    /**
+     * Get the length of the text in the element.
+     * @return the length of the text in this element
+     */
+    public int length()            { return text.length(); }
 
     /**
      * Change the attributes for this element.
