@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.38 2006/06/14 05:48:23 tfmorris Exp $
+// $Id: PropPanelDiagram.java,v 1.39 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,6 @@ import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNavigate;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.PropPanel;
 import org.argouml.util.ConfigLoader;
 
@@ -68,7 +67,7 @@ public class PropPanelDiagram extends PropPanel {
         addField(Translator.localize("label.home-model"), new JScrollPane(lst));
 
         addAction(new ActionNavigateUpFromDiagram());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(TargetManager.getInstance().getDeleteAction());
     }
 
     /**
@@ -79,28 +78,28 @@ public class PropPanelDiagram extends PropPanel {
         this("Diagram", null);
     }
 
-    /**
-     * @see org.argouml.uml.ui.PropPanel#removeElement()
-     */
-    public void removeElement() {
-        Object target = getTarget();
-        if (target instanceof ArgoDiagram) {
-            try {
-                ArgoDiagram diagram = (ArgoDiagram) target;
-                Project project =
-		    ProjectManager.getManager().getCurrentProject();
-                //
-                //  can't easily find owner of diagram
-                //    set new target to the model
-                //
-                Object newTarget = project.getModel();
-                project.moveToTrash(diagram);
-                TargetManager.getInstance().setTarget(newTarget);
-            } catch (Exception e) {
-                LOG.error(e);
-            }
-        }
-    }
+//    /**
+//     * @see org.argouml.uml.ui.PropPanel#removeElement()
+//     */
+//    public void removeElement() {
+//        Object target = getTarget();
+//        if (target instanceof ArgoDiagram) {
+//            try {
+//                ArgoDiagram diagram = (ArgoDiagram) target;
+//                Project project =
+//		    ProjectManager.getManager().getCurrentProject();
+//                //
+//                //  can't easily find owner of diagram
+//                //    set new target to the model
+//                //
+//                Object newTarget = project.getModel();
+//                project.moveToTrash(diagram);
+//                TargetManager.getInstance().setTarget(newTarget);
+//            } catch (Exception e) {
+//                LOG.error(e);
+//            }
+//        }
+//    }
 
 } /* end class PropPanelDiagram */
 

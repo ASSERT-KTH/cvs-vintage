@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.39 2006/06/11 15:39:48 mvw Exp $
+// $Id: PropPanelReception.java,v 1.40 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.ui.LookAndFeelMgr;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLTextArea2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
@@ -92,6 +91,6 @@ public class PropPanelReception extends PropPanelModelElement {
 
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionNewStereotype());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 }

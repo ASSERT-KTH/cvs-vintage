@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.77 2006/06/11 15:39:43 mvw Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.78 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateAssociation;
 import org.argouml.uml.ui.ActionNavigateOppositeAssocEnd;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -224,7 +223,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
                 TargetManager.getInstance().getAddAttributeAction(),
                 Translator.localize("button.new-qualifier"));
         addAction(new ActionNewStereotype());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelModel.java,v 1.20 2006/04/19 20:46:38 mvw Exp $
+// $Id: PropPanelModel.java,v 1.21 2006/06/17 19:54:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.ActionAddDataType;
@@ -94,7 +93,7 @@ public class PropPanelModel extends PropPanelPackage  {
         addAction(new ActionAddEnumeration());
         addAction(new ActionNewStereotype());
         addAction(new ActionNewTagDefinition());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
 } /* end class PropPanelModel */

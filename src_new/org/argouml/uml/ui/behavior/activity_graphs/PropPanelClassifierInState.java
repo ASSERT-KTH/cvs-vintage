@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierInState.java,v 1.6 2006/04/08 22:36:07 tfmorris Exp $
+// $Id: PropPanelClassifierInState.java,v 1.7 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.AbstractActionRemoveElement;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
@@ -102,7 +101,7 @@ public class PropPanelClassifierInState extends PropPanelClassifier {
                 statesScroll);
 
         addAction(new ActionNavigateNamespace());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
     
     protected JComboBox getClassifierInStateTypeSelector() {

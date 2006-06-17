@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.76 2006/04/13 03:38:31 tfmorris Exp $
+// $Id: PropPanelDataType.java,v 1.77 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
@@ -92,7 +91,7 @@ public class PropPanelDataType extends PropPanelClassifier {
         addEnumerationButtons();
         addAction(new ActionAddQueryOperation());
         addAction(new ActionNewStereotype());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
     /**

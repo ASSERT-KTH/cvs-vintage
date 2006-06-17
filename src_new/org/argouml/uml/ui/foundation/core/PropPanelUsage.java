@@ -1,4 +1,4 @@
-// $Id: PropPanelUsage.java,v 1.22 2006/06/11 15:39:43 mvw Exp $
+// $Id: PropPanelUsage.java,v 1.23 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.util.ConfigLoader;
 
@@ -59,7 +58,7 @@ public class PropPanelUsage extends PropPanelDependency {
                 getClientScroll());
 
         addAction(new ActionNavigateNamespace());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
 } /* end class PropPanelUsage */

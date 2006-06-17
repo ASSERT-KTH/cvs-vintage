@@ -1,4 +1,4 @@
-// $Id: PropPanelChangeEvent.java,v 1.17 2006/03/25 00:46:56 tfmorris Exp $
+// $Id: PropPanelChangeEvent.java,v 1.18 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
 import org.argouml.uml.ui.UMLExpressionModel2;
@@ -66,7 +65,7 @@ public class PropPanelChangeEvent extends PropPanelEvent {
                 false));
         add(changePanel);
         
-        addAction(new ActionDeleteSingleModelElement());;
+        addAction(getDeleteAction());
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: PropPanelAction.java,v 1.25 2006/04/08 22:36:06 tfmorris Exp $
+// $Id: PropPanelAction.java,v 1.26 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
@@ -127,7 +126,7 @@ public abstract class PropPanelAction extends PropPanelModelElement {
         addAction(new ActionNavigateContainerElement());
         addAction(new ActionCreateArgument());
         addAction(new ActionNewStereotype());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
 
     }
 

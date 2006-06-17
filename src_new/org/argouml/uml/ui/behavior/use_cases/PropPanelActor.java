@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.58 2006/06/11 15:39:50 mvw Exp $
+// $Id: PropPanelActor.java,v 1.59 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
@@ -77,7 +76,7 @@ public class PropPanelActor extends PropPanelClassifier {
         addAction(new ActionNewActor());
         addAction(getActionNewReception());
         addAction(new ActionNewStereotype());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
 } /* end class PropActor */

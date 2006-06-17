@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.56 2006/04/18 21:06:56 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.57 2006/06/17 19:54:29 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -111,7 +110,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 	addAction(new ActionNavigateContainerElement());
 	addAction(getActionNewReception());
 	addAction(new ActionNewStereotype());
-	addAction(new ActionDeleteSingleModelElement());
+	addAction(getDeleteAction());
     }
 
     /**

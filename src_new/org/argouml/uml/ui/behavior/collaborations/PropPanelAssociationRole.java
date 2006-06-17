@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.42 2006/06/11 15:39:49 mvw Exp $
+// $Id: PropPanelAssociationRole.java,v 1.43 2006/06/17 19:54:29 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.diagram.ui.ActionAddMessage;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -85,7 +84,7 @@ public class PropPanelAssociationRole extends PropPanelAssociation {
 
         addAction(new ActionNavigateContainerElement());
         addAction(ActionAddMessage.getSingleton());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
 } /* end class PropPanelAssociationRole */

@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.139 2006/06/04 00:43:13 tfmorris Exp $
+// $Id: PropPanel.java,v 1.140 2006/06/17 19:54:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -437,19 +437,23 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
     /**
      * Remove this element.
      */
-    public void removeElement() {
-        Object theTarget = getTarget();
-        if (Model.getFacade().isAModelElement(theTarget)) {
-            Object newTarget = Model.getFacade().getModelElementContainer(
-                    theTarget);
-            Object base = theTarget;
-            TargetManager.getInstance().setTarget(base);
-            ActionEvent event = new ActionEvent(this, 1, "delete");
-            new ActionDeleteSingleModelElement().actionPerformed(event);
-            if (newTarget != null) {
-                TargetManager.getInstance().setTarget(newTarget);
-            }
-        }
+//final public void removeElement() {
+//        Object theTarget = getTarget();
+//        if (Model.getFacade().isAModelElement(theTarget)) {
+//            Object newTarget = Model.getFacade().getModelElementContainer(
+//                    theTarget);
+//            Object base = theTarget;
+//            TargetManager.getInstance().setTarget(base);
+//            ActionEvent event = new ActionEvent(this, 1, "delete");
+//            new ActionDeleteSingleModelElement().actionPerformed(event);
+//            if (newTarget != null) {
+//                TargetManager.getInstance().setTarget(newTarget);
+//            }
+//        }
+//    }
+    
+    final protected Action getDeleteAction() {
+        return TargetManager.getInstance().getDeleteAction();
     }
 
     /**

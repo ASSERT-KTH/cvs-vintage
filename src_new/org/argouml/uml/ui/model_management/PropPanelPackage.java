@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.78 2006/04/19 20:46:38 mvw Exp $
+// $Id: PropPanelPackage.java,v 1.79 2006/06/17 19:54:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
@@ -131,7 +130,7 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addAction(new ActionAddEnumeration());
         addAction(new ActionNewStereotype());
         addAction(new ActionNewTagDefinition());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
     /**

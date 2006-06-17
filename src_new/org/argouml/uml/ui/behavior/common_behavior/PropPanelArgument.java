@@ -1,4 +1,4 @@
-// $Id: PropPanelArgument.java,v 1.6 2006/03/12 10:42:03 linus Exp $
+// $Id: PropPanelArgument.java,v 1.7 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import javax.swing.JTextArea;
 
 import org.argouml.i18n.Translator;
 import org.argouml.ui.LookAndFeelMgr;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateAction;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionExpressionModel;
@@ -69,7 +68,7 @@ public class PropPanelArgument extends PropPanelModelElement {
                 new UMLExpressionLanguageField(expressionModel, true));
 
         addAction(new ActionNavigateAction());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
 
     }
 

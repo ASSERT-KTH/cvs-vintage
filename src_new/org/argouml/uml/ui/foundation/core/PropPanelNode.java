@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.48 2006/04/08 22:36:06 tfmorris Exp $
+// $Id: PropPanelNode.java,v 1.49 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLModelElementListModel2;
@@ -79,7 +78,7 @@ public class PropPanelNode extends PropPanelClassifier {
         addAction(new ActionNavigateContainerElement());
         addAction(getActionNewReception());
         addAction(new ActionNewStereotype());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
 

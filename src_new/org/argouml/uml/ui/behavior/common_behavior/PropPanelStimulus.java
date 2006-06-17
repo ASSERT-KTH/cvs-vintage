@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.65 2006/06/11 15:39:48 mvw Exp $
+// $Id: PropPanelStimulus.java,v 1.66 2006/06/17 19:54:30 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLStimulusActionTextField;
@@ -80,7 +79,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
 
         addAction(new ActionNavigateNamespace());
         addAction(new ActionNewStereotype());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
     /**

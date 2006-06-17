@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.59 2006/06/11 15:39:51 mvw Exp $
+// $Id: PropPanelStereotype.java,v 1.60 2006/06/17 19:54:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -122,7 +121,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         addAction(new ActionNavigateNamespace());
         addAction(new ActionNewStereotype());
         addAction(new ActionNewTagDefinition());
-        addAction(new ActionDeleteSingleModelElement());
+        addAction(getDeleteAction());
     }
 
     /**
