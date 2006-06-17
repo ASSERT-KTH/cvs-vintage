@@ -1,4 +1,4 @@
-// $Id: ActionDeleteModelElements.java,v 1.6 2006/06/17 20:29:44 bobtarling Exp $
+// $Id: ActionDeleteModelElements.java,v 1.7 2006/06/17 21:07:23 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,6 +105,8 @@ public class ActionDeleteModelElements extends UndoableAction {
 
         Project p = ProjectManager.getManager().getCurrentProject();
         Object[] targets = TargetManager.getInstance().getTargets().toArray();
+        /* This next line fixes issue 4276: */
+        TargetManager.getInstance().setTarget(null);
         Object target = null;
         for (int i = targets.length - 1; i >= 0; i--) {
             target = targets[i];
