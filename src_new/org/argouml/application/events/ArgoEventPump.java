@@ -1,4 +1,4 @@
-// $Id: ArgoEventPump.java,v 1.19 2006/03/14 22:57:36 linus Exp $
+// $Id: ArgoEventPump.java,v 1.20 2006/06/17 15:25:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,7 @@ public final class ArgoEventPump {
     }
 
     /**
-     * @param event the event to what the listener will listen (?)
+     * @param event the event-type to what the listener will listen
      * @param listener the listener to be added
      */
     public static void addListener(int event, ArgoEventListener listener) {

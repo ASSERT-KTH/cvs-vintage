@@ -1,4 +1,4 @@
-// $Id: NotationUtilityJava.java,v 1.2 2006/04/30 19:38:10 mvw Exp $
+// $Id: NotationUtilityJava.java,v 1.3 2006/06/17 15:28:17 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,9 @@ public class NotationUtilityJava {
      * for a model element,
      * because if it is a Feature, then the tag 'src_visibility' is to be
      * taken into account for generating language dependent visibilities.
+     *
+     * @param o the object which may be a VisibilityKind or a ModelElelement
+     * @return the generated visibility string
      */
     static String generateVisibility(Object o) {
         if (Model.getFacade().isAFeature(o)) {
