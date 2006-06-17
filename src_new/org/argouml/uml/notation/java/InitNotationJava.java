@@ -1,4 +1,4 @@
-// $Id: InitNotationJava.java,v 1.5 2006/04/30 19:06:45 mvw Exp $
+// $Id: InitNotationJava.java,v 1.6 2006/06/17 15:30:29 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,9 @@ public class InitNotationJava {
         npf.addNotationProvider(
                 NotationProviderFactory2.TYPE_OPERATION,
                 name, OperationNotationJava.class);
+        npf.addNotationProvider(
+                NotationProviderFactory2.TYPE_ASSOCIATION_END_NAME,
+                name, AssociationEndNameNotationJava.class);
     }
 
 }
