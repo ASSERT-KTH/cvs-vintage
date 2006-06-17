@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.196 2006/06/10 23:46:47 bobtarling Exp $
+// $Id: Project.java,v 1.197 2006/06/17 11:15:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1242,6 +1242,13 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public void remove() {
 
+        if (diagrams != null) {
+            for (Iterator it = diagrams.iterator(); it.hasNext();) {
+                Diagram diagram = (Diagram) it.next();
+                diagram.remove();
+            }
+        }
+        
         if (members != null) {
             members.clear();
         }

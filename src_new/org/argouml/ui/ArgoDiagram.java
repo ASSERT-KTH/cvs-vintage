@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.59 2006/06/11 19:01:25 mvw Exp $
+// $Id: ArgoDiagram.java,v 1.60 2006/06/17 11:15:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -453,4 +453,16 @@ public class ArgoDiagram extends Diagram {
 
         return presentations;
     }
+
+    // TODO: Move to GEF
+    public void remove() {
+        List contents = new ArrayList(getLayer().getContents());
+        int size = contents.size();
+        for (int i=0; i < size; ++i) {
+            Fig f = (Fig) contents.get(i);
+            f.removeFromDiagram();
+        }
+        super.remove();
+    }
+    
 } /* end class ArgoDiagram */
