@@ -49,6 +49,7 @@ public class FlyingSaucerViewerPlugin extends JScrollPane implements
 
 		setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
+		getVerticalScrollBar().setUnitIncrement(15);
 		
 	}
 
