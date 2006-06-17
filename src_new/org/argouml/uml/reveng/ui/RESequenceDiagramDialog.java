@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.16 2006/06/14 05:48:23 tfmorris Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.17 2006/06/17 20:29:44 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.reveng.java.JavaLexer;
 import org.argouml.uml.reveng.java.JavaRecognizer;
 import org.argouml.uml.reveng.java.Modeller;
-import org.argouml.uml.ui.ActionBaseDelete;
+import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -230,7 +230,7 @@ public class RESequenceDiagramDialog
             // remove SD and clean up everything
             Project p = ProjectManager.getManager().getCurrentProject();
             Object newTarget = null;
-            if (ActionBaseDelete.sureRemove(diagram)) {
+            if (ActionDeleteModelElements.sureRemove(diagram)) {
                 // remove from the model
                 newTarget = getNewTarget(diagram);
                 p.moveToTrash(diagram);
