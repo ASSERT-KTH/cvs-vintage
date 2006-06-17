@@ -38,6 +38,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;

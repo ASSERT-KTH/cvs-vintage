@@ -247,8 +247,11 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @throws CommandCancelledException
 	 * @throws IMAPException
 	 */
-	void synchronizeHeaderlist() throws Exception, IOException,
+	Object[] synchronizeHeaderlist() throws Exception, IOException,
 			CommandCancelledException, IMAPException {
+		
+		Object[] result = new Object[0];
+		
 		// Check if the mailbox has changed
 		MailboxStatus status = getServer().getStatus(this);
 
@@ -257,13 +260,13 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 			syncMailboxInfo(status);
 
-			return;
+			return result;
 		}
 
 		if (!firstSync
 				&& status.getMessages() == this.getMessageFolderInfo()
 						.getExists()) {
-			return;
+			return result;
 		}
 
 		List localUids = new LinkedList(Arrays
@@ -286,7 +289,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 				syncMailboxInfo(status);
 			}
 
-			return;
+			return result;
 		}
 
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
@@ -347,6 +350,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			} else {
 				fetchDone();
 			}
+			
+			result = newUids.toArray(new Object[0]);
 		} else {
 
 			// Number of deleted messages is computed from exists on imap and
@@ -362,6 +367,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			}
 		}
 
+		return result;
 	}
 
 	private int findLargestLocalUidIndex(List localUids) throws IOException,

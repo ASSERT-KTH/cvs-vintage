@@ -20,8 +20,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
 
+import javax.swing.event.EventListenerList;
+
 import org.columba.core.connectionstate.ConnectionStateImpl;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
@@ -42,6 +45,9 @@ public class MailCheckingManager extends Observable {
 
     private static MailCheckingManager instance = new MailCheckingManager();
     
+    
+    protected EventListenerList listenerList = new EventListenerList();
+    
     public MailCheckingManager() {
         super();
 
@@ -56,6 +62,9 @@ public class MailCheckingManager extends Observable {
 
             add(accountItem);
         }
+        
+        // system peep on new messages 
+        addMailCheckingListener(new SystemPeepMailCheckingListener());
     }
 
     public static MailCheckingManager getInstance() {
@@ -157,4 +166,41 @@ public class MailCheckingManager extends Observable {
 
         notifyObservers();
     }
+    
+    /***************************** Listneer ************************************/
+    
+    
+    /**
+	 * Adds a listener.
+	 */
+	public void addMailCheckingListener(IMailCheckingListener l) {
+		listenerList.add(IMailCheckingListener.class, l);
+	}
+
+	/**
+	 * Removes a previously registered listener.
+	 */
+	public void removeMailCheckingListener(IMailCheckingListener l) {
+		listenerList.remove(IMailCheckingListener.class, l);
+	}
+
+	/**
+	 * Propagates an event to all registered listeners notifying them of a item
+	 * addition.
+	 */
+	public void fireNewMessageArrived(IMailFolderCommandReference ref) {
+
+		MailCheckingEvent e = new MailCheckingEvent(this, ref);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IMailCheckingListener.class) {
+				((IMailCheckingListener) listeners[i + 1]).newMessageArrived(e);
+			}
+		}
+	}
+	
 }

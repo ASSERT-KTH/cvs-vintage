@@ -31,6 +31,7 @@ import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.message.IColumbaMessage;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.ScoreMessageCommand;
@@ -78,6 +79,13 @@ public class AddPOP3MessageCommand extends Command {
 		r.setMarkVariant(MarkMessageCommand.MARK_AS_RECENT);
 		new MarkMessageCommand(r).execute(worker);
 
+		// TODO: @author fdietz
+		// This call here might cause problems, because the reference might not be valid
+		// later anymore if a message filter moves the message to a different folder or
+		// even deletes the message
+		IMailFolderCommandReference ref = new MailFolderCommandReference(inboxFolder, new Object[] {uid});
+		MailCheckingManager.getInstance().fireNewMessageArrived(ref);
+		
 		// apply spam filter
 		boolean messageWasMoved = applySpamFilter(uid, worker);
 

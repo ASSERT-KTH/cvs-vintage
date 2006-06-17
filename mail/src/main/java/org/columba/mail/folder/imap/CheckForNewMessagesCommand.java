@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.imap;
 
-import java.awt.Toolkit;
 import java.io.IOException;
 
 import javax.swing.Action;
@@ -26,6 +25,8 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.mailchecking.MailCheckingManager;
 
 /**
  * Check for new messages in IMAPFolder.
@@ -82,8 +83,9 @@ public class CheckForNewMessagesCommand extends Command {
 		int total = imapFolder.getMessageFolderInfo().getExists();
 
 		// check for new headers
+		Object[] uids = new Object[0];
 		try {
-			imapFolder.synchronizeHeaderlist();
+			uids = imapFolder.synchronizeHeaderlist();
 		} catch (IOException e) {
 			imapFolder.setMailboxSyncEnabled(true);
 			worker.cancel();
@@ -93,11 +95,14 @@ public class CheckForNewMessagesCommand extends Command {
 		// Get the new numbers
 		int newTotal = imapFolder.getMessageFolderInfo().getExists();
 		
-		//TODO: make Beep with a nice Action instead
+		// fire new message event to interested listeners
 		if (triggerNotification && (newTotal != total) ) {
 			if( ((IMAPRootFolder)imapFolder.getRootFolder()).getAccountItem().getImapItem().getBoolean("enable_sound")) {
-				Toolkit kit = Toolkit.getDefaultToolkit();
-				kit.beep(); //system beep
+				// create reference of newly arrived messages
+				IMailFolderCommandReference ref = new MailFolderCommandReference(imapFolder, uids);
+				// fire event
+				MailCheckingManager.getInstance().fireNewMessageArrived(ref);
+				
 			}
 		}
 	}
