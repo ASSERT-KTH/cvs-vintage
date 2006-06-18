@@ -24,7 +24,6 @@ package org.gjt.sp.jedit.gui;
 
 //{{{ Imports
 import bsh.*;
-import com.microstar.xml.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -102,7 +101,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.101 2005/12/27 00:27:53 ezust Exp $
+ * @version $Id: DockableWindowManager.java,v 1.102 2006/06/18 18:51:39 vanza Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -148,7 +147,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 		return DockableWindowFactory.getInstance()
 			.getRegisteredDockableWindows();
 	} //}}}
-	
+
 	//{{{ DockableWindowManager constructor
 	/**
 	 * Creates a new dockable window manager.
@@ -300,7 +299,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 	 */
 	public void hideDockableWindow(String name)
 	{
-		
+
 		Entry entry = (Entry)windows.get(name);
 		if(entry == null)
 		{
@@ -309,7 +308,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 		}
 
 
-		
+
 		if(entry.win == null)
 			return;
 		Object reason = DockableWindowUpdate.DEACTIVATED;

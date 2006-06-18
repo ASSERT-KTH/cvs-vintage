@@ -24,14 +24,15 @@
 package org.gjt.sp.jedit.syntax;
 
 //{{{ Imports
-import gnu.regexp.RE;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 //}}}
 
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.23 2003/06/05 00:01:49 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.24 2006/06/18 18:51:40 vanza Exp $
  */
 public class ParserRuleSet
 {
@@ -209,13 +210,13 @@ public class ParserRuleSet
 	} //}}}
 
 	//{{{ getDigitRegexp() method
-	public RE getDigitRegexp()
+	public Pattern getDigitRegexp()
 	{
 		return digitRE;
 	} //}}}
 
 	//{{{ setDigitRegexp() method
-	public void setDigitRegexp(RE digitRE)
+	public void setDigitRegexp(Pattern digitRE)
 	{
 		this.digitRE = digitRE;
 	} //}}}
@@ -316,7 +317,7 @@ public class ParserRuleSet
 	private ParserRule escapeRule;
 
 	private boolean highlightDigits;
-	private RE digitRE;
+	private Pattern digitRE;
 
 	private String _noWordSep;
 	private String noWordSep;

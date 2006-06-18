@@ -22,12 +22,10 @@
 
 package org.gjt.sp.jedit.search;
 
-import gnu.regexp.CharIndexed;
-
 /**
  * An abstract class for matching strings.
  * @author Slava Pestov
- * @version $Id: SearchMatcher.java,v 1.11 2003/07/14 23:00:54 spestov Exp $
+ * @version $Id: SearchMatcher.java,v 1.12 2006/06/18 18:51:40 vanza Exp $
  */
 public abstract class SearchMatcher
 {
@@ -50,9 +48,9 @@ public abstract class SearchMatcher
 	 * @return an array where the first element is the start offset
 	 * of the match, and the second element is the end offset of
 	 * the match
-	 * @since jEdit 4.2pre4
+	 * @since jEdit 4.3pre5
 	 */
-	public abstract Match nextMatch(CharIndexed text, boolean start,
+	public abstract Match nextMatch(CharSequence text, boolean start,
 		boolean end, boolean firstTime, boolean reverse);
 
 	protected Match returnValue;

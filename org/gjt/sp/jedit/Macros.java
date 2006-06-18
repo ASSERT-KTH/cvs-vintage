@@ -24,11 +24,11 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import gnu.regexp.RE;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.util.Log;
 //}}}
@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.42 2006/05/16 17:56:19 ezust Exp $
+ * @version $Id: Macros.java,v 1.43 2006/06/18 18:51:39 vanza Exp $
  */
 public class Macros
 {
@@ -613,7 +613,7 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 	private static ActionSet macroActionSet;
 	private static Vector macroHierarchy;
 	private static Hashtable macroHash;
-	
+
 	private static Macro lastMacro;
 	//}}}
 
@@ -927,7 +927,7 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 		//{{{ accept() method
 		public boolean accept(String path)
 		{
-			return filter.isMatch(MiscUtilities.getFileName(path));
+			return filter.matcher(MiscUtilities.getFileName(path)).matches();
 		} //}}}
 
 		//{{{ createMacro() method
@@ -970,7 +970,7 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 				+ name + ".label", name);
 			try
 			{
-				filter = new RE(MiscUtilities.globToRE(
+				filter = Pattern.compile(MiscUtilities.globToRE(
 					jEdit.getProperty(
 					"macro-handler." + name + ".glob")));
 			}
@@ -983,7 +983,7 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 		//{{{ Private members
 		private String name;
 		private String label;
-		private RE filter;
+		private Pattern filter;
 		//}}}
 	} //}}}
 
