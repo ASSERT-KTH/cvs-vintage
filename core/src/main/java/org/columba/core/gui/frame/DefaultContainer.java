@@ -55,6 +55,7 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.menu.ExtendableMenuBar;
 import org.columba.core.gui.menu.MenuXMLDecoder;
+import org.columba.core.gui.search.SearchBar;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ExtendableToolBar;
 import org.columba.core.gui.toolbar.ToolBarXMLDecoder;
@@ -111,6 +112,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 	private boolean defaultCloseOperation;
 
 	protected EventListenerList listenerList = new EventListenerList();
+	
+	private SearchBar searchBar = new SearchBar();
 
 	public DefaultContainer(DefaultFrameController mediator) {
 		super();
@@ -594,6 +597,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// contentPane.remove(mediator.getContentPane());
 
 		setJMenuBar(menubar);
+		
 		// add animated icon to right-hand side corner of menubar
 		MenuThrobber.setThrobber(menubar);
 

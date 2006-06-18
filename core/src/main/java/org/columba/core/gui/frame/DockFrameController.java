@@ -15,12 +15,10 @@ import javax.swing.JPopupMenu;
 
 import org.columba.api.gui.frame.IDock;
 import org.columba.api.gui.frame.IDockable;
-import org.columba.api.gui.frame.IDock.REGION;
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.docking.DockableView;
 import org.columba.core.gui.docking.XMLPersister;
-import org.flexdock.docking.Dockable;
+import org.columba.core.gui.search.SearchPanel;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -53,6 +51,7 @@ public abstract class DockFrameController extends DefaultFrameController
 		initComponents();
 
 	}
+	
 
 	/**
 	 * 
@@ -62,6 +61,7 @@ public abstract class DockFrameController extends DefaultFrameController
 		dockingPort = new DefaultDockingPort();
 		dockingPort.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
+		registerDockable("search_id", "Search", new SearchPanel(this), null);
 	}
 
 	/* (non-Javadoc)
