@@ -1,4 +1,4 @@
-// $Id: FileFilters.java,v 1.17 2006/06/14 06:10:50 tfmorris Exp $
+// $Id: FileFilters.java,v 1.18 2006/06/18 12:40:20 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 package org.argouml.util;
 
 import javax.swing.filechooser.FileFilter;
+
+import org.argouml.i18n.Translator;
 
 /** This class handles the the various file extensions.
  * It's not clear whether all of these are supported
@@ -86,7 +88,7 @@ public class FileFilters {
 
     /** Java Source File Filter */
     public static final SuffixFilter JAVA_FILE_FILTER = new
-        SuffixFilter("java", "Java Source File");
+        SuffixFilter("java", Translator.localize("combobox.filefilter.java"));
 
     /** Java Class File Filter */
     public static final SuffixFilter JAVA_CLASS_FILTER = new
@@ -96,31 +98,29 @@ public class FileFilters {
     public static final SuffixFilter JAVA_JAR_FILTER = new
         SuffixFilter("jar", "Java JAR File");
 
-    /** This writes the GIF file, known issues
-     * http://argouml.tigris.org/issues/show_bug.cgi?id=396
-     * http://argouml.tigris.org/issues/show_bug.cgi?id=407
-     *
+    /** 
+     * This writes the GIF file.
      */
     public static final SuffixFilter GIF_FILTER = new
-        SuffixFilter("gif", "GIF image");
+        SuffixFilter("gif", Translator.localize("combobox.filefilter.gif"));
 
     /**
      * Filter for portable network graphics (png) files.
      */
     public static final SuffixFilter PNG_FILTER = new
-        SuffixFilter("png", "PNG image");
+        SuffixFilter("png", Translator.localize("combobox.filefilter.png"));
 
     /**
      * This writes a Postscript file.
      */
     public static final SuffixFilter PS_FILTER = new
-        SuffixFilter("ps", "PostScript file");
+        SuffixFilter("ps", Translator.localize("combobox.filefilter.ps"));
 
     /**
      * This writes an E-Postscript file.
      */
     public static final SuffixFilter EPS_FILTER = new
-        SuffixFilter("eps", "Encapsulated PostScript file");
+        SuffixFilter("eps", Translator.localize("combobox.filefilter.eps"));
 
     /** SVG is the standard set by the W3C re vector graphics
      * The current output for SVG goes through GEF.
@@ -143,7 +143,7 @@ public class FileFilters {
      * sequence diagrams.
      */
     public static final SuffixFilter SVG_FILTER = new
-        SuffixFilter("svg", "Scalable Vector Graphics file");
+        SuffixFilter("svg", Translator.localize("combobox.filefilter.svg"));
 
     /** Filter for IDL files */
     public static final SuffixFilter IDL_FILTER = new

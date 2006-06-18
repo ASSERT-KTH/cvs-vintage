@@ -1,4 +1,4 @@
-// $Id: ZipFilePersister.java,v 1.8 2006/06/11 15:39:46 mvw Exp $
+// $Id: ZipFilePersister.java,v 1.9 2006/06/18 12:40:20 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
@@ -77,7 +78,7 @@ public class ZipFilePersister extends XmiFilePersister {
      * @see org.argouml.persistence.AbstractFilePersister#getDesc()
      */
     protected String getDesc() {
-        return "XMI compressed project file";
+        return Translator.localize("combobox.filefilter.zip");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: TestProject.java,v 1.22 2006/06/06 18:08:51 mvw Exp $
+// $Id: TestProject.java,v 1.23 2006/06/18 12:40:04 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
@@ -56,7 +57,8 @@ public class TestProject extends TestCase {
     public void testMakeUntitledProject() {
         Project p = ProjectManager.getManager().getCurrentProject();
         assertEquals(2, p.getDiagrams().size());
-        assertEquals("untitledModel", Model.getFacade().getName(p.getModel()));
+        assertEquals(Translator.localize("misc.untitled-model"), 
+                Model.getFacade().getName(p.getModel()));
         // maybe next test is going to change in future
         assertEquals(p.getRoot(), p.getModel());
     }
@@ -140,7 +142,8 @@ public class TestProject extends TestCase {
     public void testDeletePackageWithClassDiagram() {
         Project p = ProjectManager.getManager().getCurrentProject();
         assertEquals(2, p.getDiagrams().size());
-        assertEquals("untitledModel", Model.getFacade().getName(p.getModel()));
+        assertEquals(Translator.localize("misc-untitled-model"), 
+                Model.getFacade().getName(p.getModel()));
         assertEquals(p.getRoot(), p.getModel());
 
         int sizeMembers = p.getMembers().size();

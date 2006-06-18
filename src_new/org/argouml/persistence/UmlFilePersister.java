@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.35 2006/06/10 20:46:28 mvw Exp $
+// $Id: UmlFilePersister.java,v 1.36 2006/06/18 12:40:20 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.uml.ProjectMemberModel;
@@ -119,7 +120,7 @@ public class UmlFilePersister extends AbstractFilePersister
      * @see org.argouml.persistence.AbstractFilePersister#getDesc()
      */
     protected String getDesc() {
-        return "ArgoUML project file";
+        return Translator.localize("combobox.filefilter.uml");
     }
 
     /**
