@@ -61,7 +61,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.369 2006/06/08 07:28:39 kpouer Exp $
+ * @version $Id: JEditTextArea.java,v 1.370 2006/06/20 09:08:13 vampire0 Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -343,7 +343,14 @@ public class JEditTextArea extends JComponent
 				caretLine = caret = caretScreenLine = 0;
 				match = null;
 			}
+			boolean inCompoundEdit = false;
+			if (this.buffer != null)
+				inCompoundEdit = this.buffer.insideCompoundEdit();
+			if (inCompoundEdit)
+				this.buffer.endCompoundEdit();
 			this.buffer = buffer;
+			if (inCompoundEdit)
+				this.buffer.beginCompoundEdit();
 
 			chunkCache.setBuffer(buffer);
 			repaintMgr.setFastScroll(false);
