@@ -38,7 +38,7 @@ import org.gjt.sp.util.SegmentCharSequence;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.65 2006/06/20 14:59:17 kpouer Exp $
+ * @version $Id: TokenMarker.java,v 1.66 2006/06/20 15:03:34 kpouer Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -860,8 +860,8 @@ unwind:		while(context.parent != null)
 			if(c1 == null)
 				return c2 == null;
 
-            // c1 is not null
-            if(c2 == null)
+			// c1 is not null
+			if(c2 == null)
 				return false;
 
 			if(c1.length != c2.length)
