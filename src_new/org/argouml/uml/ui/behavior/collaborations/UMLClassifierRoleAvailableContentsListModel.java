@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.30 2006/03/03 23:51:32 tfmorris Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.31 2006/06/20 21:56:46 bobtarling Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 
 import org.argouml.model.AddAssociationEvent;
@@ -106,10 +107,9 @@ public class UMLClassifierRoleAvailableContentsListModel
         if (Model.getFacade().isAModelElement(theNewTarget)
                 || theNewTarget instanceof Diagram) {
             if (getTarget() != null) {
-                Collection bases = Model.getFacade().getBases(getTarget());
-                Iterator it = bases.iterator();
-                while (it.hasNext()) {
-                    Object base = it.next();
+                Enumeration enumeration = elements();
+                while (enumeration.hasMoreElements()) {
+                    Object base = enumeration.nextElement();
                     Model.getPump().removeModelEventListener(
                         this,
                         base,
