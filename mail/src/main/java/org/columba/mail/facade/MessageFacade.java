@@ -17,24 +17,25 @@ import org.columba.mail.gui.tree.FolderTreeModel;
 
 public class MessageFacade implements IMessageFacade {
 
+
 	public MessageFacade() {
 		super();
 	}
 
+	/**
+	 * @see org.columba.mail.facade.IMessageFacade#openMessage(java.net.URI)
+	 */
 	public void openMessage(URI location) {
 		// example: "columba://org.columba.mail/<folder-id>/<message-id>"
 		String s = location.toString();
 
 		// TODO: @author fdietz replace with regular expression
 		int index = s.lastIndexOf('/');
-		String messageId = s.substring(index, s.length());
-		String folderId = s.substring(s.lastIndexOf('/', index - 1), index);
-
-		System.out.println("folderId=" + folderId);
-		System.out.println("messageId=" + messageId);
+		String messageId = s.substring(index+1, s.length());
+		String folderId = s.substring(s.lastIndexOf('/', index-1)+1, index);
 
 		int folderIdIntValue = Integer.parseInt(folderId);
-		
+
 		IContainer[] container = FrameManager.getInstance().getOpenFrames();
 		if (container == null || container.length == 0)
 			throw new RuntimeException("No frames available");
@@ -56,8 +57,10 @@ public class MessageFacade implements IMessageFacade {
 				(ThreePaneMailFrameController) mailFrameMediator);
 		new DefaultContainer(c);
 
-		IMailbox folder = (IMailbox) FolderTreeModel.getInstance().getFolder(folderIdIntValue);
-		IMailFolderCommandReference r = new MailFolderCommandReference(folder, new Object[] {messageId});
+		IMailbox folder = (IMailbox) FolderTreeModel.getInstance().getFolder(
+				folderIdIntValue);
+		IMailFolderCommandReference r = new MailFolderCommandReference(folder,
+				new Object[] { messageId });
 
 		c.setTreeSelection(r);
 
@@ -65,4 +68,5 @@ public class MessageFacade implements IMessageFacade {
 
 		CommandProcessor.getInstance().addOp(new ViewMessageCommand(c, r));
 	}
+	
 }
