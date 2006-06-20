@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit.textarea;
 
 //{{{ Imports
-import java.util.*;
 import org.gjt.sp.jedit.buffer.*;
 import org.gjt.sp.jedit.Debug;
 import org.gjt.sp.util.Log;
@@ -34,7 +33,7 @@ import org.gjt.sp.util.Log;
  * 
  * @since jEdit 4.3pre1
  * @author Slava Pestov
- * @version $Id: ScreenLineManager.java,v 1.5 2006/01/23 23:04:25 ezust Exp $
+ * @version $Id: ScreenLineManager.java,v 1.6 2006/06/20 21:53:46 kpouer Exp $
  */
 class ScreenLineManager
 {

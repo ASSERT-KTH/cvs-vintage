@@ -26,7 +26,6 @@ package org.gjt.sp.jedit.textarea;
 import java.awt.Toolkit;
 import java.util.*;
 import org.gjt.sp.jedit.buffer.*;
-import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.Debug;
 import org.gjt.sp.util.Log;
 //}}}
@@ -36,7 +35,7 @@ import org.gjt.sp.util.Log;
  * 
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.125 2006/03/03 16:18:06 ezust Exp $
+ * @version $Id: DisplayManager.java,v 1.126 2006/06/20 21:53:46 kpouer Exp $
  */
 public class DisplayManager
 {
@@ -84,7 +83,7 @@ public class DisplayManager
 	} //}}}
 
 	//{{{ bufferClosed() method
-	public static void bufferClosed(Buffer buffer)
+	public static void bufferClosed(JEditBuffer buffer)
 	{
 		bufferMap.remove(buffer);
 	} //}}}

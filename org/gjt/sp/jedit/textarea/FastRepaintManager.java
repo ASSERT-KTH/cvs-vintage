@@ -23,13 +23,7 @@
 package org.gjt.sp.jedit.textarea;
 
 //{{{ Imports
-import javax.swing.text.*;
-import javax.swing.JComponent;
-import java.awt.font.*;
 import java.awt.*;
-import java.util.*;
-import org.gjt.sp.jedit.syntax.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -37,7 +31,7 @@ import org.gjt.sp.util.Log;
  * The text area does not use Swing's built-in double buffering, so that
  * we have access to the graphics context for fast scrolling.
  * @author Slava Pestov
- * @version $Id: FastRepaintManager.java,v 1.4 2005/08/19 04:51:42 spestov Exp $
+ * @version $Id: FastRepaintManager.java,v 1.5 2006/06/20 21:53:46 kpouer Exp $
  */
 class FastRepaintManager
 {

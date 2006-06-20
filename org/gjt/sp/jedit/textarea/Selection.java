@@ -24,7 +24,6 @@ package org.gjt.sp.jedit.textarea;
 
 //{{{ Imports
 import java.util.ArrayList;
-import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.MiscUtilities;
 import org.gjt.sp.jedit.buffer.JEditBuffer;
 //}}}
@@ -41,7 +40,7 @@ import org.gjt.sp.jedit.buffer.JEditBuffer;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Selection.java,v 1.24 2005/07/13 20:46:02 spestov Exp $
+ * @version $Id: Selection.java,v 1.25 2006/06/20 21:53:46 kpouer Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
