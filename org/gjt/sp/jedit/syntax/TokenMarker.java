@@ -28,10 +28,8 @@ import javax.swing.text.Segment;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.SegmentCharSequence;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -40,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.64 2006/06/18 18:51:40 vanza Exp $
+ * @version $Id: TokenMarker.java,v 1.65 2006/06/20 14:59:17 kpouer Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -412,7 +410,7 @@ unwind:		while(context.parent != null)
 				charSeq = new SegmentCharSequence(line, pos - line.offset,
 								  line.count - (pos - line.offset));
 				match = checkRule.startRegexp.matcher(charSeq);
-				if(!match.find())
+				if(!match.lookingAt())
 					return false;
 				else if(match.start() != 0)
 					throw new InternalError("Can't happen");
@@ -746,7 +744,7 @@ unwind:		while(context.parent != null)
 	} //}}}
 
 	//{{{ substitute() method
-	private char[] substitute(Matcher match, char[] end)
+	private static char[] substitute(Matcher match, char[] end)
 	{
 		StringBuffer buf = new StringBuffer();
 		for(int i = 0; i < end.length; i++)
@@ -857,12 +855,14 @@ unwind:		while(context.parent != null)
 		} //}}}
 
 		//{{{ charArraysEqual() method
-		private boolean charArraysEqual(char[] c1, char[] c2)
+		private static boolean charArraysEqual(char[] c1, char[] c2)
 		{
 			if(c1 == null)
-				return (c2 == null);
-			else if(c2 == null)
-				return (c1 == null);
+				return c2 == null;
+
+            // c1 is not null
+            if(c2 == null)
+				return false;
 
 			if(c1.length != c2.length)
 				return false;
