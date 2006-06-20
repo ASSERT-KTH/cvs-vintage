@@ -25,7 +25,7 @@ import javax.swing.JTextPane;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.config.Config;
-import org.columba.core.gui.base.UndoDocument;
+import org.columba.core.gui.base.HighlighterDocument;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.xml.XmlElement;
 
@@ -39,9 +39,9 @@ import org.columba.core.xml.XmlElement;
 public class TextEditorView extends JTextPane implements Observer,
 		CharsetListener {
 
-	private UndoDocument message;
+	private HighlighterDocument message;
 
-	public TextEditorView(TextEditorController controller, UndoDocument m) {
+	public TextEditorView(TextEditorController controller, HighlighterDocument m) {
 		super();
 
 		controller.getController().addCharsetListener(this);

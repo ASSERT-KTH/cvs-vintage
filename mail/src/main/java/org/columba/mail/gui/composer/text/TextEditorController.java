@@ -27,7 +27,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.columba.core.config.Config;
-import org.columba.core.gui.base.UndoDocument;
+import org.columba.core.gui.base.HighlighterDocument;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.composer.ComposerController;
@@ -53,7 +53,7 @@ public class TextEditorController extends AbstractEditorController
     private TextEditorView view;
 
     /** Document used in the editor view */
-    private UndoDocument document;
+    private HighlighterDocument document;
 
     //	name of font
     private String name;
@@ -75,7 +75,7 @@ public class TextEditorController extends AbstractEditorController
         super(controller);
 
         //this.controller = controller;
-        document = new UndoDocument();
+        document = new HighlighterDocument();
 
         view = new TextEditorView(this, document);
 
