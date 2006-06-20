@@ -1,4 +1,4 @@
-package org.columba.mail.search;
+package org.columba.core.search;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -8,7 +8,9 @@ import org.columba.core.search.api.ISearchResult;
 
 public class DistinctResultHelper {
 
-	// remove duplicates by searching for duplicate location URIs
+	/**
+	 * Remove duplicates by searching for duplicate location URIs
+	 */
 	public static void removeDuplicated(List<ISearchResult> list) {
 		// temporary hashtable to check for duplicated
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();

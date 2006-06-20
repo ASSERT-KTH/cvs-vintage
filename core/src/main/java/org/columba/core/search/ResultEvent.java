@@ -12,17 +12,25 @@ public class ResultEvent extends EventObject implements IResultEvent {
 	private List<ISearchResult> result;
 	private String searchTerm;
 	private ISearchCriteria criteria;
+	private int totalResultCount;
 	
 	public ResultEvent(Object source) {
 		super(source);
 	}
 	
-	public ResultEvent(Object source, String searchTerm, ISearchCriteria criteria, List<ISearchResult> result) {
+	public ResultEvent(Object source, String searchTerm) {
+		super(source);
+		this.searchTerm = searchTerm;
+	}
+	
+	
+	public ResultEvent(Object source, String searchTerm, ISearchCriteria criteria, List<ISearchResult> result, int totalResultCount) {
 		super(source);
 		
 		this.searchTerm = searchTerm;
 		this.criteria = criteria;
 		this.result = result;
+		this.totalResultCount = totalResultCount;
 	}
 
 	public List<ISearchResult> getSearchResults() {
@@ -35,6 +43,10 @@ public class ResultEvent extends EventObject implements IResultEvent {
 
 	public ISearchCriteria getSearchCriteria() {
 		return criteria;
+	}
+
+	public int getTotalResultCount() {
+		return totalResultCount;
 	}
 
 }

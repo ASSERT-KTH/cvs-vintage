@@ -47,7 +47,13 @@ public class SearchPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String searchTerm = searchBar.getSearchTerm();
 				ISearchManager manager = MainInterface.searchManager;
-				manager.executeSearch(searchTerm);
+				
+				// start a new search -> clear all previous search results
+				manager.clearSearch(searchTerm);
+				
+				// TODO @author fdietz: no paging used currently 
+				// show only first 20 results
+				manager.executeSearch(searchTerm, 0, 20);
 			}
 		});
 		

@@ -387,4 +387,10 @@ The order of the following plugins is intentional. Do not change the order of ap
  <extension id="NewMessage" class="org.columba.mail.gui.action.NewMessageAction"/>
 </extensionlist>
 
+<extensionlist id="org.columba.core.search">
+ <extension id="FromContains" class="org.columba.mail.search.FromContainsSearchProvider"/>
+ <extension id="BodyContains" class="org.columba.mail.search.BodyContainsSearchProvider"/>
+ <extension id="SubjectContains" class="org.columba.mail.search.SubjectContainsSearchProvider"/>
+</extensionlist>
+
 </plugin>

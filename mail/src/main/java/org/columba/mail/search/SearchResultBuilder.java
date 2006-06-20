@@ -23,10 +23,10 @@ public class SearchResultBuilder {
 		return ((Address) h.get("columba.from")).toString();
 	}
 	
-	public static URI createURI(IColumbaHeader h, IMailbox mailbox) {
+	public static URI createURI(int folderId, Object messageId) {
 		URI uri=null;
 		try {
-			uri = new URI("columba://org.columba.mail/"+mailbox.getUid()+"/"+h.get("columba.uid"));
+			uri = new URI("columba://org.columba.mail/"+folderId+"/"+messageId);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

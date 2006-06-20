@@ -1,7 +1,11 @@
 package org.columba.mail.search;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
 
@@ -35,5 +39,23 @@ public class SearchFolderFactory {
 		searchFolder.addSearchToHistory();
 		
 		return searchFolder;
+	}
+	
+	/**
+	 * Return list of all source folders we going to query.
+	 * 
+	 * @return	list of source folders
+	 */
+	public static List<IMailbox> getAllSourceFolders() {
+		IMailbox sourceFolder = (IMailbox) FolderTreeModel.getInstance()
+		.getFolder(101);
+		IMailbox sourceFolder2 = (IMailbox) FolderTreeModel.getInstance()
+		.getFolder(158);
+		
+		List<IMailbox> v = new Vector<IMailbox>();
+		v.add(sourceFolder);
+		v.add(sourceFolder2);
+		
+		return v;
 	}
 }

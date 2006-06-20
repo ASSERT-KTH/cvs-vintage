@@ -53,6 +53,7 @@ import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.scripting.service.ServiceManager;
+import org.columba.core.search.SearchManager;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.StackProfiler;
@@ -146,15 +147,15 @@ public class Bootstrap {
 		initPlugins();
 		profiler.pop("plugins core");
 
-		ServiceRegistry.getInstance().register(IPluginManager.class,
-				PluginManager.getInstance());
-
 		profiler.push("components");
 		// init all components
 		ComponentManager.getInstance().init();
 		ComponentManager.getInstance().registerCommandLineArguments();
 		profiler.pop("components");
 
+//		 init search manager
+		MainInterface.searchManager = new SearchManager();
+		
 		// set Look & Feel
 		ThemeSwitcher.setTheme();
 
@@ -215,6 +216,8 @@ public class Bootstrap {
 		/* everything is up and running, start services */
 		ServiceManager.getInstance().startServices();
 
+		
+		
 		profiler.pop("main");
 
 	}

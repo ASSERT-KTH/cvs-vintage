@@ -54,7 +54,7 @@ import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
 import org.columba.mail.search.BodyContainsSearchProvider;
 import org.columba.mail.search.FromContainsSearchProvider;
-import org.columba.mail.search.SubjectSearchProvider;
+import org.columba.mail.search.SubjectContainsSearchProvider;
 import org.columba.mail.shutdown.ClearRecentFlagPlugin;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
@@ -122,20 +122,6 @@ public class MailMain implements IComponentPlugin {
 		ServiceRegistry.getInstance().register(
 				org.columba.mail.facade.IMessageFacade.class,
 				new MessageFacade());
-		
-//		ServiceRegistry.getInstance().register(
-//				org.columba.mail.facade.IDialogFacade.class,
-//				new DialogFacade());
-//		ServiceRegistry.getInstance().register(
-//				org.columba.mail.facade.IFolderFacade.class,
-//				new FolderFacade());
-//		ServiceRegistry.getInstance().register(
-//				org.columba.mail.facade.ISelectionFacade.class,
-//				new SelectionFacade());
-		
-		MainInterface.searchManager.register(new SubjectSearchProvider());
-		MainInterface.searchManager.register(new BodyContainsSearchProvider());
-		MainInterface.searchManager.register(new FromContainsSearchProvider());
 	}
 
 	public void registerCommandLineArguments() {

@@ -8,4 +8,5 @@ public interface IResultEvent {
 	public String getSearchTerm();
 	public ISearchCriteria getSearchCriteria();
 	public List<ISearchResult> getSearchResults();
+	public int getTotalResultCount();
 }

@@ -12,4 +12,5 @@
  <handler id="org.columba.core.service" />
  <handler id="org.columba.core.statusbar" />
  <handler id="org.columba.core.newitem" />
+ <handler id="org.columba.core.search" />
 </handlerlist>

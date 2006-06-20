@@ -12,6 +12,7 @@ import org.columba.api.plugin.IPluginManager;
 import org.columba.api.plugin.PluginException;
 import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.logging.Logging;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.services.ServiceRegistry;
 
 public class ComponentManager implements IComponentPlugin {
@@ -33,17 +34,8 @@ public class ComponentManager implements IComponentPlugin {
 		if (extensionHandler == null) {
 			try {
 				// retrieve plugin manager instance
-				IPluginManager pm = null;
-				try {
-					pm = (IPluginManager) ServiceRegistry.getInstance()
-							.getService(IPluginManager.class);
-				} catch (ServiceNotFoundException e) {
-					LOG.severe(e.getMessage());
-
-					if (Logging.DEBUG)
-						e.printStackTrace();
-				}
-
+				IPluginManager pm = PluginManager.getInstance();
+				
 				extensionHandler = pm
 						.getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_COMPONENT);
 			} catch (PluginHandlerNotFoundException e) {

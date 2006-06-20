@@ -74,12 +74,14 @@ public abstract class Command implements ICommand {
 	protected Lock[] folderLocks;
 
 	private ICommandReference reference;
+	
 
 	public Command(ICommandReference reference) {
 		this.reference = reference;
 
 		commandType = NORMAL_OPERATION;
 		priority = NORMAL_PRIORITY;
+		
 	}
 
 	public void process(Worker worker) throws Exception {

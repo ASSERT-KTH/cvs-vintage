@@ -107,4 +107,9 @@ public interface IExtensionHandlerKeys {
 	 * They will be promptly presented in the "File->New" menu and the toolbar.
 	 */
 	public static final String ORG_COLUMBA_CORE_NEWITEM = "org.columba.core.newitem";
+	
+	/**
+	 * Search Providers should implement <code>org.columba.core.search.api.ISearchProvider</code>
+	 */
+	public static final String ORG_COLUMBA_CORE_SEARCH = "org.columba.core.search";
 }

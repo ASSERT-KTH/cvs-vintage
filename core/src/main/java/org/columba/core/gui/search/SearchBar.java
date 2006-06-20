@@ -71,18 +71,18 @@ public class SearchBar extends JPanel implements DocumentListener{
 	
 	private JPopupMenu createPopupMenu(String searchTerm) {
 		JPopupMenu menu = new JPopupMenu();
-		ISearchManager manager = MainInterface.searchManager;
-		List<ISearchProvider> list = manager.getAllProviders();
-		Iterator<ISearchProvider> it = list.iterator();
-		while (it.hasNext()) {
-			ISearchProvider p = it.next();
-			
-			ISearchCriteria c = p.getCriteria(searchTerm);
-			
-			JMenuItem m = new JMenuItem(c.getName());
-			m.setToolTipText(c.getDescription());
-			menu.add(m);
-		}
+//		ISearchManager manager = MainInterface.searchManager;
+//		List<ISearchProvider> list = manager.getAllProviders();
+//		Iterator<ISearchProvider> it = list.iterator();
+//		while (it.hasNext()) {
+//			ISearchProvider p = it.next();
+//			
+//			ISearchCriteria c = p.getCriteria(searchTerm);
+//			
+//			JMenuItem m = new JMenuItem(c.getName());
+//			m.setToolTipText(c.getDescription());
+//			menu.add(m);
+//		}
 		
 		/*menu.add(new JMenuItem("Body contains..."));
 		menu.add(new JMenuItem("Subject contains..."));

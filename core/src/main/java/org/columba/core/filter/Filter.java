@@ -14,6 +14,9 @@
 //
 // All Rights Reserved.
 //$Log: Filter.java,v $
+//Revision 1.2  2006/06/20 19:49:29  fdietz
+//[intern]added paging support in api and mail search provider backend.
+//
 //Revision 1.1  2006/06/10 12:59:03  fdietz
 //[intern]initial commit for new sourcecode structure
 //
@@ -78,6 +81,7 @@ public class Filter extends DefaultItem {
 		super(root);
 	}
 
+	
 	/**
 	 * 
 	 * @return FilterActionList this is also a simple wrapper

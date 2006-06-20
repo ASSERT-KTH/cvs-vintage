@@ -1,6 +1,5 @@
 package org.columba.core.main;
 
-import org.columba.core.search.SearchManager;
 import org.columba.core.search.api.ISearchManager;
 
 /**
@@ -10,10 +9,6 @@ import org.columba.core.search.api.ISearchManager;
  */
 public class MainInterface {
 
-	public static ISearchManager searchManager = new SearchManager();
-	
-	public MainInterface() {
-		super();
-	}
+	public static ISearchManager searchManager;
 
 }

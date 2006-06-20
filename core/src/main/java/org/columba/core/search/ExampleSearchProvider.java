@@ -14,6 +14,8 @@ import org.columba.core.search.api.ISearchResult;
 
 public class ExampleSearchProvider implements ISearchProvider {
 
+	private int count = -1;
+	
 	public ExampleSearchProvider() {
 		super();
 	}
@@ -22,7 +24,10 @@ public class ExampleSearchProvider implements ISearchProvider {
 		return new SearchCriteria("test: "+searchTerm, "test description");
 	}
 
-	public List<ISearchResult> query(String searchTerm) {
+	/**
+	 * @see org.columba.core.search.api.ISearchProvider#query(java.lang.String, int, int)
+	 */
+	public List<ISearchResult> query(String searchTerm, int startIndex, int resultCount) {
 		
 		URI url=null;
 		try {
@@ -36,14 +41,21 @@ public class ExampleSearchProvider implements ISearchProvider {
 		result.add(new SearchResult("item1", "item1 description", url));
 		result.add(new SearchResult("item2", "item2 description", url));
 		result.add(new SearchResult("item3", "item3 description", url));
+		
+		count = result.size();
+		
 		return result;
 	}
 
-	public String getTechname() {
+	public String getName() {
 		return "example";
 	}
 
 	public String getNamespace() {
 		return "org.columba.core.example";
+	}
+
+	public int getTotalResultCount() {
+		return count;
 	}
 }

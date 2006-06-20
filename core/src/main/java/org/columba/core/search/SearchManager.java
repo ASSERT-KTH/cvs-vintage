@@ -187,7 +187,8 @@ public class SearchManager implements ISearchManager {
 	 * <p>
 	 * In case new result results arrive, it ensures that all interested
 	 * listeners are notified from the EDT.
-	 * 
+	 * <p>
+	 * FIXME: @author fdietz: No locking of folders currently implemented!
 	 * @author frd
 	 */
 	class SearchCommand extends Command {
@@ -230,6 +231,11 @@ public class SearchManager implements ISearchManager {
 
 	}
 
+	/**
+	 *  FIXME: @author fdietz: No locking of folders currently implemented!
+	 *  
+	 * @author frd
+	 */
 	public class SearchCommandReference implements ICommandReference {
 
 		private String searchTerm;
