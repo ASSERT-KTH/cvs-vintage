@@ -78,7 +78,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.93 2006/05/12 23:05:47 ezust Exp $
+ * @version $Id: GUIUtilities.java,v 1.94 2006/06/20 13:19:47 kpouer Exp $
  */
 public class GUIUtilities
 {
@@ -886,17 +886,22 @@ public class GUIUtilities
 
 		if(style.getForegroundColor() != null)
 		{
-			buf.append("color:" + getColorHexString(style.getForegroundColor()));
+			buf.append("color:").append(getColorHexString(style.getForegroundColor()));
 		}
 
 		if(style.getBackgroundColor() != null)
 		{
-			buf.append(" bgColor:" + getColorHexString(style.getBackgroundColor()));
+			buf.append(" bgColor:").append(getColorHexString(style.getBackgroundColor()));
 		}
-		if(!style.getFont().isPlain())
+
+        Font font = style.getFont();
+        if(!font.isPlain())
 		{
-			buf.append(" style:" + (style.getFont().isItalic() ? "i" : "")
-				+ (style.getFont().isBold() ? "b" : ""));
+            buf.append(" style:");
+            if (font.isItalic())
+                buf.append('i');
+            if (font.isBold())
+                buf.append('b');
 		}
 
 		return buf.toString();
@@ -1264,7 +1269,7 @@ public class GUIUtilities
 			public void windowGainedFocus(WindowEvent evt)
 			{
 				
-				boolean success = comp.requestFocusInWindow();
+				comp.requestFocusInWindow();
 				
 				win.removeWindowFocusListener(this);
 			}
