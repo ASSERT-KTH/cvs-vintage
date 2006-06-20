@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceManager.java,v 1.9 2006/06/18 18:51:39 vanza Exp $
+ * @version $Id: ServiceManager.java,v 1.10 2006/06/20 07:23:43 vanza Exp $
  */
 public class ServiceManager
 {
@@ -94,7 +94,11 @@ public class ServiceManager
 		ServiceListHandler dh = new ServiceListHandler(plugin,uri);
 		try
 		{
-			MiscUtilities.parseXML(uri.openStream(), dh);
+			if (!MiscUtilities.parseXML(uri.openStream(), dh)
+				&& cache != null)
+			{
+				cache.cachedServices = dh.getCachedServices();
+			}
 		}
 		catch (IOException ioe)
 		{
