@@ -31,14 +31,13 @@
  *  effort, and keypresses.
  *  It also has the benefit of auto-completion of mode names.
  * 
- * $Id: Mode_Switcher.bsh,v 1.3 2006/06/21 12:50:49 olearyni Exp $
+ * $Id: Mode_Switcher.bsh,v 1.4 2006/06/21 13:04:43 kpouer Exp $
  */
 
 import javax.swing.border.EmptyBorder;
 
 //class ModeSwitcherTextField extends JTextField
 void modeSwitcher() {
-	Mode[] modes = jEdit.getModes();
 	JDialog dialog = new JDialog(view, "Buffer Mode Switcher", true);
 	dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	JPanel content = new JPanel(new BorderLayout());
