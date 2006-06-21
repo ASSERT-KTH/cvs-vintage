@@ -41,7 +41,7 @@ import javax.swing.event.*;
  * This class can also optionally redirect standard output and error to the log.
  *
  * @author Slava Pestov
- * @version $Id: Log.java,v 1.14 2004/03/28 00:07:27 spestov Exp $
+ * @version $Id: Log.java,v 1.15 2006/06/21 23:26:31 mediumnet Exp $
  */
 public class Log
 {
@@ -216,6 +216,19 @@ public class Log
 		return listModel;
 	} //}}}
 
+	/**
+		If an exception is the cause of a call to {@link #log}, then
+		the exception should be explicitly provided so that it can be presented
+		to the (debugging) user in a useful manner
+		(not just the exception message, but also the exception stack trace)
+	*/
+	public static void log(int urgency, Object source, Object message,Throwable exception)
+	{
+		// We can do nicer here, but this is a start...
+		log(urgency,source,message); 
+		log(urgency,source,exception);
+	}
+	
 	//{{{ log() method
 	/**
 	 * Logs a message. This method is thread-safe.<p>
