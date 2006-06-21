@@ -84,7 +84,7 @@ import org.gjt.sp.jedit.buffer.BufferIORequest;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.91 2006/06/19 01:09:51 vanza Exp $
+ * @version $Id: MiscUtilities.java,v 1.92 2006/06/21 23:27:37 mediumnet Exp $
  */
 public class MiscUtilities
 {
@@ -2018,7 +2018,7 @@ loop:		for(;;)
 			int line = se.getLineNumber();
 			String message = se.getMessage();
 			Log.log(Log.ERROR,MiscUtilities.class,
-				"SAXParseException: " + line + ": " + message);
+				"while parsing from "+in+": SAXParseException: line " + line + ": " , se);
 			return true;
 		}
 		catch(SAXException e)
