@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.131 2006/05/15 23:32:14 mediumnet Exp $
+ * @version $Id: View.java,v 1.132 2006/06/21 23:51:43 mediumnet Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -610,7 +610,7 @@ public class View extends JFrame implements EBComponent
 					if(Debug.DUMP_KEY_EVENTS)
 					{
 						Log.log(Log.DEBUG,this,
-							"Translated: "
+							"Translated (key type ): "
 							+ keyStroke + " from " + from);
 					}
 					if(inputHandler.handleKey(keyStroke))
@@ -672,7 +672,7 @@ public class View extends JFrame implements EBComponent
 					if(Debug.DUMP_KEY_EVENTS)
 					{
 						Log.log(Log.DEBUG,this,
-							"Translated: "
+							"Translated (key press): "
 							+ keyStroke + " from " + from);
 					}
 					if(inputHandler.handleKey(keyStroke))
