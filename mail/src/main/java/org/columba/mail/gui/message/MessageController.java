@@ -271,8 +271,7 @@ public class MessageController extends JPanel implements CharsetListener,
 	 * @see org.columba.mail.gui.message.IMessageController#getSelectedText()
 	 */
 	public String getSelectedText() {
-		// TODO (@author fdietz): get selected text
-		throw new IllegalArgumentException("not implemented yet");
+		return bodytextViewer.getSelectedText();
 	}
 
 	

@@ -164,8 +164,7 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 	 */
 	public String getSelectedText() {
 		try {
-			return doc.getTextWithLineBreaks(textPane.getSelectionStart(),
-					textPane.getSelectionEnd());
+			return doc.getTextWithLineBreaks(0,doc.getLength());
 		} catch (BadLocationException e) {
 			return "";
 		}
