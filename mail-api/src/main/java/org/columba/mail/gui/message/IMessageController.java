@@ -53,7 +53,17 @@ public interface IMessageController {
 
 	void clear();
 
+	/**
+	 * Return text.
+	 * 
+	 * @return
+	 */
+	String getText();
 	
+	/**
+	 * Return selected text
+	 * @return
+	 */
 	String getSelectedText();
 	
 	public IMailFolderCommandReference getSelectedReference();

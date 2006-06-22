@@ -421,6 +421,10 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	public String getSelectedText() {
 		return viewerPlugin.getSelectedText();
 	}
+	
+	public String getText() {
+		return viewerPlugin.getText();
+	}
 
 	/**
 	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()

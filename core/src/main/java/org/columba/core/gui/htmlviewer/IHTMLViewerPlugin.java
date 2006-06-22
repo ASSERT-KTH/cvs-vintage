@@ -18,6 +18,7 @@ public interface IHTMLViewerPlugin extends IExtensionInterface{
 	 */
 	void view(String body);
 	
+	String getText();
 	
 	/**
 	 * Get selected text.

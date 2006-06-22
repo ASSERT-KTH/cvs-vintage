@@ -102,7 +102,18 @@ public class JDICHTMLViewerPlugin extends JPanel implements IHTMLViewerPlugin {
 	}
 
 	public String getSelectedText() {
-		return "getSelected() not yet supported by JDIC";
+		try {
+			String selectedTextFromScript = browser
+					.executeScript("(window.getSelection) ? window.getSelection() : "
+							+ "(document.getSelection) ? document.getSelection() : "
+							+ "(document.selection) ? document.selection.createRange().text : "
+							+ "null");
+			return selectedTextFromScript;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
 	}
 
 	public boolean initialized() {
@@ -111,5 +122,9 @@ public class JDICHTMLViewerPlugin extends JPanel implements IHTMLViewerPlugin {
 
 	public JComponent getContainer() {
 		return this;
+	}
+
+	public String getText() {
+		return browser.getContent();
 	}
 }

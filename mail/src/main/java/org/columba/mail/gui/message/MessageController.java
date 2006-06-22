@@ -275,7 +275,12 @@ public class MessageController extends JPanel implements CharsetListener,
 	}
 
 	
-
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#getText()
+	 */
+	public String getText() {
+		return bodytextViewer.getText();
+	}
 
 	public IMailbox getShownFolder() {
 		return folder;
@@ -322,6 +327,8 @@ public class MessageController extends JPanel implements CharsetListener,
 		return false;
 
 	}
+
+	
 
 	
 	
