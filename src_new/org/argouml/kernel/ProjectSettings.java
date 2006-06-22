@@ -1,4 +1,4 @@
-// $Id: ProjectSettings.java,v 1.4 2006/06/04 13:54:52 mvw Exp $
+// $Id: ProjectSettings.java,v 1.5 2006/06/22 20:59:37 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -376,7 +376,7 @@ public class ProjectSettings {
      * @param width The Shadow Width.
      */
     public void setDefaultShadowWidth(int width) {
-        int oldValue = width;
+        int oldValue = defaultShadowWidth;
         defaultShadowWidth = width;
         fireEvent(Notation.KEY_DEFAULT_SHADOW_WIDTH, oldValue,
                 defaultShadowWidth);
