@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.35 2006/06/22 23:23:49 mediumnet Exp $
+ * @version $Id: Debug.java,v 1.36 2006/06/23 00:13:50 mediumnet Exp $
  */
 public class Debug
 {
@@ -122,13 +122,15 @@ public class Debug
 	public static boolean SIMPLIFIED_KEY_HANDLING	= jEdit.getBooleanProperty("newkeyhandling");
 	
 	/**
-	 * With old key handling (SIMPLIFIED_KEY_HANDLING==false), there was a
-	 * bug: Shortcuts worked also when docked dockables had the focus.
-	 * Actually, they should not have worked in this case.
-	 * With new key handling (SIMPLIFIED_KEY_HANDLING==true), this bug
-	 * does not persist anymore. However, to be compatible with old
-	 * key handling and old users experience, we can explicitly allow
-	 * this behaviour.
+	 * Old key handling (SIMPLIFIED_KEY_HANDLING==false) and
+	 * new key handling (SIMPLIFIED_KEY_HANDLING==true) react on different
+	 * key events. Old key handling primarily reacts on "key pressed" events,
+	 * while new key handling primarily reacts on "key typed" events.
+	 * The feature of enabled shortcuts when dockables are docked and have
+	 * focus was only implemented for the case of reaction on "key pressed"
+	 * evets. This switch enables such handling for "key typed" events, too.
+	 * With this switch on, global shortcuts for docked dockables also work
+	 * with the new key handling.
 	 *
 	 * See also: jEdit bug 1493185 ( https://sourceforge.net/tracker/?func=detail&aid=1493185&group_id=588&atid=100588 ).
 	 */
