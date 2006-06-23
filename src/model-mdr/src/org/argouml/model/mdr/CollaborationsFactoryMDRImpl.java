@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryMDRImpl.java,v 1.6 2006/06/23 00:43:03 bobtarling Exp $
+// $Id: CollaborationsFactoryMDRImpl.java,v 1.7 2006/06/23 20:10:56 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -479,6 +479,10 @@ public class CollaborationsFactoryMDRImpl extends AbstractUmlModelFactoryMDR
      *      java.lang.Object)
      */
     public Object buildMessage(Object acollab, Object arole) {
+        if (!(arole instanceof AssociationRole)) {
+            throw new IllegalArgumentException(
+                    "An association role must be supplied - got " + arole);
+        }
         try {
             if (acollab instanceof Collaboration) {
                 return buildMessageCollab((Collaboration) acollab,
@@ -510,8 +514,8 @@ public class CollaborationsFactoryMDRImpl extends AbstractUmlModelFactoryMDR
      *      java.lang.Object)
      */
     public Object buildActivator(Object owner, Object interaction) {
-        if (owner == null || !(owner instanceof Message)) {
-            throw new IllegalArgumentException();
+        if (!(owner instanceof Message)) {
+            throw new IllegalArgumentException("A message must be supplied as the owner");
         }
 
         if (interaction == null) {
