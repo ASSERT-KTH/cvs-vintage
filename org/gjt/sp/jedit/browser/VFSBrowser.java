@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.117 2006/06/20 13:19:47 kpouer Exp $
+ * @version $Id: VFSBrowser.java,v 1.118 2006/06/23 22:58:12 kpouer Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -810,7 +810,7 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 
 		if(vec.size() != 0)
 		{
-			MiscUtilities.quicksort(vec,new MiscUtilities.MenuItemCompare());
+			Collections.sort(vec,new MiscUtilities.MenuItemCompare());
 			for(int i = 0; i < vec.size(); i++)
 				pluginMenu.add((JMenuItem)vec.get(i));
 		}
@@ -1399,7 +1399,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 			}
 			else
 			{
-				MiscUtilities.quicksort(favorites,
+				Arrays.sort(favorites,
 					new VFS.DirectoryEntryCompare(
 					sortMixFilesAndDirs,
 					sortIgnoreCase));
@@ -1582,7 +1582,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 					directoryVector.add(file);
 				}
 
-				MiscUtilities.quicksort(directoryVector,
+				Collections.sort(directoryVector,
 					new VFS.DirectoryEntryCompare(
 					sortMixFilesAndDirs,
 					sortIgnoreCase));

@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.11 2005/01/09 19:44:54 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.12 2006/06/23 22:58:12 kpouer Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -226,7 +226,7 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 
 		public void sort(int col)
 		{
-			MiscUtilities.quicksort(bindings,new KeyCompare(col));
+			Collections.sort(bindings,new KeyCompare(col));
 			fireTableDataChanged();
 		}
 
@@ -312,7 +312,7 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 			return name;
 		}
 
-		class KeyCompare implements MiscUtilities.Compare
+		class KeyCompare implements Comparator
 		{
 			int col;
 
@@ -351,12 +351,14 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 
 					if(shortcut1 == null && shortcut2 != null)
 						return 1;
-					else if(shortcut2 == null && shortcut1 != null)
+
+					if(shortcut2 == null && shortcut1 != null)
 						return -1;
-					else if(shortcut1 == null && shortcut2 == null)
+
+					if(shortcut1 == null)
 						return MiscUtilities.compareStrings(label1,label2,true);
-					else
-						return MiscUtilities.compareStrings(shortcut1,shortcut2,true);
+
+					return MiscUtilities.compareStrings(shortcut1,shortcut2,true);
 				}
 			}
 		}

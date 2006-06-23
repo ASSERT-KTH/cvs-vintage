@@ -23,7 +23,6 @@ package org.gjt.sp.jedit;
 
 //{{{ Imports
 import bsh.UtilEvalError;
-import javax.swing.plaf.metal.*;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.*;
@@ -54,7 +53,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.262 2006/06/19 01:09:51 vanza Exp $
+ * @version $Id: jEdit.java,v 1.263 2006/06/23 22:58:12 kpouer Exp $
  */
 public class jEdit
 {
@@ -3087,7 +3086,7 @@ public class jEdit
 		if (snippets == null)
 			return;
 
-		MiscUtilities.quicksort(snippets,
+		Arrays.sort(snippets,
 			new MiscUtilities.StringICaseCompare());
 
 		for (int i = 0; i < snippets.length; ++i)
@@ -3336,7 +3335,7 @@ public class jEdit
 		if (snippets == null)
 			return;
 
-		MiscUtilities.quicksort(snippets,
+		Arrays.sort(snippets,
 			new MiscUtilities.StringICaseCompare());
 
 		for(int i = 0; i < snippets.length; ++i)

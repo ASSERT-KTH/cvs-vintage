@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Abbrev editor.
  * @author Slava Pestov
- * @version $Id: AbbrevsOptionPane.java,v 1.12 2003/11/02 21:16:38 spestov Exp $
+ * @version $Id: AbbrevsOptionPane.java,v 1.13 2006/06/23 22:58:12 kpouer Exp $
  */
 public class AbbrevsOptionPane extends AbstractOptionPane
 {
@@ -324,7 +324,7 @@ public class AbbrevsOptionPane extends AbstractOptionPane
 			// workaround for Swing's annoying processing of
 			// labels starting with <html>, which often breaks
 			if(valueStr.toLowerCase().startsWith("<html>"))
-				valueStr = " " + valueStr;
+				valueStr = ' ' + valueStr;
 			return super.getTableCellRendererComponent(table,valueStr,
 				isSelected,cellHasFocus,row,col);
 		}
@@ -361,7 +361,7 @@ class AbbrevsModel extends AbstractTableModel
 	void sort(int col)
 	{
 		lastSort = col;
-		MiscUtilities.quicksort(abbrevs,new AbbrevCompare(col));
+		Collections.sort(abbrevs,new AbbrevCompare(col));
 		fireTableDataChanged();
 	} //}}}
 
@@ -459,7 +459,7 @@ class AbbrevsModel extends AbstractTableModel
 	} //}}}
 
 	//{{{ AbbrevCompare class
-	class AbbrevCompare implements MiscUtilities.Compare
+	static class AbbrevCompare implements Comparator
 	{
 		int col;
 

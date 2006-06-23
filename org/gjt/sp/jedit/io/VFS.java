@@ -28,7 +28,6 @@ import java.awt.Component;
 import java.io.*;
 import java.util.*;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -97,7 +96,7 @@ import org.gjt.sp.util.IOUtilities;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.50 2006/06/23 22:31:58 kpouer Exp $
+ * @author $Id: VFS.java,v 1.51 2006/06/23 22:58:12 kpouer Exp $
  */
 public abstract class VFS
 {
@@ -943,11 +942,11 @@ public abstract class VFS
 
 	//{{{ DirectoryEntryCompare class
 	/**
-	 * Implementation of {@link org.gjt.sp.jedit.MiscUtilities.Compare}
+	 * Implementation of {@link Comparator}
 	 * interface that compares {@link VFS.DirectoryEntry} instances.
 	 * @since jEdit 4.2pre1
 	 */
-	public static class DirectoryEntryCompare implements MiscUtilities.Compare
+	public static class DirectoryEntryCompare implements Comparator
 	{
 		private boolean sortIgnoreCase, sortMixFilesAndDirs;
 

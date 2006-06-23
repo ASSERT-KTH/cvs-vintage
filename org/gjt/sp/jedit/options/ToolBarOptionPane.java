@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.15 2006/03/03 16:18:05 ezust Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.16 2006/06/23 22:58:12 kpouer Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -208,7 +208,7 @@ public class ToolBarOptionPane extends AbstractOptionPane
 	//{{{ Inner classes
 
 	//{{{ ButtonCompare class
-	static class ButtonCompare implements MiscUtilities.Compare
+	static class ButtonCompare implements Comparator
 	{
 		public int compare(Object obj1, Object obj2)
 		{
@@ -659,7 +659,7 @@ class ToolBarEditDialog extends EnhancedDialog
 				action.getName(),null,null,label));
 		}
 
-		MiscUtilities.quicksort(listModel,new ToolBarOptionPane.ButtonCompare());
+		Collections.sort(listModel,new ToolBarOptionPane.ButtonCompare());
 		list.setListData(listModel);
 	} //}}}
 

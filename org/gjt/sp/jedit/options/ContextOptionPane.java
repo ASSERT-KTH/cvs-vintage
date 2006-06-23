@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Right-click context menu editor.
  * @author Slava Pestov
- * @version $Id: ContextOptionPane.java,v 1.12 2006/03/03 16:18:05 ezust Exp $
+ * @version $Id: ContextOptionPane.java,v 1.13 2006/06/23 22:58:12 kpouer Exp $
  */
 public class ContextOptionPane extends AbstractOptionPane
 {
@@ -103,7 +103,7 @@ public class ContextOptionPane extends AbstractOptionPane
 		add(BorderLayout.SOUTH,buttons);
 	}
 
-	static class MenuItemCompare implements MiscUtilities.Compare
+	static class MenuItemCompare implements Comparator
 	{
 		public int compare(Object obj1, Object obj2)
 		{
@@ -364,7 +364,7 @@ class ContextAddDialog extends EnhancedDialog
 				action.getName(),label));
 		}
 
-		MiscUtilities.quicksort(listModel,new ContextOptionPane.MenuItemCompare());
+		Collections.sort(listModel,new ContextOptionPane.MenuItemCompare());
 
 		list.setListData(listModel);
 	}
