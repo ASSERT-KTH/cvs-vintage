@@ -11,8 +11,7 @@ import org.columba.api.plugin.PluginException;
 import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.OptionsItem;
+
 
 public class HTMLViewerFactory {
 
@@ -20,11 +19,11 @@ public class HTMLViewerFactory {
 			.getLogger("org.columba.core.gui.htmlviewer.HTMLViewerFactory");
 
 	public static IHTMLViewerPlugin createHTMLViewer() {
-		OptionsItem optionsItem = MailConfig.getInstance().getOptionsItem();
-		String selectedBrowser = optionsItem.getStringWithDefault(
-				OptionsItem.MESSAGEVIEWER, OptionsItem.SELECTED_BROWSER,
-				"Default");
-
+//		OptionsItem optionsItem = MailConfig.getInstance().getOptionsItem();
+//		String selectedBrowser = optionsItem.getStringWithDefault(
+//				OptionsItem.MESSAGEVIEWER, OptionsItem.SELECTED_BROWSER,
+//				"Default");
+		String selectedBrowser = "Default";
 		IHTMLViewerPlugin viewerPlugin;
 
 		try {
