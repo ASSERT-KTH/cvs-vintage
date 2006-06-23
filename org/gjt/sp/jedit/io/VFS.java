@@ -37,6 +37,7 @@ import org.gjt.sp.jedit.msg.PropertiesChanged;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 import org.gjt.sp.util.ProgressObserver;
+import org.gjt.sp.util.IOUtilities;
 //}}}
 
 /**
@@ -96,7 +97,7 @@ import org.gjt.sp.util.ProgressObserver;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.49 2006/06/18 18:51:40 vanza Exp $
+ * @author $Id: VFS.java,v 1.50 2006/06/23 22:31:58 kpouer Exp $
  */
 public abstract class VFS
 {
@@ -516,8 +517,8 @@ public abstract class VFS
 		}
 		finally
 		{
-			MiscUtilities.closeQuietly(in);
-			MiscUtilities.closeQuietly(out);
+			IOUtilities.closeQuietly(in);
+			IOUtilities.closeQuietly(out);
 		}
 	} //}}}
 

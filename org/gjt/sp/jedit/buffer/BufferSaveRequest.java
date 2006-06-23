@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer save request.
  * @author Slava Pestov
- * @version $Id: BufferSaveRequest.java,v 1.8 2006/06/13 06:56:41 kpouer Exp $
+ * @version $Id: BufferSaveRequest.java,v 1.9 2006/06/23 22:31:58 kpouer Exp $
  */
 public class BufferSaveRequest extends BufferIORequest
 {
@@ -184,7 +184,7 @@ public class BufferSaveRequest extends BufferIORequest
 		}
 		catch(WorkThread.Abort a)
 		{
-			MiscUtilities.closeQuietly(out);
+			IOUtilities.closeQuietly(out);
 			buffer.setBooleanProperty(ERROR_OCCURRED,true);
 		}
 		finally

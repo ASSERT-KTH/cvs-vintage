@@ -23,11 +23,7 @@
 package org.gjt.sp.jedit.buffer;
 
 //{{{ Imports
-import javax.swing.text.Segment;
 import java.io.*;
-import java.nio.charset.Charset;
-import java.util.zip.*;
-import java.util.Vector;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.*;
@@ -36,7 +32,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer insert request.
  * @author Slava Pestov
- * @version $Id: BufferInsertRequest.java,v 1.1 2005/02/10 22:35:16 spestov Exp $
+ * @version $Id: BufferInsertRequest.java,v 1.2 2006/06/23 22:31:58 kpouer Exp $
  */
 public class BufferInsertRequest extends BufferIORequest
 {
@@ -107,17 +103,7 @@ public class BufferInsertRequest extends BufferIORequest
 		}
 		catch(WorkThread.Abort a)
 		{
-			if(in != null)
-			{
-				try
-				{
-					in.close();
-				}
-				catch(IOException io)
-				{
-				}
-			}
-
+			IOUtilities.closeQuietly(in);
 			buffer.setBooleanProperty(ERROR_OCCURRED,true);
 		}
 		finally

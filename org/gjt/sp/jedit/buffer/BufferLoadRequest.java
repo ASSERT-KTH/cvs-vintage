@@ -32,7 +32,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer load request.
  * @author Slava Pestov
- * @version $Id: BufferLoadRequest.java,v 1.3 2006/06/20 08:31:48 kpouer Exp $
+ * @version $Id: BufferLoadRequest.java,v 1.4 2006/06/23 22:31:58 kpouer Exp $
  */
 public class BufferLoadRequest extends BufferIORequest
 {
@@ -141,7 +141,7 @@ public class BufferLoadRequest extends BufferIORequest
 		}
 		catch(WorkThread.Abort a)
 		{
-			MiscUtilities.closeQuietly(in);
+			IOUtilities.closeQuietly(in);
 			buffer.setBooleanProperty(ERROR_OCCURRED,true);
 		}
 		finally
