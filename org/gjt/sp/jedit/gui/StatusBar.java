@@ -32,7 +32,6 @@ import java.awt.font.*;
 import java.awt.geom.*;
 import java.awt.*;
 import java.text.*;
-import java.util.Calendar;
 import java.util.Date;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.textarea.*;
@@ -53,7 +52,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.66 2005/05/21 20:51:43 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.67 2006/06/23 22:04:58 kpouer Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -397,7 +396,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 				return;
 
 			buffer.getText(start,dot,seg);
-			int virtualPosition = MiscUtilities.getVirtualWidth(seg,
+			int virtualPosition = StandardUtilities.getVirtualWidth(seg,
 				buffer.getTabSize());
 
 			buf.setLength(0);

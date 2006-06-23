@@ -26,6 +26,7 @@ import java.util.*;
 import javax.swing.text.Segment;
 import org.gjt.sp.jedit.buffer.JEditBuffer;
 import org.gjt.sp.jedit.syntax.*;
+import org.gjt.sp.util.StandardUtilities;
 //}}}
 
 /**
@@ -41,7 +42,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.54 2006/01/23 23:04:24 ezust Exp $
+ * @version $Id: TextUtilities.java,v 1.55 2006/06/23 22:04:58 kpouer Exp $
  */
 public class TextUtilities
 {
@@ -534,7 +535,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 			case '\n':
 				if(whitespace != 0)
 				{
-					buf.append(MiscUtilities
+					buf.append(StandardUtilities
 						.createWhiteSpace(whitespace,tabSize,
 						width - whitespace));
 				}
@@ -545,7 +546,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 			default:
 				if(whitespace != 0)
 				{
-					buf.append(MiscUtilities
+					buf.append(StandardUtilities
 						.createWhiteSpace(whitespace,tabSize,
 						width - whitespace));
 					whitespace = 0;
@@ -558,7 +559,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 
 		if(whitespace != 0)
 		{
-			buf.append(MiscUtilities.createWhiteSpace(whitespace,tabSize,
+			buf.append(StandardUtilities.createWhiteSpace(whitespace,tabSize,
 				width - whitespace));
 		}
 
@@ -756,9 +757,9 @@ loop:		for(int i = pos; i < line.length(); i++)
 		int tabSize, StringBuffer buf)
 	{
 		// align everything to paragraph's leading indent
-		int leadingWhitespaceCount = MiscUtilities.getLeadingWhiteSpace(text);
+		int leadingWhitespaceCount = StandardUtilities.getLeadingWhiteSpace(text);
 		String leadingWhitespace = text.substring(0,leadingWhitespaceCount);
-		int leadingWhitespaceWidth = MiscUtilities.getLeadingWhiteSpaceWidth(text,tabSize);
+		int leadingWhitespaceWidth = StandardUtilities.getLeadingWhiteSpaceWidth(text,tabSize);
 
 		buf.append(leadingWhitespace);
 
@@ -792,9 +793,9 @@ loop:		for(int i = pos; i < line.length(); i++)
 		int tabSize, StringBuffer buf)
 	{
 		// align everything to paragraph's leading indent
-		int leadingWhitespaceCount = MiscUtilities.getLeadingWhiteSpace(text);
+		int leadingWhitespaceCount = StandardUtilities.getLeadingWhiteSpace(text);
 		String leadingWhitespace = text.substring(0,leadingWhitespaceCount);
-		int leadingWhitespaceWidth = MiscUtilities.getLeadingWhiteSpaceWidth(text,tabSize);
+		int leadingWhitespaceWidth = StandardUtilities.getLeadingWhiteSpaceWidth(text,tabSize);
 
 		buf.append(leadingWhitespace);
 
