@@ -1,4 +1,4 @@
-// $Id: ProjectSettings.java,v 1.5 2006/06/22 20:59:37 mvw Exp $
+// $Id: ProjectSettings.java,v 1.6 2006/06/24 11:50:43 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,6 +114,13 @@ public class ProjectSettings {
         String oldValue = notationLanguage;
         notationLanguage = language;
         fireEvent(Notation.KEY_DEFAULT_NOTATION, oldValue, notationLanguage);
+    }
+    
+    /**
+     * @param nn the new notation language
+     */
+    public void setNotationLanguage(NotationName nn) {
+        setNotationLanguage(nn.getConfigurationValue());
     }
 
     /**
