@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.197 2006/06/17 11:15:58 bobtarling Exp $
+// $Id: Project.java,v 1.198 2006/06/24 12:53:25 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -310,7 +310,9 @@ public class Project implements java.io.Serializable, TargetListener {
      * @param searchPathElement the element to be added to the searchpath
      */
     public void addSearchPath(String searchPathElement) {
-        this.searchpath.addElement(searchPathElement);
+        if (!this.searchpath.contains(searchPathElement)) {
+            this.searchpath.addElement(searchPathElement);
+        }
     }
 
     /**

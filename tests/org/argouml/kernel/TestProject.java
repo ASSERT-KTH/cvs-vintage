@@ -1,4 +1,4 @@
-// $Id: TestProject.java,v 1.24 2006/06/18 13:32:15 linus Exp $
+// $Id: TestProject.java,v 1.25 2006/06/24 12:53:31 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -446,9 +446,23 @@ public class TestProject extends TestCase {
         assertEquals(sizeMembers, p.getMembers().size());
     }
 
-
-
-
+    /**
+     * Check that there is only one searchPath. 
+     * See issue 1671.
+     */
+    public void testAddSearchPath() {
+        Project p = ProjectManager.getManager().getCurrentProject();
+        assertNotNull(p.getSearchpath());
+        assertTrue(p.getSearchpath().size() == 1);
+        
+        p.addSearchPath("PROJECT_DIR");
+        assertTrue(p.getSearchpath().size() == 1);
+        
+        p.addSearchPath("foo");
+        p.addSearchPath("foo");
+        assertTrue(p.getSearchpath().size() == 2);
+        
+    }
 
 
     /**
