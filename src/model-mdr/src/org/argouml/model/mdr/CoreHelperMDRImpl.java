@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.21 2006/06/14 20:26:49 tfmorris Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.22 2006/06/24 17:40:59 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1531,8 +1531,8 @@ public class CoreHelperMDRImpl implements CoreHelper {
                         || modelElement instanceof Constraint
                         || modelElement instanceof Dependency
                         || modelElement instanceof Collaboration
-                        // TODO: StateMachine was added recently,
-                        // but I don't find it in the spec
+                        // TODO: Having StateMachine here is non-standard
+                        // see issue 4284
                         || modelElement instanceof StateMachine
                         || modelElement instanceof DataType
                         || modelElement instanceof Interface)) {
