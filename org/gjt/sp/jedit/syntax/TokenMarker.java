@@ -38,7 +38,7 @@ import org.gjt.sp.util.SegmentCharSequence;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.67 2006/06/22 06:31:23 kpouer Exp $
+ * @version $Id: TokenMarker.java,v 1.68 2006/06/24 04:01:01 vanza Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -694,13 +694,12 @@ unwind:		while(context.parent != null)
 					}
 					else
 					{
-						CharSequence seq = new SegmentCharSequence(line);
 						int oldCount = line.count;
 						int oldOffset = line.offset;
 						line.offset = lastOffset;
 						line.count = len;
-						if(!digitRE.matcher(seq).matches())
-							digit = false;
+						CharSequence seq = new SegmentCharSequence(line);
+						digit = digitRE.matcher(seq).matches();
 						line.offset = oldOffset;
 						line.count = oldCount;
 					}
