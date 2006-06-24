@@ -96,7 +96,7 @@ import org.gjt.sp.util.IOUtilities;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.51 2006/06/23 22:58:12 kpouer Exp $
+ * @author $Id: VFS.java,v 1.52 2006/06/24 09:22:43 kpouer Exp $
  */
 public abstract class VFS
 {
@@ -510,7 +510,7 @@ public abstract class VFS
 			}
 			in = new BufferedInputStream(sourceVFS._createInputStream(sourceSession, sourcePath, false, comp));
 			out = new BufferedOutputStream(targetVFS._createOutputStream(targetSession, targetPath, comp));
-			boolean copyResult = MiscUtilities.copyStream(4096, progress, in, out, canStop);
+			boolean copyResult = IOUtilities.copyStream(4096, progress, in, out, canStop);
 			VFSManager.sendVFSUpdate(targetVFS, targetPath, true);
 			return copyResult;
 		}
