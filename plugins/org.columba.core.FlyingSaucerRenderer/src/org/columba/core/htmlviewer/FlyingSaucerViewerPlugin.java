@@ -89,7 +89,7 @@ public class FlyingSaucerViewerPlugin extends JScrollPane implements
 	}
 
 	public String getSelectedText() {
-		return null;
+		return "";
 	}
 
 	public boolean initialized() {
@@ -102,6 +102,10 @@ public class FlyingSaucerViewerPlugin extends JScrollPane implements
 
 	public JComponent getContainer() {
 		return this;
+	}
+
+	public String getText() {
+		return "";
 	}
 
 }
