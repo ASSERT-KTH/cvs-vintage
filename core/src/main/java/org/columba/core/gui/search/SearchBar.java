@@ -31,15 +31,16 @@ import org.columba.core.search.api.ISearchProvider;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class SearchBar extends JPanel implements DocumentListener, KeyListener{
+public class SearchBar extends JPanel implements DocumentListener, KeyListener {
 
 	private IconTextField textField;
 
 	private ImageIcon icon = ImageLoader.getSmallIcon(IconKeys.EDIT_FIND);
 
 	private JButton button;
-	
+
 	private ActionListener listener;
+
 	
 	public SearchBar() {
 		super();
@@ -53,10 +54,8 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 		button.setActionCommand("ALL");
 		button.setMnemonic('s');
 
-		
-		FormLayout layout = new FormLayout(
-				"fill:default:grow, 3dlu, pref",
-				// 2 columns
+		FormLayout layout = new FormLayout("fill:default:grow, 3dlu, pref",
+		// 2 columns
 				"");
 
 		// create a form builder
@@ -64,27 +63,27 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 
 		builder.append(textField);
 		builder.append(button);
-		
+
 		textField.getDocument().addDocumentListener(this);
 		textField.addKeyListener(this);
 	}
 
 	public void addActionListener(ActionListener listener) {
 		this.listener = listener;
-		
+
 		button.addActionListener(listener);
 	}
-	
+
 	private JPopupMenu createPopupMenu(String searchTerm) {
 		JPopupMenu menu = new JPopupMenu();
 		ISearchManager manager = MainInterface.searchManager;
 		List<ISearchProvider> list = manager.getAllProviders();
 		Iterator<ISearchProvider> it = list.iterator();
 		// create buckets of namespaces first
-		Hashtable<String,Vector<ISearchProvider>> map = new Hashtable<String,Vector<ISearchProvider>>();
+		Hashtable<String, Vector<ISearchProvider>> map = new Hashtable<String, Vector<ISearchProvider>>();
 		while (it.hasNext()) {
 			ISearchProvider p = it.next();
-			if ( map.containsKey(p.getNamespace())) {
+			if (map.containsKey(p.getNamespace())) {
 				Vector<ISearchProvider> v = map.get(p.getNamespace());
 				v.add(p);
 			} else {
@@ -93,7 +92,7 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 				map.put(p.getNamespace(), v);
 			}
 		}
-		
+
 		// now create menuitems, and group items with same namespace
 		Iterator<String> it2 = map.keySet().iterator();
 		while (it2.hasNext()) {
@@ -101,11 +100,13 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 			Vector<ISearchProvider> v = map.get(ns);
 			Iterator<ISearchProvider> it3 = v.iterator();
 			while (it3.hasNext()) {
-				ISearchProvider p= it3.next();
-				if ( p == null ) continue;
+				ISearchProvider p = it3.next();
+				if (p == null)
+					continue;
 				ISearchCriteria c = p.getCriteria(searchTerm);
-				if ( c==null ) continue;
-				
+				if (c == null)
+					continue;
+
 				JMenuItem m = new JMenuItem(c.getTitle());
 				m.setToolTipText(c.getDescription());
 				m.setIcon(c.getIcon());
@@ -113,10 +114,28 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 				m.addActionListener(listener);
 				menu.add(m);
 			}
-			
-			if ( it2.hasNext())
+
+			if (it2.hasNext())
 				menu.addSeparator();
 		}
+
+//		menu.addSeparator();
+//		
+//		Map<String, SearchHistoryList.HistoryItem> historyMap = SearchHistoryList.getInstance().getMap();
+//		Iterator<String> it3 = historyMap.keySet().iterator();
+//		while (it3.hasNext()) {
+//			String term = it3.next();
+//			SearchHistoryList.HistoryItem item = historyMap.get(term);
+//			ISearchProvider p = item.getProvider();
+//			ISearchCriteria c = p.getCriteria(term);
+//			
+//			JMenuItem m = new JMenuItem(c.getTitle());
+//			m.setToolTipText(c.getDescription());
+//			m.setIcon(c.getIcon());
+//			m.setActionCommand(p.getName());
+//			m.addActionListener(listener);
+//			menu.add(m);
+//		}
 		
 		return menu;
 	}
@@ -130,7 +149,7 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 
 		menubar.add(this);
 	}
-	
+
 	public String getSearchTerm() {
 		return textField.getText();
 	}
@@ -146,19 +165,24 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 	public void changedUpdate(DocumentEvent e) {
 		textField.setPopupMenu(createPopupMenu(getSearchTerm()));
 	}
-	
+
 	public void keyTyped(KeyEvent e) {
+		
 	}
 
 	public void keyPressed(KeyEvent e) {
+		
 	}
 
 	public void keyReleased(KeyEvent e) {
 		char ch = e.getKeyChar();
-
 		if (ch == KeyEvent.VK_ENTER) {
 			listener.actionPerformed(new ActionEvent(this, -1, "ALL"));
+		} else if ( e.getKeyCode() == KeyEvent.VK_DOWN) {
+			textField.showPopup();
 		}
 	}
+
 	
+
 }
