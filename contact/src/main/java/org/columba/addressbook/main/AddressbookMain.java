@@ -90,7 +90,7 @@ public class AddressbookMain implements IComponentPlugin {
 				org.columba.addressbook.facade.IFolderFacade.class,
 				new FolderFacade());
 		ServiceRegistry.getInstance().register(
-				org.columba.addressbook.facade.IDialogFacade.class,
+				org.columba.addressbook.facade.IModelFacade.class,
 				new ModelFacade());
 		ServiceRegistry.getInstance().register(
 				org.columba.addressbook.facade.IDialogFacade.class,
