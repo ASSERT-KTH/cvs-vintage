@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: do-for-projects.sh,v 1.4 2006/06/12 20:01:12 linus Exp $
+# $Id: do-for-projects.sh,v 1.5 2006/06/25 19:23:29 linus Exp $
 
 # Do the same thing for each project involved in the release.
 
@@ -9,7 +9,7 @@ PROJECTS="argouml \
     argouml-csharp \
     argouml-idl \
     argouml-php \
-    argouml-de argouml-es argouml-en-gb argouml-fr argouml-nb \
+    argouml-de argouml-es argouml-en-gb argouml-fr argouml-it argouml-nb \
     argouml-pt argouml-ru \
     argouml-i18n-zh
     argoumlinstaller"
