@@ -32,7 +32,7 @@ import org.columba.core.search.api.ISearchResult;
 public class SearchManager implements ISearchManager {
 
 	private static final Logger LOG = Logger
-			.getLogger("org.columba.core.search.SearchManage");
+			.getLogger("org.columba.core.search.SearchManager");
 
 	protected EventListenerList listenerList = new EventListenerList();
 
@@ -76,6 +76,36 @@ public class SearchManager implements ISearchManager {
 	}
 
 	/**
+	 * @see org.columba.core.search.api.ISearchManager#executeSearch(java.lang.String,
+	 *      java.lang.String, int, int)
+	 */
+	public void executeSearch(String searchTerm, String providerName,
+			int startIndex, int resultCount) {
+		if (searchTerm == null)
+			throw new IllegalArgumentException("searchTerm == null");
+		if (providerName == null)
+			throw new IllegalArgumentException("providerName == null");
+		if (startIndex < 0)
+			throw new IllegalArgumentException("startIndex must be >= 0");
+		if (resultCount <= 0)
+			throw new IllegalArgumentException("resultCount must be > 0");
+
+		Command command = null;
+		if (commandMap.containsKey(searchTerm))
+			command = commandMap.get(searchTerm);
+		else {
+			command = new SearchCommand(new SearchCommandReference(searchTerm,
+					providerName, startIndex, resultCount));
+			// store command for later reuse with different startIndex and/or
+			// resultCount
+			commandMap.put(searchTerm, command);
+		}
+
+		// fire up search command
+		CommandProcessor.getInstance().addOp(command);
+	}
+
+	/**
 	 * @see org.columba.core.search.api.ISearchManager#getAllProviders()
 	 */
 	public List<ISearchProvider> getAllProviders() {
@@ -95,16 +125,21 @@ public class SearchManager implements ISearchManager {
 		fireClearSearch(searchTerm);
 	}
 
+	public void reset() {
+		fireReset();	
+	}
+
+	
 	/**
 	 * Propagates an event to all registered listeners notifying them of a item
 	 * addition.
 	 */
-	private void fireNewResultArrived(String searchTerm,
-			ISearchCriteria criteria, List<ISearchResult> result,
-			int totalResultCount) {
+	private void fireNewResultArrived(String searchTerm, String name,
+			String namespace, ISearchCriteria criteria,
+			List<ISearchResult> result, int totalResultCount) {
 
-		IResultEvent e = new ResultEvent(this, searchTerm, criteria, result,
-				totalResultCount);
+		IResultEvent e = new ResultEvent(this, searchTerm, name, namespace,
+				criteria, result, totalResultCount);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 
@@ -134,6 +169,22 @@ public class SearchManager implements ISearchManager {
 			}
 		}
 	}
+	
+	private void fireReset() {
+
+		IResultEvent e = new ResultEvent(this);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IResultListener.class) {
+				((IResultListener) listeners[i + 1]).reset(e);
+			}
+		}
+	}
+	
 
 	/**
 	 * @see org.columba.core.search.api.ISearchManager#addResultListener(org.columba.core.search.api.IResultListener)
@@ -188,7 +239,9 @@ public class SearchManager implements ISearchManager {
 	 * In case new result results arrive, it ensures that all interested
 	 * listeners are notified from the EDT.
 	 * <p>
-	 * FIXME: @author fdietz: No locking of folders currently implemented!
+	 * FIXME:
+	 * 
+	 * @author fdietz: No locking of folders currently implemented!
 	 * @author frd
 	 */
 	class SearchCommand extends Command {
@@ -201,6 +254,8 @@ public class SearchManager implements ISearchManager {
 		public void execute(IWorkerStatusController worker) throws Exception {
 			final SearchCommandReference ref = (SearchCommandReference) getReference();
 
+			String providerName = ref.getProviderName();
+			
 			// create list of all registered providers
 			List<ISearchProvider> list = createProviderList();
 
@@ -208,6 +263,11 @@ public class SearchManager implements ISearchManager {
 			while (it.hasNext()) {
 				final ISearchProvider p = it.next();
 
+				// if providerName specified
+				// -> skip if this isn't the matching provider
+				if ( providerName != null ) {
+					if ( !providerName.equals(p.getName())) continue;
+				}
 				// execute search
 				final List<ISearchResult> resultList = p.query(ref
 						.getSearchTerm(), ref.getStartIndex(), ref
@@ -219,8 +279,9 @@ public class SearchManager implements ISearchManager {
 				// ensure this is called in the EDT
 				Runnable run = new Runnable() {
 					public void run() {
-						fireNewResultArrived(ref.getSearchTerm(), p
-								.getCriteria(ref.getSearchTerm()), resultList,
+						fireNewResultArrived(ref.getSearchTerm(), p.getName(),
+								p.getNamespace(), p.getCriteria(ref
+										.getSearchTerm()), resultList,
 								totalResultCount);
 					}
 				};
@@ -232,13 +293,17 @@ public class SearchManager implements ISearchManager {
 	}
 
 	/**
-	 *  FIXME: @author fdietz: No locking of folders currently implemented!
-	 *  
+	 * FIXME:
+	 * 
+	 * @author fdietz: No locking of folders currently implemented!
+	 * 
 	 * @author frd
 	 */
 	public class SearchCommandReference implements ICommandReference {
 
 		private String searchTerm;
+
+		private String providerName;
 
 		private int startIndex;
 
@@ -249,6 +314,16 @@ public class SearchManager implements ISearchManager {
 			super();
 
 			this.searchTerm = searchTerm;
+			this.startIndex = startIndex;
+			this.resultCount = resultCount;
+		}
+
+		public SearchCommandReference(String searchTerm, String providerName,
+				int startIndex, int resultCount) {
+			super();
+
+			this.searchTerm = searchTerm;
+			this.providerName = providerName;
 			this.startIndex = startIndex;
 			this.resultCount = resultCount;
 		}
@@ -272,6 +347,11 @@ public class SearchManager implements ISearchManager {
 			return startIndex;
 		}
 
+		public String getProviderName() {
+			return providerName;
+		}
+
 	}
 
+	
 }

@@ -17,7 +17,7 @@ public class BodyContainsSearchProvider extends AbstractMailSearchProvider
 	 * @see org.columba.core.search.api.ISearchProvider#getName()
 	 */
 	public String getName() {
-		return "Body_Contains";
+		return "body_contains";
 	}
 
 	/**

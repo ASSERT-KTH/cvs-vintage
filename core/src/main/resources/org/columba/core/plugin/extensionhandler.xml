@@ -13,4 +13,5 @@
  <handler id="org.columba.core.statusbar" />
  <handler id="org.columba.core.newitem" />
  <handler id="org.columba.core.search" />
+ <handler id="org.columba.core.search.ui" />
 </handlerlist>

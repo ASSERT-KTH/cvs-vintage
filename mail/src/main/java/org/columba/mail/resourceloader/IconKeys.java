@@ -20,6 +20,8 @@ package org.columba.mail.resourceloader;
 public interface IconKeys {
 
 	public static final String MESSAGE_NEW = "mail-message-new.png";
-
+	public static final String MESSAGE_READ = "message-mail-read.png";
+	public static final String MESSAGE_REPLIED = "message-mail-replied.png";
+	
 	
 }

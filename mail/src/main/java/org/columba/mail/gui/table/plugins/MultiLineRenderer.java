@@ -61,7 +61,7 @@ public class MultiLineRenderer extends JPanel implements TableCellRenderer,
 	protected static Border outterBorder = new EmptyBorder(2, 1, 2, 2);
 
 	protected static Border lineBorder = new HeaderSeparatorBorder(
-			Color.LIGHT_GRAY);
+			new Color(248, 248, 248));
 
 	protected static Border noFocusBorder = BorderFactory.createCompoundBorder(
 			lineBorder, outterBorder);

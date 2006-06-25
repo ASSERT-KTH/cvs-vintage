@@ -79,5 +79,6 @@
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/ical4j-0.9.18.jar"/>
 	<classpathentry kind="lib" path="lib/migcalendar-5.6.jar"/>
+	<classpathentry kind="lib" path="lib/swingx.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

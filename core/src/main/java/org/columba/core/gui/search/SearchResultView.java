@@ -84,4 +84,9 @@ public class SearchResultView extends JPanel implements IResultListener {
 		b.append("</P></BODY></HTML>");
 	}
 
+	public void reset(IResultEvent event) {
+		buf = new StringBuffer();
+		viewerPlugin.view("");
+	}
+
 }

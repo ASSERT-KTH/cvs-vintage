@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.columba.addressbook.facade.ContactFacade;
+import org.columba.addressbook.facade.DialogFacade;
 import org.columba.addressbook.facade.FolderFacade;
 import org.columba.addressbook.facade.ModelFacade;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
@@ -89,8 +90,11 @@ public class AddressbookMain implements IComponentPlugin {
 				org.columba.addressbook.facade.IFolderFacade.class,
 				new FolderFacade());
 		ServiceRegistry.getInstance().register(
-				org.columba.addressbook.facade.IModelFacade.class,
+				org.columba.addressbook.facade.IDialogFacade.class,
 				new ModelFacade());
+		ServiceRegistry.getInstance().register(
+				org.columba.addressbook.facade.IDialogFacade.class,
+				new DialogFacade());
 	}
 
 	/**

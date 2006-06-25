@@ -24,7 +24,7 @@ public class SubjectContainsSearchProvider extends AbstractMailSearchProvider im
 	 * @see org.columba.core.search.api.ISearchProvider#getName()
 	 */
 	public String getName() {
-		return "Subject_Contains";
+		return "subject_contains";
 	}
 
 	/**

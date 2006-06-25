@@ -17,7 +17,7 @@ public class FromContainsSearchProvider extends AbstractMailSearchProvider
 	 * @see org.columba.core.search.api.ISearchProvider#getName()
 	 */
 	public String getName() {
-		return "From_Contains";
+		return "from_contains";
 	}
 
 	/**

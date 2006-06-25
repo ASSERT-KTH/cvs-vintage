@@ -99,6 +99,7 @@
             <pathelement path="${lib.commons.logging}"/>
             <pathelement path="${lib.ical4j}"/>
 	    <pathelement path="${lib.migcalendar}"/>
+        	<pathelement path="${lib.swingx}"/>
 	<pathelement path="${lib.jython}"/>
         </path>
         <path id="run.classpath">

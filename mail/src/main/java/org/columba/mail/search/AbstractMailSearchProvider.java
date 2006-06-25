@@ -1,30 +1,43 @@
 package org.columba.mail.search;
 
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Vector;
+import java.util.logging.Logger;
+
+import javax.swing.ImageIcon;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterFactory;
-import org.columba.core.search.SearchResult;
+import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.search.api.ISearchCriteria;
 import org.columba.core.search.api.ISearchProvider;
 import org.columba.core.search.api.ISearchResult;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.ristretto.message.Address;
+import org.columba.ristretto.message.Flags;
 
 public abstract class AbstractMailSearchProvider implements ISearchProvider {
+
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.search.AbstractMailSearchProvider");
 
 	private Hashtable<Integer, IMailbox> folderTable = new Hashtable<Integer, IMailbox>();
 
 	private Vector<SearchIndex> indizes = new Vector<SearchIndex>();
 
-	private int totalResultCount = -1;
-	
+	private int totalResultCount = 0;
+
 	public AbstractMailSearchProvider() {
 		super();
 	}
@@ -66,7 +79,8 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 			Iterator<IMailbox> it = sourceFolders.iterator();
 			while (it.hasNext()) {
 				IMailbox folder = it.next();
-
+				LOG.info("searching in "+new TreePath(folder.getPath()).toString());
+				
 				// skip if this folder was already queried
 				if (folderTable.containsKey(folder.getUid()))
 					continue;
@@ -95,8 +109,8 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 		}
 
 		// memorize total result count
-		totalResultCount = result.size();
-		
+		totalResultCount = indizes.size();
+
 		return result;
 	}
 
@@ -115,6 +129,7 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 			// TODO @author fdietz: ensure that we don't fetch individual
 			// headers
 			// to reduce client/server roundtrips
+
 			String title = (String) folder.getAttribute(messageId,
 					"columba.subject");
 			Address from = (Address) folder.getAttribute(messageId,
@@ -123,9 +138,53 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 			String description = from.toString() + " " + date;
 			URI uri = SearchResultBuilder.createURI(folder.getUid(), messageId);
 
-			result.add(new SearchResult(title, description, uri));
+			ImageIcon statusIcon = null;
+			Flags flags = folder.getFlags(messageId);
+			if (flags.getDeleted()) {
+				statusIcon = ImageLoader.getSmallIcon("user-trash.png");
+
+			} else if (flags.getAnswered()) {
+				statusIcon = MailImageLoader
+						.getSmallIcon("message-mail-replied.png");
+			} else if (flags.getDraft()) {
+				statusIcon = MailImageLoader.getSmallIcon("edit.png");
+			} else if (!flags.getSeen()) {
+				statusIcon = MailImageLoader
+						.getSmallIcon("message-mail-unread.png");
+			} else if (flags.getSeen()) {
+				statusIcon = MailImageLoader
+						.getSmallIcon("message-mail-read.png");
+			}
+
+			String dateString = null;
+			int diff = getLocalDaysDiff(date.getTime());
+
+			// if ( today
+			if ((diff >= 0) && (diff < 7)) {
+				dateString = dfWeek.format(date);
+			} else {
+				dateString = dfCommon.format(date);
+			}
+
+			result.add(new MailSearchResult(title, description, uri,
+					dateString, from, statusIcon, flags.getFlagged()));
 		}
 		return result;
+	}
+
+	static SimpleDateFormat dfWeek = new SimpleDateFormat("EEE HH:mm", Locale
+			.getDefault());
+
+	// use local date settings
+	DateFormat dfCommon = DateFormat.getDateInstance();
+
+	static final long OneDay = 24 * 60 * 60 * 1000;
+
+	static TimeZone localTimeZone = TimeZone.getDefault();
+
+	public static int getLocalDaysDiff(long t) {
+		return (int) (((System.currentTimeMillis() + localTimeZone
+				.getRawOffset()) - (((t + localTimeZone.getRawOffset()) / OneDay) * OneDay)) / OneDay);
 	}
 
 	class SearchIndex {

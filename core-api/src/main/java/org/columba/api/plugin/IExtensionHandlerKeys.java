@@ -112,4 +112,10 @@ public interface IExtensionHandlerKeys {
 	 * Search Providers should implement <code>org.columba.core.search.api.ISearchProvider</code>
 	 */
 	public static final String ORG_COLUMBA_CORE_SEARCH = "org.columba.core.search";
+	
+	/**
+	 * Search Providers should implement <code>org.columba.core.search.ui.api.IResultPanel</code>
+	 * to display the search results appropriately.
+	 */
+	public static final String ORG_COLUMBA_CORE_SEARCH_UI = "org.columba.core.search.ui";
 }

@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.columba.api.gui.frame.IContainer;
 import org.columba.api.gui.frame.IFrameMediator;
+import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameManager;
@@ -15,15 +16,26 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
 
-public class MessageFacade implements IMessageFacade {
+public class DialogFacade implements IDialogFacade {
 
 
-	public MessageFacade() {
+	public DialogFacade() {
 		super();
 	}
 
+	
+    /**
+     * @see org.columba.mail.facade.IDialogFacade#openComposer()
+     */
+    public void openComposer() {
+        // Choice btw. text and html will be based on stored option
+        try {
+        	FrameManager.getInstance().openView("Composer");
+        } catch (PluginLoadingFailedException plfe) {} //should not occur
+    }
+    
 	/**
-	 * @see org.columba.mail.facade.IMessageFacade#openMessage(java.net.URI)
+	 * @see org.columba.mail.facade.IDialogFacade#openMessage(java.net.URI)
 	 */
 	public void openMessage(URI location) {
 		// example: "columba://org.columba.mail/<folder-id>/<message-id>"

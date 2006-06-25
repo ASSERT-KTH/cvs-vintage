@@ -35,13 +35,11 @@ import org.columba.core.gui.base.MultiLineLabel;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
-import org.columba.core.main.MainInterface;
 import org.columba.core.services.ServiceRegistry;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.facade.ComposerFacade;
-import org.columba.mail.facade.MessageFacade;
+import org.columba.mail.facade.DialogFacade;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.ActivateVirtualFolderCommand;
 import org.columba.mail.gui.composer.ComposerController;
@@ -52,9 +50,6 @@ import org.columba.mail.nativ.defaultmailclient.SystemDefaultMailClientHandler;
 import org.columba.mail.parser.MailUrlParser;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
-import org.columba.mail.search.BodyContainsSearchProvider;
-import org.columba.mail.search.FromContainsSearchProvider;
-import org.columba.mail.search.SubjectContainsSearchProvider;
 import org.columba.mail.shutdown.ClearRecentFlagPlugin;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
@@ -114,14 +109,9 @@ public class MailMain implements IComponentPlugin {
 		plugin = new ClearRecentFlagPlugin();
 		ShutdownManager.getInstance().register(plugin);
 		
-		
-		
 		ServiceRegistry.getInstance().register(
-				org.columba.mail.facade.IComposerFacade.class,
-				new ComposerFacade());
-		ServiceRegistry.getInstance().register(
-				org.columba.mail.facade.IMessageFacade.class,
-				new MessageFacade());
+				org.columba.mail.facade.IDialogFacade.class,
+				new DialogFacade());
 	}
 
 	public void registerCommandLineArguments() {
