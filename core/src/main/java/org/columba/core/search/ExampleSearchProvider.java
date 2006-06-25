@@ -21,7 +21,7 @@ public class ExampleSearchProvider implements ISearchProvider {
 	}
 
 	public ISearchCriteria getCriteria(String searchTerm) {
-		return new SearchCriteria("test: "+searchTerm, "test description");
+		return new SearchCriteria("test: "+searchTerm, "test description", null);
 	}
 
 	/**

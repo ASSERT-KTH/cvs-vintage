@@ -5,8 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -78,17 +80,42 @@ public class SearchBar extends JPanel implements DocumentListener, KeyListener{
 		ISearchManager manager = MainInterface.searchManager;
 		List<ISearchProvider> list = manager.getAllProviders();
 		Iterator<ISearchProvider> it = list.iterator();
+		// create buckets of namespaces first
+		Hashtable<String,Vector<ISearchProvider>> map = new Hashtable<String,Vector<ISearchProvider>>();
 		while (it.hasNext()) {
 			ISearchProvider p = it.next();
+			if ( map.containsKey(p.getNamespace())) {
+				Vector<ISearchProvider> v = map.get(p.getNamespace());
+				v.add(p);
+			} else {
+				Vector<ISearchProvider> v = new Vector<ISearchProvider>();
+				v.add(p);
+				map.put(p.getNamespace(), v);
+			}
+		}
+		
+		// now create menuitems, and group items with same namespace
+		Iterator<String> it2 = map.keySet().iterator();
+		while (it2.hasNext()) {
+			String ns = it2.next();
+			Vector<ISearchProvider> v = map.get(ns);
+			Iterator<ISearchProvider> it3 = v.iterator();
+			while (it3.hasNext()) {
+				ISearchProvider p= it3.next();
+				if ( p == null ) continue;
+				ISearchCriteria c = p.getCriteria(searchTerm);
+				if ( c==null ) continue;
+				
+				JMenuItem m = new JMenuItem(c.getTitle());
+				m.setToolTipText(c.getDescription());
+				m.setIcon(c.getIcon());
+				m.setActionCommand(p.getName());
+				m.addActionListener(listener);
+				menu.add(m);
+			}
 			
-			ISearchCriteria c = p.getCriteria(searchTerm);
-			if ( p == null ) continue;
-			
-			JMenuItem m = new JMenuItem(c.getName());
-			m.setToolTipText(c.getDescription());
-			m.setActionCommand(p.getName());
-			m.addActionListener(listener);
-			menu.add(m);
+			if ( it2.hasNext())
+				menu.addSeparator();
 		}
 		
 		return menu;

@@ -2,12 +2,14 @@ package org.columba.mail.search;
 
 import java.net.URI;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -19,10 +21,12 @@ import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterFactory;
 import org.columba.core.resourceloader.ImageLoader;
+import org.columba.core.search.SearchCriteria;
 import org.columba.core.search.api.ISearchCriteria;
 import org.columba.core.search.api.ISearchProvider;
 import org.columba.core.search.api.ISearchResult;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.resourceloader.IconKeys;
 import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Flags;
@@ -38,15 +42,30 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 
 	private int totalResultCount = 0;
 
+	private ResourceBundle bundle;
+	
 	public AbstractMailSearchProvider() {
 		super();
+		
+		bundle = ResourceBundle.getBundle("org.columba.mail.i18n.search");
+		
 	}
 
 	public abstract String getName();
 
 	public abstract String getNamespace();
 
-	public abstract ISearchCriteria getCriteria(String searchTerm);
+	/**
+	 * @see org.columba.core.search.api.ISearchProvider#getCriteria(java.lang.String)
+	 */
+	public ISearchCriteria getCriteria(String searchTerm) {
+		String title = MessageFormat.format(bundle.getString(getName()
+				+ "_title"), new Object[] { searchTerm });
+		String description = MessageFormat.format(bundle.getString(getName()
+				+ "_description"), new Object[] { searchTerm });
+		return new SearchCriteria(title, description, MailImageLoader
+				.getSmallIcon(IconKeys.MESSAGE_READ));
+	}
 
 	protected abstract FilterCriteria createFilterCriteria(String searchTerm);
 
@@ -70,8 +89,9 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 		// create search criteria
 		Filter filter = FilterFactory.createEmptyFilter();
 		FilterCriteria criteria = createFilterCriteria(searchTerm);
+		// return empty result, in case the criteria doesn't match the search term
 		if (criteria == null)
-			throw new IllegalArgumentException("criteria == null");
+			return result;
 
 		filter.getFilterRule().add(criteria);
 

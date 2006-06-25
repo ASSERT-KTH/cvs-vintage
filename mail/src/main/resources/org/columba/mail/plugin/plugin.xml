@@ -391,12 +391,16 @@ The order of the following plugins is intentional. Do not change the order of ap
  <extension id="from_contains" class="org.columba.mail.search.FromContainsSearchProvider"/>
  <extension id="body_contains" class="org.columba.mail.search.BodyContainsSearchProvider"/>
  <extension id="subject_contains" class="org.columba.mail.search.SubjectContainsSearchProvider"/>
+ <extension id="size_greater_than" class="org.columba.mail.search.SizeGreaterThanSearchProvider"/>
+ <extension id="size_smaller_than" class="org.columba.mail.search.SizeSmallerThanSearchProvider"/>
 </extensionlist>
 
 <extensionlist id="org.columba.core.search.ui">
  <extension id="from_contains" class="org.columba.mail.gui.search.BasicResultPanel"/>
  <extension id="body_contains" class="org.columba.mail.gui.search.BasicResultPanel"/>
  <extension id="subject_contains" class="org.columba.mail.gui.search.BasicResultPanel"/>
+ <extension id="size_greater_than" class="org.columba.mail.gui.search.BasicResultPanel"/>
+ <extension id="size_smaller_than" class="org.columba.mail.gui.search.BasicResultPanel"/>
 </extensionlist>
 
 </plugin>

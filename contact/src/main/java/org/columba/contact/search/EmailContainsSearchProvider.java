@@ -7,13 +7,12 @@ import java.util.Vector;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.IContactModel;
-import org.columba.core.search.SearchCriteria;
 import org.columba.core.search.SearchResult;
-import org.columba.core.search.api.ISearchCriteria;
 import org.columba.core.search.api.ISearchProvider;
 import org.columba.core.search.api.ISearchResult;
 
-public class EmailContainsSearchProvider implements ISearchProvider {
+public class EmailContainsSearchProvider extends AbstractSearchProvider
+		implements ISearchProvider {
 
 	private int totalResultCount = 0;
 
@@ -29,11 +28,6 @@ public class EmailContainsSearchProvider implements ISearchProvider {
 		return "org.columba.contact";
 	}
 
-	public ISearchCriteria getCriteria(String searchTerm) {
-		return new SearchCriteria("Address contains " + searchTerm,
-				"Email Address contains " + searchTerm);
-	}
-
 	public List<ISearchResult> query(String searchTerm, int startIndex,
 			int resultCount) {
 
@@ -46,20 +40,21 @@ public class EmailContainsSearchProvider implements ISearchProvider {
 		while (it.hasNext()) {
 			AddressbookFolder f = it.next();
 			String id = f.findByEmailAddress(searchTerm);
-			if ( id == null ) continue;
-			
+			if (id == null)
+				continue;
+
 			IContactModel model = f.get(id);
 
 			if (id != null) {
 				result.add(new SearchResult(model.getSortString(), model
 						.getPreferredEmail(), SearchResultBuilder.createURI(f
 						.getId(), id)));
-				
+
 			}
 		}
 
 		totalResultCount = result.size();
-		
+
 		return result;
 	}
 

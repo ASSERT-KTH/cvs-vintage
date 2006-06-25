@@ -23,6 +23,7 @@ import org.columba.core.gui.search.api.IResultPanel;
 import org.columba.core.logging.Logging;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.search.api.ISearchCriteria;
 import org.columba.core.search.api.ISearchManager;
 import org.columba.core.search.api.ISearchProvider;
 
@@ -35,7 +36,7 @@ public class SearchPanel extends JPanel {
 
 	private IFrameMediator frameMediator;
 
-	//private SearchResultView searchResultView;
+	// private SearchResultView searchResultView;
 
 	private StackedBox box;
 
@@ -46,9 +47,9 @@ public class SearchPanel extends JPanel {
 
 		this.frameMediator = frameMediator;
 
-		//setBackground(UIManager.getColor("TextField.background"));
+		// setBackground(UIManager.getColor("TextField.background"));
 		searchBar = new SearchBar();
-		//searchResultView = new SearchResultView();
+		// searchResultView = new SearchResultView();
 
 		setLayout(new BorderLayout());
 		//
@@ -64,29 +65,12 @@ public class SearchPanel extends JPanel {
 
 		center.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		center.setLayout(new BorderLayout());
-		//center.setBackground(UIManager.getColor("TextField.background"));
+		// center.setBackground(UIManager.getColor("TextField.background"));
 		box = new StackedBox();
 		box.setBackground(UIManager.getColor("TextField.background"));
-		ISearchManager manager = MainInterface.searchManager;
-		List<ISearchProvider> list = manager.getAllProviders();
-		Iterator<ISearchProvider> it = list.iterator();
-		while (it.hasNext()) {
-			ISearchProvider p = it.next();
-			IResultPanel resultPanel = getResultPanel(p.getName(), p
-					.getNamespace());
-			if (resultPanel == null)
-				resultPanel = new GenericResultPanel(p.getName(), p
-						.getNamespace());
-			MainInterface.searchManager.addResultListener(resultPanel);
-			ResultBox resultBox = new ResultBox(resultPanel);
-			MainInterface.searchManager.addResultListener(resultBox);
-			
-			box.add(resultBox);
-
-		}
-
+		
 		JScrollPane pane = new JScrollPane(box);
-		//pane.getViewport().setBackground(UIManager.getColor("TextField.background"));
+		// pane.getViewport().setBackground(UIManager.getColor("TextField.background"));
 		center.add(pane, BorderLayout.CENTER);
 		add(center, BorderLayout.CENTER);
 
@@ -104,6 +88,8 @@ public class SearchPanel extends JPanel {
 					manager.clearSearch(searchTerm);
 					manager.reset();
 					
+					createStackedBox(searchTerm, null);
+
 					// TODO @author fdietz: no paging used currently
 					// show only first 5 results
 					manager.executeSearch(searchTerm, 0, 5);
@@ -116,6 +102,7 @@ public class SearchPanel extends JPanel {
 					manager.clearSearch(searchTerm);
 					manager.reset();
 
+					createStackedBox(searchTerm, command);
 					// TODO @author fdietz: no paging used currently
 					// show only first 5 results
 					manager.executeSearch(searchTerm, command, 0, 5);
@@ -123,6 +110,46 @@ public class SearchPanel extends JPanel {
 			}
 		});
 
+	}
+
+	/**
+	 * @param searchTerm
+	 * @param command		can be <code>null</code>, in this case show all search providers
+	 */
+	private void createStackedBox(String searchTerm, String command) {
+		box.removeAll();
+		
+		ISearchManager manager = MainInterface.searchManager;
+		List<ISearchProvider> list = manager.getAllProviders();
+		Iterator<ISearchProvider> it = list.iterator();
+		while (it.hasNext()) {
+			ISearchProvider p = it.next();
+			if (p == null)
+				continue;
+			ISearchCriteria c = p.getCriteria(searchTerm);
+			if (c == null)
+				continue;
+			
+			if ( command != null ) {
+				if ( !command.equals(p.getName())) continue;
+			}
+			
+			IResultPanel resultPanel = getResultPanel(p.getName(), p
+					.getNamespace());
+			if (resultPanel == null)
+				resultPanel = new GenericResultPanel(p.getName(), p
+						.getNamespace());
+			MainInterface.searchManager.addResultListener(resultPanel);
+			ResultBox resultBox = new ResultBox(p, resultPanel);
+			MainInterface.searchManager.addResultListener(resultBox);
+
+			box.add(resultBox);
+
+		}
+
+		// repaint box
+		validate();
+		repaint();
 	}
 
 	private IResultPanel getResultPanel(String providerName,

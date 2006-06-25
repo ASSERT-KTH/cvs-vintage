@@ -1,5 +1,7 @@
 package org.columba.core.search.api;
 
+import javax.swing.ImageIcon;
+
 public interface ISearchCriteria {
 
 	/**
@@ -7,7 +9,7 @@ public interface ISearchCriteria {
 	 * 
 	 * @return
 	 */
-	String getName();
+	String getTitle();
 	
 	/**
 	 * Returns description of search criteria.
@@ -16,4 +18,5 @@ public interface ISearchCriteria {
 	 */
 	String getDescription();
 	   
+	ImageIcon getIcon();
 }

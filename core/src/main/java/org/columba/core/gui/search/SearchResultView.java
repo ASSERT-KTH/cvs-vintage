@@ -55,7 +55,7 @@ public class SearchResultView extends JPanel implements IResultListener {
 	}
 
 	private String createCriteria(ISearchCriteria r) {
-		return "Search Results for \"<font class=\"italic\">" + r.getName() + "</font>\":";
+		return "Search Results for \"<font class=\"italic\">" + r.getTitle() + "</font>\":";
 	}
 
 	private String createTitle(ISearchResult r) {

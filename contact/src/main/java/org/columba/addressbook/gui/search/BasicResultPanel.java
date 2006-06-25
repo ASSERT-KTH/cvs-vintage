@@ -6,14 +6,11 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
-import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -38,7 +35,7 @@ import org.jdesktop.swingx.decorator.RolloverHighlighter;
 
 public class BasicResultPanel extends JXList implements IResultPanel {
 
-	private ResourceBundle bundle;
+	
 
 	private String providerNamespace;
 
@@ -52,8 +49,6 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 		this.providerName = providerName;
 		this.providerNamespace = providerNamespace;
 
-		bundle = ResourceBundle
-				.getBundle("org.columba.addressbook.i18n.search");
 
 		listModel = new DefaultListModel();
 		setModel(listModel);
@@ -96,21 +91,7 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 		return this;
 	}
 
-	public ImageIcon getIcon() {
-		return ImageLoader.getSmallIcon(IconKeys.ADDRESSBOOK);
-	}
-
-	public String getTitle(String searchTerm) {
-		String result = MessageFormat.format(bundle.getString(providerName
-				+ "_title"), new Object[] { searchTerm });
-		return result;
-	}
-
-	public String getDescription(String searchTerm) {
-		String result = MessageFormat.format(bundle.getString(providerName
-				+ "_description"), new Object[] { searchTerm });
-		return result;
-	}
+	
 
 	public void resultArrived(IResultEvent event) {
 		if (!event.getProviderName().equals(this.providerName))
