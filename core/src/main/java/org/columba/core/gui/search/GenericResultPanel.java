@@ -16,15 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
-import org.columba.api.exception.ServiceNotFoundException;
 import org.columba.core.gui.base.DoubleClickListener;
 import org.columba.core.gui.search.api.IResultPanel;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.search.api.IResultEvent;
 import org.columba.core.search.api.ISearchResult;
-import org.columba.core.services.ServiceRegistry;
-import org.columba.mail.facade.IDialogFacade;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXList;
 import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
