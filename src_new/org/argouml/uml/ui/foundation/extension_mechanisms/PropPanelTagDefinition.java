@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.19 2006/06/26 20:52:14 mvw Exp $
+// $Id: PropPanelTagDefinition.java,v 1.20 2006/06/26 21:11:37 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,10 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
         typeComboBoxNav.setEnabled(false);
         addField(Translator.localize("label.type"), typeComboBoxNav);
 
-        addField(Translator.localize("label.typed-values"),
+        /* This field shows the ModelElements 
+         * that have a TaggedValue 
+         * according this TaggedDefinition: */
+        addField(Translator.localize("label.tagged-values"),
                 getTypedValuesScroll());
         
         addAction(new ActionNavigateContainerElement());
@@ -182,14 +185,15 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
                 typeComboBoxModel =
                     new UMLStructuralFeatureTypeComboBoxModel();
                 // TODO: Replace by:
-//                new UMLTagDefinitionTypedValueListModel();
+//                new UMLTagDefinitionTagTypeComboBoxModel();
+                // or should it be a textField?
             }
             typeComboBox =
                 new UMLComboBox2(
                                  typeComboBoxModel,
                                  ActionSetStructuralFeatureType.getInstance());
-            // TODO: Replace by:
-//                        new ActionSetTagDefinitionTypedValue();
+            // TODO: (?) Replace by:
+//                        new ActionSetTagDefinitionTagType();
             typeComboBox.setEnabled(false);
         }
         return typeComboBox;
