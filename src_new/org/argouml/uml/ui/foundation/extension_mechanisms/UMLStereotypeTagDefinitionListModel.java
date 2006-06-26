@@ -1,4 +1,4 @@
-// $Id: UMLTagDefinitionListModel.java,v 1.4 2006/06/11 15:39:51 mvw Exp $
+// $Id: UMLStereotypeTagDefinitionListModel.java,v 1.1 2006/06/26 20:52:14 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,19 +28,21 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
+ * The model for the list of TagDefinitions of a stereotype.
  *
  * @author rastaman@tigris.org
  * @since Oct 11, 2005
  */
-public class UMLTagDefinitionListModel
+class UMLStereotypeTagDefinitionListModel
     extends UMLModelElementListModel2 {
 
     /**
-     * Constructor for UMLGeneralizableElementGeneralizationListModel.
+     * Constructor for UMLStereotypeTagDefinitionListModel.
      */
-    public UMLTagDefinitionListModel() {
+    public UMLStereotypeTagDefinitionListModel() {
         super("dataValue");
-        // TODO: Add referenceValue for tagged values which have a non-primitive type
+        // TODO: Add referenceValue for tagged values 
+        // which have a non-primitive type
     }
 
     /**
@@ -55,7 +57,7 @@ public class UMLTagDefinitionListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
-    protected boolean isValidElement(Object/*MBase*/ element) {
+    protected boolean isValidElement(Object element) {
         return Model.getFacade().isATagDefinition(element)
             && Model.getFacade().getTagDefinitions(getTarget())
             	.contains(element);

@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.60 2006/06/17 19:54:31 bobtarling Exp $
+// $Id: PropPanelStereotype.java,v 1.61 2006/06/26 20:52:14 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,19 +52,19 @@ public class PropPanelStereotype extends PropPanelModelElement {
     private static final long serialVersionUID = 8038077991746618130L;
 
     private static UMLGeneralizableElementSpecializationListModel
-        specializationListModel =
+    specializationListModel =
             new UMLGeneralizableElementSpecializationListModel();
 
     private static UMLGeneralizableElementGeneralizationListModel
-        generalizationListModel =
+    generalizationListModel =
             new UMLGeneralizableElementGeneralizationListModel();
 
-    private static UMLTagDefinitionListModel
-        tagDefinitionListModel =
-            new UMLTagDefinitionListModel();
+    private static UMLStereotypeTagDefinitionListModel
+    tagDefinitionListModel =
+            new UMLStereotypeTagDefinitionListModel();
 
     private static UMLExtendedElementsListModel
-        extendedElementsListModel =
+    extendedElementsListModel =
             new UMLExtendedElementsListModel();
 
     private JScrollPane generalizationScroll;
