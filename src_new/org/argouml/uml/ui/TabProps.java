@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.91 2006/05/10 17:45:10 mvw Exp $
+// $Id: TabProps.java,v 1.92 2006/06/26 18:42:00 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,10 +130,10 @@ import org.argouml.uml.ui.foundation.core.PropPanelNode;
 import org.argouml.uml.ui.foundation.core.PropPanelOperation;
 import org.argouml.uml.ui.foundation.core.PropPanelParameter;
 import org.argouml.uml.ui.foundation.core.PropPanelPermission;
-import org.argouml.uml.ui.foundation.core.PropPanelTaggedValue;
 import org.argouml.uml.ui.foundation.core.PropPanelUsage;
 import org.argouml.uml.ui.foundation.extension_mechanisms.PropPanelStereotype;
 import org.argouml.uml.ui.foundation.extension_mechanisms.PropPanelTagDefinition;
+import org.argouml.uml.ui.foundation.extension_mechanisms.PropPanelTaggedValue;
 import org.argouml.uml.ui.model_management.PropPanelModel;
 import org.argouml.uml.ui.model_management.PropPanelPackage;
 import org.argouml.uml.ui.model_management.PropPanelSubsystem;

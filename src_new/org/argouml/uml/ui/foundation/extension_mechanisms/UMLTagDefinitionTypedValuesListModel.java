@@ -1,4 +1,4 @@
-// $Id: UMLTagDefinitionTypedValuesListModel.java,v 1.1 2006/01/12 07:07:33 tfmorris Exp $
+// $Id: UMLTagDefinitionTypedValuesListModel.java,v 1.2 2006/06/26 18:41:59 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
  * @author tfmorris
  * @since 12 Jan 2005
  */
-public class UMLTagDefinitionTypedValuesListModel
+class UMLTagDefinitionTypedValuesListModel
     extends UMLModelElementListModel2 {
 
     /**

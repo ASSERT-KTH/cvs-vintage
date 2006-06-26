@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperMDRImpl.java,v 1.7 2006/06/11 15:43:08 mvw Exp $
+// $Id: DataTypesHelperMDRImpl.java,v 1.8 2006/06/26 18:42:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -219,19 +219,22 @@ public class DataTypesHelperMDRImpl implements DataTypesHelper {
             throw new IllegalArgumentException("Unrecognized object: "
                     + multiplicity);
         }
-
-        String rc = "";
-        Iterator i = ((Multiplicity) multiplicity).getRange().iterator();
-        boolean first = true;
-        while (i.hasNext()) {
-            if (first) {
-                first = false;
-            } else {
-                rc += ",";
+        try {
+            String rc = "";
+            Iterator i = ((Multiplicity) multiplicity).getRange().iterator();
+            boolean first = true;
+            while (i.hasNext()) {
+                if (first) {
+                    first = false;
+                } else {
+                    rc += ",";
+                }
+                rc += multiplicityRangeToString((MultiplicityRange) i.next());
             }
-            rc += multiplicityRangeToString((MultiplicityRange) i.next());
+            return rc;
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
         }
-        return rc;
     }
 
     /**

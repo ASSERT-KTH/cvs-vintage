@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.17 2006/06/17 19:54:31 bobtarling Exp $
+// $Id: PropPanelTagDefinition.java,v 1.18 2006/06/26 18:41:59 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,7 @@ public class PropPanelTagDefinition extends PropPanelModelElement {
         typeComboBoxNav.setEnabled(false);
         addField(Translator.localize("label.type"), typeComboBoxNav);
 
-        addField(Translator.localize("label.tagged-values"),
+        addField(Translator.localize("label.typed-values"),
                 getTypedValuesScroll());
         
         addAction(new ActionNavigateContainerElement());

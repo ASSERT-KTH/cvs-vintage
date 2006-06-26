@@ -1,4 +1,4 @@
-// $Id$
+// $Id: PropPanelTaggedValue.java,v 1.1 2006/06/26 18:41:59 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui.foundation.core;
+package org.argouml.uml.ui.foundation.extension_mechanisms;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewTagDefinition;
+import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
 /**
