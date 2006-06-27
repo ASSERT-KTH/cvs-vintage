@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.24 2006/03/28 07:03:29 linus Exp $
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.25 2006/06/27 23:32:52 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,8 +133,10 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
     public void testRemoveBase() {
         Model.getUmlFactory().delete(activators[NO_OF_ELEMENTS - 1]);
         Model.getPump().flushModelEvents();
-        assertEquals(NO_OF_ELEMENTS - 1, model.getSize());
-        assertTrue(!model.contains(activators[NO_OF_ELEMENTS - 1]));
+        assertEquals("The element count should have reduced",
+                NO_OF_ELEMENTS - 1, model.getSize());
+        assertTrue("The model should no longer contain the delete element",
+                !model.contains(activators[NO_OF_ELEMENTS - 1]));
     }
 
 }
