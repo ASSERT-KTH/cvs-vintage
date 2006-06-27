@@ -1,4 +1,4 @@
-// $Id: PgmlUtility.java,v 1.7 2006/06/27 23:34:36 bobtarling Exp $
+// $Id: PgmlUtility.java,v 1.8 2006/06/27 23:55:13 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,6 +129,23 @@ public final class PgmlUtility {
             }
         }
     }
+
+    /**
+     * Generate an identifier for this Fig which is unique within the 
+     * diagram.
+     * @param f the Fig to generate the id for
+     * @return a unique string
+     */
+    public static String getEnclosingId(Fig f) {
+        
+        Fig encloser = f.getEnclosingFig();
+        if (encloser == null) {
+            return null;
+        }
+        
+        return getId(encloser);
+    }
+
 
     /**
      * Generate an identifier for this Fig which is unique within the 
