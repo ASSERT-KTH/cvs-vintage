@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.64 2006/02/25 17:03:05 ezust Exp $
+ * @version $Id: EditPane.java,v 1.65 2006/06/27 15:33:16 daleanson Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -265,6 +265,9 @@ public class EditPane extends JPanel implements EBComponent
 			textArea.getFirstPhysicalLine());
 		buffer.setIntegerProperty(Buffer.SCROLL_HORIZ,
 			textArea.getHorizontalOffset());
+		BufferHistory.setEntry(buffer.getPath(), textArea.getCaretPosition(), 
+			(Selection[])buffer.getProperty(Buffer.SELECTION),
+			buffer.getStringProperty(Buffer.ENCODING));
 	} //}}}
 
 	//{{{ loadCaretInfo() method
