@@ -22,16 +22,20 @@ import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.action.AbstractColumbaAction;
 import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.resourceloader.GlobalResourceLoader;
-import org.columba.core.resourceloader.ImageLoader;
+// import org.columba.core.resourceloader.ImageLoader;
 
 
 /**
  * Opens the About dialog.
- *
  * @author fdietz
  */
 public class AboutDialogAction extends AbstractColumbaAction {
-    public AboutDialogAction(IFrameMediator frameMediator) {
+    /**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -2752329731413062569L;
+
+	public AboutDialogAction(IFrameMediator frameMediator) {
         super(frameMediator,
             GlobalResourceLoader.getString(null, null, "menu_help_about"));
 
