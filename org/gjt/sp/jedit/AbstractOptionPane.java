@@ -55,7 +55,7 @@ import java.awt.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: AbstractOptionPane.java,v 1.22 2006/04/11 23:03:50 ezust Exp $
+ * @version $Id: AbstractOptionPane.java,v 1.23 2006/06/27 04:12:36 ezust Exp $
  */
 // even though this class is called AbstractOptionPane, it is not really
 // abstract, since BufferOptions uses an instance of it to lay out its
@@ -65,12 +65,12 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 	//{{{ AbstractOptionPane constructor
 	/**
 	 * Creates a new option pane.
-	 * @param name The internal name. The option pane's label is set to the
+	 * @param internalName The internal name. The option pane's label is set to the
 	 * value of the property named <code>options.<i>name</i>.label</code>.
 	 */
-	public AbstractOptionPane(String name)
+	public AbstractOptionPane(String internalName)
 	{
-		this.name = name;
+		this.name = internalName;
 		setLayout(gridBag = new GridBagLayout());
 	} //}}}
 
