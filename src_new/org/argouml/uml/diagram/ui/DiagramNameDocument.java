@@ -1,4 +1,4 @@
-// $Id: DiagramNameDocument.java,v 1.7 2006/06/11 15:39:48 mvw Exp $
+// $Id: DiagramNameDocument.java,v 1.8 2006/06/28 03:19:09 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import org.apache.log4j.Logger;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -48,6 +49,9 @@ import org.argouml.ui.targetmanager.TargetManager;
  */
 class DiagramNameDocument implements DocumentListener, TargetListener {
 
+    private static final Logger LOG = 
+        Logger.getLogger(DiagramNameDocument.class);
+    
     private JTextField field;
     private boolean stopEvents = false;
 
@@ -140,9 +144,9 @@ class DiagramNameDocument implements DocumentListener, TargetListener {
                         d.setName(newName);
                     }
                 } catch (PropertyVetoException pe) {
-                    pe.printStackTrace();
+                    LOG.debug(pe);
                 } catch (BadLocationException ble) {
-                    ble.printStackTrace();
+                    LOG.debug(ble);
                 }
             }
         }

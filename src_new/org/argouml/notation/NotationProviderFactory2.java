@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory2.java,v 1.15 2006/06/04 13:54:52 mvw Exp $
+// $Id: NotationProviderFactory2.java,v 1.16 2006/06/28 03:19:09 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.notation.java.InitNotationJava;
@@ -44,6 +45,9 @@ import org.argouml.uml.notation.uml.InitNotationUml;
  */
 public final class NotationProviderFactory2 {
 
+    private static final Logger LOG = 
+        Logger.getLogger(NotationProviderFactory2.class);
+    
     /**
      * TYPE_NAME the name of the modelelement, e.g. class, package, state
      */
@@ -191,10 +195,10 @@ public final class NotationProviderFactory2 {
                 constructor = clazz.getConstructor(p);
             } catch (SecurityException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (NoSuchMethodException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             }
             Object[] params = {
                 object,
@@ -204,16 +208,16 @@ public final class NotationProviderFactory2 {
                 return (NotationProvider4) constructor.newInstance(params);
             } catch (IllegalArgumentException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (InstantiationException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (IllegalAccessException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (InvocationTargetException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             }
         }
         return null;
@@ -240,10 +244,10 @@ public final class NotationProviderFactory2 {
                 constructor = clazz.getConstructor(p);
             } catch (SecurityException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (NoSuchMethodException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             }
             Object[] params = {
                 object,
@@ -253,16 +257,16 @@ public final class NotationProviderFactory2 {
                 return (NotationProvider4) constructor.newInstance(params);
             } catch (IllegalArgumentException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (InstantiationException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (IllegalAccessException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             } catch (InvocationTargetException e) {
                 // TODO: Auto-generated catch block
-                e.printStackTrace();
+                LOG.error(e);
             }
         }
         return null;

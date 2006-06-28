@@ -1,4 +1,4 @@
-// $Id: DnDExplorerTree.java,v 1.23 2006/06/11 19:01:26 mvw Exp $
+// $Id: DnDExplorerTree.java,v 1.24 2006/06/28 03:19:09 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -334,9 +334,9 @@ public class DnDExplorerTree
                 }
             }
         } catch (UnsupportedFlavorException e) {
-            e.printStackTrace();
+            LOG.debug(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.debug(e);
         }
         LOG.debug("No valid Drag: not a valid namespace.");
         return false;

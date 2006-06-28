@@ -1,4 +1,4 @@
-// $Id: DnDJGraph.java,v 1.9 2006/02/26 16:25:03 linus Exp $
+// $Id: DnDJGraph.java,v 1.10 2006/06/28 03:19:09 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.TransferableModelElements;
@@ -55,6 +56,8 @@ import org.tigris.gef.graph.presentation.JGraph;
 class DnDJGraph
     extends JGraph
     implements DropTargetListener {
+    
+    private static final Logger LOG = Logger.getLogger(DnDJGraph.class);
 
     /**
      * The constructor.
@@ -201,9 +204,9 @@ class DnDJGraph
             TargetManager.getInstance().setTargets(oldTargets);
             dropTargetDropEvent.getDropTargetContext().dropComplete(true);
         } catch (UnsupportedFlavorException e) {
-            e.printStackTrace();
+            LOG.debug(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.debug(e);
         }
     }
 
