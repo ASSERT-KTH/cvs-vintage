@@ -24,38 +24,61 @@ import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 
-import org.columba.core.io.DiskIO;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 
+/**
+ * ResourceLoader class
+ * @author unknown
+ *
+ */
 public class ResourceLoader {
-
 	private static String ICON_PATH = "/org/columba/calendar/icons";
-
-	private static String i18nPath = "org.columba.calendar.i18n";
-
+	private static String i18nPath = "org.columba.calendar.i18n";	
+	
+	/**
+	 * getMiscIcon method
+	 * @param resourceName
+	 * @return icon
+	 */
 	public static ImageIcon getMiscIcon(String resourceName) {
 		if (resourceName == null)
 			throw new IllegalArgumentException("resourceName == null");
 
-		URL url = ResourceLoader.class.getResource(ResourceLoader.ICON_PATH + "/MISC/"
-				+ resourceName);
+		URL url = ResourceLoader.class.getResource(ResourceLoader.ICON_PATH
+				+ "/MISC/" + resourceName);
 
 		if (url == null)
 			url = getFallback(true);
 
 		ImageIcon icon = new ImageIcon(url);
-
 		return icon;
 	}
 
+	/**
+	 * getIcon method
+	 * @param name
+	 * @return standard icon
+	 */
 	public static ImageIcon getIcon(String name) {
 		return getIcon(ResourceLoader.ICON_PATH, name, false);
 	}
 
+	/**
+	 * getSmallIcon method
+	 * @param name
+	 * @return small icon
+	 */
 	public static ImageIcon getSmallIcon(String name) {
 		return getIcon(ResourceLoader.ICON_PATH, name, true);
 	}
 
+	/**
+	 * getIcon method
+	 * @param path
+	 * @param name
+	 * @param small
+	 * @return icon
+	 */
 	public static ImageIcon getIcon(String path, String name, boolean small) {
 		URL url;
 
@@ -73,8 +96,9 @@ public class ResourceLoader {
 	}
 
 	/**
+	 * GetFallback method - returns correct size image-missing icon if other icon does not exist
 	 * @param small
-	 * @return
+	 * @return icon 
 	 */
 	private static URL getFallback(boolean small) {
 		String path;
@@ -90,10 +114,15 @@ public class ResourceLoader {
 		return url;
 	}
 
+	/**
+	 * getString method - gets i18n bundle name
+	 * @param resourceBundleName
+	 * @param resourceName
+	 * @return resource bundle
+	 */
 	public static final String getString(String resourceBundleName,
 			String resourceName) {
 		ResourceBundle bundle = null;
-
 		String bundlePath = i18nPath + "." + resourceBundleName;
 
 		try {
@@ -101,7 +130,6 @@ public class ResourceLoader {
 
 			return bundle.getString(resourceName);
 		} catch (MissingResourceException e) {
-			
 
 			// fall-back to global resource loader
 			return GlobalResourceLoader.getString(null, resourceBundleName,
