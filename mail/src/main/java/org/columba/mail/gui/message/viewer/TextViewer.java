@@ -426,6 +426,14 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		return viewerPlugin.getText();
 	}
 
+	public void setCaretPosition(int position) {
+		viewerPlugin.setCaretPosition(position);
+	}
+
+	public void moveCaretPosition(int position) {
+		viewerPlugin.moveCaretPosition(position);	
+	}
+	
 	/**
 	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()
 	 */

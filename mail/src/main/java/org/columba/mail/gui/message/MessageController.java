@@ -328,6 +328,20 @@ public class MessageController extends JPanel implements CharsetListener,
 
 	}
 
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#setCaretPosition(int)
+	 */
+	public void setCaretPosition(int position) {
+		bodytextViewer.setCaretPosition(position);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#moveCaretPosition(int)
+	 */
+	public void moveCaretPosition(int position) {
+		bodytextViewer.moveCaretPosition(position);
+	}
+
 	
 
 	

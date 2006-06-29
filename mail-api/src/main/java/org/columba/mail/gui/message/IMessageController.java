@@ -59,13 +59,35 @@ public interface IMessageController {
 	 * @return
 	 */
 	String getText();
-	
+
 	/**
 	 * Return selected text
+	 * 
 	 * @return
 	 */
 	String getSelectedText();
-	
+
+	/**
+	 * Sets the position of the text insertion caret for the TextComponent. Note
+	 * that the caret tracks change, so this may move if the underlying text of
+	 * the component is changed. If the document is null, does nothing. The
+	 * position must be between 0 and the length of the component's text or else
+	 * an exception is thrown.
+	 * 
+	 * @param position
+	 */
+	public void setCaretPosition(int position);
+
+	/**
+	 * Moves the caret to a new position, leaving behind a mark defined by the
+	 * last time setCaretPosition was called. This forms a selection. If the
+	 * document is null, does nothing. The position must be between 0 and the
+	 * length of the component's text or else an exception is thrown.
+	 * 
+	 * @param position
+	 */
+	public void moveCaretPosition(int position);
+
 	public IMailFolderCommandReference getSelectedReference();
 
 }

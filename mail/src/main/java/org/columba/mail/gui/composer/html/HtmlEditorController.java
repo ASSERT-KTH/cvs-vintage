@@ -371,6 +371,16 @@ public class HtmlEditorController extends AbstractEditorController implements
 		return view.getText();
 	}
 
+	@Override
+	public void setCaretPosition(int position) {
+		view.setCaretPosition(position);
+	}
+
+	@Override
+	public void moveCaretPosition(int position) {
+		view.moveCaretPosition(position);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

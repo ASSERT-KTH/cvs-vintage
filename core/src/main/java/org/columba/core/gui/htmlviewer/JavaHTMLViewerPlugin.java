@@ -183,4 +183,18 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 		}
 	}
 
+	/**
+	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#setCaretPosition(int)
+	 */
+	public void setCaretPosition(int position) {
+		textPane.setCaretPosition(position);
+	}
+
+	/**
+	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#moveCaretPosition(int)
+	 */
+	public void moveCaretPosition(int position) {
+		textPane.moveCaretPosition(position);
+	}
+
 }

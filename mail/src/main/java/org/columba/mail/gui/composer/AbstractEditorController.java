@@ -21,116 +21,140 @@ import java.util.Observable;
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
 
-
 /**
- * This class serves as a common super class for the Editor
- * Controllers used in Composer: TextEditorController and
- * HtmlEditorController. As such, it defines the common
- * interface needed by mainly the ComposerController.
+ * This class serves as a common super class for the Editor Controllers used in
+ * Composer: TextEditorController and HtmlEditorController. As such, it defines
+ * the common interface needed by mainly the ComposerController.
  * <p>
- * It extends Observable to allow all actions to enable/disable
- * themselves on text selection changes.
- *
+ * It extends Observable to allow all actions to enable/disable themselves on
+ * text selection changes.
+ * 
  * @author Karl Peder Olesen (karlpeder), 2003-09-06
  */
-public abstract class AbstractEditorController extends Observable
-   {
-    /** Reference to the controller */
-    protected ComposerController controller;
+public abstract class AbstractEditorController extends Observable {
+	/** Reference to the controller */
+	protected ComposerController controller;
 
-    /**
- * Default constructor. Stores a reference to the controller
- * @param        ctrl        Controller controlling this object
- */
-    public AbstractEditorController(ComposerController ctrl) {
-        controller = ctrl;
-    }
+	/**
+	 * Default constructor. Stores a reference to the controller
+	 * 
+	 * @param ctrl
+	 *            Controller controlling this object
+	 */
+	public AbstractEditorController(ComposerController ctrl) {
+		controller = ctrl;
+	}
 
-    /**
- * Returns the controller
- */
-    public ComposerController getController() {
-        return controller;
-    }
+	/**
+	 * Returns the controller
+	 */
+	public ComposerController getController() {
+		return controller;
+	}
 
-    /**
- * Used for synchronization between view and model.
- *
- * @param        b        If true. view is synchronized with model.
- *                                 If false, model is synchronized with view,
- */
-    public abstract void updateComponents(boolean b);
+	/**
+	 * Used for synchronization between view and model.
+	 * 
+	 * @param b
+	 *            If true. view is synchronized with model. If false, model is
+	 *            synchronized with view,
+	 */
+	public abstract void updateComponents(boolean b);
 
-    // ********** Methods necessary to hide view from clients ********
+	// ********** Methods necessary to hide view from clients ********
 
-    /**
- * Returns the GUI component which should be added to the parent,
- * i.e. to the Composer frame.
- *
- * @return        GUI component to be added to parent frame
- */
-    public abstract JTextPane getViewUIComponent();
+	/**
+	 * Returns the GUI component which should be added to the parent, i.e. to
+	 * the Composer frame.
+	 * 
+	 * @return GUI component to be added to parent frame
+	 */
+	public abstract JTextPane getViewUIComponent();
 
-    /**
- * Enables or disables the editor view.
- *
- * @param        enabled                Whether the view should be enabled
- */
-    public abstract void setViewEnabled(boolean enabled);
+	/**
+	 * Enables or disables the editor view.
+	 * 
+	 * @param enabled
+	 *            Whether the view should be enabled
+	 */
+	public abstract void setViewEnabled(boolean enabled);
 
-    /**
- * Sets the text of the editor view
- *
- * @param        text        New text, which replaces the current view text
- */
-    public abstract void setViewText(String text);
+	/**
+	 * Sets the text of the editor view
+	 * 
+	 * @param text
+	 *            New text, which replaces the current view text
+	 */
+	public abstract void setViewText(String text);
 
-    /**
- * Gets the current text of the editor view
- *
- */
-    public abstract String getViewText();
+	/**
+	 * Gets the current text of the editor view
+	 * 
+	 */
+	public abstract String getViewText();
 
-    /**
- * Sets the font of the editor view
- *
- * @param        f        Font to set in the view
- */
-    public abstract void setViewFont(Font f);
+	/**
+	 * Sets the position of the text insertion caret for the TextComponent. Note
+	 * that the caret tracks change, so this may move if the underlying text of
+	 * the component is changed. If the document is null, does nothing. The
+	 * position must be between 0 and the length of the component's text or else
+	 * an exception is thrown.
+	 * 
+	 * @param position
+	 */
+	public abstract void setCaretPosition(int position);
 
-    /**
- * Gets the font of the editor view
- */
-    public abstract Font getViewFont();
+	/**
+	 * Moves the caret to a new position, leaving behind a mark defined by the
+	 * last time setCaretPosition was called. This forms a selection. If the
+	 * document is null, does nothing. The position must be between 0 and the
+	 * length of the component's text or else an exception is thrown.
+	 * 
+	 * @param position
+	 */
+	public abstract void moveCaretPosition(int position);
+	
+	/**
+	 * Sets the font of the editor view
+	 * 
+	 * @param f
+	 *            Font to set in the view
+	 */
+	public abstract void setViewFont(Font f);
 
-    // ********************* FocusOwner methods **********************
-    public abstract boolean isCutActionEnabled();
+	/**
+	 * Gets the font of the editor view
+	 */
+	public abstract Font getViewFont();
 
-    public abstract boolean isCopyActionEnabled();
+	// ********************* FocusOwner methods **********************
+	public abstract boolean isCutActionEnabled();
 
-    public abstract boolean isPasteActionEnabled();
+	public abstract boolean isCopyActionEnabled();
 
-    public abstract boolean isDeleteActionEnabled();
+	public abstract boolean isPasteActionEnabled();
 
-    public abstract boolean isSelectAllActionEnabled();
+	public abstract boolean isDeleteActionEnabled();
 
-    public abstract boolean isUndoActionEnabled();
+	public abstract boolean isSelectAllActionEnabled();
 
-    public abstract boolean isRedoActionEnabled();
+	public abstract boolean isUndoActionEnabled();
 
-    public abstract void cut();
+	public abstract boolean isRedoActionEnabled();
 
-    public abstract void copy();
+	public abstract void cut();
 
-    public abstract void paste();
+	public abstract void copy();
 
-    public abstract void delete();
+	public abstract void paste();
 
-    public abstract void undo();
+	public abstract void delete();
 
-    public abstract void redo();
+	public abstract void undo();
 
-    public abstract void selectAll();
+	public abstract void redo();
 
-    public abstract JComponent getComponent();
+	public abstract void selectAll();
+
+	public abstract JComponent getComponent();
 }

@@ -107,5 +107,20 @@ public class FlyingSaucerViewerPlugin extends JScrollPane implements
 	public String getText() {
 		return "";
 	}
+	
+	/**
+	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#setCaretPosition(int)
+	 */
+	public void setCaretPosition(int position) {
+		// TODO
+	}
+
+	/**
+	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#moveCaretPosition(int)
+	 */
+	public void moveCaretPosition(int position) {
+		// TODO
+	}
+	
 
 }

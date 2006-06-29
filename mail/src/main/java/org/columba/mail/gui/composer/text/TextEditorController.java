@@ -343,6 +343,16 @@ public class TextEditorController extends AbstractEditorController
         view.setEnabled(enabled);
     }
 
+    @Override
+	public void setCaretPosition(int position) {
+		view.setCaretPosition(position);
+	}
+
+	@Override
+	public void moveCaretPosition(int position) {
+		view.moveCaretPosition(position);
+	}
+	
     /**
      * Gets fired when configuration changes occur.
      *
@@ -371,4 +381,6 @@ public class TextEditorController extends AbstractEditorController
             setViewFont(font);
         }
     }
+
+	
 }
