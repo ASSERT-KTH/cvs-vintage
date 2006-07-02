@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.42 2006/06/04 17:02:21 bobtarling Exp $
+// $Id: Facade.java,v 1.43 2006/07/02 07:19:16 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1712,7 +1712,7 @@ public interface Facade {
     Object getModel(Object handle);
 
     /**
-     * @param handle an Element Import.
+     * @param handle an Element Import or TaggedValue.
      * @return the model element
      */
     Object getModelElement(Object handle);

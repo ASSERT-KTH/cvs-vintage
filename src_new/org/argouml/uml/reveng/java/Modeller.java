@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.137 2006/06/11 15:39:52 mvw Exp $
+// $Id: Modeller.java,v 1.138 2006/07/02 07:19:24 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1679,8 +1679,7 @@ public class Modeller {
                             getStereotype(st.nextToken().trim()));
                 }
             }
-            Model.getExtensionMechanismsHelper().removeTaggedValue(
-                    modelElement, tv);
+            Model.getUmlFactory().delete(tv);
         }
     }
 

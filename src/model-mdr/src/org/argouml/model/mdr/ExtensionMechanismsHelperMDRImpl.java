@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.10 2006/06/14 18:48:51 tfmorris Exp $
+// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.11 2006/07/02 07:19:07 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -579,7 +579,7 @@ class ExtensionMechanismsHelperMDRImpl implements ExtensionMechanismsHelper {
                 && taggedValue instanceof TaggedValue
                 && ((ModelElement) handle).getTaggedValue()
                     .contains(taggedValue)) {
-            nsmodel.getUmlFactory().delete(taggedValue);
+            ((ModelElement) handle).getTaggedValue().remove(taggedValue);
             return;
         }
         throw new IllegalArgumentException("handle: " + handle

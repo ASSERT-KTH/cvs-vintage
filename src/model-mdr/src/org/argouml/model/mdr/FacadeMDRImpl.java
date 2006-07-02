@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.27 2006/06/14 23:58:46 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.28 2006/07/02 07:19:08 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2550,6 +2550,9 @@ class FacadeMDRImpl implements Facade {
         try {
             if (handle instanceof ElementImport) {
                 return ((ElementImport) handle).getImportedElement();
+            }
+            if (handle instanceof TaggedValue) {
+                return ((TaggedValue) handle).getModelElement();
             }
         } catch (InvalidObjectException e) {
             throw new InvalidElementException(e);
