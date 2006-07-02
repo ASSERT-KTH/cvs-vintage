@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.18 2004/06/28 06:45:27 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.19 2006/07/02 21:24:22 ezust Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer
@@ -50,6 +50,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 		caption.add(menu = new RolloverButton(GUIUtilities
 			.loadIcon("ToolbarMenu.gif")));
 		menu.addMouseListener(new MouseHandler());
+		menu.setToolTipText(jEdit.getProperty("docking.menu.label"));
 		Box separatorBox = new Box(BoxLayout.Y_AXIS);
 		separatorBox.add(Box.createVerticalStrut(3));
 		separatorBox.add(new JSeparator(JSeparator.HORIZONTAL));
