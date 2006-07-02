@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.44 2006/07/02 10:00:36 mvw Exp $
+// $Id: Facade.java,v 1.45 2006/07/02 10:16:05 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2621,6 +2621,7 @@ public interface Facade {
      * Return the owner of a feature or its
      * association end if it is a
      * qualified attribute.
+     * Returns the stereotype that owns a TagDefinition.
      *
      * @param handle is the feature
      * @return classifier
