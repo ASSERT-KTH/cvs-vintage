@@ -1,4 +1,4 @@
-// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.7 2006/04/29 09:08:11 linus Exp $
+// $Id: AbstractExtensionMechanismsHelperDecorator.java,v 1.8 2006/07/02 10:00:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,6 +200,13 @@ public abstract class AbstractExtensionMechanismsHelperDecorator
         impl.setTag(handle, tag);
     }
 
+    /**
+     * @see org.argouml.model.ExtensionMechanismsHelper#setType(
+     *          java.lang.Object, java.lang.Object)
+     */
+    public void setType(Object handle, Object type) {
+        impl.setType(handle, type);
+    }
     /**
      * @see org.argouml.model.ExtensionMechanismsHelper#setValueOfTag(
      *         java.lang.Object,

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.8 2006/04/22 00:43:01 tfmorris Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.9 2006/07/02 10:00:36 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -191,6 +191,14 @@ public interface ExtensionMechanismsHelper {
      * @param tag String
      */
     void setTag(Object handle, Object tag);
+    
+    /**
+     * Set the type of a taggedvalue.
+     * 
+     * @param handle the taggedValue
+     * @param type the tagDefinition
+     */
+    void setType(Object handle, Object type);
 
     /**
      * Sets a value of some taggedValue.

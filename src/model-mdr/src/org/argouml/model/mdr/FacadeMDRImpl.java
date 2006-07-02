@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.28 2006/07/02 07:19:08 mvw Exp $
+// $Id: FacadeMDRImpl.java,v 1.29 2006/07/02 10:00:53 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4016,6 +4016,9 @@ class FacadeMDRImpl implements Facade {
             }
             if (handle instanceof ClassifierInState) {
                 return ((ClassifierInState) handle).getType();
+            }
+            if (handle instanceof TaggedValue) {
+                return ((TaggedValue) handle).getType();
             }
             // ...
         } catch (InvalidObjectException e) {

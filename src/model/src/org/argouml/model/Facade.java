@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.43 2006/07/02 07:19:16 mvw Exp $
+// $Id: Facade.java,v 1.44 2006/07/02 10:00:36 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2429,11 +2429,11 @@ public interface Facade {
     Object getTrigger(Object handle);
 
     /**
-     * The type of a StructuralFeature, AssociationEnd, Parameter or
-     * ObjectFlowState.
+     * The type of a StructuralFeature, AssociationEnd, Parameter,
+     * ObjectFlowState, TagDefinition, TaggedValue or ClassifierInState.
      *
-     * @param handle the StructuralFeature, AssociationEnd, Parameter or
-     *  ObjectFlowState
+     * @param handle the StructuralFeature, AssociationEnd, Parameter,
+     *  ObjectFlowState, TagDefinition, TaggedValue or ClassifierInState
      * @return the type
      */
     Object getType(Object handle);

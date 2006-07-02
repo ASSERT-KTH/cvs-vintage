@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.11 2006/07/02 07:19:07 mvw Exp $
+// $Id: ExtensionMechanismsHelperMDRImpl.java,v 1.12 2006/07/02 10:00:53 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -616,6 +616,21 @@ class ExtensionMechanismsHelperMDRImpl implements ExtensionMechanismsHelper {
         }
         throw new IllegalArgumentException("handle: " + handle
                 + " or taggedValues: " + taggedValues);
+    }
+
+    /**
+     * @see org.argouml.model.ExtensionMechanismsHelper#setType(
+     *          java.lang.Object, java.lang.Object)
+     */
+    public void setType(Object handle, Object type) {
+        if (type == null || type instanceof TagDefinition) {
+            if (handle instanceof TaggedValue) {
+                ((TaggedValue) handle).setType((TagDefinition) type);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("handle: " + handle + " or type: "
+                + type);
     }
 
     /**
