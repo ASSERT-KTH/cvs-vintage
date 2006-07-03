@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.12 2006/06/23 22:58:12 kpouer Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.13 2006/07/03 05:07:26 ezust Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -52,7 +52,7 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 
 		selectModel = new JComboBox(models);
 		selectModel.addActionListener(new ActionHandler());
-
+		selectModel.setToolTipText(jEdit.getProperty("options.shortcuts.select.tooltip"));
 		Box north = Box.createHorizontalBox();
 		north.add(new JLabel(jEdit.getProperty(
 			"options.shortcuts.select.label")));
