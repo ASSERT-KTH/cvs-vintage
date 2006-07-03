@@ -101,7 +101,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.103 2006/07/03 16:27:09 ezust Exp $
+ * @version $Id: DockableWindowManager.java,v 1.104 2006/07/03 17:38:56 ezust Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -982,7 +982,9 @@ public class DockableWindowManager extends JPanel implements EBComponent
 		 * @return A label appropriate for the title on the dock buttons.
 		 */
 		public String label() {
-			return jEdit.getProperty(factory.name + ".label");
+			String retval = jEdit.getProperty(factory.name + ".label");
+			retval = retval.replaceAll("\\$", "");
+			return retval; 
 		}
 		//{{{ Entry constructor
 		Entry(DockableWindowFactory.Window factory, String position)
