@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.179 2006/07/03 16:01:18 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.180 2006/07/03 20:36:01 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -781,7 +781,7 @@ public abstract class FigEdgeModelElement
      * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
      */
     public void setOwner(Object newOwner) {
-        if (newOwner != null && !Model.getFacade().isAModelElement(newOwner)) {
+        if (!Model.getFacade().isAModelElement(newOwner)) {
             throw new IllegalArgumentException(
                     "The owner must be a model element - got a "
                     + newOwner.getClass().getName());
@@ -1065,7 +1065,7 @@ public abstract class FigEdgeModelElement
         int figCount = contents.size();
         for (int figIndex = 0; figIndex < figCount; ++figIndex) {
             Fig fig = (Fig) contents.get(figIndex);
-            if (fig.getOwner().equals(element)) {
+            if (fig.getOwner() == element) {
                 return fig;
             }
         }
