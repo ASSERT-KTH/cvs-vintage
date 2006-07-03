@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.24 2006/07/03 18:49:00 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.25 2006/07/03 21:29:46 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -270,7 +270,10 @@ public class PGMLStackParser
             EdgeData edgeData = (EdgeData) it.next();
             FigEdge edge = edgeData.getEdge();
             
-            edge.setOwner(modelElementsByFigEdge.get(edge));
+            Object modelElement = modelElementsByFigEdge.get(edge);
+            if (modelElement != null) {
+                edge.setOwner(modelElement);
+            }
             
             Fig spf = null;
             Fig dpf = null;
