@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.29 2006/07/02 10:00:53 mvw Exp $
+// $Id: FacadeMDRImpl.java,v 1.30 2006/07/03 19:20:12 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4650,6 +4650,36 @@ class FacadeMDRImpl implements Facade {
             throw new InvalidElementException(e);
         }
         return illegalArgumentString(handle);
+    }
+    
+    /**
+     * @see org.argouml.model.Facade#getReferenceValue(java.lang.Object)
+     */
+    public Collection getReferenceValue(Object taggedValue) {
+        try {
+            if (taggedValue instanceof TaggedValue) {
+                TaggedValue tv = (TaggedValue) taggedValue;
+                return tv.getReferenceValue();
+            }
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
+        }
+        return illegalArgumentCollection(taggedValue);
+    }
+
+    /**
+     * @see org.argouml.model.Facade#getDataValue(java.lang.Object)
+     */
+    public Collection getDataValue(Object taggedValue) {
+        try {
+            if (taggedValue instanceof TaggedValue) {
+                TaggedValue tv = (TaggedValue) taggedValue;
+                return tv.getDataValue();
+            }
+        } catch (InvalidObjectException e) {
+            throw new InvalidElementException(e);
+        }
+        return illegalArgumentCollection(taggedValue);
     }
 
     /**
