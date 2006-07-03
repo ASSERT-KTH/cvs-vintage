@@ -1,4 +1,4 @@
-// $Id: FigSubmachineState.java,v 1.17 2006/07/03 23:02:53 bobtarling Exp $
+// $Id: FigSubmachineState.java,v 1.18 2006/07/03 23:13:38 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -358,7 +358,7 @@ public class FigSubmachineState extends FigState {
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
      */
-    protected void updateListeners(Object newOwner) {
+    protected void updateListeners(Object oldOwner, Object newOwner) {
         super.updateListeners(newOwner);
         if (newOwner == getOwner()) {
             return;
@@ -369,7 +369,6 @@ public class FigSubmachineState extends FigState {
                 addElementListener(newSm);
             }
         } else {
-            Object oldOwner = getOwner();
             if (oldOwner != null) {
                 Object oldSm = Model.getFacade().getSubmachine(oldOwner);
                 if (oldSm != null) {

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.257 2006/06/11 14:42:10 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.258 2006/07/03 23:13:38 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1362,8 +1362,7 @@ public abstract class FigNodeModelElement
      *          the latter that they have to be set.
      *          TODO: Should this not be boolean, to clarify?
      */
-    protected void updateListeners(Object newOwner) {
-        Object oldOwner = getOwner();
+    protected void updateListeners(Object oldOwner, Object newOwner) {
         if (oldOwner != null) {
             removeElementListener(oldOwner);
         }
@@ -1371,6 +1370,9 @@ public abstract class FigNodeModelElement
             addElementListener(newOwner);
         }
 
+    }
+    
+    final protected void updateListeners(Object newOwner) {
     }
 
     /**

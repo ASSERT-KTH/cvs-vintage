@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.32 2006/06/04 13:54:53 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.33 2006/07/03 23:13:38 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,8 +160,7 @@ public class FigObjectFlowState extends FigNodeModelElement {
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
      */
-    protected void updateListeners(Object newOwner) {
-        Object oldOwner = getOwner();
+    protected void updateListeners(Object oldOwner, Object newOwner) {
         if (oldOwner != null) {
             removeAllElementListeners();
         }

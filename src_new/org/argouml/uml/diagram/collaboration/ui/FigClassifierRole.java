@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.58 2006/06/20 21:30:45 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.59 2006/07/03 23:13:38 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -420,8 +420,7 @@ public class FigClassifierRole extends FigNodeModelElement {
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
      */
-    protected void updateListeners(Object newOwner) {
-        Object oldOwner = getOwner();
+    protected void updateListeners(Object oldOwner, Object newOwner) {
         if (oldOwner != null) {
             removeAllElementListeners();
         }
