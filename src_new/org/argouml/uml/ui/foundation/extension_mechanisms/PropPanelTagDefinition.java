@@ -1,4 +1,4 @@
-// $Id: PropPanelTagDefinition.java,v 1.20 2006/06/26 21:11:37 mvw Exp $
+// $Id: PropPanelTagDefinition.java,v 1.21 2006/07/03 19:16:27 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -256,8 +256,6 @@ class UMLTagDefinitionNamespaceComboBoxModel
                         || evt instanceof AssociationChangeEvent)) {
             // allow the evt.getNewValue() to be null (see parent class)
             buildModelList();
-            // TODO: what is this next line doing? - tfm
-            setSelectedItem(getSelectedModelElement()); 
         }
     }
 }
