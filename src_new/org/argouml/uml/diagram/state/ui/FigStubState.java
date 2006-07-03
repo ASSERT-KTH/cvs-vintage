@@ -1,4 +1,4 @@
-// $Id: FigStubState.java,v 1.9 2006/06/14 05:48:23 tfmorris Exp $
+// $Id: FigStubState.java,v 1.10 2006/07/03 23:02:54 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,7 +260,7 @@ public class FigStubState extends FigStateVertex {
                     oldRef = stateMHelper.getStatebyName(
                             (String) mee.getOldValue(), top);
                 }
-                updateListeners(getOwner(), oldRef);
+                updateListenersX(getOwner(), oldRef);
             } else if ((mee.getPropertyName().equals("container")
                     && facade.isASubmachineState(container))) {
                 removeListeners();
@@ -287,7 +287,7 @@ public class FigStubState extends FigStateVertex {
                                 .getReferenceState(getOwner()), top);
                     }
                     stateMHelper.setReferenceState(getOwner(), null);
-                    updateListeners(getOwner(), oldRef);
+                    updateListenersX(getOwner(), oldRef);
                     updateReferenceText();
                 }
 
@@ -436,7 +436,7 @@ public class FigStubState extends FigStateVertex {
      * @param oldV
      *            the old owner UML object
      */
-    protected void updateListeners(Object newOwner, Object oldV) {
+    protected void updateListenersX(Object newOwner, Object oldV) {
         Object container = null;
         if (oldV != null) {
             removeElementListener(oldV);
