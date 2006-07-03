@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepad.java,v 1.10 2006/07/01 01:27:14 ezust Exp $
+ * $Id: QuickNotepad.java,v 1.11 2006/07/03 17:44:42 vampire0 Exp $
  */
 
 // from Java:
@@ -50,9 +50,10 @@ import org.gjt.sp.jedit.gui.DockableWindowManager;
 import org.gjt.sp.jedit.msg.PropertiesChanged;
 import org.gjt.sp.util.Log;
 
-public class QuickNotepad extends JPanel
-    implements EBComponent, QuickNotepadActions, DefaultFocusComponent {
+public class QuickNotepad extends JPanel implements EBComponent,
+		QuickNotepadActions, DefaultFocusComponent {
 	
+	private static final long serialVersionUID = 6412255692894321789L;
 
 	private String filename;
 
