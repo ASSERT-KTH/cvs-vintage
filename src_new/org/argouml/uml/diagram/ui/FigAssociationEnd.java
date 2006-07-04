@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.26 2006/07/04 08:03:33 bobtarling Exp $
+// $Id: FigAssociationEnd.java,v 1.27 2006/07/04 23:48:01 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,19 +29,15 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.SwingUtilities;
-
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.AssociationChangeEvent;
 import org.argouml.model.AttributeChangeEvent;
-import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.uml.notation.uml.NotationUtilityUml;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercentPlusConst;
-import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
 
 /**
@@ -252,28 +248,4 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         super.renderingChanged();
         computeRoute();
     }
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
-     */
-    protected void removeFromDiagramImpl() {
-        final Object association = Model.getFacade().getAssociation(getOwner());
-        final Object owner = getOwner();
-        final Layer layer = getLayer();
-        super.removeFromDiagram();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run () {
-                Fig associationFig = layer.presentationFor(association);
-                try {
-                    if (Model.getFacade().getClassifier(owner) != null
-                            && associationFig instanceof FigNodeAssociation) {
-                        ((FigNodeAssociation) associationFig).removeFromDiagram();
-                    }
-                } catch (InvalidElementException e) {
-                    // if already deleted, just ignore
-                }
-            }
-        });
-    }
-
 }  /* end class FigAssociationEnd */
