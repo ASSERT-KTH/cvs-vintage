@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.11 2006/06/11 15:39:46 mvw Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.12 2006/07/04 22:19:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 
 import org.apache.log4j.Logger;
+import org.argouml.cognitive.Designer;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.ocl.OCLExpander;
@@ -104,9 +105,12 @@ public class TodoListMemberFilePersister extends MemberFilePersister {
 
         if (indent == null) {
             try {
+                Designer.disableCritiquing();
                 expander.expand(writer, member);
             } catch (ExpansionException e) {
                 throw new SaveException(e);
+            } finally {
+                Designer.enableCritiquing();
             }
         } else {
             try {
