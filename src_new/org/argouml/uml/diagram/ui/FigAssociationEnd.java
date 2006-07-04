@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.25 2006/06/11 13:25:52 bobtarling Exp $
+// $Id: FigAssociationEnd.java,v 1.26 2006/07/04 08:03:33 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -142,8 +142,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
     /**
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#updateListeners(java.lang.Object)
      */
-    public void updateListeners(Object newOwner) {
-        Object oldOwner = getOwner();
+    public void updateListeners(Object oldOwner, Object newOwner) {
         if (oldOwner != null) {
             removeAllElementListeners();
         }
@@ -236,7 +235,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         if (e instanceof AttributeChangeEvent
                 || e instanceof AssociationChangeEvent) {
             renderingChanged();
-            updateListeners(getOwner());
+            updateListeners(getOwner(), getOwner());
         }
     }
 

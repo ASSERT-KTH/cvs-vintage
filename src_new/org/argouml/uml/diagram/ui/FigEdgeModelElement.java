@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.180 2006/07/03 20:36:01 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.181 2006/07/04 08:03:33 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -786,12 +786,13 @@ public abstract class FigEdgeModelElement
                     "The owner must be a model element - got a "
                     + newOwner.getClass().getName());
         }
-        updateListeners(newOwner);
+        Object oldOwner = getOwner();
         super.setOwner(newOwner);
         initNotationProviders(newOwner);
         if (newOwner != null) {
             renderingChanged();
         }
+        updateListeners(oldOwner, newOwner);
     }
 
     /**
@@ -829,8 +830,7 @@ public abstract class FigEdgeModelElement
      * 
      * @param newOwner the new owner for the listeners
      */
-    protected void updateListeners(Object newOwner) {
-        Object oldOwner = getOwner();
+    protected void updateListeners(Object oldOwner, Object newOwner) {
         if (oldOwner != null) {
             removeElementListener(oldOwner);
         }

@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.37 2006/06/14 18:16:45 tfmorris Exp $
+// $Id: FigEdgeNote.java,v 1.38 2006/07/04 08:03:33 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -272,7 +272,7 @@ public class FigEdgeNote
     /**
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#updateListeners(java.lang.Object)
      */
-    protected void updateListeners(Object newOwner) {
+    protected void updateListeners(Object oldOwner, Object newOwner) {
     }
     
     /**
