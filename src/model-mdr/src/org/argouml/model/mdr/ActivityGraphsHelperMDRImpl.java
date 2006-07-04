@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperMDRImpl.java,v 1.3 2006/03/07 22:34:22 tfmorris Exp $
+// $Id: ActivityGraphsHelperMDRImpl.java,v 1.4 2006/07/04 16:41:49 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,9 @@ class ActivityGraphsHelperMDRImpl implements ActivityGraphsHelper {
         CompositeState cs = ((ObjectFlowState) ofs).getContainer();
         StateMachine sm = cs.getStateMachine();
         ModelElement ns = sm.getContext();
+        if (ns == null) {
+            return null;
+        }
         if (!(ns instanceof Namespace)) {
             ns = ns.getNamespace();
         }
