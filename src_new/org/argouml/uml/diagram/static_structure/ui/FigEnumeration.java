@@ -1,4 +1,4 @@
-// $Id: FigEnumeration.java,v 1.5 2006/07/03 23:13:38 bobtarling Exp $
+// $Id: FigEnumeration.java,v 1.6 2006/07/04 07:55:21 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,7 +145,7 @@ public class FigEnumeration extends FigDataType
         if (mee instanceof AssociationChangeEvent 
                 || mee instanceof AttributeChangeEvent) {
             renderingChanged();
-            updateListeners(getOwner());
+            updateListeners(getOwner(), getOwner());
         }
     }
 

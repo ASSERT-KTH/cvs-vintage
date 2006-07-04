@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.42 2006/07/03 23:13:38 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.43 2006/07/04 07:55:21 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -770,7 +770,7 @@ public class FigClassifierRole extends FigNodeModelElement
      * @see FigNodeModelElement#updateListeners(java.lang.Object)
      */
     protected void updateListeners(Object oldOwner, Object newOwner) {
-        super.updateListeners(newOwner);
+        super.updateListeners(oldOwner, newOwner);
         if (newOwner != null) {
             Iterator it = Model.getFacade().getBases(newOwner).iterator();
             while (it.hasNext()) {
@@ -817,7 +817,7 @@ public class FigClassifierRole extends FigNodeModelElement
             updateStereotypeText();
         } else if (mee.getPropertyName().equals("base")) {
             updateBaseNames();
-            updateListeners(getOwner());
+            updateListeners(getOwner(), getOwner());
             nameChanged = true;
         }
         if (nameChanged) {

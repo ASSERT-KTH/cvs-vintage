@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.258 2006/07/03 23:13:38 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.259 2006/07/04 07:55:20 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1235,8 +1235,7 @@ public abstract class FigNodeModelElement
      * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
      */
     public void setOwner(Object own) {
-        // call this before the owner is set:
-        updateListeners(own);
+        Object oldOwner = getOwner();
         super.setOwner(own);
         initNotationProviders(own);
         readyToEdit = true;
@@ -1245,6 +1244,7 @@ public abstract class FigNodeModelElement
         }
         updateBounds();
         bindPort(own, bigPort);
+        updateListeners(oldOwner, own);
     }
 
     /**
@@ -1372,9 +1372,6 @@ public abstract class FigNodeModelElement
 
     }
     
-    final protected void updateListeners(Object newOwner) {
-    }
-
     /**
      * Returns the notation name for this fig. First start to
      * implement notations on a per fig basis.

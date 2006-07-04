@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.59 2006/07/03 23:13:38 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.60 2006/07/04 07:55:21 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -412,7 +412,7 @@ public class FigClassifierRole extends FigNodeModelElement {
         if (mee instanceof AddAssociationEvent
                 || mee instanceof AttributeChangeEvent) {
             renderingChanged();
-            updateListeners(getOwner());
+            updateListeners(getOwner(), getOwner());
             damage();
         }
     }
@@ -424,7 +424,7 @@ public class FigClassifierRole extends FigNodeModelElement {
         if (oldOwner != null) {
             removeAllElementListeners();
         }
-        super.updateListeners(newOwner);
+        super.updateListeners(oldOwner, newOwner);
         /* Now, let's register for all events from all modelelements
          * that may change the text: 
          */
