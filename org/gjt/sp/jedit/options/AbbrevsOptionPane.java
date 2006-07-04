@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Abbrev editor.
  * @author Slava Pestov
- * @version $Id: AbbrevsOptionPane.java,v 1.13 2006/06/23 22:58:12 kpouer Exp $
+ * @version $Id: AbbrevsOptionPane.java,v 1.14 2006/07/04 18:49:40 ezust Exp $
  */
 public class AbbrevsOptionPane extends AbstractOptionPane
 {
@@ -127,7 +127,7 @@ public class AbbrevsOptionPane extends AbstractOptionPane
 		buttons.add(Box.createGlue());
 
 		add(BorderLayout.SOUTH,buttons);
-
+		setsComboBox.setSelectedIndex(jEdit.getIntegerProperty("options.abbrevs.combobox.index", 0));
 		updateEnabled();
 	} //}}}
 
@@ -269,6 +269,7 @@ public class AbbrevsOptionPane extends AbstractOptionPane
 			Object source = evt.getSource();
 			if(source == setsComboBox)
 			{
+				jEdit.setIntegerProperty("options.abbrevs.combobox.index", setsComboBox.getSelectedIndex());
 				String selected = (String)setsComboBox.getSelectedItem();
 				if(selected.equals("global"))
 				{

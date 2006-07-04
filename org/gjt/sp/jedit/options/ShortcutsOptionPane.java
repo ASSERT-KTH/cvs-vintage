@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.13 2006/07/03 05:07:26 ezust Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.14 2006/07/04 18:49:40 ezust Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -70,6 +70,7 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 
 		add(BorderLayout.NORTH,north);
 		add(BorderLayout.CENTER,scroller);
+		selectModel.setSelectedIndex(jEdit.getIntegerProperty("options.shortcuts.select.index", 0));
 	}
 
 	protected void _save()
@@ -203,9 +204,9 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 		{
 			ShortcutsModel newModel
 				= (ShortcutsModel)selectModel.getSelectedItem();
-
 			if(currentModel != newModel)
 			{
+				jEdit.setIntegerProperty("options.shortcuts.select.index", selectModel.getSelectedIndex());
 				currentModel = newModel;
 				keyTable.setModel(currentModel);
 			}
