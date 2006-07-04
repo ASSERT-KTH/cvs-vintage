@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.51 2006/03/11 21:47:59 linus Exp $
+// $Id: ActionSaveProjectAs.java,v 1.52 2006/07/04 18:06:32 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
      */
     public void actionPerformed(ActionEvent e) {
         LOG.info("Performing saveas action");
-        ProjectBrowser.getInstance().trySaveAs(false);
+        ProjectBrowser.getInstance().trySave(false, true);
     }
 
     /**
