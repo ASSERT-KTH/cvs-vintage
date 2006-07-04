@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociationEnd.java,v 1.9 2006/02/25 16:57:39 linus Exp $
+// $Id: ModeCreateAssociationEnd.java,v 1.10 2006/07/04 22:38:37 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,6 @@ public class ModeCreateAssociationEnd extends ModeCreatePolyEdge {
                 association = oldFigAssociation.getOwner();
                 associationEnds =
                     Model.getFacade().getConnections(association);
-                oldFigAssociation.setOwner(null);
                 newFigNodeAssociation = placeTempNode(me);
                 underMouse = newFigNodeAssociation;
                 setSourceFigNode(newFigNodeAssociation);
@@ -159,7 +158,6 @@ public class ModeCreateAssociationEnd extends ModeCreatePolyEdge {
                 GraphNodeRenderer renderer = editor.getGraphNodeRenderer();
                 Layer lay = editor.getLayerManager().getActiveLayer();
                 mutableGraphModel.removeEdge(association);
-                destFig.setOwner(null);
                 destFig.removeFromDiagram();
                 mutableGraphModel.addNode(association);
                 FigNode figNode = (FigNode) lay.presentationFor(association);
