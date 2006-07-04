@@ -41,12 +41,18 @@ import org.gjt.sp.util.Log;
  *
  * In a BeanShell script, you can obtain the current edit pane from the
  * <code>editPane</code> variable.<p>
+ * 
+ * 
+ * Each View can have multiple editPanes, one is active at a time.
+ * Each EditPane has a single JEditTextArea, and is operating on single buffer.
+ * The EditPane also can switch buffers. 
+ * 
+ * This is the "controller" between a JEditTextArea (view) and a buffer (model).
  *
  * This class does not have a public constructor.
  * Edit panes can be created and destroyed using methods in the
  * {@link View} class.<p>
- *
- * Each edit pane can edit one buffer at a time.
+ * 
  *
  * @see View#splitHorizontally()
  * @see View#splitVertically()
@@ -56,7 +62,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.65 2006/06/27 15:33:16 daleanson Exp $
+ * @version $Id: EditPane.java,v 1.66 2006/07/04 00:39:23 ezust Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
