@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.22 2006/06/11 17:12:41 mvw Exp $
+// $Id: FigNodeAssociation.java,v 1.23 2006/07/05 00:03:18 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,21 +275,6 @@ public class FigNodeAssociation extends FigNodeModelElement {
         calcBounds(); //_x = x; _y = y; _w = w; _h = h;
         firePropChange("bounds", oldBounds, getBounds());
         updateEdges();
-    }
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
-     * TODO: Why does this behaviour differ from standard? Please javadoc.
-     */
-    protected void removeFromDiagramImpl() {
-        Object owner = getOwner();
-        super.removeFromDiagramImpl();
-        Editor editor = Globals.curEditor();
-        GraphModel gm = editor.getGraphModel();
-        if (gm instanceof MutableGraphModel) {
-            MutableGraphModel mutableGraphModel = (MutableGraphModel) gm;
-            mutableGraphModel.removeEdge(owner);
-        }
     }
 } /* end class FigNodeAssociation */
 
