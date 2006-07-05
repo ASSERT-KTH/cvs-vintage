@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.28 2005/04/23 20:29:12 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.29 2006/07/05 19:05:43 vampire0 Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -214,7 +214,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 		ButtonGroup grp = new ButtonGroup();
 
 		List encodingMenuItemList = new ArrayList();
-		String[] encodings = MiscUtilities.getEncodings();
+		String[] encodings = MiscUtilities.getEncodings(true);
 		for(int i = 0; i < encodings.length; i++)
 		{
 			String encoding = encodings[i];

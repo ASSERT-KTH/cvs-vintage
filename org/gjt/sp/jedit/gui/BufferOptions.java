@@ -73,7 +73,7 @@ import org.gjt.sp.jedit.*;
 
  * @author Slava Pestov
 
- * @version $Id: BufferOptions.java,v 1.34 2006/06/23 22:58:12 kpouer Exp $
+ * @version $Id: BufferOptions.java,v 1.35 2006/07/05 19:05:43 vampire0 Exp $
 
  * 
 
@@ -159,7 +159,7 @@ public class BufferOptions extends EnhancedDialog
 
 		//{{{ Encoding
 
-		String[] encodings = MiscUtilities.getEncodings();
+		String[] encodings = MiscUtilities.getEncodings(true);
 
 		Arrays.sort(encodings,new MiscUtilities.StringICaseCompare());
 
