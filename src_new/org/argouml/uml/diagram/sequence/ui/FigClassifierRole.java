@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.44 2006/07/05 19:13:04 mvw Exp $
+// $Id: FigClassifierRole.java,v 1.45 2006/07/05 19:18:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -151,11 +151,14 @@ public class FigClassifierRole extends FigNodeModelElement
                 i++) {
             linkPositions.add(new MessageNode(this));
         }
-        addFig(getBigPort());
+        
+        // TODO: Why does this give loading problems?
+//        addFig(getBigPort());
         addFig(lifeLineFig);
         addFig(headFig);
-        addFig(getStereotypeFig());
-        addFig(getNameFig());
+        // TODO: Why does this give loading problems?
+//        addFig(getStereotypeFig());
+//        addFig(getNameFig());
     }
 
     public FigClassifierRole(Object node, int x, int y, int w, int h) {
