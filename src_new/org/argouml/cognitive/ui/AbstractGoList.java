@@ -1,4 +1,4 @@
-// $Id: AbstractGoList.java,v 1.5 2006/06/11 15:39:47 mvw Exp $
+// $Id: AbstractGoList.java,v 1.6 2006/07/05 16:28:04 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,12 +59,14 @@ public abstract class AbstractGoList implements TreeModel {
      * @see javax.swing.tree.TreeModel#getRoot()
      */
     public Object getRoot() {
-    throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * @param r ignored
      */
-    public void setRoot(Object r) { }
+    public void setRoot(Object r) { 
+        // does nothing
+    }
 
 }
