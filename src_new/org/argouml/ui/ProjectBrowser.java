@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.201 2006/07/04 18:06:32 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.202 2006/07/06 16:20:51 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1118,6 +1118,17 @@ public final class ProjectBrowser
         PersistenceManager pm = PersistenceManager.getInstance();
 
         try {
+            if (file != null && !file.canWrite()) {
+                JOptionPane.showMessageDialog(this, 
+                        Translator.localize(
+                                "optionpane.save-project-cant-write"),
+                        Translator.localize(
+                                "optionpane.save-project-cant-write-title"),
+                              JOptionPane.INFORMATION_MESSAGE);
+                
+                return false;
+            }
+            
             if (!PersistenceManager.getInstance()
                     .confirmOverwrite(overwrite, file)) {
                 return false;
