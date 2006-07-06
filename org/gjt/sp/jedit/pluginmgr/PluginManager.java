@@ -38,7 +38,7 @@ import org.gjt.sp.util.WorkRequest;
 //}}}
 
 /**
- * @version $Id: PluginManager.java,v 1.29 2006/06/18 18:51:40 vanza Exp $
+ * @version $Id: PluginManager.java,v 1.30 2006/07/06 09:52:56 vampire0 Exp $
  */
 public class PluginManager extends JFrame implements EBComponent
 {
@@ -55,7 +55,6 @@ public class PluginManager extends JFrame implements EBComponent
 	//{{{ dispose() method
 	public void dispose()
 	{
-		GUIUtilities.saveGeometry(this,"plugin-manager");
 		instance = null;
 		EditBus.removeFromBus(this);
 		super.dispose();
@@ -193,6 +192,7 @@ public class PluginManager extends JFrame implements EBComponent
 
 		pack();
 		GUIUtilities.loadGeometry(this,"plugin-manager");
+		GUIUtilities.addSizeSaver(this,"plugin-manager");
 		setVisible(true);
 	} //}}}
 
@@ -342,6 +342,5 @@ public class PluginManager extends JFrame implements EBComponent
 				manager.update();
 		}
 	} //}}}
-
 	//}}}
 }
