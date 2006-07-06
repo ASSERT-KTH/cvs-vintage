@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.76 2006/06/18 12:40:20 mvw Exp $
+// $Id: ProjectManager.java,v 1.77 2006/07/06 22:38:41 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -315,6 +315,9 @@ public final class ProjectManager implements MementoCreationObserver {
      * @see org.argouml.model.MementoCreationObserver#mementoCreated(org.argouml.model.ModelMemento)
      */
     public void mementoCreated(final ModelMemento memento) {
+        if (saveAction != null) {
+            saveAction.setEnabled(true);
+        }
         Memento wrappedMemento = new Memento() {
             private ModelMemento modelMemento = memento;
             public void undo() {
