@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.218 2006/07/04 07:55:21 bobtarling Exp $
+// $Id: FigClass.java,v 1.219 2006/07/07 23:11:32 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -582,6 +582,9 @@ public class FigClass extends FigClassifierBox
      * @see org.tigris.gef.presentation.Fig#setEnclosingFig(org.tigris.gef.presentation.Fig)
      */
     public void setEnclosingFig(Fig encloser) {
+        if (encloser == getEncloser()) {
+            return;
+        }
         if (encloser == null
                 || (encloser != null
                 && !Model.getFacade().isAInstance(encloser.getOwner()))) {
@@ -592,10 +595,10 @@ public class FigClass extends FigClassifierBox
         }
         if (encloser != null
                 && (Model.getFacade().isAComponent(encloser.getOwner()))) {
-            Object component = /*(MComponent)*/ encloser.getOwner();
-            Object in = /*(MInterface)*/ getOwner();
+            Object component = encloser.getOwner();
+            Object anInterface = getOwner();
             Model.getCoreHelper().setContainer(resident, component);
-            Model.getCoreHelper().setResident(resident, in);
+            Model.getCoreHelper().setResident(resident, anInterface);
         } else {
             Model.getCoreHelper().setContainer(resident, null);
             Model.getCoreHelper().setResident(resident, null);
