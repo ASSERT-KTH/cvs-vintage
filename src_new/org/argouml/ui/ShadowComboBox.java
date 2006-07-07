@@ -1,4 +1,4 @@
-// $Id: ShadowComboBox.java,v 1.11 2006/03/16 01:26:59 bobtarling Exp $
+// $Id: ShadowComboBox.java,v 1.12 2006/07/07 18:49:19 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -149,6 +149,10 @@ public class ShadowComboBox extends JComboBox {
         private static final long serialVersionUID = 5939340501470674464L;
     }
 
+    /**
+     * This Fig is never placed on a diagram. It is only used by the call
+     * renderer so that pick list items look like diagram Figs.
+     */
     private static class ShadowFig extends FigNodeModelElement {
         /**
          * Constructor.
