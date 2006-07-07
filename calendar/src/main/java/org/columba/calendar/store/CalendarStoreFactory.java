@@ -27,34 +27,39 @@ import org.columba.calendar.model.api.IComponentInfoList;
 import org.columba.calendar.model.api.IEventInfo;
 import org.columba.calendar.store.api.ICalendarStore;
 import org.columba.calendar.store.api.ICalendarStoreFactory;
-import org.columba.calendar.store.api.StoreException;
+//import org.columba.calendar.store.api.StoreException;
 import org.columba.calendar.ui.base.CalendarHelper;
 import org.columba.core.io.DiskIO;
 
 import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.ActivityDepository;
 
+/**
+ * CalendarStoreFactory class
+ * @author fdietz
+ *
+ */
 public class CalendarStoreFactory implements ICalendarStoreFactory {
-
 	private File parentDirectory;
-
 	private File storeDirectory;
-
 	private ICalendarStore store;
-
 	private static CalendarStoreFactory instance = new CalendarStoreFactory();
 
+	/**
+	 * CalendarStoreFactory default constructor
+	 */
 	private CalendarStoreFactory() {
 		super();
 
 		parentDirectory = Config.getInstance().getConfigDirectory();
-
 		storeDirectory = new File(parentDirectory, "store");
 		DiskIO.ensureDirectory(storeDirectory);
-
 		initLocalStore();
 	}
 
+	/**
+	 * initLocalStore method
+	 */
 	private void initLocalStore() {
 		store = new LocalCalendarStore(storeDirectory);
 
@@ -69,17 +74,22 @@ public class CalendarStoreFactory implements ICalendarStoreFactory {
 				Activity act = CalendarHelper.createActivity(event);
 
 				ActivityDepository.getInstance().addBrokedActivity(act, this);
-
 			}
 		}
 	}
 
+	/**
+	 * getInstance method
+	 * @return instance
+	 */
 	public static CalendarStoreFactory getInstance() {
 		return instance;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.store.api.ICalendarStoreFactory#getLocaleStore()
+	 */
 	public ICalendarStore getLocaleStore() {
 		return store;
 	}
-
 }

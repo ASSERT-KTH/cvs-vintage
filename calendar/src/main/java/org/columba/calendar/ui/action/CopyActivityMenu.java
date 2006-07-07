@@ -40,12 +40,25 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.IMenu;
 
-
+/**
+ * CopyActivityMenu class
+ * @author fdietz
+ *
+ */
 public class CopyActivityMenu extends IMenu implements
 		IActivitySelectionChangedListener {
 
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 7014530206628904351L;
+
 	private Hashtable<String, JMenuItem> table = new Hashtable<String, JMenuItem>();
 
+	/**
+	 * CopyActivityMenu parameterized constructor
+	 * @param controller
+	 */
 	public CopyActivityMenu(IFrameMediator controller) {
 		super(controller, "Copy", "CopyActivity");
 
@@ -72,7 +85,6 @@ public class CopyActivityMenu extends IMenu implements
 									activity));
 
 					CommandProcessor.getInstance().addOp(command);
-
 				}
 			});
 
@@ -83,11 +95,13 @@ public class CopyActivityMenu extends IMenu implements
 		m.getCalendarView().addSelectionChangedListener(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.IActivitySelectionChangedListener#selectionChanged(org.columba.calendar.ui.calendar.api.ActivitySelectionChangedEvent)
+	 */
 	public void selectionChanged(ActivitySelectionChangedEvent event) {
 		if (event.getSelection().length == 0)
 			setEnabled(false);
 		else {
-
 			setEnabled(true);
 
 			// enable all menuitems
@@ -106,6 +120,5 @@ public class CopyActivityMenu extends IMenu implements
 			JMenuItem menuItem = table.get(calendarId);
 			menuItem.setEnabled(false);
 		}
-
 	}
 }

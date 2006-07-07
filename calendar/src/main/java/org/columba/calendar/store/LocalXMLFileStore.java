@@ -34,9 +34,9 @@ import org.jdom.output.XMLOutputter;
 public class LocalXMLFileStore {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
+	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.calendar.store");
-
 	private File directory;
 
 	public LocalXMLFileStore(File directory) throws StoreException {
@@ -112,7 +112,7 @@ public class LocalXMLFileStore {
 
 	/**
 	 * @param uid
-	 * @return
+	 * @return file
 	 */
 	private File getFile(Object id) throws StoreException {
 
@@ -140,7 +140,6 @@ public class LocalXMLFileStore {
 	class StoreIterator implements Iterator {
 
 		private File[] files;
-
 		int nextIndex = 0;
 
 		StoreIterator() {
@@ -160,7 +159,6 @@ public class LocalXMLFileStore {
 			String filename = files[nextIndex].getName();
 			// remove ".xcs"
 			String uid = filename.substring(0, filename.indexOf("."));
-
 			Document document = null;
 
 			document = load(uid);
@@ -176,6 +174,5 @@ public class LocalXMLFileStore {
 
 			nextIndex++;
 		}
-
 	}
 }

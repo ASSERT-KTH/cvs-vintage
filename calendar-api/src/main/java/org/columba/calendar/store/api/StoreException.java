@@ -21,20 +21,40 @@ import org.columba.api.exception.BaseRuntimeException;
 
 public class StoreException extends BaseRuntimeException {
 
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 6418062444140007181L;
+
+	/**
+	 * Store Exception default constructor
+	 */
 	public StoreException() {
 		super();
 	}
 
+	/**
+	 * StoreException parameterised constructor
+	 * @param message
+	 */
 	public StoreException(String message) {
 		super(message);
 	}
 
+	/**
+	 * StoreException parameterised constructor
+	 * @param message
+	 * @param cause
+	 */
 	public StoreException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * StoreException parameterised constructor
+	 * @param cause
+	 */
 	public StoreException(Throwable cause) {
 		super(cause);
 	}
-
 }

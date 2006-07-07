@@ -19,21 +19,34 @@ package org.columba.calendar.store.api;
 
 import java.util.EventObject;
 
+/**
+ * StoreEvent class
+ * @author fdietz
+ */
 public class StoreEvent extends EventObject {
-
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -4143276384111374455L;
 	private Object changes;
 
+	/**
+	 * StoreEvent Constructor
+	 * 
+	 * @param source
+	 * @param changes
+	 */
 	public StoreEvent(Object source, Object changes) {
 		super(source);
-
 		this.changes = changes;
 	}
 
 	/**
+	 * getChanges method
+	 * 
 	 * @return Returns the changes.
 	 */
 	public Object getChanges() {
 		return changes;
 	}
-
 }

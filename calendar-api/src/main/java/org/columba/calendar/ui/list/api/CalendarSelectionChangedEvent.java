@@ -21,22 +21,34 @@ import java.util.EventObject;
 
 import org.columba.calendar.base.api.ICalendarItem;
 
-
+/**
+ * CalendarSelectionChangedEvent class
+ * 
+ * @author fdietz
+ */
 public class CalendarSelectionChangedEvent extends EventObject {
 
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -3639709270195042586L;
 	private ICalendarItem selection;
 
+	/**
+	 * CalendarSelectionChangedEvent parameterized constructor
+	 * @param source
+	 * @param selection
+	 */
 	public CalendarSelectionChangedEvent(Object source, ICalendarItem selection) {
 		super(source);
-
 		this.selection = selection;
 	}
 
 	/**
+	 * getSelection method
 	 * @return Returns the new selection
 	 */
 	public ICalendarItem getSelection() {
 		return selection;
 	}
-
 }

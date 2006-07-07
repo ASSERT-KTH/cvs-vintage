@@ -32,19 +32,30 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.action.AbstractColumbaAction;
 
 /**
+ * ActivityMovedAction class
  * Update backend after an activity was moved in the calendar widget.
  * 
  * @author fdietz
  * 
  */
-
 public class ActivityMovedAction extends AbstractColumbaAction {
 
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1686160080952282938L;
+
+	/**
+	 * ActivityMovedAction parameterized constructor
+	 * @param frameMediator
+	 */
 	public ActivityMovedAction(IFrameMediator frameMediator) {
 		super(frameMediator, "Activity Moved");
-
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent e) {
 		ICalendarMediator m = (ICalendarMediator) getFrameMediator();
 
@@ -59,7 +70,5 @@ public class ActivityMovedAction extends AbstractColumbaAction {
 				new CalendarCommandReference(store, activity));
 
 		CommandProcessor.getInstance().addOp(command);
-
 	}
-
 }

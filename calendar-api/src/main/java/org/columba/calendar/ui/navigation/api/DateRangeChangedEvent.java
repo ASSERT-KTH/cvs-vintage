@@ -21,22 +21,33 @@ import java.util.EventObject;
 
 import org.columba.calendar.model.api.IDateRange;
 
-
+/**
+ * DateRangeChangedEvent class
+ * @author fdietz
+ */
 public class DateRangeChangedEvent extends EventObject {
 
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 925365385922404630L;
 	private IDateRange dateRange;
 
+	/**
+	 * DateRangeChangedEvent parameterized constructor
+	 * @param source
+	 * @param dateRange
+	 */
 	public DateRangeChangedEvent(Object source, IDateRange dateRange) {
 		super(source);
-
 		this.dateRange = dateRange;
 	}
 
 	/**
+	 * getDateRange method
 	 * @return Returns the dateRange.
 	 */
 	public IDateRange getDateRange() {
 		return dateRange;
 	}
-
 }

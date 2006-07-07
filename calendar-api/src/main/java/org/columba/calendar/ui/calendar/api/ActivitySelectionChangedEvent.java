@@ -22,14 +22,25 @@ import java.util.EventObject;
 import org.columba.calendar.base.api.IActivity;
 
 
-
+/**
+ * ActivitySelectionChangedEvent class
+ * @author fdietz
+ */
 public class ActivitySelectionChangedEvent extends EventObject {
 
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -7828995654504366459L;
 	private IActivity[] selection;
 
+	/**
+	 * ActivitySelectionChangedEvent parameterized constructor
+	 * @param source
+	 * @param selection
+	 */
 	public ActivitySelectionChangedEvent(Object source, IActivity[] selection) {
 		super(source);
-
 		this.selection = selection;
 	}
 
@@ -39,5 +50,4 @@ public class ActivitySelectionChangedEvent extends EventObject {
 	public IActivity[] getSelection() {
 		return selection;
 	}
-
 }

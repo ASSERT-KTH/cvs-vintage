@@ -39,28 +39,27 @@ import com.miginfocom.calendar.activity.Activity;
 import com.miginfocom.calendar.activity.ActivityDepository;
 import com.miginfocom.calendar.category.CategoryStructureEvent;
 
+/**
+ * StoreEventDelegator class
+ * @author fdietz
+ */
 public class StoreEventDelegator implements IStoreListener, ActionListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.calendar.store.event");
-
 	private static final int UPDATE_DELAY = 50;
-
 	private static StoreEventDelegator instance;
-
 	private Timer timer;
-
 	private Mutex mutex;
-
 	private int swap = 0;
-
 	private List[] itemRemovedList;
-
 	private List[] itemChangedList;
-
 	private List[] itemAddedList;
 
+	/**
+	 * StoreEventDelegator method
+	 */
 	public StoreEventDelegator() {
 		super();
 
@@ -72,9 +71,12 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 
 		timer = new Timer(UPDATE_DELAY, this);
 		timer.start();
-
 	}
 
+	/**
+	 * getInstance method
+	 * @return instance
+	 */
 	public static StoreEventDelegator getInstance() {
 		if (instance == null)
 			instance = new StoreEventDelegator();
@@ -82,23 +84,32 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 		return instance;
 	}
 
+	/**
+	 * clearAllLists method
+	 */
 	private void clearAllLists() {
 		itemAddedList[swap].clear();
 		itemRemovedList[swap].clear();
 		itemChangedList[swap].clear();
 	}
 
+	/**
+	 * processCalendarEvents method
+	 */
 	public void processCalendarEvents() {
-
-		if (itemAddedList[swap].size() > 0) {
+		StoreEventComparator instance2 = StoreEventComparator
+							.getInstance();
+		StoreEventComparator storeEventComparator = instance2;
+		StoreEventComparator storeEventComparator2 = storeEventComparator;
+		List list = itemAddedList[swap];
+		if (list.size() > 0) {
 			LOG.info("process item added calendar events");
 
-			Collections.sort(itemAddedList[swap], StoreEventComparator
-					.getInstance());
+			Collections.sort(list, storeEventComparator2);
 
 			// Process the events
-			for (int i = 0; i < itemAddedList[swap].size(); i++) {
-				StoreEvent next = (StoreEvent) itemAddedList[swap].get(i);
+			for (int i = 0; i < list.size(); i++) {
+				StoreEvent next = (StoreEvent) list.get(i);
 
 				ICalendarStore store = (ICalendarStore) next.getSource();
 				try {
@@ -115,13 +126,10 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
-
 		}
 		if (itemRemovedList[swap].size() > 0) {
-			Collections.sort(itemRemovedList[swap], StoreEventComparator
-					.getInstance());
+			Collections.sort(itemRemovedList[swap], storeEventComparator2);
 
 			// Process the events
 			for (int i = 0; i < itemRemovedList[swap].size(); i++) {
@@ -132,12 +140,10 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 				// remove old activity
 				ActivityDepository.getInstance().removeBrokedActivityById(
 						activityId);
-
 			}
 		}
 		if (itemChangedList[swap].size() > 0) {
-			Collections.sort(itemChangedList[swap], StoreEventComparator
-					.getInstance());
+			Collections.sort(itemChangedList[swap], storeEventComparator2);
 
 			// Process the events
 			for (int i = 0; i < itemChangedList[swap].size(); i++) {
@@ -164,11 +170,13 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.store.api.IStoreListener#itemAdded(org.columba.calendar.store.api.StoreEvent)
+	 */
 	public void itemAdded(StoreEvent e) {
 		LOG.info(e.toString());
 
@@ -177,9 +185,11 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 		itemAddedList[1 - swap].add(e);
 
 		mutex.release();
-
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.store.api.IStoreListener#itemRemoved(org.columba.calendar.store.api.StoreEvent)
+	 */
 	public void itemRemoved(StoreEvent e) {
 		LOG.info(e.toString());
 
@@ -190,6 +200,9 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 		mutex.release();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.store.api.IStoreListener#itemChanged(org.columba.calendar.store.api.StoreEvent)
+	 */
 	public void itemChanged(StoreEvent e) {
 		LOG.info(e.toString());
 
@@ -200,6 +213,9 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 		mutex.release();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent e) {
 
 		// process all events collected until now
@@ -213,5 +229,4 @@ public class StoreEventDelegator implements IStoreListener, ActionListener {
 
 		clearAllLists();
 	}
-
 }
