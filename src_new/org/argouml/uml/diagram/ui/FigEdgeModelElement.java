@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.182 2006/07/07 22:20:15 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.183 2006/07/07 22:48:29 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -333,7 +333,7 @@ public abstract class FigEdgeModelElement
      * @param p2 point
      * @return the square of the distance
      */
-    public int getSquaredDistance(Point p1, Point p2) {
+    protected int getSquaredDistance(Point p1, Point p2) {
         int xSquared = p2.x - p1.x;
         xSquared *= xSquared;
         int ySquared = p2.y - p1.y;
@@ -344,7 +344,7 @@ public abstract class FigEdgeModelElement
     /**
      * @param g the <code>Graphics</code> object
      */
-    public void paintClarifiers(Graphics g) {
+    protected void paintClarifiers(Graphics g) {
         int iconPos = 25, gap = 1, xOff = -4, yOff = -4;
         Point p = new Point();
         ToDoList list = Designer.theDesigner().getToDoList();
@@ -738,6 +738,7 @@ public abstract class FigEdgeModelElement
         }
 
         // Update attached node figures
+        // TODO: Presumably this should only happen on a add or remove event
         updateClassifiers();
     }
     
