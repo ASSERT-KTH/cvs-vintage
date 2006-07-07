@@ -1,4 +1,4 @@
-// $Id: UndoCoreHelperDecorator.java,v 1.9 2006/07/07 20:08:02 bobtarling Exp $
+// $Id: UndoCoreHelperDecorator.java,v 1.10 2006/07/07 20:31:11 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -548,7 +548,7 @@ class UndoCoreHelperDecorator extends AbstractCoreHelperDecorator {
      * java.lang.Object, java.lang.Object)
      */
     public void addLink(Object handle, Object link) {
-        super.addFeature(handle, link);
+        super.addLink(handle, link);
         Model.notifyMementoCreationObserver(new DummyModelMemento());
     }
 
@@ -965,7 +965,7 @@ class UndoCoreHelperDecorator extends AbstractCoreHelperDecorator {
      * java.lang.Object, java.util.Collection)
      */
     public void setParameters(Object handle, Collection parameters) {
-        super.setBody(handle, parameters);
+        super.setParameters(handle, parameters);
         Model.notifyMementoCreationObserver(new DummyModelMemento());
     }
 
