@@ -21,7 +21,6 @@ import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collection;
@@ -42,7 +41,6 @@ import org.columba.calendar.ui.calendar.api.ICalendarView;
 import org.columba.calendar.ui.frame.api.ICalendarMediator;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
-import org.columba.core.io.DiskIO;
 
 import com.miginfocom.ashape.interaction.InteractionEvent;
 import com.miginfocom.ashape.interaction.InteractionListener;
@@ -162,10 +160,10 @@ public class MainCalendarController implements InteractionListener,
 
 	}
 
-	/**
-	 * 
-	 */
-	private void registerListeners(DateAreaBean localDateAreaBean) {
+		/**
+		 * @param localDateAreaBean
+		 */
+		private void registerListeners(DateAreaBean localDateAreaBean) {
 		ToolTipProvider ttp = new ToolTipProvider() {
 			public int configureToolTip(JToolTip toolTip, MouseEvent e,
 					Object source) {
@@ -197,14 +195,23 @@ public class MainCalendarController implements InteractionListener,
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#getSelectedActivity()
+	 */
 	public IActivity getSelectedActivity() {
 		return selectedActivity;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#getView()
+	 */
 	public JComponent getView() {
 		return panel;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#setViewMode(int)
+	 */
 	public void setViewMode(int mode) {
 
 		this.currentViewMode = mode;
@@ -265,6 +272,9 @@ public class MainCalendarController implements InteractionListener,
 
 	}
 
+	/**
+	 * @param dateRange
+	 */
 	public void printDebug(DateRange dateRange) {
 		Calendar todayCalendar = Calendar.getInstance();
 		int today = todayCalendar.get(java.util.Calendar.DAY_OF_YEAR);
@@ -280,13 +290,16 @@ public class MainCalendarController implements InteractionListener,
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#recreateFilterRows()
+	 */
 	public void recreateFilterRows() {
 		filterDateArea(dateAreaBean);
 		filterDateArea(monthlyDateAreaBean);
 	}
 
 	/**
-	 * 
+	 * @param localDateAreaBean
 	 */
 	private void filterDateArea(DateAreaBean localDateAreaBean) {
 		Collection cats = CategoryDepository.getRoot().getChildrenDeep();
@@ -325,6 +338,9 @@ public class MainCalendarController implements InteractionListener,
 		localDateAreaBean.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.miginfocom.ashape.interaction.InteractionListener#interactionOccured(com.miginfocom.ashape.interaction.InteractionEvent)
+	 */
 	public void interactionOccured(InteractionEvent e) {
 		Object value = e.getCommand().getValue();
 
@@ -401,12 +417,18 @@ public class MainCalendarController implements InteractionListener,
 	}
 
 	// trigged if activity is moved or daterange is modified
+	/* (non-Javadoc)
+	 * @see com.miginfocom.calendar.datearea.ActivityMoveListener#activityMoved(com.miginfocom.calendar.datearea.ActivityMoveEvent)
+	 */
 	public void activityMoved(ActivityMoveEvent e) {
 
 		com.miginfocom.calendar.activity.Activity activity = e.getActivity();
 		System.out.println("activity moved=" + activity.getID());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#viewToday()
+	 */
 	public void viewToday() {
 		DateRange newVisRange = new DateRange(currentDateAreaBean.getDateArea()
 				.getVisibleDateRange());
@@ -430,6 +452,9 @@ public class MainCalendarController implements InteractionListener,
 		currentDateAreaBean.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#viewNext()
+	 */
 	public void viewNext() {
 		DateRange newVisRange = new DateRange(currentDateAreaBean.getDateArea()
 				.getVisibleDateRangeCorrected());
@@ -459,6 +484,9 @@ public class MainCalendarController implements InteractionListener,
 		currentDateAreaBean.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#viewPrevious()
+	 */
 	public void viewPrevious() {
 		DateRange newVisRange = new DateRange(currentDateAreaBean.getDateArea()
 				.getVisibleDateRange());
@@ -488,6 +516,9 @@ public class MainCalendarController implements InteractionListener,
 		currentDateAreaBean.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.calendar.api.ICalendarView#setVisibleDateRange(org.columba.calendar.model.api.IDateRange)
+	 */
 	public void setVisibleDateRange(IDateRange dateRange) {
 		ImmutableDateRange newRange = new ImmutableDateRange(dateRange
 				.getStartTime().getTimeInMillis(), dateRange.getEndTime()
@@ -498,6 +529,9 @@ public class MainCalendarController implements InteractionListener,
 		currentDateAreaBean.revalidate();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.miginfocom.calendar.datearea.ActivityDragResizeListener#activityDragResized(com.miginfocom.calendar.datearea.ActivityDragResizeEvent)
+	 */
 	public void activityDragResized(ActivityDragResizeEvent e) {
 		System.out.println(e);
 
@@ -566,6 +600,9 @@ public class MainCalendarController implements InteractionListener,
 			handlePopupEvent(e);
 		}
 
+		/**
+		 * @param e
+		 */
 		private void handlePopupEvent(MouseEvent e) {
 			Point p = e.getPoint();
 			if (e.isPopupTrigger()) {
@@ -576,6 +613,9 @@ public class MainCalendarController implements InteractionListener,
 				System.out.println("--> no popup");
 		}
 
+		/**
+		 * @param e
+		 */
 		private void handleEvent(MouseEvent e) {
 
 			Point p = e.getPoint();
@@ -605,7 +645,6 @@ public class MainCalendarController implements InteractionListener,
 						.fireCreateActivity(new org.columba.calendar.model.DateRange(
 								range.getStart(), range.getEnd(true)));
 			}
-
 		}
 	}
 }

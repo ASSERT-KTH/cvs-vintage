@@ -20,7 +20,6 @@ package org.columba.calendar.ui.list;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 
@@ -40,7 +39,6 @@ import org.columba.calendar.ui.list.api.ICalendarListView;
 import org.columba.calendar.ui.list.api.ICalendarSelectionChangedListener;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
 import org.columba.core.gui.menu.MenuXMLDecoder;
-import org.columba.core.io.DiskIO;
 
 import com.miginfocom.ashape.AShapeUtil;
 import com.miginfocom.ashape.shapes.AShape;
@@ -49,6 +47,7 @@ import com.miginfocom.calendar.category.CategoryDepository;
 import com.miginfocom.util.gfx.GfxUtil;
 
 /**
+ * CalendarListController class
  * @author fdietz
  * 
  */
@@ -115,6 +114,9 @@ public class CalendarListController implements ICalendarListView,
 
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
 	public void valueChanged(ListSelectionEvent e) {
 		if (e.getValueIsAdjusting()) {
 			return;
@@ -135,6 +137,9 @@ public class CalendarListController implements ICalendarListView,
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void loadCalendarPreferences() {
 		ICalendarList list = Config.getInstance().getCalendarList();
 		Enumeration<ICalendarItem> e = list.getElements();
@@ -199,6 +204,9 @@ public class CalendarListController implements ICalendarListView,
 		return calendar;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.list.api.ICalendarListView#getView()
+	 */
 	public JComponent getView() {
 		return list;
 	}
@@ -233,6 +241,9 @@ public class CalendarListController implements ICalendarListView,
 			handleEvent(e);
 		}
 
+		/**
+		 * @param e
+		 */
 		private void handleEvent(MouseEvent e) {
 			CheckableItemListTableModel model = (CheckableItemListTableModel) list
 					.getModel();
@@ -257,6 +268,9 @@ public class CalendarListController implements ICalendarListView,
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.calendar.ui.list.api.ICalendarListView#getSelected()
+	 */
 	public ICalendarItem getSelected() {
 		if (selection == null)
 			return null;
@@ -299,5 +313,4 @@ public class CalendarListController implements ICalendarListView,
 			}
 		}
 	}
-
 }
