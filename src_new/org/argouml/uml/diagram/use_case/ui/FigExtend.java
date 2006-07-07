@@ -1,4 +1,4 @@
-// $Id: FigExtend.java,v 1.24 2006/06/02 18:28:24 mvw Exp $
+// $Id: FigExtend.java,v 1.25 2006/07/07 22:20:15 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,7 +220,7 @@ public class FigExtend extends FigEdgeModelElement {
     /**
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#renderingChanged()
      */
-    public void renderingChanged() {
+    protected void renderingChanged() {
         if (getOwner() != null) {
             updateConditionText();
             updateLabel();

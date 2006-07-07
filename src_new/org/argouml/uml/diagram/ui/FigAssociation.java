@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.120 2006/07/04 08:03:33 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.121 2006/07/07 22:20:15 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -361,7 +361,7 @@ public class FigAssociation extends FigEdgeModelElement {
     /**
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#renderingChanged()
      */
-    public void renderingChanged() {
+    protected void renderingChanged() {
         Object association = getOwner();
         if (association == null) {
             return;
@@ -377,7 +377,6 @@ public class FigAssociation extends FigEdgeModelElement {
         destGroup.calcBounds();
         middleGroup.calcBounds();
         super.renderingChanged(); // last, since it calls damage()
-        computeRoute(); //very last, since otherwise exception :-(
     }
 
     /**

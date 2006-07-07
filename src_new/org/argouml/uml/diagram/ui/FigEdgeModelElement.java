@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.181 2006/07/04 08:03:33 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.182 2006/07/07 22:20:15 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -698,10 +698,11 @@ public abstract class FigEdgeModelElement
      * 
      * NOTE: If you override this method you probably also want to 
      * override the modelChanged() method
+     * TODO: Call this method something sensible. What it does rather than
+     * one example of when it is called. Its purpose seems to be to update
+     * everything if anything has changed. Not very efficient.
      */
-    public void renderingChanged() {
-        // updateAnnotationPositions();
-        updateClassifiers();
+    protected void renderingChanged() {
         updateNameText();
         updateStereotypeText();
         damage();
@@ -789,9 +790,7 @@ public abstract class FigEdgeModelElement
         Object oldOwner = getOwner();
         super.setOwner(newOwner);
         initNotationProviders(newOwner);
-        if (newOwner != null) {
-            renderingChanged();
-        }
+        renderingChanged();
         updateListeners(oldOwner, newOwner);
     }
 
