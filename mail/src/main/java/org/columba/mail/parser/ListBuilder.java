@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.parser;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -61,6 +60,10 @@ public class ListBuilder {
 		return null;
 	}
 
+	/**
+	 * @param name
+	 * @return groupItem
+	 */
 	private static IGroupItem retrieveGroupItem(String name) {
 
 		try {
@@ -95,17 +98,18 @@ public class ListBuilder {
 	 * @return list containing only contacts. Never <code>null</code>
 	 */
 	public static List<String> createFlatList(List<String> list) {
-		if ( list == null ) throw new IllegalArgumentException("list == null");
-		
+		if (list == null)
+			throw new IllegalArgumentException("list == null");
+
 		List<String> result = new Vector<String>();
 
 		Iterator<String> it = list.iterator();
 		while (it.hasNext()) {
 			String str = it.next();
-			
+
 			// remove leading or trailing whitespaces
 			str = str.trim();
-			
+
 			IContactItem contactItem = retrieveContactItem(str);
 			if (contactItem != null) {
 				// found contact item in contact component
@@ -130,12 +134,10 @@ public class ListBuilder {
 
 						result.add(address);
 					}
-				} else
-				{
+				} else {
 					result.add(str);
 				}
 			}
-
 		}
 
 		return result;
@@ -160,5 +162,4 @@ public class ListBuilder {
 
 		return result;
 	}
-
 }

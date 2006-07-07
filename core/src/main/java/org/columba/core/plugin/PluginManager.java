@@ -24,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -74,7 +73,7 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @return
+	 * @return instance
 	 */
 	public static IPluginManager getInstance() {
 		return instance;
@@ -93,7 +92,6 @@ public class PluginManager implements IPluginManager {
 		LOG.fine("adding extension handler " + id);
 
 		handlerMap.put(id, handler);
-
 	}
 
 	/**
@@ -108,7 +106,6 @@ public class PluginManager implements IPluginManager {
 			return (IExtensionHandler) handlerMap.get(id);
 		else
 			throw new PluginHandlerNotFoundException(id);
-
 	}
 
 	/**
@@ -169,7 +166,7 @@ public class PluginManager implements IPluginManager {
 					Extension pluginExtension = new Extension(pluginMetadata,
 							extensionMetadata);
 					pluginExtension.setInternal(internal);
-					
+
 					String extensionId = pluginExtension.getMetadata().getId();
 					// if extension wasn't already registered
 					if (handler.exists(extensionId) == false)
@@ -179,7 +176,6 @@ public class PluginManager implements IPluginManager {
 				LOG.severe("No suitable extension handler with name "
 						+ extensionpointId + " found");
 			}
-
 		}
 	}
 
@@ -208,7 +204,6 @@ public class PluginManager implements IPluginManager {
 
 			addPlugin(xmlFile);
 		}
-
 	}
 
 	/**
@@ -349,7 +344,6 @@ public class PluginManager implements IPluginManager {
 				// cancel
 				continue;
 			}
-
 		}
 	}
 
@@ -366,7 +360,6 @@ public class PluginManager implements IPluginManager {
 					metadata.getParent());
 
 			addExtensionHandler(metadata.getId(), handler);
-
 		}
 	}
 
@@ -383,8 +376,7 @@ public class PluginManager implements IPluginManager {
 			// cancel
 			return;
 		}
-		
+
 		addExtensionHandlers(is);
 	}
-
 }

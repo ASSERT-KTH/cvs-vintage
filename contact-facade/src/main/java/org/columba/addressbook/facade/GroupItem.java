@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -33,14 +32,25 @@ public class GroupItem extends HeaderItem implements IGroupItem {
 		super(false);
 	}
 
+	/**
+	 * @param id
+	 */
 	public GroupItem(String id) {
 		super(id, false);
 	}
 	
+	/**
+	 * @param id
+	 * @param name
+	 * @param description
+	 */
 	public GroupItem(String id, String name, String description) {
 		super(id, name, description, false);
 	}	
 
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.facade.IGroupItem#getContacts()
+	 */
 	public List<IContactItem> getContacts() {
 		return list;
 	}
@@ -52,19 +62,27 @@ public class GroupItem extends HeaderItem implements IGroupItem {
 		list = contacts;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.facade.IGroupItem#addContact(org.columba.addressbook.facade.IContactItem)
+	 */
 	public void addContact(IContactItem item) {
 		if (item == null)
 			throw new IllegalArgumentException("item == null");
 		list.add(item);
-
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.facade.IGroupItem#removeContact(org.columba.addressbook.facade.IContactItem)
+	 */
 	public void removeContact(IContactItem item) {
 		if (item == null)
 			throw new IllegalArgumentException("item == null");
 		list.remove(item);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.facade.IGroupItem#getContactCount()
+	 */
 	public int getContactCount() {
 		return list.size();
 	}

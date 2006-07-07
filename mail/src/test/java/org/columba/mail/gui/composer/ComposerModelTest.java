@@ -17,18 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
-
-import org.columba.ristretto.message.Address;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class ComposerModelTest extends TestCase {
-
-	
 
 }
