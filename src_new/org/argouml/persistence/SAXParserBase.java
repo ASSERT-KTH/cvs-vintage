@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.6 2006/06/16 19:09:25 tfmorris Exp $
+// $Id: SAXParserBase.java,v 1.7 2006/07/07 17:24:55 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,18 +49,12 @@ public abstract class SAXParserBase extends DefaultHandler {
      */
     private static final Logger LOG = Logger.getLogger(SAXParserBase.class);
 
-    ////////////////////////////////////////////////////////////////
-    // constants
-
-    private static final String    RETURNSTRING  = "\n      ";
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
-
     /**
      * The constructor.
      */
-    public SAXParserBase() { }
+    public SAXParserBase() {
+        // empty constructor
+    }
 
     ////////////////////////////////////////////////////////////////
     // static variables
@@ -252,21 +246,30 @@ public abstract class SAXParserBase extends DefaultHandler {
         return true;
     }
 
+    // TODO: remove when code below in characters() is removed
+//    private static final String    RETURNSTRING  = "\n      ";
+    
     /**
      * @see org.xml.sax.ContentHandler#characters(char[], int, int)
      */
     public void characters(char[] ch, int start, int length)
         throws SAXException {
-        // TODO: Why does the text get added to ALL the elements on the stack?
-        for (int i = 0; i < nElements; i++) {
-            XMLElement e = elements[i];
-            if (e.length() > 0) {
-                // TODO: This seems wrong since this method can be called
-                // multiple times at the parser's discretion - tfm
-                e.addText(RETURNSTRING);
-            }
-            e.addText(ch, start, length);
-        }
+        
+        elements[nElements - 1].addText(ch, start, length);
+        
+        // TODO: Remove this old implementation after 0.22 if it's
+        // demonstrated that it's not needed. - tfm
+        
+        // Why does the text get added to ALL the elements on the stack? - tfm
+//        for (int i = 0; i < nElements; i++) {
+//            XMLElement e = elements[i];
+//            if (e.length() > 0) {
+//                // This seems wrong since this method can be called
+//                // multiple times at the parser's discretion - tfm
+//                e.addText(RETURNSTRING);
+//            }
+//            e.addText(ch, start, length);
+//        }
     }
 
 

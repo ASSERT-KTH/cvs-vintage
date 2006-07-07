@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.8 2006/06/11 15:39:46 mvw Exp $
+// $Id: TodoParser.java,v 1.9 2006/07/07 17:24:55 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,6 +85,7 @@ public class TodoParser extends SAXParserBase {
      * Creates a new TodoParser.
      */
     public TodoParser() {
+        // Empty constructor
     }
 
 
@@ -413,6 +414,7 @@ public class TodoParser extends SAXParserBase {
                         try {
                             sb.append((char) Integer.parseInt(ent));
                         } catch (NumberFormatException nfe) {
+                            // Ignore any parse exceptions
                         }
                     }
                 }
