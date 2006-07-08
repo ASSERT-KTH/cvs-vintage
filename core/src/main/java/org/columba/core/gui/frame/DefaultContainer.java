@@ -112,8 +112,6 @@ public class DefaultContainer extends JFrame implements IContainer,
 	private boolean defaultCloseOperation;
 
 	protected EventListenerList listenerList = new EventListenerList();
-	
-	private SearchBar searchBar = new SearchBar();
 
 	public DefaultContainer(DefaultFrameController mediator) {
 		super();
@@ -548,6 +546,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		new MenuXMLDecoder(mediator).extendMenuBar(menubar, is);
 
+		// finally, add all external extension menu additions
+		// for example: Hello World Plugin
 		try {
 			IExtensionHandler handler = PluginManager
 					.getInstance().getExtensionHandler(IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION);
@@ -581,6 +581,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	/**
@@ -600,7 +601,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		
 		// add animated icon to right-hand side corner of menubar
 		MenuThrobber.setThrobber(menubar);
-
+		
 		// // add new componnet
 		contentPane.add(view, BorderLayout.CENTER);
 

@@ -1,22 +1,27 @@
 package org.columba.core.search.api;
 
-import javax.swing.ImageIcon;
 
 public interface ISearchCriteria {
 
 	/**
-	 * Returns name of search criteria.
+	 * Returns technical name. Should be unique in the provider context.
+	 * 
+	 * @return
+	 */
+	String getTechnicalName();
+	
+	/**
+	 * Returns human-readable name of search criteria.
 	 * 
 	 * @return
 	 */
 	String getTitle();
 	
 	/**
-	 * Returns description of search criteria.
+	 * Returns human-readable description of search criteria.
 	 * 
 	 * @return
 	 */
 	String getDescription();
-	   
-	ImageIcon getIcon();
+	
 }

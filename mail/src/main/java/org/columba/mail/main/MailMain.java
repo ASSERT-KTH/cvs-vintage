@@ -27,7 +27,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.component.IComponentPlugin;
+import org.columba.core.component.api.IComponentPlugin;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.connectionstate.ConnectionStateImpl;
@@ -127,7 +127,7 @@ public class MailMain implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#handleCommandLineParameters(java.lang.String[])
+	 * @see org.columba.core.component.api.IComponentPlugin#handleCommandLineParameters(java.lang.String[])
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 

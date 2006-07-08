@@ -26,7 +26,7 @@ import org.columba.addressbook.facade.ModelFacade;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.api.plugin.PluginLoadingFailedException;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.component.IComponentPlugin;
+import org.columba.core.component.api.IComponentPlugin;
 import org.columba.core.gui.frame.FrameManager;
 import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.resourceloader.GlobalResourceLoader;
@@ -49,7 +49,7 @@ public class AddressbookMain implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#handleCommandLineParameters()
+	 * @see org.columba.core.component.api.IComponentPlugin#handleCommandLineParameters()
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 		if (commandLine.hasOption("addressbook")) {
@@ -64,7 +64,7 @@ public class AddressbookMain implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#init()
+	 * @see org.columba.core.component.api.IComponentPlugin#init()
 	 */
 	public void init() {
 		// init addressbook plugin handlers
@@ -98,13 +98,13 @@ public class AddressbookMain implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#postStartup()
+	 * @see org.columba.core.component.api.IComponentPlugin#postStartup()
 	 */
 	public void postStartup() {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#registerCommandLineArguments()
+	 * @see org.columba.core.component.api.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
 		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();

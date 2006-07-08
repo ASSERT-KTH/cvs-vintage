@@ -7,9 +7,9 @@ import org.columba.core.search.api.IResultListener;
 
 public interface IResultPanel extends IExtensionInterface, IResultListener {
 
-	public String getProviderName();
+	public String getSearchCriteriaTechnicalName();
 
-	public String getProviderNamespace();
+	public String getProviderTechnicalName();
 
 	public JComponent getView();
 

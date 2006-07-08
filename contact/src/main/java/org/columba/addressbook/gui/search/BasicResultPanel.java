@@ -35,20 +35,18 @@ import org.jdesktop.swingx.decorator.RolloverHighlighter;
 
 public class BasicResultPanel extends JXList implements IResultPanel {
 
-	
+	private String providerTechnicalName;
 
-	private String providerNamespace;
-
-	private String providerName;
+	private String criteriaTechnicalName;
 
 	private DefaultListModel listModel;
 
-	public BasicResultPanel(String providerName, String providerNamespace) {
+	public BasicResultPanel(String providerTechnicalName,
+			String criteriaTechnicalName) {
 		super();
 
-		this.providerName = providerName;
-		this.providerNamespace = providerNamespace;
-
+		this.criteriaTechnicalName = criteriaTechnicalName;
+		this.providerTechnicalName = providerTechnicalName;
 
 		listModel = new DefaultListModel();
 		setModel(listModel);
@@ -66,7 +64,7 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 			public void doubleClick(MouseEvent event) {
 				ISearchResult result = (ISearchResult) getSelectedValue();
 
-				 try {
+				try {
 					IDialogFacade facade = (IDialogFacade) ServiceRegistry
 							.getInstance().getService(IDialogFacade.class);
 					facade.openContactDialog(result.getLocation());
@@ -79,22 +77,23 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 
 	}
 
-	public String getProviderName() {
-		return providerName;
+	public String getSearchCriteriaTechnicalName() {
+		return criteriaTechnicalName;
 	}
 
-	public String getProviderNamespace() {
-		return providerNamespace;
+	public String getProviderTechnicalName() {
+		return providerTechnicalName;
 	}
 
 	public JComponent getView() {
 		return this;
 	}
 
-	
-
 	public void resultArrived(IResultEvent event) {
-		if (!event.getProviderName().equals(this.providerName))
+		if (!event.getProviderName().equals(providerTechnicalName))
+			return;
+		if (!event.getSearchCriteria().getTechnicalName().equals(
+				this.criteriaTechnicalName))
 			return;
 
 		List<ISearchResult> result = event.getSearchResults();
@@ -115,7 +114,7 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 	class MyListCellRenderer extends JPanel implements ListCellRenderer {
 
 		private JLabel iconLabel = new JLabel();
-		
+
 		private JLabel titleLabel = new JLabel();
 
 		private JLabel descriptionLabel = new JLabel();
@@ -130,17 +129,16 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 
 			centerPanel = new JPanel();
 			centerPanel.setLayout(new BorderLayout());
-			
+
 			centerPanel.add(titleLabel, BorderLayout.NORTH);
 			centerPanel.add(descriptionLabel, BorderLayout.CENTER);
 			add(iconLabel, BorderLayout.WEST);
 			add(centerPanel, BorderLayout.CENTER);
-			
-			
+
 			setBorder(BorderFactory.createCompoundBorder(lineBorder,
 					BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 			iconLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
-			
+
 			centerPanel.setOpaque(false);
 			setOpaque(true);
 
@@ -150,8 +148,8 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 				int index, boolean isSelected, boolean cellHasFocus) {
 
 			if (isSelected) {
-//				setBackground(list.getSelectionBackground());
-//				setForeground(list.getSelectionForeground());
+				// setBackground(list.getSelectionBackground());
+				// setForeground(list.getSelectionForeground());
 
 			} else {
 				setBackground(list.getBackground());
@@ -177,16 +175,16 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 	class HeaderSeparatorBorder extends AbstractBorder {
 
 		protected Color color;
-		
+
 		public HeaderSeparatorBorder(Color color) {
 			super();
-			
+
 			this.color = color;
 		}
 
 		/**
-		 * Paints the border for the specified component with the specified position
-		 * and size.
+		 * Paints the border for the specified component with the specified
+		 * position and size.
 		 * 
 		 * @param c
 		 *            the component for which this border is being painted
@@ -201,12 +199,12 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 		 * @param height
 		 *            the height of the painted border
 		 */
-		public void paintBorder(Component c, Graphics g, int x, int y, int width,
-				int height) {
+		public void paintBorder(Component c, Graphics g, int x, int y,
+				int width, int height) {
 			Color oldColor = g.getColor();
 			g.setColor(color);
-			g.drawLine(x,y+height-1, x+width-1, y+height-1);
-			
+			g.drawLine(x, y + height - 1, x + width - 1, y + height - 1);
+
 			g.setColor(oldColor);
 		}
 
@@ -232,7 +230,7 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 			insets.left = insets.top = insets.right = insets.bottom = 1;
 			return insets;
 		}
-		
+
 	}
-	
+
 }

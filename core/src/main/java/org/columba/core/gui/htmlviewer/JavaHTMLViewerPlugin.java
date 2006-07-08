@@ -17,6 +17,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin;
 import org.columba.core.io.DiskIO;
 
 public class JavaHTMLViewerPlugin extends JScrollPane implements
@@ -184,14 +185,14 @@ public class JavaHTMLViewerPlugin extends JScrollPane implements
 	}
 
 	/**
-	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#setCaretPosition(int)
+	 * @see org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin#setCaretPosition(int)
 	 */
 	public void setCaretPosition(int position) {
 		textPane.setCaretPosition(position);
 	}
 
 	/**
-	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#moveCaretPosition(int)
+	 * @see org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin#moveCaretPosition(int)
 	 */
 	public void moveCaretPosition(int position) {
 		textPane.moveCaretPosition(position);

@@ -29,6 +29,12 @@ import org.columba.api.gui.frame.event.FrameEvent;
 import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.selection.ISelectionManager;
 import org.columba.core.config.ViewItem;
+import org.columba.core.context.semantic.SemanticContext;
+import org.columba.core.context.semantic.api.ISemanticContext;
+import org.columba.core.gui.contextualpanel.ContextualPanel;
+import org.columba.core.gui.contextualpanel.api.IContextualPanel;
+import org.columba.core.gui.search.SearchPanel;
+import org.columba.core.gui.search.api.ISearchPanel;
 import org.columba.core.resourceloader.GlobalResourceLoader;
 import org.columba.core.selection.SelectionManager;
 
@@ -61,6 +67,11 @@ public class DefaultFrameController implements IFrameMediator {
 	// Menuitems use this to display a string in the statusbar
 	protected TooltipMouseHandler tooltipMouseHandler;
 
+	protected ISearchPanel searchPanel;
+	
+	protected IContextualPanel contextualPanel;
+	
+	protected ISemanticContext semanticContext;
 	/**
 	 * 
 	 */
@@ -72,6 +83,12 @@ public class DefaultFrameController implements IFrameMediator {
 
 		this.id = viewItem.get("id");
 
+		searchPanel = new SearchPanel(this);
+		
+		contextualPanel = new ContextualPanel(this);
+		
+		semanticContext = new SemanticContext();
+		
 		// init selection handler
 		selectionManager = new SelectionManager();
 
@@ -349,6 +366,18 @@ public class DefaultFrameController implements IFrameMediator {
 	public boolean isInitialized() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public ISearchPanel getSearchPanel() {
+		return searchPanel;
+	}
+
+	public IContextualPanel getContextualPanel() {
+		return contextualPanel;
+	}
+
+	public ISemanticContext getSemanticContext() {
+		return semanticContext;
 	}
 
 }

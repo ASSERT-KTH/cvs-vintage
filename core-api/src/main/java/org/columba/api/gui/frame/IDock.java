@@ -15,7 +15,10 @@ import javax.swing.JPopupMenu;
  */
 public interface IDock {
 
-	enum REGION {CENTER, NORTH, SOUTH, EAST, WEST};
+	enum REGION {CENTER, NORTH, SOUTH, EAST, WEST}
+
+	public static final String DOCKING_VIEW_SEARCH = "search_panel";
+	public static final String DOCKING_VIEW_CONTEXTUAL_PANEL = "contextual_panel";
 
 	/**
 	 * Return iterator of dockables.
@@ -53,4 +56,6 @@ public interface IDock {
 	public void dock(IDockable dockable, IDockable parentDockable, REGION region, float percentage);
 	
 	public void setSplitProportion(IDockable dockable, float percentage);
+	
+	public void showDockable(String id);
 }

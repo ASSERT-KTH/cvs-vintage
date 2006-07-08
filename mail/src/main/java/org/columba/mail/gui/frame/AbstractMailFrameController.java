@@ -56,9 +56,7 @@ public abstract class AbstractMailFrameController extends DockFrameController
 	public AbstractMailFrameController(String id) {
 		super(id);
 
-		messageController = new MessageController(this);
-
-		folderOptionsController = new FolderOptionsController(this);
+		initComponents();
 
 	}
 
@@ -69,12 +67,15 @@ public abstract class AbstractMailFrameController extends DockFrameController
 	public AbstractMailFrameController(ViewItem viewItem) {
 		super(viewItem);
 
-		messageController = new MessageController(this);
-
-		folderOptionsController = new FolderOptionsController(this);
-
+		initComponents();
 	}
 
+	private void initComponents() {
+		messageController = new MessageController(this);
+		
+		folderOptionsController = new FolderOptionsController(this);
+	}
+	
 	/*
 	 * protected XmlElement createDefaultConfiguration(String id) { XmlElement
 	 * child = super.createDefaultConfiguration(id);
@@ -178,5 +179,7 @@ public abstract class AbstractMailFrameController extends DockFrameController
 			}
 		}
 	}
+
+	
 
 }

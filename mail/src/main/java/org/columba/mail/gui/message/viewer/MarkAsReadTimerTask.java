@@ -25,7 +25,7 @@ public class MarkAsReadTimerTask extends TimerTask {
 	public void run() {
 		// If the same message is still shown
 		// Mark it as read
-		if(controller.getShownFolder() != null && controller.getShownFolder().equals(r.getSourceFolder()) && controller.getShownUid() != null && controller.getShownUid().equals(r.getUids()[0])) {		
+		if(controller.getSelectedFolder() != null && controller.getSelectedFolder().equals(r.getSourceFolder()) && controller.getSelectedMessageId() != null && controller.getSelectedMessageId().equals(r.getUids()[0])) {		
 			r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
 			MarkMessageCommand c = new MarkMessageCommand(r);

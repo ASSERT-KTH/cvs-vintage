@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin;
 import org.columba.core.logging.Logging;
 import org.jdesktop.jdic.browser.WebBrowser;
 
@@ -129,14 +130,14 @@ public class JDICHTMLViewerPlugin extends JPanel implements IHTMLViewerPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#setCaretPosition(int)
+	 * @see org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin#setCaretPosition(int)
 	 */
 	public void setCaretPosition(int position) {
 		// TODO
 	}
 
 	/**
-	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#moveCaretPosition(int)
+	 * @see org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin#moveCaretPosition(int)
 	 */
 	public void moveCaretPosition(int position) {
 		// TODO

@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.columba.core.scripting.service.IColumbaService;
+import org.columba.core.scripting.service.api.IColumbaService;
 
 /**
  * @author Celso Pinto <cpinto@yimports.com>

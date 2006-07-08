@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import org.columba.core.gui.htmlviewer.HTMLViewerFactory;
-import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
+import org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin;
 import org.columba.core.search.api.IResultEvent;
 import org.columba.core.search.api.IResultListener;
 import org.columba.core.search.api.ISearchCriteria;

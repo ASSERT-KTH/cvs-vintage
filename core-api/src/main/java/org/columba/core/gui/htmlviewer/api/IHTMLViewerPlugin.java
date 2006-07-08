@@ -1,4 +1,4 @@
-package org.columba.core.gui.htmlviewer;
+package org.columba.core.gui.htmlviewer.api;
 
 import javax.swing.JComponent;
 

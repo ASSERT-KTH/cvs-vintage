@@ -17,28 +17,25 @@
 //All Rights Reserved.
 package org.columba.calendar;
 
-//import java.io.InputStream;
+import java.io.InputStream;
 
 import org.apache.commons.cli.CommandLine;
-//import org.columba.api.plugin.IExtensionHandlerKeys;
-//import org.columba.api.plugin.PluginHandlerNotFoundException;
-//import org.columba.api.plugin.PluginMetadata;
+import org.columba.api.plugin.IExtensionHandlerKeys;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
+import org.columba.api.plugin.PluginMetadata;
 import org.columba.calendar.store.CalendarStoreFactory;
-import org.columba.core.component.IComponentPlugin;
-
-//import org.columba.core.plugin.PluginManager;
+import org.columba.core.component.api.IComponentPlugin;
+import org.columba.core.plugin.PluginManager;
 
 /**
- * CalendarComponent class
- * 
  * @author fdietz
+ * 
  */
 public class CalendarComponent implements IComponentPlugin {
 
 	public final static String PLUGIN_ID = "org.columba.calendar.frenchvanilla";
-
 	/**
-	 * CalendarComponent default constructor
+	 * 
 	 */
 	public CalendarComponent() throws Exception {
 		super();
@@ -60,19 +57,18 @@ public class CalendarComponent implements IComponentPlugin {
 	 */
 	public void init() {
 
-		// try {
-		// PluginMetadata metadata =
-		// PluginManager.getInstance().getPluginMetadata(PLUGIN_ID);
-		//			
-		// InputStream is = this.getClass().getResourceAsStream(
-		// "/org/columba/calendar/action/action.xml");
-		//
-		// PluginManager.getInstance().getExtensionHandler(
-		// IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION).loadExternalExtensionsFromStream(metadata,
-		// is);
-		//
-		// } catch (PluginHandlerNotFoundException ex) {
-		// }
+//		try {
+//			PluginMetadata metadata = PluginManager.getInstance().getPluginMetadata(PLUGIN_ID);
+//			
+//			InputStream is = this.getClass().getResourceAsStream(
+//					"/org/columba/calendar/action/action.xml");
+//
+//			PluginManager.getInstance().getExtensionHandler(
+//					IExtensionHandlerKeys.ORG_COLUMBA_CORE_ACTION).loadExternalExtensionsFromStream(metadata, is);
+//
+//		} catch (PluginHandlerNotFoundException ex) {
+//		}
+
 	}
 
 	/**
@@ -87,6 +83,7 @@ public class CalendarComponent implements IComponentPlugin {
 	 */
 	public void registerCommandLineArguments() {
 		// TODO Auto-generated method stub
+
 	}
 
 	/**
@@ -94,5 +91,7 @@ public class CalendarComponent implements IComponentPlugin {
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 		// TODO Auto-generated method stub
+
 	}
+
 }

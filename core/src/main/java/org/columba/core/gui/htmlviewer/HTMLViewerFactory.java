@@ -9,6 +9,7 @@ import org.columba.api.plugin.IExtensionHandler;
 import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.PluginException;
 import org.columba.api.plugin.PluginHandlerNotFoundException;
+import org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 

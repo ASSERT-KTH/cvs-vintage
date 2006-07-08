@@ -24,6 +24,9 @@ import javax.swing.JPanel;
 import org.columba.api.gui.frame.event.IFrameMediatorListener;
 import org.columba.api.plugin.IExtensionInterface;
 import org.columba.api.selection.ISelectionManager;
+import org.columba.core.context.semantic.api.ISemanticContext;
+import org.columba.core.gui.contextualpanel.api.IContextualPanel;
+import org.columba.core.gui.search.api.ISearchPanel;
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -66,8 +69,12 @@ public interface IFrameMediator extends IExtensionInterface {
 
 	public JPanel getContentPane();
 
-	
+	public ISearchPanel getSearchPanel();
 
+	public IContextualPanel getContextualPanel();
+	
+	public ISemanticContext getSemanticContext();
+	
 	public void savePositions();
 
 	public void loadPositions();

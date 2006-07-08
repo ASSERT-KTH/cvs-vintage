@@ -1,5 +1,7 @@
 package org.columba.core.main;
 
+import org.columba.core.context.base.ContextFactory;
+import org.columba.core.context.base.api.IContextFactory;
 import org.columba.core.search.api.ISearchManager;
 
 /**
@@ -10,5 +12,7 @@ import org.columba.core.search.api.ISearchManager;
 public class MainInterface {
 
 	public static ISearchManager searchManager;
+	
+	public static IContextFactory contextFactory = new ContextFactory();
 
 }

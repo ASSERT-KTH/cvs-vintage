@@ -11,5 +11,6 @@
  <handler id="org.columba.mail.tablerenderer" />
  <handler id="org.columba.mail.viewer"/>
  <handler id="org.columba.mail.spam"/>
-  <handler id="org.columba.mail.service"/>
+ <handler id="org.columba.mail.service"/>
+ <handler id="org.columba.mail.attachment.handler"/>
 </handlerlist>

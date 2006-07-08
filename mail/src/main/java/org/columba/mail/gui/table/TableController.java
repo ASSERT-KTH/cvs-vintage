@@ -22,7 +22,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Observable;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
@@ -30,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
@@ -126,6 +129,9 @@ public class TableController implements ListSelectionListener,
 	 */
 	private ColumnHeaderTooltips tips;
 
+	
+	protected EventListenerList listenerList = new EventListenerList();
+	
 	/**
 	 * Constructor
 	 * 
@@ -479,8 +485,14 @@ public class TableController implements ListSelectionListener,
 		// rememember selected nodes
 		previouslySelectedNodes = getView().getSelectedNodes();
 
-		// show message
-		// new ViewMessageAction(getFrameController()).actionPerformed(null);
+		List<String> v = new Vector<String>();
+		for ( int i=0; i<previouslySelectedNodes.length; i++) {
+			v.add(previouslySelectedNodes[i].getUid().toString());
+		}
+		
+		fireMessageListSelectionChangedEvent(v);
+		
+		
 	}
 
 	/**
@@ -796,5 +808,31 @@ public class TableController implements ListSelectionListener,
 	public TreePath getPathForRow(int row) {
 		return view.getTree().getPathForRow(row);
 	}
+	
+	
+	public void addMessageListSelectionListener(IMessageListSelectionListener l) {
+		listenerList.add(IMessageListSelectionListener.class, l);
+	}
+
+	public void removeMessageListSelectionListener(IMessageListSelectionListener l) {
+		listenerList.remove(IMessageListSelectionListener.class, l);
+	}
+	
+	protected void fireMessageListSelectionChangedEvent(List<String> messageIds) {
+
+		IMessageListSelectionEvent e = new MessageListSelectionEvent(this, messageIds);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IMessageListSelectionListener.class) {
+				((IMessageListSelectionListener) listeners[i + 1]).selectionChanged(e);
+			}
+		}
+	}
+
+	
 	
 }

@@ -18,6 +18,7 @@ package org.columba.mail.gui.message.command;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,10 @@ import javax.swing.JOptionPane;
 
 import org.columba.api.command.ICommandReference;
 import org.columba.api.command.IWorkerStatusController;
+import org.columba.api.plugin.IExtension;
+import org.columba.api.plugin.IExtensionHandler;
+import org.columba.api.plugin.PluginException;
+import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.base.cFileChooser;
 import org.columba.core.base.cFileFilter;
 import org.columba.core.command.Command;
@@ -35,13 +40,18 @@ import org.columba.core.command.Worker;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.logging.Logging;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.util.TempFileStore;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
+import org.columba.mail.gui.attachment.IAttachmentHandler;
+import org.columba.mail.gui.message.util.AttachmentContext;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.plugin.IExtensionHandlerKeys;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
@@ -94,15 +104,52 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 
 			CommandProcessor.getInstance().addOp(new ViewMessageCommand(c, r));
 
-			// inline = true;
-			// openInlineMessage(part, tempFile);
 		} else {
-			if (!ColumbaDesktop.getInstance().open(tempFile)) {
-				File saveToFile = getDestinationFile(header);
 
-				if (saveToFile.exists())
-					saveToFile.delete();
-				tempFile.renameTo(saveToFile);
+			boolean attachmentHandlerExecuted = false;
+			try {
+				IExtensionHandler handler = PluginManager
+						.getInstance()
+						.getExtensionHandler(
+								IExtensionHandlerKeys.ORG_COLUMBA_ATTACHMENT_HANDLER);
+
+				Enumeration<IExtension> e = handler.getExtensionEnumeration();
+				while (e.hasMoreElements()) {
+					IExtension extension = e.nextElement();
+					try {
+						IAttachmentHandler attachmentHandler = (IAttachmentHandler) extension
+								.instanciateExtension(null);
+
+						attachmentHandler.execute(new AttachmentContext(
+								tempFile, header));
+						attachmentHandlerExecuted &= true;
+					} catch (PluginException e1) { 
+						LOG.severe("Error while loading plugin: "
+								+ e1.getMessage());
+						if (Logging.DEBUG)
+							e1.printStackTrace();
+					}
+				}
+
+			} catch (PluginHandlerNotFoundException e2) {
+				LOG.severe("Error while loading plugin: " + e2.getMessage());
+				if (Logging.DEBUG)
+					e2.printStackTrace();
+			}
+
+			// in case no attachment handler was executed correctly
+			// -> fall back to default handler
+			if (!attachmentHandlerExecuted) {
+				boolean success = ColumbaDesktop.getInstance().open(tempFile);
+
+				// if attachment can't be opened, save it only
+				if (!success) {
+					File saveToFile = getDestinationFile(header);
+
+					if (saveToFile.exists())
+						saveToFile.delete();
+					tempFile.renameTo(saveToFile);
+				}
 			}
 		}
 	}

@@ -4,7 +4,7 @@
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package org.columba.core.component;
+package org.columba.core.component.api;
 
 import org.apache.commons.cli.CommandLine;
 import org.columba.api.plugin.IExtensionInterface;

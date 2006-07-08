@@ -91,4 +91,8 @@ public interface ITableController {
 	void addColumn(TableColumn column);
 	
 	ListSelectionModel getListSelectionModel();
+	
+	public void addMessageListSelectionListener(IMessageListSelectionListener l);
+
+	public void removeMessageListSelectionListener(IMessageListSelectionListener l);
 }

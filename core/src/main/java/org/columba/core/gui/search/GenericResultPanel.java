@@ -58,11 +58,11 @@ public class GenericResultPanel extends JXList implements IResultPanel {
 		});
 	}
 	
-	public String getProviderName() {
+	public String getSearchCriteriaTechnicalName() {
 		return providerName;
 	}
 
-	public String getProviderNamespace() {
+	public String getProviderTechnicalName() {
 		return providerNamespace;
 	}
 

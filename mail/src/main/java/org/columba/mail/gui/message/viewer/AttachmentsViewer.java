@@ -34,6 +34,7 @@ import javax.swing.UIManager;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
+import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;

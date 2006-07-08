@@ -19,11 +19,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.JPopupMenu;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.core.gui.menu.ExtendablePopupMenu;
@@ -39,7 +44,8 @@ import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 /**
  * this class shows the the folder hierarchy
  */
-public class TreeController implements TreeWillExpandListener, ITreeController {
+public class TreeController implements TreeSelectionListener,
+		TreeWillExpandListener, ITreeController {
 
 	private IMailFolder selectedFolder;
 
@@ -50,6 +56,8 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 	private ExtendablePopupMenu menu;
 
 	private FolderComparator folderComparator;
+
+	protected EventListenerList listenerList = new EventListenerList();
 
 	/**
 	 * Constructor for tree controller.
@@ -67,25 +75,17 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 
 		view.addTreeWillExpandListener(this);
 
-		// mouseListener = new FolderTreeMouseListener(this);
-
-		// view.addMouseListener(mouseListener);
-
-		// add tree selection listener
-		// view.addTreeSelectionListener(this);
-
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
 		view.setCellRenderer(renderer);
 
 		getView().setTransferHandler(new TreeViewTransferHandler(controller));
 		getView().setDragEnabled(true);
 
-		/*
-		 * getView().getInputMap().put( KeyStroke.getKeyStroke(KeyEvent.VK_F2,
-		 * 0), "RENAME"); RenameFolderAction action = new
-		 * RenameFolderAction(mailFrameController);
-		 * getView().getActionMap().put("RENAME", action);
-		 */
+		getView().getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+		getView().addTreeSelectionListener(this);
+
 	}
 
 	/**
@@ -151,9 +151,7 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 	}
 
 	/**
-	 * Returns the selected folder.
-	 * 
-	 * @return the selected folder.
+	 * @see org.columba.mail.gui.tree.ITreeController#getSelected()
 	 */
 	public IMailFolder getSelected() {
 		return selectedFolder;
@@ -253,6 +251,41 @@ public class TreeController implements TreeWillExpandListener, ITreeController {
 	private void setFolderComparator(FolderComparator comparator) {
 		folderComparator = comparator;
 		view.setSortingComparator(folderComparator);
+	}
+
+	public void addFolderSelectionListener(IFolderSelectionListener l) {
+		listenerList.add(IFolderSelectionListener.class, l);
+	}
+
+	public void removeFolderSelectionListener(IFolderSelectionListener l) {
+		listenerList.remove(IFolderSelectionListener.class, l);
+	}
+
+	protected void fireFolderSelectionChangedEvent(IMailFolder folder) {
+
+		IFolderSelectionEvent e = new FolderSelectionEvent(this, folder);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IFolderSelectionListener.class) {
+				((IFolderSelectionListener) listeners[i + 1])
+						.selectionChanged(e);
+			}
+		}
+	}
+
+	public void valueChanged(TreeSelectionEvent e) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) getView()
+				.getLastSelectedPathComponent();
+
+		if (node == null)
+			return;
+		
+		// safe to cast to IMailFolder here, because only those are visible to the user
+		fireFolderSelectionChangedEvent((IMailFolder)node);
 	}
 
 }

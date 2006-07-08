@@ -37,6 +37,12 @@ public interface ITreeController {
 	 */
 	void setSelected(IMailFolder folder);
 
+	public IMailFolder getSelected();
+	
+	public void addFolderSelectionListener(IFolderSelectionListener l);
+
+	public void removeFolderSelectionListener(IFolderSelectionListener l);
+	
 	TreeModel getModel();
 
 	public void sortAscending(boolean ascending);

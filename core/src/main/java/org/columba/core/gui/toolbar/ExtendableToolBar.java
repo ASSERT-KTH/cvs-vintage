@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
+import java.awt.FlowLayout;
+
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
@@ -36,7 +38,6 @@ public class ExtendableToolBar extends JToolBar {
 
 		setRollover(true);
 		// setFloatable(true);
-
 	}
 
 	public void add(AbstractColumbaAction action) {

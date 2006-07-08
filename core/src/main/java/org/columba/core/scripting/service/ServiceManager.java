@@ -29,6 +29,7 @@ import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.Extension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.scripting.service.api.IColumbaService;
 
 public class ServiceManager {
 

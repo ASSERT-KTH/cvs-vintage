@@ -22,7 +22,6 @@ import org.columba.core.gui.search.api.IResultPanel;
 import org.columba.core.search.api.IResultEvent;
 import org.columba.core.search.api.IResultListener;
 import org.columba.core.search.api.ISearchCriteria;
-import org.columba.core.search.api.ISearchProvider;
 import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXHyperlink;
 
@@ -40,11 +39,11 @@ public class ResultBox extends JPanel implements IResultListener {
 
 	private IResultPanel resultPanel;
 
-	private ISearchProvider searchProvider;
+	private ISearchCriteria criteria;
 
-	public ResultBox(ISearchProvider searchProvider, IResultPanel resultPanel) {
+	public ResultBox(ISearchCriteria criteria, IResultPanel resultPanel) {
 		this.resultPanel = resultPanel;
-		this.searchProvider = searchProvider;
+		this.criteria = criteria;
 
 		collapsible = new JXCollapsiblePane();
 		collapsible.getContentPane().setBackground(Color.WHITE);
@@ -58,7 +57,6 @@ public class ResultBox extends JPanel implements IResultListener {
 		toggleAction.putValue(JXCollapsiblePane.EXPAND_ICON, UIManager
 				.getIcon("Tree.collapsedIcon"));
 		link = new JXHyperlink(toggleAction);
-		ISearchCriteria criteria = searchProvider.getCriteria("");
 		link.setText(criteria.getTitle());
 		link.setToolTipText(criteria.getDescription());
 
@@ -93,7 +91,7 @@ public class ResultBox extends JPanel implements IResultListener {
 				.createEmptyBorder(2, 4, 2, 4)));
 		top.setBackground(titleBackground);
 		top.setLayout(new BorderLayout());
-		JLabel iconLabel = new JLabel(criteria.getIcon());
+		JLabel iconLabel = new JLabel();
 		iconLabel.setBackground(titleBackground);
 		iconLabel.setOpaque(true);
 		iconLabel.setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 6));
@@ -105,14 +103,16 @@ public class ResultBox extends JPanel implements IResultListener {
 	}
 
 	public void resultArrived(IResultEvent event) {
+		
 		if (event.getProviderName() == null)
 			return;
 
-		if (!event.getProviderName().equals(resultPanel.getProviderName()))
+		if (!event.getProviderName().equals(
+				resultPanel.getProviderTechnicalName()))
 			return;
-
-		ISearchCriteria criteria = searchProvider.getCriteria(event
-				.getSearchTerm());
+		if (!event.getSearchCriteria().getTechnicalName().equals(
+				resultPanel.getSearchCriteriaTechnicalName()))
+			return;
 
 		link.setText(criteria.getTitle());
 		link.setToolTipText(criteria.getDescription());
@@ -130,30 +130,9 @@ public class ResultBox extends JPanel implements IResultListener {
 	}
 
 	public void clearSearch(IResultEvent event) {
-		if (event.getProviderName() == null)
-			return;
-
-		if (!event.getProviderName().equals(resultPanel.getProviderName()))
-			return;
-
-		ISearchCriteria criteria = searchProvider.getCriteria(event
-				.getSearchTerm());
-
-		link.setText(criteria.getTitle());
-		link.setToolTipText(criteria.getDescription());
-
-		moreLink.setText("Show More ..");
-		moreLink.setEnabled(false);
 	}
 
 	public void reset(IResultEvent event) {
-		ISearchCriteria criteria = searchProvider.getCriteria("");
-
-		link.setText(criteria.getTitle());
-		link.setToolTipText(criteria.getDescription());
-
-		moreLink.setText("Show More ..");
-		moreLink.setEnabled(false);
 	}
 
 	/**

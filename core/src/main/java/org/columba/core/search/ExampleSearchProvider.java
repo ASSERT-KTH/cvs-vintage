@@ -22,67 +22,86 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
+
+import org.columba.core.gui.search.api.IResultPanel;
 import org.columba.core.search.api.ISearchCriteria;
 import org.columba.core.search.api.ISearchProvider;
 import org.columba.core.search.api.ISearchResult;
 
-
 public class ExampleSearchProvider implements ISearchProvider {
 
 	private int count = -1;
-	
+
 	public ExampleSearchProvider() {
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.search.api.ISearchProvider#getCriteria(java.lang.String)
-	 */
-	public ISearchCriteria getCriteria(String searchTerm) {
-		return new SearchCriteria("test: "+searchTerm, "test description", null);
+	public String getTechnicalName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * @see org.columba.core.search.api.ISearchProvider#query(java.lang.String, int, int)
-	 */
-	public List<ISearchResult> query(String searchTerm, int startIndex, int resultCount) {
-		
-		URI url=null;
+	public String getName() {
+		return "example";
+	}
+
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ImageIcon getIcon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<ISearchCriteria> getAllCriteria(String searchTerm) {
+		List<ISearchCriteria> l = new Vector<ISearchCriteria>();
+		l.add(new SearchCriteria("id1", "test: " + searchTerm,
+				"test description"));
+		l.add(new SearchCriteria("id2", "test 2: " + searchTerm,
+				"test 2 description"));
+		return l;
+	}
+
+	public int getTotalResultCount() {
+		return count;
+	}
+
+	public List<ISearchResult> query(String searchTerm,
+			ISearchCriteria searchCriteria, int startIndex, int resultCount) {
+		URI url = null;
 		try {
 			url = new URI("columba://org.columba.core.example/test");
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		List<ISearchResult> result = new Vector<ISearchResult>();
 		result.add(new SearchResult("item1", "item1 description", url));
 		result.add(new SearchResult("item2", "item2 description", url));
 		result.add(new SearchResult("item3", "item3 description", url));
-		
+
 		count = result.size();
-		
+
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.search.api.ISearchProvider#getName()
-	 */
-	public String getName() {
-		return "example";
+	public ISearchCriteria getCriteria(String technicalName, String searchTerm) {
+		return new SearchCriteria("id1", "test: " + searchTerm,
+				"test description");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.search.api.ISearchProvider#getNamespace()
-	 */
-	public String getNamespace() {
-		return "org.columba.core.example";
+	public List<ISearchResult> query(String searchTerm,
+			String searchCriteriaTechnicalName, int startIndex, int resultCount) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.search.api.ISearchProvider#getTotalResultCount()
-	 */
-	public int getTotalResultCount() {
-		return count;
+	public IResultPanel getResultPanel(String searchCriteriaTechnicalName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }

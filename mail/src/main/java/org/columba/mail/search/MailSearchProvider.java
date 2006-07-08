@@ -17,24 +17,37 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreePath;
 
+import org.columba.contact.search.ContactSearchProvider;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterFactory;
+import org.columba.core.gui.search.api.IResultPanel;
 import org.columba.core.resourceloader.ImageLoader;
 import org.columba.core.search.SearchCriteria;
 import org.columba.core.search.api.ISearchCriteria;
 import org.columba.core.search.api.ISearchProvider;
 import org.columba.core.search.api.ISearchResult;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.search.BasicResultPanel;
 import org.columba.mail.resourceloader.IconKeys;
 import org.columba.mail.resourceloader.MailImageLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Flags;
 
-public abstract class AbstractMailSearchProvider implements ISearchProvider {
+public class MailSearchProvider implements ISearchProvider {
+	private static final String CRITERIA_BODY_CONTAINS = "body_contains";
+
+	private static final String CRITERIA_FROM_CONTAINS = "from_contains";
+
+	private static final String CRITERIA_SIZE_GREATER_THAN = "size_greater_than";
+
+	private static final String CRITERIA_SIZE_SMALLER_THAN = "size_smaller_than";
+
+	private static final String CRITERIA_SUBJECT_CONTAINS = "subject_contains";
 
 	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.search.AbstractMailSearchProvider");
+			.getLogger("org.columba.mail.search.MailSearchProvider");
 
 	private Hashtable<Integer, IMailbox> folderTable = new Hashtable<Integer, IMailbox>();
 
@@ -43,44 +56,72 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 	private int totalResultCount = 0;
 
 	private ResourceBundle bundle;
-	
-	public AbstractMailSearchProvider() {
-		super();
-		
+
+	public MailSearchProvider() {
 		bundle = ResourceBundle.getBundle("org.columba.mail.i18n.search");
-		
 	}
 
-	public abstract String getName();
+	public String getTechnicalName() {
+		return "MailSearchProvider";
+	}
 
-	public abstract String getNamespace();
+	public String getName() {
+		return bundle.getString("provider_title");
+	}
 
-	/**
-	 * @see org.columba.core.search.api.ISearchProvider#getCriteria(java.lang.String)
-	 */
-	public ISearchCriteria getCriteria(String searchTerm) {
-		String title = MessageFormat.format(bundle.getString(getName()
+	public String getDescription() {
+		return bundle.getString("provider_description");
+	}
+
+	public ImageIcon getIcon() {
+		return MailImageLoader.getSmallIcon(IconKeys.MESSAGE_READ);
+	}
+
+	public List<ISearchCriteria> getAllCriteria(String searchTerm) {
+		List<ISearchCriteria> list = new Vector<ISearchCriteria>();
+
+		// check if string is a number
+		boolean numberFormat = false;
+		try {
+			int searchTermInt = Integer.parseInt(searchTerm);
+			numberFormat = true;
+		} catch (NumberFormatException e) {
+		}
+
+		list.add(getCriteria(MailSearchProvider.CRITERIA_BODY_CONTAINS,
+				searchTerm));
+		list.add(getCriteria(MailSearchProvider.CRITERIA_SUBJECT_CONTAINS,
+				searchTerm));
+		list.add(getCriteria(MailSearchProvider.CRITERIA_FROM_CONTAINS,
+				searchTerm));
+		if (numberFormat)
+			list.add(getCriteria(MailSearchProvider.CRITERIA_SIZE_GREATER_THAN,
+					searchTerm));
+		if (numberFormat)
+			list.add(getCriteria(MailSearchProvider.CRITERIA_SIZE_SMALLER_THAN,
+					searchTerm));
+
+		return list;
+	}
+
+	public IResultPanel getResultPanel(String searchCriteriaTechnicalName) {
+		return new BasicResultPanel(getTechnicalName(),
+				searchCriteriaTechnicalName);
+	}
+
+	public ISearchCriteria getCriteria(String technicalName, String searchTerm) {
+
+		String title = MessageFormat.format(bundle.getString(technicalName
 				+ "_title"), new Object[] { searchTerm });
-		String description = MessageFormat.format(bundle.getString(getName()
-				+ "_description"), new Object[] { searchTerm });
-		return new SearchCriteria(title, description, MailImageLoader
-				.getSmallIcon(IconKeys.MESSAGE_READ));
+		String description = MessageFormat.format(bundle
+				.getString(technicalName + "_description"),
+				new Object[] { searchTerm });
+
+		return new SearchCriteria(technicalName, title, description);
 	}
 
-	protected abstract FilterCriteria createFilterCriteria(String searchTerm);
-
-	/**
-	 * Algorithm first retrieves all message id representing search results.
-	 * Then it retrieves the search results.
-	 * <p>
-	 * All the message id are cached to support paging.
-	 * 
-	 * @see org.columba.core.search.api.ISearchProvider#query(java.lang.String,
-	 *      int, int)
-	 */
-	public List<ISearchResult> query(String searchTerm, int startIndex,
-			int resultCount) {
-
+	public List<ISearchResult> query(String searchTerm,
+			String searchCriteriaTechnicalName, int startIndex, int resultCount) {
 		List<ISearchResult> result = new Vector<ISearchResult>();
 
 		List<IMailbox> sourceFolders = SearchFolderFactory
@@ -88,8 +129,30 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 
 		// create search criteria
 		Filter filter = FilterFactory.createEmptyFilter();
-		FilterCriteria criteria = createFilterCriteria(searchTerm);
-		// return empty result, in case the criteria doesn't match the search term
+		FilterCriteria criteria = null;
+		if (searchCriteriaTechnicalName
+				.equals(MailSearchProvider.CRITERIA_BODY_CONTAINS)) {
+			criteria = MailFilterFactory.createBodyContains(searchTerm);
+		} else if (searchCriteriaTechnicalName
+				.equals(MailSearchProvider.CRITERIA_SUBJECT_CONTAINS)) {
+			criteria = MailFilterFactory.createSubjectContains(searchTerm);
+		} else if (searchCriteriaTechnicalName
+				.equals(MailSearchProvider.CRITERIA_FROM_CONTAINS)) {
+			criteria = MailFilterFactory.createFromContains(searchTerm);
+		} else if (searchCriteriaTechnicalName
+				.equals(MailSearchProvider.CRITERIA_SIZE_GREATER_THAN)) {
+			criteria = MailFilterFactory.createSizeIsBigger(Integer
+					.parseInt(searchTerm));
+		} else if (searchCriteriaTechnicalName
+				.equals(MailSearchProvider.CRITERIA_SIZE_SMALLER_THAN)) {
+			criteria = MailFilterFactory.createSizeIsSmaller(Integer
+					.parseInt(searchTerm));
+		} else
+			throw new IllegalArgumentException("no criteria <"
+					+ searchCriteriaTechnicalName + "> found");
+
+		// return empty result, in case the criteria doesn't match the search
+		// term
 		if (criteria == null)
 			return result;
 
@@ -99,8 +162,9 @@ public abstract class AbstractMailSearchProvider implements ISearchProvider {
 			Iterator<IMailbox> it = sourceFolders.iterator();
 			while (it.hasNext()) {
 				IMailbox folder = it.next();
-				LOG.info("searching in "+new TreePath(folder.getPath()).toString());
-				
+				LOG.info("searching in "
+						+ new TreePath(folder.getPath()).toString());
+
 				// skip if this folder was already queried
 				if (folderTable.containsKey(folder.getUid()))
 					continue;

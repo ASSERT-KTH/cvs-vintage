@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.event.PopupMenuListener;
 
 public class IconTextField  extends JTextField {
 	private Icon icon;
@@ -49,6 +50,10 @@ public class IconTextField  extends JTextField {
 			
 			//registerKeyboardAction(showAction, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), JComponent.WHEN_FOCUSED);
 			
+		}
+		
+		public void addPopupMenuListener(PopupMenuListener listener) {
+			popupMenu.addPopupMenuListener(listener);
 		}
 		
 //		Action showAction = new AbstractAction(){ 

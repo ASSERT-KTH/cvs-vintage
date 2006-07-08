@@ -18,7 +18,7 @@ import org.columba.api.gui.frame.IDockable;
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.docking.XMLPersister;
-import org.columba.core.gui.search.SearchPanel;
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -32,6 +32,9 @@ public abstract class DockFrameController extends DefaultFrameController
 
 	private ArrayList<IDockable> list = new ArrayList<IDockable>();
 
+	private IDockable contextualPanelDockable;
+	private IDockable searchPanelDockable;
+	
 	/**
 	 * @param viewItem
 	 */
@@ -61,7 +64,9 @@ public abstract class DockFrameController extends DefaultFrameController
 		dockingPort = new DefaultDockingPort();
 		dockingPort.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		registerDockable("search_id", "Search", new SearchPanel(this), null);
+		searchPanelDockable = registerDockable(IDock.DOCKING_VIEW_SEARCH, "Search", getSearchPanel().getView(), null);
+		contextualPanelDockable = registerDockable(IDock.DOCKING_VIEW_CONTEXTUAL_PANEL, "Contextual Panel", getContextualPanel().getView(), null);
+	
 	}
 
 	/* (non-Javadoc)
@@ -152,6 +157,7 @@ public abstract class DockFrameController extends DefaultFrameController
 		list.add(dockable);
 
 		dockingPort.dock(dockable.getView(), dockable.getId());
+		
 	}
 
 	/**
@@ -272,5 +278,17 @@ public abstract class DockFrameController extends DefaultFrameController
 	/**
 	 * 
 	 */
-	public abstract void loadDefaultPosition();
+	public void loadDefaultPosition() {
+		dock(searchPanelDockable, REGION.WEST);
+		dock(contextualPanelDockable, REGION.EAST);
+	}
+
+	
+	/**
+	 * @see org.columba.api.gui.frame.IDock#showDockable(java.lang.String)
+	 */
+	public void showDockable(String id) {
+		Dockable dockable = DockingManager.getDockable(id);
+		DockingManager.display(dockable);
+	}
 }

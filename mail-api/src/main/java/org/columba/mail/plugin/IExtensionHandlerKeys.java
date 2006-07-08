@@ -64,4 +64,12 @@ public interface IExtensionHandlerKeys {
 	 */
 	public static final String ORG_COLUMBA_MAIL_TABLERENDERER = "org.columba.mail.tablerenderer";
 
+	/**
+	 * Handler for executing custom actions on attachment contents. 
+	 * <p>
+	 * Extensions retrieve the <code>File</code> containing attachment content and attachment metadata.
+	 */
+	public static final String ORG_COLUMBA_ATTACHMENT_HANDLER = "org.columba.mail.attachment.handler";
+	
+	
 }

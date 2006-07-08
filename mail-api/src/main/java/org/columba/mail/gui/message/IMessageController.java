@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
+import org.columba.core.context.semantic.api.IContextListener;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 
@@ -39,10 +40,6 @@ public interface IMessageController {
 	 */
 	void showMessage(IMailbox folder, Object uid) throws Exception;
 
-	IMailbox getShownFolder();
-
-	Object getShownUid();
-
 	/**
 	 * Revalidate message viewer components.
 	 * <p>
@@ -51,21 +48,31 @@ public interface IMessageController {
 	 */
 	void updateGUI() throws Exception;
 
-	void clear();
+	public IMailFolderCommandReference getSelectedReference();
+
+	public IMailbox getSelectedFolder();
+
+	public Object getSelectedMessageId();
+
+	public void addMessageSelectionListener(IMessageSelectionListener l);
+
+	public void removeMessageSelectionListener(IMessageSelectionListener l);
+
+	public void clear();
 
 	/**
 	 * Return text.
 	 * 
 	 * @return
 	 */
-	String getText();
+	public String getText();
 
 	/**
 	 * Return selected text
 	 * 
 	 * @return
 	 */
-	String getSelectedText();
+	public String getSelectedText();
 
 	/**
 	 * Sets the position of the text insertion caret for the TextComponent. Note
@@ -87,7 +94,5 @@ public interface IMessageController {
 	 * @param position
 	 */
 	public void moveCaretPosition(int position);
-
-	public IMailFolderCommandReference getSelectedReference();
 
 }

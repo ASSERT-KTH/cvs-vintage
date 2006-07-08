@@ -11,6 +11,7 @@ import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.IPluginManager;
 import org.columba.api.plugin.PluginException;
 import org.columba.api.plugin.PluginHandlerNotFoundException;
+import org.columba.core.component.api.IComponentPlugin;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.services.ServiceRegistry;
@@ -66,7 +67,7 @@ public class ComponentManager implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#init()
+	 * @see org.columba.core.component.api.IComponentPlugin#init()
 	 */
 	public void init() {
 		Enumeration extensionEnumeration = getExtensionHandler()
@@ -91,7 +92,7 @@ public class ComponentManager implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#postStartup()
+	 * @see org.columba.core.component.api.IComponentPlugin#postStartup()
 	 */
 	public void postStartup() {
 		Enumeration extensionEnumeration = getExtensionHandler()
@@ -113,7 +114,7 @@ public class ComponentManager implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#registerCommandLineArguments()
+	 * @see org.columba.core.component.api.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
 
@@ -137,7 +138,7 @@ public class ComponentManager implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#handleCommandLineParameters(org.apache.commons.cli.CommandLine)
+	 * @see org.columba.core.component.api.IComponentPlugin#handleCommandLineParameters(org.apache.commons.cli.CommandLine)
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 		Enumeration extensionEnumeration = getExtensionHandler()

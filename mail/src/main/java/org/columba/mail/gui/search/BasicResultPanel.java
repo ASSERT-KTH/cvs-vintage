@@ -20,6 +20,7 @@ package org.columba.mail.gui.search;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -53,37 +54,22 @@ import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.decorator.HighlighterPipeline;
 import org.jdesktop.swingx.decorator.RolloverHighlighter;
 
-/**
- * BasicResultPanel class
- * 
- * @author fdietz
- */
 public class BasicResultPanel extends JXList implements IResultPanel {
-
-	/**
-	 * serialVersionUID
-	 */
-	private static final long serialVersionUID = -4489416716453628164L;
 
 	private ResourceBundle bundle;
 
-	private String providerNamespace;
+	private String providerTechnicalName;
 
-	private String providerName;
+	private String criteriaTechnicalName;
 
 	private DefaultListModel listModel;
 
-	/**
-	 * BasicResultPanel parameterised constructor
-	 * 
-	 * @param providerName
-	 * @param providerNamespace
-	 */
-	public BasicResultPanel(String providerName, String providerNamespace) {
+	public BasicResultPanel(String providerTechnicalName,
+			String criteriaTechnicalName) {
 		super();
 
-		this.providerName = providerName;
-		this.providerNamespace = providerNamespace;
+		this.criteriaTechnicalName = criteriaTechnicalName;
+		this.providerTechnicalName = providerTechnicalName;
 
 		bundle = ResourceBundle.getBundle("org.columba.mail.i18n.search");
 
@@ -109,63 +95,47 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 				} catch (ServiceNotFoundException e) {
 					e.printStackTrace();
 				}
+
 			}
 		});
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.search.api.IResultPanel#getProviderName()
-	 */
-	public String getProviderName() {
-		return providerName;
+	public String getSearchCriteriaTechnicalName() {
+		return criteriaTechnicalName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.search.api.IResultPanel#getProviderNamespace()
-	 */
-	public String getProviderNamespace() {
-		return providerNamespace;
+	public String getProviderTechnicalName() {
+		return providerTechnicalName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.search.api.IResultPanel#getView()
-	 */
 	public JComponent getView() {
 		return this;
 	}
 
-	/**
-	 * @return small icon
-	 */
 	public ImageIcon getIcon() {
 		return MailImageLoader.getSmallIcon(IconKeys.MESSAGE_READ);
 	}
 
-	/**
-	 * @param searchTerm
-	 * @return search result title
-	 */
 	public String getTitle(String searchTerm) {
-		String result = MessageFormat.format(bundle.getString(providerName
-				+ "_title"), new Object[] { searchTerm });
+		String result = MessageFormat.format(bundle
+				.getString(criteriaTechnicalName + "_title"),
+				new Object[] { searchTerm });
 		return result;
 	}
 
-	/**
-	 * @param searchTerm
-	 * @return search result description
-	 */
 	public String getDescription(String searchTerm) {
-		String result = MessageFormat.format(bundle.getString(providerName
-				+ "_description"), new Object[] { searchTerm });
+		String result = MessageFormat.format(bundle
+				.getString(criteriaTechnicalName + "_description"),
+				new Object[] { searchTerm });
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.search.api.IResultListener#resultArrived(org.columba.core.search.api.IResultEvent)
-	 */
 	public void resultArrived(IResultEvent event) {
-		if (!event.getProviderName().equals(this.providerName))
+		if (!event.getProviderName().equals(this.providerTechnicalName))
+			return;
+		if (!event.getSearchCriteria().getTechnicalName().equals(
+				this.criteriaTechnicalName))
 			return;
 
 		List<ISearchResult> result = event.getSearchResults();
@@ -179,23 +149,11 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 		revalidate();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.search.api.IResultListener#clearSearch(org.columba.core.search.api.IResultEvent)
-	 */
 	public void clearSearch(IResultEvent event) {
 		listModel.clear();
 	}
 
-	/**
-	 * MyListCellRenderer class
-	 * @author fdietz
-	 */
 	class MyListCellRenderer extends JPanel implements ListCellRenderer {
-
-		/**
-		 * serialVersionUID
-		 */
-		private static final long serialVersionUID = -262733555786698831L;
 
 		private JPanel centerPanel;
 
@@ -242,11 +200,9 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 			topPanel.setOpaque(false);
 			centerPanel.setOpaque(false);
 			setOpaque(true);
+
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-		 */
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 
@@ -272,12 +228,11 @@ public class BasicResultPanel extends JXList implements IResultPanel {
 
 			return this;
 		}
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.search.api.IResultListener#reset(org.columba.core.search.api.IResultEvent)
-	 */
 	public void reset(IResultEvent event) {
 		listModel.clear();
 	}
+
 }

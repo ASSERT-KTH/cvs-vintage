@@ -15,7 +15,7 @@
   
   All Rights Reserved.
 */
-package org.columba.core.scripting.service;
+package org.columba.core.scripting.service.api;
 
 import org.columba.api.plugin.IExtensionInterface;
 

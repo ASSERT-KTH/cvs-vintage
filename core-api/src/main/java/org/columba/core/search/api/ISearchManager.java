@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface ISearchManager {
 
+	public ISearchProvider getProvider(String technicalName);
+	
 	public List<ISearchProvider> getAllProviders(); 
 	
 	/**
@@ -41,6 +43,24 @@ public interface ISearchManager {
 	 * 
 	 */
 	public void executeSearch(String searchTerm, String providerName, int startIndex, int resultCount);
+	
+	/**
+	 * Execute query and retrieve pageable search result for given search term.
+	 * <p>
+	 * The query returns <code>resultCount</code> individual results, from
+	 * a given <code>startIndex</code>. Paging should be supported, so its
+	 * up to the underlying implementation to use an intelligent caching 
+	 * strategy or whatsoever.
+	 * 
+	 * @param searchTerm
+	 * @param providerName
+	 * @param criteriaName
+	 * @param startIndex		start index of search results
+	 * @param resultCount		total count of results
+	 * 
+	 */
+	public void executeSearch(String searchTerm, String providerName, String criteriaName, int startIndex, int resultCount);
+	
 	
 	/**
 	 * Clear a search and discard all cached data for this <code>searchTerm</code>.

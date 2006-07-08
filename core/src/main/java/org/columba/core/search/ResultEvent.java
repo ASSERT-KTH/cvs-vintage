@@ -14,7 +14,7 @@ public class ResultEvent extends EventObject implements IResultEvent {
 	private ISearchCriteria criteria;
 	private int totalResultCount;
 	private String name;
-	private String namespace;
+
 	
 	public ResultEvent(Object source) {
 		super(source);
@@ -26,12 +26,12 @@ public class ResultEvent extends EventObject implements IResultEvent {
 	}
 	
 	
-	public ResultEvent(Object source, String searchTerm, String name, String namespace, ISearchCriteria criteria, List<ISearchResult> result, int totalResultCount) {
+	public ResultEvent(Object source, String searchTerm, String name,  ISearchCriteria criteria, List<ISearchResult> result, int totalResultCount) {
 		super(source);
 		
 		this.searchTerm = searchTerm;
 		this.name = name;
-		this.namespace = namespace;
+
 		this.criteria = criteria;
 		this.result = result;
 		this.totalResultCount = totalResultCount;
@@ -57,8 +57,6 @@ public class ResultEvent extends EventObject implements IResultEvent {
 		return name;
 	}
 
-	public String getProviderNamespace() {
-		return namespace;
-	}
+	
 
 }

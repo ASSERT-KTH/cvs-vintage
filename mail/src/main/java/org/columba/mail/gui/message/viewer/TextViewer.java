@@ -60,7 +60,7 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
 import org.columba.core.desktop.ColumbaDesktop;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
+import org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.Logging;

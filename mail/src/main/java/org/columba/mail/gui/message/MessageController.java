@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.event.EventListenerList;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
@@ -70,14 +71,14 @@ public class MessageController extends JPanel implements CharsetListener,
 
 	private PGPMessageFilter pgpFilter;
 
-	
-
 	private ExtendablePopupMenu menu;
 
 	private IMailbox folder;
 
 	private Object uid;
 
+	protected EventListenerList listenerList = new EventListenerList();
+	
 	public MessageController(MailFrameMediator frameMediator) {
 		this.frameController = frameMediator;
 
@@ -95,8 +96,6 @@ public class MessageController extends JPanel implements CharsetListener,
 
 		((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
-		
-
 		addComponentListener(new ComponentListener() {
 
 			public void componentHidden(ComponentEvent e) {
@@ -107,9 +106,9 @@ public class MessageController extends JPanel implements CharsetListener,
 
 			public void componentResized(ComponentEvent e) {
 				try {
-					if ( getShownUid() != null ) {
-					updateGUI();
-					repaint();
+					if (getSelectedMessageId() != null) {
+						updateGUI();
+						repaint();
 					}
 
 				} catch (Exception e1) {
@@ -152,15 +151,15 @@ public class MessageController extends JPanel implements CharsetListener,
 
 		add(top, BorderLayout.NORTH);
 
-//		JPanel bottom = new JPanel();
-//		bottom.setBackground(backgroundColor);
-//
-//		bottom.setLayout(new BorderLayout());
+		// JPanel bottom = new JPanel();
+		// bottom.setBackground(backgroundColor);
+		//
+		// bottom.setLayout(new BorderLayout());
 
 		JComponent c = bodytextViewer.getView();
 		c.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		c.setBackground(backgroundColor);
-//		bottom.add(c, BorderLayout.CENTER);
+		// bottom.add(c, BorderLayout.CENTER);
 
 		add(c, BorderLayout.CENTER);
 	}
@@ -224,8 +223,10 @@ public class MessageController extends JPanel implements CharsetListener,
 		}
 
 		MimeTree mimePartTree = folder.getMimePartTree(uid);
-		if( mimePartTree == null) throw new CommandCancelledException("Message does not exist anymore."); 
-		
+		if (mimePartTree == null)
+			throw new CommandCancelledException(
+					"Message does not exist anymore.");
+
 		MimePart mp = chooseBodyPart(mimePartTree);
 		if (mp != null)
 			bodytextViewer.view(folder, uid, mp.getAddress(), this
@@ -236,6 +237,8 @@ public class MessageController extends JPanel implements CharsetListener,
 
 		headerController.view(folder, uid, this.getFrameController());
 
+		// notify all interested listeners
+		fireMessageSelectionChangedEvent(folder, uid.toString());
 	}
 
 	/**
@@ -266,7 +269,6 @@ public class MessageController extends JPanel implements CharsetListener,
 		return this;
 	}
 
-
 	/**
 	 * @see org.columba.mail.gui.message.IMessageController#getSelectedText()
 	 */
@@ -274,7 +276,6 @@ public class MessageController extends JPanel implements CharsetListener,
 		return bodytextViewer.getSelectedText();
 	}
 
-	
 	/**
 	 * @see org.columba.mail.gui.message.IMessageController#getText()
 	 */
@@ -282,11 +283,11 @@ public class MessageController extends JPanel implements CharsetListener,
 		return bodytextViewer.getText();
 	}
 
-	public IMailbox getShownFolder() {
+	public IMailbox getSelectedFolder() {
 		return folder;
 	}
 
-	public Object getShownUid() {
+	public Object getSelectedMessageId() {
 		return uid;
 	}
 
@@ -342,9 +343,27 @@ public class MessageController extends JPanel implements CharsetListener,
 		bodytextViewer.moveCaretPosition(position);
 	}
 
-	
+	public void addMessageSelectionListener(IMessageSelectionListener l) {
+		listenerList.add(IMessageSelectionListener.class, l);
+	}
 
+	public void removeMessageSelectionListener(IMessageSelectionListener l) {
+		listenerList.remove(IMessageSelectionListener.class, l);
+	}
 	
-	
-	
+	protected void fireMessageSelectionChangedEvent(IMailbox folder, String messageId) {
+
+		IMessageSelectionEvent e = new MessageSelectionEvent(this, folder, messageId);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == IMessageSelectionListener.class) {
+				((IMessageSelectionListener) listeners[i + 1]).selectionChanged(e);
+			}
+		}
+	}
+
 }

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.scripting.config.BeanshellConfig;
-import org.columba.core.scripting.service.IColumbaService;
+import org.columba.core.scripting.service.api.IColumbaService;
 
 /**
  This class represents the Beanshell Service.<br>
@@ -63,7 +63,7 @@ public class BeanshellService
     }
 
     /**
-     @see org.columba.core.scripting.service.IColumbaService#initService()
+     @see org.columba.core.scripting.service.api.IColumbaService#initService()
      */
     public boolean initService()
     {
@@ -83,7 +83,7 @@ public class BeanshellService
     }
 
     /**
-     @see org.columba.core.scripting.service.IColumbaService#disposeService()
+     @see org.columba.core.scripting.service.api.IColumbaService#disposeService()
      */
     public void disposeService()
     {
@@ -91,7 +91,7 @@ public class BeanshellService
     }
 
     /**
-     @see org.columba.core.scripting.service.IColumbaService#startService()
+     @see org.columba.core.scripting.service.api.IColumbaService#startService()
      */
     public void startService()
     {
@@ -103,7 +103,7 @@ public class BeanshellService
     }
 
     /**
-     @see org.columba.core.scripting.service.IColumbaService#stopService()
+     @see org.columba.core.scripting.service.api.IColumbaService#stopService()
      */
     public void stopService()
     {

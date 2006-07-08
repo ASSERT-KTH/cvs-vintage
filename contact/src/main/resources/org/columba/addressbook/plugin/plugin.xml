@@ -40,13 +40,7 @@
 </extensionlist>
 
 <extensionlist id="org.columba.core.search">
- <extension id="EmailContains" class="org.columba.contact.search.EmailContainsSearchProvider"/>
- <extension id="DisplaynameContains" class="org.columba.contact.search.DisplaynameContainsSearchProvider"/>
-</extensionlist>
-
-<extensionlist id="org.columba.core.search.ui">
- <extension id="email_contains" class="org.columba.addressbook.gui.search.BasicResultPanel"/>
- <extension id="displayname_contains" class="org.columba.addressbook.gui.search.BasicResultPanel"/>
+ <extension id="ContactSearchProvider" class="org.columba.contact.search.ContactSearchProvider"/>
 </extensionlist>
 
 </plugin>
