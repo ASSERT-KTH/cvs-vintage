@@ -1,11 +1,11 @@
-package org.columba.core.gui.contextualpanel.api;
+package org.columba.core.gui.context.api;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 import org.columba.core.context.semantic.api.ISemanticContext;
 
-public interface IContextualProvider {
+public interface IContextProvider {
 	
 	/**
 	 * Returns technical name. Should be unique.
@@ -42,6 +42,8 @@ public interface IContextualProvider {
 	public void search(ISemanticContext context, int startIndex, int resultCount);
 	
 	public void showResult();
+	
+	public void clear();
 	
 	public JComponent getView();
 	

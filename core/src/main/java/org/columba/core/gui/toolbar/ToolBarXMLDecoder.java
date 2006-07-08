@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import javax.swing.JButton;
-
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.plugin.IExtension;
 import org.columba.api.plugin.IExtensionHandler;
@@ -31,7 +29,6 @@ import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.PluginException;
 import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.core.gui.action.AbstractColumbaAction;
-import org.columba.core.gui.search.SearchBar;
 import org.columba.core.logging.Logging;
 import org.columba.core.plugin.PluginManager;
 import org.jdom.Document;
@@ -76,14 +73,6 @@ public class ToolBarXMLDecoder {
 	}
 
 	public void extendToolBar(ExtendableToolBar toolBar, InputStream is) {
-		
-		SearchBar searchBar = new SearchBar(mediator.getSearchPanel(), false);
-		searchBar.install(toolBar);
-		
-		// add cancel button
-//		AbstractColumbaAction cancelAction = getAction("Cancel", mediator);
-//		JButton button = ToolBarButtonFactory.createButton(cancelAction);
-//		toolBar.add(button);
 
 		Document doc = retrieveDocument(is);
 

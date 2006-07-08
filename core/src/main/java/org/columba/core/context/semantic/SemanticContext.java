@@ -127,14 +127,14 @@ public class SemanticContext implements ISemanticContext {
 	}
 
 	public IStructureType getType() {
-		return type;
+		return this.type;
 	}
 
-	public IStructureValue getValue() {
-		return value;
+	public synchronized IStructureValue getValue() {
+		return this.value;
 	}
 
-	public void setValue(IStructureValue value) {
+	public synchronized void setValue(IStructureValue value) {
 		this.value = value;
 		
 		// notify all listeners

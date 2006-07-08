@@ -1,4 +1,4 @@
-package org.columba.core.gui.contextualpanel;
+package org.columba.core.gui.context;
 
 import java.awt.BorderLayout;
 import java.util.Iterator;
@@ -6,7 +6,6 @@ import java.util.Iterator;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -14,11 +13,11 @@ import javax.swing.tree.DefaultTreeModel;
 import org.columba.core.context.base.api.IName;
 import org.columba.core.context.base.api.IStructureValue;
 import org.columba.core.context.semantic.api.ISemanticContext;
-import org.columba.core.gui.contextualpanel.api.IContextualProvider;
+import org.columba.core.gui.context.api.IContextProvider;
 import org.columba.core.resourceloader.IconKeys;
 import org.columba.core.resourceloader.ImageLoader;
 
-public class ContextDebugProvider extends JPanel implements IContextualProvider {
+public class ContextDebugProvider extends JPanel implements IContextProvider {
 
 	private JTree tree;
 
@@ -38,11 +37,11 @@ public class ContextDebugProvider extends JPanel implements IContextualProvider 
 	}
 
 	public String getName() {
-		return "Context Viewer";
+		return "Context Debug View";
 	}
 
 	public String getDescription() {
-		return "Context Viewer";
+		return "Context Debug View - only visible if Columba is in DEBUG mode";
 	}
 
 	public ImageIcon getIcon() {
@@ -55,13 +54,14 @@ public class ContextDebugProvider extends JPanel implements IContextualProvider 
 
 	public void search(ISemanticContext context, int startIndex, int resultCount) {
 		IStructureValue value = context.getValue();
+		if ( value == null ) return;
+		
 		StringBuffer buf = new StringBuffer();
 		buf.append(value.getName());
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(buf.toString());
 
 		createTree(root, value);
 		treeModel = new DefaultTreeModel(root);
-		tree.setModel(treeModel);
 	}
 
 	private void createTree(DefaultMutableTreeNode parent, IStructureValue value) {
@@ -99,7 +99,12 @@ public class ContextDebugProvider extends JPanel implements IContextualProvider 
 	}
 
 	public void showResult() {
+		tree.setModel(treeModel);
+	}
 
+	public void clear() {
+		treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
+		tree.setModel(treeModel);
 	}
 
 }

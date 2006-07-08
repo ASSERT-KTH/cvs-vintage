@@ -1,16 +1,13 @@
-package org.columba.core.gui.contextualpanel;
+package org.columba.core.gui.context;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,10 +15,16 @@ import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.UIManager;
 
+import org.columba.addressbook.gui.context.ContactContextualProvider;
+import org.columba.api.command.ICommandReference;
+import org.columba.api.command.IWorkerStatusController;
 import org.columba.api.gui.frame.IDock;
 import org.columba.api.gui.frame.IFrameMediator;
-import org.columba.core.gui.contextualpanel.api.IContextualPanel;
-import org.columba.core.gui.contextualpanel.api.IContextualProvider;
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.gui.context.api.IContextProvider;
+import org.columba.core.gui.context.api.IContextualPanel;
 import org.columba.core.logging.Logging;
 import org.jdesktop.swingx.VerticalLayout;
 
@@ -29,29 +32,25 @@ public class ContextualPanel extends JPanel implements IContextualPanel {
 
 	private IFrameMediator frameMediator;
 
-	private List<IContextualProvider> providerList = new Vector<IContextualProvider>();
+	private List<IContextProvider> providerList = new Vector<IContextProvider>();
 
 	private StackedBox box;
 
-	private JButton button;
+	private ContextualBar contextualBar;
 
 	public ContextualPanel(IFrameMediator frameMediator) {
 		super();
 
 		this.frameMediator = frameMediator;
 
-		button = new JButton("What's related");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				search();
-			}
-		});
-		
+		contextualBar = new ContextualBar(frameMediator, this);
+
 		setLayout(new BorderLayout());
 
 		JPanel top = new JPanel();
 		top.setLayout(new BorderLayout());
-		top.add(button, BorderLayout.CENTER);
+		top.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		top.add(contextualBar, BorderLayout.CENTER);
 
 		JPanel center = new JPanel();
 		center.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -65,9 +64,11 @@ public class ContextualPanel extends JPanel implements IContextualPanel {
 		center.add(pane, BorderLayout.CENTER);
 		add(top, BorderLayout.NORTH);
 		add(center, BorderLayout.CENTER);
-		
+
 		if (Logging.DEBUG)
 			register(new ContextDebugProvider());
+
+		register(new ContactContextualProvider());
 	}
 
 	private void showDockingView() {
@@ -83,9 +84,12 @@ public class ContextualPanel extends JPanel implements IContextualPanel {
 
 		box.removeAll();
 
-		Iterator<IContextualProvider> it = providerList.listIterator();
+		Iterator<IContextProvider> it = providerList.listIterator();
 		while (it.hasNext()) {
-			IContextualProvider p = it.next();
+			IContextProvider p = it.next();
+			
+			// clear previous search results
+			p.clear();
 			ResultBox resultBox = new ResultBox(p);
 			box.addBox(resultBox);
 		}
@@ -97,14 +101,20 @@ public class ContextualPanel extends JPanel implements IContextualPanel {
 
 	public void search() {
 
+		// init result view
 		createStackedBox();
-
+		// show docking view
 		showDockingView();
 
-		Iterator<IContextualProvider> it = providerList.listIterator();
+		SearchCommand command = new SearchCommand(new DefaultCommandReference());
+		CommandProcessor.getInstance().addOp(command);
+	}
+
+	public void showResults() {
+		Iterator<IContextProvider> it = providerList.listIterator();
 		while (it.hasNext()) {
-			IContextualProvider p = it.next();
-			p.search(frameMediator.getSemanticContext(), 0, 5);
+			IContextProvider p = it.next();
+			p.showResult();
 		}
 	}
 
@@ -112,13 +122,41 @@ public class ContextualPanel extends JPanel implements IContextualPanel {
 		return this;
 	}
 
-	public void register(IContextualProvider provider) {
+	public void register(IContextProvider provider) {
 		providerList.add(provider);
 	}
 
-	public void unregister(IContextualProvider provider) {
+	public void unregister(IContextProvider provider) {
 		providerList.remove(provider);
 	}
+	
+	private List<IContextProvider> createProviderList() {
+		return providerList;
+	}
+
+	class SearchCommand extends Command {
+
+		public SearchCommand(ICommandReference reference) {
+			super(reference);
+		}
+
+		@Override
+		public void execute(IWorkerStatusController worker) throws Exception {
+			Iterator<IContextProvider> it = providerList.listIterator();
+			while (it.hasNext()) {
+				IContextProvider p = it.next();
+				p.search(frameMediator.getSemanticContext(), 0, 5);
+			}
+		}
+
+		@Override
+		public void updateGUI() throws Exception {
+			// update ui
+			showResults();
+		}
+
+	}
+	
 
 	class StackedBox extends JPanel implements Scrollable {
 
@@ -181,4 +219,6 @@ public class ContextualPanel extends JPanel implements IContextualPanel {
 		}
 
 	}
+
+	
 }

@@ -223,7 +223,7 @@ public class ViewMessageCommand extends Command implements ISelectionListener {
 		// from email address
 		from = (Address) srcFolder.getAttribute(uid, "columba.from");
 		// parse
-		name = NameParser.getInstance().parseDisplayName(from.toString());
+		name = NameParser.getInstance().parseDisplayName(from.getDisplayName());
 
 		subject = (String) srcFolder.getAttribute(uid, "columba.subject");
 		date = (Date) srcFolder.getAttribute(uid, "columba.date");

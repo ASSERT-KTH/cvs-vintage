@@ -38,6 +38,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.columba.api.gui.frame.IContainer;
+import org.columba.api.gui.frame.IDock;
 import org.columba.api.gui.frame.IFrameMediator;
 import org.columba.api.gui.frame.event.FrameEvent;
 import org.columba.api.gui.frame.event.IContainerListener;
@@ -53,6 +54,7 @@ import org.columba.api.statusbar.IStatusBarExtension;
 import org.columba.core.command.TaskManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.action.AbstractColumbaAction;
+import org.columba.core.gui.context.ContextualBar;
 import org.columba.core.gui.menu.ExtendableMenuBar;
 import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.search.SearchBar;
@@ -113,6 +115,8 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 	protected EventListenerList listenerList = new EventListenerList();
 
+	private JPanel toolBarPanel = new JPanel();
+	
 	public DefaultContainer(DefaultFrameController mediator) {
 		super();
 
@@ -193,9 +197,14 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		// createMenuBar();
 
+		toolBarPanel = new JPanel();
+		toolBarPanel.setLayout(new BorderLayout());
+		
 		// create toolbar
 		toolbar = new ExtendableToolBar();
 		setToolBar(toolbar);
+		
+		
 
 		// add window listener
 		addWindowListener(this);
@@ -605,7 +614,7 @@ public class DefaultContainer extends JFrame implements IContainer,
 		// // add new componnet
 		contentPane.add(view, BorderLayout.CENTER);
 
-		getContentPane().add(toolbar, BorderLayout.NORTH);
+		getContentPane().add(toolBarPanel, BorderLayout.NORTH);
 
 		contentPane.add(statusBar, BorderLayout.SOUTH);
 
@@ -759,6 +768,19 @@ public class DefaultContainer extends JFrame implements IContainer,
 
 		this.toolbar = (ExtendableToolBar) toolbar;
 
+		toolBarPanel.add(toolbar, BorderLayout.CENTER);
+		
+		// @author fdietz: hackish way of creating a search toolbar
+		JToolBar searchToolBar = new ExtendableToolBar();
+		ContextualBar contextualBar = new ContextualBar(mediator, mediator.getContextualPanel());
+		SearchBar searchBar = new SearchBar(mediator.getSearchPanel(), false);
+		contextualBar.install(searchToolBar);
+		searchToolBar.addSeparator();
+		searchBar.install(searchToolBar);
+		
+		if ( getFrameMediator() instanceof IDock)
+		toolBarPanel.add(searchToolBar, BorderLayout.EAST);
+		
 		//
 		// getContentPane().validate();
 

@@ -1,4 +1,4 @@
-package org.columba.core.gui.contextualpanel;
+package org.columba.core.gui.context;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
-import org.columba.core.gui.contextualpanel.api.IContextualProvider;
+import org.columba.core.gui.context.api.IContextProvider;
 import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXHyperlink;
 
@@ -34,9 +34,9 @@ public class ResultBox extends JPanel{
 
 	private JXCollapsiblePane collapsible;
 
-	private IContextualProvider provider;
+	private IContextProvider provider;
 
-	public ResultBox(IContextualProvider provider) {
+	public ResultBox(IContextProvider provider) {
 		super();
 		
 		this.provider = provider;

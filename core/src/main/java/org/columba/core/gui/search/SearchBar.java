@@ -51,8 +51,6 @@ public class SearchBar extends JPanel implements KeyListener, PopupMenuListener 
 
 		this.searchPanel = searchPanel;
 
-		//
-
 		textField = new IconTextField(icon, 20);
 		textField.addPopupMenuListener(this);
 
@@ -210,17 +208,11 @@ public class SearchBar extends JPanel implements KeyListener, PopupMenuListener 
 			throw new IllegalArgumentException("toolbar");
 
 		JPanel p = new JPanel();
-		p.setBorder(BorderFactory.createEmptyBorder(2,0,2,0));
+		p.setBorder(BorderFactory.createEmptyBorder(3, 10, 2, 0));
 		p.setLayout(new BorderLayout());
-		p.add(this, BorderLayout.EAST);
-
-		Component box = Box.createHorizontalBox();
-		toolbar.add(box);
+		p.add(this, BorderLayout.CENTER);
 
 		toolbar.add(p);
-
-		Component box2 = Box.createHorizontalGlue();
-		toolbar.add(box2);
 
 	}
 

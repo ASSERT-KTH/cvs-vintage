@@ -22,9 +22,9 @@ import org.columba.core.search.api.ISearchProvider;
 import org.columba.core.search.api.ISearchResult;
 
 public class ContactSearchProvider implements ISearchProvider {
-	private static final String CRITERIA_DISPLAYNAME_CONTAINS = "displayname_contains";
+	public static final String CRITERIA_DISPLAYNAME_CONTAINS = "displayname_contains";
 
-	private static final String CRITERIA_EMAIL_CONTAINS = "email_contains";
+	public static final String CRITERIA_EMAIL_CONTAINS = "email_contains";
 
 	private ResourceBundle bundle;
 
@@ -85,7 +85,7 @@ public class ContactSearchProvider implements ISearchProvider {
 		List<ISearchResult> result = new Vector<ISearchResult>();
 
 		// create list of contact folders
-		List<AddressbookFolder> v = createContactFolderList();
+		List<AddressbookFolder> v = SearchUtility.createContactFolderList();
 
 		Iterator<AddressbookFolder> it = v.iterator();
 		while (it.hasNext()) {
@@ -113,13 +113,7 @@ public class ContactSearchProvider implements ISearchProvider {
 		return result;
 	}
 
-	private List<AddressbookFolder> createContactFolderList() {
-		List<AddressbookFolder> v = new Vector<AddressbookFolder>();
-		AddressbookTreeModel treeModel = AddressbookTreeModel.getInstance();
-		v.add((AddressbookFolder) treeModel.getFolder("101"));
-		v.add((AddressbookFolder) treeModel.getFolder("102"));
-		return v;
-	}
+	
 
 	public int getTotalResultCount() {
 		return totalResultCount;
