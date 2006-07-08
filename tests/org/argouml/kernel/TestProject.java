@@ -1,4 +1,4 @@
-// $Id: TestProject.java,v 1.25 2006/06/24 12:53:31 mvw Exp $
+// $Id: TestProject.java,v 1.26 2006/07/08 05:43:46 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -360,10 +360,14 @@ public class TestProject extends TestCase {
         Model.getPump().flushModelEvents();
 
         assertTrue("Operation not in trash", p.isInTrash(oper));
-        assertTrue("Statemachine not in trash",
-                Model.getUmlFactory().isRemoved(machine));
-        assertEquals(sizeDiagrams, p.getDiagrams().size());
-        assertEquals(sizeMembers, p.getMembers().size());
+        /* Changed by issue 4281: */
+        assertTrue("Statemachine in trash",
+                !Model.getUmlFactory().isRemoved(machine));
+        assertEquals(sizeDiagrams + 1, p.getDiagrams().size());
+        assertEquals(sizeMembers + 1, p.getMembers().size());
+        /* After issue 4284 will be solved, we
+         * may even delete the class, and the diagram
+         * should still exist. */
     }
 
 
