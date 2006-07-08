@@ -23,7 +23,7 @@ import org.apache.commons.cli.CommandLine;
 import org.columba.api.plugin.IExtensionHandlerKeys;
 import org.columba.api.plugin.PluginHandlerNotFoundException;
 import org.columba.api.plugin.PluginMetadata;
-import org.columba.core.component.IComponentPlugin;
+import org.columba.core.component.api.IComponentPlugin;
 import org.columba.core.plugin.PluginManager;
 
 /**
@@ -43,7 +43,7 @@ public class AlturaComponent implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#init()
+	 * @see org.columba.core.component.api.IComponentPlugin#init()
 	 */
 	public void init() {
 		try {
@@ -61,21 +61,21 @@ public class AlturaComponent implements IComponentPlugin {
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#postStartup()
+	 * @see org.columba.core.component.api.IComponentPlugin#postStartup()
 	 */
 	public void postStartup() {
 
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#registerCommandLineArguments()
+	 * @see org.columba.core.component.api.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
 
 	}
 
 	/**
-	 * @see org.columba.core.component.IComponentPlugin#handleCommandLineParameters(org.apache.commons.cli.CommandLine)
+	 * @see org.columba.core.component.api.IComponentPlugin#handleCommandLineParameters(org.apache.commons.cli.CommandLine)
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 

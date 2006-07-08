@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="org.columba.mail.example.attachmenthandler" name="Attachment Handler Example" description="AttachmentHandler Example" category="Example" version="1.0"  enabled="true">
+ <extensionlist id="org.columba.mail.attachment.handler">
+    <extension id="MyExample" class="org.columba.mail.attachment.handler.example.MyExampleHandler" />
+  </extensionlist>
+</plugin>

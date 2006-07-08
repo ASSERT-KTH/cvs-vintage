@@ -27,7 +27,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
-import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
+import org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin;
 import org.columba.core.io.DiskIO;
 import org.w3c.tidy.Tidy;
 import org.xhtmlrenderer.simple.XHTMLPanel;
@@ -109,14 +109,14 @@ public class FlyingSaucerViewerPlugin extends JScrollPane implements
 	}
 	
 	/**
-	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#setCaretPosition(int)
+	 * @see org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin#setCaretPosition(int)
 	 */
 	public void setCaretPosition(int position) {
 		// TODO
 	}
 
 	/**
-	 * @see org.columba.core.gui.htmlviewer.IHTMLViewerPlugin#moveCaretPosition(int)
+	 * @see org.columba.core.gui.htmlviewer.api.IHTMLViewerPlugin#moveCaretPosition(int)
 	 */
 	public void moveCaretPosition(int position) {
 		// TODO

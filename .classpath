@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="plugins/org.columba.core.FlyingSaucerRenderer/src"/>
+	<classpathentry kind="src" path="plugins/org.columba.mail.example.attachmenthandler/src"/>
 	<classpathentry kind="src" path="calendar/src/main/java"/>
 	<classpathentry kind="src" path="calendar/src/main/resources"/>
 	<classpathentry kind="src" path="calendar/src/test/java"/>
