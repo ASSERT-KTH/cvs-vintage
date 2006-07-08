@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * A regular expression string matcher using java.util.regex.
  * @author Marcelo Vanzin
- * @version $Id: PatternSearchMatcher.java,v 1.1 2006/06/18 18:51:40 vanza Exp $
+ * @version $Id: PatternSearchMatcher.java,v 1.2 2006/07/08 22:43:04 vanza Exp $
  * @since jEdit 4.3pre5
  */
 public class PatternSearchMatcher extends SearchMatcher
@@ -66,7 +66,7 @@ public class PatternSearchMatcher extends SearchMatcher
 	public SearchMatcher.Match nextMatch(CharSequence text, boolean start,
 		boolean end, boolean firstTime, boolean reverse)
 	{
-		int flags = 0;
+		int flags = Pattern.MULTILINE;
 
 		if (re == null)
 			re = Pattern.compile(pattern, flags);
