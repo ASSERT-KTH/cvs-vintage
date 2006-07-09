@@ -1,4 +1,4 @@
-// $Id: TestAGHelperWithMock.java,v 1.1 2006/05/14 20:20:10 linus Exp $
+// $Id: TestAGHelperWithMock.java,v 1.2 2006/07/09 22:07:02 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,8 @@ public class TestAGHelperWithMock extends TestCase {
         Model.getFacade(); // Load the model.
 
         mockModelImplementation = MockModelImplementation.getLatest();
+
+        assertNotNull("MockModelImplementation not created", mockModelImplementation);
 
         // Must be called after setImplementation.
         mockModelImplementation.reset();
