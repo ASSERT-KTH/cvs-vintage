@@ -1,4 +1,4 @@
-// $Id: ToDoByPoster.java,v 1.15 2006/06/11 15:39:47 mvw Exp $
+// $Id: ToDoByPoster.java,v 1.16 2006/07/09 19:29:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,21 +139,29 @@ public class ToDoByPoster extends ToDoPerspective
      */
     public void toDoItemsRemoved(ToDoListEvent tde) {
 	LOG.debug("toDoItemRemoved");
+        Vector items = tde.getToDoItems();
+        int nItems = items.size();
+        
 	ToDoList list = Designer.theDesigner().getToDoList(); //source?
 	Object[] path = new Object[2];
 	path[0] = Designer.theDesigner().getToDoList();
 
 
 	Enumeration elems = list.getPosters().elements();
-	while (elems.hasMoreElements()) {
+ 	while (elems.hasMoreElements()) {
 	    Poster p = (Poster) elems.nextElement();
-	    //       boolean anyInPoster = false;
-	    //       for (int i = 0; i < nItems; i++) {
-	    // 	ToDoItem item = (ToDoItem) items.elementAt(i);
-	    // 	Poster post = item.getPoster();
-	    // 	if (post == p) anyInPoster = true;
-	    //       }
-	    //       if (!anyInPoster) continue;
+            boolean anyInPoster = false;
+            for (int i = 0; i < nItems; i++) {
+                ToDoItem item = (ToDoItem) items.elementAt(i);
+                Poster post = item.getPoster();
+                if (post == p) { 
+                    anyInPoster = true;
+                    break;
+                }
+            }
+            if (!anyInPoster) { 
+                continue;
+            }
 	    path[1] = p;
 	    fireTreeStructureChanged(path);
 	}

@@ -1,4 +1,4 @@
-// $Id: ToDoByOffender.java,v 1.17 2006/06/11 15:39:47 mvw Exp $
+// $Id: ToDoByOffender.java,v 1.18 2006/07/09 19:29:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,6 +138,9 @@ public class ToDoByOffender extends ToDoPerspective
      */
     public void toDoItemsRemoved(ToDoListEvent tde) {
         LOG.debug("toDoItemRemoved");
+        Vector items = tde.getToDoItems();
+        int nItems = items.size();
+        
         Object[] path = new Object[2];
         path[0] = Designer.theDesigner().getToDoList();
 
@@ -146,13 +149,18 @@ public class ToDoByOffender extends ToDoPerspective
         Enumeration elems = allOffenders.elements();
         while (elems.hasMoreElements()) {
             Object off = elems.nextElement();
-            //       boolean anyInOff = false;
-            //       for (int i = 0; i < nItems; i++) {
-            // 	ToDoItem item = (ToDoItem) items.elementAt(i);
-            // 	VectorSet offenders = item.getOffenders();
-            // 	if (offenders.contains(off)) anyInOff = true;
-            //       }
-            //       if (!anyInOff) continue;
+            boolean anyInOff = false;
+            for (int i = 0; i < nItems; i++) {
+                ToDoItem item = (ToDoItem) items.elementAt(i);
+                ListSet offenders = item.getOffenders();
+                if (offenders.contains(off)) { 
+                    anyInOff = true;
+                    break;
+                }
+            }
+            if (!anyInOff) { 
+                continue;
+            }
 
             LOG.debug("toDoItemRemoved updating PriorityNode");
             path[1] = off;
