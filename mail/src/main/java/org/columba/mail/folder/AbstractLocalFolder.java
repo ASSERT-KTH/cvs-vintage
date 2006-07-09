@@ -69,7 +69,7 @@ import org.columba.ristretto.parser.ParserException;
  * reference. Then nextMessageUid is simply increased.
  * <p>
  * 
- * @see org.columba.mail.folder.mh.MHCachedFolder
+ * @see org.columba.mail.folder.mh.CachedMHFolder
  * 
  * @author fdietz
  */
