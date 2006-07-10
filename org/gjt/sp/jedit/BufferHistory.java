@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.21 2006/07/08 09:42:52 kpouer Exp $
+ * @version $Id: BufferHistory.java,v 1.22 2006/07/10 19:57:27 kpouer Exp $
  */
 public class BufferHistory
 {
@@ -73,8 +73,9 @@ public class BufferHistory
 	public static void clear()
 	{
 		history.clear();
+		EditBus.send(new DynamicMenuChanged("recent-files"));
 	} //}}}
-	
+
 	//{{{ getHistory() method
 	/**
 	 * @since jEdit 4.2pre2
