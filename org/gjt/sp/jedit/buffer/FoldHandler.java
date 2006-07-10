@@ -24,8 +24,8 @@ package org.gjt.sp.jedit.buffer;
 
 import java.util.*;
 import javax.swing.text.Segment;
-import org.gjt.sp.jedit.MiscUtilities;
 import org.gjt.sp.jedit.ServiceManager;
+import org.gjt.sp.util.StandardUtilities;
 
 /**
  * Interface for obtaining the fold level of a specified line.<p>
@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.ServiceManager;
  * See {@link org.gjt.sp.jedit.ServiceManager} for details.
  *
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.18 2006/06/23 21:57:33 kpouer Exp $
+ * @version $Id: FoldHandler.java,v 1.19 2006/07/10 20:52:23 kpouer Exp $
  * @since jEdit 4.3pre3
  */
 public abstract class FoldHandler
@@ -121,7 +121,7 @@ public abstract class FoldHandler
 	public static String[] getFoldModes()
 	{
 		String[] handlers = ServiceManager.getServiceNames(SERVICE);
-		Arrays.sort(handlers,new MiscUtilities.StringCompare());
+		Arrays.sort(handlers,new StandardUtilities.StringCompare());
 		return handlers;
 	}
 	//}}}

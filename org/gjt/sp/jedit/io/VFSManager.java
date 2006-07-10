@@ -40,6 +40,7 @@ import org.gjt.sp.jedit.msg.VFSUpdate;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 import org.gjt.sp.util.WorkThreadPool;
+import org.gjt.sp.util.StandardUtilities;
 //}}}
 
 /**
@@ -54,7 +55,7 @@ import org.gjt.sp.util.WorkThreadPool;
  * {@link #waitForRequests()}.
  *
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.16 2005/04/21 20:32:29 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.17 2006/07/10 20:52:23 kpouer Exp $
  */
 public class VFSManager
 {
@@ -433,7 +434,7 @@ public class VFSManager
 				// before any updates for the children. sorting
 				// the list alphanumerically guarantees this.
 				Collections.sort(vfsUpdates,
-					new MiscUtilities.StringCompare()
+					new StandardUtilities.StringCompare()
 				);
 				for(int i = 0; i < vfsUpdates.size(); i++)
 				{
