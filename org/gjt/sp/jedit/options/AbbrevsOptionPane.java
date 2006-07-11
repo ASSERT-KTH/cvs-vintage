@@ -32,13 +32,14 @@ import java.awt.*;
 import java.util.*;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.*;
+import org.gjt.sp.util.StandardUtilities;
 //}}}
 
 //{{{ AbbrevsOptionPane class
 /**
  * Abbrev editor.
  * @author Slava Pestov
- * @version $Id: AbbrevsOptionPane.java,v 1.14 2006/07/04 18:49:40 ezust Exp $
+ * @version $Id: AbbrevsOptionPane.java,v 1.15 2006/07/11 09:27:07 kpouer Exp $
  */
 public class AbbrevsOptionPane extends AbstractOptionPane
 {
@@ -479,7 +480,7 @@ class AbbrevsModel extends AbstractTableModel
 				String abbrev1 = a1.abbrev.toLowerCase();
 				String abbrev2 = a2.abbrev.toLowerCase();
 
-				return MiscUtilities.compareStrings(
+				return StandardUtilities.compareStrings(
 					abbrev1,abbrev2,true);
 			}
 			else
@@ -487,7 +488,7 @@ class AbbrevsModel extends AbstractTableModel
 				String expand1 = a1.expand.toLowerCase();
 				String expand2 = a2.expand.toLowerCase();
 
-				return MiscUtilities.compareStrings(
+				return StandardUtilities.compareStrings(
 					expand1,expand2,true);
 			}
 		}

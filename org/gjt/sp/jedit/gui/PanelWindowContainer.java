@@ -31,14 +31,17 @@ import java.awt.font.*;
 import java.awt.geom.AffineTransform;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
+
 import org.gjt.sp.jedit.*;
+import org.gjt.sp.util.StandardUtilities;
 //}}}
 
 /**
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.81 2006/07/03 16:27:09 ezust Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.82 2006/07/11 09:27:07 kpouer Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -188,7 +191,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 	//{{{ showMostRecent() method
 	public void showMostRecent()
 	{
-		if(dockables.size() == 0)
+		if(dockables.isEmpty())
 		{
 			Toolkit.getDefaultToolkit().beep();
 			return;
@@ -377,8 +380,8 @@ public class PanelWindowContainer implements DockableWindowContainer
 	private ButtonGroup buttonGroup;
 	private JToggleButton nullButton;
 	private int dimension;
-	private ArrayList dockables;
-	private ArrayList buttons;
+	private List dockables;
+	private List buttons;
 	private DockableWindowManager.Entry current;
 	private JPopupMenu popup;
 
@@ -395,7 +398,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 		{
 			String name1 = ((AbstractButton)o1).getActionCommand();
 			String name2 = ((AbstractButton)o2).getActionCommand();
-			return MiscUtilities.compareStrings(
+			return StandardUtilities.compareStrings(
 				jEdit.getProperty(name1 + ".title",""),
 				jEdit.getProperty(name2 + ".title",""),
 				true);
@@ -717,7 +720,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 		 */
 		int getWrappedDimension(JComponent parent, int dimension)
 		{
-			Insets insets = (parent).getBorder()
+			Insets insets = parent.getBorder()
 				.getBorderInsets(parent);
 
 			Component[] comp = parent.getComponents();

@@ -34,13 +34,14 @@ import org.gjt.sp.jedit.browser.VFSBrowser;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
+import org.gjt.sp.util.StandardUtilities;
 //}}}
 
 //{{{ ToolBarOptionPane class
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.16 2006/06/23 22:58:12 kpouer Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.17 2006/07/11 09:27:07 kpouer Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -212,7 +213,7 @@ public class ToolBarOptionPane extends AbstractOptionPane
 	{
 		public int compare(Object obj1, Object obj2)
 		{
-			return MiscUtilities.compareStrings(
+			return StandardUtilities.compareStrings(
 				((Button)obj1).label,
 				((Button)obj2).label,
 				true);
@@ -686,7 +687,7 @@ class ToolBarEditDialog extends EnhancedDialog
 					directory = null;
 				else
 					directory = MiscUtilities.getParentOfPath(fileIcon);
-				String paths[] = GUIUtilities.showVFSFileDialog(null,directory,
+				String[] paths = GUIUtilities.showVFSFileDialog(null,directory,
 					VFSBrowser.OPEN_DIALOG,false);
 				if(paths == null)
 					return;
