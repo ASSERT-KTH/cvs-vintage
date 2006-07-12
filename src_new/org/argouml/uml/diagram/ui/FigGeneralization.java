@@ -1,4 +1,4 @@
-// $Id: FigGeneralization.java,v 1.27 2006/05/19 21:38:26 linus Exp $
+// $Id: FigGeneralization.java,v 1.28 2006/07/12 23:15:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,6 +187,9 @@ public class FigGeneralization extends FigEdgeModelElement {
             // due to errors in earlier releases of argouml it can
             // happen that there is a generalization without a child
             // or parent.
+            // TODO: Move into XSL. We should not remove from the graph model
+            // while we're writing to it or we have a possible cause of
+            // concurrent modification exception.
             if (subType == null || superType == null) {
                 // TODO: We should warn the user we have removed something - tfm
                 removeFromDiagram();
