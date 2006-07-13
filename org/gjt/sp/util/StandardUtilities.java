@@ -34,7 +34,7 @@ import java.util.Comparator;
  * Several tools that depends on JDK only.
  *
  * @author Matthieu Casanova
- * @version $Id: StandardUtilities.java,v 1.5 2006/07/13 06:49:00 kpouer Exp $
+ * @version $Id: StandardUtilities.java,v 1.6 2006/07/13 12:32:34 kpouer Exp $
  * @since 4.3pre5
  */
 public class StandardUtilities
@@ -154,7 +154,7 @@ loop:		for(int i = 0; i < str.length(); i++)
 	 */
 	public static String createWhiteSpace(int len, int tabSize, int start)
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if(tabSize == 0)
 		{
 			while(len-- > 0)
