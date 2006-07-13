@@ -28,8 +28,8 @@ import javax.swing.text.Segment;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.SegmentCharSequence;
+import org.gjt.sp.util.StandardUtilities;
 //}}}
 
 /**
@@ -38,7 +38,7 @@ import org.gjt.sp.util.SegmentCharSequence;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.68 2006/06/24 04:01:01 vanza Exp $
+ * @version $Id: TokenMarker.java,v 1.69 2006/07/13 06:49:00 kpouer Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -316,7 +316,7 @@ unwind:		while(context.parent != null)
 			lastOffset = pos + pattern.count;
 
 			// move pos to last character of match sequence
-			pos += (pattern.count - 1);
+			pos += pattern.count - 1;
 
 			return true;
 		}
@@ -486,9 +486,9 @@ unwind:		while(context.parent != null)
 			case ParserRule.EOL_SPAN:
 				context.inRule = checkRule;
 
-				byte tokenType = ((checkRule.action & ParserRule.EXCLUDE_MATCH)
+				byte tokenType = (checkRule.action & ParserRule.EXCLUDE_MATCH)
 					== ParserRule.EXCLUDE_MATCH
-					? context.rules.getDefault() : checkRule.token);
+					? context.rules.getDefault() : checkRule.token;
 
 				if((checkRule.action & ParserRule.REGEXP) != 0)
 				{
@@ -579,7 +579,7 @@ unwind:		while(context.parent != null)
 			}
 
 			// move pos to last character of match sequence
-			pos += (matchedChars - 1);
+			pos += matchedChars - 1;
 			lastOffset = pos + 1;
 
 			// break out of inner for loop to check next char
@@ -833,7 +833,7 @@ unwind:		while(context.parent != null)
 			{
 				LineContext lc = (LineContext)obj;
 				return lc.inRule == inRule && lc.rules == rules
-					&& MiscUtilities.objectsEqual(parent,lc.parent)
+					&& StandardUtilities.objectsEqual(parent,lc.parent)
 					&& charArraysEqual(spanEndSubst,lc.spanEndSubst);
 			}
 			else

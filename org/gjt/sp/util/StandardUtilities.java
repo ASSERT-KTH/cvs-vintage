@@ -34,7 +34,7 @@ import java.util.Comparator;
  * Several tools that depends on JDK only.
  *
  * @author Matthieu Casanova
- * @version $Id: StandardUtilities.java,v 1.4 2006/07/13 04:37:32 vanza Exp $
+ * @version $Id: StandardUtilities.java,v 1.5 2006/07/13 06:49:00 kpouer Exp $
  * @since 4.3pre5
  */
 public class StandardUtilities
@@ -349,6 +349,27 @@ loop:		for(int i = 0; i < str.length(); i++)
 			return compareStrings(obj1.toString(),
 				obj2.toString(),false);
 		}
+	} //}}}
+
+	//{{{ objectsEqual() method
+	/**
+	 * Returns if two strings are equal. This correctly handles null pointers,
+	 * as opposed to calling <code>o1.equals(o2)</code>.
+	 * @since jEdit 4.3pre6
+	 */
+	public static boolean objectsEqual(Object o1, Object o2)
+	{
+		if(o1 == null)
+		{
+			if(o2 == null)
+				return true;
+			else
+				return false;
+		}
+		else if(o2 == null)
+			return false;
+		else
+			return o1.equals(o2);
 	} //}}}
 
 	//}}}
