@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.28 2006/07/07 22:20:15 bobtarling Exp $
+// $Id: FigAssociationEnd.java,v 1.29 2006/07/13 15:37:02 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -246,6 +246,5 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         srcMult.calcBounds();
         srcGroup.calcBounds();
         super.renderingChanged();
-        computeRoute();
     }
 }  /* end class FigAssociationEnd */
