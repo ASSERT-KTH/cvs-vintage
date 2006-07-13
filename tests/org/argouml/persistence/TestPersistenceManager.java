@@ -1,4 +1,4 @@
-// $Id: TestPersistenceManager.java,v 1.1 2006/06/04 18:49:58 mvw Exp $
+// $Id: TestPersistenceManager.java,v 1.2 2006/07/13 19:37:03 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,11 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.persistence;
+
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 import junit.framework.TestCase;
 
@@ -78,4 +83,27 @@ public class TestPersistenceManager extends TestCase {
         assertNotNull(testPersister);
     }
     
+    public void testSetSaveFileChooserFilters() {
+        JFileChooser chooser = new JFileChooser();
+        PersistenceManager persistence = PersistenceManager.getInstance();
+        persistence.setSaveFileChooserFilters(chooser, null);
+        
+        FileFilter[] fileFilters = chooser.getChoosableFileFilters();
+        assertNotNull(fileFilters);
+        assertTrue(fileFilters.length == 4);
+        FileFilter defaultFileFilter = chooser.getFileFilter();
+        assertNotNull(defaultFileFilter);
+        assertTrue(defaultFileFilter.accept(new File(
+                "foo."
+                + new ZargoFilePersister().getExtension())));
+        
+        chooser.resetChoosableFileFilters();
+        persistence.setSaveFileChooserFilters(chooser, 
+                "foo." + new UmlFilePersister().getExtension());
+        defaultFileFilter = chooser.getFileFilter();
+        assertNotNull(defaultFileFilter);
+        assertTrue(defaultFileFilter.accept(new File(
+                "others_foo." 
+                + new UmlFilePersister().getExtension())));        
+    }
 }

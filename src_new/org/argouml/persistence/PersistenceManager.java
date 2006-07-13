@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.21 2006/06/11 15:39:46 mvw Exp $
+// $Id: PersistenceManager.java,v 1.22 2006/07/13 19:36:57 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -150,17 +150,26 @@ public final class PersistenceManager {
 
     /**
      * @param chooser the filechooser of which the filters will be set
+     * @param fileName the filename of the file to be saved (optional)
      */
-    public void setSaveFileChooserFilters(JFileChooser chooser) {
+    public void setSaveFileChooserFilters(JFileChooser chooser, 
+            String fileName) {
+        
         chooser.addChoosableFileFilter(defaultPersister);
+        AbstractFilePersister defaultFileFilter = defaultPersister;
+        
         Iterator iter = otherPersisters.iterator();
         while (iter.hasNext()) {
             AbstractFilePersister fp = (AbstractFilePersister) iter.next();
             if (!fp.equals(xmiPersister) && !fp.equals(xmlPersister)) {
                 chooser.addChoosableFileFilter(fp);
+                if (fileName != null 
+                        && fp.isFileExtensionApplicable(fileName)) {
+                    defaultFileFilter = fp;
+                }
             }
         }
-        chooser.setFileFilter(defaultPersister);
+        chooser.setFileFilter(defaultFileFilter);
     }
 
     /**
