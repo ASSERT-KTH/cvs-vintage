@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.22 2006/07/06 09:52:56 vampire0 Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.23 2006/07/13 17:17:06 ezust Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer,
@@ -72,7 +72,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 		this.entry = entry;
 		dockableName = entry.factory.name;
 
-		setTitle(entry.title());
+		setTitle(entry.shortTitle());
 
 		getContentPane().add(BorderLayout.CENTER,entry.win);
 
@@ -102,7 +102,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 			dispose();
 		else
 		{
-			setTitle(entry.title());
+			setTitle(entry.longTitle());
 			toFront();
 			requestFocus();
 			SwingUtilities.invokeLater(new Runnable()
@@ -179,8 +179,8 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 	public void propertyChange(PropertyChangeEvent evt)
 	{
 		if (dockableName == null) return;
-		if ((dockableName + ".title").equals(evt.getPropertyName())) {
+		String pn = evt.getPropertyName();
+		if (pn.startsWith(dockableName) && pn.endsWith("title"))
 			setTitle(evt.getNewValue().toString());
-		}
 	}
 }
