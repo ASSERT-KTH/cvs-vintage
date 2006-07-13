@@ -31,7 +31,7 @@ import java.awt.*;
  * The text area does not use Swing's built-in double buffering, so that
  * we have access to the graphics context for fast scrolling.
  * @author Slava Pestov
- * @version $Id: FastRepaintManager.java,v 1.5 2006/06/20 21:53:46 kpouer Exp $
+ * @version $Id: FastRepaintManager.java,v 1.6 2006/07/13 07:11:52 kpouer Exp $
  */
 class FastRepaintManager
 {
@@ -71,9 +71,10 @@ class FastRepaintManager
 	} //}}}
 
 	//{{{ prepareGraphics() method
-	class RepaintLines
+	static class RepaintLines
 	{
-		int first, last;
+		final int first;
+		final int last;
 
 		RepaintLines(int first, int last)
 		{
@@ -93,7 +94,7 @@ class FastRepaintManager
 
 		if(fastScroll)
 		{
-			int lineDelta = (this.firstLine - firstLine);
+			int lineDelta = this.firstLine - firstLine;
 			int yDelta = lineDelta * height;
 			int visibleLines = textArea.getVisibleLines();
 
