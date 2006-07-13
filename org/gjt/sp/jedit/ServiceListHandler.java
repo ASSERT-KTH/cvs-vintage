@@ -32,12 +32,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
 import org.gjt.sp.util.Log;
+import org.gjt.sp.util.XMLUtilities;
 //}}}
 
 /**
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceListHandler.java,v 1.4 2006/06/18 18:51:39 vanza Exp $
+ * @version $Id: ServiceListHandler.java,v 1.5 2006/07/13 04:37:32 vanza Exp $
  */
 class ServiceListHandler extends DefaultHandler
 {
@@ -54,7 +55,7 @@ class ServiceListHandler extends DefaultHandler
 	//{{{ resolveEntity() method
 	public InputSource resolveEntity(String publicId, String systemId)
 	{
-		return MiscUtilities.findEntity(systemId, "services.dtd", getClass());
+		return XMLUtilities.findEntity(systemId, "services.dtd", getClass());
 	} //}}}
 
 	//{{{ characters() method

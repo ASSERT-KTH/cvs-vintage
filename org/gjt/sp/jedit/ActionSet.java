@@ -28,6 +28,7 @@ import java.util.*;
 
 import org.gjt.sp.jedit.gui.InputHandler;
 import org.gjt.sp.util.Log;
+import org.gjt.sp.util.XMLUtilities;
 
 /**
  * A set of actions, either loaded from an XML file, or constructed at runtime
@@ -137,7 +138,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.33 2006/06/18 18:51:38 vanza Exp $
+ * @version $Id: ActionSet.java,v 1.34 2006/07/13 04:37:32 vanza Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -459,7 +460,7 @@ public class ActionSet
 		{
 			Log.log(Log.DEBUG,this,"Loading actions from " + uri);
 			ActionListHandler ah = new ActionListHandler(uri.toString(),this);
-			MiscUtilities.parseXML(uri.openStream(), ah);
+			XMLUtilities.parseXML(uri.openStream(), ah);
 		}
 		catch(IOException e)
 		{

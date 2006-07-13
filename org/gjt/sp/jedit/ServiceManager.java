@@ -26,6 +26,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import org.gjt.sp.util.Log;
+import org.gjt.sp.util.XMLUtilities;
 
 /**
  * A generic way for plugins to provide various API extensions.<p>
@@ -79,7 +80,7 @@ import org.gjt.sp.util.Log;
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceManager.java,v 1.10 2006/06/20 07:23:43 vanza Exp $
+ * @version $Id: ServiceManager.java,v 1.11 2006/07/13 04:37:32 vanza Exp $
  */
 public class ServiceManager
 {
@@ -94,7 +95,7 @@ public class ServiceManager
 		ServiceListHandler dh = new ServiceListHandler(plugin,uri);
 		try
 		{
-			if (!MiscUtilities.parseXML(uri.openStream(), dh)
+			if (!XMLUtilities.parseXML(uri.openStream(), dh)
 				&& cache != null)
 			{
 				cache.cachedServices = dh.getCachedServices();

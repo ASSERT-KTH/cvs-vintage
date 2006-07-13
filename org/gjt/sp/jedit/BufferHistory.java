@@ -32,12 +32,13 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.gjt.sp.jedit.msg.DynamicMenuChanged;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.util.Log;
+import org.gjt.sp.util.XMLUtilities;
 //}}}
 
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.22 2006/07/10 19:57:27 kpouer Exp $
+ * @version $Id: BufferHistory.java,v 1.23 2006/07/13 04:37:32 vanza Exp $
  */
 public class BufferHistory
 {
@@ -104,7 +105,7 @@ public class BufferHistory
 		RecentHandler handler = new RecentHandler();
 		try
 		{
-			MiscUtilities.parseXML(new FileInputStream(recent), handler);
+			XMLUtilities.parseXML(new FileInputStream(recent), handler);
 		}
 		catch(IOException e)
 		{
@@ -161,7 +162,7 @@ public class BufferHistory
 				Entry entry = (Entry)iter.next();
 
 				out.write("<PATH>");
-				out.write(MiscUtilities.charsToEntities(entry.path));
+				out.write(XMLUtilities.charsToEntities(entry.path,false));
 				out.write("</PATH>");
 				out.write(lineSep);
 
@@ -365,7 +366,7 @@ public class BufferHistory
 
 		public InputSource resolveEntity(String publicId, String systemId)
 		{
-			return MiscUtilities.findEntity(systemId, "recent.dtd", getClass());
+			return XMLUtilities.findEntity(systemId, "recent.dtd", getClass());
 		}
 
 		public void endElement(String uri, String localName, String name)

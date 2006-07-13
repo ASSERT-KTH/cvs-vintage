@@ -29,12 +29,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
 import org.gjt.sp.util.Log;
+import org.gjt.sp.util.XMLUtilities;
 
 /**
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.14 2006/06/18 18:51:39 vanza Exp $
+ * @version $Id: PerspectiveManager.java,v 1.15 2006/07/13 04:37:32 vanza Exp $
  */
 public class PerspectiveManager
 {
@@ -100,7 +101,7 @@ public class PerspectiveManager
 		PerspectiveHandler handler = new PerspectiveHandler(restoreFiles);
 		try
 		{
-			MiscUtilities.parseXML(new FileInputStream(perspective), handler);
+			XMLUtilities.parseXML(new FileInputStream(perspective), handler);
 		}
 		catch(IOException e)
 		{
@@ -153,7 +154,7 @@ public class PerspectiveManager
 				if(buffer.isNewFile())
 					continue;
 				out.write("<BUFFER>");
-				out.write(MiscUtilities.charsToEntities(buffer.getPath()));
+				out.write(XMLUtilities.charsToEntities(buffer.getPath(), false));
 				out.write("</BUFFER>");
 				out.write(lineSep);
 			}
@@ -181,8 +182,8 @@ public class PerspectiveManager
 
 				out.write("<PANES>");
 				out.write(lineSep);
-				out.write(MiscUtilities.charsToEntities(
-					config.splitConfig));
+				out.write(XMLUtilities.charsToEntities(
+					config.splitConfig,false));
 				out.write(lineSep);
 				out.write("</PANES>");
 				out.write(lineSep);
@@ -266,7 +267,7 @@ public class PerspectiveManager
 
 		public InputSource resolveEntity(String publicId, String systemId)
 		{
-			return MiscUtilities.findEntity(systemId, "perspective.dtd", getClass());
+			return XMLUtilities.findEntity(systemId, "perspective.dtd", getClass());
 		}
 
 		public void startElement(String uri, String localName,

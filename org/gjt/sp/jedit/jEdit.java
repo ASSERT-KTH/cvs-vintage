@@ -51,12 +51,13 @@ import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.util.Log;
 import org.gjt.sp.util.StandardUtilities;
+import org.gjt.sp.util.XMLUtilities;
 //}}}
 
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.265 2006/07/11 09:27:07 kpouer Exp $
+ * @version $Id: jEdit.java,v 1.266 2006/07/13 04:37:32 vanza Exp $
  */
 public class jEdit
 {
@@ -3861,7 +3862,7 @@ loop:		for(int i = 0; i < list.length; i++)
 				_in = jEdit.class.getResourceAsStream(path);
 			else
 				_in = new FileInputStream(path);
-			MiscUtilities.parseXML(_in, handler);
+			XMLUtilities.parseXML(_in, handler);
 		}
 		catch(IOException e)
 		{
