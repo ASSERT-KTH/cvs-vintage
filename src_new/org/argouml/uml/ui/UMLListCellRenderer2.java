@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.39 2006/05/23 21:29:57 tfmorris Exp $
+// $Id: UMLListCellRenderer2.java,v 1.40 2006/07/14 23:56:15 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import javax.swing.JList;
 import javax.swing.UIManager;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
 import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 
@@ -160,20 +161,20 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
                 if (name == null || name.equals("")) {
                     name = "(unnamed " + makeTypeName(value) + ")";
                 }
-            if (Model.getFacade().isAStereotype(value)) {
-                Collection bases = Model.getFacade().getBaseClasses(value);
-                StringBuffer sb = new StringBuffer();
-                sb.append(" [");
-                for( Iterator it = bases.iterator(); it.hasNext(); ) {
-                    sb.append(makeText(it.next()));
-                    if (it.hasNext()) {
-                        sb.append(", ");
+                if (Model.getFacade().isAStereotype(value)) {
+                    Collection bases = Model.getFacade().getBaseClasses(value);
+                    StringBuffer sb = new StringBuffer();
+                    sb.append(" [");
+                    for( Iterator it = bases.iterator(); it.hasNext(); ) {
+                        sb.append(makeText(it.next()));
+                        if (it.hasNext()) {
+                            sb.append(", ");
+                        }
                     }
+                    name = name + sb.toString() + "]";
                 }
-                name = name + sb.toString() + "]";
-            }
             } catch (InvalidElementException e){
-                name = "(*deleted*)";
+                name = Translator.localize("misc.name.deleted");
             }
         } else if (Model.getFacade().isAMultiplicity(value)) {
             name = Model.getFacade().getName(value);

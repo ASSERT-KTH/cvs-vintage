@@ -1,4 +1,4 @@
-// $Id: NameOrder.java,v 1.14 2006/05/23 21:29:57 tfmorris Exp $
+// $Id: NameOrder.java,v 1.15 2006/07/14 23:56:14 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public class NameOrder
                 try {
                     name = Model.getFacade().getName(obj);
                 } catch (InvalidElementException e) {
-                    name = "(*deleted*)";
+                    name = Translator.localize("misc.name.deleted");
                 }
             }
             name = "??";

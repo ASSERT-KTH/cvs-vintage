@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.28 2006/07/14 15:40:08 mvw Exp $
+// $Id: WizAssocComposite.java,v 1.29 2006/07/14 23:56:14 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -155,8 +155,8 @@ public class WizAssocComposite extends UMLWizard {
         // currently anonymous), use the ArgoUML convention of "(anon)" for the
         // names
 
-        String start = "(anon)";
-        String end   = "(anon)";
+        String start = Translator.localize("misc.name.anon");
+        String end   = Translator.localize("misc.name.anon");
 
         if ((cls0 != null)
                 && (Model.getFacade().getName(cls0) != null)

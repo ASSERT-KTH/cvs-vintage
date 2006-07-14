@@ -1,4 +1,4 @@
-// $Id: FigStereotypeText.java,v 1.3 2006/06/11 15:39:48 mvw Exp $
+// $Id: FigStereotypeText.java,v 1.4 2006/07/14 23:56:14 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.diagram.ui;
 import java.awt.Color;
 
 import org.apache.log4j.Logger;
+import org.argouml.i18n.Translator;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
 import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigText;
@@ -131,8 +132,9 @@ public class FigStereotypeText extends FigGroup {
         singleStereotype.setFont(FigNodeModelElement.getLabelFont());
         singleStereotype.setTextColor(Color.black);
         // TODO: Use message formatting here
-        singleStereotype
-                .setText("<<" + (text == null ? "(anon)" : text) + ">>");
+        singleStereotype.setText("<<"
+                + (text == null ? Translator.localize("misc.name.anon") : text)
+                + ">>");
         LOG.info("Adding " + singleStereotype.getText() + " to Fig");
         addFig(singleStereotype);
     }

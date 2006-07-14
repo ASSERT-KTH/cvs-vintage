@@ -1,4 +1,4 @@
-// $Id: UMLCheckItem.java,v 1.16 2006/06/15 19:40:24 mvw Exp $
+// $Id: UMLCheckItem.java,v 1.17 2006/07/14 23:56:15 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.cognitive.checklist;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.checklist.CheckItem;
+import org.argouml.i18n.Translator;
 import org.argouml.model.InvalidElementException;
 import org.argouml.ocl.CriticOclEvaluator;
 import org.argouml.ocl.OCLEvaluator;
@@ -87,7 +88,7 @@ public class UMLCheckItem extends CheckItem {
 	    } catch (InvalidElementException e) {
                 /* The modelelement must have been 
                  * deleted - ignore this - it will pass. */
-                evalStr = "(deleted)";
+                evalStr = Translator.localize("misc.name.deleted");
             }
 	    LOG.debug("expr='" + expr + "' = '" + evalStr + "'");
 	    res = res.substring(0, matchPos) + evalStr

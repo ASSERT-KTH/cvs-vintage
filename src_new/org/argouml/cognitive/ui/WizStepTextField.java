@@ -1,4 +1,4 @@
-// $Id: WizStepTextField.java,v 1.11 2006/06/11 15:39:47 mvw Exp $
+// $Id: WizStepTextField.java,v 1.12 2006/07/14 23:56:14 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
+import org.argouml.i18n.Translator;
 import org.argouml.swingext.SpacerPanel;
 
 
@@ -43,7 +44,7 @@ import org.argouml.swingext.SpacerPanel;
  */
 public class WizStepTextField extends WizStep {
     private JTextArea instructions = new JTextArea();
-    private JLabel label = new JLabel("Value:");
+    private JLabel label = new JLabel(Translator.localize("label.value"));
     private JTextField field = new JTextField(20);
 
     /**

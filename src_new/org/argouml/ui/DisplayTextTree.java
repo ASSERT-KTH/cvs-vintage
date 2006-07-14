@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.65 2006/06/11 19:01:25 mvw Exp $
+// $Id: DisplayTextTree.java,v 1.66 2006/07/14 23:56:15 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectSettings;
@@ -226,8 +227,7 @@ public class DisplayTextTree extends JTree {
                     }
                 }
             } catch (InvalidElementException e) {
-                // TODO: Localize
-                name = "*deleted element*";
+                name = Translator.localize("misc.name.deleted");
             }
 
             return name;
@@ -246,8 +246,7 @@ public class DisplayTextTree extends JTree {
                 }
                 return name;
             } catch (InvalidElementException e) {
-                // TODO: Localize
-                return "*deleted expression*";
+                return Translator.localize("misc.name.deleted");
             }
         }
 
@@ -257,7 +256,7 @@ public class DisplayTextTree extends JTree {
                 return "Multiplicity: "
                     + Model.getDataTypesHelper().multiplicityToString(value);
             } catch (InvalidElementException e) {
-                return "*deleted multiplicity*";
+                return Translator.localize("misc.name.deleted");
             }
         }
 

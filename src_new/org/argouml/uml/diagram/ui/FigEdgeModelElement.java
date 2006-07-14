@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.183 2006/07/07 22:48:29 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.184 2006/07/14 23:56:14 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -245,7 +245,7 @@ public abstract class FigEdgeModelElement
                 // We moused over an object just as it was deleted
                 // transient condition - doesn't require I18N
                 LOG.warn("A deleted element still exists on the diagram");
-                return "*deleted element*";
+                return Translator.localize("misc.name.deleted");
             }
         } else {
             tip = toString();
