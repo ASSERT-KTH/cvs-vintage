@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalPackName.java,v 1.21 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrUnconventionalPackName.java,v 1.22 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public class CrUnconventionalPackName extends AbstractCrUnconventionalName {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
-	    String ins = "Change the name of this package.";
+	    String ins = super.getInstructions();
 	    String nameStr = Model.getFacade().getName(me);
 	    String sug = computeSuggestion(nameStr);
 	    ((WizMEName) w).setInstructions(ins);

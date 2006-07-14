@@ -1,4 +1,4 @@
-// $Id: CrMissingAttrName.java,v 1.22 2006/06/11 15:39:45 mvw Exp $
+// $Id: CrMissingAttrName.java,v 1.23 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,8 +77,8 @@ public class CrMissingAttrName extends CrUML {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
-	    String ins = "Set the name of this attribute.";
-	    String sug = "AttributeName";
+	    String ins = super.getInstructions();
+	    String sug = super.getDefaultSuggestion();
 	    if (Model.getFacade().isAAttribute(me)) {
 		Object a = /*(MAttribute)*/ me;
 		int count = 1;

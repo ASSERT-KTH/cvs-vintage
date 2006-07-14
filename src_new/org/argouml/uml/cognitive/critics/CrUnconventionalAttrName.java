@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalAttrName.java,v 1.27 2006/02/19 18:13:37 linus Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.28 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,9 +202,7 @@ public class CrUnconventionalAttrName extends AbstractCrUnconventionalName {
 	    Object me =
 		/*(MModelElement)*/ item.getOffenders().elementAt(0);
 	    String sug = computeSuggestion(Model.getFacade().getName(me));
-	    String ins =
-	        "Change the attribute name to start with a "
-	        + "lowercase letter.";
+	    String ins = super.getInstructions();
 	    ((WizMEName) w).setInstructions(ins);
 	    ((WizMEName) w).setSuggestion(sug);
 	}

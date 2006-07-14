@@ -1,4 +1,4 @@
-// $Id: CrConstructorNeeded.java,v 1.24 2006/06/11 19:01:25 mvw Exp $
+// $Id: CrConstructorNeeded.java,v 1.25 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -151,12 +151,13 @@ public class CrConstructorNeeded extends CrUML {
 	if (w instanceof WizAddConstructor) {
 	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
-	    String ins = "Set the name of the new constructor.";
+	    String ins = super.getInstructions();
 	    String sug = null;
 	    if (me != null)
 		sug = Model.getFacade().getName(me);
-	    if ("".equals(sug))
-		sug = "newOperation";
+	    if ("".equals(sug)) {
+		sug = super.getDefaultSuggestion();
+            }
 	    ((WizAddConstructor) w).setInstructions(ins);
 	    ((WizAddConstructor) w).setSuggestion(sug);
 	}

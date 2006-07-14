@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.21 2006/06/11 15:39:44 mvw Exp $
+// $Id: WizMEName.java,v 1.22 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,8 +40,7 @@ import org.argouml.model.Model;
 public class WizMEName extends UMLWizard {
     private static final Logger LOG = Logger.getLogger(WizMEName.class);
 
-    private String instructions =
-	"Please change the name of the offending model element.";
+    private String instructions = Translator.localize("critics.WizMEName-ins");
     private String label = Translator.localize("label.name");
     private boolean mustEdit = false;
 

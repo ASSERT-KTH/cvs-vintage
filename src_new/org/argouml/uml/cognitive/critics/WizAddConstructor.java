@@ -1,4 +1,4 @@
-// $Id: WizAddConstructor.java,v 1.23 2006/06/11 15:39:44 mvw Exp $
+// $Id: WizAddConstructor.java,v 1.24 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,8 +54,8 @@ public class WizAddConstructor extends UMLWizard {
 
     private WizStepTextField step1;
     private String label = Translator.localize("label.name");
-    private String instructions =
-	"Please change the name of the offending model element.";
+    private String instructions = 
+        Translator.localize("critics.WizAddConstructor-ins");
 
     /**
      * Creates a new instance of WizAddConstructor.

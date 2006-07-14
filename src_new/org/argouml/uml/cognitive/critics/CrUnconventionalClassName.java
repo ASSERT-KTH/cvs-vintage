@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalClassName.java,v 1.23 2006/06/11 15:39:45 mvw Exp $
+// $Id: CrUnconventionalClassName.java,v 1.24 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,9 +90,7 @@ public class CrUnconventionalClassName extends AbstractCrUnconventionalName {
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
 	    String sug = Model.getFacade().getName(me);
 	    sug = computeSuggestion(sug);
-	    String ins =
-	        "Change the class name to start with an "
-		+ "uppercase letter.";
+	    String ins = super.getInstructions();
 	    ((WizMEName) w).setInstructions(ins);
 	    ((WizMEName) w).setSuggestion(sug);
 	}

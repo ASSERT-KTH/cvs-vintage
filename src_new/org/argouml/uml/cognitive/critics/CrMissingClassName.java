@@ -1,4 +1,4 @@
-// $Id: CrMissingClassName.java,v 1.21 2006/06/11 15:39:45 mvw Exp $
+// $Id: CrMissingClassName.java,v 1.22 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,8 +80,8 @@ public class CrMissingClassName extends CrUML {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
-	    String ins = "Set the name of this class.";
-	    String sug = "ClassName";
+	    String ins = super.getInstructions();
+	    String sug = super.getDefaultSuggestion();
 	    int count = 1;
 	    if (Model.getFacade().getNamespace(me) != null) {
 		count =

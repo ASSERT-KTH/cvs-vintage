@@ -1,4 +1,4 @@
-// $Id: WizTooMany.java,v 1.4 2006/03/19 10:46:34 mvw Exp $
+// $Id: WizTooMany.java,v 1.5 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ui.WizStepTextField;
+import org.argouml.i18n.Translator;
 
 /** 
  * A wizard which adjust the threshold for critics. <p>
@@ -42,10 +43,9 @@ import org.argouml.cognitive.ui.WizStepTextField;
  */
 public class WizTooMany extends UMLWizard {
 
-    private String instructions =
-        "Please adjust the threshold according to your needs. "
-        + "This lets you adjust when the critic creates a particular ToDoItem.";
-
+    private String instructions = 
+        Translator.localize("critics.WizTooMany-ins");
+        
     private WizStepTextField step1;
 
     /**

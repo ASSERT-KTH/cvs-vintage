@@ -1,4 +1,4 @@
-// $Id: WizAddInstanceVariable.java,v 1.18 2006/06/11 19:01:25 mvw Exp $
+// $Id: WizAddInstanceVariable.java,v 1.19 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,8 +41,8 @@ public class WizAddInstanceVariable extends UMLWizard {
 
     private WizStepTextField step1 = null;
     private String label = Translator.localize("label.name");
-    private String instructions =
-	"Please change the name of the offending model element.";
+    private String instructions = 
+        Translator.localize("critics.WizAddInstanceVariable-ins");
 
     /**
      * Creates a new instance of WizAddInstanceVariable.

@@ -1,4 +1,4 @@
-// $Id: CrNoOperations.java,v 1.31 2006/06/11 15:39:45 mvw Exp $
+// $Id: CrNoOperations.java,v 1.32 2006/07/14 15:40:08 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,8 +124,8 @@ public class CrNoOperations extends CrUML {
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizAddOperation) {
-	    String ins = "Set the name of the new operation.";
-	    String sug = "newOperation";
+	    String ins = super.getInstructions();
+	    String sug = super.getDefaultSuggestion();
 	    ((WizAddOperation) w).setInstructions(ins);
 	    ((WizAddOperation) w).setSuggestion(sug);
 	}
