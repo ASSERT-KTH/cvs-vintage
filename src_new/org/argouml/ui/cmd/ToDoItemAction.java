@@ -1,4 +1,4 @@
-// $Id: ToDoItemAction.java,v 1.5 2006/06/11 14:56:01 mvw Exp $
+// $Id: ToDoItemAction.java,v 1.6 2006/07/15 12:26:08 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,11 @@ import org.tigris.gef.undo.UndoableAction;
 
 
 
-abstract class ToDoItemAction extends UndoableAction {
+/**
+ * A base class for Actions related to ToDoItems.
+ *
+ */
+public abstract class ToDoItemAction extends UndoableAction {
 
     private Object rememberedTarget = null;
 
