@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.47 2006/07/10 19:38:05 mvw Exp $
+// $Id: Facade.java,v 1.48 2006/07/15 04:55:42 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2701,16 +2701,16 @@ public interface Facade {
     /**
      * Return the referenceValue collection for a taggedValue.
      * 
-     * @param taggedValue
-     * @return
+     * @param taggedValue the tagged value to read from
+     * @return collection of referenceValues for the given TaggedValue
      */
     Collection getReferenceValue(Object taggedValue);
 
     /**
      * Return the dataValue collection for a taggedValue.
      * 
-     * @param taggedValue
-     * @return
+     * @param taggedValue taggedValue the tagged value to read from
+     * @return a collection of dataValues for the given TaggedValue
      */
     Collection getDataValue(Object taggedValue);
     
