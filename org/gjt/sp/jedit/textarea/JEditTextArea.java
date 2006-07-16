@@ -59,7 +59,7 @@ import org.gjt.sp.util.StandardUtilities;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.376 2006/07/16 19:01:24 vanza Exp $
+ * @version $Id: JEditTextArea.java,v 1.377 2006/07/16 19:15:42 vanza Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5850,10 +5850,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	{
 		int startCaret = caretStart > 0 ? caretStart - 1 : caretStart;
 		int endCaret = caretEnd < buffer.getLength() ? caretEnd + 1 : caretEnd;
-
-		ParserRuleSet atStart = buffer.getRuleSetAtOffset(startCaret);
-		ParserRuleSet atStartMinus1 = buffer.getRuleSetAtOffset(startCaret-1);
-		System.err.println(atStart.getName() + " :: " + atStartMinus1.getName());
 
 		String startLineComment = buffer.getContextSensitiveProperty(startCaret,"lineComment");
 		String startCommentStart = buffer.getContextSensitiveProperty(startCaret,"commentStart");
