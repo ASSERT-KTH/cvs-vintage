@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.60 2006/07/04 07:55:21 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.61 2006/07/16 17:28:09 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -429,7 +429,7 @@ public class FigClassifierRole extends FigNodeModelElement {
          * that may change the text: 
          */
         if (newOwner != null) {
-            addElementListener(newOwner, new String[] {"name", "base"});
+            addElementListener(newOwner, new String[] {"name", "base", "remove"});
             Collection bases = Model.getFacade().getBases(newOwner);
             Iterator i = bases.iterator();
             while (i.hasNext()) {

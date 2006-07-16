@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.45 2006/07/04 07:55:20 bobtarling Exp $
+// $Id: FigActionState.java,v 1.46 2006/07/16 17:28:09 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,7 +251,7 @@ public class FigActionState extends FigStateVertex {
          * that change the body text: 
          */
         if (newOwner != null) {
-            addElementListener(newOwner, "entry");
+            addElementListener(newOwner, new String[] {"entry", "remove"} );
             Object entry = Model.getFacade().getEntry(newOwner);
             if (entry != null) {
                 addElementListener(entry, "script");

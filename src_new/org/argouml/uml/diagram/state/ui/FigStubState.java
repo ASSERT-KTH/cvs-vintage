@@ -1,4 +1,4 @@
-// $Id: FigStubState.java,v 1.12 2006/07/04 07:55:20 bobtarling Exp $
+// $Id: FigStubState.java,v 1.13 2006/07/16 17:28:09 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -344,21 +344,6 @@ public class FigStubState extends FigStateVertex {
         calcBounds();
         setBounds(getBounds());
         damage();
-    }
-
-    /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
-     */
-    protected void updateListeners(Object oldOwner, Object newOwner) {
-        super.updateListeners(oldOwner, newOwner);
-        if (newOwner == getOwner()) {
-            return;
-        }
-        if (newOwner == null) {
-            removeListeners();
-        } else {
-            addListeners(newOwner);
-        }
     }
 
     /**

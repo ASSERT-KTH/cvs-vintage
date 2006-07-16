@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.34 2006/07/04 07:55:20 bobtarling Exp $
+// $Id: FigObjectFlowState.java,v 1.35 2006/07/16 17:28:09 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -166,8 +166,8 @@ public class FigObjectFlowState extends FigNodeModelElement {
         }
         if (newOwner != null) {
             /* Let's NOT do this: addElementListener(newOwner);
-             * We only need to listen to its "type". */
-            addElementListener(newOwner, "type");
+             * We only need to listen to its "type", and "remove". */
+            addElementListener(newOwner, new String[] {"type", "remove"});
             // register for events from the type
             Object type = Model.getFacade().getType(newOwner);
             if (Model.getFacade().isAClassifier(type)) {

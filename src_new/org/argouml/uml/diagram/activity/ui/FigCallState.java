@@ -1,4 +1,4 @@
-// $Id: FigCallState.java,v 1.10 2006/07/04 07:55:20 bobtarling Exp $
+// $Id: FigCallState.java,v 1.11 2006/07/16 17:28:09 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,7 +104,8 @@ public class FigCallState extends FigActionState {
             // register for events from all modelelements
             // that change the name and body text
             // i.e. when the CallAction is replaced:
-            addElementListener(newOwner, new String[] {"entry", "name"});
+            addElementListener(newOwner, 
+                    new String[] {"entry", "name", "remove"});
             Object entryAction = Model.getFacade().getEntry(newOwner);
             if (Model.getFacade().isACallAction(entryAction)) {
                 // and when the Operation is replaced:
