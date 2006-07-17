@@ -62,7 +62,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.68 2006/06/18 18:51:40 vanza Exp $
+ * @version $Id: SearchAndReplace.java,v 1.69 2006/07/17 23:07:50 olearyni Exp $
  */
 public class SearchAndReplace
 {
@@ -702,7 +702,7 @@ loop:			for(;;)
 				retVal += replaceInSelection(view,textArea,
 					buffer,matcher,smartCaseReplace,s);
 			}
-
+			
 			boolean _reverse = !regexp && reverse && fileset instanceof CurrentBufferSet;
 			if(_reverse)
 			{
@@ -718,6 +718,14 @@ loop:			for(;;)
 					textArea.moveCaretPosition(s.getEnd());
 			}
 
+			if(!BeanShell.isScriptRunning())
+			{
+				Object[] args = { new Integer(retVal),
+					new Integer(1) };
+				view.getStatus().setMessageAndClear(jEdit.getProperty(
+					"view.status.replace-all",args));
+			}
+			
 			if(retVal == 0)
 			{
 				view.getToolkit().beep();
