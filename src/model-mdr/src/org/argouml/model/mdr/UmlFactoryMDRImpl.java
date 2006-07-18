@@ -1,4 +1,4 @@
-// $Id: UmlFactoryMDRImpl.java,v 1.11 2006/06/15 00:05:44 tfmorris Exp $
+// $Id: UmlFactoryMDRImpl.java,v 1.12 2006/07/18 21:12:19 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,11 @@ import javax.jmi.reflect.InvalidObjectException;
 import javax.jmi.reflect.RefObject;
 
 import org.apache.log4j.Logger;
+import org.argouml.model.DummyModelMemento;
 import org.argouml.model.IllegalModelElementConnectionException;
 import org.argouml.model.InvalidElementException;
 import org.argouml.model.MetaTypes;
+import org.argouml.model.Model;
 import org.argouml.model.UmlFactory;
 import org.omg.uml.behavioralelements.activitygraphs.ActionState;
 import org.omg.uml.behavioralelements.activitygraphs.ActivityGraph;
@@ -818,6 +820,8 @@ class UmlFactoryMDRImpl extends AbstractUmlModelFactoryMDR implements
                 }
             }
         }
+        
+        Model.notifyMementoCreationObserver(new DummyModelMemento());
     }
 
     /**
