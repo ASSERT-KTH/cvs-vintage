@@ -2,7 +2,7 @@
 
     <!-- {{{ Top-Level build file for jEdit plugins. ====== -->
     <!--
-        Version: $Id: plugin-build.xml,v 1.2 2006/07/06 15:24:39 ezust Exp $
+        Version: $Id: plugin-build.xml,v 1.3 2006/07/18 01:44:13 ezust Exp $
         Requires apache Ant 1.6, including optional tasks, and xerces.
 
         :tabSize=4:indentSize=4:noTabs=true:
@@ -51,6 +51,8 @@
     <property file="${user.home}/build.properties" />
     
     <!-- where to find jEdit and plugins    -->
+    <property name="sourceforge.user.name"
+    value="${user.name}" />
     <property name="jedit.install.dir"  value="../../jEdit" />
     <property name="jedit.user.home"    value="${user.home}/.jedit" />
     <property name="plugins.srcdir"     value=".." />
@@ -378,8 +380,17 @@
         <antcall target="docs-${docs-proc.target}" />
         <delete file="${build.docs}/users-guide.xsl" />
     </target>
+    
     <!-- =============================================== }}} -->
 
+    <target name="upload.docs" depends="userdocs"
+    description="upload documentation to plugins.jedit.org site" >
+        <exec dir="${build.docs}" executable="rsync">
+      <arg line="-avz ./ ${sourceforge.user.name}@plugins.jedit.org:/home/groups/j/je/jedit-plugins/htdocs/plugindoc/${ant.project.name}" />
+    </exec>
+    </target>
+    
+    
     <!-- {{{ Target: javadoc ============================== -->
     <!-- Builds the javadoc documentation for the plugin,
          placing it under "build.javadoc". Your plugin
