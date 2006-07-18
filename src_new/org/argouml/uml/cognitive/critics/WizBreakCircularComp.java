@@ -1,4 +1,4 @@
-// $Id: WizBreakCircularComp.java,v 1.23 2006/07/14 15:40:08 mvw Exp $
+// $Id: WizBreakCircularComp.java,v 1.24 2006/07/18 13:23:48 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,10 +115,10 @@ public class WizBreakCircularComp extends UMLWizard {
 		String toName = Model.getFacade().getName(toType);
 		String s = ascName 
                     + " " 
-                    + Translator.localize("critics.WizTooMany-from") 
+                    + Translator.localize("critics.WizBreakCircularComp-from") 
                     + fromName
                     + " "
-                    + Translator.localize("critics.WizTooMany-to")
+                    + Translator.localize("critics.WizBreakCircularComp-to")
                     + " "
                     + toName;
 		res.addElement(s);
