@@ -1,4 +1,4 @@
-// $Id: MessageNotationUml.java,v 1.5 2006/06/04 19:49:35 mvw Exp $
+// $Id: MessageNotationUml.java,v 1.6 2006/07/18 13:20:47 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -484,7 +484,7 @@ public class MessageNotationUml extends MessageNotation {
                     }
                 } else if ("[".equals(token)) {
                     if (mustBePre) {
-                    	String msg = "parsing.error.message.predec-unqualified";
+                    	String msg = "parsing.error.message.pred-unqualified";
                         throw new ParseException(Translator.localize(msg), 
                                 st.getTokenIndex());
                     }
@@ -506,7 +506,7 @@ public class MessageNotationUml extends MessageNotation {
                     }
                 } else if ("*".equals(token)) {
                     if (mustBePre) {
-                    	String msg = "parsing.error.message.predec-unqualified";
+                    	String msg = "parsing.error.message.pred-unqualified";
                         throw new ParseException(Translator.localize(msg), 
                                 st.getTokenIndex());
                     }
