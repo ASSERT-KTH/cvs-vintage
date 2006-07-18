@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.57 2006/07/17 20:38:16 olearyni Exp $
+ * @version $Id: Gutter.java,v 1.58 2006/07/18 09:54:38 olearyni Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -685,9 +685,7 @@ public class Gutter extends JComponent implements SwingConstants
 				break;
 			}
 
-			boolean highlightCurrentLine = currentLineHighlightEnabled
-				&& textArea.getSelectedLines().length == 1;
-			if (physicalLine == textArea.getCaretLine() && highlightCurrentLine)
+			if (physicalLine == textArea.getCaretLine() && currentLineHighlightEnabled)
 			{
 				gfx.setColor(currentLineHighlight);
 			}
