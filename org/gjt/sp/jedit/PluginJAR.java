@@ -85,6 +85,7 @@ import org.gjt.sp.util.StandardUtilities;
  *  plugin core class might not be loaded until the plugin is first used. See
  * {@link EditPlugin#start()} for a full description.
  *
+ *
  * @see org.gjt.sp.jedit.jEdit#getProperty(String)
  * @see org.gjt.sp.jedit.jEdit#getPlugin(String)
  * @see org.gjt.sp.jedit.jEdit#getPlugins()
@@ -99,7 +100,7 @@ import org.gjt.sp.util.StandardUtilities;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.51 2006/07/11 09:27:07 kpouer Exp $
+ * @version $Id: PluginJAR.java,v 1.52 2006/07/19 18:04:34 ezust Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
