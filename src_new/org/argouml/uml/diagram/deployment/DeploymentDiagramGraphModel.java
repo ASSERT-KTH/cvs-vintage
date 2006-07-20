@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.51 2006/03/25 21:33:51 tfmorris Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.52 2006/07/20 00:09:11 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -189,6 +189,10 @@ public class DeploymentDiagramGraphModel
      */
     public boolean canAddNode(Object node) {
         if (node == null) {
+            return false;
+        }
+        if (Model.getFacade().isAAssociation(node) && !Model.getFacade().isANaryAssociation(node)) {
+            // A binary association is not a node so reject.
             return false;
         }
         if (containsNode(node)) {

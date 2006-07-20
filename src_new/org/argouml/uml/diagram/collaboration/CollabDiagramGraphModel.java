@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.58 2006/06/11 15:39:54 mvw Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.59 2006/07/20 00:09:12 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,9 +137,14 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
      * @see org.tigris.gef.graph.MutableGraphModel#canAddNode(java.lang.Object)
      */
     public boolean canAddNode(Object node) {
-	if (node == null) {
+        if (node == null) {
             return false;
         }
+        if (Model.getFacade().isAAssociation(node) && !Model.getFacade().isANaryAssociation(node)) {
+            // A binary association is not a node so reject.
+            return false;
+        }
+    
 	if (containsNode(node)) {
             return false;
         }
