@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.60 2006/06/04 13:54:53 mvw Exp $
+// $Id: FigTransition.java,v 1.61 2006/07/21 16:15:11 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,6 +111,7 @@ public class FigTransition extends FigEdgeModelElement {
                         Model.getFacade().getSource(newOwner))
                     || Model.getFacade().isAObjectFlowState(
                             Model.getFacade().getTarget(newOwner));
+            getFig().setDashed(dashed);
         }
     }
 
