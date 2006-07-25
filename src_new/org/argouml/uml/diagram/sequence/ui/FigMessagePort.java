@@ -1,4 +1,4 @@
-// $Id: FigMessagePort.java,v 1.10 2006/06/11 15:39:48 mvw Exp $
+// $Id: FigMessagePort.java,v 1.11 2006/07/25 23:26:03 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,13 +125,6 @@ public class FigMessagePort extends FigGroup {
             ((FigClassifierRole) this.getGroup().getGroup()).setMatchingNode(this);
         }
         return node;
-    }
-
-    void clearNode() {
-        Fig parent = getGroup();
-        if (parent instanceof FigLifeLine) {
-            ((FigClassifierRole) parent.getGroup()).removeFigMessagePort(this);
-        }
     }
 
     void setNode(MessageNode n) {

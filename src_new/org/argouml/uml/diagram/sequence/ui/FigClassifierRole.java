@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.46 2006/07/16 17:28:10 mvw Exp $
+// $Id: FigClassifierRole.java,v 1.47 2006/07/25 23:26:03 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -391,7 +391,7 @@ public class FigClassifierRole extends FigNodeModelElement
      * Start or stop a rectangle when the state changes.
      *
      */
-    private void updateNodeStates() {
+    void updateNodeStates() {
         int lastState = MessageNode.INITIAL;
         ArrayList callers = null;
         int nodeCount = linkPositions.size();
@@ -849,7 +849,6 @@ public class FigClassifierRole extends FigNodeModelElement
         fmp.getNode().setFigMessagePort(null);
         fmp.setNode(null);
         lifeLineFig.removeFig(fmp);
-        updateNodeStates();
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayer.java,v 1.3 2006/03/15 01:10:02 bobtarling Exp $
+// $Id: SequenceDiagramLayer.java,v 1.4 2006/07/25 23:26:03 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -291,14 +291,36 @@ public class SequenceDiagramLayer extends LayerPerspectiveMutable {
         if (f instanceof FigMessage) {
             LOG.info("Removing a FigMessage");
             FigMessage fm = (FigMessage) f;
-            ((FigMessagePort) fm.getSourcePortFig()).clearNode();
-            ((FigMessagePort) fm.getDestPortFig()).clearNode();
+            FigMessagePort source = (FigMessagePort) fm.getSourcePortFig();
+            FigMessagePort dest = (FigMessagePort) fm.getDestPortFig();
+            
+            removeFigMessagePort(source);
+            removeFigMessagePort(dest);
+            updateNodeStates(source);
+            if (fm.getSourceFigNode() != fm.getDestFigNode()) {
+                updateNodeStates(dest);
+            }
         }
         super.remove(f);
         
         LOG.info("A Fig has been removed, updating activations");
         updateActivations();
     }
+    
+    private void removeFigMessagePort(FigMessagePort fmp) {
+        Fig parent = fmp.getGroup();
+        if (parent instanceof FigLifeLine) {
+            ((FigClassifierRole) parent.getGroup()).removeFigMessagePort(fmp);
+        }
+    }
+    
+    private void updateNodeStates(FigMessagePort fmp) {
+        Fig parent = fmp.getGroup();
+        if (parent instanceof FigLifeLine) {
+            ((FigClassifierRole) parent.getGroup()).updateNodeStates();
+        }
+    }
+    
 
     /**
      * Returns a list with all {@link FigMessage}s that intersect with
