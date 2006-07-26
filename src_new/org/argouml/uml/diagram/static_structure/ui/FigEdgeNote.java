@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.38 2006/07/04 08:03:33 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.39 2006/07/26 16:33:55 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.swing.Action;
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedVChangeListener;
-import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
@@ -187,18 +186,6 @@ public class FigEdgeNote
     protected void modelChanged(PropertyChangeEvent e) {
         if (e instanceof RemoveAssociationEvent
                 && e.getOldValue() == annotatedElement) {
-            try {
-                owner.delete();
-            } catch (InvalidElementException ex) {
-                /*
-                 * Depending on the order of deletion of elements, the order of
-                 * delivery of events and the speed of the event delivery thread
-                 * relative to other threads, we may hit this condition. In the
-                 * absence of synchronization, it's not really an error. Just
-                 * ignore it.
-                 */
-                LOG.debug("Tried to delete an already deleted comment", ex);
-            }
             removeFromDiagram();
         }
     }
