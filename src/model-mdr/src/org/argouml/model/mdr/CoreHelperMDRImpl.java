@@ -1,4 +1,4 @@
-// $Id: CoreHelperMDRImpl.java,v 1.23 2006/07/18 21:57:34 linus Exp $
+// $Id: CoreHelperMDRImpl.java,v 1.24 2006/07/26 06:19:13 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import org.apache.log4j.Logger;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
-import org.argouml.model.ModelManagementHelper;
 import org.argouml.model.NotImplementedException;
 import org.omg.uml.behavioralelements.activitygraphs.ActivityGraph;
 import org.omg.uml.behavioralelements.activitygraphs.ClassifierInState;
@@ -1942,7 +1941,9 @@ public class CoreHelperMDRImpl implements CoreHelper {
     public void removeAnnotatedElement(Object handle, Object me) {
         if (handle instanceof Comment && me instanceof ModelElement) {
             try {
-                ((Comment) handle).getAnnotatedElement().remove(me);
+                if (((Comment) handle).getAnnotatedElement().contains(me)) {
+                    ((Comment) handle).getAnnotatedElement().remove(me);
+                }
             } catch (InvalidObjectException e) {
                 throw new InvalidElementException(e);
             }
@@ -2110,6 +2111,7 @@ public class CoreHelperMDRImpl implements CoreHelper {
         try {
             Object taggedValue = Model.getFacade().getTaggedValue(handle, 
                     name);
+            // TODO: This removes the first only.  Should we remove all?
             if (taggedValue != null) {
                 modelImpl.getExtensionMechanismsHelper().removeTaggedValue(
                         handle, taggedValue);
