@@ -12,7 +12,7 @@
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo
 // Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2006.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.message.viewer;
@@ -169,22 +169,24 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		try {
 			viewerPlugin = createHTMLViewerPluginInstance(selectedBrowser);
 			// in case of an error -> fall-back to Swing's built-in JTextPane
-			if ( viewerPlugin == null || !viewerPlugin.initialized()) {
-				JOptionPane.showMessageDialog(null, "Error while trying to load html viewer");
-				
-				LOG.severe("Error while trying to load html viewer -> falling back to default");
+			if (viewerPlugin == null || !viewerPlugin.initialized()) {
+				JOptionPane.showMessageDialog(null,
+						"Error while trying to load html viewer");
+
+				LOG
+						.severe("Error while trying to load html viewer -> falling back to default");
 
 				viewerPlugin = createHTMLViewerPluginInstance("Default");
-			} 
+			}
 		} catch (Exception e) {
 			viewerPlugin = createHTMLViewerPluginInstance("Default");
-			
-			if ( Logging.DEBUG)
+
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		} catch (Error e) {
 			viewerPlugin = createHTMLViewerPluginInstance("Default");
-			
-			if ( Logging.DEBUG)
+
+			if (Logging.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -226,7 +228,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
 			if (Logging.DEBUG)
 				e.printStackTrace();
-		} 
+		}
 
 		return null;
 	}
@@ -421,7 +423,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	public String getSelectedText() {
 		return viewerPlugin.getSelectedText();
 	}
-	
+
 	public String getText() {
 		return viewerPlugin.getText();
 	}
@@ -431,9 +433,9 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	}
 
 	public void moveCaretPosition(int position) {
-		viewerPlugin.moveCaretPosition(position);	
+		viewerPlugin.moveCaretPosition(position);
 	}
-	
+
 	/**
 	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()
 	 */
@@ -657,7 +659,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	protected void processPopup(MouseEvent ev) {
 		// final URL url = extractURL(ev);
 		final ColumbaURL mailto = extractMailToURL(ev);
-		
+
 		final MouseEvent event = ev;
 		// open context-menu
 		// -> this has to happen in the awt-event dispatcher thread
@@ -669,5 +671,4 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			}
 		});
 	}
-
 }
