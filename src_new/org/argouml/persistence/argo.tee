@@ -11,7 +11,7 @@
 <!-- "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.tee,v 1.7 2006/06/04 13:54:53 mvw Exp $ -->
+<!-- $Id: argo.tee,v 1.8 2006/08/09 22:41:13 bobtarling Exp $ -->
 
 
 <TemplateSet>
@@ -20,8 +20,6 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <template class="org.argouml.kernel.Project">
 <![CDATA[
-<?xml version = "1.0" encoding = "UTF-8" ?>
-<!DOCTYPE argo SYSTEM "argo.dtd" >
 <argo version="<ocl>self.persistenceVersion</ocl>">
   <documentation>
     <authorname><ocl>self.authorname</ocl></authorname>
