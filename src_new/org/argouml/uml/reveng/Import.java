@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.90 2006/03/27 13:09:01 linus Exp $
+// $Id: Import.java,v 1.91 2006/08/09 18:36:19 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,6 +78,7 @@ import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.base.Globals;
+import org.tigris.swidgets.GridLayout2;
 
 /**
  * This is the main class for all import classes.<p>
@@ -187,7 +188,7 @@ public class Import {
             new JDialog(ProjectBrowser.getInstance(),
                     Translator.localize("action.import-sources"), true);
 
-        dialog.getContentPane().add(chooser, BorderLayout.WEST);
+        dialog.getContentPane().add(chooser, BorderLayout.CENTER);
         dialog.getContentPane().add(getConfigPanel(this), BorderLayout.EAST);
         dialog.pack();
         int x =
@@ -250,7 +251,7 @@ public class Import {
         // build the configPanel:
         if (configPanel == null) {
             JPanel general = new JPanel();
-            general.setLayout(new GridLayout(13, 1));
+            general.setLayout(new GridLayout2(13, 1, 0, 0, GridLayout2.NONE));
 
             general.add(new JLabel(
                     Translator.localize("action.import-select-lang")));
