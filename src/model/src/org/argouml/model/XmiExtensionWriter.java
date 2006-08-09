@@ -1,4 +1,4 @@
-// $Id: XmiWriter.java,v 1.7 2006/08/09 18:58:34 bobtarling Exp $
+// $Id$
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,29 +24,21 @@
 
 package org.argouml.model;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
- * A wrapper around the genuine XmiWriter that provides public
- * access with no knowledge of actual UML implementation.
- * Unlike many of the interfaces to the model there is no control to force
- * a single instance of an XmiWriter. This is to allow work objects generated
- * by the implementation to be garbage collected when an XmiWriter instance
- * falls out of scope.
+ * An interface to be implemented by classes outside of the model subsystem that
+ * wish to inject data into the XMI output stream.
  *
  * @author Bob Tarling
  */
-public interface XmiWriter {
+public interface XmiExtensionWriter {
 
     /**
      * Write XMI to registered writer.
      *
      * @throws UmlException if it goes wrong
      */
-    void write() throws UmlException;
-    
-    /**
-     * Set the object to call back in order to write exentsion elements into the XMI
-     * output stream
-     * @param xmiExtensionWriter
-     */
-    void setXmiExtensionWriter(XmiExtensionWriter xmiExtensionWriter);
+    void write(Writer writer) throws IOException;
 }

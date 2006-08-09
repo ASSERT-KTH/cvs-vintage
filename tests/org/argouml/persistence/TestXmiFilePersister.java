@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.16 2006/08/09 16:49:22 mvw Exp $
+// $Id: TestXmiFilePersister.java,v 1.17 2006/08/09 18:58:47 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,7 @@ public class TestXmiFilePersister extends TestCase {
         } catch (OpenException e) {
             fail("Load resulted in an exception");
         } catch (InterruptedException e) {
-            fail("Load interrupted");
+            fail("Load resulted in an exception");
         }
     }
 }

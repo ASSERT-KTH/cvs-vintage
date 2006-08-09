@@ -1,4 +1,4 @@
-// $Id: TestMDRModelImplementation.java,v 1.2 2006/06/11 17:14:04 mvw Exp $
+// $Id: TestMDRModelImplementation.java,v 1.3 2006/08/09 18:58:22 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -301,7 +301,7 @@ public class TestMDRModelImplementation extends TestCase {
      * @throws UmlException If an error occur
      */
     public void testGetXmiWriter() throws UmlException {
-        assertNotNull(modelImplementation.getXmiWriter(null, null));
+        assertNotNull(modelImplementation.getXmiWriter(null, null, null));
     }
 
     /**

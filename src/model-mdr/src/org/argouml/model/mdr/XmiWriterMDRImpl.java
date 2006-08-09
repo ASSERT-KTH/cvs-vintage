@@ -1,4 +1,4 @@
-// $Id: XmiWriterMDRImpl.java,v 1.5 2006/06/11 17:14:04 mvw Exp $
+// $Id: XmiWriterMDRImpl.java,v 1.6 2006/08/09 18:58:22 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.mdr;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,6 +35,7 @@ import javax.jmi.reflect.RefObject;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.UmlException;
+import org.argouml.model.XmiExtensionWriter;
 import org.argouml.model.XmiWriter;
 import org.netbeans.api.xmi.XMIWriter;
 import org.netbeans.api.xmi.XMIWriterFactory;
@@ -70,6 +72,8 @@ public class XmiWriterMDRImpl implements XmiWriter {
     private static final String ENCODING = "UTF-8";
     
     private static final String XMI_VERSION = "1.2";
+    
+    private XmiExtensionWriter xmiExtensionWriter;
 
     /*
      * If true, change write semantics to write all top level model elements
@@ -88,9 +92,10 @@ public class XmiWriterMDRImpl implements XmiWriter {
      *            elements.
      * @param theWriter
      *            The writer to write to
+     * @param version the ArgoUML version
      */
     public XmiWriterMDRImpl(MDRModelImplementation theParent, Object theModel,
-            Writer theWriter) {
+            Writer theWriter, String version) {
         this.parent = theParent;
         this.model = theModel;
         this.writer = theWriter;
@@ -98,7 +103,7 @@ public class XmiWriterMDRImpl implements XmiWriter {
         config.setEncoding(ENCODING);
         config.setReferenceProvider(new XmiReferenceProviderImpl(parent
                 .getObjectToId()));
-        config.setHeaderProvider(new XmiHeaderProviderImpl());
+        config.setHeaderProvider(new XmiHeaderProviderImpl(version));
     }
 
     /**
@@ -147,12 +152,15 @@ public class XmiWriterMDRImpl implements XmiWriter {
     public class WriterOuputStream extends OutputStream {
 
         private Writer myWriter;
+        private boolean inTag = false;
+        private StringBuffer tagName = new StringBuffer(12);
 
         /**
          * Constructor.
          * @param wrappedWriter The myWriter which will be wrapped
          */
         public WriterOuputStream(Writer wrappedWriter) {
+            LOG.info("Constructing WriterOutputStream");
             this.myWriter = wrappedWriter;
         }
 
@@ -174,8 +182,9 @@ public class XmiWriterMDRImpl implements XmiWriter {
          * @see java.io.OutputStream#write(byte[], int, int)
          */
         public void write(byte[] b, int off, int len) throws IOException {
-            char[] c = new String(b, off, len, ENCODING).toCharArray();
-            myWriter.write(c, 0, c.length);
+            while (off < len) {
+                write(b[off++]);
+            }
         }
 
         /**
@@ -189,7 +198,32 @@ public class XmiWriterMDRImpl implements XmiWriter {
          * @see java.io.OutputStream#write(int)
          */
         public void write(int b) throws IOException {
-            write(new byte[] {(byte) (b & 255)}, 0, 1);
+            myWriter.write((byte) (b & 255));
+            if (xmiExtensionWriter != null) {
+                if (inTag) {
+                    if (b == '>') {
+                        inTag = false;
+                        if (tagName.toString().equals("/XMI.content")) {
+                            LOG.info("Calling extension writer");
+                            xmiExtensionWriter.write(myWriter);
+                        }
+                    } else {
+                        tagName.append((char) b);
+                    }
+                }
+                
+                if (b == '<') {
+                    inTag = true;
+                    tagName.delete(0, tagName.length());
+                }
+            }
         }
     }
+
+    public void setXmiExtensionWriter(XmiExtensionWriter xmiExtensionWriter) {
+        LOG.info("Extension writer set to " + xmiExtensionWriter);
+        this.xmiExtensionWriter = xmiExtensionWriter;
+    }
+    
+    
 }

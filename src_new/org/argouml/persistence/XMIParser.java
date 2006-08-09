@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.20 2006/04/08 23:31:20 tfmorris Exp $
+// $Id: XMIParser.java,v 1.21 2006/08/09 18:58:07 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,12 +122,12 @@ public class XMIParser {
      * @param url the URL
      * @throws OpenException when there is an IO error
      */
-    public synchronized void readModels(Project p, URL url)
+    public synchronized void readModels(Project p, URL url, XmiExtensionParser xmiExtensionParser)
         throws OpenException {
         LOG.info("=======================================");
         LOG.info("== READING MODEL " + url);
         try {
-            InputSource source = new InputSource(url.openStream());
+            InputSource source = new InputSource(new XmiInputStream(url.openStream(), xmiExtensionParser, 10000000, 100000));
             source.setSystemId(url.toString());
             readModels(p, source);
         } catch (Exception ex) {
@@ -145,8 +145,6 @@ public class XMIParser {
         throws OpenException {
 
         proj = p;
-        
-
 
         XmiReader reader = null;
         try {

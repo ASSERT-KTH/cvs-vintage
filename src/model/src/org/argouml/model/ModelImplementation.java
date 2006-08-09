@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.18 2006/06/11 17:13:46 mvw Exp $
+// $Id: ModelImplementation.java,v 1.19 2006/08/09 18:58:34 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -285,10 +285,11 @@ public interface ModelImplementation {
      *
      * @param model the project member model
      * @param writer the writer
+     * @param the version of ArgoUML
      * @return the object implementing the XmiWriter interface
      * @throws UmlException on any error while writing
      */
-    XmiWriter getXmiWriter(Object model, Writer writer) throws UmlException;
+    XmiWriter getXmiWriter(Object model, Writer writer, String version) throws UmlException;
 
     /**
      * Allows an external system to register itself to recieve mementos created

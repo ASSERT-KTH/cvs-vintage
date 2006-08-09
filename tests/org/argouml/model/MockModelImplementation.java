@@ -1,4 +1,4 @@
-// $Id: MockModelImplementation.java,v 1.2 2006/05/26 11:27:54 linus Exp $
+// $Id: MockModelImplementation.java,v 1.3 2006/08/09 18:58:47 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -649,7 +649,7 @@ class MockModelImplementation implements ModelImplementation {
     /**
      * @see org.argouml.model.ModelImplementation#getXmiWriter(java.lang.Object, java.io.Writer)
      */
-    public XmiWriter getXmiWriter(Object model, Writer writer)
+    public XmiWriter getXmiWriter(Object model, Writer writer, String version)
         throws UmlException {
         throw new NotImplementedException();
     }

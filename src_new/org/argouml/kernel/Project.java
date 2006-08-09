@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.198 2006/06/24 12:53:25 mvw Exp $
+// $Id: Project.java,v 1.199 2006/08/09 18:58:07 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -349,7 +349,10 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public void addMember(Object m) {
 
-        if (m instanceof ArgoDiagram) {
+        if (m == null) {
+            throw new IllegalArgumentException(
+                    "A model member must be suppleid");
+        } else if (m instanceof ArgoDiagram) {
             LOG.info("Adding diagram member");
             addDiagramMember((ArgoDiagram) m);
         } else if (m instanceof ProjectMemberTodoList) {
