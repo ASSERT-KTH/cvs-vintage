@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.54 2006/07/13 09:56:50 linus Exp $
+// $Id: AboutBox.java,v 1.55 2006/08/09 18:10:17 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.awt.Toolkit;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -51,7 +50,7 @@ import org.argouml.util.Tools;
  * TODO: Add registration for new AboutBox tabs
  * (instead of {@link org.argouml.application.api.PluggableAboutTab}).
  */
-public class AboutBox extends JDialog {
+public class AboutBox extends ArgoDialog {
 
     /**
      * Insets in pixels.
@@ -92,7 +91,7 @@ public class AboutBox extends JDialog {
      * @param str The key to localize.
      * @return The localized String.
      */
-    private String localize(String str) {
+    private static String localize(String str) {
 	return Translator.localize(str);
     }
 
@@ -121,9 +120,7 @@ public class AboutBox extends JDialog {
     *                   other windows to be active at the same time
     */
     public AboutBox(Frame owner, boolean modal) {
-	super(owner, modal);
-        // TODO: i18n
-	this.setTitle(localize("aboutbox.aboutbox-title"));
+	super(localize("aboutbox.aboutbox-title"), modal);
 	splashPanel = new SplashPanel("Splash");
 	int imgWidth = splashPanel.getImage().getIconWidth();
 	int imgHeight = splashPanel.getImage().getIconHeight();

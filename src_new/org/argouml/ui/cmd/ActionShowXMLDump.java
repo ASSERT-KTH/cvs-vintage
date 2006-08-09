@@ -1,4 +1,4 @@
-// $Id: ActionShowXMLDump.java,v 1.5 2006/06/11 15:39:53 mvw Exp $
+// $Id: ActionShowXMLDump.java,v 1.6 2006/08/09 18:10:17 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,11 +26,14 @@ package org.argouml.ui.cmd;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
@@ -42,6 +45,12 @@ import org.argouml.ui.ProjectBrowser;
  * Action that shows an XML dump of the current project contents.
  */
 class ActionShowXMLDump extends AbstractAction {
+    
+    /**
+     * The key for the escape action
+     */
+    private static final String ACTION_KEY_ESCAPE = "escapeAction";
+
     /**
      * Insets in pixels.
      */
@@ -79,7 +88,27 @@ class ActionShowXMLDump extends AbstractAction {
 	pw.setSize(400, 500);
 
 	pw.setLocationRelativeTo(pb);
+        
+        loadCommonKeyMap(pw);
+        
 	pw.setVisible(true);
     }
+
+    /**
+     * This method does load common key maps for 
+     *
+     */
+    private void loadCommonKeyMap(final JDialog dialog) {
+        dialog.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), 
+                ACTION_KEY_ESCAPE);
+        // Add the action to the component
+        dialog.getRootPane().getActionMap().put(ACTION_KEY_ESCAPE,
+            new AbstractAction() {
+                public void actionPerformed(ActionEvent evt) {
+                    dialog.dispose();
+                }
+            });
+    }    
 }
 
