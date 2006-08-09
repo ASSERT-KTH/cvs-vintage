@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.16 2006/06/11 15:39:47 mvw Exp $
+// $Id: ActionReopenProject.java,v 1.17 2006/08/09 16:49:35 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,6 +83,7 @@ public class ActionReopenProject extends AbstractAction {
         File toOpen = new File(filename);;
         // load of the new project
         // just reuse of the ActionOpen object
-        ProjectBrowser.getInstance().loadProject(toOpen, true);
+        ProjectBrowser.getInstance().loadProjectWithProgressMonitor(
+                toOpen, true);
     }
 }

@@ -1,4 +1,4 @@
-// $Id: ActionImportXMI.java,v 1.8 2006/06/11 17:12:41 mvw Exp $
+// $Id: ActionImportXMI.java,v 1.9 2006/08/09 16:49:36 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,11 @@ package org.argouml.ui;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Logger;
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
@@ -46,11 +44,6 @@ import org.argouml.persistence.PersistenceManager;
  * @author mvw@tigris.org
   */
 public class ActionImportXMI extends AbstractAction {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = Logger.getLogger(ActionImportXMI.class);
 
     /**
      * The constructor.
@@ -73,64 +66,58 @@ public class ActionImportXMI extends AbstractAction {
             return;
         }
 
-        try {
-            JFileChooser chooser = null;
-            if (p != null && p.getURL() != null) {
-                File file = new File(p.getURL().getFile());
-                if (file.getParentFile() != null) {
-                    chooser = new JFileChooser(file.getParent());
-                }
-            } else {
-                chooser = new JFileChooser();
+        JFileChooser chooser = null;
+        if (p != null && p.getURL() != null) {
+            File file = new File(p.getURL().getFile());
+            if (file.getParentFile() != null) {
+                chooser = new JFileChooser(file.getParent());
             }
+        } else {
+            chooser = new JFileChooser();
+        }
 
-            if (chooser == null) {
-                chooser = new JFileChooser();
-            }
+        if (chooser == null) {
+            chooser = new JFileChooser();
+        }
 
-            chooser.setDialogTitle(
-                    Translator.localize("filechooser.import-xmi"));
+        chooser.setDialogTitle(
+                Translator.localize("filechooser.import-xmi"));
 
-            chooser.setAcceptAllFileFilterUsed(true);
+        chooser.setAcceptAllFileFilterUsed(true);
 
-            pm.setXmiFileChooserFilter(chooser);
+        pm.setXmiFileChooserFilter(chooser);
 
-            String fn =
-                Configuration.getString(
-                    PersistenceManager.KEY_IMPORT_XMI_PATH);
-            if (fn.length() > 0) {
-                chooser.setSelectedFile(new File(fn));
-            }
+        String fn =
+            Configuration.getString(
+                PersistenceManager.KEY_IMPORT_XMI_PATH);
+        if (fn.length() > 0) {
+            chooser.setSelectedFile(new File(fn));
+        }
 
-            int retval = chooser.showOpenDialog(pb);
-            if (retval == JFileChooser.APPROVE_OPTION) {
-                File theFile = chooser.getSelectedFile();
+        int retval = chooser.showOpenDialog(pb);
+        if (retval == JFileChooser.APPROVE_OPTION) {
+            File theFile = chooser.getSelectedFile();
 
-                if (!theFile.canRead()) {
-                    /* Try adding the extension from the chosen filter. */
-                    FileFilter ffilter = chooser.getFileFilter();
-                    if (ffilter instanceof AbstractFilePersister) {
-                        AbstractFilePersister afp =
-                            (AbstractFilePersister) ffilter;
-                        File m =
-                            new File(theFile.getPath() + "."
-                                    + afp.getExtension());
-                        if (m.canRead()) {
-                            theFile = m;
-                        }
+            if (!theFile.canRead()) {
+                /* Try adding the extension from the chosen filter. */
+                FileFilter ffilter = chooser.getFileFilter();
+                if (ffilter instanceof AbstractFilePersister) {
+                    AbstractFilePersister afp =
+                        (AbstractFilePersister) ffilter;
+                    File m =
+                        new File(theFile.getPath() + "."
+                                + afp.getExtension());
+                    if (m.canRead()) {
+                        theFile = m;
                     }
                 }
-                Configuration.setString(
-                        PersistenceManager.KEY_IMPORT_XMI_PATH,
-                        theFile.getPath());
-
-                if (ProjectBrowser.getInstance().loadProject(theFile, true)) {
-                    // notification of menu bar
-                    pb.addFileSaved(theFile);
-                }
             }
-        } catch (IOException ignore) {
-            LOG.error("got an IOException in ActionOpenProject", ignore);
+            Configuration.setString(
+                    PersistenceManager.KEY_IMPORT_XMI_PATH,
+                    theFile.getPath());
+
+            ProjectBrowser.getInstance().loadProjectWithProgressMonitor(
+                    theFile, true);
         }
     }
 

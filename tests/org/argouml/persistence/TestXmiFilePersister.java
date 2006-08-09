@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.15 2006/04/29 10:45:45 linus Exp $
+// $Id: TestXmiFilePersister.java,v 1.16 2006/08/09 16:49:22 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,7 @@ public class TestXmiFilePersister extends TestCase {
             p.preSave();
             persister.save(p, file);
             p.postSave();
-        } catch (SaveException e) {
+        } catch (Exception e) {
             fail("Save resulted in an exception");
         }
     }
@@ -95,6 +95,8 @@ public class TestXmiFilePersister extends TestCase {
             persister.doLoad(file);
         } catch (OpenException e) {
             fail("Load resulted in an exception");
+        } catch (InterruptedException e) {
+            fail("Load interrupted");
         }
     }
 }

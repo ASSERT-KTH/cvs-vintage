@@ -1,4 +1,4 @@
-// $Id: TestZargoFilePersister.java,v 1.9 2006/06/11 15:43:57 mvw Exp $
+// $Id: TestZargoFilePersister.java,v 1.10 2006/08/09 16:49:22 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,8 @@ public class TestZargoFilePersister extends TestCase {
      * @param filename of the project file to load
      * @throws OpenException if something goes wrong.
      */
-    private Project doLoad(String filename) throws OpenException {
+    private Project doLoad(String filename) 
+        throws OpenException, InterruptedException {
         URL url = TestZargoFilePersister.class.getResource(filename);
         assertTrue("Unintended failure: resource to be tested is not found: "
                 + filename + ", converted to URL: " + url, url != null);
@@ -123,6 +124,9 @@ public class TestZargoFilePersister extends TestCase {
                     !LastLoadInfo.getInstance().getLastLoadStatus());
         } catch (OpenException io) {
             // This is the normal case.
+            loaded = false;
+        } catch (InterruptedException iExc) {
+            // This should not happen!
             loaded = false;
         }
         assertTrue("No exception was thrown.", !loaded);

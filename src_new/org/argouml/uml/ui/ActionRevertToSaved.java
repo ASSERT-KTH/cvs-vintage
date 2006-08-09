@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.18 2006/06/11 15:39:47 mvw Exp $
+// $Id: ActionRevertToSaved.java,v 1.19 2006/08/09 16:49:35 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,7 +86,8 @@ public class ActionRevertToSaved extends AbstractAction {
                   JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
-            ProjectBrowser.getInstance().loadProject(new File(p.getURL().getFile()), true);
+            ProjectBrowser.getInstance().loadProjectWithProgressMonitor(
+                    new File(p.getURL().getFile()), true);
         }
     }
 }

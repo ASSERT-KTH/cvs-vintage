@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.22 2006/07/13 19:36:57 mvw Exp $
+// $Id: PersistenceManager.java,v 1.23 2006/08/09 16:49:36 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -284,8 +284,8 @@ public final class PersistenceManager {
     public String getQuickViewDump(Project project) {
         OutputStream stream = new ByteArrayOutputStream();
         try {
-            quickViewDump.writeProject(project, stream);
-        } catch (SaveException e) {
+            quickViewDump.writeProject(project, stream, null);
+        } catch (Exception e) {
             // If anything goes wrong return the stack
             // trace as a string so that we get some
             // useful feedback.

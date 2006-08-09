@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.150 2006/06/16 19:58:31 mvw Exp $
+// $Id: Main.java,v 1.151 2006/08/09 16:49:37 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -294,7 +294,7 @@ public class Main {
             System.err.println("The filename is " + filename);
             System.err.println("The file is " + file);
             System.err.println("File.exists = " + file.exists());
-            projectLoaded = pb.loadProject(file, true);
+            projectLoaded = pb.loadProject(file, true, null);
         }
         
         if (!projectLoaded) {

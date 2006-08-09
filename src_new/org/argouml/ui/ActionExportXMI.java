@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.28 2006/06/11 15:39:42 mvw Exp $
+// $Id: ActionExportXMI.java,v 1.29 2006/08/09 16:49:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,8 @@ public final class ActionExportXMI extends AbstractAction {
                                 theFile.getPath()));
                 name = pm.fixXmiExtension(name);
                 theFile = new File(theFile.getParent(), name);
-                ProjectBrowser.getInstance().trySave(false, theFile);
+                ProjectBrowser.getInstance().trySaveWithProgressMonitor(
+                        false, theFile);
             }
         }
     }

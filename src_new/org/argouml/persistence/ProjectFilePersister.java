@@ -1,4 +1,4 @@
-// $Id: ProjectFilePersister.java,v 1.9 2006/06/11 15:39:46 mvw Exp $
+// $Id: ProjectFilePersister.java,v 1.10 2006/08/09 16:49:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,14 +38,32 @@ public interface ProjectFilePersister {
      * @param project the project to save
      * @param file The file to write.
      * @throws SaveException if anything goes wrong.
+     * @throws InterruptedException     if the thread is interrupted
      */
-    void save(Project project, File file) throws SaveException;
+    void save(Project project, File file) throws SaveException, 
+    InterruptedException;
 
     /**
      * @param file the file of the project to load.
      * @return the Project
      *
      * @throws OpenException when we fail to open from this url
+     * @throws InterruptedException     if the thread is interrupted
      */
-    Project doLoad(File file) throws OpenException;
+    Project doLoad(File file) throws OpenException, InterruptedException;
+    
+    /**
+     * Add any object interested in listening to persistence progress.
+     *
+     * @param listener the interested listener.
+     */
+    public void addProgressListener(ProgressListener listener);
+    
+    /**
+     * Remove any object no longer interested in listening to persistence
+     * progress.
+     *
+     * @param listener the listener to remove.
+     */
+    public void removeProgressListener(ProgressListener listener);    
 }
