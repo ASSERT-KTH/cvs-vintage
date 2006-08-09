@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.16 2006/08/09 22:41:13 bobtarling Exp $
+// $Id: ModelMemberFilePersister.java,v 1.17 2006/08/09 23:35:56 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,8 @@
 
 package org.argouml.persistence;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -45,7 +40,6 @@ import org.argouml.model.Model;
 import org.argouml.model.UmlException;
 import org.argouml.model.XmiExtensionWriter;
 import org.argouml.model.XmiWriter;
-import org.argouml.ocl.ArgoFacade;
 import org.argouml.ocl.OCLExpander;
 import org.argouml.uml.ProjectMemberModel;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;

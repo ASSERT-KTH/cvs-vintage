@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.30 2006/08/09 18:58:07 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.31 2006/08/09 23:35:56 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.model.Model;
-import org.argouml.model.UmlException;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
 
 /**
@@ -60,6 +59,8 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
     private ArrayList pgmlStrings = new ArrayList();
     
     private String todoString;
+    
+    private String argoString;
     
     /**
      * The constructor.
@@ -234,6 +235,8 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
     public void parse(String label, String xmiExtensionString) {
         if (label.equals("pgml")) {
             pgmlStrings.add(xmiExtensionString);
+        } else if (label.equals("argo")) {
+            argoString = xmiExtensionString;
         } else if (label.equals("todo")) {
             todoString = xmiExtensionString;
         }
@@ -244,6 +247,18 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
      */
     public void parseXmiExtensions(Project project) throws OpenException {
         
+        if (argoString != null) {
+            LOG.info("Parsing argoString " + argoString.length());
+            InputStream inputStream = new ByteArrayInputStream(todoString.getBytes());
+            ArgoParser parser = new ArgoParser();
+            try {
+                parser.readProject(project, inputStream);
+            } catch (Exception e) {
+                throw new OpenException("Exception caught", e);
+            }
+        } else {
+            project.addMember(new ProjectMemberTodoList("", project));
+        }
         for (Iterator it = pgmlStrings.iterator(); it.hasNext(); ) {
             String pgml = (String) it.next();
             LOG.info("Parsing pgml " + pgml.length());
