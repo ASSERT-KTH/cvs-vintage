@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.29 2006/08/09 16:49:36 mvw Exp $
+// $Id: ActionExportXMI.java,v 1.30 2006/08/09 18:31:17 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.JFileChooser;
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
 import org.argouml.persistence.PersistenceManager;
+import org.argouml.uml.ui.ProjectFileView;
 
 /**
  * Exports the xmi of a project to a file choosen by the user.
@@ -58,6 +59,7 @@ public final class ActionExportXMI extends AbstractAction {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle(Translator.localize(
 				       "action.export-project-as-xmi"));
+        chooser.setFileView(ProjectFileView.getInstance());
         chooser.setApproveButtonText(Translator.localize(
 					     "filechooser.export"));
         chooser.setAcceptAllFileFilterUsed(true);
