@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.205 2006/08/09 16:49:36 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.206 2006/08/09 17:54:57 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -832,7 +832,7 @@ public final class ProjectBrowser
      * Save the positions of the screen splitters, sizes and postion
      * of main window in the properties file.
      */
-    public void saveScreenConfiguration() {
+    private void saveScreenConfiguration() {
         if (explorerPane != null) {
 	    Configuration.setInteger(Argo.KEY_SCREEN_WEST_WIDTH,
 				     explorerPane.getWidth());
@@ -919,6 +919,7 @@ public final class ProjectBrowser
                 }
             }
         }
+        saveScreenConfiguration();
         Configuration.save();
         System.exit(0);
     }

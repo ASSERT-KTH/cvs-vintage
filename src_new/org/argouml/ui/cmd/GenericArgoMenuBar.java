@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.52 2006/06/24 11:50:43 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.53 2006/08/09 17:54:56 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,6 @@ import org.argouml.ui.ActionAutoResize;
 import org.argouml.ui.ActionExportXMI;
 import org.argouml.ui.ActionImportXMI;
 import org.argouml.ui.ActionProjectSettings;
-import org.argouml.ui.ActionSaveConfiguration;
 import org.argouml.ui.ActionSettings;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
@@ -469,8 +468,6 @@ public class GenericArgoMenuBar extends JMenuBar implements
         JMenuItem propertiesItem = file.add(new ActionProjectSettings());
         setMnemonic(propertiesItem, "Properties");
         
-        JMenuItem saveConfiguration = file.add(new ActionSaveConfiguration());
-        setMnemonic(saveConfiguration, "Save Configuration");
         file.addSeparator();
 
         // add last recently used list _before_ exit menu
