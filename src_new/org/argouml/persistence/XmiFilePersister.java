@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.31 2006/08/09 23:35:56 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.32 2006/08/10 16:19:55 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -193,6 +193,8 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
     public Project doLoad(File file)
         throws OpenException, InterruptedException {
 
+        LOG.info("Loading with XMIFilePersister");
+        
         ProgressMgr progressMgr = new ProgressMgr();
         progressMgr.setNumberOfPhases(3);
         progressMgr.nextPhase();
@@ -249,7 +251,7 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
         
         if (argoString != null) {
             LOG.info("Parsing argoString " + argoString.length());
-            InputStream inputStream = new ByteArrayInputStream(todoString.getBytes());
+            InputStream inputStream = new ByteArrayInputStream(argoString.getBytes());
             ArgoParser parser = new ArgoParser();
             try {
                 parser.readProject(project, inputStream);

@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.33 2006/08/10 15:37:01 mvw Exp $
+// $Id: ZargoFilePersister.java,v 1.34 2006/08/10 16:19:55 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,6 +214,7 @@ public class ZargoFilePersister extends UmlFilePersister {
             ZipInputStream zis =
                 openZipStreamAt(file.toURL(), FileConstants.PROJECT_FILE_EXT);
             if (zis == null) {
+                LOG.info("There is no argo file so use ZipFilePersister");
                 ZipFilePersister zfp = new ZipFilePersister();
                 return zfp.doLoad(file);
             }

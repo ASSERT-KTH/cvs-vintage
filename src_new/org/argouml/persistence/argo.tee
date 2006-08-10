@@ -11,7 +11,7 @@
 <!-- "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.tee,v 1.8 2006/08/09 22:41:13 bobtarling Exp $ -->
+<!-- $Id: argo.tee,v 1.9 2006/08/10 16:19:55 bobtarling Exp $ -->
 
 
 <TemplateSet>
@@ -42,22 +42,12 @@
   </settings>
   
   <searchpath href="<ocl>self.searchPath</ocl>" />
-
-  <ocl>self.members</ocl>
-
   <historyfile name="<ocl>self.historyFile</ocl>" />
 
 </argo>
 ]]>
 </template>
 
-
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<template class="org.argouml.kernel.AbstractProjectMember">
-<![CDATA[
-<member type="<ocl>self.type</ocl>" />
-]]>
-</template>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <template class="org.argouml.ui.UsageStatistic">
