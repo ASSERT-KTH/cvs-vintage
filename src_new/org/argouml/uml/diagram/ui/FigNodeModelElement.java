@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.261 2006/08/10 00:01:32 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.262 2006/08/10 22:02:28 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1563,7 +1563,6 @@ public abstract class FigNodeModelElement
      * @see org.tigris.gef.presentation.Fig#postLoad()
      */
     public void postLoad() {
-        super.postLoad();
         ArgoEventPump.removeListener(this);
         ArgoEventPump.addListener(this);
         Iterator it = getFigs().iterator();
