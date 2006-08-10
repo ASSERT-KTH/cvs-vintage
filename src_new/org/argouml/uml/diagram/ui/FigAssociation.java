@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.122 2006/07/20 16:56:45 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.123 2006/08/10 00:01:31 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -223,6 +223,9 @@ public class FigAssociation extends FigEdgeModelElement {
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#updateListeners(java.lang.Object)
      */
     public void updateListeners(Object oldOwner, Object newOwner) {
+        if (oldOwner == newOwner) {
+            LOG.warn("Listeners being added and removed from the same owner");
+        }
         if (oldOwner != null) {
             removeAllElementListeners();
         }
@@ -351,10 +354,10 @@ public class FigAssociation extends FigEdgeModelElement {
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
     protected void modelChanged(PropertyChangeEvent e) {
-	super.modelChanged(e);
-	if (getOwner() == null || getLayer() == null) {
-	    return;
-	}
+        super.modelChanged(e);
+        if (getOwner() == null || getLayer() == null) {
+            return;
+        }
         renderingChanged();
         updateListeners(getOwner(), getOwner());
     }
