@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.70 2006/08/09 16:49:35 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.71 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,13 +85,13 @@ public class ActionOpenProject extends AbstractAction
         }
 
         // next line does give user.home back but this is not
-        // compliant with how the project.url works and therefore
+        // compliant with how the project.uri works and therefore
         // open and save project as give different starting
         // directories.  String directory =
         // Globals.getLastDirectory();
         JFileChooser chooser = null;
-        if (p != null && p.getURL() != null) {
-            File file = new File(p.getURL().getFile());
+        if (p != null && p.getURI() != null) {
+            File file = new File(p.getURI());
             if (file.getParentFile() != null) {
                 chooser = new JFileChooser(file.getParent());
             }

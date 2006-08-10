@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.38 2006/08/09 18:58:07 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.39 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -278,7 +278,7 @@ public class UmlFilePersister extends AbstractFilePersister {
 
         XmlInputStream inputStream = null;
         try {
-            Project p = new Project(file.toURL());
+            Project p = new Project(file.toURI());
             
             // Run through any stylesheet upgrades
             int fileVersion = getPersistenceVersionFromFile(file);

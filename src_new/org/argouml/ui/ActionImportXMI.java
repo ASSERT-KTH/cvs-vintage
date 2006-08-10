@@ -1,4 +1,4 @@
-// $Id: ActionImportXMI.java,v 1.10 2006/08/09 18:31:17 mvw Exp $
+// $Id: ActionImportXMI.java,v 1.11 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,8 +68,8 @@ public class ActionImportXMI extends AbstractAction {
         }
 
         JFileChooser chooser = null;
-        if (p != null && p.getURL() != null) {
-            File file = new File(p.getURL().getFile());
+        if (p != null && p.getURI() != null) {
+            File file = new File(p.getURI());
             if (file.getParentFile() != null) {
                 chooser = new JFileChooser(file.getParent());
             }
@@ -84,7 +84,7 @@ public class ActionImportXMI extends AbstractAction {
         chooser.setDialogTitle(
                 Translator.localize("filechooser.import-xmi"));
 
-            chooser.setFileView(ProjectFileView.getInstance());
+        chooser.setFileView(ProjectFileView.getInstance());
 
         chooser.setAcceptAllFileFilterUsed(true);
 

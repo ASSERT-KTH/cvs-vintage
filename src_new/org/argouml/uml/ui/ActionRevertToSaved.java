@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.19 2006/08/09 16:49:35 mvw Exp $
+// $Id: ActionRevertToSaved.java,v 1.20 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,8 @@ public class ActionRevertToSaved extends AbstractAction {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
 
-        if (p == null || !ProjectBrowser.getInstance().getSaveAction().isEnabled()) {
+        if (p == null 
+                || !ProjectBrowser.getInstance().getSaveAction().isEnabled()) {
             return;
         }
 
@@ -87,7 +88,7 @@ public class ActionRevertToSaved extends AbstractAction {
 
         if (response == JOptionPane.YES_OPTION) {
             ProjectBrowser.getInstance().loadProjectWithProgressMonitor(
-                    new File(p.getURL().getFile()), true);
+                    new File(p.getURI()), true);
         }
     }
 }

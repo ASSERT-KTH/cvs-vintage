@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.32 2006/08/09 21:24:02 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.33 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -306,7 +306,7 @@ public class ZargoFilePersister extends UmlFilePersister {
             
             progressMgr.nextPhase();
             
-            p.setURL(file.toURL());
+            p.setURI(file.toURI());
             return p;
         } catch (IOException e) {
             throw new OpenException(e);

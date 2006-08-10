@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.6 2006/06/04 13:54:53 mvw Exp $
+// $Id: ArgoParser.java,v 1.7 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,7 @@ public class ArgoParser extends SAXParserBase {
     }
 
     /**
-     * Get the project to which the URL is to be parsed.
+     * Get the project to which the URI is to be parsed.
      * @return the project
      */
     public Project getProject() {
@@ -106,7 +106,7 @@ public class ArgoParser extends SAXParserBase {
     }
 
     /**
-     * Set the project to which the URL is to be parsed.
+     * Set the project to which the URI is to be parsed.
      * @param newProj the project
      */
     public void setProject(Project newProj) {

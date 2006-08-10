@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.41 2006/06/11 15:39:47 mvw Exp $
+// $Id: ActionSaveGraphics.java,v 1.42 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,21 +98,17 @@ public class ActionSaveGraphics extends AbstractAction
             JFileChooser chooser = null;
 
             if (p != null
-                	&& p.getURL() != null
-                	&& p.getURL().getFile().length() > 0) {
+            	&& p.getURI() != null
+            	&& p.getURI().toURL().getFile().length() > 0) {
 
-            	String filename = p.getURL().getFile();
-                // TODO: Someone please explain this.
-            	if (!filename.startsWith("/FILE1/+/")) {
-            	    chooser = new JFileChooser(p.getURL().getFile());
-            	}
+                chooser = new JFileChooser(p.getURI().toURL().getFile());
             }
 
             if (chooser == null) {
                 chooser = new JFileChooser();
             }
 
-            Object[] s = { defaultName };
+            Object[] s = {defaultName };
             chooser.setDialogTitle(
                     Translator.messageFormat("filechooser.save-graphics", s));
             // Only specified format are allowed.

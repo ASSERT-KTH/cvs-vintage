@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.23 2006/08/09 16:49:36 mvw Exp $
+// $Id: PersistenceManager.java,v 1.24 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -241,20 +241,20 @@ public final class PersistenceManager {
 
 
     /**
-     * @param in the input url which may or may not have a recognised extension
-     * @return the url with default extension added,
+     * @param in the input uri which may or may not have a recognised extension
+     * @return the uri with default extension added,
      *         if it did not have a valid extension yet
      */
-    public URL fixUrlExtension(URL in) {
-        URL newUrl;
+    public URI fixUriExtension(URI in) {
+        URI newUri;
         String n = in.toString();
         n = fixExtension(n);
         try {
-            newUrl = new URL(n);
-        } catch (java.net.MalformedURLException e) {
+            newUri = new URI(n);
+        } catch (java.net.URISyntaxException e) {
             throw new UnexpectedException(e);
         }
-        return newUrl;
+        return newUri;
     }
 
     /**

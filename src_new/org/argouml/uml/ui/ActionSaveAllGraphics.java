@@ -1,4 +1,4 @@
-// $Id: ActionSaveAllGraphics.java,v 1.8 2006/06/11 14:56:00 mvw Exp $
+// $Id: ActionSaveAllGraphics.java,v 1.9 2006/08/10 15:37:01 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -217,12 +217,10 @@ public class ActionSaveAllGraphics extends UndoableAction {
     private JFileChooser getFileChooser(Project p) {
 	JFileChooser chooser = null;
 	try {
-	    if ( p != null && p.getURL() != null
-                    && p.getURL().getFile().length() > 0 ) {
-		String filename = p.getURL().getFile();
-		if ( !filename.startsWith( "/FILE1/+/" ) )
-		    chooser  =
-			new JFileChooser( p.getURL().getFile() );
+	    if ( p != null 
+                && p.getURI() != null
+                && p.getURI().toURL().getFile().length() > 0 ) {
+	        chooser = new JFileChooser(p.getURI().toURL().getFile());
 	    }
 	}
 	catch ( Exception ex ) {
