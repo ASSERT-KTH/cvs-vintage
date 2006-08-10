@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.44 2006/08/10 15:37:01 mvw Exp $
+// $Id: Argo.java,v 1.45 2006/08/10 15:43:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,6 +92,12 @@ public final class Argo {
      */
     public static final ConfigurationKey KEY_MOST_RECENT_PROJECT_FILE =
 	Configuration.makeKey("project", "mostrecent", "file");
+
+    /**
+     * Key for last generated class/classes directory.
+     */
+    public static final ConfigurationKey KEY_MOST_RECENT_EXPORT_DIRECTORY =
+        Configuration.makeKey("project", "mostrecent", "exportdirectory");
 
     /**
      * Key to reload last saved project on startup.

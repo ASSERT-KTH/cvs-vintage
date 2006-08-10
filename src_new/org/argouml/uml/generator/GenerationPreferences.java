@@ -1,4 +1,4 @@
-// $Id: GenerationPreferences.java,v 1.11 2006/06/11 15:39:51 mvw Exp $
+// $Id: GenerationPreferences.java,v 1.12 2006/08/10 15:43:52 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,9 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.generator;
+
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
 
 /**
  * Stores generation preference information entered by the user
@@ -50,6 +53,8 @@ public class GenerationPreferences implements java.io.Serializable {
 	    //_outputDir = "c:\\temp";
             outputDir = System.getProperty("java.io.tmpdir");
         }
+        outputDir = Configuration.getString(
+                Argo.KEY_MOST_RECENT_EXPORT_DIRECTORY, outputDir);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -62,7 +67,10 @@ public class GenerationPreferences implements java.io.Serializable {
     /**
      * @param od the output directory name
      */
-    public void setOutputDir(String od) { outputDir = od; }
+    public void setOutputDir(String od) { 
+        outputDir = od;
+        Configuration.setString(Argo.KEY_MOST_RECENT_EXPORT_DIRECTORY, od);
+    }
 
     /**
      * @return the header comment string
