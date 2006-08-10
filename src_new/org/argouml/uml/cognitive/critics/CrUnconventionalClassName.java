@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalClassName.java,v 1.24 2006/07/14 15:40:08 mvw Exp $
+// $Id: CrUnconventionalClassName.java,v 1.25 2006/08/10 17:23:55 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,8 @@ public class CrUnconventionalClassName extends AbstractCrUnconventionalName {
 	    return NO_PROBLEM;
 	}
 	char initialChar = nameStr.charAt(0);
-	if (!Character.isUpperCase(initialChar)) {
+	if (Character.isDigit(initialChar) 
+                || !Character.isUpperCase(initialChar)) {
 	    return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;
@@ -103,7 +104,16 @@ public class CrUnconventionalClassName extends AbstractCrUnconventionalName {
         if (sug == null) {
             return "";
         }
-        return sug.substring(0, 1).toUpperCase() + sug.substring(1);
+        StringBuffer sb = new StringBuffer(sug);
+        while (sb.length() > 0 && Character.isDigit(sb.charAt(0))) {
+            sb.deleteCharAt(0);
+        }
+        if (sb.length() == 0) {
+            return "";
+        }
+        return sb.replace(0, 1,
+                Character.toString(Character.toUpperCase(sb.charAt(0))))
+                .toString();
     }
 
     /**
