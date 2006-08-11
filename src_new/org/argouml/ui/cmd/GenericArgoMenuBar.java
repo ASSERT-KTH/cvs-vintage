@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.53 2006/08/09 17:54:56 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.54 2006/08/11 19:21:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,6 @@ import org.argouml.application.events.ArgoModuleEventListener;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.UndoEnabler;
 import org.argouml.notation.ui.ActionNotation;
-import org.argouml.ui.ActionAutoResize;
 import org.argouml.ui.ActionExportXMI;
 import org.argouml.ui.ActionImportXMI;
 import org.argouml.ui.ActionProjectSettings;
@@ -693,9 +692,6 @@ public class GenericArgoMenuBar extends JMenuBar implements
             arrange.add(new CmdSetPreferredSize(
                 CmdSetPreferredSize.MINIMUM_SIZE));
         setMnemonic(preferredSize, "Preferred Size");
-
-        JMenuItem autoResize = arrange.addCheckItem(new ActionAutoResize());
-        setMnemonic(autoResize, "Toggle Auto Resize");
 
         arrange.add(new ActionLayout());
 
