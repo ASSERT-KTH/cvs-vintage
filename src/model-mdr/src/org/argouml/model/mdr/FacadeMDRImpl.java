@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.31 2006/08/11 17:02:38 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.32 2006/08/11 19:51:52 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3489,12 +3489,9 @@ class FacadeMDRImpl implements Facade {
      * @see org.argouml.model.Facade#getParameter(java.lang.Object, int)
      */
     public Object getParameter(Object handle, int n) {
-        try {
-            if (handle instanceof BehavioralFeature) {
-                return ((BehavioralFeature) handle).getParameter().get(n);
-            }
-        } catch (InvalidObjectException e) {
-            throw new InvalidElementException(e);
+        Collection collection = getParameters(handle);
+        if (collection instanceof List) {
+            return ((List) collection).get(n);
         }
         return illegalArgumentObject(handle);
     }
