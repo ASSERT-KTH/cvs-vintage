@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseListModel.java,v 1.3 2006/06/11 15:39:50 mvw Exp $
+// $Id: UMLExtendBaseListModel.java,v 1.4 2006/08/11 22:41:04 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,10 +34,6 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
  */
 public class UMLExtendBaseListModel extends UMLModelElementListModel2 {
 
-
-
-
-
     /**
      * Constructor for UMLExtendBaseComboBoxModel.
      */
@@ -48,7 +44,7 @@ public class UMLExtendBaseListModel extends UMLModelElementListModel2 {
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
         if (!isEmpty())
@@ -56,9 +52,8 @@ public class UMLExtendBaseListModel extends UMLModelElementListModel2 {
         addElement(Model.getFacade().getBase(getTarget()));
     }
 
-
     /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(java.lang.Object)
      */
     protected boolean isValidElement(Object element) {
         return Model.getFacade().isAUseCase(element);

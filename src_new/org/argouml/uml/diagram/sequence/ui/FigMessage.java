@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.15 2006/08/11 17:14:50 bobtarling Exp $
+// $Id: FigMessage.java,v 1.16 2006/08/11 22:41:04 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public abstract class FigMessage
         Vector popUpActions = super.getPopUpActions(me);
 
         // the menu item for RE a sequence into the diagram is offered always,
-        // becauase some check (does a operation with a body exist) would be
+        // because a check (e.g. does a operation with a body exist) would be
         // too expensive
         popUpActions.insertElementAt(new ActionRESequenceDiagram(this),
                 popUpActions.size() - getPopupAddOffset());
@@ -113,8 +113,8 @@ public abstract class FigMessage
         if (result instanceof FigClassifierRole.TempFig
                 && getOwner() != null) {
             result =
-                getSourceFigClassifierRole().createFigMessagePort(getOwner(),
-                        (FigClassifierRole.TempFig)result);
+                getSourceFigClassifierRole().createFigMessagePort(
+                    getOwner(), (FigClassifierRole.TempFig) result);
             setSourcePortFig(result);
         }
         return result;
@@ -128,8 +128,8 @@ public abstract class FigMessage
         if (result instanceof FigClassifierRole.TempFig
                 && getOwner() != null) {
             result =
-                getDestFigClassifierRole().createFigMessagePort(getOwner(),
-            						(FigClassifierRole.TempFig)result);
+                getDestFigClassifierRole().createFigMessagePort(
+                    getOwner(), (FigClassifierRole.TempFig) result);
             setDestPortFig(result);
         }
         return result;

@@ -1,4 +1,4 @@
-// $Id: AttributeNotationUml.java,v 1.6 2006/07/15 07:06:32 mvw Exp $
+// $Id: AttributeNotationUml.java,v 1.7 2006/08/11 22:41:04 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,13 +30,11 @@ import java.util.NoSuchElementException;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectSettings;
 import org.argouml.model.Model;
-import org.argouml.notation.Notation;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.notation.AttributeNotation;
@@ -214,7 +212,7 @@ public class AttributeNotationUml extends AttributeNotation {
         boolean hasColon = false;
         boolean hasEq = false;
         int multindex = -1;
-        MyTokenizer st, mst;
+        MyTokenizer st;
 
         text = text.trim();
         if (text.length() > 0 
@@ -371,8 +369,8 @@ public class AttributeNotationUml extends AttributeNotation {
                         if (name == null
                                 && visibility == null
                                 && token.length() > 1
-                                && NotationUtilityUml.VISIBILITYCHARS.indexOf(token.charAt(0))
-                                                        >= 0) {
+                                && NotationUtilityUml.VISIBILITYCHARS
+                                        .indexOf(token.charAt(0)) >= 0) {
                             visibility = token.substring(0, 1);
                             token = token.substring(1);
                         }

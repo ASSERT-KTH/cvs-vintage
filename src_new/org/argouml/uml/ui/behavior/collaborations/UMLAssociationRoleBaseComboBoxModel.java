@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.32 2006/05/14 17:57:39 mvw Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.33 2006/08/11 22:41:04 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -41,7 +40,7 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
  */
 public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
 
-    Collection others = new ArrayList();
+    private Collection others = new ArrayList();
 
     /**
      * Constructor for UMLAssociationRoleBaseComboBoxModel.

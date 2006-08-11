@@ -1,4 +1,4 @@
-// $Id: FigEdgeAssociationClass.java,v 1.16 2006/07/07 22:20:15 bobtarling Exp $
+// $Id: FigEdgeAssociationClass.java,v 1.17 2006/08/11 22:41:04 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,9 +74,8 @@ public class FigEdgeAssociationClass
 
     /**
      * The constructor for the AssociationClass fig.
-     *
-     * @param fromFig the fig where we started
-     * @param toFig the fig where we ended
+     * 
+     * @param classBoxFig the figure representing the Class
      * @param ownerFig the owner fig
      */
     public FigEdgeAssociationClass(FigClassAssociationClass classBoxFig,
@@ -88,15 +87,15 @@ public class FigEdgeAssociationClass
                     + "creating FigEdgeAssociationClass");
         }
         if (ownerFig == null) {
-            throw new IllegalArgumentException("No association edge found while "
-                    + "creating FigEdgeAssociationClass");
+            throw new IllegalArgumentException("No association edge found "
+                    + "while creating FigEdgeAssociationClass");
         }
-        setDestFigNode((FigNode) classBoxFig);
+        setDestFigNode(classBoxFig);
         setDestPortFig(classBoxFig);
         ownerFig.makeEdgePort();
         FigEdgePort edgePort = ownerFig.getEdgePort();
         setSourcePortFig(edgePort);
-        setSourceFigNode((FigNode) edgePort);
+        setSourceFigNode(edgePort);
         computeRoute();
     }
 
@@ -137,8 +136,8 @@ public class FigEdgeAssociationClass
             node = getSourceFigNode();
         }
         if (!(node instanceof FigEdgePort)) {
-            LOG.warn("The is no FigEdgePort attached" +
-                    " to the association class link");
+            LOG.warn("The is no FigEdgePort attached"
+                    + " to the association class link");
             return null;
         }
         // Actually return the FigEdge that the FigEdgePort is part of.
