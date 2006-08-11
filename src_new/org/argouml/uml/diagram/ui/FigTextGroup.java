@@ -1,4 +1,4 @@
-// $Id: FigTextGroup.java,v 1.17 2006/06/11 15:39:48 mvw Exp $
+// $Id: FigTextGroup.java,v 1.18 2006/08/11 17:14:49 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class FigTextGroup extends FigGroup implements MouseListener {
      * The rest of the figtexts are shown non-overlapping. The first figtext
      * added (via addFig) is shown at the bottom of the FigTextGroup.
      */
-    protected void updateFigTexts() {
+    private void updateFigTexts() {
         Iterator it = getFigs().iterator();
         int height = 0;
         while (it.hasNext()) {

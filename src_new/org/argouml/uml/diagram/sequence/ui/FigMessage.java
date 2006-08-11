@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.14 2006/03/11 22:23:16 bobtarling Exp $
+// $Id: FigMessage.java,v 1.15 2006/08/11 17:14:50 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -289,9 +289,9 @@ public abstract class FigMessage
     /**
      * This won't work, so this implementation does nothing.
      *
-     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#updateClassifiers()
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#determineFigNodes()
      */
-    protected boolean updateClassifiers() {
+    protected boolean determineFigNodes() {
         return true;
     }
 
