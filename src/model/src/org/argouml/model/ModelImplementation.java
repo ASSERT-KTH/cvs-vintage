@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.19 2006/08/09 18:58:34 bobtarling Exp $
+// $Id: ModelImplementation.java,v 1.20 2006/08/11 18:29:22 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -282,14 +282,35 @@ public interface ModelImplementation {
     /**
      * A factory method that creates a new instance of an XmiWriter on each
      * call.
-     *
-     * @param model the project member model
-     * @param writer the writer
-     * @param the version of ArgoUML
+     * 
+     * @param model
+     *            the project member model
+     * @param writer
+     *            the writer
      * @return the object implementing the XmiWriter interface
-     * @throws UmlException on any error while writing
+     * @throws UmlException
+     *             on any error while writing
+     * @deprecated for 0.22.1 by tfmorris - use 3 argument version
      */
-    XmiWriter getXmiWriter(Object model, Writer writer, String version) throws UmlException;
+    XmiWriter getXmiWriter(Object model, Writer writer)
+        throws UmlException;
+    
+    /**
+     * A factory method that creates a new instance of an XmiWriter on each
+     * call.
+     * 
+     * @param model
+     *            the project member model
+     * @param writer
+     *            the writer
+     * @param version
+     *            the version of ArgoUML
+     * @return the object implementing the XmiWriter interface
+     * @throws UmlException
+     *             on any error while writing
+     */
+    XmiWriter getXmiWriter(Object model, Writer writer, String version)
+        throws UmlException;
 
     /**
      * Allows an external system to register itself to recieve mementos created

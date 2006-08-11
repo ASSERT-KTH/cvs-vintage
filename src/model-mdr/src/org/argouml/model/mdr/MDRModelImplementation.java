@@ -1,4 +1,4 @@
-// $Id: MDRModelImplementation.java,v 1.9 2006/08/09 18:58:22 bobtarling Exp $
+// $Id: MDRModelImplementation.java,v 1.10 2006/08/11 18:29:15 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -602,6 +602,14 @@ public class MDRModelImplementation implements ModelImplementation {
         return reader;
     }
 
+    /**
+     * @see org.argouml.model.ModelImplementation#getXmiWriter(Object, Writer)
+     */
+    public XmiWriter getXmiWriter(Object model, Writer writer)
+        throws UmlException {
+        return getXmiWriter(model, writer, "unknown");
+    }
+    
     /**
      * @see org.argouml.model.ModelImplementation#getXmiWriter(Object, Writer, String)
      */

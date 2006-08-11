@@ -1,4 +1,4 @@
-// $Id: XmiHeaderProviderImpl.java,v 1.4 2006/08/09 18:58:22 bobtarling Exp $
+// $Id: XmiHeaderProviderImpl.java,v 1.5 2006/08/11 18:29:14 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ public class XmiHeaderProviderImpl implements XMIHeaderProvider {
                     + " version " + WriterBase.EXPORTER_VERSION 
                     + ")</XMI.exporter>\n"
             + "      <XMI.exporterVersion>" + version
+                    + " revised on $Date: 2006/08/11 18:29:14 $ "
                     + "</XMI.exporterVersion>\n"
             + "    </XMI.documentation>\n"
             + "    <XMI.metamodel xmi.name=\"UML\" xmi.version=\""

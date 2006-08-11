@@ -1,4 +1,4 @@
-// $Id: XmiWriterMDRImpl.java,v 1.6 2006/08/09 18:58:22 bobtarling Exp $
+// $Id: XmiWriterMDRImpl.java,v 1.7 2006/08/11 18:29:15 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -182,6 +182,8 @@ public class XmiWriterMDRImpl implements XmiWriter {
          * @see java.io.OutputStream#write(byte[], int, int)
          */
         public void write(byte[] b, int off, int len) throws IOException {
+            // TODO: Why has this been reverted to an inefficient
+            // byte-by-byte algorithm? - tfm
             while (off < len) {
                 write(b[off++]);
             }
@@ -198,6 +200,8 @@ public class XmiWriterMDRImpl implements XmiWriter {
          * @see java.io.OutputStream#write(int)
          */
         public void write(int b) throws IOException {
+            // TODO: Is this character set independent? 
+            // Why are we reparsing the entire output? - tfm
             myWriter.write((byte) (b & 255));
             if (xmiExtensionWriter != null) {
                 if (inTag) {

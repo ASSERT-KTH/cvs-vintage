@@ -1,4 +1,4 @@
-// $Id: XmiWriter.java,v 1.7 2006/08/09 18:58:34 bobtarling Exp $
+// $Id: XmiWriter.java,v 1.8 2006/08/11 18:29:22 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,9 +44,10 @@ public interface XmiWriter {
     void write() throws UmlException;
     
     /**
-     * Set the object to call back in order to write exentsion elements into the XMI
-     * output stream
-     * @param xmiExtensionWriter
+     * Set the object to call back in order to write extension elements into the
+     * XMI output stream.
+     * 
+     * @param xmiExtensionWriter the writer to handle XMI extensions
      */
     void setXmiExtensionWriter(XmiExtensionWriter xmiExtensionWriter);
 }
