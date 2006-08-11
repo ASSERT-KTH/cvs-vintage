@@ -1,4 +1,4 @@
-// $Id: ToDoItem.java,v 1.26 2006/03/27 12:58:26 linus Exp $
+// $Id: ToDoItem.java,v 1.27 2006/08/11 17:09:17 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -168,7 +168,7 @@ public class ToDoItem implements Serializable, WizardItem {
         if (!Model.getFacade().isAModelElement(dm)
                 && !(dm instanceof Fig)
                 && !(dm instanceof Diagram)) {
-            //TODO: The cognotive system should not be aware of any other
+            //TODO: The cognitive system should not be aware of any other
             // system. Find a better way to do this.
             throw new IllegalArgumentException(
                     "The offender must be a model element, "
@@ -237,7 +237,7 @@ public class ToDoItem implements Serializable, WizardItem {
                 && !Model.getFacade().isAModelElement(offender)
                 && !(offender instanceof Fig)
                 && !(offender instanceof Diagram)) {
-            //TODO: The cognotive system should not be aware of any other
+            //TODO: The cognitive system should not be aware of any other
             // system. Find a better way to do this.
             throw new IllegalArgumentException(
                     "The first offender must be a model element, "
@@ -249,7 +249,7 @@ public class ToDoItem implements Serializable, WizardItem {
             if (!Model.getFacade().isAModelElement(offender)
                     && !(offender instanceof Fig)
                     && !(offender instanceof Diagram)) {
-                //TODO: The cognotive system should not be aware of any other
+                //TODO: The cognitive system should not be aware of any other
                 // system. Find a better way to do this.
                 throw new IllegalArgumentException(
                         "The second offender must be a model element, "
@@ -341,7 +341,7 @@ public class ToDoItem implements Serializable, WizardItem {
      */
     public ListSet getOffenders() {
         assert theOffenders != null;
-        //TODO: The cognotive system should not be aware of any other
+        // TODO: The cognitive system should not be aware of any other
         // system. Find a better way to do this. We should not use
         // assert on public methods.
         assert theOffenders.size() <= 0
@@ -352,7 +352,7 @@ public class ToDoItem implements Serializable, WizardItem {
     }
 
     /**
-     * Set the designmatial that is subject of this ToDoItem.
+     * Set the design material that is subject of this ToDoItem.
      *
      * @param offenders the offenders
      */
@@ -382,11 +382,7 @@ public class ToDoItem implements Serializable, WizardItem {
      * @return an Icon or null if none found.
      */
     public Icon getClarifier() {
-	Icon posterClarifier = thePoster.getClarifier();
-	if (posterClarifier != null) {
-	    return posterClarifier;
-	}
-	return null;
+	return thePoster.getClarifier();
     }
 
     /**
