@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.17 2006/08/09 16:49:36 mvw Exp $
+// $Id: AbstractFilePersister.java,v 1.18 2006/08/11 17:18:57 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -242,6 +242,17 @@ public abstract class AbstractFilePersister extends FileFilter
      */
     protected abstract void doSave(Project project, File file)
         throws SaveException, InterruptedException;
+
+    /**
+     * Some persisters only provide load functionality for discontinued formats
+     * but no save.
+     * This method returns true by default. Those Peristers that do not provide
+     * save must override this.
+     * @return true if this persister is able to save
+     */
+    public boolean isSaveEnabled() {
+        return true;
+    }
 
     /**
      * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.io.File)

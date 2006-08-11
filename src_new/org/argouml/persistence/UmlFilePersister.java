@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.39 2006/08/10 15:37:01 mvw Exp $
+// $Id: UmlFilePersister.java,v 1.40 2006/08/11 17:18:57 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -193,6 +193,14 @@ public class UmlFilePersister extends AbstractFilePersister {
                 throw new SaveException(e);
             }
         }
+    }
+    
+    /**
+     * The .uml save format is no longer available to save
+     * @see org.argouml.persistence.AbstractFilePersister#isSaveEnabled()
+     */
+    public boolean isSaveEnabled() {
+        return false;
     }
 
     /**
