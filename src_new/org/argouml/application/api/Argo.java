@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.45 2006/08/10 15:43:52 mvw Exp $
+// $Id: Argo.java,v 1.46 2006/08/11 19:08:09 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -375,6 +375,7 @@ public final class Argo {
      *
      * @param arg1 the name of the resource to find.
      * @return an Icon
+     * @deprecated by tfmorris for 0.22.1.  Use ResourceLoaderWrapper directly.
      */
     public static Icon lookupIconResource(String arg1) {
 	return ResourceLoaderWrapper.lookupIconResource(arg1);
@@ -386,6 +387,7 @@ public final class Argo {
      * @param arg1 the name of the resource to find.
      * @param arg2 the description of the resource
      * @return an Icon
+     * @deprecated by tfmorris for 0.22.1.  Use ResourceLoaderWrapper directly.
      */
     public static Icon lookupIconResource(String arg1, String arg2) {
 	return ResourceLoaderWrapper.lookupIconResource(arg1, arg2);
