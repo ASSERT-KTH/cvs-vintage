@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.74 2006/06/09 16:41:22 mvw Exp $
+// $Id: UMLComboBoxModel2.java,v 1.75 2006/08/11 22:36:19 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -357,11 +357,17 @@ public abstract class UMLComboBoxModel2 extends AbstractListModel
                 addOtherModelEventListeners(comboBoxTarget);
                 
                 buildingModel = true;
-                buildModelList();
-                // Do not set buildingModel = false here, 
-                // otherwise the action for selection is performed.
-                setSelectedItem(getSelectedModelElement());
-                buildingModel = false;
+                try {
+                    buildModelList();
+                    // Do not set buildingModel = false here, 
+                    // otherwise the action for selection is performed.
+                    setSelectedItem(getSelectedModelElement());
+                } catch (InvalidElementException e) {
+                    LOG.warn("buildModelList attempted to operate on " 
+                            + "deleted element");
+                } finally {
+                    buildingModel = false;
+                }
                 
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
