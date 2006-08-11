@@ -1,4 +1,4 @@
-// $Id: DocumentationManager.java,v 1.25 2006/06/11 15:39:50 mvw Exp $
+// $Id: DocumentationManager.java,v 1.26 2006/08/11 17:14:45 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,93 +157,29 @@ public class DocumentationManager {
      */
     public static String defaultFor(Object o, String indent) {
 	if (Model.getFacade().isAClass(o)) {
-	    /*
-	     * Changed 2001-10-05 STEFFEN ZSCHALER
-	     *
-	     * Was (space added below!):
-	     *
-	     return
-	     "/** A class that represents ...\n"+
-	     " * \n"+
-	     " * @see OtherClasses\n"+
-	     " * @author your_name_here\n"+
-	     " * /";
-	     *
-	     */
+            // TODO: Needs localization
 	    return " A class that represents ...\n\n"
 		+ indent + " @see OtherClasses\n"
 		+ indent + " @author your_name_here";
 	}
 	if (Model.getFacade().isAAttribute(o)) {
-	    /*
-	     * Changed 2001-10-05 STEFFEN ZSCHALER
-	     *
-	     * Was (space added below!):
-	     *
-	     return
-	     "/** An attribute that represents ...\n"+
-	     " * /";
-	     *
-	     */
+
 	    return " An attribute that represents ...";
 	}
 
 	if (Model.getFacade().isAOperation(o)) {
-	    /*
-	     * Changed 2001-10-05 STEFFEN ZSCHALER
-	     *
-	     * Was (space added below!):
-	     *
-	     return
-	     "/** An operation that does ...\n"+
-	     " * \n"+
-	     " * @param firstParamName  a description of this parameter\n"+
-	     " * /";
-	     *
-	     */
 	    return " An operation that does...\n\n"
 		+ indent + " @param firstParam a description of this parameter";
 	}
 	if (Model.getFacade().isAInterface(o)) {
-	    /*
-	     * Changed 2001-10-05 STEFFEN ZSCHALER
-	     *
-	     * Was (space added below!):
-	     *
-	     return
-	     "/** A interface defining operations expected of ...\n"+
-	     " * \n"+
-	     " * @see OtherClasses\n"+
-	     " * @author your_name_here\n"+
-	     " * /";
-	     *
-	     */
-	    return " A interface defining operations expected of ...\n\n"
+	    return " An interface defining operations expected of ...\n\n"
 		+ indent + " @see OtherClasses\n"
 		+ indent + " @author your_name_here";
 	}
 	if (Model.getFacade().isAModelElement(o)) {
-	    /*
-	     * Changed 2001-10-05 STEFFEN ZSCHALER
-	     *
-	     * Was (space added below!):
-	     *
-	     return
-	     "/**\n"+
-	     " * \n"+
-	     " * /";
-	     *
-	     */
 	    return "\n";
 	}
 
-	/*
-	 * Changed 2001-10-05 STEFFEN ZSCHALER
-	 *
-	 * Was:
-	 return "(No documentation)";
-	 *
-	 */
 	return null;
     }
 
