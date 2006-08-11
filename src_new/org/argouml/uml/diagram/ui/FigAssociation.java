@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.125 2006/08/11 17:57:23 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.126 2006/08/11 23:25:12 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,6 @@ import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
-import org.argouml.model.UmlChangeEvent;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.ui.ArgoJMenu;
@@ -271,20 +270,6 @@ public class FigAssociation extends FigEdgeModelElement {
     }
 
     /**
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-     */
-    public void propertyChange(PropertyChangeEvent e) {
-        if ("stereotype".equals(e.getPropertyName()) && middleGroup != null) {
-            if (e instanceof AddAssociationEvent) {
-                addElementListener(e.getNewValue());
-            } else if (e instanceof RemoveAssociationEvent) {
-                removeElementListener(e.getOldValue());
-            }
-        }
-        super.propertyChange(e);
-    }
-
-    /**
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
     protected void modelAttributeChanged(AttributeChangeEvent e) {
@@ -299,7 +284,7 @@ public class FigAssociation extends FigEdgeModelElement {
                     + e.getPropertyName());
         }
     }
-
+    
     /**
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#renderingChanged()
      */

@@ -1,4 +1,4 @@
-// $Id: FigStereotypeText.java,v 1.5 2006/07/15 07:06:32 mvw Exp $
+// $Id: FigStereotypeText.java,v 1.6 2006/08/11 23:25:12 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.tigris.gef.presentation.FigText;
 
 /**
  * A specialist FigText for display stereotypes.
- *
+ * @deprecated by Bob in 0.23.1 - this has not been used since UML 1.3
  * @author Bob Tarling
  */
 public class FigStereotypeText extends FigGroup {
