@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.32 2006/08/10 16:19:55 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.33 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,8 @@ import org.argouml.uml.cognitive.ProjectMemberTodoList;
  *
  * @author Bob Tarling
  */
-public class XmiFilePersister extends AbstractFilePersister implements XmiExtensionParser {
+public class XmiFilePersister extends AbstractFilePersister 
+    implements XmiExtensionParser {
     /**
      * Logger.
      */
@@ -116,7 +117,8 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
 
             OutputStream stream = new FileOutputStream(file);
             OutputStream bout = new BufferedOutputStream(stream);
-            writer = new OutputStreamWriter(bout, getEncoding());
+            writer = 
+                new OutputStreamWriter(bout, PersistenceManager.getEncoding());
 
             int size = project.getMembers().size();
             for (int i = 0; i < size; i++) {
@@ -251,7 +253,8 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
         
         if (argoString != null) {
             LOG.info("Parsing argoString " + argoString.length());
-            InputStream inputStream = new ByteArrayInputStream(argoString.getBytes());
+            InputStream inputStream = 
+                new ByteArrayInputStream(argoString.getBytes());
             ArgoParser parser = new ArgoParser();
             try {
                 parser.readProject(project, inputStream);
@@ -272,7 +275,8 @@ public class XmiFilePersister extends AbstractFilePersister implements XmiExtens
         }
         if (todoString != null) {
             LOG.info("Parsing todoString " + todoString.length());
-            InputStream inputStream = new ByteArrayInputStream(todoString.getBytes());
+            InputStream inputStream = 
+                new ByteArrayInputStream(todoString.getBytes());
             MemberFilePersister persister = null;
             persister = new TodoListMemberFilePersister();
             persister.load(project, inputStream);

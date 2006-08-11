@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.40 2006/08/11 17:18:57 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.41 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -228,7 +228,8 @@ public class UmlFilePersister extends AbstractFilePersister {
             Integer indent = new Integer(4);
 
             writer.println("<?xml version = \"1.0\" "
-                    + "encoding = \"" + getEncoding() + "\" ?>");
+                    + "encoding = \"" 
+                    + PersistenceManager.getEncoding() + "\" ?>");
             writer.println("<uml version=\"" + PERSISTENCE_VERSION + "\">");
             // Write out header section
             try {
@@ -398,11 +399,11 @@ public class UmlFilePersister extends AbstractFilePersister {
                 File.createTempFile("upgrade_" + version + "_", ".uml");
             transformedFile.deleteOnExit();
 
-            String encoding = "UTF-8";
             FileOutputStream stream =
                 new FileOutputStream(transformedFile);
             Writer writer =
-                new BufferedWriter(new OutputStreamWriter(stream, encoding));
+                new BufferedWriter(new OutputStreamWriter(stream, 
+                        PersistenceManager.getEncoding()));
             Result result = new StreamResult(writer);
 
             StreamSource inputStreamSource = new StreamSource(file);
@@ -431,7 +432,8 @@ public class UmlFilePersister extends AbstractFilePersister {
         BufferedReader reader = null;
         try {
             inputStream = new BufferedInputStream(file.toURL().openStream());
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            reader = new BufferedReader(new InputStreamReader(inputStream, 
+                    PersistenceManager.getEncoding()));
             String rootLine = reader.readLine();
             while (!rootLine.startsWith("<uml ")) {
                 rootLine = reader.readLine();
@@ -473,7 +475,8 @@ public class UmlFilePersister extends AbstractFilePersister {
         BufferedReader reader = null;
         try {
             inputStream = new BufferedInputStream(file.toURL().openStream());
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            reader = new BufferedReader(new InputStreamReader(inputStream, 
+                    PersistenceManager.getEncoding()));
             String versionLine = reader.readLine();
             while (!versionLine.trim().startsWith("<version>")) {
                 versionLine = reader.readLine();

@@ -1,4 +1,4 @@
-// $Id: ZipFilePersister.java,v 1.10 2006/08/10 16:19:55 bobtarling Exp $
+// $Id: ZipFilePersister.java,v 1.11 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,7 +123,8 @@ public class ZipFilePersister extends XmiFilePersister {
                 new ZipEntry(fileName.substring(0, fileName.lastIndexOf(".")));
             stream.putNextEntry(xmiEntry);
             OutputStream bout = new BufferedOutputStream(stream);
-            writer = new OutputStreamWriter(bout, getEncoding());
+            writer = new OutputStreamWriter(bout, 
+                    PersistenceManager.getEncoding());
 
             int size = project.getMembers().size();
             for (int i = 0; i < size; i++) {
@@ -211,7 +212,8 @@ public class ZipFilePersister extends XmiFilePersister {
                         fileName.indexOf('.'),
                         fileName.lastIndexOf('.'));
             InputStream stream = openZipStreamAt(file.toURL(), extension);
-            InputSource is = new InputSource(new XmiInputStream(stream, this, 10000000, 100000));
+            InputSource is = new InputSource(
+                    new XmiInputStream(stream, this, 10000000, 100000));
             is.setSystemId(file.toURL().toExternalForm());
             
             XMIParser.getSingleton().readModels(p, is);

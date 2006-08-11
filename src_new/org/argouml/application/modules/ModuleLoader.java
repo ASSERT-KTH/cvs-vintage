@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.35 2006/06/14 05:48:23 tfmorris Exp $
+// $Id: ModuleLoader.java,v 1.36 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,6 +55,7 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoModuleEvent;
 import org.argouml.i18n.Translator;
+import org.argouml.persistence.PersistenceManager;
 
 /**
  * Handles loading of modules and plugins for ArgoUML.
@@ -451,7 +452,8 @@ public class ModuleLoader {
     public boolean loadModules(InputStream is, String filename) {
         try {
 	    LineNumberReader lnr =
-		new LineNumberReader(new InputStreamReader(is));
+		new LineNumberReader(new InputStreamReader(is, 
+                        PersistenceManager.getEncoding()));
 	    while (true) {
 	        String realLine = lnr.readLine();
 		if (realLine == null) {

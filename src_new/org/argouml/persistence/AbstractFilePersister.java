@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.18 2006/08/11 17:18:57 bobtarling Exp $
+// $Id: AbstractFilePersister.java,v 1.19 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,15 +44,6 @@ import org.argouml.util.ThreadUtils;
 public abstract class AbstractFilePersister extends FileFilter
         implements ProjectFilePersister {
     private EventListenerList listenerList = new EventListenerList();
-
-    /**
-     * Supply the encoding to be used throughout the persistence
-     * mechanism.
-     * @return the encoding.
-     */
-    protected String getEncoding() {
-        return "UTF-8";
-    }
 
     /**
      * Create a temporary copy of the existing file.

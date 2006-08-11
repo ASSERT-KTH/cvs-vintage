@@ -1,4 +1,4 @@
-// $Id: MemberFilePersister.java,v 1.7 2006/03/25 22:05:21 linus Exp $
+// $Id: MemberFilePersister.java,v 1.8 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,8 @@ public abstract class MemberFilePersister {
             BufferedReader reader =
                 new BufferedReader(
                         new InputStreamReader(
-                                new FileInputStream(file), "UTF-8"));
+                                new FileInputStream(file), 
+                                PersistenceManager.getEncoding()));
 
             // Skip the <?xml... first line
             String line = reader.readLine();

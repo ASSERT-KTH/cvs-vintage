@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.24 2006/08/10 15:37:01 mvw Exp $
+// $Id: PersistenceManager.java,v 1.25 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -339,6 +339,15 @@ public final class PersistenceManager {
             }
         }
         return true;
+    }
+
+    /**
+     * Supply the encoding to be used throughout the persistence
+     * mechanism.
+     * @return the encoding.
+     */
+    public static String getEncoding() {
+        return "UTF-8";
     }
 }
 

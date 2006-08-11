@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.26 2006/06/14 05:48:23 tfmorris Exp $
+// $Id: ConfigLoader.java,v 1.27 2006/08/11 19:12:24 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
+import org.argouml.persistence.PersistenceManager;
 import org.tigris.swidgets.Orientation;
 
 /**
@@ -105,7 +107,12 @@ public class ConfigLoader {
             is = ConfigLoader.class.getResourceAsStream(configFile);
         }
         if (is != null) {
-            lnr = new LineNumberReader(new InputStreamReader(is));
+            try {
+                lnr = new LineNumberReader(new InputStreamReader(is, 
+                        PersistenceManager.getEncoding()));
+            } catch (UnsupportedEncodingException ueExc) {
+                lnr = new LineNumberReader(new InputStreamReader(is));
+            }
 
             if (lnr != null) {
                 try {
@@ -193,7 +200,8 @@ public class ConfigLoader {
 		}
 		catch (ClassNotFoundException cnfe) { }
 		catch (Exception e) {
-		    LOG.error("Unanticipated exception, skipping " + tabName, e);
+		    LOG.error("Unanticipated exception, skipping " 
+                            + tabName, e);
 		}
 		if (res != null) {
 		    return res;
