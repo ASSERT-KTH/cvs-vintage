@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.207 2006/08/10 15:37:01 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.208 2006/08/11 19:38:42 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -722,6 +722,9 @@ public final class ProjectBrowser
      *
      * @param tabName The tabpage label
      * @return the tabpage
+     * @deprecated by Andrea Nironi (0.22 August 2006). Replaced by
+     *             {@link org.argouml.ui.ProjectBrowser#getTab(Class tabClass)}.
+     *             See issue 3278.
      */
     public JPanel getNamedTab(String tabName) {
         JPanel panel;

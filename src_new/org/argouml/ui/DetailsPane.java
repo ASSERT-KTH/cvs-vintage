@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.60 2006/06/11 19:01:25 mvw Exp $
+// $Id: DetailsPane.java,v 1.61 2006/08/11 19:38:42 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -344,6 +344,9 @@ public class DetailsPane
      *
      * @param tabName the name of the required tab
      * @return the tab of the given name
+     * @deprecated by Andrea Nironi (0.22 August 2006). Replaced by
+     *             {@link org.argouml.ui.DetailsPane#getTab(Class tabClass)}.
+     *             See issue 3278.
      */
     public JPanel getNamedTab(String tabName) {
         for (int i = 0; i < tabPanelList.size(); i++) {

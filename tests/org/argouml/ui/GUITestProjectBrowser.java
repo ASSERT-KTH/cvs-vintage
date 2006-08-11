@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.18 2006/06/17 12:50:56 bobtarling Exp $
+// $Id: GUITestProjectBrowser.java,v 1.19 2006/08/11 19:38:30 mvw Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.Action;
 
 import junit.framework.TestCase;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
@@ -71,8 +70,6 @@ public class GUITestProjectBrowser extends TestCase {
 	assertNotNull(pb.getStatusBar());
 	assertNotNull(pb.getJMenuBar());
 	assertNotNull(pb.getEditorPane());
-	assertNotNull(pb.getNamedTab(Translator.localize("tab.properties")));
-	assertNotNull(pb.getNamedTab(Translator.localize("tab.source")));
 	assertNotNull(pb.getTodoPane());
     }
 
