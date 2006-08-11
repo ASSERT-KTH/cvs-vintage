@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.30 2006/07/03 19:20:12 mvw Exp $
+// $Id: FacadeMDRImpl.java,v 1.31 2006/08/11 17:02:38 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4564,7 +4564,7 @@ class FacadeMDRImpl implements Facade {
     public Object getValue(Object handle) {
         try {
             if (handle instanceof TaggedValue) {
-                return ((TaggedValue) handle).getDataValue();
+                return getValueOfTag(handle);
             }
             if (handle instanceof Argument) {
                 return ((Argument) handle).getValue();
