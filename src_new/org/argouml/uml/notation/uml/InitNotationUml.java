@@ -1,4 +1,4 @@
-// $Id: InitNotationUml.java,v 1.15 2006/05/06 19:28:11 mvw Exp $
+// $Id: InitNotationUml.java,v 1.16 2006/08/12 05:39:58 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.notation.uml;
 
-import org.argouml.application.api.Argo;
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.notation.Notation;
 import org.argouml.notation.NotationName;
 import org.argouml.notation.NotationProviderFactory2;
@@ -48,7 +48,7 @@ public class InitNotationUml {
             Notation.makeNotation(
                     "UML",
                     "1.4",
-                    Argo.lookupIconResource("UmlNotation"));
+                    ResourceLoaderWrapper.lookupIconResource("UmlNotation"));
 
         npf.addNotationProvider(
                 NotationProviderFactory2.TYPE_NAME,
