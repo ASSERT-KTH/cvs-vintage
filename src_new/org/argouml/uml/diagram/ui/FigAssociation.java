@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.126 2006/08/11 23:25:12 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.127 2006/08/12 01:27:47 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -186,6 +186,9 @@ public class FigAssociation extends FigEdgeModelElement {
         destMult.setOwner(dest);
         
         applyArrowHeads();
+        
+        updateStereotypeText();
+        updateAbstract();
         
         addElementListener(getOwner(), new String[] {"name", "isAbstract"});
     }
