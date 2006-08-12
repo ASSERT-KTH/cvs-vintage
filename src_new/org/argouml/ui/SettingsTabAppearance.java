@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.14 2006/06/02 18:28:25 mvw Exp $
+// $Id: SettingsTabAppearance.java,v 1.15 2006/08/12 18:48:03 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -236,9 +236,19 @@ class MyLocale {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return myLocale.toString() + " ("
-            + myLocale.getDisplayLanguage(myLocale) + " "
-            + myLocale.getDisplayCountry(myLocale) + ")";
+        StringBuffer displayString = new StringBuffer(myLocale.toString());
+        displayString.append(" (");
+        displayString.append(myLocale.getDisplayLanguage(myLocale));
+        if (myLocale.getDisplayCountry(myLocale) != null 
+                && myLocale.getDisplayCountry(myLocale).length() > 0) {
+            displayString.append(" ");
+            displayString.append(myLocale.getDisplayCountry(myLocale));
+        }
+        displayString.append(")");
+        if (myLocale.equals(Translator.getSystemDefaultLocale())) {
+            displayString.append(" - Default");
+        }
+        return displayString.toString();
     }
 
     static Collection getLocales() {

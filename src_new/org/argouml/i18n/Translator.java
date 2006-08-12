@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.45 2006/06/25 19:23:29 linus Exp $
+// $Id: Translator.java,v 1.46 2006/08/12 18:48:03 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,6 +72,11 @@ public final class Translator {
     private static boolean initialized;
 
     /**
+     * Used to keep track of the system default locale
+     */
+    private static Locale systemDefaultLocale;
+    
+    /**
      * This class should only be used in a static constant so make
      * the constructor private.
      */
@@ -83,6 +88,8 @@ public final class Translator {
      */
     public static void init () {
         initialized = true;
+        loadDefaultLocale();
+        
         String s = Configuration.getString(Argo.KEY_LOCALE);
         if ((!"".equals(s)) && (s != null)) {
             setLocale(s);
@@ -110,16 +117,16 @@ public final class Translator {
      */
     public static Locale[] getLocales() {
         return new Locale[] {
-            new Locale("en", ""),
-            new Locale("fr", ""),
+            Locale.ENGLISH,
+            Locale.FRENCH,
             new Locale("es", ""),
-            new Locale("de", ""),
-            new Locale("it", ""),
+            Locale.GERMAN,
+            Locale.ITALIAN,
             new Locale("nb", ""),
             new Locale("pt", ""),
             new Locale("ru", ""),
-            new Locale("zh", ""),
-            new Locale("en", "GB"),
+            Locale.CHINESE,
+            Locale.UK,
         };
     }
 
@@ -154,6 +161,28 @@ public final class Translator {
         bundles = new HashMap();
     }
 
+    /**
+     * Returns the system default locale (indipendent from the selected
+     * configuration)
+     * 
+     * @return the system default locale
+     */
+    public static Locale getSystemDefaultLocale() {
+        return systemDefaultLocale;
+    }
+    
+    private static void loadDefaultLocale() {
+        systemDefaultLocale = new Locale(Locale.getDefault().getLanguage(), 
+                Locale.getDefault().getCountry());
+        Locale[] availableLocales = getLocales();
+        for (int i = 0; i < availableLocales.length; i++) {
+            if (systemDefaultLocale.equals(availableLocales[i])) {
+                break;
+            }
+        }
+        systemDefaultLocale = new Locale(Locale.getDefault().getLanguage());
+    }
+    
     /**
      * Add another class loader that the resource bundle could be located
      * through.
