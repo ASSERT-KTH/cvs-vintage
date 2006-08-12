@@ -1,4 +1,4 @@
-// $Id: FigSingleLineText.java,v 1.10 2006/04/01 11:45:08 linus Exp $
+// $Id: FigSingleLineText.java,v 1.11 2006/08/12 13:34:01 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
+import org.argouml.model.AttributeChangeEvent;
+import org.argouml.model.Model;
 import org.tigris.gef.presentation.FigText;
 
 /**
@@ -50,7 +56,10 @@ public class FigSingleLineText extends FigText {
      */
     private static final long serialVersionUID = -5611216741181499679L;
 
-
+    /**
+     * The properties of 'owner' that this is interested in
+     */
+    private String[] properties;
 
     /**
      * @see org.tigris.gef.presentation.FigText#FigText(
@@ -65,6 +74,23 @@ public class FigSingleLineText extends FigText {
         setTabAction(FigText.END_EDITING);
         setReturnAction(FigText.END_EDITING);
         setLineWidth(0);
+    }
+
+    /**
+     * @see org.tigris.gef.presentation.FigText#FigText(
+     *         int, int, int, int, boolean)
+     */
+    public FigSingleLineText(int x, int y, int w, int h, boolean expandOnly, String property) {
+        this(x, y, w, h, expandOnly, new String[] {property});
+    }
+
+    /**
+     * @see org.tigris.gef.presentation.FigText#FigText(
+     *         int, int, int, int, boolean)
+     */
+    public FigSingleLineText(int x, int y, int w, int h, boolean expandOnly, String[] properties) {
+        this(x, y, w, h, expandOnly);
+        this.properties = properties;
     }
 
 
@@ -99,5 +125,42 @@ public class FigSingleLineText extends FigText {
         } else {
             return false;
         }
+    }
+    
+    public void setOwner(Object owner) {
+        super.setOwner(owner);
+        if (owner != null && properties != null) {
+            Model.getPump().addModelEventListener(
+                    this, 
+                    owner, 
+                    properties);
+            setText();
+        }
+    }
+    
+    public void removeFromDiagram() {
+        if (getOwner() != null && properties != null) {
+            Model.getPump().addModelEventListener(
+                    this, 
+                    getOwner(), 
+                    properties);
+        }
+    }
+    
+    public void propertyChange(PropertyChangeEvent pce) {
+        super.propertyChange(pce);
+        if (getOwner() != null
+                && properties != null
+                && pce instanceof AttributeChangeEvent) {
+            assert Arrays.asList(properties).contains(pce.getPropertyName());
+            setText();
+        }
+    }
+
+    /**
+     * Sets the text of the Fifg taking values from the owner.
+     * TO be implemented as required by sub classes.
+     */
+    protected void setText() {
     }
 }

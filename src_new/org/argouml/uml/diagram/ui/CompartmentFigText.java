@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.29 2006/05/25 20:54:23 mvw Exp $
+// $Id: CompartmentFigText.java,v 1.30 2006/08/12 13:34:01 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,6 +108,70 @@ public class CompartmentFigText extends FigSingleLineText {
             LOG.warn(this.getClass().toString()
 		     + ": Cannot create with null compartment fig");
         }
+    }
+
+    /**
+     * Build a new compartment figText of the given dimensions, within
+     * the compartment described by <code>aFig</code>.<p>
+     *
+     * Invoke the parent constructor, then set the reference to the
+     * associated compartment figure. The associated FigText is marked
+     * as expand only.<p>
+     *
+     * <em>Warning</em>. Won't work properly if <code>aFig</code> is
+     * null. A warning is printed.<p>
+     *
+     * @param x      X coordinate of the top left of the FigText.
+     *
+     * @param y      Y coordinate of the top left of the FigText.
+     *
+     * @param w      Width of the FigText.
+     *
+     * @param h      Height of the FigText.
+     *
+     * @param aFig  The figure describing the whole compartment
+     * 
+     * @param property The property this Fig should listen for
+     */
+    public CompartmentFigText(int x, int y, int w, int h, Fig aFig, 
+            String property) {
+        super(x, y, w, h, true, new String[] {property});
+    }
+
+    /**
+     * Build a new compartment figText of the given dimensions, within
+     * the compartment described by <code>aFig</code>.<p>
+     *
+     * Invoke the parent constructor, then set the reference to the
+     * associated compartment figure. The associated FigText is marked
+     * as expand only.<p>
+     *
+     * <em>Warning</em>. Won't work properly if <code>aFig</code> is
+     * null. A warning is printed.<p>
+     *
+     * @param x      X coordinate of the top left of the FigText.
+     *
+     * @param y      Y coordinate of the top left of the FigText.
+     *
+     * @param w      Width of the FigText.
+     *
+     * @param h      Height of the FigText.
+     *
+     * @param aFig  The figure describing the whole compartment
+     * 
+     * @param properties The properties this Fig should listen for
+     */
+    public CompartmentFigText(int x, int y, int w, int h, Fig aFig, 
+            String[] properties) {
+        super(x, y, w, h, true, properties);
+        
+        if (refFig == null) {
+            throw new IllegalArgumentException("A refFig must be provided");
+        }
+
+        // Set the enclosing compartment fig. Warn if its null (which will
+        // break).
+        refFig = aFig;
     }
 
     /**
