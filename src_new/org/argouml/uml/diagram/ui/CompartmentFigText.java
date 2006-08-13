@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.30 2006/08/12 13:34:01 bobtarling Exp $
+// $Id: CompartmentFigText.java,v 1.31 2006/08/13 06:11:33 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,7 +135,7 @@ public class CompartmentFigText extends FigSingleLineText {
      */
     public CompartmentFigText(int x, int y, int w, int h, Fig aFig, 
             String property) {
-        super(x, y, w, h, true, new String[] {property});
+        this(x, y, w, h, aFig, new String[] {property});
     }
 
     /**
@@ -165,7 +165,7 @@ public class CompartmentFigText extends FigSingleLineText {
             String[] properties) {
         super(x, y, w, h, true, properties);
         
-        if (refFig == null) {
+        if (aFig == null) {
             throw new IllegalArgumentException("A refFig must be provided");
         }
 
