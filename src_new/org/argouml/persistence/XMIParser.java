@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.22 2006/08/11 23:35:16 bobtarling Exp $
+// $Id: XMIParser.java,v 1.23 2006/08/13 02:01:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -229,6 +229,27 @@ public class XMIParser {
             if (namespace == null) {
                 namespace = facade.getContext(statemachine);
                 Model.getCoreHelper().setNamespace(statemachine, namespace);
+            }
+            if (proj.getDiagramCount() == 0) {
+                ArgoDiagram diagram = null;
+                if (facade.isAActivityGraph(statemachine)) {
+                    LOG.info("Creating activity diagram for "
+                            + facade.getUMLClassName(statemachine)
+                            + "<<" + facade.getName(statemachine) + ">>");
+                    diagram =
+                        diagramFactory.createDiagram(UMLActivityDiagram.class,
+                                                     namespace, statemachine);
+                } else {
+                    LOG.info("Creating state diagram for "
+                            + facade.getUMLClassName(statemachine)
+                            + "<<" + facade.getName(statemachine) + ">>");
+                    diagram =
+                        diagramFactory.createDiagram(UMLStateDiagram.class,
+                                                     namespace, statemachine);
+                }
+                if (diagram != null) {
+                    proj.addMember(diagram);
+                }
             }
         }
         // ISSUE 3516 : Make sure there is at least one diagram because
