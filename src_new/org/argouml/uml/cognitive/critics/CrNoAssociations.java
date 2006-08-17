@@ -1,4 +1,4 @@
-// $Id: CrNoAssociations.java,v 1.25 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrNoAssociations.java,v 1.26 2006/08/17 08:17:50 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.cognitive.critics;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
@@ -94,6 +95,23 @@ public class CrNoAssociations extends CrUML {
             return NO_PROBLEM;
         if (Model.getFacade().getSupplierDependencies(dm).size() > 0)
             return NO_PROBLEM;
+        
+        // special cases for use cases
+        // Extending use cases and use case that are being included are
+        // not required to have associations.
+        if (Model.getFacade().isAUseCase(dm)) {
+            Object usecase = dm;
+            Collection includes = Model.getFacade().getIncludes(usecase);
+            if (includes!=null && includes.size()>=1) {
+                return NO_PROBLEM;
+            }
+            Collection extend = Model.getFacade().getExtends(usecase);
+            if (extend!=null && extend.size()>=1) {
+                return NO_PROBLEM;
+            }
+        }
+        
+        
 
         //TODO: different critic or special message for classes
         //that inherit all ops but define none of their own.
