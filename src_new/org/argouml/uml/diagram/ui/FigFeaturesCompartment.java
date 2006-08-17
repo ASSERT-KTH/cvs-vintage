@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.29 2006/06/04 13:54:52 mvw Exp $
+// $Id: FigFeaturesCompartment.java,v 1.30 2006/08/17 18:14:28 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.InvalidElementException;
-import org.argouml.notation.NotationContext;
 import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.uml.diagram.static_structure.ui.FigFeature;
@@ -215,7 +214,7 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
                     // bounds not relevant here, but I am perfectionist...
                     comp.setBounds(b);
                     /* We need to set a new notationprovider, since 
-                     * the NotationContext may have been changed:  */
+                     * the Notation language may have been changed:  */
                     comp.setNotationProvider(np);
                 }
                 addFig(comp); // add it again (but now in the right sequence)
