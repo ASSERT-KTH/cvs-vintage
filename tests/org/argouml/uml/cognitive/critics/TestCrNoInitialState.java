@@ -1,4 +1,4 @@
-// $Id: TestCrInvalidHistory.java,v 1.2 2006/08/17 14:32:30 mkl Exp $
+// $Id: TestCrNoInitialState.java,v 1.1 2006/08/17 14:32:30 mkl Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 
 import org.argouml.model.Model;
 
-public class TestCrInvalidHistory extends TestCase {
+public class TestCrNoInitialState extends TestCase {
 
     private CrUML critic = null;
 
@@ -36,47 +36,29 @@ public class TestCrInvalidHistory extends TestCase {
 
     private Object compositestate;
 
-    private Object history;
+    private Object initial;
 
-    private Object state1, state2;
-
-    public TestCrInvalidHistory(String arg0) {
+    
+    public TestCrNoInitialState(String arg0) {
         super(arg0);
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        critic = new CrInvalidHistory();
+        critic = new CrNoInitialState();
         statemachine = Model.getStateMachinesFactory().createStateMachine();
         compositestate = Model.getStateMachinesFactory()
                 .buildCompositeStateOnStateMachine(statemachine);
-        history = Model.getStateMachinesFactory().buildPseudoState(
+        initial = Model.getStateMachinesFactory().buildPseudoState(
                 compositestate);
-        state1 = Model.getStateMachinesFactory().buildSimpleState(
-                compositestate);
-        state2 = Model.getStateMachinesFactory().buildSimpleState(
-                compositestate);
+      
 
     }
 
-    public void testShallowHistoryKind() {
-        Model.getCoreHelper().setKind(history,
-                Model.getPseudostateKind().getShallowHistory());
-        assertFalse(critic.predicate2(history, null));
-        Model.getStateMachinesFactory().buildTransition(history, state1);
-        assertFalse(critic.predicate2(history, null));
-        Model.getStateMachinesFactory().buildTransition(history, state2);
-        assertTrue(critic.predicate2(history, null));
+    public void testPredicate2() {
+        assertTrue(critic.predicate2(compositestate, null));
+        Model.getCoreHelper().setKind(initial,
+                Model.getPseudostateKind().getInitial());
+        assertFalse(critic.predicate2(compositestate, null));
     }
-
-    public void testDeepHistoryKind() {
-        Model.getCoreHelper().setKind(history,
-                Model.getPseudostateKind().getDeepHistory());
-        assertFalse(critic.predicate2(history, null));
-        Model.getStateMachinesFactory().buildTransition(history, state1);
-        assertFalse(critic.predicate2(history, null));
-        Model.getStateMachinesFactory().buildTransition(history, state2);
-        assertTrue(critic.predicate2(history, null));
-    }
-
 }
