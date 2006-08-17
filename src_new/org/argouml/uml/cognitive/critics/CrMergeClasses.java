@@ -1,4 +1,4 @@
-// $Id: CrMergeClasses.java,v 1.22 2006/06/11 15:39:44 mvw Exp $
+// $Id: CrMergeClasses.java,v 1.23 2006/08/17 07:25:42 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,10 @@ public class CrMergeClasses extends CrUML {
 	Object myEnd = /*(MAssociationEnd)*/ ends.iterator().next();
 	Object asc = Model.getFacade().getAssociation(myEnd);
 	List conns = new ArrayList(Model.getFacade().getConnections(asc));
+        // Do we have 2 connection ends?
+        if (conns == null || conns.size()!=2) {
+                return NO_PROBLEM;
+        }
 	Object ae0 = /*(MAssociationEnd)*/ conns.get(0);
 	Object ae1 = /*(MAssociationEnd)*/ conns.get(1);
 	// both ends must be classes, otherwise there is nothing to merge
