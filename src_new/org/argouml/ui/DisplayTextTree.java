@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.66 2006/07/14 23:56:15 tfmorris Exp $
+// $Id: DisplayTextTree.java,v 1.67 2006/08/18 09:17:02 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,17 +175,7 @@ public class DisplayTextTree extends JTree {
                      * is stored in the "body".
                      */
                     name = (String) Model.getFacade().getBody(value);
-                } else if (Model.getFacade().isAElementImport(value)) {
-                    // TODO: Localize
-                    StringBuffer s = new StringBuffer("Imported ");
-                    Object me = Model.getFacade().getImportedElement(value);
-                    s.append(Model.getFacade().getUMLClassName(me));
-                    s.append(": ");
-                    // TODO: Handle the Alias from the ElementImport.
-                    s.append(convertValueToText(me, selected, expanded,
-                            leaf, row,
-                            hasFocus));
-                    name = s.toString();
+                
                 } else if (Model.getFacade().isATaggedValue(value)) {
                     String tagName = Model.getFacade().getTagOfTag(value);
                     if (tagName == null || tagName.equals("")) {
@@ -245,6 +235,22 @@ public class DisplayTextTree extends JTree {
                     name += ": " + body;
                 }
                 return name;
+            } catch (InvalidElementException e) {
+                return Translator.localize("misc.name.deleted");
+            }
+        }
+        
+        if (Model.getFacade().isAElementImport(value)) {
+            try {
+                // TODO: Localize
+                StringBuffer s = new StringBuffer("Imported ");
+                Object me = Model.getFacade().getImportedElement(value);
+                s.append(Model.getFacade().getUMLClassName(me));
+                s.append(": ");
+                // TODO: Handle the Alias from the ElementImport.
+                s.append(convertValueToText(me, selected, expanded, leaf, row,
+                        hasFocus));
+                return s.toString();
             } catch (InvalidElementException e) {
                 return Translator.localize("misc.name.deleted");
             }
