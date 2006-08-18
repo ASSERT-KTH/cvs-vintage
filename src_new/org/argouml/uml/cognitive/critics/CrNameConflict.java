@@ -1,4 +1,4 @@
-// $Id: CrNameConflict.java,v 1.21 2006/07/14 15:40:08 mvw Exp $
+// $Id: CrNameConflict.java,v 1.22 2006/08/18 11:31:02 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.UMLToDoItem;
@@ -75,7 +74,7 @@ public class CrNameConflict extends CrUML {
      * @return the set of offenders
      */
     protected ListSet computeOffenders(Object dm) {
-        ListSet offs = new ListSet();
+        ListSet offenderResult = new ListSet();
         if (Model.getFacade().isANamespace(dm)) {
             Iterator it = Model.getFacade().getOwnedElements(dm).iterator();
             HashMap names = new HashMap();
@@ -87,15 +86,16 @@ public class CrNameConflict extends CrUML {
 		if ("".equals(name))
 		    continue;
                 if (names.containsKey(name)) {
-                    Object off = names.get(name);
-                    offs.addElement(off);
-                    offs.addElement(name1Object);
-                    break;
+                    Object offender = names.get(name);
+                    if (!offenderResult.contains(offender)) {
+                        offenderResult.addElement(offender);
+                    }
+                    offenderResult.addElement(name1Object);
                 }
                 names.put(name, name1Object);
             }
         }
-        return offs;
+        return offenderResult;
     }
 
 
@@ -116,28 +116,6 @@ public class CrNameConflict extends CrUML {
 	boolean res = offs.equals(newOffs);
 	return res;
     }
-
-    /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(
-     *         org.argouml.cognitive.ui.Wizard)
-     */
-    public void initWizard(Wizard w) {
-        if (w instanceof WizMEName) {
-            ToDoItem item = (ToDoItem) w.getToDoItem();
-            Object me = item.getOffenders().firstElement();
-            String sug = Model.getFacade().getName(me);
-            String ins = super.getInstructions();
-            ((WizMEName) w).setInstructions(ins);
-            ((WizMEName) w).setSuggestion(sug);
-            ((WizMEName) w).setMustEdit(true);
-        }
-    }
-
-    /**
-     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
-     */
-    public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
-
 
 } /* end class CrNameConflict.java */
 
