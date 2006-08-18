@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.28 2006/06/11 17:13:46 mvw Exp $
+// $Id: CoreHelper.java,v 1.29 2006/08/18 12:02:35 mkl Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -964,6 +964,7 @@ public interface CoreHelper {
      *
      * @param handle is the parameter
      * @param kind is the directionkind
+     * @see org.argouml.model.Model#getDirectionKind
      */
     void setKind(Object handle, Object kind);
 
