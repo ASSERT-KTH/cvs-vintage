@@ -1,4 +1,4 @@
-// $Id: TestCrUnconventionalPackName.java,v 1.3 2006/06/11 17:30:38 mvw Exp $
+// $Id: TestCrUnconventionalPackName.java,v 1.4 2006/08/18 11:35:09 mkl Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 
 package org.argouml.uml.cognitive.critics;
+
+import org.argouml.model.Model;
 
 import junit.framework.TestCase;
 
@@ -53,5 +55,17 @@ public class TestCrUnconventionalPackName extends TestCase {
     public void testComputeSuggestion() {
         assertEquals("packageName", cr.computeSuggestion(null));
         assertEquals("x", cr.computeSuggestion("X"));
+    }
+    
+    public void testPredicate2() {
+        Object me = Model.getModelManagementFactory().createPackage();
+        Model.getCoreHelper().setName(me, null);
+        assertFalse(cr.predicate2(me, null));
+        
+        Model.getCoreHelper().setName(me, "Uppercase");
+        assertTrue(cr.predicate2(me, null));
+        
+        Model.getCoreHelper().setName(me, "lowercase");
+        assertFalse(cr.predicate2(me, null));
     }
 }
