@@ -1,4 +1,4 @@
-// $Id: CrDupParamName.java,v 1.19 2006/06/11 15:39:45 mvw Exp $
+// $Id: CrDupParamName.java,v 1.20 2006/08/18 11:52:55 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,9 +64,6 @@ public class CrDupParamName extends CrUML {
 	Iterator params = Model.getFacade().getParameters(bf).iterator();
 	while (params.hasNext()) {
 	    Object p = /*(MParameter)*/ params.next();
-	    if (Model.getFacade().isReturn(p)) {
-		continue;
-	    }
 
 	    String pName = Model.getFacade().getName(p);
 	    if (pName == null || "".equals(pName)) {
