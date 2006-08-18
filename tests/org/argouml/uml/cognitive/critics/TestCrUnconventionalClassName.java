@@ -1,4 +1,4 @@
-// $Id: TestCrUnconventionalClassName.java,v 1.4 2006/08/10 17:23:58 mvw Exp $
+// $Id: TestCrUnconventionalClassName.java,v 1.5 2006/08/18 11:27:37 mkl Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.cognitive.critics;
+
+import org.argouml.model.Model;
 
 import junit.framework.TestCase;
 
@@ -58,4 +60,14 @@ public class TestCrUnconventionalClassName extends TestCase {
         assertEquals("", cr.computeSuggestion("12345"));
         assertEquals("Foo2354foo", cr.computeSuggestion("foo2354foo"));
     }
+    
+    public void testPredicate2() {
+        Object me = Model.getCoreFactory().createClass();
+        Model.getCoreHelper().setName(me, null);
+        assertFalse(cr.predicate2(me, null));
+        
+        Model.getCoreHelper().setName(me, "lowerCase");
+        assertTrue(cr.predicate2(me, null));
+    }
+
 }

@@ -1,4 +1,4 @@
-// $Id: TestCrUnconventionalAttrName.java,v 1.6 2006/06/11 15:43:56 mvw Exp $
+// $Id: TestCrUnconventionalAttrName.java,v 1.7 2006/08/18 11:27:37 mkl Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 
 package org.argouml.uml.cognitive.critics;
+
+import org.argouml.model.Model;
 
 import junit.framework.TestCase;
 
@@ -83,4 +85,14 @@ public class TestCrUnconventionalAttrName extends TestCase {
     public void testOnlyUnderscoreName() {
         assertEquals("_", cr.computeSuggestion("_"));
     }
+    
+    public void testPredicate2() {
+        Object me = Model.getCoreFactory().createAttribute();
+        Model.getCoreHelper().setName(me, null);
+        assertFalse(cr.predicate2(me, null));
+        
+        Model.getCoreHelper().setName(me, "UpperCase");
+        assertTrue(cr.predicate2(me, null));
+    }
+
 }

@@ -1,4 +1,4 @@
-// $Id: TestCrUnconventionalOperName.java,v 1.3 2006/06/11 17:30:38 mvw Exp $
+// $Id: TestCrUnconventionalOperName.java,v 1.4 2006/08/18 11:27:37 mkl Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 package org.argouml.uml.cognitive.critics;
 
 import junit.framework.TestCase;
+
+import org.argouml.model.Model;
 
 
 /**
@@ -54,5 +56,14 @@ public class TestCrUnconventionalOperName extends TestCase {
         assertEquals("", cr.computeSuggestion(null));
         assertEquals("test", cr.computeSuggestion("Test"));
         assertEquals("t", cr.computeSuggestion("T"));
+    }
+    
+    public void testPredicate2() {
+        Object me = Model.getCoreFactory().createOperation();
+        Model.getCoreHelper().setName(me, null);
+        assertFalse(cr.predicate2(me, null));
+        
+        Model.getCoreHelper().setName(me, "UpperCase");
+        assertTrue(cr.predicate2(me, null));
     }
 }
