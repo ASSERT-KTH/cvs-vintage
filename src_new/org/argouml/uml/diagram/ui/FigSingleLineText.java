@@ -1,4 +1,4 @@
-// $Id: FigSingleLineText.java,v 1.11 2006/08/12 13:34:01 bobtarling Exp $
+// $Id: FigSingleLineText.java,v 1.12 2006/08/19 07:23:36 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
@@ -80,7 +78,8 @@ public class FigSingleLineText extends FigText {
      * @see org.tigris.gef.presentation.FigText#FigText(
      *         int, int, int, int, boolean)
      */
-    public FigSingleLineText(int x, int y, int w, int h, boolean expandOnly, String property) {
+    public FigSingleLineText(int x, int y, int w, int h, boolean expandOnly, 
+            String property) {
         this(x, y, w, h, expandOnly, new String[] {property});
     }
 
@@ -88,9 +87,10 @@ public class FigSingleLineText extends FigText {
      * @see org.tigris.gef.presentation.FigText#FigText(
      *         int, int, int, int, boolean)
      */
-    public FigSingleLineText(int x, int y, int w, int h, boolean expandOnly, String[] properties) {
+    public FigSingleLineText(int x, int y, int w, int h, boolean expandOnly, 
+            String[] allProperties) {
         this(x, y, w, h, expandOnly);
-        this.properties = properties;
+        this.properties = allProperties;
     }
 
 
@@ -140,7 +140,7 @@ public class FigSingleLineText extends FigText {
     
     public void removeFromDiagram() {
         if (getOwner() != null && properties != null) {
-            Model.getPump().addModelEventListener(
+            Model.getPump().removeModelEventListener(
                     this, 
                     getOwner(), 
                     properties);
@@ -158,7 +158,9 @@ public class FigSingleLineText extends FigText {
     }
 
     /**
-     * Sets the text of the Fifg taking values from the owner.
+     * This function without parameter shall
+     * determine the text of the Fig taking values from the owner,
+     * and then call {@link #setText(String)}.
      * TO be implemented as required by sub classes.
      */
     protected void setText() {
