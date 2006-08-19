@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.48 2006/07/15 04:55:42 tfmorris Exp $
+// $Id: Facade.java,v 1.49 2006/08/19 18:34:25 mkl Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1242,7 +1242,7 @@ public interface Facade {
      * The list of Attributes.
      *
      * @param handle classifier to examine.
-     * @return iterator with attributes.
+     * @return Collection with attributes.
      */
     Collection getAttributes(Object handle);
 
