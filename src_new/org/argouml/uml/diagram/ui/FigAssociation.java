@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.129 2006/08/17 14:18:43 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.130 2006/08/19 07:26:17 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -510,11 +510,12 @@ class FigMultiplicity extends FigSingleLineText implements PropertyChangeListene
 }
 
 /**
- * A Fig representing the ordering of some model element.
- * This has potential reuse for other edges showing ordering
+ * A textual Fig representing the ordering of some model element,
+ * i.e. "{ordered}" or "{sorted}".
+ * This has potential reuse for other edges showing ordering.
  * @author Bob Tarling
  */
-class FigOrdering extends FigSingleLineText implements PropertyChangeListener {
+class FigOrdering extends FigSingleLineText {
 
     private static final long serialVersionUID = 5385230942216677015L;
 
@@ -564,7 +565,8 @@ class FigRole extends FigSingleLineText implements PropertyChangeListener {
     private NotationProvider4 notationProviderRole;
 
     FigRole() {
-        super(10, 10, 90, 20, false, new String[] {"name", "visibility"});
+        super(10, 10, 90, 20, false, 
+                new String[] {"name", "visibility", "stereotype"});
         setTextFilled(false);
         setJustification(FigText.JUSTIFY_CENTER);
     }
