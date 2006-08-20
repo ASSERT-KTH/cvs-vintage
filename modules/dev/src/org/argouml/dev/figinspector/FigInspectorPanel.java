@@ -1,4 +1,4 @@
-// $Id: FigInspectorPanel.java,v 1.2 2006/04/29 11:02:37 linus Exp $
+// $Id: FigInspectorPanel.java,v 1.3 2006/08/20 20:45:51 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.dev.figinspector;
 
 import java.awt.BorderLayout;
+import java.util.Iterator;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,6 +37,7 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.event.GraphSelectionEvent;
 import org.tigris.gef.event.GraphSelectionListener;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigText;
 
@@ -98,14 +100,26 @@ public final class FigInspectorPanel
         if (f instanceof FigGroup) {
             FigGroup fg = (FigGroup) f;
             for (int i = 0; i < fg.getFigCount(); ++i) {
-                DefaultMutableTreeNode childNode =
-                    new DefaultMutableTreeNode(getDescr(fg.getFigAt(i)));
-                buildTree(fg.getFigAt(i), childNode);
-                tn.add(childNode);
+                addNode(tn, fg.getFigAt(i));
+            }
+        } else if (f instanceof FigEdge) {
+            FigEdge fe = (FigEdge) f;
+            Fig lineFig = fe.getFig();
+            addNode(tn, lineFig);
+            for (Iterator it = fe.getPathItemFigs().iterator(); it.hasNext(); ) {
+                Fig pathFig = (Fig) it.next();
+                addNode(tn, pathFig);
             }
         }
     }
 
+    private void addNode(DefaultMutableTreeNode tn, Fig fig) {
+        DefaultMutableTreeNode childNode =
+            new DefaultMutableTreeNode(getDescr(fig));
+        buildTree(fig, childNode);
+        tn.add(childNode);
+    }
+    
     private String getDescr(Fig f) {
         String className = f.getClass().getName();
         String descr = className.substring(className.lastIndexOf(".") + 1);
@@ -116,6 +130,7 @@ public final class FigInspectorPanel
         if (!f.isVisible()) {
             descr += " - INVISIBLE";
         }
+        descr = descr + " - lay=" + f.getLayer() + " - grp=" + f.getGroup();
         return descr;
     }
 }
