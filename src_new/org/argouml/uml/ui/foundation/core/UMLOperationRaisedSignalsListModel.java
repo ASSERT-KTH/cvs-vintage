@@ -1,4 +1,4 @@
-// $Id: UMLOperationRaisedSignalsListModel.java,v 1.4 2006/06/11 15:39:43 mvw Exp $
+// $Id: UMLOperationRaisedSignalsListModel.java,v 1.5 2006/08/20 17:13:44 mkl Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,6 @@ public class UMLOperationRaisedSignalsListModel
         if (Model.getFacade().isAOperation(target)) {
             signals = Model.getFacade().getRaisedSignals(target);
         }
-        return signals.contains(element);
+        return (signals!=null) && signals.contains(element);
     }
 }

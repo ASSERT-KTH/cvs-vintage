@@ -1,4 +1,4 @@
-// $Id: UMLOperationMethodsListModel.java,v 1.2 2006/04/13 22:18:39 linus Exp $
+// $Id: UMLOperationMethodsListModel.java,v 1.3 2006/08/20 17:13:43 mkl Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class UMLOperationMethodsListModel
         if (Model.getFacade().isAOperation(target)) {
             methods = Model.getFacade().getMethods(target);
         }
-        return methods.contains(element);
+        return (methods != null) && methods.contains(element);
     }
 
     /**
