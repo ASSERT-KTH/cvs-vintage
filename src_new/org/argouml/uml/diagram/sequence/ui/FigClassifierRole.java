@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.47 2006/07/25 23:26:03 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.48 2006/08/20 20:44:19 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -682,13 +682,6 @@ public class FigClassifierRole extends FigNodeModelElement
             setBounds(x, y, w, h);
         }
         PGMLStackParser.setCommonAttrs(this, attributes);
-        String ownerRef = attributes.getValue("href");
-        if (ownerRef != null) {
-            Object owner = parser.findOwner(ownerRef);
-            if (owner != null) {
-		setOwner(owner);
-	    }
-        }
         parser.registerFig(this, attributes.getValue("name"));
         ((Container) container).addObject(this);
         return new FigClassifierRoleHandler(parser, this);
