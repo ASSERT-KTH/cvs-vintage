@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.23 2006/07/05 00:03:18 bobtarling Exp $
+// $Id: FigNodeAssociation.java,v 1.24 2006/08/20 17:09:32 mkl Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,11 +133,11 @@ public class FigNodeAssociation extends FigNodeModelElement {
      */
     protected void modelChanged(PropertyChangeEvent mee) {
         super.modelChanged(mee);
-        if (mee == null || mee.getPropertyName().equals("isAbstract")) {
+        if (mee == null || "isAbstract".equals(mee.getPropertyName())) {
             updateAbstract();
             damage();
         }
-        if (mee.getPropertyName().equals("connection")) {
+        if ("connection".equals(mee.getPropertyName())) {
             if (mee instanceof RemoveAssociationEvent) {
                 Object association =
                     ((RemoveAssociationEvent) mee).getSource();
