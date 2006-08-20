@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.55 2006/05/18 22:00:15 linus Exp $
+// $Id: Designer.java,v 1.56 2006/08/20 17:06:58 mkl Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -226,9 +226,8 @@ public final class Designer
         toDoList.spawnValidityChecker(this);
         // TODO: make this configurable
         emailAddr = "users@argouml.tigris.org";
-        //TheDesigner = this; // already done above
         userWorking = false;
-
+        
         critiquingInterval = 8000;
         critiqueCPUPercent = 10;
 
