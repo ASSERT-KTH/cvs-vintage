@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.36 2006/08/12 18:56:39 mvw Exp $
+// $Id: TabToDo.java,v 1.37 2006/08/21 18:29:06 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     private static UndoableAction actionNewToDoItem = new ActionNewToDoItem();
     private static ToDoItemAction actionResolve = new ActionResolve();
     private static ToDoItemAction actionEmailExpert = new ActionEmailExpert();
-    private static UndoableAction actionSnooze = new ActionSnooze();
+    private static ToDoItemAction actionSnooze = new ActionSnooze();
     //public static UMLAction _actionRecordFix = Actions.RecordFix;
     //public static UMLAction _actionReplayFix = Actions.ReplayFix;
     //public static UMLAction _actionFixItNext = Actions.FixItNext;
@@ -200,6 +200,7 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
         actionEmailExpert.setEnabled(actionEmailExpert.isEnabled());
         actionEmailExpert.updateEnabled(item);
         actionSnooze.setEnabled(actionSnooze.isEnabled());
+        actionSnooze.updateEnabled(item);
     }
 
     /**
