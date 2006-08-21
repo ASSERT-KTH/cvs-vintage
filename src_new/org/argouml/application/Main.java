@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.152 2006/08/09 18:10:18 mvw Exp $
+// $Id: Main.java,v 1.153 2006/08/21 18:38:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,7 @@ import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
 import org.argouml.ui.cmd.ActionExit;
+import org.argouml.ui.cmd.PrintManager;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.util.Util;
 
@@ -188,6 +189,22 @@ public class Main {
                     i++;
                 } else if (args[i].equalsIgnoreCase("-batch")) {
                     batch = true;
+                } else if (args[i].equalsIgnoreCase("-open") 
+                        && i + 1 < args.length) {
+                    projectName = args[++i];
+                } else if (args[i].equalsIgnoreCase("-print") 
+                        && i + 1 < args.length) {
+                    // let's load the project
+                    String projectToBePrinted = 
+                        PersistenceManager.getInstance().fixExtension(
+                                args[++i]);
+                    URL urlToBePrinted = projectUrl(projectToBePrinted, null);
+                    ProjectBrowser.getInstance().loadProject(
+                            new File(urlToBePrinted.getFile()), true, null);
+                    // now, let's print it
+                    PrintManager.getInstance().print();
+                    // nothing else to do (?)
+                    System.exit(0);
                 } else {
                     System.err.println(
                         "Ignoring unknown/incomplete option '" + args[i] + "'");
