@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.25 2006/08/11 19:12:24 mvw Exp $
+// $Id: PersistenceManager.java,v 1.26 2006/08/21 16:55:27 bobtarling Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,7 @@ public final class PersistenceManager {
 
     private AbstractFilePersister defaultPersister;
     private List otherPersisters = new ArrayList();
-    private UmlFilePersister quickViewDump;
+    private XmiFilePersister quickViewDump;
     private XmiFilePersister xmiPersister;
     private XmiFilePersister xmlPersister;
     private ZipFilePersister zipPersister;
@@ -109,7 +109,7 @@ public final class PersistenceManager {
     private PersistenceManager() {
         // These are the file formats I know about:
         defaultPersister = new ZargoFilePersister();
-        quickViewDump = new UmlFilePersister();
+        quickViewDump = new XmiFilePersister();
         otherPersisters.add(quickViewDump);
         xmiPersister = new XmiFilePersister();
         otherPersisters.add(xmiPersister);

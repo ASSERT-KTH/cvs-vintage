@@ -1,4 +1,4 @@
-// $Id: ActionShowXMLDump.java,v 1.6 2006/08/09 18:10:17 mvw Exp $
+// $Id: ActionShowXMLDump.java,v 1.7 2006/08/21 16:55:27 bobtarling Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,8 @@ import org.argouml.ui.ProjectBrowser;
  */
 class ActionShowXMLDump extends AbstractAction {
     
+    private static final long serialVersionUID = -7942597779499060380L;
+
     /**
      * The key for the escape action
      */
