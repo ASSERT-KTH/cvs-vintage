@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.46 2006/08/12 18:48:03 mvw Exp $
+// $Id: Translator.java,v 1.47 2006/08/21 14:36:05 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,15 +172,28 @@ public final class Translator {
     }
     
     private static void loadDefaultLocale() {
+        // let's try to load the locale with language and country parameters
         systemDefaultLocale = new Locale(Locale.getDefault().getLanguage(), 
                 Locale.getDefault().getCountry());
+        if (!isLocaleAvailable(systemDefaultLocale)) {
+            // the country parameter wasn't found. retrying to load the locale 
+            // without it
+            systemDefaultLocale = new Locale(Locale.getDefault().getLanguage());
+            if (!isLocaleAvailable(systemDefaultLocale)) {
+                // the default locale is not present. so the default is english
+                systemDefaultLocale = Locale.ENGLISH;
+            }
+        }
+    }
+    
+    private static boolean isLocaleAvailable(Locale locale) {
         Locale[] availableLocales = getLocales();
         for (int i = 0; i < availableLocales.length; i++) {
             if (systemDefaultLocale.equals(availableLocales[i])) {
-                break;
+                return true;
             }
         }
-        systemDefaultLocale = new Locale(Locale.getDefault().getLanguage());
+        return false;
     }
     
     /**
