@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.23 2006/08/13 02:01:58 bobtarling Exp $
+// $Id: XMIParser.java,v 1.24 2006/08/22 20:37:03 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,8 @@ import org.xml.sax.InputSource;
  * TODO: This is set up as a singleton, but it's retaining project
  * specific state (eg UUID map)in an uncoordinated manner which
  * will be a problem when we attempt to support multiple projects. - tfm
+ * @deprecated in 0.23.1, this class is no longer used. All functionality is
+ * now contained in ModelMemberFilePersister
  */
 public class XMIParser {
 

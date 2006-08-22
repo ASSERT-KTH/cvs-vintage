@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.35 2006/08/21 16:55:27 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.36 2006/08/22 20:37:03 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -244,14 +244,18 @@ public class XmiFilePersister extends AbstractFilePersister
             
             InputSource source = new InputSource(new XmiInputStream(file.toURL().openStream(), this, length, phaseSpace, progressMgr));
             source.setSystemId(file.toURL().toString());
-            XMIParser.getSingleton().readModels(p, source);
-            Object model = XMIParser.getSingleton().getCurModel();
+            
+            ModelMemberFilePersister modelPersister =
+                new ModelMemberFilePersister();
+            
+            modelPersister.readModels(p, source);
+            Object model = modelPersister.getCurModel();
             progressMgr.nextPhase();
             Model.getUmlHelper().addListenersToModel(model);
-            p.setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
+            p.setUUIDRefs(modelPersister.getUUIDRefs());
             p.addMember(model);
             parseXmiExtensions(p);
-            XMIParser.getSingleton().registerDiagrams(p);
+            modelPersister.registerDiagrams(p);
             
             p.setRoot(model);
             progressMgr.nextPhase();

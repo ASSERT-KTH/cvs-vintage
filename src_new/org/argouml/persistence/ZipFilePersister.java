@@ -1,4 +1,4 @@
-// $Id: ZipFilePersister.java,v 1.12 2006/08/11 19:26:59 tfmorris Exp $
+// $Id: ZipFilePersister.java,v 1.13 2006/08/22 20:37:03 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -224,13 +224,16 @@ public class ZipFilePersister extends XmiFilePersister {
                         path);
             }
             
-            XMIParser.getSingleton().readModels(p, is);
-            Object model = XMIParser.getSingleton().getCurModel();
+            ModelMemberFilePersister modelPersister =
+                new ModelMemberFilePersister();
+            
+            modelPersister.readModels(p, is);
+            Object model = modelPersister.getCurModel();
             Model.getUmlHelper().addListenersToModel(model);
-            p.setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
+            p.setUUIDRefs(modelPersister.getUUIDRefs());
             p.addMember(model);
             parseXmiExtensions(p);
-            XMIParser.getSingleton().registerDiagrams(p);
+            modelPersister.registerDiagrams(p);
 
             p.setRoot(model);
             ProjectManager.getManager().setSaveEnabled(false);
