@@ -1,4 +1,4 @@
-// $Id: GUI.java,v 1.7 2006/06/03 06:28:07 linus Exp $
+// $Id: GUI.java,v 1.8 2006/08/23 20:11:30 andrea_nironi Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,6 +75,7 @@ public final class GUI {
         addSettingsTab(new SettingsTabEnvironment());
         addSettingsTab(new SettingsTabUser());
         addSettingsTab(new SettingsTabAppearance());
+        addSettingsTab(new SettingsTabShortcuts());
         addSettingsTab(new SettingsTabNotation(
                 GUI.SCOPE_APPLICATION));
 

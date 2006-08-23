@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.64 2006/06/12 00:22:21 bobtarling Exp $
+// $Id: TargetManager.java,v 1.65 2006/08/23 20:11:31 andrea_nironi Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.event.EventListenerList;
 
@@ -398,7 +399,7 @@ public final class TargetManager {
 
     private Action addOperationAction = new ActionAddOperation();
     
-    private Action deleteAction = new ActionDeleteModelElements();
+    private AbstractAction deleteAction = new ActionDeleteModelElements();
 
     private Action addEnumerationLiteralAction = 
         new ActionAddEnumerationLiteral();
@@ -934,7 +935,7 @@ public final class TargetManager {
      * Get the Action for deleting the target list.
      * @return the action
      */
-    public Action getDeleteAction() {
+    public AbstractAction getDeleteAction() {
         return deleteAction;
     }
 
