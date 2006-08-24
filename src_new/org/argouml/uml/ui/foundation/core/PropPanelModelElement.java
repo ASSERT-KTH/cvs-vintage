@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.107 2006/04/12 18:57:38 mvw Exp $
+// $Id: PropPanelModelElement.java,v 1.108 2006/08/24 05:05:24 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -171,62 +171,6 @@ public abstract class PropPanelModelElement extends PropPanel {
                 Model.getFacade().getModelElementContainer(getTarget()));
     }
 
-
-    //
-    // Pluggable Property Panel support
-    //
-    // THIS CLASS MUST NOT IMPLEMENT PluggablePropertyPanel. These
-    // are present to provide default implementations for any
-    // property panel that extends this class.
-    /**
-     * @see org.argouml.application.api.PluggablePropertyPanel#getPropertyPanel()
-     */
-    public PropPanel getPropertyPanel() {
-        return this;
-    }
-
-    /**
-     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
-     */
-    public boolean isModuleEnabled() {
-        return true;
-    }
-
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModulePopUpActions(
-     *         Vector, Object)
-     */
-    public Vector getModulePopUpActions(Vector v, Object o) {
-        return null;
-    }
-
-    /**
-     * @see org.argouml.application.api.ArgoModule#shutdownModule()
-     */
-    public boolean shutdownModule() {
-        return true;
-    }
-
-    /**
-     * @see org.argouml.application.api.ArgoModule#initializeModule()
-     */
-    public boolean initializeModule() {
-        LOG.debug("initializeModule()");
-        return true;
-    }
-
-    /**
-     * @see org.argouml.application.api.ArgoModule#setModuleEnabled(boolean)
-     */
-    public void setModuleEnabled(boolean enabled) {
-    }
-
-    /**
-     * @see org.argouml.application.api.Pluggable#inContext(Object[])
-     */
-    public boolean inContext(Object[] o) {
-        return true;
-    }
 
     /**
      * @return a scrollpane for the namespace

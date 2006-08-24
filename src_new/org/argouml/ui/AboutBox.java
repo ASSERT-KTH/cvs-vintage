@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.55 2006/08/09 18:10:17 mvw Exp $
+// $Id: AboutBox.java,v 1.56 2006/08/24 05:05:24 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.util.List;
-import java.util.ListIterator;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,17 +36,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
-import org.argouml.application.api.AboutTabPanel;
-import org.argouml.application.api.Argo;
-import org.argouml.application.api.PluggableAboutTab;
 import org.argouml.i18n.Translator;
 import org.argouml.util.Tools;
 
 /**
  * This is what you see after you activate the "Help->About ArgoUML" menu-item.
  *
- * TODO: Add registration for new AboutBox tabs
- * (instead of {@link org.argouml.application.api.PluggableAboutTab}).
+ * TODO: Add registration for new AboutBox tabs.
  */
 public class AboutBox extends ArgoDialog {
 
@@ -150,17 +144,6 @@ public class AboutBox extends ArgoDialog {
 		     createPane(localize("aboutbox.bugreport")));
 	tabs.addTab(localize("aboutbox.tab.legal"),
 		     createPane(localize("aboutbox.legal")));
-
-	// Add the About tabs from the modules.
-	List list = Argo.getPlugins(PluggableAboutTab.class);
-	ListIterator iterator = list.listIterator();
-	while (iterator.hasNext()) {
-	    Object o = iterator.next();
-	    AboutTabPanel atp = ((PluggableAboutTab) o).getAboutTabPanel();
-
-	    tabs.addTab(Translator.localize(atp.getTabKey()),
-			atp.getTabPanel());
-	}
 
 	getContentPane().setLayout(new BorderLayout(0, 0));
 	getContentPane().add(tabs, BorderLayout.CENTER);
