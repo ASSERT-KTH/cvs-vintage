@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.65 2006/08/23 20:11:31 andrea_nironi Exp $
+// $Id: TargetManager.java,v 1.66 2006/08/24 12:13:17 andrea_nironi Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -892,8 +892,7 @@ public final class TargetManager {
         Object target = TargetManager.getInstance().getTarget();
         if (target instanceof Diagram) { // we cannot delete the last diagram
             return (ProjectManager.getManager().getCurrentProject()
-            .getDiagrams().size()
-            > 1);
+                .getDiagrams().size() > 1);
         }
         if (Model.getFacade().isAModel(target)
         // we cannot delete the model itself
