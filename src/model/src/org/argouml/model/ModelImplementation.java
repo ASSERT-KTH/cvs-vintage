@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.20 2006/08/11 18:29:22 tfmorris Exp $
+// $Id: ModelImplementation.java,v 1.21 2006/08/25 06:59:15 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -313,25 +313,8 @@ public interface ModelImplementation {
         throws UmlException;
 
     /**
-     * Allows an external system to register itself to recieve mementos created
-     * by the model subsystem.
-     *
-     * @param observer the interested party
-     * @deprecated by Linus Tolke in 0.21.3. This is taken care of in the
-     *         {@link Model} and the implementation need not bother.
-     */
-    void setMementoCreationObserver(MementoCreationObserver observer);
-
-    /**
-     * Gets the external class responsible for handling mementos.
-     * @return the MementoCreationObserver
-     * @deprecated by Linus Tolke in 0.21.3. This is taken care of in the
-     *         {@link Model} and the implementation need not bother.
-     */
-    MementoCreationObserver getMementoCreationObserver();
-
-    /**
      * Get the copy helper.
+     *
      * @return the CopyHelper
      */
     CopyHelper getCopyHelper();

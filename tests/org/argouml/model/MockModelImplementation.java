@@ -1,4 +1,4 @@
-// $Id: MockModelImplementation.java,v 1.4 2006/08/11 18:29:18 tfmorris Exp $
+// $Id: MockModelImplementation.java,v 1.5 2006/08/25 06:59:07 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -668,32 +668,4 @@ class MockModelImplementation implements ModelImplementation {
     public CopyHelper getCopyHelper() {
         return (CopyHelper) controlCopyHelper.getMock();
     }
-
-
-    /**
-     * The mementoCreationObserver.
-     */
-    private MementoCreationObserver mementoCreationObserver;
-
-    /**
-     * @see org.argouml.model.ModelImplementation#setMementoCreationObserver(
-     *      org.argouml.model.MementoCreationObserver)
-     * @deprecated by Linus Tolke in 0.21.3. This is taken care of
-     *         in the {@link org.argouml.model.Model} and the
-     *         implementation need not bother.
-     */
-    public void setMementoCreationObserver(MementoCreationObserver observer) {
-        mementoCreationObserver = observer;
-    }
-
-    /**
-     * @see org.argouml.model.ModelImplementation#getMementoCreationObserver()
-     * @deprecated by Linus Tolke in 0.21.3. This is taken care of
-     *         in the {@link org.argouml.model.Model} and the
-     *         implementation need not bother.
-     */
-    public MementoCreationObserver getMementoCreationObserver() {
-        return mementoCreationObserver;
-    }
-
 }

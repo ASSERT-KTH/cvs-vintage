@@ -1,4 +1,4 @@
-// $Id: MDRModelImplementation.java,v 1.10 2006/08/11 18:29:15 tfmorris Exp $
+// $Id: MDRModelImplementation.java,v 1.11 2006/08/25 06:59:12 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,6 @@ import org.argouml.model.EventAdapter;
 import org.argouml.model.ExtensionMechanismsFactory;
 import org.argouml.model.ExtensionMechanismsHelper;
 import org.argouml.model.Facade;
-import org.argouml.model.MementoCreationObserver;
 import org.argouml.model.MetaTypes;
 import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelImplementation;
@@ -175,8 +174,6 @@ public class MDRModelImplementation implements ModelImplementation {
      * across read/write cycles.
      */
     private Map objectToId = Collections.synchronizedMap(new HashMap());
-
-    private MementoCreationObserver mementoCreationObserver;
 
     /**
      * @return Returns the root UML Factory package for user model.
@@ -623,27 +620,6 @@ public class MDRModelImplementation implements ModelImplementation {
      */
     public EventAdapter getEventAdapter() {
         return theModelEventPump;
-    }
-
-    /**
-     * @see org.argouml.model.ModelImplementation#setMementoCreationObserver(
-     *      org.argouml.model.MementoCreationObserver)
-     * @deprecated by Linus Tolke in 0.21.3. This is taken care of
-     *         in the {@link org.argouml.model.Model} and the
-     *         implementation need not bother.
-     */
-    public void setMementoCreationObserver(MementoCreationObserver observer) {
-        mementoCreationObserver = observer;
-    }
-
-    /**
-     * @see org.argouml.model.ModelImplementation#getMementoCreationObserver()
-     * @deprecated by Linus Tolke in 0.21.3. This is taken care of
-     *         in the {@link org.argouml.model.Model} and the
-     *         implementation need not bother.
-     */
-    public MementoCreationObserver getMementoCreationObserver() {
-        return mementoCreationObserver;
     }
 
     /**
