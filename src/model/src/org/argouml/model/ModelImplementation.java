@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.21 2006/08/25 06:59:15 linus Exp $
+// $Id: ModelImplementation.java,v 1.22 2006/08/26 11:03:51 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,16 +137,6 @@ public interface ModelImplementation {
      * @return the helper
      */
     ExtensionMechanismsHelper getExtensionMechanismsHelper();
-
-    /**
-     * Getter for EventAdapter.
-     *
-     * @return the event adapter
-     * @deprecated for 0.21.2 by tfmorris.
-     *         Use {@link #getModelEventPump()} methods and
-     *         {@link ModelEventPump}.
-     */
-    EventAdapter getEventAdapter();
 
     /**
      * Getter for ModelManagementFactory.

@@ -1,4 +1,4 @@
-// $Id: MDRModelImplementation.java,v 1.11 2006/08/25 06:59:12 linus Exp $
+// $Id: MDRModelImplementation.java,v 1.12 2006/08/26 11:04:15 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,6 @@ import org.argouml.model.DataTypesFactory;
 import org.argouml.model.DataTypesHelper;
 import org.argouml.model.DiagramInterchangeModel;
 import org.argouml.model.DirectionKind;
-import org.argouml.model.EventAdapter;
 import org.argouml.model.ExtensionMechanismsFactory;
 import org.argouml.model.ExtensionMechanismsHelper;
 import org.argouml.model.Facade;
@@ -613,13 +612,6 @@ public class MDRModelImplementation implements ModelImplementation {
     public XmiWriter getXmiWriter(Object model, Writer writer, String version)
         throws UmlException {
         return new XmiWriterMDRImpl(this, model, writer, version);
-    }
-
-    /**
-     * @see org.argouml.model.ModelImplementation#getEventAdapter()
-     */
-    public EventAdapter getEventAdapter() {
-        return theModelEventPump;
     }
 
     /**

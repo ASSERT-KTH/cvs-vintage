@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.27 2006/08/11 18:29:22 tfmorris Exp $
+// $Id: Model.java,v 1.28 2006/08/26 11:03:51 linus Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -309,17 +309,6 @@ public final class Model {
      */
     public static ExtensionMechanismsHelper getExtensionMechanismsHelper() {
         return extensionMechanismsHelper;
-    }
-
-    /**
-     * Getter for EventAdapter.
-     *
-     * @return the event adapter
-     * @deprecated for 0.21.2 by tfmorris.
-     *         Use {@link #getPump()} and {@link ModelEventPump} methods
-     */
-    public static EventAdapter getEventAdapter() {
-        return impl.getEventAdapter();
     }
 
     /**

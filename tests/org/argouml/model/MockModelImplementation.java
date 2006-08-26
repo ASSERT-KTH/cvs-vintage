@@ -1,4 +1,4 @@
-// $Id: MockModelImplementation.java,v 1.5 2006/08/25 06:59:07 linus Exp $
+// $Id: MockModelImplementation.java,v 1.6 2006/08/26 11:04:09 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -511,13 +511,6 @@ class MockModelImplementation implements ModelImplementation {
      */
     public ExtensionMechanismsHelper getExtensionMechanismsHelper() {
         return (ExtensionMechanismsHelper) controlEMH.getMock();
-    }
-
-    /**
-     * @see org.argouml.model.ModelImplementation#getEventAdapter()
-     */
-    public EventAdapter getEventAdapter() {
-        throw new NotImplementedException();
     }
 
     /**

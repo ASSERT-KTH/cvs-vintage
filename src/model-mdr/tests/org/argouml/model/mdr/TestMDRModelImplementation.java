@@ -1,4 +1,4 @@
-// $Id: TestMDRModelImplementation.java,v 1.4 2006/08/11 18:29:15 tfmorris Exp $
+// $Id: TestMDRModelImplementation.java,v 1.5 2006/08/26 11:04:15 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -304,13 +304,6 @@ public class TestMDRModelImplementation extends TestCase {
         // Check both old and new variants of method
         assertNotNull(modelImplementation.getXmiWriter(null, null));
         assertNotNull(modelImplementation.getXmiWriter(null, null, null));
-    }
-
-    /**
-     * 
-     */
-    public void testGetEventAdapter() {
-        assertNotNull(modelImplementation.getEventAdapter());
     }
 }
 
