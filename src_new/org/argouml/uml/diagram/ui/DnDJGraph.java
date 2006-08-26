@@ -1,4 +1,4 @@
-// $Id: DnDJGraph.java,v 1.10 2006/06/28 03:19:09 tfmorris Exp $
+// $Id: DnDJGraph.java,v 1.11 2006/08/26 11:31:37 andrea_nironi Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,6 +114,16 @@ class DnDJGraph
                 this);
     }
 
+    /**
+     * Overriding JGraph's initKeys in order to avoid unconfigurable key 
+     * bindings from gef
+     * 
+     * @see org.tigris.gef.graph.presentation.JGraph#initKeys()
+     */
+    public void initKeys() {
+        // do nothing - key bindings are user-configurable
+    }
+    
     /**
      * @see java.awt.dnd.DropTargetListener#dragEnter(
      *         java.awt.dnd.DropTargetDragEvent)
