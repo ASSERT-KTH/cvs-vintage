@@ -1,4 +1,4 @@
-// $Id: KindsMDRImpl.java,v 1.3 2006/06/11 17:14:04 mvw Exp $
+// $Id: KindsMDRImpl.java,v 1.4 2006/08/26 09:47:52 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,13 +71,6 @@ public class KindsMDRImpl implements ChangeableKind, AggregationKind,
      */
     public Object getAggregate() {
         return AggregationKindEnum.AK_AGGREGATE;
-    }
-
-    /**
-     * @see org.argouml.model.PseudostateKind#getBranch()
-     */
-    public Object getBranch() {
-        return getChoice();
     }
 
     /**

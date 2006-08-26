@@ -1,4 +1,4 @@
-// $Id: XmiReaderImpl.java,v 1.7 2006/04/14 10:06:52 linus Exp $
+// $Id: XmiReaderImpl.java,v 1.8 2006/08/26 09:47:52 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -349,27 +349,6 @@ public class XmiReaderImpl implements XmiReader, UnknownElementsListener {
             }
         }
         return elements;
-    }
-
-    /**
-     * @see org.argouml.model.XmiReader#parseToModel(org.xml.sax.InputSource)
-     */
-    public Object parseToModel(InputSource is) throws UmlException {
-        Model model = null;
-        Collection newElements = parse(is);
-        if (newElements != null && !newElements.isEmpty()) {
-            Object current;
-            Iterator elements = newElements.iterator();
-            while (elements.hasNext()) {
-                current = elements.next();
-                if (current instanceof Model) {
-                    Model currentModel = (Model) current;
-                    LOG.info("Loaded model '" + currentModel.getName() + "'");
-                    model = currentModel;
-                }
-            }
-        }
-        return model;
     }
 
     /**

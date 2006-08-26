@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.140 2006/06/17 19:54:31 bobtarling Exp $
+// $Id: PropPanel.java,v 1.141 2006/08/26 09:48:12 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -262,14 +262,6 @@ public abstract class PropPanel extends AbstractArgoJPanel implements
         // Note: the mispelling is in a foreign component's method name
         // so can't be corrected. - tfm
         add(LabelledLayout.getSeperator());
-    }
-    
-    /**
-     * @deprecated before 0.21.2 by tfm - use addSeparator 
-     * (ie the correct spelling)
-     */
-    protected final void addSeperator() {
-        addSeparator();
     }
     
     /**

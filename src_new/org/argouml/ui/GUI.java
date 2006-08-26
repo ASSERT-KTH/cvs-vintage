@@ -1,4 +1,4 @@
-// $Id: GUI.java,v 1.8 2006/08/23 20:11:30 andrea_nironi Exp $
+// $Id: GUI.java,v 1.9 2006/08/26 09:48:12 linus Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,17 +140,5 @@ public final class GUI {
      */
     public List getProjectSettingsTabs() {
         return Collections.unmodifiableList(projectSettingsTabs);
-    }
-    
-    /**
-     * Register a file in the menubar.
-     *
-     * @param file The File.
-     * @throws IOException if we cannot get the filename.
-     * @deprecated before 0.21.3 by tfmorris.  Use 
-     * ProjectBrowser.addFileSaved() directly.
-     */
-    public void addFileSaved(File file) throws IOException {
-        ProjectBrowser.getInstance().addFileSaved(file);
     }
 }

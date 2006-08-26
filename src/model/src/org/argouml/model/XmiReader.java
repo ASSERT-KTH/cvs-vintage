@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.12 2006/06/11 15:42:45 mvw Exp $
+// $Id: XmiReader.java,v 1.13 2006/08/26 09:47:20 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,16 +40,6 @@ import org.xml.sax.InputSource;
  * @author Bob Tarling
  */
 public interface XmiReader {
-
-    /**
-     * Parse a given inputsource to a model.
-     *
-     * @param pIs the input source for parsing
-     * @return MModel the UML model
-     * @throws UmlException on any error
-     * @deprecated use parse()
-     */
-    Object parseToModel(InputSource pIs) throws UmlException;
 
     /**
      * Parse a given inputsource to a collection of top level model elements.

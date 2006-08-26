@@ -1,4 +1,4 @@
-// $Id: UmlHelperMDRImpl.java,v 1.5 2006/06/11 15:43:08 mvw Exp $
+// $Id: UmlHelperMDRImpl.java,v 1.6 2006/08/26 09:47:52 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.model.mdr;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.argouml.model.NotImplementedException;
 import org.argouml.model.UmlHelper;
 import org.omg.uml.behavioralelements.statemachines.Transition;
 import org.omg.uml.foundation.core.AssociationEnd;
@@ -68,13 +67,6 @@ class UmlHelperMDRImpl implements UmlHelper {
      */
     public void addListenersToModel(Object model) {
         // Nothing to do - we get all events automatically
-    }
-
-    /**
-     * @see org.argouml.model.UmlHelper#getOwner(java.lang.Object)
-     */
-    public Object getOwner(Object handle) {
-        throw new NotImplementedException("Not implemented");
     }
 
     /**

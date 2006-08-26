@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.200 2006/08/10 15:37:01 mvw Exp $
+// $Id: Project.java,v 1.201 2006/08/26 09:48:11 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1102,16 +1102,6 @@ public class Project implements java.io.Serializable, TargetListener {
     }
 
     /**
-     * Returns the cgPrefs.
-     *
-     * @deprecated use getGenerationPrefs() instead
-     * @return GenerationPreferences
-     */
-    public GenerationPreferences getCgPrefs() {
-        return cgPrefs;
-    }
-
-    /**
      * Returns the searchpath.
      * @return Vector
      */
@@ -1133,15 +1123,6 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public HashMap getUUIDRefs() {
         return uuidRefs;
-    }
-
-    /**
-     * Sets the cgPrefs.
-     * @deprecated use setGenerationPrefs() instead
-     * @param theCgPrefs The cgPrefs to set
-     */
-    public void setCgPrefs(GenerationPreferences theCgPrefs) {
-        this.cgPrefs = theCgPrefs;
     }
 
     /**

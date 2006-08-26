@@ -1,4 +1,4 @@
-// $Id: TestReadCompressedFilesAndHref.java,v 1.3 2006/06/11 17:14:04 mvw Exp $
+// $Id: TestReadCompressedFilesAndHref.java,v 1.4 2006/08/26 09:47:52 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class TestReadCompressedFilesAndHref extends
                     (RefPackage) modelImplementation.getMofPackage());
             try {
                 //persister.doLoad(new File(testModel));
-                reader.parseToModel(new InputSource(new FileInputStream(
+                reader.parse(new InputSource(new FileInputStream(
                         testModel)));
             } catch (Exception e) {
                 e.printStackTrace();

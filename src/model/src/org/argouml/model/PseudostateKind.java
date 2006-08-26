@@ -1,4 +1,4 @@
-// $Id: PseudostateKind.java,v 1.3 2006/06/11 17:13:46 mvw Exp $
+// $Id: PseudostateKind.java,v 1.4 2006/08/26 09:47:20 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,12 +28,6 @@ package org.argouml.model;
  * The different PseudostateKinds.
  */
 public interface PseudostateKind {
-    /**
-     * @return Returns the Branch PseudostateKind.
-     * @deprecated UML 1.3 - use getChoice
-     */
-    Object getBranch();
-
     /**
      * @return Returns the Choice (Branch in UML 1.3) PseudostateKind.
      * @since UML 1.4

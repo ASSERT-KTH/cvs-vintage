@@ -1,4 +1,4 @@
-// $Id: UndoCoreHelperDecorator.java,v 1.10 2006/07/07 20:31:11 bobtarling Exp $
+// $Id: UndoCoreHelperDecorator.java,v 1.11 2006/08/26 09:47:20 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,38 +260,6 @@ class UndoCoreHelperDecorator extends AbstractCoreHelperDecorator {
                 getComponent().setKind(handle, value);
             }
         }, kind, Model.getFacade().getKind(handle));
-    }
-
-    /**
-     * @see org.argouml.model.CoreHelper#setKindToIn(
-     * java.lang.Object)
-     */
-    public void setKindToIn(Object handle) {
-        setKind(handle, Model.getDirectionKind().getInParameter());
-    }
-
-    /**
-     * @see org.argouml.model.CoreHelper#setKindToInOut(
-     * java.lang.Object)
-     */
-    public void setKindToInOut(Object handle) {
-        setKind(handle, Model.getDirectionKind().getInOutParameter());
-    }
-
-    /**
-     * @see org.argouml.model.CoreHelper#setKindToOut(
-     * java.lang.Object)
-     */
-    public void setKindToOut(Object handle) {
-        setKind(handle, Model.getDirectionKind().getOutParameter());
-    }
-
-    /**
-     * @see org.argouml.model.CoreHelper#setKindToReturn(
-     * java.lang.Object)
-     */
-    public void setKindToReturn(Object handle) {
-        setKind(handle, Model.getDirectionKind().getReturnParameter());
     }
 
     /**
@@ -892,16 +860,6 @@ class UndoCoreHelperDecorator extends AbstractCoreHelperDecorator {
      */
     public void setFeatures(Object handle, Collection features) {
         super.setFeatures(handle, features);
-        Model.notifyMementoCreationObserver(new DummyModelMemento());
-    }
-
-    /**
-     * @see 
-     * org.argouml.model.AbstractCoreHelperDecorator#setImplementationLocation(
-     * java.lang.Object, java.lang.Object)
-     */
-    public void setImplementationLocation(Object handle, Object component) {
-        super.setImplementationLocation(handle, component);
         Model.notifyMementoCreationObserver(new DummyModelMemento());
     }
 

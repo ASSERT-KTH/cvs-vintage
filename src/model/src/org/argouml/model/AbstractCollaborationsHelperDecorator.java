@@ -1,4 +1,4 @@
-// $Id: AbstractCollaborationsHelperDecorator.java,v 1.5 2006/06/11 17:13:46 mvw Exp $
+// $Id: AbstractCollaborationsHelperDecorator.java,v 1.6 2006/08/26 09:47:20 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,14 +78,6 @@ public abstract class AbstractCollaborationsHelperDecorator
      */
     public Collection getClassifierRoles(Object role) {
         return impl.getClassifierRoles(role);
-    }
-
-    /**
-     * @see org.argouml.model.CollaborationsHelper#getAssocationRole(
-     *         java.lang.Object, java.lang.Object)
-     */
-    public Object getAssocationRole(Object afrom, Object ato) {
-        return impl.getAssocationRole(afrom, ato);
     }
 
     /**

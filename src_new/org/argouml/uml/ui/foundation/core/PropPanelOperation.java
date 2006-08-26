@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.103 2006/06/17 19:54:30 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.104 2006/08/26 09:48:12 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -154,29 +154,6 @@ public class PropPanelOperation extends PropPanelFeature {
             TargetManager.getInstance().setTarget(newMethod);
         }
     }
-
-    /**
-     * @deprecated before 0.21.2 by tfmorris - use the argumentless version of
-     *             this method
-     * @param index
-     *            ignored
-     */
-    public void addRaisedSignal(Integer index) {
-        LOG.warn("Ignoring index parameter to addRaisedSignal: " + index);
-        addRaisedSignal();
-    }
-    
-    /**
-     * @deprecated before 0.21.2 by tfmorris - use the argumentless version of
-     *             this method
-     * @param index
-     *            ignored
-     */
-    public void addMethod(Integer index) {
-        LOG.warn("Ignoring index parameter to addMethod: " + index);
-        addMethod();
-    }
-
 
     private class ActionNewRaisedSignal extends AbstractActionNewModelElement {
 

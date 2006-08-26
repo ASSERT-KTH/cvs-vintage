@@ -1,4 +1,4 @@
-// $Id: TabTaggedValuesModel.java,v 1.14 2006/04/22 06:28:13 tfmorris Exp $
+// $Id: TabTaggedValuesModel.java,v 1.15 2006/08/26 09:48:12 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,17 +60,6 @@ public class TabTaggedValuesModel extends AbstractTableModel implements
      * The ModelElement that is the current target.
      */
     private Object target;
-
-    /**
-     * Construct a model to be used by the JTable on the TaggedValues tab.
-     *
-     * @param t ignored
-     * @deprecated before 0.21.3 by tfmorris - use no argument constructor
-     * @see #TabTaggedValuesModel()
-     */
-    public TabTaggedValuesModel(TabTaggedValues t) {
-        this();
-    }
 
     /**
      * Construct a model to be used by a JTable containing TaggedValues.

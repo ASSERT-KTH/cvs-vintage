@@ -1,4 +1,4 @@
-// $Id: FacadeMDRImpl.java,v 1.32 2006/08/11 19:51:52 tfmorris Exp $
+// $Id: FacadeMDRImpl.java,v 1.33 2006/08/26 09:47:52 linus Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -344,13 +344,6 @@ class FacadeMDRImpl implements Facade {
      */
     public boolean isAActivityGraph(Object handle) {
         return handle instanceof ActivityGraph;
-    }
-
-    /**
-     * @see org.argouml.model.Facade#isABase(java.lang.Object)
-     */
-    public boolean isABase(Object handle) {
-        return (handle instanceof ModelElement);
     }
 
     /**
@@ -2214,13 +2207,6 @@ class FacadeMDRImpl implements Facade {
             throw new InvalidElementException(e);
         }
         return illegalArgumentObject(handle);
-    }
-
-    /**
-     * @see org.argouml.model.Facade#getImplementationLocation(java.lang.Object)
-     */
-    public Object getImplementationLocation(Object handle) {
-        return getContainer(handle);
     }
 
     /*

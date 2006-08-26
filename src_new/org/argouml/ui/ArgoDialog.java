@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.20 2006/08/09 18:10:17 mvw Exp $
+// $Id: ArgoDialog.java,v 1.21 2006/08/26 09:48:12 linus Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,19 +75,6 @@ public class ArgoDialog extends Dialog {
      */
     public ArgoDialog(String title, int optionType, boolean modal) {
         super(ProjectBrowser.getInstance(), title, optionType, modal);
-        this.loadCommonKeyMap();
-    }
-
-    /**
-     * @see Dialog#Dialog(Frame, String, boolean)
-     *
-     * Creates a new ArgoDialog with the default optionType.
-     *
-     * @deprecated in 0.21.3 by Linus Tolke.
-     *         Use {@link #ArgoDialog(String, boolean)}.
-     */
-    public ArgoDialog(Frame owner, String title, boolean modal) {
-        super(owner, title, modal);
         this.loadCommonKeyMap();
     }
 

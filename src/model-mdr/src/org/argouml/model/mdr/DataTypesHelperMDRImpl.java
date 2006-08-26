@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperMDRImpl.java,v 1.8 2006/06/26 18:42:08 mvw Exp $
+// $Id: DataTypesHelperMDRImpl.java,v 1.9 2006/08/26 09:47:52 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,13 +174,6 @@ public class DataTypesHelperMDRImpl implements DataTypesHelper {
         } catch (InvalidObjectException e) {
             throw new InvalidElementException(e);
         }
-    }
-
-    /**
-     * @see org.argouml.model.DataTypesHelper#equalsBRANCHKind(java.lang.Object)
-     */
-    public boolean equalsBRANCHKind(Object kind) {
-        return equalsCHOICEKind(kind);
     }
 
     /**

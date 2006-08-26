@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperMDRImpl.java,v 1.10 2006/06/14 18:48:51 tfmorris Exp $
+// $Id: CollaborationsHelperMDRImpl.java,v 1.11 2006/08/26 09:47:52 linus Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -209,13 +209,6 @@ class CollaborationsHelperMDRImpl implements CollaborationsHelper {
         return null;
     }
     
-    /**
-     * @see org.argouml.model.CollaborationsHelper#getAssocationRole(java.lang.Object, java.lang.Object)
-     */
-    public Object getAssocationRole(Object afrom, Object ato) {
-        return getAssociationRole(afrom, ato);
-    }
-
     /**
      * @see org.argouml.model.CollaborationsHelper#getAllPossibleActivators(java.lang.Object)
      */
