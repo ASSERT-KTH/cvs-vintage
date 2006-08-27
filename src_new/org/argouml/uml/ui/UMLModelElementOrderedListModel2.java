@@ -1,4 +1,4 @@
-// $Id: UMLModelElementOrderedListModel2.java,v 1.6 2006/04/04 19:08:08 mvw Exp $
+// $Id: UMLModelElementOrderedListModel2.java,v 1.7 2006/08/27 20:00:51 bobtarling Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,13 +73,14 @@ public abstract class UMLModelElementOrderedListModel2
     protected abstract boolean isValidElement(Object element);
 
     /**
-     * This function should swap two elements in the UML model.
+     * Move an elements from one position to another inside its
+     * container.
      * The list will then be updated by the events/listener mechanism.
      *
-     * @param index1 the 1st element
-     * @param index2 the 2nd element
+     * @param source the existing position
+     * @param dest the new position
      */
-    public abstract void swap(int index1, int index2);
+    protected abstract void moveTo(int source, int dest);
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildPopup(
@@ -124,7 +125,7 @@ class MoveUpAction extends UndoableAction {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        model.swap(index - 1, index);
+        model.moveTo(index - 1, index);
     }
     /**
      * @see javax.swing.Action#isEnabled()
@@ -158,7 +159,7 @@ class MoveDownAction extends UndoableAction {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        model.swap(index, index + 1);
+        model.moveTo(index, index + 1);
     }
     /**
      * @see javax.swing.Action#isEnabled()

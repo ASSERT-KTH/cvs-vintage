@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseExtensionPointListModel.java,v 1.13 2006/06/11 15:39:50 mvw Exp $
+// $Id: UMLUseCaseExtensionPointListModel.java,v 1.14 2006/08/27 20:00:51 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,9 +59,9 @@ public class UMLUseCaseExtensionPointListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#swap(int, int)
+     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#moveTo(int, int)
      */
-    public void swap(int index1, int index2) {
+    protected void moveTo(int index1, int index2) {
         Object usecase = getTarget();
         List c = new ArrayList(Model.getFacade().getExtensionPoints(usecase));
         Object mem1 = c.get(index1);
