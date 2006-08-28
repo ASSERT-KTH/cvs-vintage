@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.9 2006/08/28 12:22:24 bobtarling Exp $
+// $Id: ArgoParser.java,v 1.10 2006/08/28 15:19:03 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,8 +80,8 @@ class ArgoParser extends SAXParserBase {
                     "An input stream must be supplied");
         }
 
-        LastLoadInfo.getInstance().setLastLoadMessage("OK");
-        LastLoadInfo.getInstance().setLastLoadStatus(true);
+        PersistenceManager.getInstance().setLastLoadMessage("OK");
+        PersistenceManager.getInstance().setLastLoadStatus(true);
 
         try {
             LOG.info("=======================================");
@@ -90,10 +90,10 @@ class ArgoParser extends SAXParserBase {
             ps = project.getProjectSettings();
             parse(is);
         } catch (SAXException e) {
-            LastLoadInfo.getInstance().setLastLoadStatus(false);
+            PersistenceManager.getInstance().setLastLoadStatus(false);
             LOG.error("Exception reading project================");
             LOG.error(is.toString());
-            LastLoadInfo.getInstance().setLastLoadMessage(e.toString());
+            PersistenceManager.getInstance().setLastLoadMessage(e.toString());
             throw e;
         }
     }

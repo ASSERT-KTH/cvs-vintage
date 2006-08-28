@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.21 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: ModelMemberFilePersister.java,v 1.22 2006/08/28 15:19:03 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,8 +99,8 @@ class ModelMemberFilePersister extends MemberFilePersister
             readModels(project, source);
             mmodel = getCurModel();
         } catch (OpenException e) {
-            LastLoadInfo.getInstance().setLastLoadStatus(false);
-            LastLoadInfo.getInstance().setLastLoadMessage(
+            PersistenceManager.getInstance().setLastLoadStatus(false);
+            PersistenceManager.getInstance().setLastLoadMessage(
                     "UmlException parsing XMI.");
             LOG.error("UmlException caught", e);
             throw new OpenException(e);
