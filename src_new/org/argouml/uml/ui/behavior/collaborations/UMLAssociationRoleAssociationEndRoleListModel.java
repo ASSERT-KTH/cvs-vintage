@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.19 2006/08/27 20:00:51 bobtarling Exp $
+// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.20 2006/08/28 10:20:40 bobtarling Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,8 @@ public class UMLAssociationRoleAssociationEndRoleListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#moveTo(int, int)
      */
-    protected void moveTo(int index1, int index2) {
+    protected void moveDown(int index1) {
+        int index2 = index1 + 1;
         Object assocrole = getTarget();
         List c = new ArrayList(Model.getFacade().getConnections(assocrole));
         Object mem1 = c.get(index1);

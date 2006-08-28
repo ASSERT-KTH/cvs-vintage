@@ -1,4 +1,4 @@
-// $Id: UMLLinkConnectionListModel.java,v 1.7 2006/08/27 20:00:51 bobtarling Exp $
+// $Id: UMLLinkConnectionListModel.java,v 1.8 2006/08/28 10:20:40 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 public class UMLLinkConnectionListModel
     extends UMLModelElementOrderedListModel2 {
 
+    private static final long serialVersionUID = 4459749162218567926L;
+
     /**
      * Constructor for UMLInstanceLinkEndListModel.
      */
@@ -60,9 +62,10 @@ public class UMLLinkConnectionListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#moveTo(int, int)
+     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#moveDown(int)
      */
-    protected void moveTo(int index1, int index2) {
+    protected void moveDown(int index1) {
+        int index2 = index1 + 1;
         Object link = getTarget();
         List c = new ArrayList(Model.getFacade().getConnections(link));
         Object mem1 = c.get(index1);

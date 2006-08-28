@@ -1,4 +1,4 @@
-// $Id: UMLEnumerationLiteralsListModel.java,v 1.4 2006/08/27 20:00:51 bobtarling Exp $
+// $Id: UMLEnumerationLiteralsListModel.java,v 1.5 2006/08/28 10:20:40 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,9 +68,10 @@ public class UMLEnumerationLiteralsListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#moveTo(int, int)
+     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#moveDown(int)
      */
-    protected void moveTo(int index1, int index2) {
+    protected void moveDown(int index1) {
+        int index2 = index1 + 1;
         Object clss = getTarget();
         List c = new ArrayList(Model.getFacade().getEnumerationLiterals(clss));
         Object mem1 = c.get(index1);

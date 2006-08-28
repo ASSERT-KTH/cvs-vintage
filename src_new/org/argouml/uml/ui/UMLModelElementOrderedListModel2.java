@@ -1,4 +1,4 @@
-// $Id: UMLModelElementOrderedListModel2.java,v 1.7 2006/08/27 20:00:51 bobtarling Exp $
+// $Id: UMLModelElementOrderedListModel2.java,v 1.8 2006/08/28 10:20:40 bobtarling Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,14 +73,12 @@ public abstract class UMLModelElementOrderedListModel2
     protected abstract boolean isValidElement(Object element);
 
     /**
-     * Move an elements from one position to another inside its
-     * container.
+     * Move an elements from the given position down 1 index
      * The list will then be updated by the events/listener mechanism.
      *
-     * @param source the existing position
-     * @param dest the new position
+     * @param index the existing position
      */
-    protected abstract void moveTo(int source, int dest);
+    protected abstract void moveDown(int index);
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildPopup(
@@ -125,7 +123,7 @@ class MoveUpAction extends UndoableAction {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        model.moveTo(index - 1, index);
+        model.moveDown(index - 1);
     }
     /**
      * @see javax.swing.Action#isEnabled()
@@ -159,7 +157,7 @@ class MoveDownAction extends UndoableAction {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        model.moveTo(index, index + 1);
+        model.moveDown(index);
     }
     /**
      * @see javax.swing.Action#isEnabled()

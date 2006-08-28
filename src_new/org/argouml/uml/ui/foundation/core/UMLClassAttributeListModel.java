@@ -1,4 +1,4 @@
-// $Id: UMLClassAttributeListModel.java,v 1.12 2006/08/27 20:00:51 bobtarling Exp $
+// $Id: UMLClassAttributeListModel.java,v 1.13 2006/08/28 10:20:40 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,8 @@ public class UMLClassAttributeListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#moveTo(int, int)
      */
-    protected void moveTo(int index1, int index2) {
+    protected void moveDown(int index1) {
+        int index2 = index1 + 1;
         Object clss = getTarget();
         List c = new ArrayList(Model.getFacade().getAttributes(clss));
         Object mem1 = c.get(index1);
