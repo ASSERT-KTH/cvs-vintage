@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.10 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: TodoParser.java,v 1.11 2006/08/28 12:22:24 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.persistence;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
@@ -97,7 +97,7 @@ class TodoParser extends SAXParserBase {
      * @throws SAXException on any error
      */
     public synchronized void readTodoList(
-            InputStream is) throws SAXException {
+            Reader is) throws SAXException {
 
         LOG.info("=======================================");
         LOG.info("== READING TO DO LIST");

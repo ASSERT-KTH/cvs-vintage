@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.8 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: SAXParserBase.java,v 1.9 2006/08/28 12:22:24 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.persistence;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -116,7 +117,7 @@ abstract class SAXParserBase extends DefaultHandler {
      * @param is the inputstream of the project to read
      * @throws SAXException when parsing xml
      */
-    public void parse(InputStream is) throws SAXException {
+    public void parse(Reader is) throws SAXException {
 
         long start, end;
 

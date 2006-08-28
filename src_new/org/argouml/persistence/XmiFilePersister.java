@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.37 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.38 2006/08/28 12:22:24 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -298,8 +299,7 @@ class XmiFilePersister extends AbstractFilePersister
         
         if (argoString != null) {
             LOG.info("Parsing argoString " + argoString.length());
-            InputStream inputStream = 
-                new ByteArrayInputStream(argoString.getBytes());
+            StringReader inputStream = new StringReader(argoString);
             ArgoParser parser = new ArgoParser();
             try {
                 parser.readProject(project, inputStream);

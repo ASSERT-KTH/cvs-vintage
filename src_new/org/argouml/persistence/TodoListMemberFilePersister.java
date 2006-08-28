@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.13 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.14 2006/08/28 12:22:24 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.Writer;
 
 import org.apache.log4j.Logger;
@@ -39,7 +41,6 @@ import org.argouml.ocl.OCLExpander;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.TemplateReader;
-import org.xml.sax.SAXException;
 
 /**
  * The file persister for the Todo members.
@@ -62,10 +63,11 @@ class TodoListMemberFilePersister extends MemberFilePersister {
 
         try {
             TodoParser parser = new TodoParser();
-            parser.readTodoList(inputStream);
+            Reader reader = new InputStreamReader(inputStream, PersistenceManager.getEncoding());
+            parser.readTodoList(reader);
             ProjectMemberTodoList pm = new ProjectMemberTodoList("", project);
             project.addMember(pm);
-        } catch (SAXException e) {
+        } catch (Exception e) {
             throw new OpenException(e);
         }
     }

@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.42 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.43 2006/08/28 12:22:24 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
@@ -333,7 +334,8 @@ class UmlFilePersister extends AbstractFilePersister {
                         100000);
 
             ArgoParser parser = new ArgoParser();
-            parser.readProject(p, inputStream);
+            Reader reader = new InputStreamReader(inputStream, PersistenceManager.getEncoding());
+            parser.readProject(p, reader);
             
             List memberList = parser.getMemberList();
 

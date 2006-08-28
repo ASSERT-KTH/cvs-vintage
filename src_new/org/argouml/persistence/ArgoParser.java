@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.8 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: ArgoParser.java,v 1.9 2006/08/28 12:22:24 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.persistence;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,10 +69,10 @@ class ArgoParser extends SAXParserBase {
 
     /**
      * @param theProject the project to populate
-     * @param is the inputStream
+     * @param is the reader
      * @throws SAXException on error when parsing xml
      */
-    public void readProject(Project theProject, InputStream is)
+    public void readProject(Project theProject, Reader is)
     	throws SAXException {
 
         if (is == null) {
