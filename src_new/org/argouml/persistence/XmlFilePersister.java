@@ -1,4 +1,4 @@
-// $Id: XmlFilePersister.java,v 1.3 2006/06/10 20:46:28 mvw Exp $
+// $Id: XmlFilePersister.java,v 1.4 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ package org.argouml.persistence;
  *
  * @author tfmorris
  */
-public class XmlFilePersister extends XmiFilePersister {
+class XmlFilePersister extends XmiFilePersister {
 
     /**
      * @see org.argouml.persistence.AbstractFilePersister#getExtension()

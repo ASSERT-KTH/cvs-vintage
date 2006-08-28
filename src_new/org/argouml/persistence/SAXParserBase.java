@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.7 2006/07/07 17:24:55 tfmorris Exp $
+// $Id: SAXParserBase.java,v 1.8 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Jim Holt
  */
 
-public abstract class SAXParserBase extends DefaultHandler {
+abstract class SAXParserBase extends DefaultHandler {
     /**
      * Logger.
      */

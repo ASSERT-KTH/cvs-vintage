@@ -1,4 +1,4 @@
-// $Id: OffenderXMLHelper.java,v 1.3 2006/03/25 22:06:51 linus Exp $
+// $Id: OffenderXMLHelper.java,v 1.4 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,8 @@ package org.argouml.persistence;
  * An offender is a subject that is (partly) responsible for trigging a
  * critic. These need to be saved to keep track of in which contexts a
  * critic has been resolved.
+ * Used by todo.tee
+ * This is not to be considered as part of the peristence interface.
  *
  * @author	Michael Stockman
  */

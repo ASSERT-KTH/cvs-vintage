@@ -1,4 +1,4 @@
-// $Id: ZipFilePersister.java,v 1.13 2006/08/22 20:37:03 bobtarling Exp $
+// $Id: ZipFilePersister.java,v 1.14 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ import org.xml.sax.InputSource;
  * @author Bob Tarling
  * @author Ludovic Ma&icirc;tre
  */
-public class ZipFilePersister extends XmiFilePersister {
+class ZipFilePersister extends XmiFilePersister {
     /**
      * Logger.
      */

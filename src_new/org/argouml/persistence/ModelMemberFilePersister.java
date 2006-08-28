@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.20 2006/08/22 20:37:03 bobtarling Exp $
+// $Id: ModelMemberFilePersister.java,v 1.21 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
  * The file persister for the UML model.
  * @author Bob Tarling
  */
-public class ModelMemberFilePersister extends MemberFilePersister 
+class ModelMemberFilePersister extends MemberFilePersister 
     implements XmiExtensionWriter, XmiExtensionParser {
 
     /**

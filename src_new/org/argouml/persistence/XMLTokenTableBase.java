@@ -1,4 +1,4 @@
-// $Id: XMLTokenTableBase.java,v 1.3 2006/06/11 15:39:46 mvw Exp $
+// $Id: XMLTokenTableBase.java,v 1.4 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
  * @author Jim Holy
  */
 
-public abstract class XMLTokenTableBase {
+abstract class XMLTokenTableBase {
     private static final Logger LOG = Logger.getLogger(XMLTokenTableBase.class);
 
     ////////////////////////////////////////////////////////////////

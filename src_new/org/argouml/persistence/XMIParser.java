@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.24 2006/08/22 20:37:03 bobtarling Exp $
+// $Id: XMIParser.java,v 1.25 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ import org.xml.sax.InputSource;
  * @deprecated in 0.23.1, this class is no longer used. All functionality is
  * now contained in ModelMemberFilePersister
  */
-public class XMIParser {
+class XMIParser {
 
     ////////////////////////////////////////////////////////////////
     // static variables

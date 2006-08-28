@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.41 2006/08/11 19:12:24 mvw Exp $
+// $Id: UmlFilePersister.java,v 1.42 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ import org.tigris.gef.ocl.TemplateReader;
  *
  * @author Bob Tarling
  */
-public class UmlFilePersister extends AbstractFilePersister {
+class UmlFilePersister extends AbstractFilePersister {
 
     /**
      * The PERSISTENCE_VERSION is increased every time the persistence format

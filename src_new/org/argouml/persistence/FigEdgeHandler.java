@@ -1,4 +1,4 @@
-// $Id: FigEdgeHandler.java,v 1.10 2006/06/11 19:01:26 mvw Exp $
+// $Id: FigEdgeHandler.java,v 1.11 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  * to nodes inside other edges.
  * @author Bob Tarling
  */
-public class FigEdgeHandler
+class FigEdgeHandler
     extends org.tigris.gef.persistence.pgml.FigEdgeHandler {
 
     /**

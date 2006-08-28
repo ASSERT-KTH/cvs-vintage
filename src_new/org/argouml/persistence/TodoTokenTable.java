@@ -1,4 +1,4 @@
-// $Id: TodoTokenTable.java,v 1.3 2006/06/11 15:39:46 mvw Exp $
+// $Id: TodoTokenTable.java,v 1.4 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ package org.argouml.persistence;
  *
  * @author Michael Stockman
  */
-public class TodoTokenTable extends XMLTokenTableBase {
+class TodoTokenTable extends XMLTokenTableBase {
 
     private static final String STRING_TO_DO                = "todo";
     private static final String STRING_TO_DO_LIST           = "todolist";

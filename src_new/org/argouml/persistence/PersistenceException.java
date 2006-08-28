@@ -1,4 +1,4 @@
-// $Id: PersistenceException.java,v 1.4 2006/02/19 09:42:15 linus Exp $
+// $Id: PersistenceException.java,v 1.5 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ package org.argouml.persistence;
  *
  * @author Bob Tarling
  */
-public class PersistenceException extends Exception {
+class PersistenceException extends Exception {
     /**
      * Constructor.
      */

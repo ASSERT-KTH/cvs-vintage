@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.18 2006/02/19 18:08:18 linus Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.19 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.tigris.gef.ocl.TemplateReader;
  * The file persister for the diagram members.
  * @author Bob Tarling
  */
-public class DiagramMemberFilePersister extends MemberFilePersister {
+class DiagramMemberFilePersister extends MemberFilePersister {
     /**
      * The tee file for persistence.
      */

@@ -1,4 +1,4 @@
-// $Id: ToDoItemXMLHelper.java,v 1.2 2006/06/11 17:30:17 mvw Exp $
+// $Id: ToDoItemXMLHelper.java,v 1.3 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import org.argouml.cognitive.ToDoItem;
  * It provides a view of A ToDoItem particularly suited for saving in an
  * XML file by encoding strings to preserve graphic characters and allow
  * lines to be broken and still be able to regain the original contents.
+ * Used by todo.tee
+ * This is not to be considered as part of the peristence interface.
  *
  * @see	ToDoItem
  * @author Michael Stockman

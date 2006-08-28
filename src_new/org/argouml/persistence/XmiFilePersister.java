@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.36 2006/08/22 20:37:03 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.37 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ import org.xml.sax.InputSource;
  *
  * @author Bob Tarling
  */
-public class XmiFilePersister extends AbstractFilePersister 
+class XmiFilePersister extends AbstractFilePersister 
     implements XmiExtensionParser {
     /**
      * Logger.

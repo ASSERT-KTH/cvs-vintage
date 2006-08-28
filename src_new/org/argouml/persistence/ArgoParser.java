@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.7 2006/08/10 15:37:01 mvw Exp $
+// $Id: ArgoParser.java,v 1.8 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  * @stereotype singleton
  */
-public class ArgoParser extends SAXParserBase {
+class ArgoParser extends SAXParserBase {
 
     /**
      * Logger.

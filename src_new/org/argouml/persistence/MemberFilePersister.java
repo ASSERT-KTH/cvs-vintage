@@ -1,4 +1,4 @@
-// $Id: MemberFilePersister.java,v 1.8 2006/08/11 19:12:24 mvw Exp $
+// $Id: MemberFilePersister.java,v 1.9 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.argouml.kernel.ProjectMember;
  * A base class file persister for project members.
  * @author Bob Tarling
  */
-public abstract class MemberFilePersister {
+abstract class MemberFilePersister {
     /**
      * Load the member based on instance variables
      * which should have been setup in the constructor.

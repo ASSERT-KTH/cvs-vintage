@@ -1,4 +1,4 @@
-// $Id: XmlInputStream.java,v 1.11 2006/08/09 16:49:36 mvw Exp $
+// $Id: XmlInputStream.java,v 1.12 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.apache.log4j.Logger;
  * The tag is not expected to be an empty tag.
  * @author Bob Tarling
  */
-public class XmlInputStream extends BufferedInputStream {
+class XmlInputStream extends BufferedInputStream {
 
     private boolean xmlStarted;
     private boolean inTag;

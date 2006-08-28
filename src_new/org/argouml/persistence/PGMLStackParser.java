@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.27 2006/07/09 13:20:43 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.28 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * The PGML Parser.
  */
-public class PGMLStackParser
+class PGMLStackParser
     extends org.tigris.gef.persistence.pgml.PGMLStackParser {
 
     /**

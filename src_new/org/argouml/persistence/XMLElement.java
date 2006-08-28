@@ -1,4 +1,4 @@
-// $Id: XMLElement.java,v 1.4 2006/06/16 19:09:25 tfmorris Exp $
+// $Id: XMLElement.java,v 1.5 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @author Jim Holt
  */
-public class XMLElement {
+class XMLElement {
 
     ////////////////////////////////////////////////////////////////
     // instance variables

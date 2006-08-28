@@ -1,4 +1,4 @@
-// $Id: ArgoTokenTable.java,v 1.4 2006/06/04 13:54:53 mvw Exp $
+// $Id: ArgoTokenTable.java,v 1.5 2006/08/28 10:18:23 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ package org.argouml.persistence;
  * @author Jim Holt
  */
 
-public class ArgoTokenTable extends XMLTokenTableBase {
+class ArgoTokenTable extends XMLTokenTableBase {
 
     /**
      * The constructor.
