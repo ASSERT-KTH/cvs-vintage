@@ -1,4 +1,4 @@
-// $Id: TestPersistenceManager.java,v 1.2 2006/07/13 19:37:03 mvw Exp $
+// $Id: TestPersistenceManager.java,v 1.3 2006/08/30 15:27:54 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public class TestPersistenceManager extends TestCase {
         
         FileFilter[] fileFilters = chooser.getChoosableFileFilters();
         assertNotNull(fileFilters);
-        assertTrue(fileFilters.length == 4);
+        assertEquals(5, fileFilters.length);
         FileFilter defaultFileFilter = chooser.getFileFilter();
         assertNotNull(defaultFileFilter);
         assertTrue(defaultFileFilter.accept(new File(
