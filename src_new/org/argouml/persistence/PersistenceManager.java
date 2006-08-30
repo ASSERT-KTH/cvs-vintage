@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.27 2006/08/28 15:19:03 bobtarling Exp $
+// $Id: PersistenceManager.java,v 1.28 2006/08/30 15:26:28 bobtarling Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,6 +70,7 @@ public final class PersistenceManager {
     private XmiFilePersister quickViewDump;
     private XmiFilePersister xmiPersister;
     private XmiFilePersister xmlPersister;
+    private UmlFilePersister umlPersister;
     private ZipFilePersister zipPersister;
 
     private boolean lastLoadStatus = true;
@@ -119,6 +120,8 @@ public final class PersistenceManager {
         otherPersisters.add(xmiPersister);
         xmlPersister = new XmlFilePersister();
         otherPersisters.add(xmlPersister);
+        umlPersister = new UmlFilePersister();
+        otherPersisters.add(umlPersister);
         zipPersister = new ZipFilePersister();
         otherPersisters.add(zipPersister);
     }
