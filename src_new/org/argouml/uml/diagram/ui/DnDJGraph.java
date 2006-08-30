@@ -1,4 +1,4 @@
-// $Id: DnDJGraph.java,v 1.12 2006/08/27 09:25:45 andrea_nironi Exp $
+// $Id: DnDJGraph.java,v 1.13 2006/08/30 15:33:46 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,8 +129,6 @@ class DnDJGraph
         ShortcutMgr.assignAccelerator(panel, ShortcutMgr.ACTION_SELECT_NEXT);
         ShortcutMgr.assignAccelerator(panel, 
                 ShortcutMgr.ACTION_SELECT_PREVIOUS);
-        ShortcutMgr.assignAccelerator(panel, ShortcutMgr.ACTION_GROUP);
-        ShortcutMgr.assignAccelerator(panel, ShortcutMgr.ACTION_UNGROUP);
         ShortcutMgr.assignAccelerator(panel, ShortcutMgr.ACTION_NUDGE_LEFT_2X);
         ShortcutMgr.assignAccelerator(panel, ShortcutMgr.ACTION_NUDGE_RIGHT_2X);
         ShortcutMgr.assignAccelerator(panel, ShortcutMgr.ACTION_NUDGE_DOWN_2X);
