@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.33 2006/03/24 05:50:49 linus Exp $
+// $Id: ToDoList.java,v 1.34 2006/09/01 13:39:15 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.i18n.Translator;
 
 
 /**
@@ -513,9 +514,9 @@ public class ToDoList extends Observable implements Runnable {
         }
 
         if (!(item.getPoster() instanceof Critic)) {
-            throw new UnresolvableException("Unable to resolve with poster "
-					    + "of type: "
-					    + item.getPoster().getClass());
+            throw new UnresolvableException(Translator.localize(
+                    "misc.todo-unresolvable", 
+                    new Object[]{item.getPoster().getClass()}));
 	}
 
         ResolvedCritic rc =
