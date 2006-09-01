@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.50 2006/07/17 23:08:05 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.51 2006/09/01 17:46:15 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,6 +80,12 @@ import org.tigris.gef.presentation.FigNode;
  * @author jrobbins
  */
 public class ClassDiagramRenderer extends UmlDiagramRenderer {
+    
+    /**
+     * The UID.
+     */
+    static final long serialVersionUID = 675407719309039112L;
+
     /**
      * Logger.
      */
@@ -250,7 +256,7 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
             } else {
                 source = Model.getUmlHelper().getSource(edge);
             }
-            setSourcePort(newEdge, (FigNode) lay.presentationFor(source));
+            setSourcePort(newEdge, getNodePresentationFor(lay, source));
         }
 
         if (newEdge.getDestPortFig() == null) {
@@ -260,7 +266,7 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
             } else {
                 dest = Model.getUmlHelper().getDestination(edge);
             }
-            setDestPort(newEdge, (FigNode) lay.presentationFor(dest));
+            setDestPort(newEdge, getNodePresentationFor(lay, dest));
         }
 
         if (newEdge.getSourcePortFig() == null
@@ -291,10 +297,27 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
         edge.setDestPortFig(dest);
         edge.setDestFigNode(dest);
     }
-
+    
     /**
-     * The UID.
+     * Get the FigNode from the given layer that represents the given
+     * model element.
+     * This is required to make sure that a FigNode is always returned
+     * when getting the presentation of a model element and that we do
+     * not get the edge portion of an association class.
+     * @param lay the layer containing the Fig
+     * @param modelElement the model element to find presentation for
+     * @return the FigNode presentation of the model element
      */
-    static final long serialVersionUID = 675407719309039112L;
-
+    private FigNode getNodePresentationFor(Layer lay, Object modelElement) {
+        assert modelElement != null : "A modelElement must be supplied";
+        for (Iterator it = lay.getContentsNoEdges().iterator();
+                it.hasNext(); ) {
+            Object fig = it.next();
+            if (fig instanceof FigNode
+                    && ((FigNode) fig).getOwner().equals(modelElement)) {
+                return ((FigNode) fig);
+            }
+        }
+        return null;
+    }
 } /* end class ClassDiagramRenderer */
