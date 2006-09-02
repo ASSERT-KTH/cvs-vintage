@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.21 2006/06/04 19:21:16 mvw Exp $
+// $Id: FileImportSupport.java,v 1.22 2006/09/02 17:51:05 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,17 +30,16 @@ import java.awt.Insets;
 import java.io.File;
 import java.util.Vector;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileSystemView;
 
 import org.argouml.application.api.PluggableImport;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
+import org.argouml.swingext.JXButtonGroupPanel;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.util.SuffixFilter;
@@ -54,11 +53,11 @@ import org.tigris.gef.base.Globals;
  * for other input sources.
  *
  * @author Alexander Lepekhine
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
-    private JPanel configPanel;
+    private JXButtonGroupPanel configPanel;
 
     private JRadioButton attribute;
 
@@ -81,7 +80,7 @@ public abstract class FileImportSupport implements PluggableImport {
     public JComponent getConfigPanel() {
 
 	if (configPanel == null) {
-	    configPanel = new JPanel();
+	    configPanel = new JXButtonGroupPanel(2);
 	    configPanel.setLayout(new GridBagLayout());
 
 	    JLabel attributeLabel1 =
@@ -97,12 +96,10 @@ public abstract class FileImportSupport implements PluggableImport {
 						   GridBagConstraints.NONE,
 						   new Insets(5, 5, 0, 5),
 						   0, 0));
-	    ButtonGroup group1 = new ButtonGroup();
 	    attribute =
 		new JRadioButton(
                         Translator.localize("action.import-java-UML-attr"));
 	    attribute.setSelected(true);
-	    group1.add(attribute);
 	    configPanel.add(attribute,
 			    new GridBagConstraints(GridBagConstraints.RELATIVE,
 						   GridBagConstraints.RELATIVE,
@@ -112,11 +109,10 @@ public abstract class FileImportSupport implements PluggableImport {
 						   GridBagConstraints.NORTHWEST,
 						   GridBagConstraints.NONE,
 						   new Insets(0, 5, 0, 5),
-						   0, 0));
+						   0, 0), -1, 0);
 	    JRadioButton association =
 		new JRadioButton(
                         Translator.localize("action.import-java-UML-assoc"));
-	    group1.add(association);
 	    configPanel.add(association,
 			    new GridBagConstraints(GridBagConstraints.RELATIVE,
 						   GridBagConstraints.RELATIVE,
@@ -126,7 +122,7 @@ public abstract class FileImportSupport implements PluggableImport {
 						   GridBagConstraints.NORTHWEST,
 						   GridBagConstraints.NONE,
 						   new Insets(0, 5, 5, 5),
-						   0, 0));
+						   0, 0), -1, 0);
 	    JLabel attributeLabel2 =
 	        new JLabel(
                     Translator.localize("action.import-java-array-model"));
@@ -141,13 +137,11 @@ public abstract class FileImportSupport implements PluggableImport {
                                                new Insets(5, 5, 0, 5),
                                                0, 0));
 
-	    ButtonGroup group2 = new ButtonGroup();
 	    datatype =
 		new JRadioButton(
                         Translator.localize(
                                 "action.import-java-array-model-datatype"));
 	    datatype.setSelected(true);
-	    group2.add(datatype);
 	    configPanel.add(datatype,
 			    new GridBagConstraints(GridBagConstraints.RELATIVE,
 						   GridBagConstraints.RELATIVE,
@@ -157,12 +151,11 @@ public abstract class FileImportSupport implements PluggableImport {
 						   GridBagConstraints.NORTHWEST,
 						   GridBagConstraints.NONE,
 						   new Insets(5, 5, 0, 5),
-						   0, 0));
+						   0, 0), -1, 1);
 	    JRadioButton multi =
 		new JRadioButton(
                         Translator.localize(
                                 "action.import-java-array-model-multi"));
-	    group2.add(multi);
 	    configPanel.add(multi,
 			    new GridBagConstraints(GridBagConstraints.RELATIVE,
 						   GridBagConstraints.RELATIVE,
@@ -172,7 +165,7 @@ public abstract class FileImportSupport implements PluggableImport {
 						   GridBagConstraints.NORTHWEST,
 						   GridBagConstraints.NONE,
 						   new Insets(0, 5, 5, 5),
-						   0, 0));
+						   0, 0), -1, 1);
 	}
 	return configPanel;
     }

@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.91 2006/08/09 18:36:19 mvw Exp $
+// $Id: Import.java,v 1.92 2006/09/02 17:51:06 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -71,6 +70,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
+import org.argouml.swingext.JXButtonGroupPanel;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
@@ -250,7 +250,7 @@ public class Import {
 
         // build the configPanel:
         if (configPanel == null) {
-            JPanel general = new JPanel();
+            JXButtonGroupPanel general = new JXButtonGroupPanel();
             general.setLayout(new GridLayout2(13, 1, 0, 0, GridLayout2.NONE));
 
             general.add(new JLabel(
@@ -312,23 +312,19 @@ public class Import {
             JLabel importDetailLabel =
                 new JLabel(Translator.localize(
                         "action.import-level-of-import-detail"));
-            ButtonGroup detailButtonGroup = new ButtonGroup();
 
             classOnly =
                 new JRadioButton(Translator.localize(
                         "action.import-option-classfiers"));
-            detailButtonGroup.add(classOnly);
 
             classAndFeatures =
                 new JRadioButton(Translator.localize(
                         "action.import-option-classifiers-plus-specs"));
-            detailButtonGroup.add(classAndFeatures);
 
             fullImport =
                 new JRadioButton(Translator.localize(
                         "action.import-option-full-import"));
             fullImport.setSelected(true);
-            detailButtonGroup.add(fullImport);
 
             general.add(importDetailLabel);
             general.add(classOnly);

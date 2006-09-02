@@ -1,4 +1,4 @@
-// $Id: WizStepChoice.java,v 1.10 2006/06/11 15:39:47 mvw Exp $
+// $Id: WizStepChoice.java,v 1.11 2006/09/02 17:51:06 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
-import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
@@ -47,7 +46,6 @@ import org.argouml.swingext.SpacerPanel;
 
 public class WizStepChoice extends WizStep {
     private JTextArea instructions = new JTextArea();
-    private ButtonGroup group = new ButtonGroup();
     private Vector choices = new Vector();
     private int selectedIndex = -1;
 
@@ -116,7 +114,6 @@ public class WizStepChoice extends WizStep {
 	    c.gridy = 2 + i;
 	    String s = (String) ch.elementAt(i);
 	    JRadioButton rb = new JRadioButton(s);
-	    group.add(rb);
 	    rb.setActionCommand(s);
 	    rb.addActionListener(this);
 	    gb.setConstraints(rb, c);

@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.37 2006/08/11 19:51:57 mvw Exp $
+// $Id: WizStep.java,v 1.38 2006/09/02 17:51:06 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import javax.swing.event.DocumentListener;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.Translator;
+import org.argouml.swingext.JXButtonGroupPanel;
 import org.argouml.swingext.SpacerPanel;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -66,7 +67,7 @@ public class WizStep extends JPanel
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    private JPanel  mainPanel = new JPanel();
+    private JXButtonGroupPanel  mainPanel = new JXButtonGroupPanel();
     private JButton backButton =
         new JButton(Translator.localize("button.back"));
     private JButton nextButton =
