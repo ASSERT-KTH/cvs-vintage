@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.92 2006/09/02 17:51:06 andrea_nironi Exp $
+// $Id: Import.java,v 1.93 2006/09/02 22:42:11 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,6 +76,7 @@ import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.argouml.util.UIUtils;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.base.Globals;
 import org.tigris.swidgets.GridLayout2;
@@ -200,6 +201,9 @@ public class Import {
              - dialog.getSize().height)
             / 2;
         dialog.setLocation(x > 0 ? x : 0, y > 0 ? y : 0);
+        
+        UIUtils.loadCommonKeyMap(dialog);
+        
         dialog.setVisible(true);
     }
 
