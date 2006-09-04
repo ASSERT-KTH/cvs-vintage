@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.57 2006/08/24 05:05:24 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.58 2006/09/04 18:51:15 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -584,8 +584,6 @@ public class GenericArgoMenuBar extends JMenuBar implements
         setMnemonic(distribute, "Distribute");
         JMenu reorder = (JMenu) arrange.add(new JMenu(menuLocalize("Reorder")));
         setMnemonic(reorder, "Reorder");
-        JMenu nudge = (JMenu) arrange.add(new JMenu(menuLocalize("Nudge")));
-        setMnemonic(nudge, "Nudge");
 
         JMenuItem preferredSize = arrange.add(new CmdSetPreferredSize(
                 CmdSetPreferredSize.MINIMUM_SIZE));
@@ -596,7 +594,7 @@ public class GenericArgoMenuBar extends JMenuBar implements
         arrange.add(new ActionLayout());
 
         // This used to be deferred, but it's only 30-40 msec of work.
-        InitMenusLater.initMenus(align, distribute, reorder, nudge);
+        InitMenusLater.initMenus(align, distribute, reorder);
     }
 
     /**
