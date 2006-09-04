@@ -1,4 +1,4 @@
-// $Id: StartBrowser.java,v 1.13 2006/06/11 15:39:53 mvw Exp $
+// $Id: StartBrowser.java,v 1.14 2006/09/04 18:44:56 andrea_nironi Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,15 +71,7 @@ public class StartBrowser {
 		}
 	    }
 	    else {
-		Process proc =
-		    Runtime.getRuntime().exec("netscape -remote (" + url + ")");
-		try {
-		    if (proc.waitFor() != 0) {
-			Runtime.getRuntime().exec("netscape " + url);
-		    }
-		} catch (InterruptedException ie) {
-                    LOG.error(ie);
-		}
+                Runtime.getRuntime().exec("firefox " + url);
 	    }
 	}
 	catch (IOException ioe) {
