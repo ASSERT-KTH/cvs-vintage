@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.37 2006/08/13 07:35:55 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.38 2006/09/04 21:31:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ import org.argouml.util.ThreadUtils;
  *
  * @author Bob Tarling
  */
-public class ZargoFilePersister extends UmlFilePersister {
+class ZargoFilePersister extends UmlFilePersister {
     /**
      * Logger.
      */

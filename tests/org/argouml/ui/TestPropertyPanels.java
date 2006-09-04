@@ -1,4 +1,4 @@
-// $Id: TestPropertyPanels.java,v 1.7 2006/08/12 21:10:33 tfmorris Exp $
+// $Id: TestPropertyPanels.java,v 1.8 2006/09/04 21:32:02 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,8 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.persistence.ZargoFilePersister;
+import org.argouml.persistence.AbstractFilePersister;
+import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.cognitive.critics.ChildGenUML;
 import org.tigris.gef.base.Diagram;
@@ -169,7 +170,9 @@ public class TestPropertyPanels extends TestCase {
 
         File testfile = new File(url.getFile());
 
-        ZargoFilePersister persister = new ZargoFilePersister();
+        AbstractFilePersister persister =
+            PersistenceManager.getInstance().getPersisterFromFileName(
+                TEST_PROPERTY_PANELS_ZARGO);
         p = persister.doLoad(testfile);
         ProjectManager.getManager().setCurrentProject(p);
         Object model = p.getRoot();
