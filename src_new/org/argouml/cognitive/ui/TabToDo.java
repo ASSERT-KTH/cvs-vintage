@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.37 2006/08/21 18:29:06 mvw Exp $
+// $Id: TabToDo.java,v 1.38 2006/09/04 18:41:53 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.SwingConstants;
 import org.argouml.application.api.Configuration;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.ui.AbstractArgoJPanel;
-import org.argouml.ui.cmd.ActionEmailExpert;
 import org.argouml.ui.cmd.ActionNewToDoItem;
 import org.argouml.ui.cmd.ActionResolve;
 import org.argouml.ui.cmd.ActionSnooze;
@@ -57,7 +56,6 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
 
     private static UndoableAction actionNewToDoItem = new ActionNewToDoItem();
     private static ToDoItemAction actionResolve = new ActionResolve();
-    private static ToDoItemAction actionEmailExpert = new ActionEmailExpert();
     private static ToDoItemAction actionSnooze = new ActionSnooze();
     //public static UMLAction _actionRecordFix = Actions.RecordFix;
     //public static UMLAction _actionReplayFix = Actions.ReplayFix;
@@ -98,7 +96,6 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
         JToolBar toolBar = new ToolBar(SwingConstants.VERTICAL);
         toolBar.add(actionNewToDoItem);
         toolBar.add(actionResolve);
-        toolBar.add(actionEmailExpert);
         toolBar.add(actionSnooze);
         toolBar.setFloatable(false);
 
@@ -191,14 +188,13 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     }
 
     /**
-	 * Update the "enabled" state of the resolve, emailExpert and snooze
-	 * actions.
-	 */
+     * Update the "enabled" state of the resolve and snooze actions.
+     * 
+     * @param item  the target of the TabToDo class
+     */
     protected static void updateActionsEnabled(Object item) {
         actionResolve.setEnabled(actionResolve.isEnabled());
         actionResolve.updateEnabled(item);
-        actionEmailExpert.setEnabled(actionEmailExpert.isEnabled());
-        actionEmailExpert.updateEnabled(item);
         actionSnooze.setEnabled(actionSnooze.isEnabled());
         actionSnooze.updateEnabled(item);
     }

@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.47 2006/05/23 21:29:57 tfmorris Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.48 2006/09/04 18:41:52 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -308,7 +308,6 @@ public final class ResourceLoaderWrapper {
         images.put("action.resolve-item", "Resolve Item...");
         images.put("action.save-project", "Save Project");
         images.put("action.save-project-as", "Save Project As...");
-        images.put("action.send-email-to-expert", "Send Email To Expert...");
         images.put("action.settings", "Settings...");
         images.put("action.snooze-critic", "Snooze Critic");
         images.put("action.system-information", "System Information");

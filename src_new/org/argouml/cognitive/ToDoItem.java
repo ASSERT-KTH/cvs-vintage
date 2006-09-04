@@ -1,4 +1,4 @@
-// $Id: ToDoItem.java,v 1.27 2006/08/11 17:09:17 tfmorris Exp $
+// $Id: ToDoItem.java,v 1.28 2006/09/04 18:41:52 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +43,7 @@ import org.tigris.gef.presentation.Fig;
  * context suitable for resolving the issue: ToDoItem's are well tied
  * into the design and design process so that the Designer can see
  * which design material's are the subject of this ToDoItem, and which
- * Critic raised it.  The expert email address helps connect the
- * designer with the organizational context.  The more info URL helps
+ * Critic raised it.  The more info URL helps
  * provide background knowledge of the domain. In the future
  * ToDoItems will include ties back to the design rationale log.
  * Also the run-time system needs to know who posted each ToDoItem so
@@ -366,13 +365,6 @@ public class ToDoItem implements Serializable, WizardItem {
      * @return the poster
      */
     public Poster getPoster() { return thePoster; }
-
-    /**
-     * Find the email address of the poster.
-     *
-     * @return the email address
-     */
-    public String getExpertEmail() { return thePoster.getExpertEmail(); }
 
     /**
      * Return a clarifier object that can graphical highlight this

@@ -1,4 +1,4 @@
-// $Id: Poster.java,v 1.9 2006/06/11 15:39:46 mvw Exp $
+// $Id: Poster.java,v 1.10 2006/09/04 18:41:52 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,20 +46,6 @@ public interface Poster {
 
     ////////////////////////////////////////////////////////////////
     // accessors
-
-    /**
-     * Get some contact information on the Poster.
-     *
-     * @return the email address of the poster
-     */
-    String getExpertEmail();
-
-    /**
-     * Update the Poster's contact info. Is this needed?
-     *
-     * @param addr the emailaddress
-     */
-    void setExpertEmail(String addr);
 
     /**
      * Reply true if the given item should be kept on the Designer's
