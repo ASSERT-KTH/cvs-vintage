@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.19 2006/08/11 19:12:24 mvw Exp $
+// $Id: AbstractFilePersister.java,v 1.20 2006/09/04 21:57:01 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -242,6 +242,17 @@ public abstract class AbstractFilePersister extends FileFilter
      * @return true if this persister is able to save
      */
     public boolean isSaveEnabled() {
+        return true;
+    }
+
+    /**
+     * Some persisters only provide save functionality for deprecated formats.
+     * Other persisters with the same extension will manage loading.
+     * This method returns true by default. Those Peristers that do not provide
+     * load must override this.
+     * @return true if this persister is able to load
+     */
+    public boolean isLoadEnabled() {
         return true;
     }
 
