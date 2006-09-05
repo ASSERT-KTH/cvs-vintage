@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.209 2006/08/23 20:11:30 andrea_nironi Exp $
+// $Id: ProjectBrowser.java,v 1.210 2006/09/05 00:04:39 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.persistence.AbstractFilePersister;
-import org.argouml.persistence.LastLoadInfo;
 import org.argouml.persistence.OpenException;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.persistence.ProjectFilePersister;
@@ -1181,7 +1180,11 @@ public final class ProjectBrowser
                          new Object[] {file});
             this.showStatus (sStatus);
 
-            persister = pm.getPersisterFromFileName(file.getName());
+            persister = pm.getSavePersister();
+            pm.setSavePersister(null);
+            if (persister == null) {
+                persister = pm.getPersisterFromFileName(file.getName());
+            }
             if (persister == null) {
                 throw new IllegalStateException("Filename " + project.getName()
                             + " is not of a known file type");
@@ -1467,7 +1470,7 @@ public final class ProjectBrowser
                         showUI, ex);
             } finally {
 
-                if (!LastLoadInfo.getInstance().getLastLoadStatus()) {
+                if (!PersistenceManager.getInstance().getLastLoadStatus()) {
                     project = oldProject;
                     success = false;
                     // TODO: This seems entirely redundant
@@ -1478,7 +1481,7 @@ public final class ProjectBrowser
                             + file.getName()
                             + "\n"
                             + "Error message:\n"
-                            + LastLoadInfo.getInstance().getLastLoadMessage()
+                            + PersistenceManager.getInstance().getLastLoadMessage()
                             + "\n"
                             + "Some (or all) information may be missing "
                             + "from the project.\n"
@@ -1698,6 +1701,7 @@ public final class ProjectBrowser
                             name + "." + filter.getExtension());
                 }
             }
+            PersistenceManager.getInstance().setSavePersister(filter);
             return theFile;
         }
         return null;

@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.29 2006/09/04 21:57:01 bobtarling Exp $
+// $Id: PersistenceManager.java,v 1.30 2006/09/05 00:04:39 bobtarling Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,8 @@ public final class PersistenceManager {
     private UmlFilePersister umlPersister;
     private ZipFilePersister zipPersister;
 
+    private AbstractFilePersister savePersister;
+    
     private boolean lastLoadStatus = true;
 
     private String lastLoadMessage;
@@ -395,6 +397,14 @@ public final class PersistenceManager {
     public void setLastLoadStatus(boolean status) {
         lastLoadStatus = status;
     }
+    
+    public void setSavePersister(AbstractFilePersister persister) {
+        savePersister = persister;
+    }
+    
+    public AbstractFilePersister getSavePersister() {
+        return savePersister;
+    }
 }
 
 /**
@@ -464,5 +474,4 @@ class MultitypeFileFilter extends FileFilter {
         Object[] s = {desc};
         return Translator.messageFormat("filechooser.all-types-desc", s);
     }
-
 }
