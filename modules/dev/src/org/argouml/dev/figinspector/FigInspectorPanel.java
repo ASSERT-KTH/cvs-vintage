@@ -1,4 +1,4 @@
-// $Id: FigInspectorPanel.java,v 1.3 2006/08/20 20:45:51 bobtarling Exp $
+// $Id: FigInspectorPanel.java,v 1.4 2006/09/06 23:29:12 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,6 +106,10 @@ public final class FigInspectorPanel
             FigEdge fe = (FigEdge) f;
             Fig lineFig = fe.getFig();
             addNode(tn, lineFig);
+            addNode(tn, fe.getSourceFigNode());
+            addNode(tn, fe.getSourcePortFig());
+            addNode(tn, fe.getDestFigNode());
+            addNode(tn, fe.getDestPortFig());
             for (Iterator it = fe.getPathItemFigs().iterator(); it.hasNext(); ) {
                 Fig pathFig = (Fig) it.next();
                 addNode(tn, pathFig);
@@ -130,7 +134,7 @@ public final class FigInspectorPanel
         if (!f.isVisible()) {
             descr += " - INVISIBLE";
         }
-        descr = descr + " - lay=" + f.getLayer() + " - grp=" + f.getGroup();
+        descr += " - lay=" + f.getLayer() + " - grp=" + f.getGroup();
         return descr;
     }
 }
