@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.17 2006/06/11 14:56:00 mvw Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.18 2006/09/06 17:50:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,7 +112,7 @@ public abstract class AbstractActionAddModelElement extends UndoableAction {
     protected abstract String getDialogTitle();
 
     /**
-     * The action that has to be done by Argouml after the user clicks ok in the
+     * The action that has to be done by ArgoUml after the user clicks ok in the
      * UMLAddDialog.
      * @param selected The choices the user has selected in the UMLAddDialog
      */

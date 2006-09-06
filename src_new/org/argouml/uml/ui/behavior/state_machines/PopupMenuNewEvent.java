@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewEvent.java,v 1.12 2006/03/28 05:57:26 linus Exp $
+// $Id: PopupMenuNewEvent.java,v 1.13 2006/09/06 17:50:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class PopupMenuNewEvent extends JPopupMenu {
      * Constructs a new popupmenu. The given parameter role determines what
      * the purpose is of the events that can be created via this popupmenu.
      * The parameter must comply to the interface Roles
-     * defined on ActionNewAction.
+     * defined on ActionNewEvent.
      *
      * @param role the role
      * @param list the list

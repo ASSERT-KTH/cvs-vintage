@@ -1,4 +1,4 @@
-// $Id: UMLAddDialog.java,v 1.17 2006/06/11 15:39:47 mvw Exp $
+// $Id: UMLAddDialog.java,v 1.18 2006/09/06 17:50:45 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,8 +187,8 @@ public class UMLAddDialog extends JPanel implements ActionListener {
             choicesList.setCellRenderer(renderer);
         }
         if (multiselectAllowed) {
-            choicesList
-                    .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            choicesList.setSelectionMode(
+                    ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         } else {
             choicesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         }
