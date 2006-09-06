@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.22 2006/09/02 17:51:05 andrea_nironi Exp $
+// $Id: FileImportSupport.java,v 1.23 2006/09/06 19:06:09 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,6 @@ import org.tigris.gef.base.Globals;
  * for other input sources.
  *
  * @author Alexander Lepekhine
- * @version $Revision: 1.22 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
