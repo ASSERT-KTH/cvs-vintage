@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.41 2006/06/17 19:54:30 bobtarling Exp $
+// $Id: PropPanelCallEvent.java,v 1.42 2006/09/07 18:28:29 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,6 +131,14 @@ class UMLCallEventOperationComboBoxModel extends UMLComboBoxModel2 {
                 Iterator i = c.iterator();
                 while (i.hasNext()) {
                     ops.addAll(Model.getFacade().getOperations(i.next()));
+                }
+                c = Model.getModelManagementHelper().getAllImportedElements(ns);
+                i = c.iterator();
+                while (i.hasNext()) {
+                    Object obj = i.next();
+                    if (Model.getFacade().isAClassifier(obj)) {
+                        ops.addAll(Model.getFacade().getOperations(obj));
+                    }
                 }
             }
         }
