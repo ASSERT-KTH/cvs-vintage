@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.92 2006/08/26 09:48:11 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.93 2006/09/07 16:50:39 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,11 @@ import org.tigris.gef.base.ModeCreatePolyEdge;
  * "UMLStatechartDiagram". See issue 2306.
  */
 public class UMLStateDiagram extends UMLDiagram {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1541136327444703151L;
+
     /**
      * Logger.
      */
@@ -173,6 +178,11 @@ public class UMLStateDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#getOwner()
      */
     public Object getOwner() {
+        if (!(getGraphModel() instanceof StateDiagramGraphModel)) {
+            throw new IllegalStateException(
+                    "Incorrect graph model of "
+                    + getGraphModel().getClass().getName());
+        }
         StateDiagramGraphModel gm = (StateDiagramGraphModel) getGraphModel();
         return gm.getMachine();
     }

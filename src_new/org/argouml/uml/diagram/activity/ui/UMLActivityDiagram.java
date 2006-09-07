@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.92 2006/06/07 18:36:17 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.93 2006/09/07 16:50:39 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -207,6 +207,11 @@ public class UMLActivityDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#getOwner()
      */
     public Object getOwner() {
+        if (!(getGraphModel() instanceof ActivityDiagramGraphModel)) {
+            throw new IllegalStateException(
+                    "Incorrect graph model of "
+                    + getGraphModel().getClass().getName());
+        }
         ActivityDiagramGraphModel gm =
             (ActivityDiagramGraphModel) getGraphModel();
         return gm.getMachine();
