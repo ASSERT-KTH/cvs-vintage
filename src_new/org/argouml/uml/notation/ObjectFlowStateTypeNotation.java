@@ -1,4 +1,4 @@
-// $Id: ObjectFlowStateTypeNotation.java,v 1.1 2006/03/01 22:38:46 mvw Exp $
+// $Id: ObjectFlowStateTypeNotation.java,v 1.2 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,7 @@ import org.argouml.model.Model;
  * 
  * @author Michiel
  */
-public abstract class ObjectFlowStateTypeNotation extends ValueHandler {
-
-    protected Object myObjectFlowState;
+public abstract class ObjectFlowStateTypeNotation extends NotationProvider {
 
     /**
      * The constructor.
@@ -44,9 +42,9 @@ public abstract class ObjectFlowStateTypeNotation extends ValueHandler {
      */
     public ObjectFlowStateTypeNotation(Object objectflowstate) {
         if (!Model.getFacade().isAObjectFlowState(objectflowstate)) {
-            throw new IllegalArgumentException("This is not a ObjectFlowState.");
+            throw new IllegalArgumentException(
+                    "This is not a ObjectFlowState.");
         }
-        myObjectFlowState = objectflowstate;
     }
 
 }

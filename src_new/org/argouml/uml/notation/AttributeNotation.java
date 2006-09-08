@@ -1,4 +1,4 @@
-// $Id: AttributeNotation.java,v 1.4 2006/04/29 21:50:32 mvw Exp $
+// $Id: AttributeNotation.java,v 1.5 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,10 +33,7 @@ import org.argouml.model.Model;
  *
  * @author mvw@tigris.org
  */
-public abstract class AttributeNotation extends ValueHandler {
-
-    protected Object myAttribute;
-    protected Object myClass;
+public abstract class AttributeNotation extends NotationProvider {
 
     /**
      * The constructor.
@@ -47,8 +44,6 @@ public abstract class AttributeNotation extends ValueHandler {
         if (!Model.getFacade().isAAttribute(attribute)) {
             throw new IllegalArgumentException("This is not an Attribute.");
         }
-        myAttribute = attribute;
-        myClass = Model.getFacade().getOwner(attribute);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ModelElementNameNotation.java,v 1.5 2006/04/29 21:50:32 mvw Exp $
+// $Id: ModelElementNameNotation.java,v 1.6 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,13 +33,7 @@ import org.argouml.model.Model;
  *
  * @author mvw@tigris.org
  */
-public abstract class ModelElementNameNotation extends ValueHandler {
-
-    /**
-     * The modelelement we represent.
-     */
-    protected Object myModelElement;
-
+public abstract class ModelElementNameNotation extends NotationProvider {
 
     /**
      * The constructor.
@@ -50,7 +44,6 @@ public abstract class ModelElementNameNotation extends ValueHandler {
         if (!Model.getFacade().isAModelElement(modelElement)) {
             throw new IllegalArgumentException("This is not a ModelElement.");
         }
-        myModelElement = modelElement;
     }
 
 

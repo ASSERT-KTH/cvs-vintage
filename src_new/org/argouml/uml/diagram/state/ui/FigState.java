@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.46 2006/07/04 07:55:20 bobtarling Exp $
+// $Id: FigState.java,v 1.47 2006/09/08 14:50:56 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,8 @@ import java.util.Iterator;
 import org.argouml.model.AssociationChangeEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
-import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
+import org.argouml.uml.notation.NotationProvider;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRRect;
 import org.tigris.gef.presentation.FigText;
@@ -59,7 +59,7 @@ public abstract class FigState extends FigStateVertex {
 
     protected static final int MARGIN = 2;
 
-    protected NotationProvider4 notationProviderBody;
+    protected NotationProvider notationProviderBody;
 
     /**
      * The text inside the state.
@@ -225,7 +225,7 @@ public abstract class FigState extends FigStateVertex {
             return;
         }
         if (notationProviderBody != null) {
-            internal.setText(notationProviderBody.toString());
+            internal.setText(notationProviderBody.toString(getOwner(), null));
         }
         super.renderingChanged();
         calcBounds();
@@ -286,7 +286,8 @@ public abstract class FigState extends FigStateVertex {
             if (st == null) {
                 return;
             }
-            ft.setText(notationProviderBody.parse(ft.getText()));
+            notationProviderBody.parse(getOwner(), ft.getText());
+            ft.setText(notationProviderBody.toString(getOwner(), null));
         }
     }
 

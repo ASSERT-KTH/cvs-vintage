@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.147 2006/07/04 07:55:21 bobtarling Exp $
+// $Id: FigInterface.java,v 1.148 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -373,8 +373,11 @@ public class FigInterface extends FigClassifierBox {
         if (i != -1) {
             highlightedFigText = (CompartmentFigText) ft;
             highlightedFigText.setHighlighted(true);
-            ft.setText(highlightedFigText.getNotationProvider()
-                    .parse(ft.getText()));
+
+            highlightedFigText.getNotationProvider()
+                .parse(highlightedFigText.getOwner(), ft.getText());
+            ft.setText(highlightedFigText.getNotationProvider().toString(
+                highlightedFigText.getOwner(), null));
         }
     }
 
@@ -469,7 +472,7 @@ public class FigInterface extends FigClassifierBox {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object, java.lang.Object)
      */
     protected void updateListeners(Object oldOwner, Object newOwner) {
         if (oldOwner != null) {

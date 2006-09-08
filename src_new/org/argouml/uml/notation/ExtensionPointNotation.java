@@ -1,4 +1,4 @@
-// $Id: ExtensionPointNotation.java,v 1.1 2006/04/29 21:50:32 mvw Exp $
+// $Id: ExtensionPointNotation.java,v 1.2 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,7 @@ import org.argouml.model.Model;
  * 
  * @author michiel
  */
-public abstract class ExtensionPointNotation extends ValueHandler {
-
-    /**
-     * The Extension Point.
-     */
-    protected Object myEP;
+public abstract class ExtensionPointNotation extends NotationProvider {
 
     /**
      * The constructor.
@@ -50,7 +45,6 @@ public abstract class ExtensionPointNotation extends ValueHandler {
             throw new IllegalArgumentException(
                     "This is not an ExtensionPoint.");
         }
-        myEP = ep;
     }
 
 }

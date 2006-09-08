@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.219 2006/07/07 23:11:32 bobtarling Exp $
+// $Id: FigClass.java,v 1.220 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -412,18 +412,22 @@ public class FigClass extends FigClassifierBox
         if (i != -1) {
             highlightedFigText = (CompartmentFigText) ft;
             highlightedFigText.setHighlighted(true);
-            
-            ft.setText(highlightedFigText.getNotationProvider()
-                    .parse(ft.getText()));
+
+            highlightedFigText.getNotationProvider()
+                .parse(highlightedFigText.getOwner(), ft.getText());
+            ft.setText(highlightedFigText.getNotationProvider().toString(
+                    highlightedFigText.getOwner(), null));
             return;
         }
         i = new Vector(getOperationsFig().getFigs()).indexOf(ft);
         if (i != -1) {
             highlightedFigText = (CompartmentFigText) ft;
             highlightedFigText.setHighlighted(true);
-            
-            ft.setText(highlightedFigText.getNotationProvider()
-                    .parse(ft.getText()));
+
+            highlightedFigText.getNotationProvider()
+                .parse(highlightedFigText.getOwner(), ft.getText());
+            ft.setText(highlightedFigText.getNotationProvider().toString(
+                highlightedFigText.getOwner(), null));
             return;
         }
     }
@@ -760,7 +764,7 @@ public class FigClass extends FigClassifierBox
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object)
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateListeners(java.lang.Object, java.lang.Object)
      */
     protected void updateListeners(Object oldOwner, Object newOwner) {
         if (oldOwner != null) {

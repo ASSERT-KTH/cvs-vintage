@@ -1,4 +1,4 @@
-// $Id: OperationNotation.java,v 1.5 2006/06/11 17:12:41 mvw Exp $
+// $Id: OperationNotation.java,v 1.6 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,10 +33,7 @@ import org.argouml.model.Model;
  *
  * @author mvw@tigris.org
  */
-public abstract class OperationNotation extends ValueHandler {
-
-    protected Object myOperation;
-    protected Object myClass;
+public abstract class OperationNotation extends NotationProvider {
 
     /**
      * The constructor.
@@ -47,8 +44,6 @@ public abstract class OperationNotation extends ValueHandler {
         if (!Model.getFacade().isAOperation(operation)) {
             throw new IllegalArgumentException("This is not an Operation.");
         }
-        myOperation = operation;
-        myClass = Model.getFacade().getOwner(operation);
     }
 
 }

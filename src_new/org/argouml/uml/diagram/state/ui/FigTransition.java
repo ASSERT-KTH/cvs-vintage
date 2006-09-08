@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.61 2006/07/21 16:15:11 mvw Exp $
+// $Id: FigTransition.java,v 1.62 2006/09/08 14:50:56 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,10 @@ import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.Model;
 import org.argouml.model.RemoveAssociationEvent;
-import org.argouml.notation.NotationProvider4;
 import org.argouml.notation.NotationProviderFactory2;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.PathConvPercent2;
+import org.argouml.uml.notation.NotationProvider;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.Fig;
@@ -51,7 +51,7 @@ public class FigTransition extends FigEdgeModelElement {
 
     private ArrowHeadGreater endArrow = new ArrowHeadGreater();
 
-    private NotationProvider4 notationProvider;
+    private NotationProvider notationProvider;
 
     /**
      * If <code>dashed</code> is true, then the transition represents
@@ -143,7 +143,8 @@ public class FigTransition extends FigEdgeModelElement {
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#textEdited(org.tigris.gef.presentation.FigText)
      */
     protected void textEdited(FigText ft) {
-        ft.setText(notationProvider.parse(ft.getText()));
+        notationProvider.parse(getOwner(), ft.getText());
+        ft.setText(notationProvider.toString(getOwner(), null));
     }
 
     /**
@@ -303,7 +304,7 @@ public class FigTransition extends FigEdgeModelElement {
      */
     protected void updateNameText() {
         if (notationProvider != null) {
-            getNameFig().setText(notationProvider.toString());
+            getNameFig().setText(notationProvider.toString(getOwner(), null));
         }
     }
 

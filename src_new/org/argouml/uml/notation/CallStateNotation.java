@@ -1,4 +1,4 @@
-// $Id: CallStateNotation.java,v 1.1 2006/03/20 22:24:42 mvw Exp $
+// $Id: CallStateNotation.java,v 1.2 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,18 +33,17 @@ import org.argouml.model.Model;
  *
  * @author mvw@tigris.org
  */
-public abstract class CallStateNotation extends ValueHandler {
-
-    protected Object myCallState;
+public abstract class CallStateNotation extends NotationProvider {
 
     /**
      * The constructor.
+     *
+     * @param callState the UML element
      */
     public CallStateNotation(Object callState) {
         if (!Model.getFacade().isACallState(callState)) {
             throw new IllegalArgumentException("This is not an CallState.");
         }
-        myCallState = callState;
     }
 
 }

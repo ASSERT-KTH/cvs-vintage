@@ -1,4 +1,4 @@
-// $Id: AssociationRoleNotation.java,v 1.2 2006/05/06 19:28:11 mvw Exp $
+// $Id: AssociationRoleNotation.java,v 1.3 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,7 @@ import org.argouml.model.Model;
  * 
  * @author michiel
  */
-public abstract class AssociationRoleNotation extends ValueHandler {
-
-    protected Object myAssociationRole;
+public abstract class AssociationRoleNotation extends NotationProvider {
     
     /**
      * The constructor.
@@ -44,9 +42,9 @@ public abstract class AssociationRoleNotation extends ValueHandler {
      */
     public AssociationRoleNotation(Object role) {
         if (!Model.getFacade().isAAssociationRole(role)) {
-            throw new IllegalArgumentException("This is not an AssociationRole.");
+            throw new IllegalArgumentException(
+                    "This is not an AssociationRole.");
         }
-        myAssociationRole = role;
     }
 
 }

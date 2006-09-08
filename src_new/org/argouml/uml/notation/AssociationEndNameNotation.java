@@ -1,4 +1,4 @@
-// $Id: AssociationEndNameNotation.java,v 1.1 2006/05/06 19:28:11 mvw Exp $
+// $Id: AssociationEndNameNotation.java,v 1.2 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,18 +33,18 @@ import org.argouml.model.Model;
  * 
  * @author michiel
  */
-public abstract class AssociationEndNameNotation extends ValueHandler {
+public abstract class AssociationEndNameNotation extends NotationProvider {
 
-    protected Object myAssociationEnd;
-    
     /**
      * The constructor. 
+     *
+     * @param assocEnd the UML element
      */
     public AssociationEndNameNotation(Object assocEnd) {
         if (!Model.getFacade().isAAssociationEnd(assocEnd)) {
-            throw new IllegalArgumentException("This is not an AssociationEnd.");
+            throw new IllegalArgumentException(
+                    "This is not an AssociationEnd.");
         }
-        myAssociationEnd = assocEnd;
     }
 
 }

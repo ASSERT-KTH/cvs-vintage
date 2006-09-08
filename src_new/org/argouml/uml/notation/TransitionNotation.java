@@ -1,4 +1,4 @@
-// $Id: TransitionNotation.java,v 1.6 2006/06/11 17:12:41 mvw Exp $
+// $Id: TransitionNotation.java,v 1.7 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,18 +32,17 @@ import org.argouml.model.Model;
  *
  * @author mvw@tigris.org
  */
-public abstract class TransitionNotation extends ValueHandler {
-
-    protected Object myTransition;
+public abstract class TransitionNotation extends NotationProvider {
 
     /**
      * The constructor.
+     *
+     * @param transition the UML element
      */
     public TransitionNotation(Object transition) {
         if (!Model.getFacade().isATransition(transition)) {
             throw new IllegalArgumentException("This is not a Transition.");
         }
-        myTransition = transition;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ClassifierRoleNotation.java,v 1.1 2006/03/27 21:32:10 mvw Exp $
+// $Id: ClassifierRoleNotation.java,v 1.2 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,18 +33,17 @@ import org.argouml.model.Model;
  * 
  * @author Michiel
  */
-public abstract class ClassifierRoleNotation extends ValueHandler {
-
-    protected Object myClassifierRole;
+public abstract class ClassifierRoleNotation extends NotationProvider {
     
     /**
      * The Constructor. 
+     *
+     * @param classifierRole the UML element
      */
     public ClassifierRoleNotation(Object classifierRole) {
         if (!Model.getFacade().isAClassifierRole(classifierRole)) {
             throw new IllegalArgumentException("This is not a ClassifierRole.");
         }
-        myClassifierRole = classifierRole;
     }
 
 }

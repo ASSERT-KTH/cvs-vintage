@@ -1,4 +1,4 @@
-// $Id: MessageNotation.java,v 1.1 2006/04/13 19:54:07 mvw Exp $
+// $Id: MessageNotation.java,v 1.2 2006/09/08 14:50:54 mvw Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,21 +33,17 @@ import org.argouml.model.Model;
  * 
  * @author michiel
  */
-public abstract class MessageNotation extends ValueHandler {
-
-    /**
-     * The message we handle the notation of.
-     */
-    protected Object myMessage;
+public abstract class MessageNotation extends NotationProvider {
     
     /**
      * The constructor.
+     *
+     * @param message the UML element
      */
     public MessageNotation(Object message) {
         if (!Model.getFacade().isAMessage(message)) {
             throw new IllegalArgumentException("This is not an Message.");
         }
-        myMessage = message;
     }
 
 }

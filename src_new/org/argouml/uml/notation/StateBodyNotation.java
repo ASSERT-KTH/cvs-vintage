@@ -1,4 +1,4 @@
-// $Id: StateBodyNotation.java,v 1.7 2006/06/11 17:12:41 mvw Exp $
+// $Id: StateBodyNotation.java,v 1.8 2006/09/08 14:50:55 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,7 @@ import org.argouml.model.Model;
  *
  * @author mvw@tigris.org
  */
-public abstract class StateBodyNotation extends ValueHandler {
-
-    protected Object myState;
+public abstract class StateBodyNotation extends NotationProvider {
 
     /**
      * The constructor.
@@ -45,7 +43,6 @@ public abstract class StateBodyNotation extends ValueHandler {
         if (!Model.getFacade().isAState(state)) {
             throw new IllegalArgumentException("This is not a State.");
         }
-        myState = state;
     }
 
 }

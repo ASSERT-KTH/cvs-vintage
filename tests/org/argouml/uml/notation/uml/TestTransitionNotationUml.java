@@ -1,4 +1,4 @@
-// $Id: TestTransitionNotationUml.java,v 1.5 2006/04/29 10:45:46 linus Exp $
+// $Id: TestTransitionNotationUml.java,v 1.6 2006/09/08 14:50:20 mvw Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.notation.NotationProvider4;
+import org.argouml.uml.notation.NotationProvider;
 
 /**
  * Test ParserDisplay: parsing transitions.
@@ -186,8 +186,8 @@ public class TestTransitionNotationUml extends TestCase {
 
         //try changing the triggertype to ChangeEvent
         text = "when(it happens)";
-        NotationProvider4 notation = new TransitionNotationUml(trans);
-        notation.parse(text);
+        NotationProvider notation = new TransitionNotationUml(trans);
+        notation.parse(trans, text);
         trig = Model.getFacade().getTrigger(trans);
         assertTrue("Unexpected triggertype found instead of ChangeEvent",
                 Model.getFacade().isAChangeEvent(trig));
