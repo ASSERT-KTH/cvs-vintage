@@ -1,4 +1,4 @@
-// $Id: TestPersistenceManager.java,v 1.3 2006/08/30 15:27:54 bobtarling Exp $
+// $Id: TestPersistenceManager.java,v 1.4 2006/09/08 09:44:22 bobtarling Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,13 +97,5 @@ public class TestPersistenceManager extends TestCase {
                 "foo."
                 + new ZargoFilePersister().getExtension())));
         
-        chooser.resetChoosableFileFilters();
-        persistence.setSaveFileChooserFilters(chooser, 
-                "foo." + new UmlFilePersister().getExtension());
-        defaultFileFilter = chooser.getFileFilter();
-        assertNotNull(defaultFileFilter);
-        assertTrue(defaultFileFilter.accept(new File(
-                "others_foo." 
-                + new UmlFilePersister().getExtension())));        
     }
 }
