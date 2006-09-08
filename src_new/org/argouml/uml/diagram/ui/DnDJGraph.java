@@ -1,4 +1,4 @@
-// $Id: DnDJGraph.java,v 1.14 2006/09/04 18:51:15 andrea_nironi Exp $
+// $Id: DnDJGraph.java,v 1.15 2006/09/08 18:48:20 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,7 @@ import org.argouml.ui.TransferableModelElements;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
+import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.ConnectionConstrainer;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.MutableGraphModel;
@@ -193,6 +194,16 @@ class DnDJGraph
                 if (Model.getFacade().isAModelElement(me)) {
                     if (gm.canAddEdge(me)) {
                         gm.addEdge(me);
+                        if (Model.getFacade().isAAssociationClass(me)) {
+                            Layer lay =
+                                getEditor().getLayerManager().getActiveLayer();
+                            FigAssociationClass thisFig =
+                                (FigAssociationClass) lay.presentationFor(me);
+                            ModeCreateAssociationClass.buildParts(
+                                    getEditor(), 
+                                    thisFig, 
+                                    lay);
+                        }
                     } else if (gm.canAddNode(me)) {
                         AddExistingNodeCommand cmd =
                             new AddExistingNodeCommand(me, dropTargetDropEvent,
