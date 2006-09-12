@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.18 2006/09/06 17:50:45 mvw Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.19 2006/09/12 06:17:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.ArgoFrame;
 import org.tigris.gef.undo.UndoableAction;
 
 /**
@@ -84,7 +84,7 @@ public abstract class AbstractActionAddModelElement extends UndoableAction {
 	    new UMLAddDialog(getChoices(), getSelected(), getDialogTitle(),
 			     isMultiSelect(),
 			     isExclusive());
-        int result = dialog.showDialog(ProjectBrowser.getInstance());
+        int result = dialog.showDialog(ArgoFrame.getInstance());
         if (result == JOptionPane.OK_OPTION) {
             doIt(dialog.getSelected());
         }

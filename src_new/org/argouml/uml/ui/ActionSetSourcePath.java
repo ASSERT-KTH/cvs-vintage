@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.30 2006/06/11 14:56:00 mvw Exp $
+// $Id: ActionSetSourcePath.java,v 1.31 2006/09/12 06:17:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.JFileChooser;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.ArgoFrame;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.undo.UndoableAction;
 
@@ -126,7 +126,7 @@ public class ActionSetSourcePath extends UndoableAction {
 	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 	int retval =
-            chooser.showDialog(ProjectBrowser.getInstance(),
+            chooser.showDialog(ArgoFrame.getInstance(),
                     Translator.localize("dialog.button.ok"));
 	if (retval == JFileChooser.APPROVE_OPTION) {
 	    return chooser.getSelectedFile();

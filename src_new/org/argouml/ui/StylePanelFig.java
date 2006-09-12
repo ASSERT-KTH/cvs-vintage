@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.42 2006/06/11 19:01:25 mvw Exp $
+// $Id: StylePanelFig.java,v 1.43 2006/09/12 06:17:06 tfmorris Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -378,7 +378,7 @@ public class StylePanelFig
     protected void handleCustomColor(JComboBox field, String title,
             Color targetColor) {
         Color newColor =
-            JColorChooser.showDialog(ProjectBrowser.getInstance(),
+            JColorChooser.showDialog(ArgoFrame.getInstance(),
                 title, targetColor);
         if (newColor != null) {
             field.insertItemAt(newColor, field.getItemCount() - 1);

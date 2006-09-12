@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.22 2006/09/02 22:42:12 andrea_nironi Exp $
+// $Id: ArgoDialog.java,v 1.23 2006/09/12 06:17:06 tfmorris Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class ArgoDialog extends Dialog {
      * Suffix to calculate the mnemonic key from the key.
      */
     private static final String MNEMONIC_KEY_SUFFIX = ".mnemonic";
-   
+
     /**
      * Creates a new ArgoDialog with the default optionType.
      *
@@ -52,10 +52,10 @@ public class ArgoDialog extends Dialog {
      * @see Dialog#Dialog(Frame, String, boolean)
      */
     public ArgoDialog(String title, boolean modal) {
-        super(ProjectBrowser.getInstance(), title, modal);
+        super(ArgoFrame.getInstance(), title, modal);
         init();
     }
-    
+
     /**
      * Creates a new ArgoDialog with the specified optionType.
      *
@@ -114,5 +114,5 @@ public class ArgoDialog extends Dialog {
 
     private void init() {
         UIUtils.loadCommonKeyMap(this);
+                }
     }
-}

@@ -1,4 +1,4 @@
-// $Id: ActionAboutArgoUML.java,v 1.5 2006/02/26 01:48:10 linus Exp $
+// $Id: ActionAboutArgoUML.java,v 1.6 2006/09/12 06:17:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.JFrame;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.ui.AboutBox;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.ArgoFrame;
 
 
 /**
@@ -52,7 +52,7 @@ class ActionAboutArgoUML extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	JFrame jframe = ((JFrame) (ProjectBrowser.getInstance()));
+	JFrame jframe = ArgoFrame.getInstance();
 	AboutBox box = new AboutBox(jframe, true);
 
 	box.setLocationRelativeTo(jframe);

@@ -1,4 +1,4 @@
-// $Id: AbstractArgoJPanel.java,v 1.4 2006/06/11 15:39:42 mvw Exp $
+// $Id: AbstractArgoJPanel.java,v 1.5 2006/09/12 06:17:06 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,7 +172,7 @@ public abstract class AbstractArgoJPanel extends JPanel
      */
     public AbstractArgoJPanel spawn() {
 
-        JDialog f = new JDialog(ProjectBrowser.getInstance());
+        JDialog f = new JDialog(ArgoFrame.getInstance());
         f.getContentPane().setLayout(new BorderLayout());
         f.setTitle(Translator.localize(title));
         AbstractArgoJPanel newPanel = (AbstractArgoJPanel) clone();
