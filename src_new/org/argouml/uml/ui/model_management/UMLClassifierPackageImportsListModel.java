@@ -1,4 +1,4 @@
-// $Id: UMLClassifierPackageImportsListModel.java,v 1.1 2006/04/19 20:46:38 mvw Exp $
+// $Id: UMLClassifierPackageImportsListModel.java,v 1.2 2006/09/12 05:04:13 tfmorris Exp $
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,6 +63,7 @@ class UMLClassifierPackageImportsListModel extends UMLModelElementListModel2 {
     /**
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
+    // TODO: Should this really be overriding the super class? - tfm
     public void propertyChange(PropertyChangeEvent e) {
         if (isValidEvent(e)) {
             removeAllElements();
