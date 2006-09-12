@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.11 2006/08/28 12:22:24 bobtarling Exp $
+// $Id: TodoParser.java,v 1.12 2006/09/12 05:07:13 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -414,7 +414,7 @@ class TodoParser extends SAXParserBase {
                         try {
                             sb.append((char) Integer.parseInt(ent));
                         } catch (NumberFormatException nfe) {
-                            // Ignore any parse exceptions
+                            // TODO: handle parse error
                         }
                     }
                 }
@@ -432,6 +432,9 @@ class TodoParser extends SAXParserBase {
      * saved properly in an XML file and regained filtering out any noice
      * that an XML framework might have seen fit to add.
      *
+     * TODO: Why are we doing this ourselves?  Surely encoding information
+     * for XML serialization is a well known task - tfm
+     * 
      * @param	str	The String to encode.
      * @return	The encoded String.
      */
