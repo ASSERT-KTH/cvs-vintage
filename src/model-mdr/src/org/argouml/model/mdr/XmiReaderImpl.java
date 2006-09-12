@@ -1,4 +1,4 @@
-// $Id: XmiReaderImpl.java,v 1.8 2006/08/26 09:47:52 linus Exp $
+// $Id: XmiReaderImpl.java,v 1.9 2006/09/12 05:02:18 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -225,9 +225,13 @@ public class XmiReaderImpl implements XmiReader, UnknownElementsListener {
                     unknownElement = false;
                     // InputSource xformedInput =
                     //        chainedTransform(transformFiles, pIs);
-                    InputSource xformedInput =
-                        serialTransform(transformFiles,
-                            new InputSource(new FileInputStream(tmpFile)));
+                    InputSource originalInput = 
+                        new InputSource(new FileInputStream(tmpFile));
+                    // Use the original file for the system ID
+                    // so any references resolve correctly
+                    originalInput.setSystemId(pIs.getSystemId());
+                    InputSource xformedInput = 
+                        serialTransform(transformFiles, originalInput);
                     newElements =
                         xmiReader.read(xformedInput.getByteStream(),
                             xformedInput.getSystemId(), extent);
