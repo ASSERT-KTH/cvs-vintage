@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.23 2006/09/12 06:17:06 tfmorris Exp $
+// $Id: ArgoDialog.java,v 1.24 2006/09/12 07:01:34 tfmorris Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class ArgoDialog extends Dialog {
      * @see Dialog#Dialog(Frame, String, int, boolean)
      */
     public ArgoDialog(String title, int optionType, boolean modal) {
-        super(ProjectBrowser.getInstance(), title, optionType, modal);
+        super(ArgoFrame.getInstance(), title, optionType, modal);
         init();
     }
 
@@ -114,5 +114,5 @@ public class ArgoDialog extends Dialog {
 
     private void init() {
         UIUtils.loadCommonKeyMap(this);
-                }
     }
+}

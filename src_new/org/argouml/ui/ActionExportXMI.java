@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.30 2006/08/09 18:31:17 mvw Exp $
+// $Id: ActionExportXMI.java,v 1.31 2006/09/12 07:01:34 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public final class ActionExportXMI extends AbstractAction {
             chooser.setSelectedFile(new File(fn));
         }
 
-        int result = chooser.showSaveDialog(ProjectBrowser.getInstance());
+        int result = chooser.showSaveDialog(ArgoFrame.getInstance());
         if (result == JFileChooser.APPROVE_OPTION) {
             File theFile = chooser.getSelectedFile();
             if (theFile != null) {

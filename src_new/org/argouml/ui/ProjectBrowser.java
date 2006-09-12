@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.210 2006/09/05 00:04:39 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.211 2006/09/12 07:01:34 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1534,7 +1534,7 @@ public final class ProjectBrowser
     private void reportError(String message, boolean showUI) {
         if (showUI) {
             JOptionPane.showMessageDialog(
-                      ProjectBrowser.getInstance(),
+                      ArgoFrame.getInstance(),
                       message,
                       "Error",
                       JOptionPane.ERROR_MESSAGE);
@@ -1559,7 +1559,7 @@ public final class ProjectBrowser
         if (showUI) {
             JDialog dialog =
                 new ExceptionDialog(
-                        ProjectBrowser.getInstance(),
+                        ArgoFrame.getInstance(),
                         message,
                         error);
             dialog.setVisible(true);
@@ -1584,7 +1584,7 @@ public final class ProjectBrowser
         if (showUI) {
             JDialog dialog =
                 new ExceptionDialog(
-                        ProjectBrowser.getInstance(),
+                        ArgoFrame.getInstance(),
                         message,
                         ex,
                         ex instanceof OpenException);

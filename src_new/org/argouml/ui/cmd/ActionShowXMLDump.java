@@ -1,4 +1,4 @@
-// $Id: ActionShowXMLDump.java,v 1.8 2006/09/02 22:42:11 andrea_nironi Exp $
+// $Id: ActionShowXMLDump.java,v 1.9 2006/09/12 07:01:33 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.persistence.PersistenceManager;
+import org.argouml.ui.ArgoFrame;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.UIUtils;
 
@@ -62,14 +63,14 @@ class ActionShowXMLDump extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project project = ProjectManager.getManager().getCurrentProject();
 
 	String data =
 	    PersistenceManager.getInstance().getQuickViewDump(project);
 
-	JDialog pw = new JDialog(pb, Translator.localize("action.show-saved"),
-            false);
+	JDialog pw = new JDialog(ArgoFrame.getInstance(), 
+                Translator.localize("action.show-saved"), 
+                false);
 
 	JTextArea a = new JTextArea(data, 50, 80);
 	a.setEditable(false);
@@ -82,7 +83,7 @@ class ActionShowXMLDump extends AbstractAction {
 
 	pw.setSize(400, 500);
 
-	pw.setLocationRelativeTo(pb);
+	pw.setLocationRelativeTo(ArgoFrame.getInstance());
         
         init(pw);
         

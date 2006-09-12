@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.30 2006/09/05 00:04:39 bobtarling Exp $
+// $Id: PersistenceManager.java,v 1.31 2006/09/12 07:01:34 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.ArgoFrame;
 import org.tigris.gef.util.UnexpectedException;
 
 
@@ -342,7 +342,7 @@ public final class PersistenceManager {
                     new Object[] {file});
             int nResult =
                 JOptionPane.showConfirmDialog(
-                        ProjectBrowser.getInstance(),
+                        ArgoFrame.getInstance(),
                         sConfirm,
                         Translator.localize(
                             "optionpane.confirm-overwrite-title"),

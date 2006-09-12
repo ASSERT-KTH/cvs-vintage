@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.153 2006/08/21 18:38:45 mvw Exp $
+// $Id: Main.java,v 1.154 2006/09/12 07:01:34 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,6 +61,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.moduleloader.ModuleLoader2;
 import org.argouml.persistence.PersistenceManager;
+import org.argouml.ui.ArgoFrame;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
@@ -345,7 +346,7 @@ public class Main {
 
         updateProgress(splash, 95, "statusmsg.bar.open-project-browser");
 
-        pb.setVisible(true);
+        ArgoFrame.getInstance().setVisible(true);
 
         st.mark("close splash");
         if (splash != null) {
@@ -380,7 +381,8 @@ public class Main {
         LOG.info("");
 
         st = null;
-        pb.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        ArgoFrame.getInstance().setCursor(
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
         //ToolTipManager.sharedInstance().setInitialDelay(500);
         ToolTipManager.sharedInstance().setDismissDelay(50000000);

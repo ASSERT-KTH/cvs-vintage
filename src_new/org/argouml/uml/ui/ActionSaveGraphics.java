@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.42 2006/08/10 15:37:01 mvw Exp $
+// $Id: ActionSaveGraphics.java,v 1.43 2006/09/12 07:01:33 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.ui.ArgoFrame;
 import org.argouml.ui.ExceptionDialog;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.SuffixFilter;
@@ -91,7 +92,6 @@ public class ActionSaveGraphics extends AbstractAction
         String defaultName = ((Diagram) target).getName();
         defaultName = Util.stripJunk(defaultName);
 
-        ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p =  ProjectManager.getManager().getCurrentProject();
         SaveGraphicsManager sgm = SaveGraphicsManager.getInstance();
         try {
@@ -121,7 +121,7 @@ public class ActionSaveGraphics extends AbstractAction
                 chooser.setSelectedFile(new File(fn));
             }
 
-            int retval = chooser.showSaveDialog(pb);
+            int retval = chooser.showSaveDialog(ArgoFrame.getInstance());
             if (retval == JFileChooser.APPROVE_OPTION) {
                 File theFile = chooser.getSelectedFile();
                 if (theFile != null) {
@@ -138,11 +138,11 @@ public class ActionSaveGraphics extends AbstractAction
                 }
             }
         } catch (OutOfMemoryError e) {
-            new ExceptionDialog(ProjectBrowser.getInstance(),
+            new ExceptionDialog(ArgoFrame.getInstance(),
                 "You have run out of memory. "
                 + "Close down ArgoUML and restart with a larger heap size.", e);
         } catch (Exception e) {
-            new ExceptionDialog(ProjectBrowser.getInstance(), e);
+            new ExceptionDialog(ArgoFrame.getInstance(), e);
             LOG.error("Got some exception", e);
         }
 
@@ -177,7 +177,7 @@ public class ActionSaveGraphics extends AbstractAction
         }
 	if (theFile.exists() && useUI) {
 	    int response = JOptionPane.showConfirmDialog(
-                ProjectBrowser.getInstance(),
+                ArgoFrame.getInstance(),
                 Translator.messageFormat("optionpane.confirm-overwrite",
                         new Object[] {theFile}),
                 Translator.localize("optionpane.confirm-overwrite-title"),

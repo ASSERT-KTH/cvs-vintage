@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.20 2006/08/10 15:37:01 mvw Exp $
+// $Id: ActionRevertToSaved.java,v 1.21 2006/09/12 07:01:33 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.ui.ArgoFrame;
 import org.argouml.ui.ProjectBrowser;
 
 /**
@@ -62,7 +63,6 @@ public class ActionRevertToSaved extends AbstractAction {
      * @param e an event
      */
     public void actionPerformed(ActionEvent e) {
-        ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
 
         if (p == null 
@@ -80,7 +80,7 @@ public class ActionRevertToSaved extends AbstractAction {
 
         int response =
             JOptionPane.showConfirmDialog(
-                  pb,
+                  ArgoFrame.getInstance(),
                   message,
                   Translator.localize(
                       "optionpane.revert-to-saved-confirm-title"),
