@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.50 2006/08/26 09:47:20 linus Exp $
+// $Id: Facade.java,v 1.51 2006/09/13 18:41:16 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2610,9 +2610,10 @@ public interface Facade {
     Object getOwner(Object handle);
 
     /**
-     * Return the tag of a tagged value.
+     * Return the tag of a tagged value, i.e. the name 
+     * of the TagDefinition of the given tagged value.
      *
-     * @param handle The tagged value belongs to this.
+     * @param handle the given tagged value
      * @return The found tag as a String.
      */
     String getTag(Object handle);
