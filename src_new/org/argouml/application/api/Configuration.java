@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.24 2006/06/11 15:39:49 mvw Exp $
+// $Id: Configuration.java,v 1.25 2006/09/13 17:36:37 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.net.URL;
 import org.argouml.application.configuration.ConfigurationFactory;
 import org.argouml.application.configuration.ConfigurationHandler;
 import org.argouml.application.configuration.ConfigurationKeyImpl;
+import org.argouml.application.configuration.IConfigurationFactory;
 
 /**
  * This class provides the core user configuration implementation
@@ -76,6 +77,7 @@ public final class Configuration {
      * Private constructor so it cannot be instantiated.
      */
     private Configuration() {
+        // Don't allow instantiation
     }
 
     /**
@@ -97,7 +99,7 @@ public final class Configuration {
      *
      * @return the configuration factory
      */
-    public static ConfigurationFactory getFactory() {
+    public static IConfigurationFactory getFactory() {
 	return ConfigurationFactory.getInstance();
     }
 

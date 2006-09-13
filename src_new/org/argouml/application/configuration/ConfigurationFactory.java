@@ -1,4 +1,4 @@
-// $Id: ConfigurationFactory.java,v 1.11 2006/06/11 15:39:51 mvw Exp $
+// $Id: ConfigurationFactory.java,v 1.12 2006/09/13 17:36:37 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,17 +33,17 @@ import org.apache.log4j.Logger;
  * @author Thierry Lach
  * @since 0.9.4
  */
-public class ConfigurationFactory {
+public class ConfigurationFactory implements IConfigurationFactory {
     /**
      * The only occurance of the configuration factory.
      */
-    private static final ConfigurationFactory SINGLETON;
+    private static final IConfigurationFactory SINGLETON;
 
     /**
      * The active configuration handler.
      */
     private static ConfigurationHandler handler =
-	new ConfigurationProperties();
+        new ConfigurationProperties();
 
     /**
      * Initialize the factory singleton based on system
@@ -52,21 +52,21 @@ public class ConfigurationFactory {
      */
     static {
         String name = System.getProperty("argo.ConfigurationFactory");
-	ConfigurationFactory newFactory = null;
-	if (name != null) {
+        IConfigurationFactory newFactory = null;
+        if (name != null) {
             try {
                 newFactory =
-		    (ConfigurationFactory) Class.forName(name).newInstance();
+                    (IConfigurationFactory) Class.forName(name).newInstance();
             } catch (Exception e) {
-		Logger.getLogger(ConfigurationFactory.class).
-		    warn("Can't create configuration factory "
+                Logger.getLogger(ConfigurationFactory.class).
+                    warn("Can't create configuration factory "
                         + name + ", using default factory");
             }
-	}
-	if (newFactory == null) {
-	    newFactory = new ConfigurationFactory();
-	}
-	SINGLETON = newFactory;
+        }
+        if (newFactory == null) {
+            newFactory = new ConfigurationFactory();
+        }
+        SINGLETON = newFactory;
     }
 
     /**
@@ -80,8 +80,8 @@ public class ConfigurationFactory {
      *
      * @return the only instance of the configuration factory.
      */
-    public static final ConfigurationFactory getInstance() {
-	return SINGLETON;
+    public static final IConfigurationFactory getInstance() {
+        return SINGLETON;
     }
 
     /**
@@ -91,8 +91,8 @@ public class ConfigurationFactory {
      *         can be used to access and manipulate the configuration.
      */
     public ConfigurationHandler getConfigurationHandler() {
-	// TODO:  Allow other configuration handlers.
-	return handler;
+        // TODO:  Allow other configuration handlers.
+        return handler;
     }
 
 } /* end class ConfigurationFactory */

@@ -1,4 +1,4 @@
-// $Id: ConfigurationProperties.java,v 1.20 2006/06/11 15:39:51 mvw Exp $
+// $Id: ConfigurationProperties.java,v 1.21 2006/09/13 17:36:37 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ class ConfigurationProperties extends ConfigurationHandler {
      * Logger.
      */
     private static final Logger LOG =
-	Logger.getLogger(ConfigurationProperties.class);
+        Logger.getLogger(ConfigurationProperties.class);
 
     /**
      * The location of Argo's default properties resource.
@@ -66,16 +66,16 @@ class ConfigurationProperties extends ConfigurationHandler {
      * Anonymous constructor.
      */
     ConfigurationProperties() {
-	super(true);
-	Properties defaults = new Properties();
-	try {
-	    defaults.load(getClass().getResourceAsStream(propertyLocation));
-	    LOG.debug("Configuration loaded from " + propertyLocation);
-	} catch (Exception ioe) {
-	    // TODO:  What should we do here?
-	    LOG.warn("Configuration not loaded from " + propertyLocation, ioe);
-	}
-	propertyBundle = new Properties(defaults);
+        super(true);
+        Properties defaults = new Properties();
+        try {
+            defaults.load(getClass().getResourceAsStream(propertyLocation));
+            LOG.debug("Configuration loaded from " + propertyLocation);
+        } catch (Exception ioe) {
+            // TODO:  What should we do here?
+            LOG.warn("Configuration not loaded from " + propertyLocation, ioe);
+        }
+        propertyBundle = new Properties(defaults);
     }
 
     /**
@@ -83,8 +83,8 @@ class ConfigurationProperties extends ConfigurationHandler {
      *
      * @return a generic path string.
      */
-    String getDefaultPath() {
-	return System.getProperty("user.home") + "/argo.user.properties";
+    public String getDefaultPath() {
+        return System.getProperty("user.home") + "/argo.user.properties";
     }
 
 
@@ -95,7 +95,7 @@ class ConfigurationProperties extends ConfigurationHandler {
      *
      * @return true if the load was successful, false if not.
      */
-    boolean loadFile(File file) {
+    public boolean loadFile(File file) {
         try {
             propertyBundle.load(new FileInputStream(file));
             LOG.info("Configuration loaded from " + file);
@@ -129,20 +129,20 @@ class ConfigurationProperties extends ConfigurationHandler {
      *
      * @return true if the save was successful, false if not.
      */
-    boolean saveFile(File file) {
-	try {
-	    propertyBundle.store(new FileOutputStream(file),
+    public boolean saveFile(File file) {
+        try {
+            propertyBundle.store(new FileOutputStream(file),
                     "ArgoUML properties");
-	    LOG.info("Configuration saved to " + file);
-	    return true;
-	} catch (Exception e) {
-	    if (canComplain) {
-		LOG.warn("Unable to save configuration " + file + "\n");
-	    }
-	    canComplain = false;
-	}
+            LOG.info("Configuration saved to " + file);
+            return true;
+        } catch (Exception e) {
+            if (canComplain) {
+                LOG.warn("Unable to save configuration " + file + "\n");
+            }
+            canComplain = false;
+        }
 
-	return false;
+        return false;
     }
 
     /**
@@ -152,18 +152,18 @@ class ConfigurationProperties extends ConfigurationHandler {
      *
      * @return true if the load was successful, false if not.
      */
-    boolean loadURL(URL url) {
-	try {
-	    propertyBundle.load(url.openStream());
-	    LOG.info("Configuration loaded from " + url + "\n");
-	    return true;
-	} catch (Exception e) {
-	    if (canComplain) {
-		LOG.warn("Unable to load configuration " + url + "\n");
-	    }
-	    canComplain = false;
-	    return false;
-	}
+    public boolean loadURL(URL url) {
+        try {
+            propertyBundle.load(url.openStream());
+            LOG.info("Configuration loaded from " + url + "\n");
+            return true;
+        } catch (Exception e) {
+            if (canComplain) {
+                LOG.warn("Unable to load configuration " + url + "\n");
+            }
+            canComplain = false;
+            return false;
+        }
     }
 
     /**
@@ -173,9 +173,9 @@ class ConfigurationProperties extends ConfigurationHandler {
      *
      * @return true if the save was successful, false if not.
      */
-    boolean saveURL(URL url) {
-	// LOG.info("Configuration saved to " + url + "\n");
-	return false;
+    public boolean saveURL(URL url) {
+        // LOG.info("Configuration saved to " + url + "\n");
+        return false;
     }
 
     /**
@@ -186,14 +186,14 @@ class ConfigurationProperties extends ConfigurationHandler {
      *
      * @return the string value of the key if found, otherwise null;
      */
-    String getValue(String key, String defaultValue) {
-	String result = "";
-	try {
-	    result = propertyBundle.getProperty(key, defaultValue);
-	} catch (Exception e) {
-	    result = defaultValue;
-	}
-	return result;
+    public String getValue(String key, String defaultValue) {
+        String result = "";
+        try {
+            result = propertyBundle.getProperty(key, defaultValue);
+        } catch (Exception e) {
+            result = defaultValue;
+        }
+        return result;
     }
 
     /**
@@ -202,9 +202,9 @@ class ConfigurationProperties extends ConfigurationHandler {
      * @param key the key to set.
      * @param value the value to set the key to.
      */
-    void setValue(String key, String value) {
-	LOG.debug("key '" + key + "' set to '" + value + "'");
-	propertyBundle.setProperty(key, value);
+    public void setValue(String key, String value) {
+        LOG.debug("key '" + key + "' set to '" + value + "'");
+        propertyBundle.setProperty(key, value);
     }
 
     /**
