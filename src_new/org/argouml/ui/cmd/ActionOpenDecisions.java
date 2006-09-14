@@ -1,4 +1,4 @@
-// $Id: ActionOpenDecisions.java,v 1.7 2006/06/11 19:01:26 mvw Exp $
+// $Id: ActionOpenDecisions.java,v 1.8 2006/09/14 05:24:19 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.tigris.gef.undo.UndoableAction;
 
 
 
-class ActionOpenDecisions extends UndoableAction {
+public class ActionOpenDecisions extends UndoableAction {
 
     /**
      * The constructor.

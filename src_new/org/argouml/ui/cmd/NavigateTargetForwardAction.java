@@ -1,4 +1,4 @@
-// $Id: NavigateTargetForwardAction.java,v 1.2 2006/04/29 10:29:11 linus Exp $
+// $Id: NavigateTargetForwardAction.java,v 1.3 2006/09/14 05:24:19 tfmorris Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.ui.targetmanager.TargetManager;
  *
  * @author jaap.branderhorst@xs4all.nl
  */
-class NavigateTargetForwardAction extends AbstractAction {
+public class NavigateTargetForwardAction extends AbstractAction {
 
     /**
      * Constructor.

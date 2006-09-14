@@ -1,4 +1,4 @@
-// $Id: ActionShowXMLDump.java,v 1.9 2006/09/12 07:01:33 tfmorris Exp $
+// $Id: ActionShowXMLDump.java,v 1.10 2006/09/14 05:24:19 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,13 +37,12 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.ArgoFrame;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.UIUtils;
 
 /**
  * Action that shows an XML dump of the current project contents.
  */
-class ActionShowXMLDump extends AbstractAction {
+public class ActionShowXMLDump extends AbstractAction {
     
     private static final long serialVersionUID = -7942597779499060380L;
 

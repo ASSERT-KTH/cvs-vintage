@@ -1,4 +1,4 @@
-// $Id: ActionAutoCritique.java,v 1.7 2006/06/11 14:56:01 mvw Exp $
+// $Id: ActionAutoCritique.java,v 1.8 2006/09/14 05:24:19 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.tigris.gef.undo.UndoableAction;
 /**
  * Stops critiquing and the TodoList validity checking thread in ToDoList.
  */
-class ActionAutoCritique extends UndoableAction {
+public class ActionAutoCritique extends UndoableAction {
 
     /**
      * The constructor.

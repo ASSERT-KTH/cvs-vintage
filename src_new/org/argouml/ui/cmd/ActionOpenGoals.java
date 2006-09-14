@@ -1,4 +1,4 @@
-// $Id: ActionOpenGoals.java,v 1.6 2006/06/11 14:56:01 mvw Exp $
+// $Id: ActionOpenGoals.java,v 1.7 2006/09/14 05:24:19 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.tigris.gef.undo.UndoableAction;
 /**
  * Action to open the Goals dialog.
  */
-class ActionOpenGoals extends UndoableAction {
+public class ActionOpenGoals extends UndoableAction {
 
     /**
      * The constructor.

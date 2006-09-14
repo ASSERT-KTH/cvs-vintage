@@ -1,4 +1,4 @@
-// $Id: ActionPageSetup.java,v 1.7 2006/06/11 15:39:53 mvw Exp $
+// $Id: ActionPageSetup.java,v 1.8 2006/09/14 05:24:19 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.i18n.Translator;
 /**
  * Page setup for printing.
  */
-class ActionPageSetup extends AbstractAction {
+public class ActionPageSetup extends AbstractAction {
 
     /**
      * Constructor.

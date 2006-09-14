@@ -1,4 +1,4 @@
-// $Id: ActionAboutArgoUML.java,v 1.6 2006/09/12 06:17:06 tfmorris Exp $
+// $Id: ActionAboutArgoUML.java,v 1.7 2006/09/14 05:24:19 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.ui.ArgoFrame;
 /**
  * The action to show the About ArgoUML dialog.
  */
-class ActionAboutArgoUML extends AbstractAction {
+public class ActionAboutArgoUML extends AbstractAction {
 
     /**
      * Constructor.
