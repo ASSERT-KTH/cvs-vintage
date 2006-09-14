@@ -1,4 +1,4 @@
-// $Id: RESequenceDiagramDialog.java,v 1.18 2006/09/02 17:51:06 andrea_nironi Exp $
+// $Id: RESequenceDiagramDialog.java,v 1.19 2006/09/14 20:35:23 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -58,7 +59,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.swingext.JXButtonGroupPanel;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.CheckboxTableModel;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
@@ -348,10 +348,12 @@ public class RESequenceDiagramDialog
         fieldConstraints.weightx = 1.0;
         fieldConstraints.insets = new Insets(4, 2, 2, 2);
 
-        JXButtonGroupPanel depthPanel = 
-            new JXButtonGroupPanel(new FlowLayout());
+        JPanel depthPanel = new JPanel(new FlowLayout());
         JRadioButton unlimited = new JRadioButton("unlimited");
         JRadioButton limited = new JRadioButton("limit to", true);
+        ButtonGroup group = new ButtonGroup();
+        group.add(unlimited);
+        group.add(limited);
         depthPanel.add(limited);
         depthPanel.add(new JSpinner(new SpinnerNumberModel(1, 0, 999, 1)));
         depthPanel.add(unlimited);
