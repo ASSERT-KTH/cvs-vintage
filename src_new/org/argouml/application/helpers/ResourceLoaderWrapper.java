@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.48 2006/09/04 18:41:52 andrea_nironi Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.49 2006/09/15 18:19:34 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.DataTypesHelper;
 import org.argouml.model.InvalidElementException;
 import org.argouml.model.Model;
-import org.tigris.gef.util.ResourceLoader;
 
 /**
  * Wrapper around org.tigris.gef.util.ResourceLoader.<p>
@@ -45,7 +44,8 @@ import org.tigris.gef.util.ResourceLoader;
  * Necessary since ArgoUML needs some extra init.
  *
  * @since Nov 24, 2002
- * @author jaap.branderhorst@xs4all.nl @stereotype singleton
+ * @author jaap.branderhorst@xs4all.nl 
+ * @stereotype singleton
  */
 public final class ResourceLoaderWrapper {
 
