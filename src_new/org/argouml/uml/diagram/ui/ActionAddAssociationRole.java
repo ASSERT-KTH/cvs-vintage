@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.15 2006/06/11 15:39:48 mvw Exp $
+// $Id: ActionAddAssociationRole.java,v 1.16 2006/09/15 17:53:15 tfmorris Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,11 @@ package org.argouml.uml.diagram.ui;
 import javax.swing.Action;
 import javax.swing.Icon;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
 import org.argouml.ui.CmdSetMode;
 import org.tigris.gef.base.ModeCreatePolyEdge;
-import org.tigris.gef.util.ResourceLoader;
+
 
 /**
  * The ActionAddAssociation class is for creating a dummy link with a
@@ -86,7 +87,8 @@ public class ActionAddAssociationRole extends CmdSetMode {
                 name);
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", Boolean.valueOf(unidirectional));
-        Icon icon = ResourceLoader.lookupIconResource(iconName, iconName);
+        Icon icon = ResourceLoaderWrapper.lookupIconResource(iconName, 
+                iconName);
         if (icon != null) {
             putValue(Action.SMALL_ICON, icon);
         }
