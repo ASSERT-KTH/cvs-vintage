@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.29 2006/09/15 15:15:55 tfmorris Exp $
+// $Id: Model.java,v 1.30 2006/09/15 18:03:38 tfmorris Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,13 +169,13 @@ public final class Model {
     /**
      * Selects the implementation.<p>
      *
-     * This is used for testing purposes only when a fake implementation
-     * is used. Normally this is set when loading the Model subsystem.
+     * Normally this is set when loading the Model subsystem, but this
+     * allows the implementation to be set externally.
      *
      * @param newImpl The ModelImplementation object of the selected
      * 		      implementation.
      */
-    static void setImplementation(ModelImplementation newImpl) {
+    public static void setImplementation(ModelImplementation newImpl) {
         impl = newImpl;
         installDecorators();
     }
