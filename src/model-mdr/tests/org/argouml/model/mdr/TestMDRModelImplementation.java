@@ -1,4 +1,4 @@
-// $Id: TestMDRModelImplementation.java,v 1.5 2006/08/26 11:04:15 linus Exp $
+// $Id: TestMDRModelImplementation.java,v 1.6 2006/09/15 15:13:24 tfmorris Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,9 @@
 
 package org.argouml.model.mdr;
 
-import java.io.IOException;
-
-import javax.jmi.xmi.MalformedXMIException;
-
 import junit.framework.TestCase;
 
 import org.argouml.model.UmlException;
-import org.netbeans.api.mdr.CreationFailedException;
 
 /**
  * Testing the MDRModelImplementation.
@@ -49,11 +44,7 @@ public class TestMDRModelImplementation extends TestCase {
     static {
         try {
             modelImplementation = new MDRModelImplementation();
-        } catch (CreationFailedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (MalformedXMIException e) {
+        } catch (UmlException e) {
             e.printStackTrace();
         }
     }
