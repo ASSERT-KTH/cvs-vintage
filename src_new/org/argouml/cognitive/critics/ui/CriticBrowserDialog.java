@@ -1,4 +1,4 @@
-// $Id: CriticBrowserDialog.java,v 1.30 2006/08/21 18:29:07 mvw Exp $
+// $Id: CriticBrowserDialog.java,v 1.31 2006/09/16 12:20:53 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,6 +70,7 @@ import org.argouml.cognitive.Translator;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.ui.ArgoDialog;
+import org.argouml.util.osdep.StartBrowser;
 import org.tigris.swidgets.BorderSplitPane;
 
 /**
@@ -77,7 +78,7 @@ import org.tigris.swidgets.BorderSplitPane;
  * properties. <p>
  *
  * TODO: knowledge type, supported goals,
- * supported decisions, critic network, localize labels.
+ * supported decisions, critic network.
  */
 public class CriticBrowserDialog extends ArgoDialog
     implements ActionListener,
@@ -372,7 +373,9 @@ public class CriticBrowserDialog extends ArgoDialog
      */
     protected void updateButtonsEnabled() {
         this.configButton.setEnabled(false);
-        this.goButton.setEnabled(false);
+        this.goButton.setEnabled(this.target != null 
+                && this.target.getMoreInfoURL() != null 
+                && this.target.getMoreInfoURL().length() > 0);
         this.networkButton.setEnabled(false);
         this.wakeButton.setEnabled(this.target != null
                                && (this.target.isSnoozed() 
@@ -423,7 +426,7 @@ public class CriticBrowserDialog extends ArgoDialog
     public void actionPerformed(ActionEvent e) {
 	super.actionPerformed(e);
 	if (e.getSource() == goButton) {
-	    LOG.debug("TODO: go!");
+	    StartBrowser.openUrl(moreInfo.getText());
 	    return;
 	}
 	if (e.getSource() == networkButton) {
