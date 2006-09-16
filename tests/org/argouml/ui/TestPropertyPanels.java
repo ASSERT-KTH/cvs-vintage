@@ -1,4 +1,4 @@
-// $Id: TestPropertyPanels.java,v 1.8 2006/09/04 21:32:02 bobtarling Exp $
+// $Id: TestPropertyPanels.java,v 1.9 2006/09/16 13:57:44 andrea_nironi Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,7 @@ import org.argouml.persistence.AbstractFilePersister;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.cognitive.critics.ChildGenUML;
+import org.argouml.uml.ui.TabProps;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.util.ChildGenerator;
 import org.tigris.gef.util.EnumerationComposite;
@@ -245,7 +246,8 @@ public class TestPropertyPanels extends TestCase {
         theDetailsPane.targetSet(e);
 
         propertyPane = /*TabProps */
-            theDetailsPane.getNamedTab(Translator.localize("tab.properties"));
+            theDetailsPane.getTab(TabProps.class);
+//            theDetailsPane.getNamedTab(Translator.localize("tab.properties"));
 
         // currently this is in this try block as it does not work
         // _propertyPanel always has size 0,0
