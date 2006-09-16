@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.131 2006/09/08 14:50:53 mvw Exp $
+// $Id: FigAssociation.java,v 1.132 2006/09/16 06:59:22 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -634,6 +634,8 @@ class FigRole extends FigSingleLineText
      */
     public void removeFromDiagram() {
         notationProviderRole.removeListener(this, getOwner());
+        ArgoEventPump.removeListener(
+                ArgoEventTypes.ANY_NOTATION_EVENT, this);
         super.removeFromDiagram();
     }
 
