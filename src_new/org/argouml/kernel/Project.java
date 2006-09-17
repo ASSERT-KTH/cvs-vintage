@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.201 2006/08/26 09:48:11 linus Exp $
+// $Id: Project.java,v 1.202 2006/09/17 20:54:39 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1069,8 +1069,11 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public void setRoot(Object root) {
 
+        if (root == null) {
+            throw new IllegalArgumentException("A root model element is required");
+        }
         if (!Model.getFacade().isAModel(root)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The root model element must be a model - got " + root.getClass().getName());
         }
 
         Object treeRoot = Model.getModelManagementFactory().getRootModel();
