@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.40 2006/09/17 21:57:46 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.41 2006/09/17 22:15:42 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -300,14 +300,11 @@ class ZargoFilePersister extends UmlFilePersister {
                     reader = new BufferedReader(
                         new InputStreamReader(sub, 
                                 PersistenceManager.getEncoding()));
-                    // Skip the 2 lines
-                    //<?xml version="1.0" encoding="UTF-8" ?>
-                    //<!DOCTYPE pgml SYSTEM "pgml.dtd">
-                    // TODO: This could be made more robust, 
-                    // these 2 lines should be
-                    // there but what if they don't exist?
                     String firstLine = reader.readLine();
-                    if (firstLine.startsWith("?xml")) {
+                    if (firstLine.startsWith("<?xml")) {
+                        // Skip the 2 lines
+                        //<?xml version="1.0" encoding="UTF-8" ?>
+                        //<!DOCTYPE pgml SYSTEM "pgml.dtd">
                         reader.readLine();
                     } else {
                         writer.println(firstLine);
