@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayer.java,v 1.4 2006/07/25 23:26:03 bobtarling Exp $
+// $Id: SequenceDiagramLayer.java,v 1.5 2006/09/17 22:44:11 bobtarling Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -294,10 +294,10 @@ public class SequenceDiagramLayer extends LayerPerspectiveMutable {
             FigMessagePort source = (FigMessagePort) fm.getSourcePortFig();
             FigMessagePort dest = (FigMessagePort) fm.getDestPortFig();
             
-            removeFigMessagePort(source);
-            removeFigMessagePort(dest);
-            updateNodeStates(source);
-            if (fm.getSourceFigNode() != fm.getDestFigNode()) {
+            if (source != null) removeFigMessagePort(source);
+            if (dest != null) removeFigMessagePort(dest);
+            if (source != null) updateNodeStates(source);
+            if (dest != null && fm.getSourceFigNode() != fm.getDestFigNode()) {
                 updateNodeStates(dest);
             }
         }
