@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.264 2006/09/08 14:50:53 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.265 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -181,6 +181,10 @@ public abstract class FigNodeModelElement
 
     static {
         LABEL_FONT =
+        /* TODO: Why is this different from the FigEdgeModelElement?
+         * Should we not use one of the following? 
+         * LookAndFeelMgr.getInstance().getStandardFont();
+         * new javax.swing.plaf.metal.DefaultMetalTheme().getUserTextFont(); */
             new javax.swing.plaf.metal.DefaultMetalTheme().getSubTextFont();
         ITALIC_LABEL_FONT =
             new Font(LABEL_FONT.getFamily(), Font.ITALIC, LABEL_FONT.getSize());

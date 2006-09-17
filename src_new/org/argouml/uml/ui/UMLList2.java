@@ -1,4 +1,4 @@
-// $Id: UMLList2.java,v 1.24 2006/06/11 15:39:47 mvw Exp $
+// $Id: UMLList2.java,v 1.25 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public abstract class UMLList2
         if (renderer != null) {
             setCellRenderer(renderer);
         }
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
         addMouseListener(this);
     }
 

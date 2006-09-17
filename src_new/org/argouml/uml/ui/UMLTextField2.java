@@ -1,4 +1,4 @@
-// $Id: UMLTextField2.java,v 1.16 2006/06/11 15:39:47 mvw Exp $
+// $Id: UMLTextField2.java,v 1.17 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class UMLTextField2
      */
     public UMLTextField2(UMLDocument doc) {
         super(doc, null, 0);
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
         addCaretListener(ActionCopy.getInstance());
         addCaretListener(ActionCut.getInstance());
         addCaretListener(ActionPaste.getInstance());

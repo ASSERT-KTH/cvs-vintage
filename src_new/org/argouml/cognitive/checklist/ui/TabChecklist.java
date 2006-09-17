@@ -1,4 +1,4 @@
-// $Id: TabChecklist.java,v 1.29 2006/06/11 15:39:53 mvw Exp $
+// $Id: TabChecklist.java,v 1.30 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public class TabChecklist extends AbstractArgoJPanel
 	tableModel = new TableModelChecklist(this);
 	table.setModel(tableModel);
 
-	Font labelFont = LookAndFeelMgr.getInstance().getSmallFont();
+	Font labelFont = LookAndFeelMgr.getInstance().getStandardFont();
 	table.setFont(labelFont);
 
 	table.setIntercellSpacing(new Dimension(0, 1));

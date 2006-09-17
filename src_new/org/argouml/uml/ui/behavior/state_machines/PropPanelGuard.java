@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.48 2006/06/17 19:54:30 bobtarling Exp $
+// $Id: PropPanelGuard.java,v 1.49 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class PropPanelGuard extends PropPanelModelElement {
         UMLExpressionModel2 expressionModel = new UMLExpressionExpressionModel(
                 this, "expression");
         JTextArea ebf = new UMLExpressionBodyField(expressionModel, true);
-        ebf.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        ebf.setFont(LookAndFeelMgr.getInstance().getStandardFont());
         ebf.setRows(1);
         exprPanel.add(new JScrollPane(ebf));
         exprPanel.add(new UMLExpressionLanguageField(expressionModel, true));

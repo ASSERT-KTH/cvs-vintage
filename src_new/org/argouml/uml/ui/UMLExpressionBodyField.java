@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.24 2006/04/10 16:59:25 mvw Exp $
+// $Id: UMLExpressionBodyField.java,v 1.25 2006/09/17 16:26:39 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class UMLExpressionBodyField extends JTextArea
         notifyModel = n;
         getDocument().addDocumentListener(this);
         setToolTipText(Translator.localize("label.body.tooltip"));
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
     }
 
     /**

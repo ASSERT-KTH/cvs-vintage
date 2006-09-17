@@ -1,4 +1,4 @@
-// $Id: PropPanelMethod.java,v 1.11 2006/06/17 19:54:30 bobtarling Exp $
+// $Id: PropPanelMethod.java,v 1.12 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,7 @@ public class PropPanelMethod extends PropPanelFeature {
         UMLTextArea2 bodyArea = new UMLTextArea2(uptd);
         bodyArea.setLineWrap(true);
         bodyArea.setRows(5);
-        bodyArea.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        bodyArea.setFont(LookAndFeelMgr.getInstance().getStandardFont());
         JScrollPane pane = new JScrollPane(bodyArea);
         addField(Translator.localize("label.body"), pane);
 

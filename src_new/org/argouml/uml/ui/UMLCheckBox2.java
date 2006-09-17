@@ -1,4 +1,4 @@
-// $Id: UMLCheckBox2.java,v 1.27 2006/06/11 15:39:47 mvw Exp $
+// $Id: UMLCheckBox2.java,v 1.28 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public abstract class UMLCheckBox2 extends JCheckBox
      */
     public UMLCheckBox2(String text, Action a, String name) {
         super(text);
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
         propertySetName = name;
         addActionListener(a);
 

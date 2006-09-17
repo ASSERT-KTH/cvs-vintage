@@ -1,4 +1,4 @@
-// $Id: UMLComboBox2.java,v 1.26 2006/04/01 11:45:08 linus Exp $
+// $Id: UMLComboBox2.java,v 1.27 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class UMLComboBox2
      */
     protected UMLComboBox2(UMLComboBoxModel2 arg0) {
         super(arg0);
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
         addActionListener(this);
     }
 
@@ -68,7 +68,7 @@ public class UMLComboBox2
     public UMLComboBox2(UMLComboBoxModel2 arg0, Action action,
 			boolean showIcon) {
         super(arg0);
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
         addActionListener(action);
         // setDoubleBuffered(true);
         setRenderer(new UMLListCellRenderer2(showIcon));

@@ -1,4 +1,4 @@
-// $Id: UMLTextArea2.java,v 1.10 2006/06/11 15:39:47 mvw Exp $
+// $Id: UMLTextArea2.java,v 1.11 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class UMLTextArea2 extends JTextArea
      */
     public UMLTextArea2(UMLDocument doc) {
         super(doc);
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
         addCaretListener(ActionCopy.getInstance());
         addCaretListener(ActionCut.getInstance());
         addCaretListener(ActionPaste.getInstance());

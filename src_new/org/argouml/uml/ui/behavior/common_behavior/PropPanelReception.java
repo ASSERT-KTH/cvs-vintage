@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.40 2006/06/17 19:54:30 bobtarling Exp $
+// $Id: PropPanelReception.java,v 1.41 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 2002-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class PropPanelReception extends PropPanelModelElement {
                 new UMLReceptionSpecificationDocument());
         specText.setLineWrap(true);
         specText.setRows(5);
-        specText.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        specText.setFont(LookAndFeelMgr.getInstance().getStandardFont());
         JScrollPane specificationScroll = new JScrollPane(specText);
         addField(Translator.localize("label.specification"),
                 specificationScroll);

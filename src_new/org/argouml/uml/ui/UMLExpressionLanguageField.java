@@ -1,4 +1,4 @@
-// $Id: UMLExpressionLanguageField.java,v 1.16 2006/03/13 21:34:39 mvw Exp $
+// $Id: UMLExpressionLanguageField.java,v 1.17 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class UMLExpressionLanguageField
         notifyModel = n;
         getDocument().addDocumentListener(this);
         setToolTipText(Translator.localize("label.language.tooltip"));
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
     }
 
     /**

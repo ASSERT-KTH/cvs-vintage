@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.61 2006/05/31 17:54:48 mvw Exp $
+// $Id: TabTaggedValues.java,v 1.62 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,7 +112,7 @@ public class TabTaggedValues extends AbstractArgoJPanel
         table.getSelectionModel().addListSelectionListener(this);
 
         JScrollPane sp = new JScrollPane(table);
-        Font labelFont = LookAndFeelMgr.getInstance().getSmallFont();
+        Font labelFont = LookAndFeelMgr.getInstance().getStandardFont();
         table.setFont(labelFont);
 
         titleLabel = new JLabel("none");

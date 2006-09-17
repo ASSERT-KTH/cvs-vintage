@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.26 2006/09/14 20:35:23 andrea_nironi Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.27 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public abstract class UMLRadioButtonPanel
     extends JPanel
     implements TargetListener, PropertyChangeListener {
 
-    private static Font smallFont = LookAndFeelMgr.getInstance().getSmallFont();
+    private static Font stdFont = LookAndFeelMgr.getInstance().getStandardFont();
 
     /**
      * The target object of which some attribute is shown via this panel.
@@ -103,7 +103,7 @@ public abstract class UMLRadioButtonPanel
         setDoubleBuffered(true);
         if (title != null) {
             TitledBorder border = new TitledBorder(title);
-            border.setTitleFont(smallFont);
+            border.setTitleFont(stdFont);
             setBorder(border);
         }
         setButtons(labeltextsActioncommands, setAction);
@@ -159,7 +159,7 @@ public abstract class UMLRadioButtonPanel
 	    String actionCommand =
 		(String) labeltextsActioncommands.get(keyAndLabel);
             button.setActionCommand(actionCommand);
-            button.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+            button.setFont(LookAndFeelMgr.getInstance().getStandardFont());
             buttonGroup.add(button);
             add(button);
         }

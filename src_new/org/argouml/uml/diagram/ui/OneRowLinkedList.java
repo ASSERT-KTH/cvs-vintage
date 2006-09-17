@@ -1,4 +1,4 @@
-// $Id: OneRowLinkedList.java,v 1.2 2006/06/11 17:12:41 mvw Exp $
+// $Id: OneRowLinkedList.java,v 1.3 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class OneRowLinkedList extends JList {
         setForeground(Color.blue);
         setSelectionForeground(Color.blue.darker());
         UMLLinkMouseListener mouseListener = new UMLLinkMouseListener(this);
-        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setFont(LookAndFeelMgr.getInstance().getStandardFont());
         addMouseListener(mouseListener);
         setVisibleRowCount(1);
     }

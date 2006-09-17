@@ -1,4 +1,4 @@
-// $Id: PropPanelArgument.java,v 1.7 2006/06/17 19:54:30 bobtarling Exp $
+// $Id: PropPanelArgument.java,v 1.8 2006/09/17 16:26:40 mvw Exp $
 // Copyright (c) 2003-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class PropPanelArgument extends PropPanelModelElement {
             new UMLExpressionExpressionModel(
                 this, "expression");
         JTextArea ebf = new UMLExpressionBodyField(expressionModel, true);
-        ebf.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        ebf.setFont(LookAndFeelMgr.getInstance().getStandardFont());
         ebf.setRows(3); // make it take up all remaining height
         addField(Translator.localize("label.value"),
                 new JScrollPane(ebf));
