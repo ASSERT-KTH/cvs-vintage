@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.12 2006/09/12 05:07:13 tfmorris Exp $
+// $Id: TodoParser.java,v 1.13 2006/09/18 00:12:17 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -434,6 +434,8 @@ class TodoParser extends SAXParserBase {
      *
      * TODO: Why are we doing this ourselves?  Surely encoding information
      * for XML serialization is a well known task - tfm
+     * I have never understood why this is being done. I think we should remove
+     * any usage - bob
      * 
      * @param	str	The String to encode.
      * @return	The encoded String.
