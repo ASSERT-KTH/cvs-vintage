@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.41 2006/09/17 22:15:42 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.42 2006/09/18 21:28:58 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -256,7 +256,7 @@ class ZargoFilePersister extends UmlFilePersister {
             LOG.info("Transfering argo contents");
             int memberCount = 0;
             while ((line = reader.readLine()) != null) {
-                if (line.trim().equals("<member")) {
+                if (line.trim().startsWith("<member")) {
                     ++memberCount;
                 }
                 if (line.trim().equals("</argo>") && memberCount == 0) {
