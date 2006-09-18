@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.42 2006/09/18 21:28:58 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.43 2006/09/18 22:37:06 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -361,10 +361,12 @@ class ZargoFilePersister extends UmlFilePersister {
 
         int ch;
         while ((ch = reader.read()) != -1) {
-            if (ch != 0xFFFF) {
-                writer.write(ch);
+            if (ch == 0xFFFF) {
+                LOG.info("Stripping out 0xFFFF from save file");
+            } else if (ch == 8) {
+                LOG.info("Stripping out 0x8 from save file");
             } else {
-                LOG.info("Stripping out 0xFFFF from XMI");
+                writer.write(ch);
             }
         }
     }
