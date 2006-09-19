@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.134 2006/09/19 17:36:36 mvw Exp $
+// $Id: FigAssociation.java,v 1.135 2006/09/19 17:40:50 mvw Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -583,9 +583,6 @@ class FigRole extends FigSingleLineText
     public void setOwner(Object owner) {
         super.setOwner(owner);
         getNewNotation();
-//        if (getOwner() != null) {
-//            setText();
-//        }
     }
 
     private void getNewNotation() {
@@ -598,8 +595,6 @@ class FigRole extends FigSingleLineText
                         NotationProviderFactory2.TYPE_ASSOCIATION_END_NAME, 
                         getOwner(),
                         this);
-//        } else {
-//            damage();
         }
     }
     
