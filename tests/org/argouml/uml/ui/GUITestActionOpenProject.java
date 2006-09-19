@@ -1,4 +1,4 @@
-// $Id: GUITestActionOpenProject.java,v 1.9 2006/09/09 10:57:09 linus Exp $
+// $Id: GUITestActionOpenProject.java,v 1.10 2006/09/19 00:01:42 bobtarling Exp $
 // Copyright (c) 2004-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class GUITestActionOpenProject extends TestCase {
      * TODO: This tests is deactivated by Linus Tolke in 0.23.1 since
      * it fails in. Investigate and fix! Issue 4443.
      */
-    public void xtestEmptyProject() {
+    public void testEmptyProject() {
         File file
             = CheckMain.getTestModel("testmodels/EmptyProject0161.zargo");
 
@@ -70,7 +70,7 @@ public class GUITestActionOpenProject extends TestCase {
      * TODO: This tests is deactivated by Linus Tolke in 0.23.1 since
      * it fails in. Investigate and fix! Issue 4443.
      */
-    public void xtestProjectWithContents() {
+    public void testProjectWithContents() {
         File file =
             CheckMain.getTestModel("testmodels/GUITestPropertyPanels.zargo");
 
