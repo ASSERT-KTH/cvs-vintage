@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRole.java,v 1.4 2006/06/11 15:39:48 mvw Exp $
+// $Id: ActionAddClassifierRole.java,v 1.5 2006/09/20 17:22:07 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class ActionAddClassifierRole extends CmdCreateNode {
      */
     public ActionAddClassifierRole() {
         super(Model.getMetaTypes().getClassifierRole(),
-                false, "button.new-classifierrole");
+                "button.new-classifierrole");
     }
 
     /**

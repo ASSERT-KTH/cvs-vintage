@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRole.java,v 1.2 2006/06/11 15:39:52 mvw Exp $
+// $Id: ActionAddClassifierRole.java,v 1.3 2006/09/20 17:22:07 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,12 +37,14 @@ import org.tigris.gef.graph.GraphModel;
  */
 public class ActionAddClassifierRole extends CmdCreateNode {
 
+    private static final long serialVersionUID = 8939546123926523391L;
+
     /**
      * The constructor.
      */
     public ActionAddClassifierRole() {
         super(Model.getMetaTypes().getClassifierRole(),
-                false, "button.new-classifierrole");
+                "button.new-classifierrole");
     }
 
     /**

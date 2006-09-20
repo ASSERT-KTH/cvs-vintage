@@ -1,4 +1,4 @@
-// $Id: ActionCreatePseudostate.java,v 1.18 2006/06/11 15:39:53 mvw Exp $
+// $Id: ActionCreatePseudostate.java,v 1.19 2006/09/20 17:22:07 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ public class ActionCreatePseudostate extends CmdCreateNode {
      */
     public Object makeNode() {
 	Object newNode = super.makeNode();
-	Object kind = _args.get("kind");
+	Object kind = getArg("kind");
 	Model.getCoreHelper().setKind(newNode, kind);
 
 	return newNode;
