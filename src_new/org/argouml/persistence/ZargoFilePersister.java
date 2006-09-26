@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.44 2006/09/18 23:18:55 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.45 2006/09/26 22:44:40 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -186,13 +186,10 @@ class ZargoFilePersister extends UmlFilePersister {
     }
     
     /**
-     * The .zargo save format is able to save. We must override
-     * UmlFilePersister which has turned this off (suggests a need for some
-     * refactoring here)
      * @see org.argouml.persistence.AbstractFilePersister#isSaveEnabled()
      */
     public boolean isSaveEnabled() {
-        return true;
+        return false;
     }
 
     /**

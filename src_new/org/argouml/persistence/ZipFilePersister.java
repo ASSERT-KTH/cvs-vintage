@@ -1,4 +1,4 @@
-// $Id: ZipFilePersister.java,v 1.14 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: ZipFilePersister.java,v 1.15 2006/09/26 22:44:40 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,6 +79,13 @@ class ZipFilePersister extends XmiFilePersister {
      */
     protected String getDesc() {
         return Translator.localize("combobox.filefilter.zip");
+    }
+    
+    /**
+     * @see org.argouml.persistence.XmiFilePersister#isSaveEnabled()
+     */
+    public boolean isSaveEnabled() {
+        return true;
     }
 
     /**

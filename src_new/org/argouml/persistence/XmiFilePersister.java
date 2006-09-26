@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.38 2006/08/28 12:22:24 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.39 2006/09/26 22:44:40 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,6 +86,15 @@ class XmiFilePersister extends AbstractFilePersister
      */
     protected String getDesc() {
         return Translator.localize("combobox.filefilter.xmi");
+    }
+
+    
+    
+    /**
+     * @see org.argouml.persistence.AbstractFilePersister#isSaveEnabled()
+     */
+    public boolean isSaveEnabled() {
+        return false;
     }
 
     /**
