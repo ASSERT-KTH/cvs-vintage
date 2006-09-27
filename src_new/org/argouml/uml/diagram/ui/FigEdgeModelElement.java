@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.191 2006/09/17 16:26:40 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.192 2006/09/27 21:44:47 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,6 +202,7 @@ public abstract class FigEdgeModelElement
             edgePort.setVisible(false);
             addPathItem(edgePort,
                     new PathConvPercent(this, 50, 0));
+            computeRoute();
         }
     }
 
