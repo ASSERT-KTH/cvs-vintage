@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.192 2006/09/27 21:44:47 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.193 2006/09/27 22:01:18 bobtarling Exp $
 // Copyright (c) 1996-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,7 +198,9 @@ public abstract class FigEdgeModelElement
     public void makeEdgePort() {
         if (edgePort == null) {
             edgePort = new FigEdgePort();
-            edgePort.setOwner(getOwner());
+            if (getOwner() != null) {
+                edgePort.setOwner(getOwner());
+            }
             edgePort.setVisible(false);
             addPathItem(edgePort,
                     new PathConvPercent(this, 50, 0));
@@ -834,6 +836,9 @@ public abstract class FigEdgeModelElement
                     + owner.getClass().getName());
         }
         super.setOwner(owner);
+        if (edgePort != null) {
+            edgePort.setOwner(getOwner());
+        }
         initNotationProviders(owner);
         renderingChanged();
         updateListeners(null, owner);
