@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.28 2006/08/28 10:18:23 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.29 2006/09/27 18:36:14 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -358,7 +358,12 @@ class PGMLStackParser
         if (figId.indexOf('.') < 0) {
             // If there is no dot then this must be a top level Fig and can be
             // assumed to be a FigNode.
-            return (FigNode) findFig(figId);
+            Fig f = findFig(figId);
+            if (f instanceof FigNode) {
+                return (FigNode) f;
+            } else {
+                throw new IllegalStateException("FigID " + figId + " is not a node");
+            }
         }
         // If the id does not look like a top-level Fig then we can assume that
         // this is an id of a FigEdgePort inside some FigEdge.
