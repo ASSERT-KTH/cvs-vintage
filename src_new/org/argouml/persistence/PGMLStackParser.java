@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.29 2006/09/27 18:36:14 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.30 2006/09/27 21:45:58 bobtarling Exp $
 // Copyright (c) 2005-2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,6 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigNode;
-import org.tigris.gef.util.Predicate;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -335,6 +334,7 @@ class PGMLStackParser
                     edge.setDestPortFig(dpf);
                     edge.setSourceFigNode(sfn);
                     edge.setDestFigNode(dfn);
+                    edge.computeRoute();
                 }
             }
         }
