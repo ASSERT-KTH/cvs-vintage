@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiRegistryWrapperContext.java,v 1.1 2006/01/26 16:28:55 pelletib Exp $
+ * $Id: CmiRegistryWrapperContext.java,v 1.2 2006/10/04 22:23:53 pelletib Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -29,6 +29,7 @@ import java.util.Hashtable;
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.NamingException;
 
@@ -124,6 +125,44 @@ public class CmiRegistryWrapperContext extends AbsRegistryWrapperContext impleme
     }
 
     /**
+     * Hide special characters from flat namespace registry. Escape forward and
+     * backward slashes, and leading quote character.
+     * @param initialName the name to encode
+     * @return the encoded name
+     */
+    protected Name encode(Name initialName) {
+        String name = initialName.toString();
+
+        // nothing to encode
+        if (name.length() < 1) {
+            return initialName;
+        }
+        // replace all / and \ by adding a \\ prefix
+        StringBuffer newname = new StringBuffer(name);
+        int i = 0;
+        while (i < newname.length()) {
+            char c = newname.charAt(i);
+            if (c == '/' || c == '\\') {
+                newname.insert(i, '\\');
+                i++;
+            }
+            i++;
+        }
+        // prefix quote characters
+        if (newname.charAt(0) == '"' || newname.charAt(0) == '\'') {
+            newname.insert(0, '\\');
+        }
+
+        // return encoded name
+        try {
+            return new CompositeName(newname.toString());
+        } catch (InvalidNameException e) {
+            return initialName;
+        }
+    }
+
+
+    /**
      * Binds a name to an object.
      * @param name the name to bind; may not be empty
      * @param obj the object to bind; possibly null
@@ -134,7 +173,8 @@ public class CmiRegistryWrapperContext extends AbsRegistryWrapperContext impleme
         // Clean the jndi name from extra info/characters
         String n = getName(name.get(0));
 
-        super.bind(new CompositeName(n), obj);
+        // Need to encode again because the format changing (Name -> String) broke it
+        super.bind(encode(new CompositeName(n)), obj);
     }
 
     /**
@@ -149,7 +189,8 @@ public class CmiRegistryWrapperContext extends AbsRegistryWrapperContext impleme
         // Clean the jndi name from extra info/characters
         String n = getName(name.get(0));
 
-        super.rebind(new CompositeName(n), obj);
+        // Need to encode again because the format changing (Name -> String) broke it
+        super.rebind(encode(new CompositeName(n)), obj);
     }
 
     /**
@@ -163,7 +204,8 @@ public class CmiRegistryWrapperContext extends AbsRegistryWrapperContext impleme
         // Clean the jndi name from extra info/characters
         String n = getName(name.get(0));
 
-        super.unbind(new CompositeName(n));
+        // Need to encode again because the format changing (Name -> String) broke it
+        super.unbind(encode(new CompositeName(n)));
     }
 }
 
