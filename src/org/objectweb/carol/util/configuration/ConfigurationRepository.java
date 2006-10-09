@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.8 2006/01/17 16:14:45 pelletib Exp $
+ * $Id: ConfigurationRepository.java,v 1.9 2006/10/09 15:09:12 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -102,7 +102,7 @@ public class ConfigurationRepository {
     /**
      * Check that the configuration is done
      */
-    protected static void checkInitialized() {
+    protected static synchronized void checkInitialized() {
         if (!initDone) {
             try {
                 if (logger.isDebugEnabled()) {
