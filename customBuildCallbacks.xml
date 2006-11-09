@@ -27,14 +27,9 @@
 	<!-- ===================================================================== -->
 	<target name="post.build.jars">
 		<property name="dest" value="${postingDirectory}/${buildLabel}" />
-		<mkdir dir="${dest}/checksum" />
 		<ant antfile="${basedir}/scripts/export-ecj.xml" target="export">
 			<property name="dest" value="${dest}" />
 		</ant>
-    	<checksum file="${dest}/ecj.jar" property="md5" /> 
-		<echo message="${md5} ecj.jar" file="${dest}/checksum/ecj.jar.md5" /> 
-    	<checksum file="${dest}/ecjsrc.zip" property="md5" /> 
-		<echo message="${md5} ecjsrc.zip" file="${dest}/checksum/ecjsrc.zip.md5" /> 
 	</target>
 	
 	<!-- ===================================================================== -->
