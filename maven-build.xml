@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  - CAROL: Common Architecture for RMI ObjectWeb Layer
+  - Copyright (C) 2007 Bull S.A.S.
+  - Contact: carol@objectweb.org
+  -
+  - This library is free software; you can redistribute it and/or
+  - modify it under the terms of the GNU Lesser General Public
+  - License as published by the Free Software Foundation; either
+  - version 2.1 of the License, or any later version.
+  -
+  - This library is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  - Lesser General Public License for more details.
+  -
+  - You should have received a copy of the GNU Lesser General Public
+  - License along with this library; if not, write to the Free Software
+  - Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+  - USA
+  -
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  - $Id: maven-build.xml,v 1.1 2007/03/14 14:22:06 sauthieg Exp $
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="Maven 2 - Carol"
+         default="install"
+         xmlns:m2="urn:maven-artifact-ant">
+
+  <!-- directory definition -->
+  <property name="build.dir" value="${basedir}/build" />
+  <property name="build.lib.dir" value="${build.dir}/lib" />
+  <property name="output.dir" value="${basedir}/output" />
+  <property name="output.tmp.dir" value="${output.dir}/tmp" />
+  <property name="output.dist.dir" value="${output.dir}/dist/lib" />
+  <property name="config" value="${basedir}/config" />
+
+  <path id="build.lib.path">
+    <fileset dir="${build.lib.dir}">
+      <include name="maven-artifact-ant-*-dep.jar" />
+    </fileset>
+  </path>
+
+  <!-- m2:* elements loading -->
+  <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+           uri="urn:maven-artifact-ant">
+    <classpath refid="build.lib.path" />
+  </typedef>
+
+  <!-- - - - - - - - - - - - - - - - - -
+    target: init
+    - - - - - - - - - - - - - - - - - -->
+  <target name="init">
+    <mkdir dir="${output.dir}" />
+    <mkdir dir="${output.tmp.dir}" />
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+    target: update
+    - - - - - - - - - - - - - - - - - -->
+  <target name="update" depends="init">
+    <copy todir="${output.tmp.dir}">
+      <fileset dir="${build.dir}" includes="*.pom" />
+    </copy>
+    <replace dir="${output.tmp.dir}"
+             token="@VERSION@"
+             value="${carol.version}" />
+
+    <!-- ================================================ -->
+    <!--                  Carol POMs                    -->
+    <!-- ================================================ -->
+    <m2:pom id="parent.pom" file="${output.tmp.dir}/ow_carol_parent.pom" />
+    <m2:pom id="carol.pom" file="${output.tmp.dir}/ow_carol.pom" />
+    <m2:pom id="iiop-del.pom"
+            file="${output.tmp.dir}/ow_carol_iiop_delegate.pom" />
+  </target>
+
+
+  <!-- =================================
+    target: install
+    ================================= -->
+  <target name="install" depends="update" description="--> install artifacts">
+
+    <m2:install>
+      <m2:pom refid="parent.pom" />
+    </m2:install>
+
+    <m2:install file="${output.dist.dir}/ow_carol.jar">
+      <m2:pom refid="carol.pom" />
+    </m2:install>
+
+    <m2:install file="${output.dist.dir}/ow_carol_iiop_delegate.jar">
+      <m2:pom refid="iiop-del.pom" />
+    </m2:install>
+
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - -
+    - Deployment using Maven2 Ant tasks
+    - - - - - - - - - - - - - - - - - - - - - -->
+  <macrodef name="maven-deploy">
+    <attribute name="pomrefid" />
+    <attribute name="file" />
+    <sequential>
+      <m2:install-provider artifactId="wagon-ssh" version="1.0-alpha-7" />
+      <!-- <m2:install-provider artifactId="wagon-file" version="1.0-beta-2" /> -->
+      <m2:deploy file="@{file}" pomRefId="@{pomrefid}">
+        <!-- may introduce here shared elements -->
+      </m2:deploy>
+    </sequential>
+  </macrodef>
+
+  <!-- =================================
+    target: deploy
+    ================================= -->
+  <target name="deploy" depends="update" description="--> Deploy artifacts">
+
+
+    <!-- Deploy the parent -->
+    <m2:install-provider artifactId="wagon-ssh" version="1.0-alpha-7" />
+    <m2:deploy>
+      <m2:pom refid="parent.pom" />
+    </m2:deploy>
+
+    <maven-deploy pomRefId="carol.pom" file="${output.dist.dir}/ow_carol.jar" />
+
+    <maven-deploy pomRefId="iiop-del.pom"
+                  file="${output.dist.dir}/ow_carol_iiop_delegate.jar" />
+
+  </target>
+</project>
+

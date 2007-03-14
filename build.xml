@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.67 2006/10/09 15:36:43 benoitf Exp $
+ - $Id: build.xml,v 1.68 2007/03/14 14:22:06 sauthieg Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -50,7 +50,7 @@
   <property file="${config}/configure.properties" />
 
   <!-- carol meta information -->
-  <property name="carol.version" value="2.2.9" />
+  <property name="carol.version" value="2.2.10-SNAPSHOT" />
   <property name="carol.name" value="Carol" />
   <property name="carol.package" value="org.objectweb.carol" />
 
@@ -427,4 +427,20 @@
       </fileset>
     </scp>
   </target>
+
+
+  <!-- - - - - - - - - - - - - - - - - -
+          target: maven:install
+         - - - - - - - - - - - - - - - - - -->
+    <target name="maven:install" depends="jar">
+       <ant antfile="maven-build.xml" target="install" />
+    </target>
+
+  <!-- - - - - - - - - - - - - - - - - -
+          target: maven:deploy
+         - - - - - - - - - - - - - - - - - -->
+    <target name="maven:deploy" depends="jar">
+       <ant antfile="maven-build.xml" target="deploy" />
+    </target>
+
 </project>
